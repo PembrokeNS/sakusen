@@ -1,0 +1,36 @@
+This is the gospel of libsakusen memory mangement according to John.
+
+In what follows, 'server' refers to the executable which links against
+libsakusen, which will probably be a server, but we may be linking clients
+against it at some point.
+
+There shall be no global variables apart from world.
+
+There shall be one World, one Map and one Universe.
+
+The server is responsible for allocating the Universe, Map, World, and all
+clients.  libsakusen shall only ever deal with pointers to such things.  The
+server is also responsible for ensuring that the global 'world' variable points
+to the right thing.
+
+Objects which exist before the World does, and define the parameters of the
+game, are stored in Universe.  This includes UnitType, WeaponType, BeamType
+objects.  Elsewhere these shall be accessed by pointer or by ID (which is
+probably the same thing).
+
+The current Heightfield is stored in Map (I'm slightly dubious about this - my
+instinct says that it should be in World - Map should store the original
+Heightfield).
+
+All objects currently in existence on the map are stored in World.  This
+includes all Unit, Beam, Ballistic, Effect and PlaceAction object (including
+subunits!) but not UnitAction objects.
+
+UnitAction and Weapon objects are stored in the Unit to which they are attached.
+
+Subactions which are triggered by other actions (the 'next' field in UnitAction
+and PlaceAction) are stored on the heap, with a pointer in their parent action.
+This pointer shall be kept private, and never revealed to outside code.  When
+someone else wants the 'next' action, they get a copy.  When the parent action
+is destroyed, the subaction is deleted.
+

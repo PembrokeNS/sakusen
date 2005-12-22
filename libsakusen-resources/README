@@ -1,0 +1,10 @@
+libsakusen-resources is a library for managing the data for the game sakusen.
+It is intended that clients and servers can use it to manage their needs for
+loading / downloading / saving data such as maps and unitsets.
+
+Possibly the library will also manage savegames and replays.
+
+To compile, requires either libsakusen to be checked out in a parallel
+directory called libsakusen or else for things to be laid out as in the
+repository.
+

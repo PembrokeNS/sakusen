@@ -1,0 +1,21 @@
+Since we obviously want replays to work properly (unlike the majority), I'm
+concerned about the reproducibilty of the game engine.  If everything is
+perfectly reproducible then it would suffice to store in the replay the initial
+game state, map scripting, and all incoming orders from clients to be able to
+reconstruct the game entirely.  So far the following possible sources of
+non-reproducibility concern me:
+
+Floating point arithmetic
+=========================
+
+This occurs in two places so far:
+
+- In orientation matricies, which are 3x3 double arrays.  A possible solution
+  in this case would be to use sint32s as fixed precision values with ounly a
+  couple of bits to the left of the decimal point.  This would work because
+  orientation matrix entries are guaranteed to lie in the range [-1,1].
+
+- In the computation of vector lengths.  I see no solution here, but I'm sure
+  there exist integer arithmetic algorithms to do anything we want to do with
+  vector lengths.
+

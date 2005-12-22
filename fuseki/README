@@ -1,0 +1,7 @@
+fuseki is a C++ Sakusen server that currently aims to serve through a Unix
+socket (see unix(7)).
+
+To compile, requires either both libsakusen and libsakusen-comms checked out in
+appropriately named parallel directories or else for things to be laid out as
+in the repository.
+

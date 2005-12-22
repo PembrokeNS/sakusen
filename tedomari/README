@@ -1,0 +1,15 @@
+tedomari is a C++/SDL Sakusen client
+
+tedomari is free software, distributed under the terms of the GNU General
+Public License, version 2.  For more information, see the file COPYING.
+
+To compile, requires either both libsakusen and libsakusen-comms checked out in
+appropriately named parallel directories or else for things to be laid out as
+in the repository.
+
+Additionally, compilation requires the following libraries (their corresponding
+Debian package names are also given):
+
+readline  libreadline5-dev
+unicode   libunicode-dev
+

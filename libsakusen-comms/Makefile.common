@@ -1,0 +1,109 @@
+# This Makefile section is intended to compile a collection of C++ sources and
+# headers (all in one directory), properly keeping track of all header
+# dependencies.  You should define a few variables and then include this file -
+# you need define no targets at all to get compilation working.  If you do
+# define any targets, then you can define them after includeing this file if
+# you wish the default action to be a recursive build.
+#
+# The variables you can define are as follows.  Omit irrelevant ones.
+# SUBDIRS - a list of subdirectories to visit recursively when dealing with the
+#   'all' or 'clean' targets.  Subdirs are built after the current dir.
+# SOURCE_DIRS - a list of directories other than the current one in which to
+# 	look for sources
+# BIN - the name of the binary to compile from all the cpp files (either a .la
+#   library file, or an executable).
+# INCLUDE - include arguments, e.g. "-I.. -Imy-headers".  Include arguments
+#   will also be extrapolated from LIB_DEP_NAMES, so you needn't include those
+#   here.  Indeed, you probably shouldn't ever need to specify this.
+# LIBS - system library arguments, e.g. "-lstdc++".
+# LIB_DEP_NAMES - base names of prerequisite libraries, e.g. "libsakusen" will
+#   be searched for at ../libsakusen/libsakusen.la,
+#   ../../libsakusen/libsakusen.la, ../../libsakusen/trunk/libsakusen.la and at
+#   ../../../libsakusen/trunk/libsakusen.la.  This will give appropriate
+#   include arguments, linking arguments, make dependencies and rules for
+#   building (by making in the directory of the library).
+# LIB_DEP - Like LIB_DEP_NAMES, but you provide the full path and name, e.g.
+#   "../libsakusen.la", rather than this Makefile searching for you.
+# THIS_CXXFLAGS - other args to gcc at compile stage, e.g. "-Werror".
+# THIS_LDFLAGS - other args to libtool at link stage, e.g. "-no-install".
+
+CXX_SOURCES = $(wildcard *.cpp) \
+	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.cpp))
+C_SOURCES = $(wildcard *.c) \
+	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
+CXX_BASES = $(basename $(CXX_SOURCES))
+C_BASES = $(basename $(C_SOURCES))
+LIBTOOL_OBJS = $(foreach base,$(CXX_BASES) $(C_BASES),.obj/$(base).lo)
+CXX_OBJS = $(foreach base,$(CXX_BASES),.obj/$(base).o)
+C_OBJS = $(foreach base,$(C_BASES),.obj/$(base).o)
+MAKEFRAGS = \
+	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),.makefrags/$(source).makefrag)
+
+E_LIB_DEP = $(foreach lib,$(LIB_DEP_NAMES), \
+	$(if $(wildcard ../$(lib)),../$(lib)/$(lib).la) \
+	$(if $(wildcard ../../$(lib)/trunk/),../../$(lib)/trunk/$(lib).la) \
+	$(if $(wildcard ../../$(lib)),../../$(lib)/$(lib).la) \
+	$(if $(wildcard ../../../$(lib)/trunk/),../../../$(lib)/trunk/$(lib).la)) \
+	$(LIB_DEP)
+E_INCLUDE = -I. $(foreach lib,$(E_LIB_DEP),-I$(dir $(lib))) $(INCLUDE)
+
+CXX ?= g++
+
+# Default target is to build the binary (and recurse)
+
+all: $(BIN)
+	@for subdir in $(SUBDIRS); do \
+		$(MAKE) -C $$subdir $@ \
+		; \
+	done
+
+# Clean (recursively)
+
+clean:
+	-rm -rf .libs .obj .makefrags $(BIN)
+	@for subdir in $(SUBDIRS); do \
+		$(MAKE) -C $$subdir $@ \
+		; \
+	done
+
+# Build the binary
+
+$(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
+	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
+
+# Use other Makefiles to build prerequisite libraries
+
+$(E_LIB_DEP): %.la:
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+# Libtool objects are made when normal objects are
+
+$(LIBTOOL_OBJS): %.lo: %.o
+
+# The actual compile commands (source dependencies will come from the makefrag
+# file).
+
+$(CXX_OBJS): .obj/%.o:
+	@mkdir -p $(dir $@)
+	libtool --tag=CXX --mode=compile $(CXX) $(CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -c \
+		-o $@ $(wildcard $*.cpp $*.c)
+
+$(C_OBJS): .obj/%.o:
+	@mkdir -p $(dir $@)
+	libtool --tag=CC --mode=compile $(CC) $(CFLAGS) $(E_INCLUDE) $(THIS_CFLAGS) -c \
+		-o $@ $(wildcard $*.cpp $*.c)
+
+# Here follows cunningness to make the makefile handle headers properly
+
+include $(MAKEFRAGS)
+
+$(MAKEFRAGS): .makefrags/%.makefrag: %
+	@mkdir -p $(dir $@)
+	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $<
+	@echo "$@ .obj/$(filter-out ./,$(dir $<))`cat $@.tmp`" > $@
+	@rm $@.tmp
+
+.PHONY: all clean
+
+.DELETE_ON_ERROR:
+
