@@ -4,5 +4,5 @@ THIS_CFLAGS = -Wall -W -Wno-format -O0 -g3
 LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
 LIBS = -lstdc++ -lreadline -lunicode
 
-include Makefile.common
+include ../Makefile.common
 

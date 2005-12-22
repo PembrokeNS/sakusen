@@ -4,18 +4,18 @@
 #include "libsakusen-global.h"
 #include "exceptions.h"
 
-class SocketException : public Exception {
+class SocketExn : public Exn {
   public:
-    SocketException(const String& message) :
-      Exception(message) { }
-    virtual ~SocketException() throw() { }
+    SocketExn(const String& message) :
+      Exn(message) { }
+    virtual ~SocketExn() throw() { }
 };
 
-class SocketClosedException : public SocketException {
+class SocketClosedExn : public SocketExn {
   public:
-    SocketClosedException() :
-      SocketException("Socket was never connected or was closed remotely") { }
-    virtual ~SocketClosedException() throw() { }
+    SocketClosedExn() :
+      SocketExn("Socket was never connected or was closed remotely") { }
+    virtual ~SocketClosedExn() throw() { }
 };
 
 #endif // LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H

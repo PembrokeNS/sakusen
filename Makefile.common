@@ -53,7 +53,7 @@ CXX ?= g++
 
 all: $(BIN)
 	@for subdir in $(SUBDIRS); do \
-		$(MAKE) -C $$subdir $@ \
+		$(MAKE) -C $$subdir $@ || exit 1 \
 		; \
 	done
 
@@ -62,7 +62,7 @@ all: $(BIN)
 clean:
 	-rm -rf .libs .obj .makefrags $(BIN)
 	@for subdir in $(SUBDIRS); do \
-		$(MAKE) -C $$subdir $@ \
+		$(MAKE) -C $$subdir $@ || exit 1 \
 		; \
 	done
 
@@ -95,7 +95,9 @@ $(C_OBJS): .obj/%.o:
 
 # Here follows cunningness to make the makefile handle headers properly
 
+ifneq ($(MAKEFRAGS),)
 include $(MAKEFRAGS)
+endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag: %
 	@mkdir -p $(dir $@)

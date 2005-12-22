@@ -125,7 +125,7 @@ String ServerInterface::join()
   localSocket->setAsynchronous(true);
   try {
     serverSocket->send(JoinMessageData(localSocket->getAddress()));
-  } catch (SocketException* e) {
+  } catch (SocketExn* e) {
     delete localSocket;
     localSocket = NULL;
     String ret = String("Error while sending join message to server: '") +
@@ -183,7 +183,7 @@ bool ServerInterface::leave(bool sendMessage)
   if (sendMessage) {
     try {
       privateServerSocket->send(LeaveMessageData());
-    } catch (SocketException* e) {
+    } catch (SocketExn* e) {
       Debug("Error sending leave message:" << e->what());
       delete e;
     }

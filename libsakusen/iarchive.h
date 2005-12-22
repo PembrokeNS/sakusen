@@ -39,7 +39,7 @@ class LIBSAKUSEN_API IArchive {
       /* We ensure that enough length remains.
        * If not, we throw an exception */
       if (remainingLength < length) {
-        throw new UnexpectedEndOfArchiveDeserializationException();
+        throw new EndOfArchiveDeserializationExn();
       }
     }
     inline void advance(size_t length) {

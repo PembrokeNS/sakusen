@@ -4,7 +4,7 @@ THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werr
 LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
 LIBS = -lstdc++ -lpcrecpp
 
-include Makefile.common
+include ../Makefile.common
 
 doc/man/man1/fuseki.1: $(BIN)
 	help2man --output=$@ --no-info \

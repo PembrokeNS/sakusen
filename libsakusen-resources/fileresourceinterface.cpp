@@ -174,7 +174,7 @@ void* FileResourceInterface::internalSearch(
       default:
         Fatal("unexpected ResourceType: " << type);
     }
-  } catch (DeserializationException* e) {
+  } catch (DeserializationExn* e) {
     *result = resourceSearchResult_error;
     delete e;
     error = e->what();

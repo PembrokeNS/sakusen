@@ -7,47 +7,47 @@
 
 #include <stdexcept>
 
-class Exception : public std::runtime_error {
+class Exn : public std::runtime_error {
   public:
-    Exception(const String& message) :
+    Exn(const String& message) :
       std::runtime_error(message), errorNum(errno) { }
-    virtual ~Exception() throw() { }
+    virtual ~Exn() throw() { }
     int errorNum;
 };
 
-class DeserializationException : public Exception {
+class DeserializationExn : public Exn {
   public:
-    DeserializationException(const String& message) :
-      Exception(message) { }
-    virtual ~DeserializationException() throw() { }
+    DeserializationExn(const String& message) :
+      Exn(message) { }
+    virtual ~DeserializationExn() throw() { }
 };
 
-class UnexpectedEndOfArchiveDeserializationException :
-    public DeserializationException {
+class EndOfArchiveDeserializationExn :
+    public DeserializationExn {
   public:
-    UnexpectedEndOfArchiveDeserializationException() :
-      DeserializationException("tried to read past end of arhive") { }
-    virtual ~UnexpectedEndOfArchiveDeserializationException() throw() { }
+    EndOfArchiveDeserializationExn() :
+      DeserializationExn("tried to read past end of arhive") { }
+    virtual ~EndOfArchiveDeserializationExn() throw() { }
 };
 
-class UnresolvedNameDeserializationException :
-    public DeserializationException {
+class UnresolvedNameDeserializationExn :
+    public DeserializationExn {
   public:
-    UnresolvedNameDeserializationException(String name) :
-      DeserializationException(
+    UnresolvedNameDeserializationExn(String name) :
+      DeserializationExn(
           "name '"+name+"' could not be resolved"
         ) { }
-    virtual ~UnresolvedNameDeserializationException() throw() { }
+    virtual ~UnresolvedNameDeserializationExn() throw() { }
 };
 
-class DuplicateNameDeserializationException :
-    public DeserializationException {
+class DuplicateNameDeserializationExn :
+    public DeserializationExn {
   public:
-    DuplicateNameDeserializationException(String name) :
-      DeserializationException(
+    DuplicateNameDeserializationExn(String name) :
+      DeserializationExn(
           "name '"+name+"' was duplicated"
         ) { }
-    virtual ~DuplicateNameDeserializationException() throw() { }
+    virtual ~DuplicateNameDeserializationExn() throw() { }
 };
 
 #endif // LIBSAKUSEN__EXCEPTIONS_H

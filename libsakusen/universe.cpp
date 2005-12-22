@@ -18,7 +18,7 @@ void Universe::constructHashMaps()
       unitType != unitTypes.end(); unitType++) {
     if (unitIDLookup.count(unitType->getInternalName())) {
       throw new
-        DuplicateNameDeserializationException(unitType->getInternalName());
+        DuplicateNameDeserializationExn(unitType->getInternalName());
     }
     unitIDLookup[unitType->getInternalName()] = &*unitType;
   }
@@ -77,7 +77,7 @@ Universe* Universe::loadNew(IArchive& archive)
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {
     delete u;
-    throw new UnresolvedNameDeserializationException(unresolvedName);
+    throw new UnresolvedNameDeserializationExn(unresolvedName);
   }
   return u;
 }

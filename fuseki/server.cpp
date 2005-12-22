@@ -299,9 +299,9 @@ void Server::serve()
             break;
           }
         }
-      } catch (SocketException* e) {
+      } catch (SocketExn* e) {
         out << "Removing client " << clientID_toString(client->getID()) <<
-          " due to causing Exception: " << e->what();
+          " due to causing SocketExn: " << e->what();
         removeClient(client);
         clientRemoved = true;
       }
@@ -392,7 +392,7 @@ void Server::serve()
     while (!clients.empty()) {
       try {
         clients.begin()->second->send(KickMessageData("Server shutting down."));
-      } catch (SocketException* e) {
+      } catch (SocketExn* e) {
         out << "Socket exception while kicking client: " << e->what() << "\n";
         delete e;
       }
@@ -658,7 +658,7 @@ void Server::settingAlteredCallback(Leaf* altered)
       try {
         client->second->send(data);
         /* TODO: clear readiness flag if desired */
-      } catch (SocketException* e) {
+      } catch (SocketExn* e) {
         deadClients.push_back(client->second);
       }
     }
@@ -667,7 +667,7 @@ void Server::settingAlteredCallback(Leaf* altered)
   while (!deadClients.empty()) {
     out << "Removing client " <<
       clientID_toString(deadClients.front()->getID()) <<
-      "due to causing a SocketException\n";
+      "due to causing a SocketExn\n";
     removeClient(deadClients.front());
     deadClients.pop_front();
   }

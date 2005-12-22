@@ -110,7 +110,7 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
       case ENOTCONN:
       case 111: /* This errno seems to have no name, but signifies that the
                    socket has closed */
-        throw new SocketClosedException();
+        throw new SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(errno) << " sending message");
