@@ -22,19 +22,15 @@ inline void OArchive::store(const T& toStore)
   toStore.store(*this);
 }
 
-template<
-    typename T,
-    template<typename> class Container1,
-    template<typename> class Container2
-  >
-OArchive& OArchive::operator<<(const Container1< Container2<T> >& toStore)
+template<typename T>
+OArchive& OArchive::operator<<(const std::vector< std::vector<T> >& toStore)
 {
   *this << uint32(toStore.size());
   
-  for (typename Container1< Container2<T> >::const_iterator
+  for (typename std::vector< std::vector<T> >::const_iterator
       i1 = toStore.begin(); i1 != toStore.end(); ++i1) {
     *this << uint32(i1->size());
-    for (typename Container2<T>::const_iterator
+    for (typename std::vector<T>::const_iterator
         i2 = i1->begin(); i2 != i1->end(); ++i2) {
       store(*i2);
     }
@@ -43,12 +39,25 @@ OArchive& OArchive::operator<<(const Container1< Container2<T> >& toStore)
   return *this;
 }
 
-template<typename T, template<typename> class Container>
-OArchive& OArchive::operator<<(const Container<T>& toStore)
+template<typename T>
+OArchive& OArchive::operator<<(const std::vector<T>& toStore)
 {
   *this << uint32(toStore.size());
   
-  for(typename Container<T>::const_iterator i = toStore.begin();
+  for(typename std::vector<T>::const_iterator i = toStore.begin();
+      i != toStore.end(); ++i) {
+    store(*i);
+  }
+
+  return *this;
+}
+
+template<typename T>
+OArchive& OArchive::operator<<(const std::list<T>& toStore)
+{
+  *this << uint32(toStore.size());
+  
+  for(typename std::list<T>::const_iterator i = toStore.begin();
       i != toStore.end(); ++i) {
     store(*i);
   }

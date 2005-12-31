@@ -80,19 +80,18 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(double& d);
     IArchive& operator>>(String& s);
 
-    template<typename T, template<typename> class Container>
-    IArchive& operator>>(Container<T>&);
+    template<typename T>
+    IArchive& operator>>(std::vector<T>&);
+
+    template<typename T>
+    IArchive& operator>>(std::list<T>&);
     
-    template<typename T, template<typename> class Container>
-    IArchive& extract(Container<T>&, const typename T::loadArgument*);
+    template<typename T>
+    IArchive& extract(std::vector<T>&, const typename T::loadArgument*);
     
-    template<
-        typename T,
-        template<typename> class Container1,
-        template<typename> class Container2
-      >
+    template<typename T>
     IArchive& extract(
-        Container1< Container2<T> >&,
+        std::vector< std::vector<T> >&,
         const typename T::loadArgument*
       );
 

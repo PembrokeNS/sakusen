@@ -62,15 +62,14 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
 
-    template<typename T, template<typename> class Container>
-    OArchive& operator<<(const Container<T>&);
+    template<typename T>
+    OArchive& operator<<(const std::vector<T>&);
+
+    template<typename T>
+    OArchive& operator<<(const std::list<T>&);
     
-    template<
-        typename T,
-        template<typename> class Container1,
-        template<typename> class Container2
-      >
-    OArchive& operator<<(const Container1< Container2<T> >& toStore);
+    template<typename T>
+    OArchive& operator<<(const std::vector< std::vector<T> >& toStore);
 
     template<typename T>
     inline OArchive& operator<<(const Point<T>&);

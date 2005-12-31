@@ -24,8 +24,8 @@ inline T IArchive::load(const typename T::loadArgument* arg)
   return T::load(*this, arg);
 }
 
-template<typename T, template<typename> class Container>
-IArchive& IArchive::operator>>(Container<T>& result)
+template<typename T>
+IArchive& IArchive::operator>>(std::vector<T>& result)
 {
   assert(result.empty());
   uint32 size;
@@ -38,9 +38,23 @@ IArchive& IArchive::operator>>(Container<T>& result)
   return *this;
 }
 
-template<typename T, template<typename> class Container>
+template<typename T>
+IArchive& IArchive::operator>>(std::list<T>& result)
+{
+  assert(result.empty());
+  uint32 size;
+  *this >> size;
+  
+  while (size--) {
+    result.push_back(load<T>());
+  }
+
+  return *this;
+}
+
+template<typename T>
 IArchive& IArchive::extract(
-    Container<T>& result,
+    std::vector<T>& result,
     const typename T::loadArgument* arg
   )
 {
@@ -55,13 +69,9 @@ IArchive& IArchive::extract(
   return *this;
 }
 
-template<
-    typename T,
-    template<typename> class Container1,
-    template<typename> class Container2
-  >
+template<typename T>
 IArchive& IArchive::extract(
-    Container1< Container2<T> >& result,
+    std::vector< std::vector<T> >& result,
     const typename T::loadArgument* arg
   )
 {
@@ -70,7 +80,7 @@ IArchive& IArchive::extract(
   *this >> size;
   
   while (size--) {
-    Container2<T> element;
+    std::vector<T> element;
     extract(element, arg);
     result.push_back(element);
   }

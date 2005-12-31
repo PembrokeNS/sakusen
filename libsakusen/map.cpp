@@ -24,8 +24,11 @@ Map::Map(
   playModes(p)
 {
   /* NB: order on Points is *partial*, so the following not equivalent to
-   * topRight <= bottomLeft */
-  if (!(topRight > bottomLeft)) {
+   * topRight < bottomLeft
+   *
+   * We allow maps of zero area because they are actually useful in some
+   * circumstances (e.g. a map which exists only for its briefing) */
+  if (!(topRight >= bottomLeft)) {
     Fatal("map has negative dimension");
   }
   
