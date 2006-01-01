@@ -26,6 +26,7 @@ class UnixDatagramSocket : public Socket {
   protected:
     bool abstract; /* whether this socket exists in the abstract namespace (see
                       unix(7)) */
+    bool closed; /* whether this socket has been closed already */
     char path[UNIX_PATH_MAX];
     struct sockaddr_un addr; /* socket address */
     int sockfd; /* socket file descriptor */
@@ -40,6 +41,7 @@ class UnixDatagramSocket : public Socket {
     size_t receive(void* buf, size_t len);
     size_t receive(void* buf, size_t len, const struct timeval& timeout);
       /* try to receive, blocking for the given time period before giving up */
+    void close();
     void setAsynchronous(bool val);
     String getAddress() const;
 };

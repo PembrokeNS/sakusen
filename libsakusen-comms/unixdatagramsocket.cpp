@@ -47,14 +47,16 @@ Socket* UnixDatagramSocket::newConnectionToAddress(list<String> address)
 
 UnixDatagramSocket::UnixDatagramSocket(const char* p, bool a) :
   Socket(),
-  abstract(a)
+  abstract(a),
+  closed(false)
 {
   initialize(p);
 }
 
 UnixDatagramSocket::UnixDatagramSocket(const String& p, bool a) :
   Socket(),
-  abstract(a)
+  abstract(a),
+  closed(false)
 {
   initialize(p.c_str());
 }
@@ -92,8 +94,8 @@ void UnixDatagramSocket::initialize(const char* p)
 
 UnixDatagramSocket::~UnixDatagramSocket()
 {
-  if (-1==close(sockfd)) {
-    Fatal("Error " << errorUtils_parseErrno(errno) << " closing socket");
+  if (!closed) {
+    close();
   }
 }
 
@@ -161,6 +163,16 @@ size_t UnixDatagramSocket::receive(
      * much */
   }
   return receivedLength;
+}
+
+void UnixDatagramSocket::close()
+{
+  if (!closed) {
+    if (-1 == ::close(sockfd)) {
+      Fatal("Error " << errorUtils_parseErrno(errno) << " closing socket");
+    }
+    closed = true;
+  }
 }
 
 void UnixDatagramSocket::setAsynchronous(bool val)

@@ -23,6 +23,7 @@ class Socket {
         size_t len,
         const struct timeval& timeout
       ) = 0;
+    virtual void close() = 0;
     virtual void setAsynchronous(bool val) = 0;
     virtual String getAddress() const = 0;
 };
