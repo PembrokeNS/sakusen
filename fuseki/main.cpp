@@ -60,7 +60,9 @@ int main(int argc, char* const* argv)
   
   Options options;
   
-  String fusekiConfigFile = homePath + FILE_SEP ".fuseki" FILE_SEP "config";
+  String fusekiConfigFile =
+    homePath + CONFIG_SUBDIR FILE_SEP "fuseki" FILE_SEP "config";
+  cout << "Looking for fuseki config file at " << fusekiConfigFile << endl;
   /* TODO: Parse configuration file */
   
   /* Parse command line arguments */

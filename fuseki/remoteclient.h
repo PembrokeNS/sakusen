@@ -32,12 +32,15 @@ class RemoteClient : public Client, public SettingsUser {
     bool admin; /* Whether I am an admin */
     bool neverAdmin; /* Whether I never want to be an admin */
     bool ready; /* Whether I am ready to start the game */
+    bool autoUnready; /* Whether I want to have my readiness cleared whenever
+                         a setting changes */
   public:
     /* accessors */
-    inline ClientID getID() { return id; }
+    inline ClientID getId() { return id; }
     inline bool isAdmin() { return admin; }
     inline void setAdmin(bool value);
     inline bool isNeverAdmin() { return neverAdmin; }
+    inline bool isAutoUnready() { return autoUnready; }
 
     inline bool isReadyForGameStart() {
       return ready && (observer || (playerId != 0));

@@ -7,6 +7,7 @@
 #include "clientid.h"
 #include "settingstree/branch.h"
 #include "settingstree/clientsbranch.h"
+#include "settingstree/playersbranch.h"
 #include "settingsuser.h"
 
 namespace fuseki {
@@ -35,6 +36,9 @@ class SettingsTree : public Branch {
     Node* getNode(const String& nodeAddress);
     inline ClientsBranch* getClientsBranch() {
       return dynamic_cast<ClientsBranch*>(getNode("clients"));
+    }
+    inline PlayersBranch* getPlayersBranch() {
+      return dynamic_cast<PlayersBranch*>(getNode("players"));
     }
 };
 

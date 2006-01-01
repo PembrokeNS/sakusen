@@ -56,6 +56,7 @@ class Server : public SettingsUser {
                                     universe when possible (owned by this) */
     Map* requestedMap; /* Put a map here to be promoted to map when possible
                           (owned by this) */
+    bool mapPlayModeChanged;
 
     uint32 gameSpeed; /* Desired game speed in microseconds per frame */
 
@@ -64,7 +65,18 @@ class Server : public SettingsUser {
        * Returns (ClientID)-1 if there are no free IDs */
     void addClient(const String& address);
     void removeClient(RemoteClient* client);
+    void clearPlayers();
+    void createPlayersFor(const MapPlayMode& mode);
     void setAllowObservers(bool value);
+    inline void setMapPlayMode(uint32 mode) {
+      mapPlayMode = mode;
+      mapPlayModeChanged = true;
+    }
+    void changeInClientBranch(
+        RemoteClient* client,
+        const String& node,
+        const String& value
+      );
   public:
     inline bool getAllowObservers() { return allowObservers; }
     

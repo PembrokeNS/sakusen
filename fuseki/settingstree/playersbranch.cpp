@@ -1,5 +1,7 @@
 #include "settingstree/playersbranch.h"
 
+#include "settingstree/playerbranch.h"
+
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
@@ -10,5 +12,23 @@ PlayersBranch::PlayersBranch(const Branch* parent, Server* server) :
 
 PlayersBranch::~PlayersBranch()
 {
+}
+
+void PlayersBranch::addPlayer(PlayerID id, bool special, bool fixed)
+{
+  String name = playerID_toString(id);
+  if (getChild(name) != NULL) {
+    Fatal("tried to add player branch of existing name");
+  }
+  addChild(new PlayerBranch(id, this, server, special, fixed));
+}
+
+void PlayersBranch::removePlayer(PlayerID id)
+{
+  String name = playerID_toString(id);
+  if (getChild(name) == NULL) {
+    Fatal("tried to remove non-existant player branch " << name);
+  }
+  removeChild(name);
 }
 

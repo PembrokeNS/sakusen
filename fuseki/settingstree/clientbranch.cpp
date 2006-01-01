@@ -14,5 +14,9 @@ ClientBranch::ClientBranch(ClientID id, const Branch* parent, Server* server) :
   addChild(
       new BoolLeaf("neveradmin", true, "world", clientGroup, this, server)
     );
+  addChild(new BoolLeaf(
+        "observer", false, "world", clientGroup+",admin", this, server
+      ));
+  addChild(new BoolLeaf("ready", false, "world", clientGroup, this, server));
 }
 

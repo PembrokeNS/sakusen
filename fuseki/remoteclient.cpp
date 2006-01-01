@@ -21,7 +21,9 @@ RemoteClient::RemoteClient(
   outSocket(socket),
   messageQueue(),
   admin(false),
-  neverAdmin(true)
+  neverAdmin(true),
+  ready(false),
+  autoUnready(false)
 {
   inSocket = new UnixDatagramListeningSocket(abstract);
   inSocket->setAsynchronous(true);
@@ -56,7 +58,6 @@ void RemoteClient::sendUpdate(const Update& update)
 }
 
 String RemoteClient::performBoolMagic(
-    /*const settingsTree::Leaf* altering,*/
     const std::list<String>& name,
     bool newValue
   )
@@ -80,20 +81,21 @@ String RemoteClient::performBoolMagic(
       /* A client becoming an observer can be enough to trigger a game start */
       server->checkForGameStart();
     }
+    return "";
   } else if (name.front() == "application") {
     /* Do nothing */
+    return "";
   } else if (name.front() == "neveradmin") {
     if (newValue == neverAdmin) {
       Debug("unexpectedly asked to confirm non-change");
       return "";
     }
 
-    if (newValue) {
-      neverAdmin = newValue;
-    } else {
-      neverAdmin = newValue;
+    neverAdmin = newValue;
+    if (!newValue) {
       server->ensureAdminExists();
     }
+    return "";
   } else if (name.front() == "admin") {
     if (newValue == admin) {
       Debug("unexpectedly asked to confirm non-change");
@@ -110,14 +112,25 @@ String RemoteClient::performBoolMagic(
       admin = newValue;
       server->ensureAdminExists();
     }
+    return "";
+  } else if (name.front() == "ready") {
+    if (newValue == ready) {
+      Debug("Unexpectedly asked to confirm non-change");
+      return "";
+    }
+
+    ready = newValue;
+
+    if (newValue) {
+      server->checkForGameStart();
+    }
+    return "";
   } else {
     Fatal("unexpected child of client branch: " << name.front());
   }
-  return "";
 }
 
 String RemoteClient::performStringMagic(
-    /*const settingsTree::Leaf* altering,*/
     const std::list<String>& name,
     const String& /*newValue*/
   )

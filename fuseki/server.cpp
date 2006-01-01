@@ -1,6 +1,7 @@
 #include "server.h"
 
 #include "libsakusen-global.h"
+#include "world.h"
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"
 #include "message.h"
@@ -12,7 +13,9 @@
 #include "settingstree/stringlistleaf.h"
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
+#include "timeutils.h"
 
+#include <sys/time.h>
 #include <time.h>
 #include <signal.h>
 
@@ -48,6 +51,7 @@ Server::Server(Socket* s, ostream& o, ResourceInterface* r, bool a, bool d) :
   ensureAdminExistsNextTime(false),
   requestedUniverse(NULL),
   requestedMap(NULL),
+  mapPlayModeChanged(false),
   gameSpeed(DEFAULT_GAME_SPEED)
 {
   String reason;
@@ -144,10 +148,39 @@ void Server::addClient(const String& address)
 
 void Server::removeClient(RemoteClient* client)
 {
-  settings.getClientsBranch()->removeClient(client->getID());
-  clients.erase(clients.find(client->getID()));
+  settings.getClientsBranch()->removeClient(client->getId());
+  clients.erase(clients.find(client->getId()));
   delete client;
   ensureAdminExists();
+}
+
+void Server::clearPlayers()
+{
+  for (hash_map<ClientID, RemoteClient*>::iterator clientIt = clients.begin();
+      clientIt != clients.end(); ++clientIt) {
+    RemoteClient* client = clientIt->second;
+    if (client->getPlayerId() != 0) {
+      changeInClientBranch(client, "player", "0");
+    }
+  }
+  while (!players.empty()) {
+    PlayerID id = players.size()-1;
+    players.pop_back();
+    settings.getPlayersBranch()->removePlayer(id);
+  }
+}
+
+void Server::createPlayersFor(const MapPlayMode& mode)
+{
+  assert(players.empty());
+  for (uint32 i=0; i<mode.getMaxPlayers(); i++) {
+    players.push_back(Player());
+    /* TODO: allow MapPlayMode to specify whether the player is special and/or
+     * fixed */
+    settings.getPlayersBranch()->addPlayer(
+        i, (i==0) /* special */, (i==0) /* fixed */
+      );
+  }
 }
 
 void Server::setAllowObservers(bool value)
@@ -156,22 +189,28 @@ void Server::setAllowObservers(bool value)
     /* In this case, we may have to dump some clients who have themselves
      * registered as observers */
     for (hash_map<ClientID, RemoteClient*>::iterator client = clients.begin();
-        client != clients.end(); client++) {
+        client != clients.end(); ++client) {
       if (client->second->isObserver()) {
-        if ("" != 
-            settings.changeRequest(
-              String("clients:") + clientID_toString(client->second->getID()) +
-                ":observer",
-              "false",
-              this
-            )) {
-          Fatal("something has gone wrong with the settings tree");
-        }
+        changeInClientBranch(client->second, "observer", "false");
       }
     }
   }
 
   allowObservers = value;
+}
+
+void Server::changeInClientBranch(
+    RemoteClient* client,
+    const String& node,
+    const String& value
+  )
+{
+  if ("" != settings.changeRequest(
+      String("clients:") + clientID_toString(client->getId()) +
+        ":" + node, value, this
+    )) {
+      Fatal("something has gone wrong with the settings tree");
+  }
 }
 
 /* Handler for interrupt signals from the keyboard, so that the server can
@@ -300,7 +339,7 @@ void Server::serve()
           }
         }
       } catch (SocketExn* e) {
-        out << "Removing client " << clientID_toString(client->getID()) <<
+        out << "Removing client " << clientID_toString(client->getId()) <<
           " due to causing SocketExn: " << e->what();
         removeClient(client);
         clientRemoved = true;
@@ -312,40 +351,6 @@ void Server::serve()
       } else {
         ++clientIt;
       }
-    }
-
-    /* If we asked ourselves to, then check whether the game can start now */
-    if (checkForGameStartNextTime) {
-      out << "Checking for game start\n";
-      /* Check that we have:
-       * - A map and mapplaymode selected
-       * - Races selected for all players
-       * - A client for all players that need one
-       * - All clients ready
-       * - All clients either observers or else assigned to some player
-       */
-      if (map != NULL) {
-        bool allPlayersReady = true;
-        for (vector<Player>::iterator player = players.begin();
-            player != players.end(); player++) {
-          if (!player->isReadyForGameStart()) {
-            allPlayersReady = false;
-            break;
-          }
-        }
-        if (allPlayersReady) {
-          bool allClientsReady = true;
-          for (hash_map<ClientID, RemoteClient*>::iterator client =
-              clients.begin(); client != clients.end(); client++) {
-            if (!client->second->isReadyForGameStart()) {
-              allClientsReady = false;
-              break;
-            }
-          }
-          startGame = allClientsReady;
-        }
-      }
-      checkForGameStartNextTime = false;
     }
 
     if (ensureAdminExistsNextTime) {
@@ -366,26 +371,142 @@ void Server::serve()
 
       if (needAdmin && adminCandidate != NULL) {
         out << "Promoting a client to admin status";
-        if ("" != settings.changeRequest(
-              String("clients:") + clientID_toString(adminCandidate->getID()) +
-                ":admin",
-              "true",
-              this
-            )) {
-          Fatal("something has gone wrong with the settings tree");
-        }
+        changeInClientBranch(adminCandidate, "admin", "true");
       }
       
       ensureAdminExistsNextTime = false;
     }
 
-    /* TODO: Promote requestedUniverse and requestedMap */
+    if (requestedUniverse != NULL) {
+      delete universe;
+      universe = requestedUniverse;
+      requestedUniverse = NULL;
+      String reason = settings.changeRequest(
+          "game:universe", universe->getInternalName(), this
+        );
+      assert(reason == "");
+    }
+    
+    if (requestedMap != NULL) {
+      delete map;
+      map = requestedMap;
+      requestedMap = NULL;
+      String reason = settings.changeRequest(
+          "game:map", map->getInternalName(), this
+        );
+      assert(reason == "");
+      setMapPlayMode(0);
+    }
+
+    if (mapPlayModeChanged) {
+      clearPlayers();
+      createPlayersFor(map->getPlayMode(mapPlayMode));
+      checkForGameStart();
+      
+      mapPlayModeChanged = false;
+    }
+
+    /* If we asked ourselves to, then check whether the game can start now */
+    if (checkForGameStartNextTime) {
+      out << "Checking for game start\n";
+      /* Check that we have:
+       * - A map and mapplaymode selected
+       * - Races selected for all players
+       * - A client for all players that need one
+       * - All clients ready
+       * - All clients either observers or else assigned to some player
+       */
+      if (map == NULL) {
+        out << "Not ready because no map selected";
+      } else {
+        bool allPlayersReady = true;
+        for (vector<Player>::iterator player = players.begin();
+            player != players.end(); player++) {
+          if (!player->isReadyForGameStart()) {
+            allPlayersReady = false;
+            out << "Not ready because player '" << player->getName() <<
+              "' not ready\n";
+            break;
+          }
+        }
+        if (allPlayersReady) {
+          bool allClientsReady = true;
+          for (hash_map<ClientID, RemoteClient*>::iterator client =
+              clients.begin(); client != clients.end(); client++) {
+            if (!client->second->isReadyForGameStart()) {
+              allClientsReady = false;
+              out << "Not ready because client '" <<
+                clientID_toString(client->second->getId()) <<
+                "' not ready\n";
+              break;
+            }
+          }
+          startGame = allClientsReady;
+        }
+      }
+      checkForGameStartNextTime = false;
+    }
     
     nanosleep(&sleepTime, NULL);
     if (dots) {
       out << "." << flush;
     }
   } while (!(interrupted || startGame));
+
+  out << "Transitioning to gameplay state" << endl;
+
+  /* Close the solicitation socket because we aren't going to accept any more
+   * clients
+   * TODO: maybe we can support dynamic join for people whose clients crash,
+   * or adding observers in mid-game. */
+  socket->close();
+
+  /* Remove settings tree manipulation permissions from all clients, excpet for
+   * some which remain in the 'playtime' group so that they can do such things
+   * as pause the game */
+  for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
+      clients.begin(); clientIt != clients.end(); ++clientIt) {
+    RemoteClient* client = clientIt->second;
+    bool wasAdmin = client->hasGroup("admin");
+    client->clearGroups();
+    client->addGroup("world");
+    if (wasAdmin) {
+      client->addGroup("playtime");
+    }
+  }
+  
+  /* Now we have the real game loop */
+  world = new World(map, mapPlayMode, players);
+  /* Note: henceforth, do not use the local field 'players', because world has
+   * a copy of it - that's the one that must be worked with */
+  struct timeval timeNow;
+  struct timeval timeForNextTick;
+  bool warnedLastTime = false;
+  
+  while (!interrupted) {
+    /* find out when we aim to start the next tick */
+    gettimeofday(&timeNow, NULL);
+    timeForNextTick = timeNow + gameSpeed;
+    
+    /* Do the game's stuff */
+    world->incrementGameState();
+    
+    if (dots && world->getTimeNow() % 16 == 0) {
+      out << "." << flush;
+    }
+
+    /* Sleep until it's time for the next tick */
+    gettimeofday(&timeNow, NULL);
+    if (timercmp(&timeNow, &timeForNextTick, <) || gameSpeed == 0) {
+      usleep(timeForNextTick-timeNow);
+      warnedLastTime = false;
+    } else {
+      if (!warnedLastTime) {
+        out << "Warning: server is lagging\n";
+        warnedLastTime = true;
+      }
+    }
+  }
 
   if (interrupted) {
     out << "Server interrupted.  Shutting down." << endl;
@@ -400,9 +521,6 @@ void Server::serve()
     }
     return;
   }
-
-  /* TODO: Now we have the real game loop */
-  out << "At this point a game would start" << endl;
 }
 
 void Server::checkForGameStart()
@@ -532,6 +650,9 @@ String Server::stringSettingAlteringCallback(
     if (fullName.front() == "speed") {
       Fatal("speed not a string setting");
     } else if (fullName.front() == "universe") {
+      if (universe != NULL && newValue == universe->getInternalName()) {
+        return "";
+      }
       ResourceSearchResult result;
       Universe* u = resourceInterface->search<Universe>(
           newValue, NULL, &result
@@ -556,6 +677,9 @@ String Server::stringSettingAlteringCallback(
     } else if (fullName.front() == "map") {
       if (universe == NULL) {
         return "must specify a universe before map";
+      }
+      if (map != NULL && newValue == map->getInternalName()) {
+        return "";
       }
       ResourceSearchResult result;
       Map* m = resourceInterface->search<Map>(
@@ -648,25 +772,33 @@ String Server::stringSetSettingAlteringCallback(
 
 void Server::settingAlteredCallback(Leaf* altered)
 {
-  NotifySettingMessageData data(altered->getFullName(), altered->getValue());
+  String fullName = altered->getFullName();
+  bool isReadinessChange =
+    pcrecpp::RE(":clients:[0-9]+:ready").FullMatch(fullName);
+  NotifySettingMessageData data(fullName, altered->getValue());
   list<RemoteClient*> deadClients;
   
   /* Inform everyone with read permission that the setting was altered */
   for (__gnu_cxx::hash_map<ClientID, RemoteClient*>::iterator
-      client = clients.begin(); client != clients.end(); client++) {
-    if (client->second->hasReadPermissionFor(altered)) {
+      clientIt = clients.begin(); clientIt != clients.end(); ++clientIt) {
+    RemoteClient* client = clientIt->second;
+    if (client->hasReadPermissionFor(altered)) {
       try {
-        client->second->send(data);
-        /* TODO: clear readiness flag if desired */
+        client->send(data);
+        
+        /* clear readiness flag if desired */
+        if (client->isAutoUnready() && !isReadinessChange) {
+          changeInClientBranch(client, "ready", "false");
+        }
       } catch (SocketExn* e) {
-        deadClients.push_back(client->second);
+        deadClients.push_back(client);
       }
     }
   }
 
   while (!deadClients.empty()) {
     out << "Removing client " <<
-      clientID_toString(deadClients.front()->getID()) <<
+      clientID_toString(deadClients.front()->getId()) <<
       "due to causing a SocketExn\n";
     removeClient(deadClients.front());
     deadClients.pop_front();
