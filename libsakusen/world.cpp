@@ -12,7 +12,6 @@ World::World() :
   beams(),
   effects(),
   actionQueue(),
-  clients(),
   players(),
   timeNow(0)
 {
@@ -21,15 +20,14 @@ World::World() :
 
 World::World(Map* m,
     uint32 mode,
-    const std::vector<Player>& p,
-    const std::vector<Client*>& c) :
+    const std::vector<Player>& p
+  ) :
   map(m),
   units(),
   ballistics(),
   beams(),
   effects(),
   actionQueue(),
-  clients(c),
   players(p),
   timeNow(0)
 {

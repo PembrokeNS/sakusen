@@ -25,6 +25,7 @@ class LIBSAKUSEN_API Client {
     bool observer;
   public:
     /* accessors */
+    inline PlayerID getPlayerId() const { return playerId; }
     inline void setPlayerId(const PlayerID& id) { playerId = id; }
     inline bool orderMessageQueueEmpty(void) const {
       return orderMessageQueue.empty();

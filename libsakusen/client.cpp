@@ -6,3 +6,4 @@ Client::Client() :
   observer(false)
 {
 }
+

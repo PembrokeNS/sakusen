@@ -24,6 +24,8 @@ class LIBSAKUSEN_API MapPlayMode {
     std::vector< std::vector<Unit> > playersUnits;
     /* TODO: scripting / map-based actions */
   public:
+    inline uint32 getMinPlayers() const { return minPlayers; }
+    inline uint32 getMaxPlayers() const { return maxPlayers; }
     inline bool acceptableNumberOfPlayers(uint32 numPlayers) const
     {
       return numPlayers >= minPlayers && numPlayers <= maxPlayers;

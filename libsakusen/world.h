@@ -8,7 +8,6 @@
 #include "player.h"
 #include "map.h"
 #include "effect.h"
-#include "client.h"
 #include "universe.h"
 #include "action.h"
 
@@ -23,8 +22,7 @@ class LIBSAKUSEN_API World {
     World(); /* Constructs a very dull World with nothing in it */
     World(Map* map,
         uint32 playMode, /* what mode of the map we are using */
-        const std::vector<Player>& players,
-        const std::vector<Client*>& clients
+        const std::vector<Player>& players
       ); /* The constructor which the server is actually expected to use */
     ~World();
   private:
@@ -34,7 +32,6 @@ class LIBSAKUSEN_API World {
     std::list<Beam> beams;
     std::list<Effect*> effects;
     ActionQueue actionQueue; /* the ActionQueue is a FIFO priority queue */
-    std::vector<Client*> clients;
     std::vector<Player> players;
     Time timeNow; /* Current game time */
   public:

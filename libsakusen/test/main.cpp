@@ -120,7 +120,7 @@ int main(/* int argc, char** argv */)
     );
 
   /* Create the world */
-  World* w = new World(map, 0 /* mode */, players, clients);
+  World* w = new World(map, 0 /* mode */, players);
     
   doLoadTest(cout);
   world = NULL;
@@ -154,7 +154,7 @@ int main(/* int argc, char** argv */)
     );
 
   /* Create the world */
-  w = new World(map, 0 /* mode */, players, clients);
+  w = new World(map, 0 /* mode */, players);
   
   doLoadTest(cout);
   world = NULL;
@@ -167,7 +167,7 @@ int main(/* int argc, char** argv */)
   PatrollerClient patrollerClient(Point<sint32>(2000, 0, 0));
   players.back().attachClient(&patrollerClient);
   
-  w = new World(map, 0 /* mode */, players, clients);
+  w = new World(map, 0 /* mode */, players);
   doLoadTest(cout);
   world = NULL;
   delete w;
