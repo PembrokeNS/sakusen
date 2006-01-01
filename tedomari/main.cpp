@@ -81,7 +81,7 @@ int main(int argc, char * const * argv)
     homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
 
   /* Construct the path to the tedomari config directory */
-  String configPath = homePath + FILE_SEP ".tedomari";
+  String configPath = homePath + CONFIG_SUBDIR FILE_SEP "tedomari";
   cout << "Using directory " << configPath << " for tedomari configuration\n";
   struct stat tmpStat;
 
