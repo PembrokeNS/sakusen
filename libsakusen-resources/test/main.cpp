@@ -104,7 +104,7 @@ int main(/*int argc, char** argv*/)
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
   Map* map = new PlaneMap(
-      &universe, "Toy map", Point<uint32>(10000,10000,10000),
+      &universe, "map", Point<uint32>(10000,10000,10000),
       heightfield, 10 /* gravity */, playModes
     );
 

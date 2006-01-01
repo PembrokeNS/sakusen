@@ -1,5 +1,6 @@
 #include "fileresourceinterface.h"
 
+#include "libsakusen-resources-global.h"
 #include "iarchive.h"
 #include "map.h"
 #include "errorutils.h"
@@ -9,6 +10,8 @@
 
 #include <sys/stat.h>
 #include <dirent.h>
+
+#include <pcrecpp.h>
 
 using namespace std;
 
@@ -234,6 +237,13 @@ bool FileResourceInterface::internalSave(
       break;
     default:
       Fatal("unexpected ResourceType: " << type);
+  }
+
+  if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(shortName)) {
+    error = String("Name '") + shortName + "' contains invalid characters and "
+      "cannot be used as part of a filename.  The name must match " +
+      FILENAME_REGEX + ".";
+    return true;
   }
 
   String hash = archive.getSecureHashAsString();
