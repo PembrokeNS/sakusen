@@ -2,6 +2,7 @@
 #define OARCHIVE_METHODS_H
 
 #include "oarchive.h"
+#include "mapplaymode.h"
 
 template<typename T>
 inline void OArchive::store(const T& toStore)
@@ -58,7 +59,8 @@ inline OArchive& OArchive::operator<<(const Point<T>& p)
   return *this << p.x << p.y << p.z;
 }
 
-
+template <Unit> OArchive& insert(const std::vector<std::vector<Unit> >& toStore);
+template <MapPlayMode> OArchive& OArchive::operator<<(const std::vector<MapPlayMode>& toStore);
 
 #endif // OARCHIVE_METHODS_H
 

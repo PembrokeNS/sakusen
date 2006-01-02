@@ -178,6 +178,10 @@ SOURCE=..\..\heightfield.h
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\iarchive-methods.h"
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\iarchive.cpp
 # End Source File
 # Begin Source File
@@ -215,6 +219,10 @@ SOURCE=..\..\moveorderdata.cpp
 # Begin Source File
 
 SOURCE=..\..\moveorderdata.h
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\oarchive-methods.h"
 # End Source File
 # Begin Source File
 

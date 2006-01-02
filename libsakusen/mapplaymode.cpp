@@ -44,7 +44,7 @@ bool MapPlayMode::sanityCheck(
 
 void MapPlayMode::store(OArchive& archive) const
 {
-  (archive << minPlayers << maxPlayers).insert(playersUnits);
+	(archive << minPlayers << maxPlayers).insert(this->getPlayersUnits);
 }
 
 MapPlayMode MapPlayMode::load(IArchive& archive, const Universe* universe)

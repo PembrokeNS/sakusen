@@ -202,7 +202,7 @@ void Map::store(OArchive& archive) const
   archive << uint8(getTopology()) << internalName;
   archive<<  topRight << bottomLeft;
   heightfield.store(archive);
-  (archive << gravity).insert(playModes);
+  archive << gravity << playModes;
 }
 
 Map* Map::loadNew(IArchive& archive, const Universe* universe)

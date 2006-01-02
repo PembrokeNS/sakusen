@@ -82,11 +82,10 @@ class LIBSAKUSEN_API OArchive {
     template<typename T>
     inline OArchive& operator<<(const Point<T>&);
 
-	//These two lines are required by MSVC, whose templating does seem a little unusual.
-
+	//These three lines are required by MSVC, whose templating does seem a little unusual.
+	OArchive& operator<<(const Point<sint16>& point);
 	OArchive& operator<<(const Point<sint32>& point);
 	OArchive& operator<<(const Point<uint32>& point);
-	
 	
 	template<>
 	inline void store<String>(const String& toStore)
