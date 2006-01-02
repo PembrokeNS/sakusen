@@ -63,13 +63,13 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const String& s);
 
     template<typename T>
-    OArchive& operator<<(const std::vector<T>&);
+	OArchive& operator<<(const stlport::vector<T>&);
 
     template<typename T>
     OArchive& operator<<(const std::list<T>&);
     
     template<typename T>
-    OArchive& operator<<(const std::vector< std::vector<T> >& toStore);
+    OArchive& insert(const std::vector< std::vector<T> >& toStore);
 
     template<typename T>
     inline OArchive& operator<<(const Point<T>&);

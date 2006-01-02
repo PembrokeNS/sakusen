@@ -2,7 +2,11 @@
 
 #include "stringutils.h"
 
+#if defined(_WIN32)
+#include <winsock2.h>
+#else
 #include <netinet/in.h>
+#endif
 
 #define DEFAULT_START_CAPACITY 1
 

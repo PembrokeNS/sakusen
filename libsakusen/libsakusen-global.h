@@ -9,8 +9,7 @@
  * This is easy for gcc, but far from easy for MSVC */
 
 #if defined(_MSC_VER)
-
-  /* The __declspec stuff for ensuring symbols are exported from DLLs and
+	/* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)
@@ -31,12 +30,21 @@
    * and fall back on EXPORT if you get linking errors */
   #define E_EXPORT(EExportedType) \
     LIBSAKUSEN_EXIMP EXPORT(EExportedType);
+	/* This is another one that may need re-enabling at some point. 
+	Non-dll interdface class used for basis of dll-interface class. 
+	Basically, all the STLport containers are based on other containers that 
+	specialise in various ways for speed, and MSVC complains that the base classes 
+	aren't exported, but then they wouldn't be, would they? */
+  #pragma warning (disable: 4275)
 
   #define EXPORT_VECTOR(ElementType) \
-    EXPORT(std::vector< ElementType >)
+    EXPORT(std::vector< ElementType >);
+	template class LIBSAKUSEN_API std::_Vector_base< ElementType, std::allocator< ElementType > >; */
 
   #define EXPORT_LIST(ElementType) \
-    E_EXPORT(std::list< ElementType >)
+    EXPORT(std::list< ElementType >);
+	
+//	LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::_List_base< ElementType, _STLP_DEFAULT_ALLOCATOR_SELECT(ElementType) >;
 
   /* Note that the first line in the following definition is "morally" just
    * E_EXPORT(std::_Deque_val< ElementType, std::allocator< ElementType > >)
@@ -44,21 +52,23 @@
    * commas, so it must be written out explicitly.  Similar things happen below
    * */
   #define EXPORT_QUEUE(ElementType) \
-    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::_Deque_val< ElementType, std::allocator< ElementType > >; \
-    E_EXPORT(std::deque< ElementType >) \
-    EXPORT(std::queue< ElementType >)
+	LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::deque< ElementType, std::allocator< ElementType > >;
+
+/*	EXPORT(std::deque< ElementType >) \ 
+	EXPORT(std::queue< ElementType >) */
 
   /* This macro for exporting maps doesn't work properly. */
   #define EXPORT_MAP(KeyType, ValueType) \
     LIBSAKUSEN_EXIMP template LIBSAKUSEN_API std::map< KeyType, ValueType >::_Imp; \
-    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::map< KeyType, ValueType >; \
+    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::map< KeyType, ValueType >;
 
   /* Because, on this compiler, we currently implement hash_map through map,
    * we must also export that.  Once we have a proper implementation, that
-   * won't be necessary any more */
-  #define EXPORT_HASH_MAP(KeyType, ValueType) \
-    EXPORT_MAP(KeyType, ValueType) \
+   * won't be necessary any more. It isn't, now. */
+
+   #define EXPORT_HASH_MAP(KeyType, ValueType) \
     LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API __gnu_cxx::hash_map< KeyType, ValueType >;
+/*    EXPORT_MAP(KeyType, ValueType) \ */
 
   /* This warning is about debugging symbol names being truncated to 255
    * characters.  It's not at all important. */
@@ -68,7 +78,7 @@
    * In at least one case it was very important.  In the long run we should
    * do without disabling this warning. */
   #pragma warning(disable: 4251)
-
+	
   /* Assert we need explicit template instantiation */
   #define NEED_TEMPLATE_INSTANTIATION
 
@@ -82,7 +92,7 @@
     bool operator!=(const Type&) const { return true; }
 
   /* Define a filler for the useful gcc __PRETTY_FUNCTION__ */
-  #define __PRETTY_FUNCTION__ "Not in MSVC, alas."
+  #define __PRETTY_FUNCTION__ "__PRETTY_FUNCTION__ not in MSVC6"
 
   /* Define file seperator */
   #define FILE_SEP "\\"
@@ -154,8 +164,9 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   typedef unsigned long int    uint32;
   typedef signed __int64       sint64;
   typedef unsigned __int64     uint64;
+//	#include <uint64.h>
 #else // _MSC_VER
-  /* On a sane compiler there is a good way to do it */
+  /* On a sane compiler there is a good way to do it */ 
   #include <stdint.h>
   typedef uint8_t  uint8;
   typedef int8_t   sint8;
@@ -182,14 +193,14 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 	  return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
   }
   /* And, for the love of God, not a min function. What kind of madman
-   * doesn't have a min function? */
+   * doesn't have a min function? 
   namespace std{
   template<typename T> T min (T a, T b)
   {
 	  return (a>b ? a: b);
   }
   }
-
+*/
 #endif
 
 /* end platform-dependent code */

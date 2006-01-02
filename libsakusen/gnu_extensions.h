@@ -7,8 +7,16 @@
 #include <ext/hash_map>
 #include <ext/hash_set>
 
-#else // __GNUC__
+#else// STLport has its own versions of hash_map, etc.
 
+#define __gnu_cxx  std
+
+#include <hash_map>
+#include <hash_set>
+
+/*#else */
+
+#if 0
 /* If not, then approximate them */
 #include <map>
 #include <set>
@@ -69,7 +77,7 @@ namespace __gnu_cxx {
 			public:
 		};
 }
-
+#endif //0
 #endif // __GNUC__
 
 #endif // GNU_EXTENSIONS_H

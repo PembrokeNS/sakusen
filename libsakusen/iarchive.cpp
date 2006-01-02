@@ -1,8 +1,11 @@
 #include "iarchive.h"
 
 #include "stringutils.h"
-
+#if defined(_WIN32)
+#include <winsock2.h>
+#else
 #include <netinet/in.h>
+#endif
 
 IArchive::IArchive(const uint8* b, size_t l) :
   originalBuffer(new uint8[l]),

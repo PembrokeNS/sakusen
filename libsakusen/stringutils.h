@@ -28,6 +28,10 @@ std::list<String> stringUtils_split(
 template<typename T>
 inline T numFromString(String str);
 
+//Because this file is linked to from several places, VC gives this warning quite a lot. So it is disabled.
+#pragma warning(push)
+#pragma warning(disable: 4244)
+
 template<>
 inline uint8 numFromString<uint8>(String str)
 {
@@ -37,6 +41,8 @@ inline uint8 numFromString<uint8>(String str)
   assert(uint8(i) == i); /* Check for overflow */
   return i;
 }
+#pragma warning (pop)
+//Restores old state, in case this warning is useful anywhere else
 
 template<typename T>
 inline T numFromString(String str)
