@@ -2,6 +2,18 @@
 #define VECTORS_H
 
 #include "libsakusen-global.h"
+/* VC++ gives a (couple hundred) warning(s) about unary minus operators being applied to unsigned types here.
+This links back to the definition of the '-' operator in this file, which of course does nothing when applied 
+to Point<uintX>. John does not belive he has used such a thing, so it is probably just an artifact of explicit 
+template instantiation. To aid reading of build output I #pragma it away here. 
+
+  I remind everyone that expecting -Point<uintX> to be different from Point<uintX> will not be renumerative.
+*/
+
+
+#pragma warning(push)
+
+#pragma warning(disable: 4146)
 
 template <typename T>
 class Point {
@@ -157,20 +169,23 @@ Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps 
 
 };
 
+#pragma warning(pop)
+
 #ifdef NEED_TEMPLATE_INSTANTIATION
 #pragma warning (disable: 4231)
 /* I barely know what I'm doing here - JJB */
-//This is now disabled, because it seems unnecessary, and besides gives the dreaded C1001: INTERNAL COMPILER ERROR
+/*I also barely know what I am doing */
+
+template Point<float> Point<uint32>::truncate16() const;
+template Point<float> Point<sint32>::truncate16() const;
+template Point<float> Point<uint16>::truncate16() const;
+template Point<float> Point<sint16>::truncate16() const;
 /*
-extern template Point<uint32>::truncate16() const;
-extern template Point<sint32>::truncate16() const;
-extern template Point<uint16>::truncate16() const;
-extern template Point<sint16>::truncate16() const;
-*/
 EXPORT(Point<uint32>)
 EXPORT(Point<sint32>)
 EXPORT(Point<uint16>)
 EXPORT(Point<sint16>)
+*/
 #endif
 
 template<>
