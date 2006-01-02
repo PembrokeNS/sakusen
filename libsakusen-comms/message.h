@@ -57,6 +57,9 @@ class Message {
     inline NotifySettingMessageData getNotifySettingData(void) const {
       return *dynamic_cast<const NotifySettingMessageData*>(data);
     }
+    inline GameStartMessageData getGameStartData(void) const {
+      return *dynamic_cast<const GameStartMessageData*>(data);
+    }
     inline UpdateMessageData getUpdateData(void) const {
       return *dynamic_cast<const UpdateMessageData*>(data);
     }

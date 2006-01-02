@@ -212,6 +212,19 @@ class NotifySettingMessageData : public MessageData {
     inline const String& getValue() const { return value; }
 };
 
+class GameStartMessageData : public MessageData {
+  public:
+    GameStartMessageData();
+    GameStartMessageData(IArchive& in);
+    ~GameStartMessageData() {}
+  private:
+  protected:
+    void fillArchive();
+  public:
+    MessageType getType() const;
+    MessageData* newCopy() const;
+};
+
 class UpdateMessageData : public MessageData {
   private:
     UpdateMessageData();

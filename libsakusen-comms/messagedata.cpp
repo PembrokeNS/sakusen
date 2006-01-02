@@ -320,6 +320,30 @@ MessageData* NotifySettingMessageData::newCopy() const
   return new NotifySettingMessageData(*this);
 }
 
+GameStartMessageData::GameStartMessageData() :
+  MessageData()
+{
+}
+
+GameStartMessageData::GameStartMessageData(IArchive& /*in*/) :
+  MessageData()
+{
+}
+
+void GameStartMessageData::fillArchive()
+{
+}
+
+MessageType GameStartMessageData::getType() const
+{
+  return messageType_gameStart;
+}
+
+MessageData* GameStartMessageData::newCopy() const
+{
+  return new GameStartMessageData(*this);
+}
+
 UpdateMessageData::UpdateMessageData(const Update& u) :
   MessageData(),
   update(u)

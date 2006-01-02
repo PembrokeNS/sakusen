@@ -71,6 +71,9 @@ Message::Message(const uint8* buffer, size_t bufferLength) :
     case messageType_notifySetting:
       data = new NotifySettingMessageData(in);
       break;
+    case messageType_gameStart:
+      data = new GameStartMessageData(in);
+      break;
     case messageType_update:
       data = new UpdateMessageData(in);
       break;
