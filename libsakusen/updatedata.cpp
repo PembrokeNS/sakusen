@@ -11,9 +11,7 @@ UnitRemovedUpdateData::UnitRemovedUpdateData(
 
 void UnitRemovedUpdateData::store(OArchive& out) const
 {
-  out << updateType_unitRemoved;
-  out << id;
-  out << reason;
+  out << uint8(updateType_unitRemoved) << id << uint8(reason);
 }
 
 UnitAddedUpdateData::UnitAddedUpdateData(
@@ -41,9 +39,7 @@ OrderAcceptedUpdateData::OrderAcceptedUpdateData(
 
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
-  out << updateType_orderAccepted;
-  out << unitId;
-  out << condition;
+  out << uint8(updateType_orderAccepted) << unitId << uint8(condition);
 }
 
 OrderCompletedUpdateData::OrderCompletedUpdateData(
@@ -57,9 +53,7 @@ OrderCompletedUpdateData::OrderCompletedUpdateData(
 
 void OrderCompletedUpdateData::store(OArchive& out) const
 {
-  out << updateType_orderCompleted;
-  out << unitId;
-  out << condition;
+  out << uint8(updateType_orderCompleted) << unitId << uint8(condition);
 }
 
 OrderQueuedUpdateData::OrderQueuedUpdateData(

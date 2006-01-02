@@ -5,9 +5,6 @@
 
 #include "stringutils.h"
 #include "point.h"
-#include "changeownerreason.h"
-#include "updatetype.h"
-#include "ordercondition.h"
 #include "weapontype.h"
 
 /* This class represents an archive into which we put objects for tranmission
@@ -66,12 +63,9 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint32& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
-	OArchive& operator<<(const changeOwnerReason& reason);
-	OArchive& operator<<(const UpdateType& updtyp);
-	OArchive& operator<<(const OrderCondition& condition);
 
     template<typename T>
-	OArchive& operator<<(const std::vector<T>&);
+	  OArchive& operator<<(const std::vector<T>&);
 
     template<typename T>
     OArchive& operator<<(const std::list<T>&);
@@ -82,23 +76,27 @@ class LIBSAKUSEN_API OArchive {
     template<typename T>
     inline OArchive& operator<<(const Point<T>&);
 
-	//These three lines are required by MSVC, whose templating does seem a little unusual.
-	OArchive& operator<<(const Point<sint16>& point);
-	OArchive& operator<<(const Point<sint32>& point);
-	OArchive& operator<<(const Point<uint32>& point);
-	
-	template<>
-	inline void store<String>(const String& toStore)
-	{
-	  *this << toStore;
-	}
-
-	template<>
-	inline void store<WeaponTypeID>(const WeaponTypeID& toStore)
-	{
-	  *this << toStore->getInternalName();
-	}
+    /* These three lines are required by MSVC, whose templating does seem a
+     * little unusual. */
+    /* These three lines also break compilation under gcc.  I can't believe
+     * that they are really needed under MSVC.  They surely won't be once the
+     * internal compiler error is dealt with
+    OArchive& operator<<(const Point<sint16>& point);
+    OArchive& operator<<(const Point<sint32>& point);
+    OArchive& operator<<(const Point<uint32>& point); */
 };
+    
+template<>
+inline void OArchive::store<String>(const String& toStore)
+{
+  *this << toStore;
+}
+
+template<>
+inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
+{
+  *this << toStore->getInternalName();
+}
 
 #endif // OARCHIVE_H
 

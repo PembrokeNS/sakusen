@@ -10,10 +10,10 @@ template instantiation. To aid reading of build output I #pragma it away here.
   I remind everyone that expecting -Point<uintX> to be different from Point<uintX> will not be renumerative.
 */
 
-
+#if defined(_MSC_VER)
 #pragma warning(push)
-
 #pragma warning(disable: 4146)
+#endif
 
 template <typename T>
 class Point {
@@ -169,7 +169,9 @@ Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps 
 
 };
 
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
 
 #ifdef NEED_TEMPLATE_INSTANTIATION
 #pragma warning (disable: 4231)

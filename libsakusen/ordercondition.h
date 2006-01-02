@@ -1,6 +1,9 @@
 #ifndef ORDERCONDITION_H
 #define ORDERCONDITION_H
 
+/* Note that current serialization implementation limits us to 256 enumeration
+ * values (see updatedata.cpp) */
+
 enum OrderCondition {
   orderCondition_now,
   orderCondition_lastOrderSuccess,

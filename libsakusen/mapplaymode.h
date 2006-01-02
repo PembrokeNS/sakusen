@@ -26,8 +26,6 @@ class LIBSAKUSEN_API MapPlayMode {
   public:
     inline uint32 getMinPlayers() const { return minPlayers; }
     inline uint32 getMaxPlayers() const { return maxPlayers; }
-	//I think this is needed to store this to an OArchive. Does it break some secrecy scheme you are thinking of? - Simeon
-	std::vector<std::vector<Unit> > getPlayersUnits() const {return playersUnits;}
 
     inline bool acceptableNumberOfPlayers(uint32 numPlayers) const
     {
