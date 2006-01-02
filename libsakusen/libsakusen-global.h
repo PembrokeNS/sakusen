@@ -9,7 +9,7 @@
  * This is easy for gcc, but far from easy for MSVC */
 
 #if defined(_MSC_VER)
-	/* The __declspec stuff for ensuring symbols are exported from DLLs and
+  /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)

@@ -23,7 +23,7 @@ inline void OArchive::store(const T& toStore)
 }
 
 template<typename T>
-OArchive& OArchive::operator<<(const std::vector< std::vector<T> >& toStore)
+OArchive& OArchive::insert(const std::vector< std::vector<T> >& toStore)
 {
   *this << uint32(toStore.size());
   

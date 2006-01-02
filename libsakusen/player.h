@@ -32,6 +32,7 @@ class LIBSAKUSEN_API Player {
     inline const String& getName(void) const { return name; }
     inline uint16 getNumClients(void) const { return clients.size(); }
     void attachClient(Client* client);
+    void detachClient(Client* client);
 
     inline bool isReadyForGameStart(void) const {
       /* FIXME: should check that a race is selected, and possibly that it has

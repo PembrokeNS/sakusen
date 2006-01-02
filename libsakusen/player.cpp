@@ -55,6 +55,20 @@ void Player::attachClient(Client* client)
   clients.push_back(client);
 }
 
+void Player::detachClient(Client* client)
+{
+  /* Debugf(("attaching client for player %d", playerId)); */
+  for (std::list<Client*>::iterator c = clients.begin();
+      c != clients.end(); c++) {
+    if (*c == client) {
+      clients.erase(c);
+      return;
+    }
+  }
+  
+  Debug("Tried to detach an unattached client");
+}
+
 void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
 {
   __gnu_cxx::hash_map<uint32, Unit*>::iterator unit = units.find(id);
