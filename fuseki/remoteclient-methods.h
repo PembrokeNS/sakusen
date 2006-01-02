@@ -9,9 +9,8 @@ namespace fuseki {
 template<typename T>
 
 String RemoteClient::performIntMagic(
-    /*const settingsTree::Leaf* altering,*/
     const std::list<String>& name,
-    T /*newValue*/
+    T newValue
   )
 {
   assert(!name.empty());
@@ -19,10 +18,22 @@ String RemoteClient::performIntMagic(
     Fatal("observer not an int setting");
   } else if (name.front() == "application") {
     /* Do nothing */
+    return "";
+  } else if (name.front() == "player") {
+    if (newValue == playerId) {
+      Debug("unexpectedly asked to confirm a non-change");
+      return "";
+    }
+
+    if (observer) {
+      return "cannot assign to a player whilst an observer";
+    }
+
+    setPlayerId(newValue);
+    return "";
   } else {
     Fatal("unexpected child of client branch: " << name.front());
   }
-  return "";
 }
 
 }

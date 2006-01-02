@@ -78,6 +78,10 @@ class Server : public SettingsUser {
         const String& value
       );
   public:
+    inline Player& getPlayer(PlayerID id) {
+      assert (id<players.size());
+      return players[id];
+    }
     inline bool getAllowObservers() { return allowObservers; }
     
     void serve(); /* Do what servers do best */

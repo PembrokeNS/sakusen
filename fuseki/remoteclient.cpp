@@ -14,6 +14,7 @@ RemoteClient::RemoteClient(
     Socket* socket,
     bool abstract
   ) :
+  Client(),
   SettingsUser(String("client")+clientID_toString(i)),
   id(i),
   server(s),
@@ -32,10 +33,29 @@ RemoteClient::RemoteClient(
 
 RemoteClient::~RemoteClient()
 {
+  /* Must setPlayerId so as to detach from any player to whom we
+   * might be attached, and thus avoid the Player having a dangling
+   * pointer */
+  setPlayerId(0);
+  
   delete inSocket;
   delete outSocket;
   inSocket = NULL;
   outSocket = NULL;
+}
+
+void RemoteClient::setPlayerId(PlayerID id)
+{
+  if (playerId != 0) {
+    server->getPlayer(playerId).detachClient(this);
+    removeGroup(String("player")+playerID_toString(playerId));
+  }
+  playerId = id;
+  if (playerId != 0) {
+    server->getPlayer(playerId).attachClient(this);
+    addGroup(String("player")+playerID_toString(playerId));
+    server->checkForGameStart();
+  }
 }
 
 void RemoteClient::flushIncoming()

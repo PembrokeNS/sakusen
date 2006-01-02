@@ -34,6 +34,8 @@ class RemoteClient : public Client, public SettingsUser {
     bool ready; /* Whether I am ready to start the game */
     bool autoUnready; /* Whether I want to have my readiness cleared whenever
                          a setting changes */
+
+    void setPlayerId(PlayerID id);
   public:
     /* accessors */
     inline ClientID getId() { return id; }

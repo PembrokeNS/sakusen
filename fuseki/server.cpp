@@ -467,6 +467,7 @@ void Server::serve()
   for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
       clients.begin(); clientIt != clients.end(); ++clientIt) {
     RemoteClient* client = clientIt->second;
+    client->send(GameStartMessageData());
     bool wasAdmin = client->hasGroup("admin");
     client->clearGroups();
     client->addGroup("world");
@@ -474,6 +475,8 @@ void Server::serve()
       client->addGroup("playtime");
     }
   }
+
+  /* TODO: The part where we wait for the clients to initialize themselves */
   
   /* Now we have the real game loop */
   world = new World(map, mapPlayMode, players);

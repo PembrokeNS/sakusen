@@ -2,6 +2,7 @@
 
 #include "settingstree/applicationbranch.h"
 #include "settingstree/boolleaf.h"
+#include "settingstree/intleaf.h"
 
 using namespace fuseki::settingsTree;
 
@@ -18,5 +19,8 @@ ClientBranch::ClientBranch(ClientID id, const Branch* parent, Server* server) :
         "observer", false, "world", clientGroup+",admin", this, server
       ));
   addChild(new BoolLeaf("ready", false, "world", clientGroup, this, server));
+  addChild(new IntLeaf<uint8>(
+        "player", 0, "world", clientGroup+",admin", this, server
+      ));
 }
 
