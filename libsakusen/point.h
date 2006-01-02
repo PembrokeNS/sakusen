@@ -154,20 +154,23 @@ Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps 
 
     inline Point<sint16> round16(void) const;
     inline Point<sint32> round32(void) const;
+
 };
 
 #ifdef NEED_TEMPLATE_INSTANTIATION
 #pragma warning (disable: 4231)
 /* I barely know what I'm doing here - JJB */
+//This is now disabled, because it seems unnecessary, and besides gives the dreaded C1001: INTERNAL COMPILER ERROR
+/*
 extern template Point<uint32>::truncate16() const;
 extern template Point<sint32>::truncate16() const;
 extern template Point<uint16>::truncate16() const;
 extern template Point<sint16>::truncate16() const;
-
-/*EXPORT(Point<uint32>)
+*/
+EXPORT(Point<uint32>)
 EXPORT(Point<sint32>)
 EXPORT(Point<uint16>)
-EXPORT(Point<sint16>)*/
+EXPORT(Point<sint16>)
 #endif
 
 template<>

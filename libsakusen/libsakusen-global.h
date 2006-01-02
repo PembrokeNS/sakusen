@@ -38,8 +38,8 @@
   #pragma warning (disable: 4275)
 
   #define EXPORT_VECTOR(ElementType) \
-    EXPORT(std::vector< ElementType >);
-	template class LIBSAKUSEN_API std::_Vector_base< ElementType, std::allocator< ElementType > >; */
+    E_EXPORT(std::vector< ElementType >);
+/*	template class LIBSAKUSEN_API std::_Vector_base< ElementType, std::allocator< ElementType > >; */
 
   #define EXPORT_LIST(ElementType) \
     EXPORT(std::list< ElementType >);

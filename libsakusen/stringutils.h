@@ -28,12 +28,11 @@ std::list<String> stringUtils_split(
 template<typename T>
 inline T numFromString(String str);
 
-#if defined(_MSC_VER)
-// Because this file is linked to from several places, VC gives this
-// warning quite a lot. So it is disabled.
+/*Because this file is linked to from several places, VC gives this warning quite a lot. So it is disabled. 
+This warning is about losing information when the sint32 in the following funciton is typecast as uint8, 
+so not important. */
 #pragma warning(push)
 #pragma warning(disable: 4244)
-#endif
 
 template<>
 inline uint8 numFromString<uint8>(String str)
@@ -44,11 +43,8 @@ inline uint8 numFromString<uint8>(String str)
   assert(uint8(i) == i); /* Check for overflow */
   return i;
 }
-
-#if defined(_MSC_VER)
 #pragma warning (pop)
-// Restores old state, in case this warning is useful anywhere else
-#endif
+//Restores old state, in case this warning is useful anywhere else
 
 template<typename T>
 inline T numFromString(String str)

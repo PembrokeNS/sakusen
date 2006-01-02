@@ -5,6 +5,10 @@
 
 #include "stringutils.h"
 #include "point.h"
+#include "changeownerreason.h"
+#include "updatetype.h"
+#include "ordercondition.h"
+#include "weapontype.h"
 
 /* This class represents an archive into which we put objects for tranmission
  * over the network or saving to disk. */
@@ -28,6 +32,7 @@ class LIBSAKUSEN_API OArchive {
 
     template<typename T>
     inline void store(const T&);
+
   public:
     inline size_t getLength() const { return length; }
     inline const uint8* getBytes() const { return buffer; }
@@ -43,13 +48,13 @@ class LIBSAKUSEN_API OArchive {
       length += sizeof(uint8);
       return *this;
     }
-    inline OArchive& operator<<(const uint8& i) {
+    OArchive& operator<<(const uint8& i) {
       ensureSpace(sizeof(uint8));
       buffer[length]=i;
       length+=sizeof(uint8);
       return *this;
     }
-    inline OArchive& operator<<(const sint8& i) {
+    OArchive& operator<<(const sint8& i) {
       ensureSpace(sizeof(sint8));
       buffer[length] = i;
       length+=sizeof(sint8);
@@ -61,6 +66,9 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint32& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
+	OArchive& operator<<(const changeOwnerReason& reason);
+	OArchive& operator<<(const UpdateType& updtyp);
+	OArchive& operator<<(const OrderCondition& condition);
 
     template<typename T>
 	OArchive& operator<<(const std::vector<T>&);
@@ -73,6 +81,24 @@ class LIBSAKUSEN_API OArchive {
 
     template<typename T>
     inline OArchive& operator<<(const Point<T>&);
+
+	//These two lines are required by MSVC, whose templating does seem a little unusual.
+
+	OArchive& operator<<(const Point<sint32>& point);
+	OArchive& operator<<(const Point<uint32>& point);
+	
+	
+	template<>
+	inline void store<String>(const String& toStore)
+	{
+	  *this << toStore;
+	}
+
+	template<>
+	inline void store<WeaponTypeID>(const WeaponTypeID& toStore)
+	{
+	  *this << toStore->getInternalName();
+	}
 };
 
 #endif // OARCHIVE_H
