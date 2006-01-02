@@ -7,6 +7,10 @@
 #include "serverinterface.h"
 #include "asynchronousiohandler.h"
 
+/* TODO: This include will need to be guarded by whatever symbol is defined by
+ * the --enable-sdl configure switch once such a thing exists */
+#include "ui/sdl/sdlui.h"
+
 #include <sys/stat.h>
 #include <getopt.h>
 
@@ -19,6 +23,8 @@ using namespace std;
 using namespace __gnu_cxx;
 
 using namespace tedomari;
+using namespace tedomari::ui;
+using namespace tedomari::ui::sdl;
 
 /* struct to store options processed from the command line */
 
@@ -137,11 +143,12 @@ int main(int argc, char * const * argv)
       "\n"
       "Type 'help' for a list of commands" << endl;
 
-    /* Create the asynchronous input handler.  Hereafter nothing else should mess
-     * with stdin, because that is likely to cause problems. */
+    /* Create the asynchronous input handler.  Hereafter nothing else should
+     * mess with stdin, because that is likely to cause problems. */
     AsynchronousIOHandler ioHandler(
         stdin, cout, historyPath, options.historyLength
       );
+    UI* ui = NULL;
 
     bool finished = false;
     String whitespace = " \t\r\n"; /* TODO: obtain whitespace in some more
@@ -266,10 +273,17 @@ int main(int argc, char * const * argv)
       if ("" != (message = serverInterface.flushIncoming())) {
         ioHandler.message(message);
       }
+      if (serverInterface.isGameStarted() && ui == NULL) {
+        /* Hopefully this should be the only mention anywhere outside of the
+         * tedomari::ui::sdl code of SDL.
+         * TODO: support alternate UIs (OpenGL, DirectX) */
+        ui = new SDLUI();
+      }
       nanosleep(&sleepTime, NULL);
     }
     
     cout << endl;
+    delete ui;
     delete socket;
   } while (reconnect);
   

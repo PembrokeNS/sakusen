@@ -27,6 +27,7 @@ class ServerInterface {
       /* Socket used by the server to talk to us (owned by this) */
     Socket* privateServerSocket;
       /* Socket the server has reserved for us to talk to it (owned by this) */
+    bool gameStarted;
 
     void initialSettingsSetup();
       /* Do initial setup of settings for us on the server (e.g. tell our
@@ -34,6 +35,7 @@ class ServerInterface {
   public:
     inline bool isJoined() const { return joined; }
     inline ClientID getID() const { return id; }
+    inline bool isGameStarted() const { return gameStarted; }
     
     bool getAdvertisement(AdvertiseMessageData* advertisement);
       /* Try to get advertisement from server.  Returns true iff an error

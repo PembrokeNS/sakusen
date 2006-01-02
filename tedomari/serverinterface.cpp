@@ -18,7 +18,8 @@ ServerInterface::ServerInterface(Socket* s, bool a) :
   abstract(a),
   joined(false),
   localSocket(NULL),
-  privateServerSocket(NULL)
+  privateServerSocket(NULL),
+  gameStarted(false)
 {
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
@@ -103,6 +104,13 @@ String ServerInterface::flushIncoming()
           NotifySettingMessageData data = message.getNotifySettingData();
           out << "Server reported that value of '" << data.getSetting() <<
             "' was:\n" << data.getValue() << "\n";
+        }
+        break;
+      case messageType_gameStart:
+        {
+          GameStartMessageData data = message.getGameStartData();
+          out << "Game is starting!\n";
+          gameStarted = true;
         }
         break;
       default:
