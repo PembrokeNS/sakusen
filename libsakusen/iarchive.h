@@ -49,12 +49,23 @@ class LIBSAKUSEN_API IArchive {
 
     template<typename T>
     inline T load()
-	{
-		return T::load(*this);
-	};
+    {
+      return T::load(*this);
+    }
 
     template<typename T>
-    inline T load(const typename T::loadArgument*);
+    inline T load(const typename T::loadArgument*)
+    {
+      return T::load(*this, arg);
+    }
+    
+    template<>
+    inline String load<String>()
+    {
+      String s;
+      *this >> s;
+      return s;
+    }
   public:
     inline bool isFinished() const { return remainingLength == 0; }
     inline IArchive& operator>>(bool& i) {
@@ -84,118 +95,83 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(String& s);
 
     template<typename T>
-    IArchive& IArchive::operator>>(Point<T>& result);
+    IArchive& operator>>(Point<T>& result)
+    {
+      T x;
+      *this >> x;
+      T y;
+      *this >> y;
+      T z;
+      *this >> z;
+
+      result = Point<T>(x,y,z);
+      return *this;
+    }
     
     template<typename T>
-    IArchive& IArchive::operator>>(std::vector<T>& result);
+    IArchive& operator>>(std::vector<T>& result)
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>());
+      }
+
+      return *this;
+    }
 
     template<typename T>
-    IArchive& IArchive::operator>>(std::list<T>& result);
+    IArchive& operator>>(std::list<T>& result)
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>());
+      }
+
+      return *this;
+    }
 
     template<typename T>
-    IArchive& IArchive::extract(
+    IArchive& extract(
         std::vector<T>& result,
         const typename T::loadArgument* arg
-      );
+      )
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>(arg));
+      }
+
+      return *this;
+    }
     
     template<typename T>
-    IArchive& IArchive::extract(
+    IArchive& extract(
         std::vector< std::vector<T> >& result,
         const typename T::loadArgument* arg
-      );
+      )
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        std::vector<T> element;
+        extract(element, arg);
+        result.push_back(element);
+      }
+
+      return *this;
+    }
 };
-    
-template<>
-inline String IArchive::load<String>()
-{
-  String s;
-  *this >> s;
-  return s;
-}
-
-template<typename T>
-inline T IArchive::load(const typename T::loadArgument* arg)
-{
-  return T::load(*this, arg);
-}
-
-template<typename T>
-IArchive& IArchive::operator>>(std::vector<T>& result)
-{
-  assert(result.empty());
-  uint32 size;
-  *this >> size;
-
-  while (size--) {
-  result.push_back(load<T>());
-  }
-
-  return *this;
-}
-
-template<typename T>
-IArchive& IArchive::operator>>(std::list<T>& result)
-{
-  assert(result.empty());
-  uint32 size;
-  *this >> size;
-
-  while (size--) {
-  result.push_back(load<T>());
-  }
-
-  return *this;
-}
-
-template<typename T>
-IArchive& IArchive::extract(
-    std::vector<T>& result,
-    const typename T::loadArgument* arg
-  )
-{
-  assert(result.empty());
-  uint32 size;
-  *this >> size;
-
-  while (size--) {
-  result.push_back(load<T>(arg));
-  }
-
-  return *this;
-}
-
-template<typename T>
-IArchive& IArchive::extract(
-  std::vector< std::vector<T> >& result,
-  const typename T::loadArgument* arg
-  )
-{
-  assert(result.empty());
-  uint32 size;
-  *this >> size;
-
-  while (size--) {
-  std::vector<T> element;
-  extract(element, arg);
-  result.push_back(element);
-  }
-
-  return *this;
-}
-
-template<typename T>
-IArchive& IArchive::operator>>(Point<T>& result)
-{
-  T x;
-  *this >> x;
-  T y;
-  *this >> y;
-  T z;
-  *this >> z;
-
-  result = Point<T>(x,y,z);
-  return *this;
-}
 
 #endif // IARCHIVE_H
 

@@ -200,7 +200,7 @@ bool Map::resolvePosition(
 void Map::store(OArchive& archive) const
 {
   archive << uint8(getTopology()) << internalName;
-  archive<<  topRight << bottomLeft;
+  archive << topRight << bottomLeft;
   heightfield.store(archive);
   archive << gravity << playModes;
 }

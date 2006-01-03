@@ -286,6 +286,10 @@ SOURCE=..\..\playerid.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\point.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\quadratic.cpp
 # End Source File
 # Begin Source File
@@ -379,10 +383,6 @@ SOURCE=..\..\updatetype.cpp
 # Begin Source File
 
 SOURCE=..\..\updatetype.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\vectors.h
 # End Source File
 # Begin Source File
 

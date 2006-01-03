@@ -28,8 +28,22 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T>
-    inline void store(const T&);
+    inline void store(const T& toStore)
+    {
+      toStore.store(*this);
+    }
 
+    template<>
+    inline void store<String>(const String& toStore)
+    {
+      *this << toStore;
+    }
+
+    template<>
+    inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
+    {
+      *this << toStore->getInternalName();
+    }
   public:
     inline size_t getLength() const { return length; }
     inline const uint8* getBytes() const { return buffer; }
@@ -65,16 +79,53 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const String& s);
 
     template<typename T>
-	  OArchive& operator<<(const std::vector<T>&);
+	  OArchive& operator<<(const std::vector<T>& toStore)
+    {
+      *this << uint32(toStore.size());
+  
+      for(typename std::vector<T>::const_iterator i = toStore.begin();
+          i != toStore.end(); ++i) {
+        store(*i);
+      }
+
+      return *this;
+    }
 
     template<typename T>
-    OArchive& operator<<(const std::list<T>&);
+    OArchive& operator<<(const std::list<T>& toStore)
+    {
+      *this << uint32(toStore.size());
+  
+      for(typename std::list<T>::const_iterator i = toStore.begin();
+          i != toStore.end(); ++i) {
+        store(*i);
+      }
+
+      return *this;
+    }
     
     template<typename T>
-    OArchive& insert(const std::vector< std::vector<T> >& toStore);
+    OArchive& insert(const std::vector< std::vector<T> >& toStore)
+    {
+      *this << uint32(toStore.size());
+  
+      for (typename std::vector< std::vector<T> >::const_iterator
+          i1 = toStore.begin(); i1 != toStore.end(); ++i1) {
+        *this << uint32(i1->size());
+        for (typename std::vector<T>::const_iterator
+            i2 = i1->begin(); i2 != i1->end(); ++i2) {
+          store(*i2);
+        }
+      }
+
+      return *this;
+    }
 
     template<typename T>
-    inline OArchive& operator<<(const Point<T>&);
+    inline OArchive& operator<<(const Point<T>& p)
+    {
+      return *this << p.x << p.y << p.z;
+    }
 
     /* These three lines are required by MSVC, whose templating does seem a
      * little unusual. */
@@ -85,18 +136,6 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const Point<sint32>& point);
     OArchive& operator<<(const Point<uint32>& point); */
 };
-    
-template<>
-inline void OArchive::store<String>(const String& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
-{
-  *this << toStore->getInternalName();
-}
 
 #endif // OARCHIVE_H
 

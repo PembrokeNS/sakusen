@@ -1,6 +1,8 @@
 #ifndef UNIVERSE_H
 #define UNIVERSE_H
 
+#include "libsakusen-global.h"
+
 #include <vector>
 
 #include "gnu_extensions.h"

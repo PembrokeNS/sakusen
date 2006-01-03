@@ -38,23 +38,23 @@
   #pragma warning (disable: 4275)
 
   #define EXPORT_VECTOR(ElementType) \
+    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::allocator< ElementType >; \
+    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::_STLP_alloc_proxy< class ElementType*, class ElementType, std::allocator< ElementType > >; \
+    LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::_Vector_base< ElementType, std::allocator< ElementType > >; \
     E_EXPORT(std::vector< ElementType >);
-/*	template class LIBSAKUSEN_API std::_Vector_base< ElementType, std::allocator< ElementType > >; */
 
   #define EXPORT_LIST(ElementType) \
     EXPORT(std::list< ElementType >);
-	
-//	LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::_List_base< ElementType, _STLP_DEFAULT_ALLOCATOR_SELECT(ElementType) >;
 
   /* Note that the first line in the following definition is "morally" just
    * E_EXPORT(std::_Deque_val< ElementType, std::allocator< ElementType > >)
    * but of course that doesn't work because macro arguments can't contain
    * commas, so it must be written out explicitly.  Similar things happen below
-   * */
+   * and above */
   #define EXPORT_QUEUE(ElementType) \
 	LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::deque< ElementType, std::allocator< ElementType > >;
 
-/*	EXPORT(std::deque< ElementType >) \ 
+  /*EXPORT(std::deque< ElementType >) \ 
 	EXPORT(std::queue< ElementType >) */
 
   /* This macro for exporting maps doesn't work properly. */
@@ -62,13 +62,8 @@
     LIBSAKUSEN_EXIMP template LIBSAKUSEN_API std::map< KeyType, ValueType >::_Imp; \
     LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::map< KeyType, ValueType >;
 
-  /* Because, on this compiler, we currently implement hash_map through map,
-   * we must also export that.  Once we have a proper implementation, that
-   * won't be necessary any more. It isn't, now. */
-
-   #define EXPORT_HASH_MAP(KeyType, ValueType) \
+  #define EXPORT_HASH_MAP(KeyType, ValueType) \
     LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API __gnu_cxx::hash_map< KeyType, ValueType >;
-/*    EXPORT_MAP(KeyType, ValueType) \ */
 
   /* This warning is about debugging symbol names being truncated to 255
    * characters.  It's not at all important. */

@@ -12,7 +12,8 @@ template instantiation. To aid reading of build output I #pragma it away here.
 
 #if defined(_MSC_VER)
 #pragma warning(push)
-#pragma warning(disable: 4146)
+//#pragma warning(disable: 4146)
+//#pragma warning(disable: 4244)
 #endif
 
 template <typename T>
@@ -133,23 +134,22 @@ class Point {
       Point<T> result(x/scale,y/scale,z/scale);
 			return result;
     }
-/* Nasty HACK: Apparently VC6 has no implementation of the conversion from unsigned __int64 to double. 
-Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps this large anyway, but we should fix it later. */
-#if defined(_MSC_VER)
-	inline sint64 squareLength(void) const {
-      /* Ugly casting here because of paranoia. */
-      return sint64(x)*x + sint64(y)*y + sint64(z)*z;
-    }
-#else
-	inline uint64 squareLength(void) const {
+    inline uint64 squareLength(void) const {
       /* Ugly casting here because of paranoia. */
       return uint64(sint64(x)*x) + sint64(y)*y + sint64(z)*z;
     }
-#endif //MSC_VER
 
+#if defined(_MSC_VER)
+/* Nasty HACK: Apparently VC6 has no implementation of the conversion from unsigned __int64 to double. 
+Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps this large anyway, but we should fix it later. */
+    inline double length(void) const {
+      return sqrt(static_cast<double>(sint64(squareLength())));
+    }
+#else
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
     }
+#endif //MSC_VER
 
     inline bool isZero(void) const {
       return x==0 && y==0 && z==0;
