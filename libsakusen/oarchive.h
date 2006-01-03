@@ -32,18 +32,6 @@ class LIBSAKUSEN_API OArchive {
     {
       toStore.store(*this);
     }
-
-    template<>
-    inline void store<String>(const String& toStore)
-    {
-      *this << toStore;
-    }
-
-    template<>
-    inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
-    {
-      *this << toStore->getInternalName();
-    }
   public:
     inline size_t getLength() const { return length; }
     inline const uint8* getBytes() const { return buffer; }
@@ -136,6 +124,18 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const Point<sint32>& point);
     OArchive& operator<<(const Point<uint32>& point); */
 };
+
+template<>
+inline void OArchive::store<String>(const String& toStore)
+{
+  *this << toStore;
+}
+
+template<>
+inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
+{
+  *this << toStore->getInternalName();
+}
 
 #endif // OARCHIVE_H
 

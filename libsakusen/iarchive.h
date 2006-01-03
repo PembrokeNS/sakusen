@@ -54,17 +54,9 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
-    inline T load(const typename T::loadArgument*)
+    inline T load(const typename T::loadArgument* arg)
     {
       return T::load(*this, arg);
-    }
-    
-    template<>
-    inline String load<String>()
-    {
-      String s;
-      *this >> s;
-      return s;
     }
   public:
     inline bool isFinished() const { return remainingLength == 0; }
@@ -172,6 +164,14 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 };
+    
+template<>
+inline String IArchive::load<String>()
+{
+  String s;
+  *this >> s;
+  return s;
+}
 
 #endif // IARCHIVE_H
 

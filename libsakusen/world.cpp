@@ -48,7 +48,7 @@ World::World(Map* m,
   /* TODO: more sanity checks */
   
   /* assign player ids */
-  uint8 i;
+  sint32 i;
   
   for (i=players.size()-1; i>=0; i--) {
     players[i].setPlayerId(i);
