@@ -3,7 +3,7 @@
 
 #include "map.h"
 
-class PlaneMap : public Map {
+class LIBSAKUSEN_API PlaneMap : public Map {
   private:
     PlaneMap();
   public:

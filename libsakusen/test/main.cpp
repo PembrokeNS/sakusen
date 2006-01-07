@@ -1,12 +1,13 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-#include "libsakusen-global.h"
+
 
 #include <iostream>
 #include <time.h>
-#include <errno.h>
+#include <cerrno>
 
+#include "libsakusen-global.h"
 #include "world.h"
 #include "planemap.h"
 #include "debuggingclient.h"

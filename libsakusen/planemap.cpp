@@ -76,4 +76,3 @@ Point<sint32> PlaneMap::getShortestDifference(
 {
   return op1-op2;
 }
-

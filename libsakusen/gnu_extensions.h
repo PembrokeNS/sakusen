@@ -9,10 +9,10 @@
 
 #else// STLport has its own versions of hash_map, etc.
 
-#define __gnu_cxx  std
-
 #include <hash_map>
 #include <hash_set>
+
+#define __gnu_cxx std
 
 /*#else */
 
