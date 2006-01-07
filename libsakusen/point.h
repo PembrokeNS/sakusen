@@ -10,11 +10,11 @@ template instantiation. To aid reading of build output I #pragma it away here.
   I remind everyone that expecting -Point<uintX> to be different from Point<uintX> will not be renumerative.
 */
 
-#if defined(_MSC_VER)
-#pragma warning(push)
+//#if defined(_MSC_VER)
+//#pragma warning(push)
 //#pragma warning(disable: 4146)
 //#pragma warning(disable: 4244)
-#endif
+//#endif
 
 template <typename T>
 class Point {
@@ -139,7 +139,7 @@ class Point {
       return uint64(sint64(x)*x) + sint64(y)*y + sint64(z)*z;
     }
 
-#if defined(_MSC_VER)
+#if (defined(_MSC_VER)&&(_MSC_VER<1400))
 /* Nasty HACK: Apparently VC6 has no implementation of the conversion from unsigned __int64 to double. 
 Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps this large anyway, but we should fix it later. */
     inline double length(void) const {
@@ -169,9 +169,9 @@ Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps 
 
 };
 
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
+//#if defined(_MSC_VER)
+//#pragma warning(pop)
+//#endif
 
 #ifdef NEED_TEMPLATE_INSTANTIATION
 #pragma warning (disable: 4231)

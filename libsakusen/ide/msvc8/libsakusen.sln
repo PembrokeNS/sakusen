@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen", "libsakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen_test", "libsakusen_test\libsakusen_test.vcproj", "{6C2B5A2E-820A-47E5-A063-A57555795B5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Debug|Win32.Build.0 = Debug|Win32
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Release|Win32.ActiveCfg = Release|Win32
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Release|Win32.Build.0 = Release|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.Build.0 = Debug|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.ActiveCfg = Release|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,8 +1,11 @@
 #include "stringutils.h"
 
-#include <mhash.h>
-
 #include <iomanip>
+
+/* See below for why this is here */
+#ifndef WIN32
+#include <mhash.h>
+#endif
 
 using namespace std;
 
@@ -29,7 +32,11 @@ list<String> stringUtils_split(
 
 String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length)
 {
+    /*mhash is only for linux and CYGWIN. It would be nice if *
+    we could switch to some other library for crypto things, or if 
+    someone could build an mhash dll for me using CYGWIn, or something.*/
   /* TODO: Maybe support other hashes */
+#ifndef WIN32
   MHASH thread = mhash_init(MHASH_SHA256);
   /* FIXME: Commented out because it generates an old style cast warning (silly
    * reason...)
@@ -55,5 +62,8 @@ String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length)
     stream << byte;
   }
   return stream.str();
+#else
+    return "HashNotSupported";
+#endif
 }
 

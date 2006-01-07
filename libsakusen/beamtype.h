@@ -58,12 +58,12 @@ class BeamType {
     //@{
     /* \name accessors */
     /** These allow you to examine the ::flags. */
-    inline bool getInteractWithUnits(void) {return (flags & interactWithUnits != 0);}
-    inline bool getPassThroughUnits(void) {return (flags & passThroughUnits != 0);}
-    inline bool getInteractWithLand(void) {return (flags & interactWithLand != 0);}
-    inline bool getPassThroughLand(void) {return (flags & passThroughLand != 0);}
-    inline bool getInteractWithWater(void) {return (flags & interactWithWater != 0);}
-    inline bool getPassThroughWater(void) {return (flags & passThroughWater != 0);}
+    inline bool getInteractWithUnits(void) {return ((flags & interactWithUnits )!= 0);}
+    inline bool getPassThroughUnits(void) {return ((flags & passThroughUnits )!= 0);}
+    inline bool getInteractWithLand(void) {return ((flags & interactWithLand )!= 0);}
+    inline bool getPassThroughLand(void) {return ((flags & passThroughLand )!= 0);}
+    inline bool getInteractWithWater(void) {return ((flags & interactWithWater )!= 0);}
+    inline bool getPassThroughWater(void) {return ((flags & passThroughWater )!= 0);}
     //@}
 };
 

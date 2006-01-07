@@ -75,7 +75,9 @@
   #pragma warning(disable: 4251)
 	
   /* Assert we need explicit template instantiation */
+#if _MSC_VER<1400
   #define NEED_TEMPLATE_INSTANTIATION
+#endif
 
   /* Define placeholder versions of operators to be inseerted into classes
    * which will be the element type of an explicitly instantiated templated
@@ -154,6 +156,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 /* Obtain the types we need */
 
 #if defined(_MSC_VER)
+#if (_MSC_VER<1400)
   /* In MSVC there's no portable way to do it */
   typedef signed char          sint8;
   typedef unsigned char        uint8;
@@ -164,6 +167,16 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   typedef signed __int64       sint64;
   typedef unsigned __int64     uint64;
 //	#include <uint64.h>
+#else
+ typedef signed __int8          sint8;
+  typedef unsigned __int8        uint8;
+  typedef signed __int16     sint16;
+  typedef unsigned __int16   uint16;
+  typedef signed __int32      sint32;
+  typedef unsigned __int32    uint32;
+  typedef signed __int64       sint64;
+  typedef unsigned __int64     uint64;
+#endif //_MSC_VER<1400
 #else // _MSC_VER
   /* On a sane compiler there is a good way to do it */ 
   #include <stdint.h>
@@ -180,26 +193,17 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 #include <cmath>
 
 #if defined(_MSC_VER)
-  /* The MS math.h lacks a truncate function */
+    /* The MS math.h lacks a truncate function */
   inline double trunc(double x) {
     return ( x > 0 ? floor(x) : ceil(x) );
   }
-  /* it also appears to lack a value of pi */
-  #define M_PI 3.14159265358979
   /* And a round function.  */
   inline double round(double x)
   {
 	  return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
   }
-  /* And, for the love of God, not a min function. What kind of madman
-   * doesn't have a min function? 
-  namespace std{
-  template<typename T> T min (T a, T b)
-  {
-	  return (a>b ? a: b);
-  }
-  }
-*/
+  /* it also appears to lack a value of pi */
+  #define M_PI 3.14159265358979
 #endif
 
 /* end platform-dependent code */
