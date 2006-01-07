@@ -85,9 +85,13 @@
     bool operator>(const Type&) const { return true; } \
     bool operator==(const Type&) const { return true; } \
     bool operator!=(const Type&) const { return true; }
-
-  /* Define a filler for the useful gcc __PRETTY_FUNCTION__ */
-  #define __PRETTY_FUNCTION__ "__PRETTY_FUNCTION__ not in MSVC6"
+	#if (_MSC_VER<1310) //VC2003 or 2005.
+	 /* Define a filler for the useful gcc __PRETTY_FUNCTION__ */
+	  #define __PRETTY_FUNCTION__ "__PRETTY_FUNCTION__ not in MSVC6"
+	#else
+	//Defines a working alias for __PRETTY_FUNCTION__
+		#define __PRETTY_FUNCTION__ __FUNCDNAME__
+	#endif //VC2003/5
 
   /* Define file seperator */
   #define FILE_SEP "\\"
