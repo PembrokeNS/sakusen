@@ -1,8 +1,6 @@
 #include "map.h"
 
 #include "planemap.h"
-#include "iarchive-methods.h"
-#include "oarchive-methods.h"
 
 using namespace std;
 

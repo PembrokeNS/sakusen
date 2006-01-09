@@ -1,7 +1,5 @@
 #include "mapplaymode.h"
 
-#include "iarchive-methods.h"
-#include "oarchive-methods.h"
 #include "map.h"
 
 MapPlayMode::MapPlayMode(

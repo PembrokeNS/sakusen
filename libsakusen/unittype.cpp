@@ -1,8 +1,6 @@
 #include "unittype.h"
 
 #include "universe.h"
-#include "iarchive-methods.h"
-#include "oarchive-methods.h"
 
 UnitType::UnitType(
     String in,
