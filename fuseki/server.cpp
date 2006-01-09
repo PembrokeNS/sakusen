@@ -1,6 +1,6 @@
 #include "server.h"
 
-#include "libsakusen-global.h"
+#include <libsakusen-global.h>
 #include "world.h"
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"
@@ -85,10 +85,11 @@ Server::~Server()
     clients.erase(clients.begin());
   }
 
-  delete universe;
+  /* The following, on the other hand, really need to be here */
   delete map;
-  delete requestedUniverse;
+  delete universe;
   delete requestedMap;
+  delete requestedUniverse;
   
   universe = NULL;
   map = NULL;
@@ -213,6 +214,15 @@ void Server::changeInClientBranch(
   }
 }
 
+Player* Server::getPlayerPtr(PlayerID id)
+{
+  if (world == NULL) {
+    assert (id<players.size());
+    return &players[id];
+  } else {
+    return world->getPlayerPtr(id);
+  }
+}
 /* Handler for interrupt signals from the keyboard, so that the server can
  * shutdown gracefully.  Because signals are an inherently C thing, there seems
  * to be no nice way to handle them in an OO way, and thus I am reduced to
@@ -510,6 +520,9 @@ void Server::serve()
       }
     }
   }
+
+  delete world;
+  world = NULL;
 
   if (interrupted) {
     out << "Server interrupted.  Shutting down." << endl;

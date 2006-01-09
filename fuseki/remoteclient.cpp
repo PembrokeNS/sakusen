@@ -47,12 +47,12 @@ RemoteClient::~RemoteClient()
 void RemoteClient::setPlayerId(PlayerID id)
 {
   if (playerId != 0) {
-    server->getPlayer(playerId).detachClient(this);
+    server->getPlayerPtr(playerId)->detachClient(this);
     removeGroup(String("player")+playerID_toString(playerId));
   }
   playerId = id;
   if (playerId != 0) {
-    server->getPlayer(playerId).attachClient(this);
+    server->getPlayerPtr(playerId)->attachClient(this);
     addGroup(String("player")+playerID_toString(playerId));
     server->checkForGameStart();
   }

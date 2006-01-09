@@ -8,9 +8,9 @@
 #include "server.h"
 
 #include <sys/stat.h>
-#include <errno.h>
 #include <getopt.h>
 
+#include <cerrno>
 #include <iostream>
 
 using namespace std;
