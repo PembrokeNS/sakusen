@@ -38,5 +38,6 @@
 #define EDQUOT                  WSAEDQUOT
 #define ESTALE                  WSAESTALE
 #define EREMOTE                 WSAEREMOTE
+#define EBADMSG                 11032 //Not defined by Windows. This error code should be unused.
 
 #endif

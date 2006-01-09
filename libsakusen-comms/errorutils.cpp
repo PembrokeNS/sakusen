@@ -2,13 +2,14 @@
 
 
 #include <errno.h>
-#if defined (_MSC_VER)
-#include <winsock.h>
-#include "wsabsd.h"
-#endif //_MSC_VER
 
 #include <sstream>
 #include "libsakusen-comms-global.h"
+
+#if defined (_MSC_VER)
+#include <winsock2.h>
+#include "wsabsd.h"
+#endif //_MSC_VER
 
 String errorUtils_parseErrno(int num)
 {
