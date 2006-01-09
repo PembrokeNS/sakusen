@@ -2,9 +2,9 @@
 
 #include "stringutils.h"
 
-#include <errno.h>
 #include <sys/stat.h>
 
+#include <cerrno>
 #include <list>
 
 using namespace std;

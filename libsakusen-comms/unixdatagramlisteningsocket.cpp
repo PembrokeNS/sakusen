@@ -2,9 +2,9 @@
 #include "errorutils.h"
 
 #include <sys/socket.h>
-#include <errno.h>
 #include <sys/time.h>
 
+#include <cerrno>
 #include <sstream>
 
 UnixDatagramListeningSocket::UnixDatagramListeningSocket(bool abstract) :

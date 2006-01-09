@@ -3,8 +3,7 @@
 
 #include "libsakusen-global.h"
 
-#include <errno.h>
-
+#include <cerrno>
 #include <stdexcept>
 
 class Exn : public std::runtime_error {

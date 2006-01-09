@@ -2,8 +2,9 @@
 
 #include "errorutils.h"
 
-#include <errno.h>
 #include <fcntl.h>
+
+#include <cerrno>
 
 LockingFile::LockingFile(const String& f) :
   fileName(f),

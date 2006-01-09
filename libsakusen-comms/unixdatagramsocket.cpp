@@ -5,10 +5,11 @@
 #include "socketexception.h"
 
 #include <sys/socket.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <sys/time.h>
 #include <time.h>
+
+#include <cerrno>
 
 #define MICRO 1000000
 

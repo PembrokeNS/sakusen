@@ -117,7 +117,7 @@ int main(/*int argc, char** argv*/)
 
   cout << "Loading map" << endl;
   Map* reloadedMap =
-    resourceInterface->search<Map>("Toy map", reloadedUniverse, &result);
+    resourceInterface->search<Map>("map", reloadedUniverse, &result);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
