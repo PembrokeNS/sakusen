@@ -47,10 +47,11 @@ Map::Map(
  * of the classes derived from Map, I had to make it explicit, 
  * I hope this was what it was supposed to be. */
  
-  Map::Map(const Map & Map) 
-  {
-      *this=Map;
-  }
+Map::Map(const Map& copy)
+{
+  *this = copy;
+}
+
 /* The following function commented out but left so that the code can be
  * stolen when the remaining *Map classes are written */
 #if 0

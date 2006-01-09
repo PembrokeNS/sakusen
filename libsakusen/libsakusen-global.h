@@ -30,11 +30,11 @@
    * and fall back on EXPORT if you get linking errors */
   #define E_EXPORT(EExportedType) \
     LIBSAKUSEN_EXIMP EXPORT(EExportedType);
-	/* This is another one that may need re-enabling at some point. 
-	Non-dll interdface class used for basis of dll-interface class. 
-	Basically, all the STLport containers are based on other containers that 
-	specialise in various ways for speed, and MSVC complains that the base classes 
-	aren't exported, but then they wouldn't be, would they? */
+  /* This is another one that may need re-enabling at some point. 
+  Non-dll interdface class used for basis of dll-interface class. 
+  Basically, all the STLport containers are based on other containers that 
+  specialise in various ways for speed, and MSVC complains that the base classes 
+  aren't exported, but then they wouldn't be, would they? */
   #pragma warning (disable: 4275)
 
   #define EXPORT_VECTOR(ElementType) \
@@ -52,10 +52,10 @@
    * commas, so it must be written out explicitly.  Similar things happen below
    * and above */
   #define EXPORT_QUEUE(ElementType) \
-	LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::deque< ElementType, std::allocator< ElementType > >;
+  LIBSAKUSEN_EXIMP template class LIBSAKUSEN_API std::deque< ElementType, std::allocator< ElementType > >;
 
   /*EXPORT(std::deque< ElementType >) \ 
-	EXPORT(std::queue< ElementType >) */
+  EXPORT(std::queue< ElementType >) */
 
   /* This macro for exporting maps doesn't work properly. */
   #define EXPORT_MAP(KeyType, ValueType) \
@@ -73,7 +73,7 @@
    * In at least one case it was very important.  In the long run we should
    * do without disabling this warning. */
   #pragma warning(disable: 4251)
-	
+  
   /* Assert we need explicit template instantiation */
 #if _MSC_VER<1400
   #define NEED_TEMPLATE_INSTANTIATION
@@ -87,13 +87,13 @@
     bool operator>(const Type&) const { return true; } \
     bool operator==(const Type&) const { return true; } \
     bool operator!=(const Type&) const { return true; }
-	#if (_MSC_VER<1310) //VC2003 or 2005.
-	 /* Define a filler for the useful gcc __PRETTY_FUNCTION__ */
-	  #define __PRETTY_FUNCTION__ "__PRETTY_FUNCTION__ not in MSVC6"
-	#else
-	//Defines a working alias for __PRETTY_FUNCTION__
-		#define __PRETTY_FUNCTION__ __FUNCDNAME__
-	#endif //VC2003/5
+  #if (_MSC_VER<1310) //VC2003 or 2005.
+   /* Define a filler for the useful gcc __PRETTY_FUNCTION__ */
+    #define __PRETTY_FUNCTION__ "__PRETTY_FUNCTION__ not in MSVC6"
+  #else
+  //Defines a working alias for __PRETTY_FUNCTION__
+    #define __PRETTY_FUNCTION__ __FUNCDNAME__
+  #endif //VC2003/5
 
   /* Define file seperator */
   #define FILE_SEP "\\"
@@ -166,7 +166,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   typedef unsigned long int    uint32;
   typedef signed __int64       sint64;
   typedef unsigned __int64     uint64;
-//	#include <uint64.h>
+//  #include <uint64.h>
 #else
  typedef signed __int8          sint8;
   typedef unsigned __int8        uint8;
@@ -200,7 +200,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   /* And a round function.  */
   inline double round(double x)
   {
-	  return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
+    return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
   }
   /* it also appears to lack a value of pi */
   #define M_PI 3.14159265358979
@@ -216,3 +216,4 @@ typedef uint32 Time;
 typedef uint32 TimeSpan; /* We might want to allow negative TimeSpans too. */
 
 #endif // LIBSAKUSEN_GLOBAL_H
+
