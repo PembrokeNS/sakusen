@@ -5,8 +5,8 @@
 #include <readline/history.h>
 
 #include <fcntl.h>
-#include <errno.h>
 
+#include <cerrno>
 #include <ostream>
 
 using namespace std;

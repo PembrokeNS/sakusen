@@ -19,7 +19,8 @@ ServerInterface::ServerInterface(Socket* s, bool a) :
   joined(false),
   localSocket(NULL),
   privateServerSocket(NULL),
-  gameStarted(false)
+  gameStarted(false),
+  updateQueue()
 {
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
@@ -113,6 +114,12 @@ String ServerInterface::flushIncoming()
           gameStarted = true;
         }
         break;
+      case messageType_update:
+        {
+          UpdateMessageData data = message.getUpdateData();
+          updateQueue.push(data.getUpdate());
+        }
+        break;
       default:
         out << "Unexpected MessageType " << message.getType() << "\n";
         break;
@@ -196,6 +203,7 @@ bool ServerInterface::leave(bool sendMessage)
       delete e;
     }
   }
+  gameStarted = false;
   joined = false;
   delete localSocket;
   delete privateServerSocket;

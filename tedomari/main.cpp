@@ -44,6 +44,7 @@ enum Command {
   command_set,
   command_get,
   command_reconnect,
+  command_resetUI,
   command_quit,
   command_help
 };
@@ -51,6 +52,8 @@ enum Command {
 /* Forward declarations */
 
 Options parseCommandLine(int argc, char * const * argv);
+
+UI* newUI();
 
 int main(int argc, char * const * argv)
 {
@@ -166,6 +169,7 @@ int main(int argc, char * const * argv)
     commands["s"] = commands["set"] = command_set;
     commands["q"] = commands["quit"] = command_quit;
     commands["r"] = commands["reconnect"] = command_reconnect;
+    commands["u"] = commands["resetui"] = command_resetUI;
     commands["h"] = commands["?"] = commands["help"] = command_help;
     
     String helpMessage =
@@ -176,6 +180,8 @@ int main(int argc, char * const * argv)
       "  set (s) SETTING VALUE Submit request to change SETTING to VALUE\n"
       "  reconnect (r)         Close this connection to the server and start "
         "over\n"
+      "  resetui (u)           If there is a game UI open, then close it and "
+        "reopen it\n"
       "                        from scratch\n"
       "  quit (q)              Quit tedomari (closing any connection to "
         "server)\n"
@@ -251,6 +257,12 @@ int main(int argc, char * const * argv)
                   }
                 }
                 break;
+              case command_resetUI:
+                if (ui != NULL) {
+                  delete ui;
+                  ui = newUI();
+                }
+                break;
               case command_help:
                 ioHandler.message(helpMessage);
                 break;
@@ -274,10 +286,11 @@ int main(int argc, char * const * argv)
         ioHandler.message(message);
       }
       if (serverInterface.isGameStarted() && ui == NULL) {
-        /* Hopefully this should be the only mention anywhere outside of the
-         * tedomari::ui::sdl code of SDL.
-         * TODO: support alternate UIs (OpenGL, DirectX) */
-        ui = new SDLUI();
+        ui = newUI();
+      }
+      if (!serverInterface.isGameStarted() && ui != NULL) {
+        delete ui;
+        ui = NULL;
       }
       nanosleep(&sleepTime, NULL);
     }
@@ -329,3 +342,10 @@ Options parseCommandLine(int argc, char * const * argv) {
   return results;
 }
 
+UI* newUI()
+{
+  /* Hopefully this should be the only mention of SDL anywhere outside of the
+   * tedomari::ui::sdl code.
+   * TODO: support alternate UIs (OpenGL, DirectX) */
+  return new SDLUI();
+}

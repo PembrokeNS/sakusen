@@ -4,6 +4,8 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include <queue>
+
 #include "socket.h"
 
 namespace tedomari {
@@ -28,6 +30,7 @@ class ServerInterface {
     Socket* privateServerSocket;
       /* Socket the server has reserved for us to talk to it (owned by this) */
     bool gameStarted;
+    std::queue<Update> updateQueue;
 
     void initialSettingsSetup();
       /* Do initial setup of settings for us on the server (e.g. tell our
@@ -36,6 +39,13 @@ class ServerInterface {
     inline bool isJoined() const { return joined; }
     inline ClientID getID() const { return id; }
     inline bool isGameStarted() const { return gameStarted; }
+    inline bool isUpdateQueueEmpty() const { return updateQueue.empty(); }
+    inline Update updateQueuePopFront() {
+      assert(!updateQueue.empty());
+      Update update = updateQueue.front();
+      updateQueue.pop();
+      return update;
+    }
     
     bool getAdvertisement(AdvertiseMessageData* advertisement);
       /* Try to get advertisement from server.  Returns true iff an error
