@@ -2,6 +2,8 @@
 
 #include "libsakusen-global.h"
 
+using namespace sakusen::comms;
+
 MessageData::MessageData() :
   archive()
 {

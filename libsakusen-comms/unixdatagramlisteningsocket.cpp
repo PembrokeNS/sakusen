@@ -7,6 +7,8 @@
 #include <cerrno>
 #include <sstream>
 
+using namespace sakusen::comms;
+
 UnixDatagramListeningSocket::UnixDatagramListeningSocket(bool abstract) :
   UnixDatagramSocket(makeRandomPath(abstract), abstract)
 {

@@ -3,6 +3,9 @@
 
 #include "unixdatagramsocket.h"
 
+namespace sakusen {
+namespace comms {
+
 class UnixDatagramConnectingSocket : public UnixDatagramSocket {
   private:
     UnixDatagramConnectingSocket();
@@ -12,6 +15,8 @@ class UnixDatagramConnectingSocket : public UnixDatagramSocket {
     UnixDatagramConnectingSocket(const String& path, bool abstract);
     ~UnixDatagramConnectingSocket() {}
 };
+
+}}
 
 #endif // UNIXDATAGRAMCONNECTINGSOCKET_H
 

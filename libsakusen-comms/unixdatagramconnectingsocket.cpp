@@ -2,6 +2,8 @@
 
 #include <sys/socket.h>
 
+using namespace sakusen::comms;
+
 UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
     const char* path,
     bool abstract) :

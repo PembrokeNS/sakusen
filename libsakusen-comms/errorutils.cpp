@@ -9,7 +9,7 @@
 #include "wsabsd.h"
 #endif //_MSC_VER
 
-String errorUtils_parseErrno(int num)
+String sakusen::comms::errorUtils_parseErrno(int num)
 {
   switch(num) {
 #define CASE(name) case name: return #name;
@@ -42,7 +42,7 @@ String errorUtils_parseErrno(int num)
 
 #define MESSAGE_BUFFER_LEN 256
 
-String errorUtils_errorMessage(int num)
+String sakusen::comms::errorUtils_errorMessage(int num)
 {
   /*char message[MESSAGE_BUFFER_LEN];*/
   /* HACK: This is the obsolete version of strerror_r - I can't find out how to

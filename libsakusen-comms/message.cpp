@@ -3,6 +3,8 @@
 #include "iarchive.h"
 #include "libsakusen-comms-global.h"
 
+using namespace sakusen::comms;
+
 Message::Message(const Message& copy) :
   data( copy.isRealMessage() ? copy.data->newCopy() : NULL )
 {

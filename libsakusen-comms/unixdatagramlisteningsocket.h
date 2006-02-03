@@ -3,6 +3,9 @@
 
 #include "unixdatagramsocket.h"
 
+namespace sakusen {
+namespace comms {
+
 class UnixDatagramListeningSocket : public UnixDatagramSocket {
   private:
     UnixDatagramListeningSocket();
@@ -15,6 +18,8 @@ class UnixDatagramListeningSocket : public UnixDatagramSocket {
   private:
     static String makeRandomPath(bool abstract);
 };
+
+}}
 
 #endif // UNIXDATAGRAMLISTENINGSOCKET_H
 

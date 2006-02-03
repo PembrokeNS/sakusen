@@ -8,6 +8,9 @@
 #include "libsakusen-comms-global.h"
 #include "clientid.h"
 
+namespace sakusen {
+namespace comms {
+
 class MessageData {
   /* Abstract class - all constructors must be protected */
   protected:
@@ -242,6 +245,8 @@ class UpdateMessageData : public MessageData {
     MessageData* newCopy() const;
     inline const Update& getUpdate() const { return update; }
 };
+
+}}
 
 #endif // MESSAGEDATA_H
 

@@ -5,6 +5,9 @@
 
 #include "message.h"
 
+namespace sakusen {
+namespace comms {
+
 class Socket {
   public:
     static Socket* newConnectionToAddress(const String& address);
@@ -27,6 +30,8 @@ class Socket {
     virtual void setAsynchronous(bool val) = 0;
     virtual String getAddress() const = 0;
 };
+
+}}
 
 #endif // SOCKET_H
 

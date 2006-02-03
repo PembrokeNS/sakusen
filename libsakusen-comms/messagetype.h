@@ -3,6 +3,9 @@
 
 #include <iosfwd>
 
+namespace sakusen {
+namespace comms {
+
 /* Note that current serialization implementation limits us to 256 types */
 enum MessageType {
   messageType_none,
@@ -21,6 +24,8 @@ enum MessageType {
 };
 
 std::ostream& operator<<(std::ostream& output, MessageType type);
+
+}}
 
 #endif // MESSAGETYPE_H
 

@@ -4,6 +4,9 @@
 #include "libsakusen-global.h"
 #include "exceptions.h"
 
+namespace sakusen {
+namespace comms {
+
 class SocketExn : public Exn {
   public:
     SocketExn(const String& message) :
@@ -17,6 +20,8 @@ class SocketClosedExn : public SocketExn {
       SocketExn("Socket was never connected or was closed remotely") { }
     virtual ~SocketClosedExn() throw() { }
 };
+
+}}
 
 #endif // LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H
 

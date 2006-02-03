@@ -4,6 +4,9 @@
 #include "libsakusen-global.h"
 #include "messagedata.h"
 
+namespace sakusen {
+namespace comms {
+
 class Message {
   public:
     Message();
@@ -64,6 +67,8 @@ class Message {
       return *dynamic_cast<const UpdateMessageData*>(data);
     }
 };
+
+}}
 
 #endif // MESSAGE_H
 

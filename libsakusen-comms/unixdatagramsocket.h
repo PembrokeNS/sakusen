@@ -8,6 +8,9 @@
 
 #include <list>
 
+namespace sakusen {
+namespace comms {
+
 class UnixDatagramSocket : public Socket {
   public:
     static Socket* newConnectionToAddress(std::list<String> address);
@@ -45,6 +48,8 @@ class UnixDatagramSocket : public Socket {
     void setAsynchronous(bool val);
     String getAddress() const;
 };
+
+}}
 
 #endif // UNIXDATAGRAMSOCKET_H
 

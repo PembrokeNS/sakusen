@@ -15,6 +15,8 @@
 
 using namespace std;
 
+using namespace sakusen::comms;
+
 Socket* UnixDatagramSocket::newConnectionToAddress(list<String> address)
 {
   if (address.empty()) {

@@ -10,9 +10,11 @@
 
 #include "unixdatagramsocket.h"
 
-#endif //Windows
+#endif //WIN32
 
 using namespace std;
+
+using namespace sakusen::comms;
 
 Socket* Socket::newConnectionToAddress(const String& address)
 {

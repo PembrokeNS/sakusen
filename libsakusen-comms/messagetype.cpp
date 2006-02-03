@@ -3,7 +3,9 @@
 
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& out, MessageType type)
+using namespace sakusen::comms;
+
+std::ostream& sakusen::comms::operator<<(std::ostream& out, MessageType type)
 {
   switch (type) {
 #define CASE(name) case name: out << #name; break;
