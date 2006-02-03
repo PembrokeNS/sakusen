@@ -3,6 +3,9 @@
 
 #include "libsakusen-global.h"
 
+namespace sakusen {
+namespace resources {
+
 class LockingFile {
   private:
     LockingFile();
@@ -27,6 +30,8 @@ class LockingFile {
     virtual bool releaseLock();
       /* Returns true iff an error occurs */
 };
+
+}}
 
 #endif // LOCKINGFILE_H
 

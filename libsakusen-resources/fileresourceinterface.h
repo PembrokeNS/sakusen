@@ -5,6 +5,9 @@
 
 #include "resourceinterface.h"
 
+namespace sakusen {
+namespace resources {
+
 class FileResourceInterface : public ResourceInterface {
   private:
     FileResourceInterface();
@@ -35,6 +38,8 @@ class FileResourceInterface : public ResourceInterface {
       );
     virtual bool internalSave(const void* resource, ResourceType type);
 };
+
+}}
 
 #endif // FILERESOURCEINTERFACE_H
 

@@ -4,6 +4,9 @@
 #include "lockingfile.h"
 #include "oarchive.h"
 
+namespace sakusen {
+namespace resources {
+
 class LockingFileWriter : public LockingFile {
   private:
     LockingFileWriter();
@@ -20,6 +23,8 @@ class LockingFileWriter : public LockingFile {
       return write(archive.getBytes(), archive.getBytesLength(), block);
     }
 };
+
+}}
 
 #endif // LOCKINGFILEWRITER_H
 

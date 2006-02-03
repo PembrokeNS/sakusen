@@ -9,7 +9,10 @@
 
 using namespace std;
 
-int fileUtils_mkdirRecursive(String path, mode_t mode)
+using namespace sakusen;
+using namespace sakusen::resources;
+
+int sakusen::resources::fileUtils_mkdirRecursive(String path, mode_t mode)
 {
   if (path=="") {
     return 0;

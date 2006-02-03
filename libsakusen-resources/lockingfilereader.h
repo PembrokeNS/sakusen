@@ -3,6 +3,9 @@
 
 #include "lockingfile.h"
 
+namespace sakusen {
+namespace resources {
+
 class LockingFileReader : public LockingFile {
   private:
     LockingFileReader();
@@ -35,6 +38,8 @@ class LockingFileReader : public LockingFile {
      */
     ssize_t getWholeFile(uint8* buffer, size_t length, bool block);
 };
+
+}}
 
 #endif // LOCKINGFILEREADER_H
 

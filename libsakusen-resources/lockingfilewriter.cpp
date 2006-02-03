@@ -2,6 +2,8 @@
 
 #include <fcntl.h>
 
+using namespace sakusen::resources;
+
 LockingFileWriter::LockingFileWriter(const String& name) :
   LockingFile(name)
 {

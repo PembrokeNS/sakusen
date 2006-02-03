@@ -2,6 +2,8 @@
 
 #include <fcntl.h>
 
+using namespace sakusen::resources;
+
 LockingFileReader::LockingFileReader(const String& fileName) :
   LockingFile(fileName),
   length(-1)

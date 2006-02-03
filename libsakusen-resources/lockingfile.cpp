@@ -6,6 +6,9 @@
 
 #include <cerrno>
 
+using namespace sakusen::comms;
+using namespace sakusen::resources;
+
 LockingFile::LockingFile(const String& f) :
   fileName(f),
   stream(NULL),

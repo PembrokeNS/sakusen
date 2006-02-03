@@ -13,6 +13,9 @@
 
 using namespace std;
 
+using namespace sakusen;
+using namespace sakusen::resources;
+
 /** \file
  *
  * This file contains code for a test of the libsakusen-resources library.  It

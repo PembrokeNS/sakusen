@@ -15,6 +15,9 @@
 
 using namespace std;
 
+using namespace sakusen::resources;
+using namespace sakusen::comms;
+
 FileResourceInterface::FileResourceInterface(const String& d) :
   saveDirectory(d),
   directories()
