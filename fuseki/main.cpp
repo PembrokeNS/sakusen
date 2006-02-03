@@ -15,6 +15,9 @@
 
 using namespace std;
 
+using namespace sakusen;
+using namespace sakusen::comms;
+using namespace sakusen::resources;
 using namespace fuseki;
 
 /* struct to store options processed from the command line.

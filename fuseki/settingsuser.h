@@ -33,7 +33,7 @@ class SettingsUser {
     bool hasGroupIn(const std::set<String>& groupsToCheck) const;
     inline void addGroup(const String& group) { groups.insert(group); }
     inline void removeGroup(const String& group) {
-      assert(groups.count(group));
+      assert(hasGroup(group));
       groups.erase(group);
     }
     inline void clearGroups() { groups.clear(); }

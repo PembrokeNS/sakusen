@@ -7,6 +7,7 @@
 
 using namespace std;
 
+using namespace sakusen;
 using namespace fuseki::settingsTree;
 
 Node::Node(

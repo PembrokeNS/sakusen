@@ -14,8 +14,8 @@ class ClientsBranch : public Branch {
     ClientsBranch(const Branch* parent, Server* server);
     ~ClientsBranch();
   public:
-    void addClient(ClientID id);
-    void removeClient(ClientID id);
+    void addClient(sakusen::comms::ClientID id);
+    void removeClient(sakusen::comms::ClientID id);
 };
 
 }}

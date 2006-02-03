@@ -3,6 +3,7 @@
 using namespace std;
 using namespace __gnu_cxx;
 
+using namespace sakusen;
 using namespace fuseki::settingsTree;
 
 Branch::Branch(

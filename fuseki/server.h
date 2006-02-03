@@ -20,9 +20,9 @@ class Server : public SettingsUser {
     Server(const Server&);
   public:
     Server(
-        Socket* socket,
+        sakusen::comms::Socket* socket,
         std::ostream& output,
-        ResourceInterface* resourceInterface,
+        sakusen::ResourceInterface* resourceInterface,
         bool abstract,
         bool dots
       ); /* Caller must ensure that socket remains open until the server is
@@ -32,17 +32,18 @@ class Server : public SettingsUser {
     bool abstract; /* Whether to use abstract sockets for RemoteClients to
                       listen */
     bool dots; /* Whether to print dots constantly */
-    Socket* socket; /*Not owned by this */
+    sakusen::comms::Socket* socket; /*Not owned by this */
     std::ostream& out;
-    ResourceInterface* resourceInterface; /* Not owned by this */
-    __gnu_cxx::hash_map<ClientID, RemoteClient*> clients;
+    sakusen::ResourceInterface* resourceInterface; /* Not owned by this */
+    __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
       /* Client interfaces (owned by this) */
-    Universe* universe; /* The universe we plan to use to build the map.  NULL
+    sakusen::Universe* universe;
+      /* The universe we plan to use to build the map.  NULL
                            if none selected yet.  Owned by this. */
-    Map* map; /* The map which we plan to use to build the world.  NULL if none
-                 selected yet.  Owned by this. */
+    sakusen::Map* map; /* The map which we plan to use to build the world.
+                          NULL if none selected yet.  Owned by this. */
     uint32 mapPlayMode; /* Which mode we plan to play the map on */
-    std::vector<Player> players;
+    std::vector<sakusen::Player> players;
       /* Players.  Note that this vector *becomes obsolete* as soon as the game
        * is started, because World makes a copy of it and works with that */
     settingsTree::SettingsTree settings; /* The tree of all the settings */
@@ -52,21 +53,22 @@ class Server : public SettingsUser {
                                        game can start is in order */
     bool ensureAdminExistsNextTime; /* Indicate that a check for whether an
                                        admin exists is in order */
-    Universe* requestedUniverse; /* Put a universe here to be promoted to
-                                    universe when possible (owned by this) */
-    Map* requestedMap; /* Put a map here to be promoted to map when possible
-                          (owned by this) */
+    sakusen::Universe* requestedUniverse;
+      /* Put a universe here to be promoted to universe when possible (owned
+       * by this) */
+    sakusen::Map* requestedMap; /* Put a map here to be promoted to map when
+                                   possible (owned by this) */
     bool mapPlayModeChanged;
 
     uint32 gameSpeed; /* Desired game speed in microseconds per frame */
 
-    ClientID getFreeClientID();
+    sakusen::comms::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.
        * Returns (ClientID)-1 if there are no free IDs */
     void addClient(const String& address);
     void removeClient(RemoteClient* client);
     void clearPlayers();
-    void createPlayersFor(const MapPlayMode& mode);
+    void createPlayersFor(const sakusen::MapPlayMode& mode);
     void setAllowObservers(bool value);
     inline void setMapPlayMode(uint32 mode) {
       mapPlayMode = mode;
@@ -78,7 +80,7 @@ class Server : public SettingsUser {
         const String& value
       );
   public:
-    Player* getPlayerPtr(PlayerID id);
+    sakusen::Player* getPlayerPtr(sakusen::PlayerID id);
     inline bool getAllowObservers() { return allowObservers; }
     
     void serve(); /* Do what servers do best */
@@ -109,7 +111,7 @@ class Server : public SettingsUser {
       );
     String stringSetSettingAlteringCallback(
         settingsTree::Leaf* altering,
-        const __gnu_cxx::hash_set<String, StringHash>& newValue
+        const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
       );
 
     void settingAlteredCallback(settingsTree::Leaf* altered);

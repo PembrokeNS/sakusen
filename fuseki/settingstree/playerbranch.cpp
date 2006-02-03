@@ -4,6 +4,8 @@
 #include "settingstree/intleaf-methods.h"
 #include "settingstree/boolleaf.h"
 
+using namespace sakusen;
+using namespace sakusen::comms;
 using namespace fuseki::settingsTree;
 
 PlayerBranch::PlayerBranch(

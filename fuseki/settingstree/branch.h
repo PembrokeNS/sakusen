@@ -27,7 +27,7 @@ class Branch : public Node {
   public:
     virtual ~Branch();
   private:
-    __gnu_cxx::hash_map<String, Node*, StringHash> children;
+    __gnu_cxx::hash_map<String, Node*, sakusen::StringHash> children;
 
   protected:
     /* Calling this method transfers ownership of child to this */

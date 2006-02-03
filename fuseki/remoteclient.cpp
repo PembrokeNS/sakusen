@@ -6,6 +6,8 @@
 
 using namespace __gnu_cxx;
 
+using namespace sakusen;
+using namespace sakusen::comms;
 using namespace fuseki;
 
 RemoteClient::RemoteClient(
@@ -36,7 +38,7 @@ RemoteClient::~RemoteClient()
   /* Must setPlayerId so as to detach from any player to whom we
    * might be attached, and thus avoid the Player having a dangling
    * pointer */
-  setPlayerId(0);
+  setPlayerId(0, false);
   
   delete inSocket;
   delete outSocket;
@@ -44,11 +46,15 @@ RemoteClient::~RemoteClient()
   outSocket = NULL;
 }
 
-void RemoteClient::setPlayerId(PlayerID id)
+void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)
 {
   if (playerId != 0) {
     server->getPlayerPtr(playerId)->detachClient(this);
-    removeGroup(String("player")+playerID_toString(playerId));
+    if (removeGroup) {
+      /* This condition is necessary because when this method is called from
+       * the destructor, this->groups has already had its destructor called */
+      this->removeGroup(String("player")+playerID_toString(playerId));
+    }
   }
   playerId = id;
   if (playerId != 0) {

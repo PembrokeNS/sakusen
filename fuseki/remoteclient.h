@@ -13,32 +13,40 @@ namespace fuseki {
 /* Represents a client which is contacted via a socket of some kind (this could
  * be a TCP socket to another machine, or a Unix socket to another process on
  * the same machine, or whatever else is supported) */
-class RemoteClient : public Client, public SettingsUser {
+class RemoteClient : public sakusen::Client, public SettingsUser {
   private:
     RemoteClient();
     RemoteClient(const RemoteClient& copy);
   public:
-    RemoteClient(ClientID id, Server* server, Socket* socket, bool abstract);
+    RemoteClient(
+        sakusen::comms::ClientID id,
+        Server* server,
+        sakusen::comms::Socket* socket,
+        bool abstract
+      );
       /* Uses given socket to contact client.  Transfers ownership of socket to
        * this.
        * Uses abstract inSocket iff abstract == true */
     ~RemoteClient();
   private:
-    ClientID id;
+    sakusen::comms::ClientID id;
     Server* server;
-    Socket* inSocket;
-    Socket* outSocket;
-    std::queue<Message, std::list<Message> > messageQueue;
+    sakusen::comms::Socket* inSocket;
+    sakusen::comms::Socket* outSocket;
+    std::queue<sakusen::comms::Message, std::list<sakusen::comms::Message> > messageQueue;
     bool admin; /* Whether I am an admin */
     bool neverAdmin; /* Whether I never want to be an admin */
     bool ready; /* Whether I am ready to start the game */
     bool autoUnready; /* Whether I want to have my readiness cleared whenever
                          a setting changes */
 
-    void setPlayerId(PlayerID id);
+    void setPlayerId(sakusen::PlayerID id, bool removeGroup);
+    inline void setPlayerId(sakusen::PlayerID id) {
+      setPlayerId(id, true);
+    }
   public:
     /* accessors */
-    inline ClientID getId() { return id; }
+    inline sakusen::comms::ClientID getId() { return id; }
     inline bool isAdmin() { return admin; }
     inline void setAdmin(bool value);
     inline bool isNeverAdmin() { return neverAdmin; }
@@ -52,16 +60,16 @@ class RemoteClient : public Client, public SettingsUser {
     inline bool messageQueueEmpty() const {
       return messageQueue.empty();
     }
-    inline Message messageQueuePopFront() {
+    inline sakusen::comms::Message messageQueuePopFront() {
       assert(!messageQueue.empty());
-      Message message = messageQueue.front();
+      sakusen::comms::Message message = messageQueue.front();
       messageQueue.pop();
       return message;
     }
-    inline void send(const MessageData& data) {
+    inline void send(const sakusen::comms::MessageData& data) {
       outSocket->send(data);
     }
-    void sendUpdate(const Update& update);
+    void sendUpdate(const sakusen::Update& update);
 
     /* Perform magic related to the changing value of a client setting */
     String performBoolMagic(
@@ -83,7 +91,7 @@ class RemoteClient : public Client, public SettingsUser {
     String performStringSetMagic(
         /*const settingsTree::Leaf* altering,*/
         const std::list<String>& name,
-        const __gnu_cxx::hash_set<String, StringHash>& newValue
+        const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
       );
 };
 

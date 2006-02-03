@@ -14,7 +14,7 @@ class PlayerBranch : public Branch {
     PlayerBranch(const PlayerBranch&);
   public:
     PlayerBranch(
-        PlayerID id,
+        sakusen::PlayerID id,
         const Branch* parent,
         Server* server,
         bool special,

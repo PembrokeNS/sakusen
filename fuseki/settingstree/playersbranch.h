@@ -15,8 +15,8 @@ class PlayersBranch : public Branch {
     PlayersBranch(const Branch* parent, Server* server);
     ~PlayersBranch();
 
-    void addPlayer(PlayerID id, bool special, bool fixed);
-    void removePlayer(PlayerID id);
+    void addPlayer(sakusen::PlayerID id, bool special, bool fixed);
+    void removePlayer(sakusen::PlayerID id);
 };
 
 }}

@@ -2,6 +2,7 @@
 
 #include "settingstree/playerbranch.h"
 
+using namespace sakusen;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 

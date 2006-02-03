@@ -11,7 +11,11 @@ class ClientBranch : public Branch {
     ClientBranch();
     ClientBranch(const ClientBranch&);
   public:
-    ClientBranch(ClientID id, const Branch* parent, Server* server);
+    ClientBranch(
+        sakusen::comms::ClientID id,
+        const Branch* parent,
+        Server* server
+      );
     ~ClientBranch() {}
 };
 

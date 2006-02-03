@@ -22,12 +22,12 @@ class StringListLeaf : public Leaf {
       );
     virtual ~StringListLeaf() { }
   private:
-    __gnu_cxx::hash_set<String, StringHash> value;
+    __gnu_cxx::hash_set<String, sakusen::StringHash> value;
   protected:
     virtual String setValue(const String& v);
     virtual String getValue() const;
   public:
-    inline const __gnu_cxx::hash_set<String, StringHash>&
+    inline const __gnu_cxx::hash_set<String, sakusen::StringHash>&
       getValueAsList() const {
       return value;
     }

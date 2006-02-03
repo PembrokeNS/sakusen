@@ -25,7 +25,7 @@ IntLeaf<T>::IntLeaf(
 template<typename T>
 String IntLeaf<T>::setValue(const String& s)
 {
-  T v = numFromString<T>(s);
+  T v = sakusen::numFromString<T>(s);
   String reason;
   if ("" != (reason = server->intSettingAlteringCallback(this, v))) {
     return reason;
@@ -38,7 +38,7 @@ String IntLeaf<T>::setValue(const String& s)
 template<typename T>
 String IntLeaf<T>::getValue() const
 {
-  return numToString(value);
+  return sakusen::numToString(value);
 }
 
 }}
