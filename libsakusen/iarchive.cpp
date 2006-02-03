@@ -7,6 +7,8 @@
 #include <netinet/in.h>
 #endif
 
+using namespace sakusen;
+
 IArchive::IArchive(const uint8* b, size_t l) :
   originalBuffer(new uint8[l]),
   buffer(originalBuffer),

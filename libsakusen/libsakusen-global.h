@@ -212,8 +212,13 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 
 #include <string>
 typedef std::string String;
+
+namespace sakusen {
+
 typedef uint32 Time;
 typedef uint32 TimeSpan; /* We might want to allow negative TimeSpans too. */
+
+}
 
 #endif // LIBSAKUSEN_GLOBAL_H
 

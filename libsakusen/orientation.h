@@ -6,6 +6,8 @@
 #include "iarchive.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 enum Rotation {
   rotation_anticlockwise
 };
@@ -91,6 +93,8 @@ class LIBSAKUSEN_API Orientation {
     void store(OArchive&) const;
     static Orientation load(IArchive&);
 };
+
+}
 
 #endif // ORIENTATION_H
 

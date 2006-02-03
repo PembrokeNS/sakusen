@@ -2,6 +2,8 @@
 #include "unit.h"
 #include "updatedata.h"
 
+using namespace sakusen;
+
 Player::Player() :
   playerId(0),
   name(""),

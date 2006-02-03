@@ -1,5 +1,7 @@
 #include "debuggingclient.h"
 
+using namespace sakusen;
+
 DebuggingClient::DebuggingClient(
     std::ostream& output) :
   Client(),

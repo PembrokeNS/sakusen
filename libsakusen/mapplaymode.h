@@ -6,6 +6,8 @@
 #include "universe.h"
 #include "heightfield.h"
 
+namespace sakusen {
+
 class Map;
 
 class LIBSAKUSEN_API MapPlayMode {
@@ -50,6 +52,8 @@ class LIBSAKUSEN_API MapPlayMode {
     void store(OArchive&) const;
     static MapPlayMode load(IArchive&, const loadArgument*);
 };
+
+}
 
 #endif // MAPPLAYMODE_H
 

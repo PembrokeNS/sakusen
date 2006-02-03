@@ -4,7 +4,11 @@
 
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& output, ResourceType resource)
+using namespace std;
+
+using namespace sakusen;
+
+ostream& sakusen::operator<<(ostream& output, ResourceType resource)
 {
   switch(resource) {
     #define CASE(type) case type: output << #type; break;

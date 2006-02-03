@@ -1,5 +1,7 @@
 #include "updatedata.h"
 
+using namespace sakusen;
+
 UnitRemovedUpdateData::UnitRemovedUpdateData(
     uint32 i,
     changeOwnerReason r) :

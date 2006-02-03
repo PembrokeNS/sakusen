@@ -6,6 +6,8 @@
 #include "ordercondition.h"
 #include "order.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API OrderMessage {
   public:
     OrderMessage();
@@ -28,6 +30,8 @@ class LIBSAKUSEN_API OrderMessage {
 #pragma warning (disable: 4231)
 EXPORT_QUEUE(OrderMessage)
 #endif
+
+}
 
 #endif // ORDERMESSAGE_H
 

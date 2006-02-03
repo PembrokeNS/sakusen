@@ -6,6 +6,8 @@
 
 #include "gnu_extensions.h"
 
+namespace sakusen {
+
 /* Defines a priority queue which guarantees first-in-first-out behaviour when
  * there is a tie for the highest priority.
  * The price of this functionality is that prioritization can no longer be
@@ -108,6 +110,8 @@ class fifo_priority_queue {
       }
     }
 };
+
+}
 
 #endif // FIFO_PRIORITY_QUEUE_H
 

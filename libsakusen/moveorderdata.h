@@ -4,6 +4,8 @@
 #include "point.h"
 #include "orderdata.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API MoveOrderData : public OrderData {
   private:
     MoveOrderData();
@@ -16,6 +18,8 @@ class LIBSAKUSEN_API MoveOrderData : public OrderData {
     const Point<sint32>& getTarget(void) const { return target; }
     OrderData* newCopy(void) const;
 };
+
+}
 
 #endif // MOVEORDERDATA_H
 

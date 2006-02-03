@@ -5,6 +5,8 @@
 #include <list>
 #include <vector>
 
+using namespace sakusen;
+
 World::World() :
   map(NULL),
   units(),
@@ -198,5 +200,5 @@ void World::applyEntryExitEffects(
   }
 }
 
-LIBSAKUSEN_API World* world = NULL;
+LIBSAKUSEN_API World* sakusen::world = NULL;
 

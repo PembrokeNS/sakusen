@@ -11,6 +11,8 @@
 #include "universe.h"
 #include "action.h"
 
+namespace sakusen {
+
 class Region;
 
 class LIBSAKUSEN_API World {
@@ -90,5 +92,8 @@ class LIBSAKUSEN_API World {
 };
 
 extern LIBSAKUSEN_API World* world;
+
+}
+
 #endif
 

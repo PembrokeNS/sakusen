@@ -11,6 +11,8 @@
 /* This class provides a debugging client which dumps information to
  * a stream about what messages it receives, etc. */
 
+namespace sakusen {
+
 class LIBSAKUSEN_API DebuggingClient : public Client {
   public:
     DebuggingClient();
@@ -22,6 +24,8 @@ class LIBSAKUSEN_API DebuggingClient : public Client {
   public:
     void sendUpdate(const Update& update);
 };
+
+}
 
 #endif // DEBUGGINGCLIENT_H
 

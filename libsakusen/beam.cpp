@@ -1,6 +1,8 @@
 #include "beam.h"
 #include "world.h"
 
+using namespace sakusen;
+
 void Beam::spawn(
     BeamTypeID type,
     Time creationTime,

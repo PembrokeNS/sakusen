@@ -6,6 +6,8 @@
 #include <cerrno>
 #include <stdexcept>
 
+namespace sakusen {
+
 class Exn : public std::runtime_error {
   public:
     Exn(const String& message) :
@@ -48,6 +50,8 @@ class DuplicateNameDeserializationExn :
         ) { }
     virtual ~DuplicateNameDeserializationExn() throw() { }
 };
+
+}
 
 #endif // LIBSAKUSEN__EXCEPTIONS_H
 

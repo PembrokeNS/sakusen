@@ -1,5 +1,7 @@
 #include "spheremap.h"
 
+using namespace sakusen;
+
 SphereMap::SphereMap(
     const Universe* universe,
     const String& internalName,

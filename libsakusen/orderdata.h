@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API OrderData {
   /* abstract class - all constructors must be protected */
   protected:
@@ -14,6 +16,8 @@ class LIBSAKUSEN_API OrderData {
       /* Allocates a new copy of this object - caller responsible for freeing
        * memory */
 };
+
+}
 
 #endif // ORDERDATA_H
 

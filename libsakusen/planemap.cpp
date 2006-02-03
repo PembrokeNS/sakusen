@@ -1,5 +1,7 @@
 #include "planemap.h"
 
+using namespace sakusen;
+
 PlaneMap::PlaneMap(
     const Universe* universe,
     const String& internalName,

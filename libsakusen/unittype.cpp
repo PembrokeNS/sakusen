@@ -2,6 +2,8 @@
 
 #include "universe.h"
 
+using namespace sakusen;
+
 UnitType::UnitType(
     String in,
     HitPoints mHP,

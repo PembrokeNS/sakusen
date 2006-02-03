@@ -1,6 +1,9 @@
 #include "patrollerclient.h"
 #include "unit.h"
 
+using namespace sakusen;
+using namespace sakusen::test;
+
 PatrollerClient::PatrollerClient(Point<sint32> p) :
   patrolTo(p),
   patrolFrom(),

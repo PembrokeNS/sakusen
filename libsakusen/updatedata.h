@@ -7,6 +7,8 @@
 #include "ordercondition.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 class Unit;
 class Order;
 
@@ -105,6 +107,8 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
     UpdateType getType() const { return updateType_orderQueued; }
     void store(OArchive& out) const;
 };
+
+}
 
 #endif // UPDATEDATA_H
 

@@ -3,6 +3,8 @@
 
 #include "visibility.h"
 
+namespace sakusen {
+
 /** \file
  * This file contains the class ::BeamType */
 /** \brief This class represents a type of ::Beam, for example a +1 fiery laser
@@ -68,6 +70,8 @@ class BeamType {
 };
 
 typedef const BeamType* BeamTypeID;
+
+}
 
 #endif // BEAMTYPE_H
 

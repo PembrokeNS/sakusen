@@ -6,6 +6,8 @@
 #include "iarchive.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 /** \file
  * This file holds various sensor-related things. They are all in the
  * same file because it is expected that you will probably not want to use only
@@ -158,5 +160,7 @@ struct Sensors {
     sonarActive.store(archive);
   }
 };
+
+}
 
 #endif

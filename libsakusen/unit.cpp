@@ -2,6 +2,8 @@
 
 #include "world.h"
 
+using namespace sakusen;
+
 void Unit::spawn(
     const PlayerID owner,
     const UnitTypeID type,

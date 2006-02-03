@@ -3,7 +3,9 @@
 
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& output, UpdateType update)
+using namespace sakusen;
+
+std::ostream& sakusen::operator<<(std::ostream& output, UpdateType update)
 {
   switch(update) {
     #define CASE(type) case type: output << #type; break;

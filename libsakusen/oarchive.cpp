@@ -10,6 +10,8 @@
 
 #define DEFAULT_START_CAPACITY 1
 
+using namespace sakusen;
+
 OArchive::OArchive() :
   buffer(new uint8[DEFAULT_START_CAPACITY]),
   length(0),

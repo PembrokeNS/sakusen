@@ -1,10 +1,16 @@
 #ifndef BEAM_H
 #define BEAM_H
 
+namespace sakusen {
+
 class Beam;
+
+}
 
 #include "ray.h"
 #include "beamtype.h"
+
+namespace sakusen {
 
 /** \file
  * This defines the ::Beam class. */
@@ -66,6 +72,8 @@ class Beam: private Ray {
     void resolveIntersections(void);
     //@}
 };
+
+}
 
 #endif
 

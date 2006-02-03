@@ -5,6 +5,8 @@
 #include "resourcesearchresult.h"
 #include "resourcetype.h"
 
+namespace sakusen {
+
 /** \brief Abstract class providing an interface to a supply of resources
  *
  * This class is an abstract class which can be used to aid in serialization
@@ -60,6 +62,8 @@ class ResourceInterface {
      */
     inline String getError() const { return error; }
 };
+
+}
 
 #endif // RESOURCE_INTERFACE_H
 

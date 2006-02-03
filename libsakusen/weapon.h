@@ -5,6 +5,8 @@
 #include "point.h"
 #include "weapontype.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API Weapon {
   private:
     WeaponTypeID type;
@@ -40,5 +42,7 @@ class LIBSAKUSEN_API Weapon {
 #pragma warning (disable: 4231)
 EXPORT_LIST(Weapon)
 #endif
+
+}
 
 #endif

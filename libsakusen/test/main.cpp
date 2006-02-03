@@ -1,8 +1,6 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-
-
 #include <iostream>
 #include <time.h>
 #include <cerrno>
@@ -16,6 +14,9 @@
 #define NANO 1000000000 /* Nanoseconds in a second */
 
 using namespace std;
+
+using namespace sakusen;
+using namespace sakusen::test;
 
 void doLoadTest(ostream& output)
 {

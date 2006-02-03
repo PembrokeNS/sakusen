@@ -8,6 +8,8 @@
 
 #include "gnu_extensions.h" // Included only for __gnu_cxx::hash
 
+namespace sakusen {
+
 /* A hash function for Strings */
 class StringHash {
   private:
@@ -81,6 +83,8 @@ inline String numToString(T i)
 }
 
 String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length);
+
+}
 
 #endif // STRINGUTILS_H
 

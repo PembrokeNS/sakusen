@@ -3,6 +3,8 @@
 
 #include "map.h"
 
+namespace sakusen {
+
 class SphereMap : public Map {
   private:
     SphereMap();
@@ -16,6 +18,8 @@ class SphereMap : public Map {
         const std::vector<MapPlayMode>& playModes
       );
 };
+
+}
 
 #endif // SPHEREMAP_H
 

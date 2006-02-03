@@ -3,6 +3,8 @@
 
 #include "playerid.h"
 
+namespace sakusen {
+
 class Unit;
 
 class UnitID {
@@ -15,6 +17,8 @@ class UnitID {
   public:
   Unit* operator->(void);
 };
+
+}
 
 #endif // UNITID_H
 

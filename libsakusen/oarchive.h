@@ -7,6 +7,8 @@
 #include "point.h"
 #include "weapontype.h"
 
+namespace sakusen {
+
 /* This class represents an archive into which we put objects for tranmission
  * over the network or saving to disk. */
 class LIBSAKUSEN_API OArchive {
@@ -135,6 +137,8 @@ template<>
 inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
 {
   *this << toStore->getInternalName();
+}
+
 }
 
 #endif // OARCHIVE_H

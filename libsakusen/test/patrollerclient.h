@@ -3,6 +3,9 @@
 
 #include "client.h"
 
+namespace sakusen {
+namespace test {
+
 /* A toy client whose only purpose is to tell unit zero to patrol */
 
 class PatrollerClient : public Client {
@@ -18,6 +21,8 @@ class PatrollerClient : public Client {
   public:
     void sendUpdate(const Update& update);
 };
+
+}}
 
 #endif // PATROLLERCLIENT_H
 

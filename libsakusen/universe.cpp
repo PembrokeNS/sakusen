@@ -2,6 +2,8 @@
 
 using namespace std;
 
+using namespace sakusen;
+
 Universe::Universe(const String& in, const std::vector<UnitType>& u) :
   internalName(in),
   unitTypes(u)

@@ -1,5 +1,7 @@
 #include "visibility.h"
 
+using namespace sakusen;
+
 Visibility::Visibility() :
   optical(0),
   infraRed(0),

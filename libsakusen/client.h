@@ -8,6 +8,8 @@
 #include "ordermessage.h"
 #include "update.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API Client {
   private:
     Client(const Client& copy);
@@ -46,6 +48,8 @@ class LIBSAKUSEN_API Client {
 #pragma warning (disable: 4231)
 EXPORT_LIST(Client*)
 #endif
+
+}
 
 #endif // CLIENT_H
 

@@ -3,8 +3,6 @@
 
 #include "libsakusen-global.h"
 
-class Unit;
-
 #include <list>
 #include "changeownerreason.h"
 #include "point.h"
@@ -16,6 +14,8 @@ class Unit;
 #include "ordercondition.h"
 #include "universe.h"
 #include "targettype.h"
+
+namespace sakusen {
 
 enum hitPointAlteration {
   fullHitPoints,
@@ -191,6 +191,8 @@ EXPORT_VECTOR(Unit)
 /* Note: The following is exporting a vector of vectors of units */
 /*EXPORT_VECTOR(std::vector<Unit>)*/
 #endif
+
+}
 
 #endif
 

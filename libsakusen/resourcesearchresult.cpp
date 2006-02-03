@@ -4,7 +4,12 @@
 
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& output, ResourceSearchResult resource)
+using namespace sakusen;
+
+std::ostream& sakusen::operator<<(
+    std::ostream& output,
+    ResourceSearchResult resource
+  )
 {
   switch(resource) {
     #define CASE(type) case type: output << #type; break;

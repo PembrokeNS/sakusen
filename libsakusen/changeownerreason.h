@@ -1,6 +1,8 @@
 #ifndef CHANGEOWNERREASON_H
 #define CHANGEOWNERREASON_H
 
+namespace sakusen {
+
 /** Describes a reason for a Unit's owner being changed, primarily so the client
  * can notify the user appropriately.
  */
@@ -14,6 +16,8 @@ enum changeOwnerReason {
   changeOwnerReason_reverted /**< reverted to original owner's control after
                                 being confused */
 };
+
+}
 
 #endif // CHANGEOWNERREASON_H
 

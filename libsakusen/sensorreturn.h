@@ -6,6 +6,8 @@
 #include "libsakusen-global.h"
 #include "unitid.h"
 
+namespace sakusen {
+
 typedef uint32 SensorReturnID;
 
 class UnitSensorPair {
@@ -27,6 +29,8 @@ class SensorReturn {
   public:
   inline SensorReturnID getId(void) {return srId;}
 };
+
+}
 
 #endif
 

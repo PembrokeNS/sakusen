@@ -1,9 +1,15 @@
 #ifndef REGION_H
 #define REGION_H
 
+namespace sakusen {
+
 class Region;
 
+}
+
 #include "point.h"
+
+namespace sakusen {
 
 class Unit;
 
@@ -28,6 +34,8 @@ class Region {
     bool contains(const Unit& unit) const; /* Can't inline these due to cyclic
                                               include problems */
 };
+
+}
 
 #endif // REGION_H
 

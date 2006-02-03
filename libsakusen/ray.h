@@ -4,6 +4,8 @@
 #include "libsakusen-global.h"
 #include "unit.h"
 
+namespace sakusen {
+
 class Ray {
   private:
   /* representation of location: x = s + d.t, 0<t<{1 iff finite, 0 o/w} */
@@ -19,6 +21,8 @@ class Ray {
   double intersectLand();
   double intersectWater();
 };
+
+}
 
 #endif
 

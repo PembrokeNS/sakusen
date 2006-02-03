@@ -4,6 +4,8 @@
 
 using namespace std;
 
+using namespace sakusen;
+
 Map::Map(
     const Universe* u,
     const String& in,

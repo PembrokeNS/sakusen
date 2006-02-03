@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+namespace sakusen {
+
 class Weapon;
 class WeaponType;
 
@@ -43,5 +45,7 @@ class WeaponType {
     inline uint32 getRate(void) const {return (energyRate<<16)|metalRate;}
 
 };
+
+}
 
 #endif

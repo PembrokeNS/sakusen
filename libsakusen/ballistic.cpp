@@ -2,6 +2,8 @@
 #include "ballistictypeid.h"
 #include "world.h"
 
+using namespace sakusen;
+
 Ballistic::Ballistic(
       BallisticTypeID t,
       Time startTime,

@@ -1,7 +1,11 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
+namespace sakusen {
+
 class Effect;
+
+}
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -9,6 +13,8 @@ class Effect;
 #include "playerid.h"
 #include "visibility.h"
 #include "unit.h"
+
+namespace sakusen {
 
 class Effect {
   private:
@@ -33,6 +39,8 @@ class Effect {
     virtual void onUnitLeave(Unit&) {}
     virtual void onDestruct(void) {}
 };
+
+}
 
 #endif
 

@@ -3,6 +3,8 @@
 
 #include <iosfwd>
 
+namespace sakusen {
+
 /** \brief Enumerates the types which can be sought through a ResourceInterface
  */
 enum ResourceType {
@@ -11,6 +13,8 @@ enum ResourceType {
 };
 
 std::ostream& operator<<(std::ostream& output, ResourceType resource);
+
+}
 
 #endif // RESOURCETYPE_H
 

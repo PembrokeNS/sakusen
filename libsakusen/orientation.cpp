@@ -1,6 +1,8 @@
 #include "orientation.h"
 #include "libsakusen-global.h"
 
+using namespace sakusen;
+
 Orientation::Orientation()
 {
   for (int i=0; i<3; i++) {

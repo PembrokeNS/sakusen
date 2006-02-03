@@ -6,6 +6,8 @@
 #include "moveorderdata.h"
 #include "setvelocityorderdata.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API Order {
   public:
     Order();
@@ -31,6 +33,8 @@ class LIBSAKUSEN_API Order {
       return *dynamic_cast<const SetVelocityOrderData*>(data);
     }
 };
+
+}
 
 #endif // ORDER_H
 

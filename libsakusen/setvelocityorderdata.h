@@ -4,6 +4,8 @@
 #include "orderdata.h"
 #include "point.h"
 
+namespace sakusen {
+
 class SetVelocityOrderData : public OrderData {
   private:
     SetVelocityOrderData();
@@ -16,6 +18,8 @@ class SetVelocityOrderData : public OrderData {
     Point<sint32> getTarget(void) const { return target; }
     OrderData* newCopy(void) const;
 };
+
+}
 
 #endif // SETVELOCITYORDERDATA_H
 

@@ -5,6 +5,8 @@
 #include "universe.h"
 #include "map.h"
 
+namespace sakusen {
+
 template<>
 inline ResourceType ResourceInterface::typenameToResourceType<Universe>()
 {
@@ -33,5 +35,8 @@ inline bool ResourceInterface::save(const T* resource)
 {
   return internalSave(resource, typenameToResourceType<T>());
 }
+
+}
+
 #endif // RESOURCE_INTERFACE_METHODS_H
 

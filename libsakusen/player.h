@@ -9,6 +9,8 @@
 #include "updatetype.h"
 #include "changeownerreason.h"
 
+namespace sakusen {
+
 class Unit;
 
 class LIBSAKUSEN_API Player {
@@ -54,6 +56,8 @@ class LIBSAKUSEN_API Player {
     /* Methods to send a update message to all this player's clients */
     void informClients(const Update& update);
 };
+
+}
 
 #endif
 

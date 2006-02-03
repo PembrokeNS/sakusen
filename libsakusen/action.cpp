@@ -1,5 +1,7 @@
 #include "action.h"
 
+using namespace sakusen;
+
 Action::Action() :
   time(0)
 {

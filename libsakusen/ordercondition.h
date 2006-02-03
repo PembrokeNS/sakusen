@@ -4,6 +4,8 @@
 /* Note that current serialization implementation limits us to 256 enumeration
  * values (see updatedata.cpp) */
 
+namespace sakusen {
+
 enum OrderCondition {
   orderCondition_now,
   orderCondition_lastOrderSuccess,
@@ -11,6 +13,8 @@ enum OrderCondition {
   orderCondition_enemyUnitSighted,
   orderCondition_max /* Dummy condition which must be the last */
 };
+
+}
 
 #endif // ORDERCONDITION_H
 

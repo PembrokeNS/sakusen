@@ -7,6 +7,8 @@
 #include "quadratic.h"
 #include "point.h"
 
+namespace sakusen {
+
 /** \file
  * This file contains the ::Ballistic class. */
 
@@ -70,6 +72,8 @@ class Ballistic {
   inline Point<sint32> getPosition(Time t) {return path.evaluate(t);}
   //@}
 };
+
+}
 
 #endif
 

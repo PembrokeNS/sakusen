@@ -6,6 +6,8 @@
 #include "iarchive.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API Update {
   private:
     Update();
@@ -38,6 +40,8 @@ class LIBSAKUSEN_API Update {
 };
 
 std::ostream& operator<<(std::ostream& output, const Update& update);
+
+}
 
 #endif // UPDATE_H
 

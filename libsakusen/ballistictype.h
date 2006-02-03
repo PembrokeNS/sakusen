@@ -5,6 +5,8 @@
 #include "visibility.h"
 #include "unit.h"
 
+namespace sakusen {
+
 /** \file
  * This file declares the ::BallisticType class. */
 
@@ -21,7 +23,7 @@
 class BallisticType {
   friend class Ballistic;
   private:
-  /** represents the visibility of a ::Ballistic of this type */
+    /** represents the visibility of a ::Ballistic of this type */
     Visibility vis;
 
   protected:
@@ -39,22 +41,24 @@ class BallisticType {
      */
     virtual ~BallisticType();
 
-  /** returns by reference the visibility of a ::Ballistic of this type */
-  inline Visibility& getVisibility(void) {return vis;}
-  /** \brief callback for hitting a ::Unit
-   * 
-   * Subclasses may override this method to perform some action on hitting a
-   * Unit. The default action is a nop.
-   */
-  virtual void hitUnit(Unit&) {}
-  /** \brief callback for hitting the ground (probably representing a miss)
-   * 
-   * Subclasses may override this method to perform some action on hitting the
-   * ground. The default action is a nop, which may be appropriate for some
-   * projectiles.
-   */
-  virtual void hitLandscape(Point<sint32>&) {}
+    /** returns by reference the visibility of a ::Ballistic of this type */
+    inline Visibility& getVisibility(void) {return vis;}
+    /** \brief callback for hitting a ::Unit
+     * 
+     * Subclasses may override this method to perform some action on hitting a
+     * Unit. The default action is a nop.
+     */
+    virtual void hitUnit(Unit&) {}
+    /** \brief callback for hitting the ground (probably representing a miss)
+     * 
+     * Subclasses may override this method to perform some action on hitting the
+     * ground. The default action is a nop, which may be appropriate for some
+     * projectiles.
+     */
+    virtual void hitLandscape(Point<sint32>&) {}
 };
+
+}
 
 #endif // BALLISTICTYPE_H
 

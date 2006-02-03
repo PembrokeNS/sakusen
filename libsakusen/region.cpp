@@ -2,6 +2,8 @@
 #include "unit.h"
 #include "world.h"
 
+using namespace sakusen;
+
 Region::Region() :
   centre(),
   radius(0)

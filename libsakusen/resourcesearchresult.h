@@ -3,6 +3,8 @@
 
 #include <iosfwd>
 
+namespace sakusen {
+
 /** \brief Enumeration of possible results of searching for a resource
  *
  * When search for a resource through a ResourceInterface, one of the following
@@ -18,6 +20,8 @@ enum ResourceSearchResult {
 };
 
 std::ostream& operator<<(std::ostream& output, ResourceSearchResult resource);
+
+}
 
 #endif // RESOURCESEARCHRESULT_H
 

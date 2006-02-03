@@ -16,6 +16,8 @@ template instantiation. To aid reading of build output I #pragma it away here.
 //#pragma warning(disable: 4244)
 //#endif
 
+namespace sakusen {
+
 template <typename T>
 class Point {
   public:
@@ -206,6 +208,8 @@ inline Point<sint16> Point<double>::round16(void) const {
       static_cast<sint16>(round(y)),
       static_cast<sint16>(round(z))
     );
+}
+
 }
 
 #endif // VECTORS_H

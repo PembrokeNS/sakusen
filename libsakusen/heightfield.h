@@ -6,6 +6,8 @@
 #include "iarchive.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API Heightfield {
   public:
     Heightfield();
@@ -15,6 +17,8 @@ class LIBSAKUSEN_API Heightfield {
     void store(OArchive&) const;
     static Heightfield load(IArchive&);
 };
+
+}
 
 #endif // HEIGHTFIELD_H
 

@@ -11,6 +11,8 @@
 #include "iarchive.h"
 #include "oarchive.h"
 
+namespace sakusen {
+
 /** \brief Encapsulates information about the universe in which a game is
  * played
  *
@@ -86,6 +88,8 @@ class LIBSAKUSEN_API Universe {
     void store(OArchive&) const;
     static Universe* loadNew(IArchive&);
 };
-  
+
+}
+
 #endif // UNIVERSE_H
 

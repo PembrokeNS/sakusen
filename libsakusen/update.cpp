@@ -2,6 +2,8 @@
 
 #include <ostream>
 
+using namespace sakusen;
+
 Update::Update() :
   data(NULL)
 {
@@ -52,7 +54,7 @@ Update& Update::operator=(const Update& copy)
   return *this;
 }
 
-std::ostream& operator<<(std::ostream& output, const Update& update)
+std::ostream& sakusen::operator<<(std::ostream& output, const Update& update)
 {
   output << "Update { type=" << update.getType() << " }";
   return output;

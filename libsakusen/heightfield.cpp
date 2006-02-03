@@ -1,5 +1,7 @@
 #include "heightfield.h"
 
+using namespace sakusen;
+
 Heightfield::Heightfield()
 {
 }

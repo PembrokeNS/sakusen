@@ -11,6 +11,8 @@
 
 #include <list>
 
+namespace sakusen {
+
 class Universe;
 class UnitType;
 
@@ -137,5 +139,7 @@ class LIBSAKUSEN_API UnitType {
 #pragma warning (disable: 4231)
 EXPORT_VECTOR(UnitType)
 #endif
+
+}
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef TOPOLOGY_H
 #define TOPOLOGY_H
 
+namespace sakusen {
+
 /* Note that current serialization implementation limits us to 256 topologies.
  * See map.cpp */
 enum Topology {
@@ -19,6 +21,8 @@ enum Topology {
   /* possibly also the less symmetric versions of the mobius strip, sphere and
    * crosscut */
 };
+
+}
 
 #endif // TOPOLOGY_H
 

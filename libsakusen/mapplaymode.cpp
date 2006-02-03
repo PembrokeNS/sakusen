@@ -2,6 +2,8 @@
 
 #include "map.h"
 
+using namespace sakusen;
+
 MapPlayMode::MapPlayMode(
     uint32 minP,
     uint32 maxP,

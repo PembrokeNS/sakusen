@@ -9,6 +9,8 @@
 #include "point.h"
 #include "exceptions.h"
 
+namespace sakusen {
+
 /* This class represents an archive from which we extract objects after
  * receiving it across the network or reading it from disk.  c.f. OArchive.
  * Thus it can be constructed from a buffer of uint8s and has lots of overloads
@@ -171,6 +173,8 @@ inline String IArchive::load<String>()
   String s;
   *this >> s;
   return s;
+}
+
 }
 
 #endif // IARCHIVE_H

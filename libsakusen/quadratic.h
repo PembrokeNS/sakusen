@@ -4,6 +4,8 @@
 #include "libsakusen-global.h"
 #include "point.h"
 
+namespace sakusen {
+
 /* store a ballistic curve, x and y linear in T, z quadratic in T
  * x(T) = sx + dx.(T-t)
  * y(T) = sy + dy.(T-t)
@@ -20,6 +22,8 @@ class Quadratic {
   ~Quadratic() {}
   Point<sint32> evaluate(Time tt);
 };
+
+}
 
 #endif // QUADRATIC_H
 

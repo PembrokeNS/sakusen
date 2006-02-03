@@ -1,5 +1,7 @@
 #include "order.h"
 
+using namespace sakusen;
+
 Order::Order() :
   type(orderType_none),
   data(NULL)

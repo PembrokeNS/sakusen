@@ -3,6 +3,8 @@
 
 #include <iosfwd>
 
+namespace sakusen {
+
 /* The various messages sent from server to client to inform of an update to
  * the game state.  What arguments each takes is given in a comment after it.
  * Note that current serialization implementation limits us to 256 types. */
@@ -20,6 +22,8 @@ enum UpdateType {
 };
 
 std::ostream& operator<<(std::ostream& output, UpdateType update);
+
+}
 
 #endif // UPDATETYPE_H
 

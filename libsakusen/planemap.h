@@ -3,6 +3,8 @@
 
 #include "map.h"
 
+namespace sakusen {
+
 class LIBSAKUSEN_API PlaneMap : public Map {
   private:
     PlaneMap();
@@ -34,6 +36,8 @@ class LIBSAKUSEN_API PlaneMap : public Map {
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const;
 };
+
+}
 
 #endif // PLANEMAP_H
 

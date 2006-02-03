@@ -9,7 +9,7 @@
 
 using namespace std;
 
-list<String> stringUtils_split(
+list<String> sakusen::stringUtils_split(
     const String& splitee,
     const String& spliton
   )
@@ -30,7 +30,10 @@ list<String> stringUtils_split(
   return result;
 }
 
-String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length)
+String sakusen::stringUtils_getSecureHashAsString(
+    const uint8* buffer,
+    size_t length
+  )
 {
     /*mhash is only for linux and CYGWIN. It would be nice if *
     we could switch to some other library for crypto things, or if 
@@ -63,7 +66,7 @@ String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length)
   }
   return stream.str();
 #else
-    return "HashNotSupported";
+  return "00000000000000000000000000000000";
 #endif
 }
 

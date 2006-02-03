@@ -1,5 +1,7 @@
 #include "weapon.h"
 
+using namespace sakusen;
+
 Weapon::Weapon(const WeaponType* t) :
   type(t->getId()),
   energyCharge(0),

@@ -11,6 +11,8 @@
 #include "universe.h"
 #include "iarchive.h"
 
+namespace sakusen {
+
 class Map;
 
 class LIBSAKUSEN_API Map {
@@ -151,6 +153,8 @@ class LIBSAKUSEN_API Map {
     void store(OArchive& archive) const;
     static Map* loadNew(IArchive& archive, const loadArgument* universe);
 };
+
+}
 
 #endif // MAP_H
 

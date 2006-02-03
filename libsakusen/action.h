@@ -4,6 +4,8 @@
 #include "libsakusen-global.h"
 #include "fifo_priority_queue.h"
 
+namespace sakusen {
+
 class PrioritizeActions;
 
 class Action {
@@ -33,6 +35,8 @@ class PrioritizeActions {
 };
 
 typedef fifo_priority_queue<Action*, uint32, PrioritizeActions> ActionQueue;
+
+}
 
 #endif
 
