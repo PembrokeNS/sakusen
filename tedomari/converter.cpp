@@ -4,6 +4,7 @@
 
 #define CONVERT_BUFFER_LEN 4096
 
+using namespace sakusen::comms;
 using namespace tedomari;
 
 Converter::Converter() :

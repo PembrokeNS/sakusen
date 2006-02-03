@@ -22,6 +22,9 @@
 using namespace std;
 using namespace __gnu_cxx;
 
+using namespace sakusen;
+using namespace sakusen::comms;
+using namespace sakusen::resources;
 using namespace tedomari;
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;

@@ -11,6 +11,7 @@
 
 using namespace std;
 
+using namespace sakusen::comms;
 using namespace tedomari;
 
 ServerInterface::ServerInterface(Socket* s, bool a) :

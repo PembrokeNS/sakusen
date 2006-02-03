@@ -11,6 +11,7 @@
 
 using namespace std;
 
+using namespace sakusen::comms;
 using namespace tedomari;
 
 /* Static data for the static function below to use */

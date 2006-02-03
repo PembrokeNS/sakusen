@@ -15,39 +15,40 @@ class ServerInterface {
     ServerInterface();
     ServerInterface(const ServerInterface& copy);
   public:
-    ServerInterface(Socket* serverSocket, bool abstract);
+    ServerInterface(sakusen::comms::Socket* serverSocket, bool abstract);
     ~ServerInterface();
   private:
-    Socket* serverSocket;
+    sakusen::comms::Socket* serverSocket;
       /* Socket for solicitation/advertising (owned by code that constructs
        * this object) */
     struct timeval timeout;
     bool abstract; /* OK to use abstract namespace */
     bool joined;
-    ClientID id; /* ID assigned to us by the server (valid only when joined) */
-    Socket* localSocket;
+    sakusen::comms::ClientID id;
+      /* ID assigned to us by the server (valid only when joined) */
+    sakusen::comms::Socket* localSocket;
       /* Socket used by the server to talk to us (owned by this) */
-    Socket* privateServerSocket;
+    sakusen::comms::Socket* privateServerSocket;
       /* Socket the server has reserved for us to talk to it (owned by this) */
     bool gameStarted;
-    std::queue<Update> updateQueue;
+    std::queue<sakusen::Update> updateQueue;
 
     void initialSettingsSetup();
       /* Do initial setup of settings for us on the server (e.g. tell our
        * client application, etc.) */
   public:
     inline bool isJoined() const { return joined; }
-    inline ClientID getID() const { return id; }
+    inline sakusen::comms::ClientID getID() const { return id; }
     inline bool isGameStarted() const { return gameStarted; }
     inline bool isUpdateQueueEmpty() const { return updateQueue.empty(); }
-    inline Update updateQueuePopFront() {
+    inline sakusen::Update updateQueuePopFront() {
       assert(!updateQueue.empty());
-      Update update = updateQueue.front();
+      sakusen::Update update = updateQueue.front();
       updateQueue.pop();
       return update;
     }
     
-    bool getAdvertisement(AdvertiseMessageData* advertisement);
+    bool getAdvertisement(sakusen::comms::AdvertiseMessageData* advertisement);
       /* Try to get advertisement from server.  Returns true iff an error
        * occurs */
     String flushIncoming();
