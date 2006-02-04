@@ -1,0 +1,12 @@
+/**
+\namespace sakusen::resources
+\brief libsakusen-resources: Sakusen data resource library
+
+Like \ref sakusen::comms, this library is intended as a useful means for clients to
+behave in the same way without having to reinvent the wheel or copy-and-paste
+lots of code. It provides an easy way for applications to retrieve resources
+from files and the network, using the standard formats specified for Sakusen.
+
+"Resources" in this context means things like maps, units, GUI elements, and
+sounds. Eventually it may be stretched to include replays and such.
+*/

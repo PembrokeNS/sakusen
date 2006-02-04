@@ -1,0 +1,19 @@
+/** \mainpage
+Sakusen is a real-time, multi-player strategy game, allowing untrusted
+clients to connect and play without allowing cheating. It features the
+following:
+\li Tense, information-based warfare.
+\li Choose and customise (or even write) your own client.
+\li Combat more epic than TA.
+\li More automation than any other RTS.
+\li More plot than StarCraft.
+\li Bizarre map topologies.
+\li With added CompSci to refresh the parts no other game can reach.
+
+The game has several components:
+\li \ref sakusen
+\li \ref sakusen::comms
+\li \ref sakusen::resources
+\li \ref fuseki
+\li \ref tedomari
+*/

@@ -1,0 +1,8 @@
+/**
+\namespace sakusen::comms
+\brief libsakusen-comms: Sakusen protocol library
+
+libsakusen-comms is a utility library designed to obviate the need for each
+client to have its own set of functions to speak the protocol. It wraps the
+protocol in a lightweight interface.
+*/

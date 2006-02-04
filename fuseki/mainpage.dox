@@ -1,0 +1,11 @@
+/** \namespace fuseki
+\brief Experimental game server
+
+Fuseki is a C++ Sakusen server that currently aims to serve through a Unix
+socket (see unix(7)). In time it will serve over real network sockets.
+
+Currently, it allows players to connect and observe the game. However, the game
+is always the same, because it does not yet let clients control units. In time
+it will allow you to play the game, using one of a wide range of clients. Time
+passes.
+*/

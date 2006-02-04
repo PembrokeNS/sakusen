@@ -1,0 +1,9 @@
+/**
+\namespace sakusen
+\brief libsakusen: The core sakusen library.
+
+libsakusen is the core of Sakusen. It defines the entities involved in the game
+(weapons, units, clients, etc.) and how they interact. It is anticipated that
+all Sakusen clients and servers will use libsakusen; thus, it must be kept as
+fast as possible.
+*/
