@@ -4,7 +4,7 @@ THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werr
 LIB_DEP_NAMES = libsakusen libsakusen-comms
 LIBS = -lpcrecpp
 
-include ../Makefile.common
+include ../../Makefile.common
 
 test: all
 	$(MAKE) -C test test

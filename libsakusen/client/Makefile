@@ -1,6 +1,7 @@
-BIN = libsakusen-comms.la
+BIN = libsakusen-client.la
 THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werror -O0 -g3
+LIBS = -lstdc++
 LIB_DEP_NAMES = libsakusen
 
-include ../Makefile.common
+include ../../Makefile.common
 
