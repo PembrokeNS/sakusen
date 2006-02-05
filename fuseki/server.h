@@ -40,8 +40,9 @@ class Server : public SettingsUser {
     sakusen::Universe* universe;
       /* The universe we plan to use to build the map.  NULL
                            if none selected yet.  Owned by this. */
-    sakusen::Map* map; /* The map which we plan to use to build the world.
-                          NULL if none selected yet.  Owned by this. */
+    sakusen::MapTemplate* map;
+      /* The map template which we plan to use to build the world.
+         NULL if none selected yet.  Owned by this. */
     uint32 mapPlayMode; /* Which mode we plan to play the map on */
     std::vector<sakusen::Player> players;
       /* Players.  Note that this vector *becomes obsolete* as soon as the game
@@ -56,11 +57,11 @@ class Server : public SettingsUser {
     sakusen::Universe* requestedUniverse;
       /* Put a universe here to be promoted to universe when possible (owned
        * by this) */
-    sakusen::Map* requestedMap; /* Put a map here to be promoted to map when
-                                   possible (owned by this) */
+    sakusen::MapTemplate* requestedMap;
+      /* Put a map here to be promoted to map when possible (owned by this) */
     bool mapPlayModeChanged;
 
-    uint32 gameSpeed; /* Desired game speed in microseconds per frame */
+    uint32 gameSpeed; /* Desired game speed in microseconds per tick */
 
     sakusen::comms::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.

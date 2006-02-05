@@ -413,7 +413,7 @@ void Server::serve()
 
     if (mapPlayModeChanged) {
       clearPlayers();
-      createPlayersFor(map->getPlayMode(mapPlayMode));
+      createPlayersFor(map->getPlayModes()[mapPlayMode]);
       checkForGameStart();
       
       mapPlayModeChanged = false;
@@ -492,7 +492,7 @@ void Server::serve()
   /* TODO: The part where we wait for the clients to initialize themselves */
   
   /* Now we have the real game loop */
-  world = new World(map, mapPlayMode, players);
+  world = new World(*map, mapPlayMode, players);
   /* Note: henceforth, do not use the local field 'players', because world has
    * a copy of it - that's the one that must be worked with */
   struct timeval timeNow;
@@ -701,7 +701,7 @@ String Server::stringSettingAlteringCallback(
         return "";
       }
       ResourceSearchResult result;
-      Map* m = resourceInterface->search<Map>(
+      MapTemplate* m = resourceInterface->search<MapTemplate>(
           newValue, universe, &result
         );
       switch(result) {
@@ -711,9 +711,9 @@ String Server::stringSettingAlteringCallback(
           requestedMap = m; /* File an asynchronous request to use the map */
           return "";
         case resourceSearchResult_ambiguous:
-          return "specified map name ambiguous";
+          return "specified map template name ambiguous";
         case resourceSearchResult_notFound:
-          return "specified map name not found";
+          return "specified map template name not found";
         case resourceSearchResult_error:
           return String("error finding resource: ") +
             resourceInterface->getError();

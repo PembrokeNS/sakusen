@@ -52,7 +52,8 @@ void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)
     server->getPlayerPtr(playerId)->detachClient(this);
     if (removeGroup) {
       /* This condition is necessary because when this method is called from
-       * the destructor, this->groups has already had its destructor called */
+       * the destructor, this->groups may already have been cleared when the
+       * game started */
       this->removeGroup(String("player")+playerID_toString(playerId));
     }
   }
