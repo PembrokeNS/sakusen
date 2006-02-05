@@ -42,7 +42,8 @@ MAKEFRAGS = \
 # because e.g. libsakusen-comms is in libsakusen/comms
 
 E_LIB_DEP = $(foreach lib,$(LIB_DEP_NAMES), \
-		$(if $(wildcard ../$(subst -,/,$(lib))),../$(subst -,/,$(lib))/$(lib).la) \
+		$(if $(wildcard ../$(subst -,/,$(lib))), \
+      ../$(subst -,/,$(lib))/$(lib).la) \
 		$(if $(wildcard ../../$(subst -,/,$(lib))), \
 			../../$(subst -,/,$(lib))/$(lib).la) \
 		$(if $(wildcard ../../../$(subst -,/,$(lib))), \
@@ -65,7 +66,7 @@ all: $(BIN)
 # Clean (recursively)
 
 clean:
-	-rm -rf .libs .obj .makefrags $(BIN)
+	-rm -rf .libs .obj .makefrags $(BIN) revision.h
 	@for subdir in $(SUBDIRS); do \
 		$(MAKE) -C $$subdir $@ || exit 1 \
 		; \
