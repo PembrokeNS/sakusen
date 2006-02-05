@@ -12,4 +12,5 @@ Debian package names are also given):
 
 readline  libreadline5-dev
 unicode   libunicode-dev
+SDL 	libsdl-dev 
 

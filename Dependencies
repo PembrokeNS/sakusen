@@ -1,0 +1,9 @@
+Dependencies:
+
+libsakusen: mhash  libmhash-dev
+Fuseki: pcre libpcre-dev
+
+Tedomari:
+readline  libreadline5-dev
+unicode   libunicode-dev
+SDL 	libsdl-dev 

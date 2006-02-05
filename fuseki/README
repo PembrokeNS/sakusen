@@ -5,3 +5,6 @@ To compile, requires either both libsakusen and libsakusen-comms checked out in
 appropriately named parallel directories or else for things to be laid out as
 in the repository.
 
+Also the following libraries:
+
+PCRE libpcre-dev
