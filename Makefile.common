@@ -119,7 +119,8 @@ revision.h: $(wildcard .svn/entries)
 	if [ -f .svn/entries ]; \
 	then \
 		echo '#define REVISION '`grep '^   revision=' .svn/entries | \
-			sed 's/^   revision="//' | sed 's/"\/>//'` > revision.h; \
+			sed 's/^   revision="//' | sed 's/"\/>//' | sort -rn | head -n 1` \
+      > revision.h; \
 	else \
 		echo '#define REVISION 0' > revision.h; \
 	fi
