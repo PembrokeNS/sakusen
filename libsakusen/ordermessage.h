@@ -18,18 +18,11 @@ class LIBSAKUSEN_API OrderMessage {
     OrderCondition condition;
     Order order;
   public:
-    PLACEHOLDER_OPERATORS(OrderMessage)
     /* accessors */
     uint32 getOrderee(void) const { return orderee; }
     const OrderCondition& getCondition(void) const { return condition; }
     const Order& getOrder(void) const { return order; }
 };
-
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <queue>
-#pragma warning (disable: 4231)
-EXPORT_QUEUE(OrderMessage)
-#endif
 
 }
 

@@ -19,8 +19,6 @@ class LIBSAKUSEN_API Weapon {
     Weapon(const WeaponType* t);
     virtual ~Weapon() {}
 
-    PLACEHOLDER_OPERATORS(Weapon)
-
     /* accessors */
     WeaponTypeID getType(void) {return type;}
     uint16 getEnergy(void) {return energyCharge;}
@@ -36,13 +34,6 @@ class LIBSAKUSEN_API Weapon {
     virtual void onFire(void) {} /* provisional - probably should take some arguments */
     virtual void onDestruct(Point <sint32>) {} /* for when the unit is destroyed, if we want to have ammo exploding or anything like that */
 };
-
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <list>
-#pragma warning (disable: 4231)
-EXPORT_LIST(Weapon)
-#endif
-
 }
 
 #endif

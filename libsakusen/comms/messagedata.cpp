@@ -2,7 +2,8 @@
 
 #include "libsakusen-global.h"
 
-using namespace sakusen::comms;
+namespace sakusen{
+    namespace comms{
 
 MessageData::MessageData() :
   archive()
@@ -373,3 +374,4 @@ MessageData* UpdateMessageData::newCopy() const
   return new UpdateMessageData(*this);
 }
 
+}}

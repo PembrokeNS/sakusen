@@ -108,8 +108,6 @@ class LIBSAKUSEN_API UnitType {
     String corpseUnitTypeName;
     UnitTypeID corpseUnitType;
   public:
-    PLACEHOLDER_OPERATORS(UnitType);
-
     String resolveNames(const Universe* universe);
 
     /* accessors */
@@ -133,12 +131,6 @@ class LIBSAKUSEN_API UnitType {
     void store(OArchive&) const;
     static UnitType load(IArchive&);
 };
-
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <vector>
-#pragma warning (disable: 4231)
-EXPORT_VECTOR(UnitType)
-#endif
 
 }
 

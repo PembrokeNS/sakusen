@@ -101,7 +101,7 @@ class LIBSAKUSEN_API Visibility {
  * This struct contains all the information related to the use of any one
  * sensor.
  */
-struct SensorCapability {
+struct LIBSAKUSEN_API SensorCapability {
   SensorCapability() :
     capable(false), range(0), falloff(0) {}
   SensorCapability(IArchive& archive) {
@@ -122,7 +122,7 @@ struct SensorCapability {
  * This struct contains a ::SensorCapability for each sensor type, thus contains
  * all the information related to any one object's sensors.
  */
-struct Sensors {
+struct  LIBSAKUSEN_API Sensors {
   Sensors() :
     optical(),
     infraRed(),

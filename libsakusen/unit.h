@@ -23,11 +23,6 @@ enum hitPointAlteration {
   fixHitPoints
 };
 
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#pragma warning (disable: 4231)
-EXPORT_LIST(Unit*)
-#endif
-
 class LIBSAKUSEN_API Unit {
   public:
     static void spawn(
@@ -110,8 +105,6 @@ class LIBSAKUSEN_API Unit {
       /* Accept a new order from the queue */
 
   public:
-    PLACEHOLDER_OPERATORS(Unit)
-
     /* accessors */
     inline PlayerID getOwner(void) const {return owner;}
     inline UnitTypeID getType(void) const {return type;}
@@ -182,16 +175,6 @@ class LIBSAKUSEN_API Unit {
     void store(OArchive&) const;
     static Unit load(IArchive&, const loadArgument*);
 };
-
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <vector>
-#pragma warning (disable: 4231)
-EXPORT_VECTOR(Unit)
-/* The following commented out because it generates an undisablable 4876 */
-/* Note: The following is exporting a vector of vectors of units */
-/*EXPORT_VECTOR(std::vector<Unit>)*/
-#endif
-
 }
 
 #endif

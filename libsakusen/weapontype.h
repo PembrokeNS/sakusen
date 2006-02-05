@@ -10,12 +10,6 @@ class WeaponType;
 
 typedef const WeaponType* WeaponTypeID;
 
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <list>
-#pragma warning (disable: 4231)
-EXPORT_LIST(WeaponTypeID)
-#endif
-
 class WeaponType {
   friend class Weapon;
   private:

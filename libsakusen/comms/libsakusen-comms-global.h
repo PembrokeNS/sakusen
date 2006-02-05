@@ -1,6 +1,12 @@
 #ifndef LIBSAKUSEN_COMMS_GLOBAL_H
 #define LIBSAKUSEN_COMMS_GLOBAL_H
 
+#if defined(_MSC_VER)
+//Uses the bounds checked versions of certain string functions
+    #undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
+    #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
+#endif //_MSC_VER
+
 /* The value 108 is used in sys/un.h, but not declared to anything.  The
  * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit */
 #define UNIX_PATH_MAX 108

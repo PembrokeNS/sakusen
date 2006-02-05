@@ -43,12 +43,6 @@ class LIBSAKUSEN_API Client {
     virtual void sendUpdate(const Update& update) = 0;
 };
 
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#include <list>
-#pragma warning (disable: 4231)
-EXPORT_LIST(Client*)
-#endif
-
 }
 
 #endif // CLIENT_H

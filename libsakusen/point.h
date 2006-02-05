@@ -2,24 +2,10 @@
 #define VECTORS_H
 
 #include "libsakusen-global.h"
-/* VC++ gives a (couple hundred) warning(s) about unary minus operators being applied to unsigned types here.
-This links back to the definition of the '-' operator in this file, which of course does nothing when applied 
-to Point<uintX>. John does not belive he has used such a thing, so it is probably just an artifact of explicit 
-template instantiation. To aid reading of build output I #pragma it away here. 
-
-  I remind everyone that expecting -Point<uintX> to be different from Point<uintX> will not be renumerative.
-*/
-
-//#if defined(_MSC_VER)
-//#pragma warning(push)
-//#pragma warning(disable: 4146)
-//#pragma warning(disable: 4244)
-//#endif
 
 namespace sakusen {
 
-template <typename T>
-class Point {
+template <typename T> class LIBSAKUSEN_API Point {
   public:
     T x;
     T y;
@@ -140,18 +126,9 @@ class Point {
       /* Ugly casting here because of paranoia. */
       return uint64(sint64(x)*x) + sint64(y)*y + sint64(z)*z;
     }
-
-#if (defined(_MSC_VER)&&(_MSC_VER<1400))
-/* Nasty HACK: Apparently VC6 has no implementation of the conversion from unsigned __int64 to double. 
-Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps this large anyway, but we should fix it later. */
-    inline double length(void) const {
-      return sqrt(static_cast<double>(sint64(squareLength())));
-    }
-#else
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
     }
-#endif //MSC_VER
 
     inline bool isZero(void) const {
       return x==0 && y==0 && z==0;
@@ -170,27 +147,6 @@ Hence for VC6 we use sint64. It is fairly unlikely that we shall ever have maps 
     inline Point<sint32> round32(void) const;
 
 };
-
-//#if defined(_MSC_VER)
-//#pragma warning(pop)
-//#endif
-
-#ifdef NEED_TEMPLATE_INSTANTIATION
-#pragma warning (disable: 4231)
-/* I barely know what I'm doing here - JJB */
-/*I also barely know what I am doing */
-
-template Point<float> Point<uint32>::truncate16() const;
-template Point<float> Point<sint32>::truncate16() const;
-template Point<float> Point<uint16>::truncate16() const;
-template Point<float> Point<sint16>::truncate16() const;
-/*
-EXPORT(Point<uint32>)
-EXPORT(Point<sint32>)
-EXPORT(Point<uint16>)
-EXPORT(Point<sint16>)
-*/
-#endif
 
 template<>
 inline Point<sint32> Point<double>::truncate32(void) const {
