@@ -2,7 +2,7 @@
 
 #include "libsakusen-resources-global.h"
 #include "iarchive.h"
-#include "map.h"
+#include "maptemplate.h"
 #include "errorutils.h"
 #include "lockingfilereader.h"
 #include "lockingfilewriter.h"
@@ -77,8 +77,8 @@ String FileResourceInterface::getSubdir(ResourceType type)
   switch (type) {
     case resourceType_universe:
       return String(FILE_SEP "universe" FILE_SEP);
-    case resourceType_map:
-      return String(FILE_SEP "map" FILE_SEP);
+    case resourceType_mapTemplate:
+      return String(FILE_SEP "maptemplate" FILE_SEP);
     default:
       Fatal("Unexpected ResourceType: " << type);
   }
@@ -173,9 +173,10 @@ void* FileResourceInterface::internalSearch(
       case resourceType_universe:
         resource = Universe::loadNew(fileAsArchive);
         break;
-      case resourceType_map:
-        resource =
-          Map::loadNew(fileAsArchive, static_cast<const Universe*>(arg));
+      case resourceType_mapTemplate:
+        resource = new MapTemplate(
+            MapTemplate::load(fileAsArchive, static_cast<const Universe*>(arg))
+          );
         break;
       default:
         Fatal("unexpected ResourceType: " << type);
@@ -193,8 +194,8 @@ void* FileResourceInterface::internalSearch(
       case resourceType_universe:
         delete static_cast<Universe*>(resource);
         break;
-      case resourceType_map:
-        delete static_cast<Map*>(resource);
+      case resourceType_mapTemplate:
+        delete static_cast<MapTemplate*>(resource);
         break;
       default:
         Fatal("unexpected ResourceType: " << type);
@@ -230,11 +231,11 @@ bool FileResourceInterface::internalSave(
         u->store(archive);
       }
       break;
-    case resourceType_map:
+    case resourceType_mapTemplate:
       {
-        const Map* m = static_cast<const Map*>(resource);
+        const MapTemplate* m = static_cast<const MapTemplate*>(resource);
         shortName = m->getInternalName();
-        extension = "sakusenmap";
+        extension = "sakusenmaptemplate";
         m->store(archive);
       }
       break;

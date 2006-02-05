@@ -106,21 +106,22 @@ int main(/*int argc, char** argv*/)
   MapPlayMode playMode = MapPlayMode(2, 2, playersUnits);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
-  Map* map = new PlaneMap(
-      &universe, "map", Point<uint32>(10000,10000,10000),
+  MapTemplate* t = new MapTemplate(
+      &universe, "map", Point<sint32>(10000,10000,10000),
+      Point<sint32>(-10000,-10000,-10000), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
 
   cout << "Saving map" << endl;
-  if(resourceInterface->save(map))
+  if(resourceInterface->save(t))
   {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
   }
 
   cout << "Loading map" << endl;
-  Map* reloadedMap =
-    resourceInterface->search<Map>("map", reloadedUniverse, &result);
+  MapTemplate* reloadedTemplate =
+    resourceInterface->search<MapTemplate>("map", reloadedUniverse, &result);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -133,9 +134,9 @@ int main(/*int argc, char** argv*/)
       break;
   }
   
-  delete reloadedMap;
+  delete reloadedTemplate;
   delete reloadedUniverse;
-  delete map;
+  delete t;
   delete resourceInterface;
 
   return EXIT_SUCCESS;

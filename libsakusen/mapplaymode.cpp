@@ -23,7 +23,8 @@ MapPlayMode::MapPlayMode(
 
 bool MapPlayMode::sanityCheck(
     const Universe* universe,
-    const Map& map)
+    const MapTemplate& map
+  )
 {
   for (std::vector< std::vector<Unit> >::iterator player = playersUnits.begin();
       player != playersUnits.end(); player++) {

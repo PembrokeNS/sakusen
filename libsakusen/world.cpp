@@ -20,11 +20,13 @@ World::World() :
   Debug("World::World() called (probably a bad thing)");
 }
 
-World::World(Map* m,
+World::World(
+    const MapTemplate& m,
     uint32 mode,
     const std::vector<Player>& p
   ) :
-  map(m),
+  universe(m.getUniverse()),
+  map(Map::newMap(m)),
   units(),
   ballistics(),
   beams(),
@@ -42,7 +44,7 @@ World::World(Map* m,
   if (players.empty()) {
     Fatal("A World must have at least a neutral player.");
   }
-  const MapPlayMode* playMode = &map->getPlayMode(mode);
+  const MapPlayMode* playMode = &m.getPlayModes()[mode];
   
   if (!playMode->acceptableNumberOfPlayers(players.size())) {
     Fatal("Number of players not acceptable for this map and mode");
@@ -78,6 +80,9 @@ World::~World()
 
   /* Possibly we should free memory for actions, but I suspect not, and for the
    * moment I have declared that it shall not be so. */
+
+  delete map;
+  map = NULL;
 }
 
 /* Advances the game state to the specified time, taking into

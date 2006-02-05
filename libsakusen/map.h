@@ -10,6 +10,7 @@
 #include "mapplaymode.h"
 #include "universe.h"
 #include "iarchive.h"
+#include "maptemplate.h"
 
 namespace sakusen {
 
@@ -20,32 +21,18 @@ class LIBSAKUSEN_API Map {
     Map();
   protected:
     Map(const Map&);
-    Map(const Universe* universe,
-        const String& internalName,
-        const Point<uint32>& topRight,
-        const Point<uint32>& bottomLeft,
-        const Heightfield& heightfield,
-        uint16 gravity,
-        const std::vector<MapPlayMode>& playModes
-      );
+    Map(const MapTemplate&);
   public:
     virtual ~Map() {}
   private:
-    const Universe* universe; /* Not owned by this */
-    String internalName;
     Point<sint32> topRight; /* Excludes top right */
     Point<sint32> bottomLeft; /* Includes bottom left */
     Heightfield heightfield;
     /* TODO: tiles */
     uint16 gravity;
-    std::vector<MapPlayMode> playModes;
   public:
     /* accessors */
     virtual Topology getTopology(void) const = 0;
-    inline const Universe* getUniverse(void) const {
-      return universe;
-    }
-    inline const String& getInternalName(void) const { return internalName; }
     inline sint32 left(void) const { return bottomLeft.x; }
     inline sint32 right(void) const { return topRight.x; }
     inline sint32 bottom(void) const { return bottomLeft.y; }
@@ -66,10 +53,6 @@ class LIBSAKUSEN_API Map {
     }
     
     inline uint16 getGravity(void) const { return gravity; }
-    inline const MapPlayMode& getPlayMode(uint32 i) const {
-      assert(i<playModes.size());
-      return playModes[i];
-    }
 
     /* game mechanics */
     
@@ -148,10 +131,8 @@ class LIBSAKUSEN_API Map {
     virtual Point<sint32> getShortestDifference(
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const = 0;
-
-    typedef Universe loadArgument;
-    void store(OArchive& archive) const;
-    static Map* loadNew(IArchive& archive, const loadArgument* universe);
+    
+    static Map* newMap(const MapTemplate& t);
 };
 
 }

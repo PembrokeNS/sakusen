@@ -4,11 +4,10 @@
 #include "libsakusen-global.h"
 #include "unit.h"
 #include "universe.h"
-#include "heightfield.h"
 
 namespace sakusen {
 
-class Map;
+class MapTemplate;
 
 class LIBSAKUSEN_API MapPlayMode {
   private:
@@ -44,9 +43,9 @@ class LIBSAKUSEN_API MapPlayMode {
        * number of players */
       return playersUnits[player];
     }
-    bool sanityCheck(const Universe* universe, const Map& map);
+    bool sanityCheck(const Universe* universe, const MapTemplate& map);
       /* Confirms that all specified units exist in the given universe, and
-       * that they all fit onto the given heightfield.  Returns true if a
+       * that they all fit onto the given map.  Returns true if a
        * problem is found */
     typedef Universe loadArgument;
     void store(OArchive&) const;

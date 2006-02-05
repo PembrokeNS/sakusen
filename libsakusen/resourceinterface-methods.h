@@ -14,9 +14,9 @@ inline ResourceType ResourceInterface::typenameToResourceType<Universe>()
 }
 
 template<>
-inline ResourceType ResourceInterface::typenameToResourceType<Map>()
+inline ResourceType ResourceInterface::typenameToResourceType<MapTemplate>()
 {
-  return resourceType_map;
+  return resourceType_mapTemplate;
 }
 
 template<typename T>

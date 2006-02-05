@@ -9,23 +9,7 @@ class LIBSAKUSEN_API PlaneMap : public Map {
   private:
     PlaneMap();
   public:
-    PlaneMap(
-        const Universe* universe,
-        const String& name,
-        const Point<uint32>& volume,
-        const Heightfield& heightfield,
-        uint16 gravity,
-        const std::vector<MapPlayMode>& playModes
-      );
-    PlaneMap(
-        const Universe* universe,
-        const String& name,
-        const Point<uint32>& topRight,
-        const Point<uint32>& bottomLeft,
-        const Heightfield& heightfield,
-        uint16 gravity,
-        const std::vector<MapPlayMode>& playModes
-      );
+    PlaneMap(const MapTemplate& t);
 
     Topology getTopology(void) const { return topology_plane; }
     bool resolvePosition(

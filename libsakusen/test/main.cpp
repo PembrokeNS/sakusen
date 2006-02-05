@@ -116,19 +116,18 @@ int main(/* int argc, char** argv */)
   MapPlayMode playMode = MapPlayMode(2, 2, playersUnits);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
-  Map* map = new PlaneMap(
-      &universe, "Toy map", Point<uint32>(), heightfield,
-      10 /* gravity */, playModes
+  MapTemplate t = MapTemplate(
+      &universe, "Toy map", Point<uint32>(), Point<uint32>(), topology_plane,
+      heightfield, 10 /* gravity */, playModes
     );
 
   /* Create the world */
-  World* w = new World(map, 0 /* mode */, players);
+  World* w = new World(t, 0 /* mode */, players);
     
   doLoadTest(cout);
   world = NULL;
   delete w;
   w = NULL;
-  delete map;
 
   /* Now another test, this time with a unit */
   cout << "Performing test with one unit..." << endl;
@@ -150,13 +149,14 @@ int main(/* int argc, char** argv */)
   playMode = MapPlayMode(2, 2, playersUnits);
   playModes.clear();
   playModes.push_back(playMode);
-  map = new PlaneMap(
-      &universe, "Toy map", Point<uint32>(10000,10000,10000),
+  t = MapTemplate(
+      &universe, "Toy map", Point<sint32>(10000,10000,10000),
+      Point<sint32>(-10000,-10000,-10000), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
 
   /* Create the world */
-  w = new World(map, 0 /* mode */, players);
+  w = new World(t, 0 /* mode */, players);
   
   doLoadTest(cout);
   world = NULL;
@@ -169,12 +169,11 @@ int main(/* int argc, char** argv */)
   PatrollerClient patrollerClient(Point<sint32>(2000, 0, 0));
   players.back().attachClient(&patrollerClient);
   
-  w = new World(map, 0 /* mode */, players);
+  w = new World(t, 0 /* mode */, players);
   doLoadTest(cout);
   world = NULL;
   delete w;
   w = NULL;
-  delete map;
 
   /* Done */
   cout << "All tests completed successfully." << endl;

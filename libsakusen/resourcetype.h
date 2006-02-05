@@ -9,7 +9,7 @@ namespace sakusen {
  */
 enum ResourceType {
   resourceType_universe,
-  resourceType_map
+  resourceType_mapTemplate
 };
 
 std::ostream& operator<<(std::ostream& output, ResourceType resource);

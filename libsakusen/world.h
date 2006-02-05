@@ -22,13 +22,15 @@ class LIBSAKUSEN_API World {
                                  pointers to units */
   public:
     World(); /* Constructs a very dull World with nothing in it */
-    World(Map* map,
+    World(
+        const MapTemplate& map,
         uint32 playMode, /* what mode of the map we are using */
         const std::vector<Player>& players
       ); /* The constructor which the server is actually expected to use */
     ~World();
   private:
-    Map* map;
+    const Universe* universe; /* not owned by this */
+    Map* map; /* owned by this */
     std::list<Unit> units; /* this list includes subunits */
     std::list<Ballistic> ballistics;
     std::list<Beam> beams;
@@ -39,7 +41,7 @@ class LIBSAKUSEN_API World {
   public:
   /* accessors */
   inline const Map* getMap(void) const { return map; }
-  inline const Universe* getUniverse(void) const { return map->getUniverse(); }
+  inline const Universe* getUniverse(void) const { return universe; }
   inline void addUnit(const Unit& unit, PlayerID owner)
   {
     units.push_back(unit);

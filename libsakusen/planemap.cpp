@@ -2,34 +2,8 @@
 
 using namespace sakusen;
 
-PlaneMap::PlaneMap(
-    const Universe* universe,
-    const String& internalName,
-    const Point<uint32>& volume,
-    const Heightfield& heightfield,
-    uint16 gravity,
-    const std::vector<MapPlayMode>& playModes
-  ) :
-  Map(
-      universe, internalName, volume/uint32(2), volume/uint32(2) - volume,
-      heightfield, gravity, playModes
-    )
-{
-}
-
-PlaneMap::PlaneMap(
-    const Universe* universe,
-    const String& internalName,
-    const Point<uint32>& topRight,
-    const Point<uint32>& bottomLeft,
-    const Heightfield& heightfield,
-    uint16 gravity,
-    const std::vector<MapPlayMode>& playModes
-  ) :
-  Map(
-      universe, internalName, topRight, bottomLeft, heightfield,
-      gravity, playModes
-    )
+PlaneMap::PlaneMap(const MapTemplate& t) :
+  Map(t)
 {
 }
 
