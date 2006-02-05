@@ -3,6 +3,7 @@ SOURCE_DIRS = settingstree
 THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werror -O0 -g3
 LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
 LIBS = -lstdc++ -lpcrecpp
+INCLUDE =
 
 include ../Makefile.common
 

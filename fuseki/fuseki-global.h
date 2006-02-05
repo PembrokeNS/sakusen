@@ -5,7 +5,6 @@
 
 #define APPLICATION_NAME "fuseki"
 #define APPLICATION_VERSION "0.1"
-#define APPLICATION_ID "$Id$"
 
 #define DEFAULT_GAME_SPEED 20000
 

@@ -14,6 +14,7 @@
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
 #include "timeutils.h"
+#include "revision.h"
 
 #include <sys/time.h>
 #include <time.h>
@@ -70,8 +71,8 @@ Server::Server(Socket* s, ostream& o, ResourceInterface* r, bool a, bool d) :
     );
   assert(reason == "");
   reason = settings.changeRequest(
-      "server:application:id",
-      APPLICATION_ID,
+      "server:application:revision",
+      numToString(REVISION),
       this
     );
   assert(reason == "");

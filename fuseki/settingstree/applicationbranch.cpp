@@ -15,7 +15,7 @@ ApplicationBranch::ApplicationBranch(
 {
   addChild(new StringLeaf("name", readers, subWriters, this, server));
   addChild(new StringLeaf("version", readers, subWriters, this, server));
-  addChild(new StringLeaf("id", readers, subWriters, this, server));
+  addChild(new StringLeaf("revision", readers, subWriters, this, server));
 }
 
 ApplicationBranch::~ApplicationBranch()

@@ -1,8 +1,10 @@
+#include "stringutils.h"
 #include "serverinterface.h"
 #include "libsakusen-comms-global.h"
 #include "unixdatagramlisteningsocket.h"
 #include "socketexception.h"
 #include "tedomari-global.h"
+#include "revision.h"
 
 #include <sys/time.h>
 #include <time.h>
@@ -11,6 +13,7 @@
 
 using namespace std;
 
+using namespace sakusen;
 using namespace sakusen::comms;
 using namespace tedomari;
 
@@ -46,7 +49,7 @@ void ServerInterface::initialSettingsSetup()
   /* TODO: deal with return values */
   setClientSetting("application:name", APPLICATION_NAME);
   setClientSetting("application:version", APPLICATION_VERSION);
-  setClientSetting("application:id", APPLICATION_ID);
+  setClientSetting("application:revision", numToString(REVISION));
 }
 
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)

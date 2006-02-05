@@ -17,9 +17,8 @@
 #   here.  Indeed, you probably shouldn't ever need to specify this.
 # LIBS - system library arguments, e.g. "-lstdc++".
 # LIB_DEP_NAMES - base names of prerequisite libraries, e.g. "libsakusen" will
-#   be searched for at ../libsakusen/libsakusen.la,
-#   ../../libsakusen/libsakusen.la, ../../libsakusen/trunk/libsakusen.la and at
-#   ../../../libsakusen/trunk/libsakusen.la.  This will give appropriate
+#   be searched for at ../libsakusen/libsakusen.la  and at
+#   ../../libsakusen/libsakusen.la.  This will give appropriate
 #   include arguments, linking arguments, make dependencies and rules for
 #   building (by making in the directory of the library).
 # LIB_DEP - Like LIB_DEP_NAMES, but you provide the full path and name, e.g.
@@ -39,15 +38,21 @@ C_OBJS = $(foreach base,$(C_BASES),.obj/$(base).o)
 MAKEFRAGS = \
 	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),.makefrags/$(source).makefrag)
 
+# We replace '-' with '/' in the library name when using it as a directory
+# because e.g. libsakusen-comms is in libsakusen/comms
+
 E_LIB_DEP = $(foreach lib,$(LIB_DEP_NAMES), \
-	$(if $(wildcard ../$(lib)),../$(lib)/$(lib).la) \
-	$(if $(wildcard ../../$(lib)/trunk/),../../$(lib)/trunk/$(lib).la) \
-	$(if $(wildcard ../../$(lib)),../../$(lib)/$(lib).la) \
-	$(if $(wildcard ../../../$(lib)/trunk/),../../../$(lib)/trunk/$(lib).la)) \
+		$(if $(wildcard ../$(subst -,/,$(lib))),../$(subst -,/,$(lib))/$(lib).la) \
+		$(if $(wildcard ../../$(subst -,/,$(lib))), \
+			../../$(subst -,/,$(lib))/$(lib).la) \
+		$(if $(wildcard ../../../$(subst -,/,$(lib))), \
+			../../../$(subst -,/,$(lib))/$(lib).la) \
+	) \
 	$(LIB_DEP)
 E_INCLUDE = -I. $(foreach lib,$(E_LIB_DEP),-I$(dir $(lib))) $(INCLUDE)
 
 CXX ?= g++
+CC ?= gcc
 
 # Default target is to build the binary (and recurse)
 
@@ -101,9 +106,23 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag: %
 	@mkdir -p $(dir $@)
-	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $<
+	cpp $(E_INCLUDE) -MP -MM -MG -MF $@.tmp $<
 	@echo "$@ .obj/$(filter-out ./,$(dir $<))`cat $@.tmp`" > $@
 	@rm $@.tmp
+
+# If we're in a working copy then we can make a revision.h containing the
+# current revision number if so desired (this should be automatically
+# generated iff it's included from anywhere).  If we're not in a working copy,
+# we claim revision zero
+
+revision.h: $(wildcard .svn/entries)
+	if [ -f .svn/entries ]; \
+	then \
+		echo '#define REVISION '`grep '^   revision=' .svn/entries | \
+			sed 's/^   revision="//' | sed 's/"\/>//'` > revision.h; \
+	else \
+		echo '#define REVISION 0' > revision.h; \
+	fi
 
 .PHONY: all clean
 
