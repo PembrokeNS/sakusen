@@ -2,6 +2,7 @@
 #define PLAYERSSETTINGSTREEBRANCH_H
 
 #include "playerid.h"
+#include "playertemplate.h"
 #include "settingstree/branch.h"
 
 namespace fuseki {
@@ -15,7 +16,7 @@ class PlayersBranch : public Branch {
     PlayersBranch(const Branch* parent, Server* server);
     ~PlayersBranch();
 
-    void addPlayer(sakusen::PlayerID id, bool special, bool fixed);
+    void addPlayer(sakusen::PlayerID id, const sakusen::PlayerTemplate& t);
     void removePlayer(sakusen::PlayerID id);
 };
 

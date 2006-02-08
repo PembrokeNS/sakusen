@@ -4,6 +4,7 @@
 #include "settingstree/branch.h"
 
 #include "playerid.h"
+#include "playertemplate.h"
 
 namespace fuseki {
 namespace settingsTree {
@@ -17,8 +18,7 @@ class PlayerBranch : public Branch {
         sakusen::PlayerID id,
         const Branch* parent,
         Server* server,
-        bool special,
-        bool fixed
+        const sakusen::PlayerTemplate& t
       );
     ~PlayerBranch() {}
 };

@@ -15,13 +15,13 @@ PlayersBranch::~PlayersBranch()
 {
 }
 
-void PlayersBranch::addPlayer(PlayerID id, bool special, bool fixed)
+void PlayersBranch::addPlayer(PlayerID id, const PlayerTemplate& t)
 {
   String name = playerID_toString(id);
   if (getChild(name) != NULL) {
     Fatal("tried to add player branch of existing name");
   }
-  addChild(new PlayerBranch(id, this, server, special, fixed));
+  addChild(new PlayerBranch(id, this, server, t));
 }
 
 void PlayersBranch::removePlayer(PlayerID id)

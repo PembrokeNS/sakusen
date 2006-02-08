@@ -12,22 +12,25 @@ PlayerBranch::PlayerBranch(
     PlayerID id,
     const Branch* parent,
     Server* server,
-    bool special,
-    bool fixed
+    const PlayerTemplate& t
   ) :
   Branch(playerID_toString(id), "world", "", parent, server)
 {
-  assert(fixed || !special);
   String playerGroup = String("player") + clientID_toString(id);
   String playerAdminGroup = playerGroup+",admin";
   
   addChild(new StringLeaf(
-        "race", "world", ( fixed ? "" : playerAdminGroup ), this, server
+        "race", "world", ( t.isRaceFixed() ? "" : playerAdminGroup ), this,
+        server
       ));
   addChild(new IntLeaf<uint8>(
         "maxclients", 255, "world", playerAdminGroup, this, server
       ));
-  addChild(new BoolLeaf("special", special, "world", "", this, server));
-  addChild(new BoolLeaf("fixed", fixed, "world", "", this, server));
+  addChild(new BoolLeaf(
+        "noclients", t.isNoClients(), "world", "", this, server
+      ));
+  addChild(new BoolLeaf(
+        "racefixed", t.isRaceFixed(), "world", "", this, server
+      ));
 }
   

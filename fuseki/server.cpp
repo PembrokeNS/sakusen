@@ -178,12 +178,9 @@ void Server::createPlayersFor(const MapPlayMode& mode)
 {
   assert(players.empty());
   for (uint32 i=0; i<mode.getMaxPlayers(); i++) {
-    players.push_back(Player());
-    /* TODO: allow MapPlayMode to specify whether the player is special and/or
-     * fixed */
-    settings.getPlayersBranch()->addPlayer(
-        i, (i==0) /* special */, (i==0) /* fixed */
-      );
+    const PlayerTemplate& player = mode.getPlayer(i);
+    players.push_back(Player(player));
+    settings.getPlayersBranch()->addPlayer(i, player);
   }
 }
 
