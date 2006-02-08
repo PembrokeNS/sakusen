@@ -4,30 +4,26 @@
 
 using namespace sakusen;
 
-Player::Player() :
+Player::Player(const PlayerTemplate& t) :
+  noClients(t.isNoClients()),
+  raceFixed(t.isRaceFixed()),
   playerId(0),
   name(""),
   clients(),
   units(),
   lastUnitId(static_cast<uint32>(-1))
 {
+  assert(raceFixed || !noClients);
 }
 
 Player::Player(const Player& copy) :
+  noClients(copy.noClients),
+  raceFixed(copy.raceFixed),
   playerId(copy.playerId),
   name(copy.name),
   clients(copy.clients),
   units(copy.units),
   lastUnitId(copy.lastUnitId)
-{
-}
-
-Player::Player(String n) :
-  playerId(0),
-  name(n),
-  clients(),
-  units(),
-  lastUnitId(static_cast<uint32>(-1))
 {
 }
 
@@ -46,7 +42,7 @@ void Player::setPlayerId(const PlayerID& id)
 
 void Player::attachClient(Client* client)
 {
-  /* Debugf(("attaching client for player %d", playerId)); */
+  assert(!noClients);
   for (std::list<Client*>::iterator c = clients.begin();
       c != clients.end(); c++) {
     if (*c == client) {
@@ -59,7 +55,7 @@ void Player::attachClient(Client* client)
 
 void Player::detachClient(Client* client)
 {
-  /* Debugf(("attaching client for player %d", playerId)); */
+  assert(!noClients);
   for (std::list<Client*>::iterator c = clients.begin();
       c != clients.end(); c++) {
     if (*c == client) {

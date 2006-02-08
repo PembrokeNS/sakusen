@@ -146,25 +146,6 @@ class LIBSAKUSEN_API IArchive {
 
       return *this;
     }
-    
-    template<typename T>
-    IArchive& extract(
-        std::vector< std::vector<T> >& result,
-        const typename T::loadArgument* arg
-      )
-    {
-      assert(result.empty());
-      uint32 size;
-      *this >> size;
-
-      while (size--) {
-        std::vector<T> element;
-        extract(element, arg);
-        result.push_back(element);
-      }
-
-      return *this;
-    }
 };
     
 template<>

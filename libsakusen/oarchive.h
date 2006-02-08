@@ -95,23 +95,6 @@ class LIBSAKUSEN_API OArchive {
     }
     
     template<typename T>
-    OArchive& insert(const std::vector< std::vector<T> >& toStore)
-    {
-      *this << uint32(toStore.size());
-  
-      for (typename std::vector< std::vector<T> >::const_iterator
-          i1 = toStore.begin(); i1 != toStore.end(); ++i1) {
-        *this << uint32(i1->size());
-        for (typename std::vector<T>::const_iterator
-            i2 = i1->begin(); i2 != i1->end(); ++i2) {
-          store(*i2);
-        }
-      }
-
-      return *this;
-    }
-
-    template<typename T>
     inline OArchive& operator<<(const Point<T>& p)
     {
       return *this << p.x << p.y << p.z;

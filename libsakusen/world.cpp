@@ -61,7 +61,7 @@ World::World(
   /* put units on the map as specified in map */
   for (i=players.size()-1; i>=0; i--) {
     std::vector<Unit> playersUnits =
-      playMode->getPlayersUnits(players.size(), i);
+      playMode->getPlayer(i).getUnits();
     for (std::vector<Unit>::iterator unit = playersUnits.begin();
         unit != playersUnits.end(); unit++) {
       units.push_back(*unit);

@@ -100,10 +100,10 @@ int main(/*int argc, char** argv*/)
         &universe
       )
     );
-  vector< vector<Unit> > playersUnits;
-  playersUnits.push_back(neutralPlayersUnits);
-  playersUnits.push_back(realPlayersUnits);
-  MapPlayMode playMode = MapPlayMode(2, 2, playersUnits);
+  vector<PlayerTemplate> players;
+  players.push_back(PlayerTemplate(true, true, neutralPlayersUnits));
+  players.push_back(PlayerTemplate(false, false, realPlayersUnits));
+  MapPlayMode playMode = MapPlayMode(2, 2, players);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
   MapTemplate* t = new MapTemplate(

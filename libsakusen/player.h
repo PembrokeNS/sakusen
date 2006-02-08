@@ -8,6 +8,7 @@
 #include "client.h"
 #include "updatetype.h"
 #include "changeownerreason.h"
+#include "playertemplate.h"
 
 namespace sakusen {
 
@@ -15,7 +16,15 @@ class Unit;
 
 class LIBSAKUSEN_API Player {
   private:
-    PlayerID playerId;
+    Player();
+  public:
+    Player(const PlayerTemplate& t);
+    Player(const Player& copy);
+    ~Player();
+  private:
+    bool noClients;
+    bool raceFixed;
+    PlayerID playerId; /**< ID of player is assigned by the World constructor */
     String name;
     std::list<Client*> clients;
     __gnu_cxx::hash_map<uint32, Unit*> units;
@@ -24,22 +33,17 @@ class LIBSAKUSEN_API Player {
     uint32 lastUnitId; /* The id of the last unit that was added for this
                           player */
   public:
-    Player();
-    Player(const Player& copy);
-    Player(String n);
-    ~Player();
-
     /* accessors */
     void setPlayerId(const PlayerID& id);
     inline const String& getName(void) const { return name; }
+    inline void setName(const String& n) { name = n; }
     inline uint16 getNumClients(void) const { return clients.size(); }
     void attachClient(Client* client);
     void detachClient(Client* client);
 
     inline bool isReadyForGameStart(void) const {
-      /* FIXME: should check that a race is selected, and possibly that it has
-       * a client, if needed */
-      return true;
+      /* FIXME: should check that a race is selected */
+      return (clients.size() > 0 || noClients);
     }
 
     /* game mechanics */

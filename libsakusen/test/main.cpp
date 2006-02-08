@@ -67,15 +67,6 @@ int main(/* int argc, char** argv */)
   vector<Client*> clients;
   clients.push_back(&client);
 
-  /* For our toy example we create two players: the neutral player with no
-   * client, and a "real" player with a debugging client */
-  Player neutralPlayer = Player();
-  Player realPlayer = Player();
-  realPlayer.attachClient(&client);
-  vector<Player> players;
-  players.push_back(neutralPlayer);
-  players.push_back(realPlayer);
-
   /* Create the universe */
   vector<UnitType> unitTypes;
   UnitType commanderType =
@@ -110,16 +101,29 @@ int main(/* int argc, char** argv */)
   Heightfield heightfield = Heightfield();
   vector<Unit> neutralPlayersUnits;
   vector<Unit> realPlayersUnits;
-  vector< vector<Unit> > playersUnits;
-  playersUnits.push_back(neutralPlayersUnits);
-  playersUnits.push_back(realPlayersUnits);
-  MapPlayMode playMode = MapPlayMode(2, 2, playersUnits);
+  PlayerTemplate neutralPlayerTemplate =
+    PlayerTemplate(true, true, realPlayersUnits);
+  PlayerTemplate realPlayerTemplate =
+    PlayerTemplate(false, false, neutralPlayersUnits);
+  vector<PlayerTemplate> playerTemplates;
+  playerTemplates.push_back(neutralPlayerTemplate);
+  playerTemplates.push_back(realPlayerTemplate);
+  MapPlayMode playMode = MapPlayMode(2, 2, playerTemplates);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
   MapTemplate t = MapTemplate(
       &universe, "Toy map", Point<uint32>(), Point<uint32>(), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
+
+  /* For our toy example we create two players: the neutral player with no
+   * client, and a "real" player with a debugging client */
+  Player neutralPlayer = Player(neutralPlayerTemplate);
+  Player realPlayer = Player(realPlayerTemplate);
+  realPlayer.attachClient(&client);
+  vector<Player> players;
+  players.push_back(neutralPlayer);
+  players.push_back(realPlayer);
 
   /* Create the world */
   World* w = new World(t, 0 /* mode */, players);
@@ -143,10 +147,10 @@ int main(/* int argc, char** argv */)
         &universe
       )
     );
-  playersUnits.clear();
-  playersUnits.push_back(neutralPlayersUnits);
-  playersUnits.push_back(realPlayersUnits);
-  playMode = MapPlayMode(2, 2, playersUnits);
+  playerTemplates.clear();
+  playerTemplates.push_back(PlayerTemplate(true, true, neutralPlayersUnits));
+  playerTemplates.push_back(PlayerTemplate(false, false, realPlayersUnits));
+  playMode = MapPlayMode(2, 2, playerTemplates);
   playModes.clear();
   playModes.push_back(playMode);
   t = MapTemplate(
