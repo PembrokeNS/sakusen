@@ -9,13 +9,50 @@ void Unit::spawn(
     const UnitTypeID type,
     const Point<sint32>& startNear,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity)
+    const Point<sint16>& startVelocity
+  )
 {
   Point<sint32> startPosition = startNear; /* FIXME: find empty spot to start */
   world->addUnit(
       Unit(type, startPosition, startOrientation, startVelocity),
       owner
     );
+}
+
+void Unit::spawn(const PlayerID owner, const UnitTemplate& t)
+{
+  world->addUnit(Unit(
+        t.getType(), t.getPosition(), t.getOrientation(), t.getVelocity(),
+        t.getHitPoints(), t.isRadarActive(), t.isSonarActive()
+      ), owner);
+}
+
+Unit::Unit(
+    const UnitTypeID& startType,
+    const Point<sint32>& startPosition,
+    const Orientation& startOrientation,
+    const Point<sint16>& startVelocity,
+    HitPoints startHitPoints,
+    bool startRadarActive,
+    bool startSonarActive
+  ) :
+  owner(0),
+  type(startType),
+  unitId(0),
+  position(startPosition),
+  orientation(startOrientation),
+  velocity(startVelocity),
+  hitPoints(startHitPoints),
+  radarIsActive(startRadarActive),
+  sonarIsActive(startSonarActive),
+  subunits(),
+  weapons(),
+  linearTarget(linearTargetType_none),
+  rotationalTarget(rotationalTargetType_none)
+{
+  initializeFromUnitType(
+      world->getUniverse()->getUnitTypePtr(type),
+      world->getUniverse());
 }
 
 Unit::Unit(
@@ -40,34 +77,7 @@ Unit::Unit(
   initializeFromUnitType(
       world->getUniverse()->getUnitTypePtr(type),
       world->getUniverse());
-  hitPoints = maxHitPoints; /* TODO: allow for fewer HP */
-}
-
-Unit::Unit(
-    const UnitTypeID& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
-    const Point<sint16>& startVelocity,
-    const Universe* universe
-  ) :
-  owner(0),
-  type(startType),
-  unitId(0),
-  position(startPosition),
-  orientation(startOrientation),
-  velocity(startVelocity),
-  radarIsActive(false),
-  sonarIsActive(false),
-  subunits(),
-  weapons(),
-  linearTarget(linearTargetType_none),
-  rotationalTarget(rotationalTargetType_none)
-{
-  assert(world==NULL); /* This constructor is for when making maps, not when
-                          playing the game */
-  
-  initializeFromUnitType(universe->getUnitTypePtr(type), universe);
-  hitPoints = maxHitPoints; /* TODO: allow for fewer HP */
+  hitPoints = maxHitPoints;
 }
 
 void Unit::initializeFromUnitType(
@@ -391,36 +401,5 @@ bool Unit::setSonar(bool active) {
     /* TODO: inform clients */
     return active;
   } else return false;
-}
-
-void Unit::store(OArchive& archive) const
-{
-  /* TODO: See comments in Unit::load below.  The same applies here */
-  
-  archive << type->getInternalName()
-    /* FIXME: assumes UnitTypeID is UnitType* */ << position;
-  orientation.store(archive);
-  archive << velocity;
-}
-
-Unit Unit::load(IArchive& archive, const Universe* universe)
-{
-  /* TODO: This function needs to behave differently according to the
-   * circumstances under which it is called.  The current implementation is
-   * suitable only for deserialization of a map file */
-
-  /* TODO: At present only a bare minimum of functionality is implemented (just
-   * enough to be able to call the world-less constructor).  We need to be able
-   * to override each value which is copied across from UnitType */
-
-  String typeName;
-  archive >> typeName;
-  UnitTypeID type = universe->getUnitTypeID(typeName);
-  Point<sint32> position;
-  archive >> position;
-  Orientation orientation(Orientation::load(archive));
-  Point<sint16> velocity;
-  archive >> velocity;
-  return Unit(type, position, orientation, velocity, universe);
 }
 

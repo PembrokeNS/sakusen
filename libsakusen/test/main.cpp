@@ -48,9 +48,10 @@ void doLoadTest(ostream& output)
   output << "Test complete: ";
   output << endl;
   if (timeTaken) {
-    output << "Framerate=" << NANO/timeTaken << "fps" << endl;
+    output << "Tickrate=" << NANO/timeTaken << "tps" << endl;
   } else {
-    output << "Nanoseconds per frame=" << timeTaken << endl;
+    output << "Test was too fast to time (probably indicates a problem)" <<
+      endl;
   }
 #else
   cout << "Test complete." << endl;
@@ -99,8 +100,8 @@ int main(/* int argc, char** argv */)
 
   /* Create the map */
   Heightfield heightfield = Heightfield();
-  vector<Unit> neutralPlayersUnits;
-  vector<Unit> realPlayersUnits;
+  vector<UnitTemplate> neutralPlayersUnits;
+  vector<UnitTemplate> realPlayersUnits;
   PlayerTemplate neutralPlayerTemplate =
     PlayerTemplate(true, true, realPlayersUnits);
   PlayerTemplate realPlayerTemplate =
@@ -139,12 +140,15 @@ int main(/* int argc, char** argv */)
   /* Create the map */
   heightfield = Heightfield();
   realPlayersUnits.push_back(
-      Unit(
+      UnitTemplate(
+        &universe,
         universe.getUnitTypeId(0),
-        Point<sint32>(1,1,1),
+        Point<sint32>(0,0,0),
         Orientation(),
         Point<sint16>(),
-        &universe
+        universe.getUnitTypePtr(uint32(0))->getMaxHitPoints()/*100*/,
+        false,
+        false
       )
     );
   playerTemplates.clear();

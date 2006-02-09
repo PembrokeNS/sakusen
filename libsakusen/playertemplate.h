@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "unit.h"
+#include "unittemplate.h"
 
 namespace sakusen {
 
@@ -16,7 +16,7 @@ class PlayerTemplate {
     PlayerTemplate(
         bool noClients,
         bool fixedRace,
-        const std::vector<Unit>& units
+        const std::vector<UnitTemplate>& units
       );
   private:
     bool noClients;
@@ -24,12 +24,12 @@ class PlayerTemplate {
        * clients (including AI clients) */
     bool raceFixed;
       /**< indicates that there is no choice as to the race of a player */
-    std::vector<Unit> units;
+    std::vector<UnitTemplate> units;
       /**< provides a list of all the units that a player starts with */
   public:
     inline bool isNoClients() const { return noClients; }
     inline bool isRaceFixed() const { return raceFixed; }
-    inline const std::vector<Unit> getUnits() const { return units; }
+    inline const std::vector<UnitTemplate>& getUnits() const { return units; }
     bool sanityCheck(const Universe* universe, const MapTemplate& map);
       /* Confirms that all specified units exist in the given universe, and
        * that they all fit onto the given map.  Returns true if a

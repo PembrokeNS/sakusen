@@ -14,14 +14,10 @@
 #include "ordercondition.h"
 #include "universe.h"
 #include "targettype.h"
+#include "hitpointalteration.h"
+#include "unittemplate.h"
 
 namespace sakusen {
-
-enum hitPointAlteration {
-  fullHitPoints,
-  scaleHitPoints,
-  fixHitPoints
-};
 
 class LIBSAKUSEN_API Unit {
   public:
@@ -32,30 +28,37 @@ class LIBSAKUSEN_API Unit {
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
     ); /* factory class */
+    static void spawn(const PlayerID owner, const UnitTemplate& t);
+      /* factory class */
   private:
-    Unit(
-      const UnitTypeID& startType,
-      const Point<sint32>& startPosition,
-      const Orientation& startOrientation,
-      const Point<sint16>& startVelocity
-    ); /* constructor intended to be used when spawning a Unit on the map -
-          this is called only by Unit::spawn, and is thus private */
-  public:
+    Unit(); /**< Default constructor should not be used */
     Unit(
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
-      const Universe* universe
-    ); /* constructor intended to be used when making Map object - at this
-          stage no World exists */
-    Unit();
+      HitPoints startHitPoints,
+      bool startRadarActive,
+      bool startSonarActive
+    ); /* constructor intended to be used when spawning a Unit on the map -
+          this is called only by Unit::spawn, and is thus private.
+          owner is expected to be set after construction since it should not
+          be set until *after* the Unit has been added to the World */
+    Unit(
+      const UnitTypeID& startType,
+      const Point<sint32>& startPosition,
+      const Orientation& startOrientation,
+      const Point<sint16>& startVelocity
+    ); /* This is a simpler version of the above constructor for when you don't
+          need to specify the extra data */
+  public:
     virtual ~Unit() {}
   private:
     PlayerID owner;
     UnitTypeID type;
     uint32 unitId;
-    Point<sint32> position; /* this maybe needs a 'magic value' for when the unit is a subunit of another unit */
+    Point<sint32> position; /* this maybe needs a 'magic value' for when the
+                               unit is a subunit of another unit */
     Orientation orientation;
     Point<sint16> velocity; /* velocity is in distance-units per frame */
     
@@ -169,11 +172,7 @@ class LIBSAKUSEN_API Unit {
 
     /* callbacks */
     virtual void onCreate(void) {}
-    virtual void onDestruct(void) { /* what should the default be? */ }
-    
-    typedef Universe loadArgument;
-    void store(OArchive&) const;
-    static Unit load(IArchive&, const loadArgument*);
+    virtual void onDestruct(void) { /* TODO: what should the default be? */ }
 };
 }
 

@@ -89,15 +89,18 @@ int main(/*int argc, char** argv*/)
 
   cout << "Creating map" << endl;
   Heightfield heightfield = Heightfield();
-  vector<Unit> neutralPlayersUnits;
-  vector<Unit> realPlayersUnits;
+  vector<UnitTemplate> neutralPlayersUnits;
+  vector<UnitTemplate> realPlayersUnits;
   realPlayersUnits.push_back(
-      Unit(
+      UnitTemplate(
+        &universe,
         universe.getUnitTypeId(0),
-        Point<sint32>(1,1,1),
+        Point<sint32>(0,0,0),
         Orientation(),
         Point<sint16>(),
-        &universe
+        universe.getUnitTypePtr(uint32(0))->getMaxHitPoints(),
+        false,
+        false
       )
     );
   vector<PlayerTemplate> players;

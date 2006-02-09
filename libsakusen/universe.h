@@ -55,20 +55,24 @@ class LIBSAKUSEN_API Universe {
     
     /* accessors */
     inline const String& getInternalName() const { return internalName; }
+    
+    /* index/pointer/ID/Name conversions */
+    inline const WeaponType* getWeaponTypePtr(const WeaponTypeID id) const
+    {
+      return id;
+    }
     inline const UnitTypeID getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
       return &unitTypes[i];
     }
-    
-    /* pointer/ID/Name conversions */
-    inline const WeaponType* getWeaponTypePtr(const WeaponTypeID id) const
-    {
-      return id;
-    }
     inline const UnitType* getUnitTypePtr(const UnitTypeID id) const
     {
       return id;
+    }
+    inline const UnitType* getUnitTypePtr(uint32 i) const
+    {
+      return getUnitTypePtr(getUnitTypeId(i));
     }
     WeaponTypeID getWeaponTypeID(String weaponTypeName) const;
     UnitTypeID getUnitTypeID(String unitTypeName) const;
@@ -76,7 +80,7 @@ class LIBSAKUSEN_API Universe {
     bool containsUnitType(const UnitTypeID id) const;
 
     typedef void loadArgument;
-    
+    void store(OArchive&) const;
     /** \brief Loads a Universe from an archive
      *
      * This method attempts to create a Universe from the contents of the given
@@ -85,7 +89,6 @@ class LIBSAKUSEN_API Universe {
      * It returns a newly allocated Universe, which must be deleted by the
      * caller.
      */
-    void store(OArchive&) const;
     static Universe* loadNew(IArchive&);
 };
 

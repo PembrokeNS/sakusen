@@ -60,12 +60,11 @@ World::World(
   
   /* put units on the map as specified in map */
   for (i=players.size()-1; i>=0; i--) {
-    std::vector<Unit> playersUnits =
+    std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
-    for (std::vector<Unit>::iterator unit = playersUnits.begin();
+    for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
         unit != playersUnits.end(); unit++) {
-      units.push_back(*unit);
-      units.back().changeOwner(i, changeOwnerReason_created);
+      Unit::spawn(i, *unit);
     }
   }
 }

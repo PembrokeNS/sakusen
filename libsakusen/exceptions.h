@@ -8,12 +8,13 @@
 
 namespace sakusen {
 
-class Exn : public std::runtime_error {
+class Exn {
   public:
-    Exn(const String& message) :
-      std::runtime_error(message), errorNum(errno) { }
+    Exn(const String& m) :
+      errorNum(errno), message(m) { }
     virtual ~Exn() throw() { }
     int errorNum;
+    const String message;
 };
 
 class DeserializationExn : public Exn {

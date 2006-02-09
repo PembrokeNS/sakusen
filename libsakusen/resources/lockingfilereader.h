@@ -36,7 +36,7 @@ class LockingFileReader : public LockingFile {
      * -1.  if \a length is insufficient to store the entire file, it does
      *  nothing and returns 0
      */
-    ssize_t getWholeFile(uint8* buffer, ssize_t length, bool block);
+    ssize_t getWholeFile(uint8* buffer, size_t length, bool block);
 };
 
 }}

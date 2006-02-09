@@ -53,7 +53,7 @@ sint64 LockingFileReader::getLength(bool block)
 
 ssize_t LockingFileReader::getWholeFile(
     uint8* buffer,
-    ssize_t bufferLen,
+    size_t bufferLen,
     bool block
   )
 {

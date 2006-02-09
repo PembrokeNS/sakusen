@@ -7,7 +7,7 @@ using namespace sakusen;
 PlayerTemplate::PlayerTemplate(
     bool nc,
     bool rf,
-    const std::vector<Unit>& u
+    const std::vector<UnitTemplate>& u
   ) :
   noClients(nc),
   raceFixed(rf),
@@ -21,7 +21,7 @@ bool PlayerTemplate::sanityCheck(
     const MapTemplate& map
   )
 {
-  for (std::vector<Unit>::iterator unit = units.begin();
+  for (std::vector<UnitTemplate>::iterator unit = units.begin();
       unit != units.end(); unit++) {
     if (!universe->containsUnitType(unit->getType())) {
       Debug("MapPlayMode has unit not in universe");
@@ -48,7 +48,7 @@ PlayerTemplate PlayerTemplate::load(
 {
   bool noClients;
   bool fixedRace;
-  std::vector<Unit> units;
+  std::vector<UnitTemplate> units;
   (archive >> noClients >> fixedRace).extract(units, arg);
   return PlayerTemplate(noClients, fixedRace, units);
 }
