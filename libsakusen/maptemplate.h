@@ -9,7 +9,7 @@
 
 namespace sakusen {
 
-class MapTemplate {
+class LIBSAKUSEN_API MapTemplate {
   private:
     MapTemplate();
   public:

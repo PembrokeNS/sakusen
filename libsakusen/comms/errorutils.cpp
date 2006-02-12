@@ -7,6 +7,7 @@
 #if defined (_MSC_VER)
 #include <winsock2.h>
 #include "wsabsd.h"
+#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #endif //_MSC_VER
 
 String sakusen::comms::errorUtils_parseErrno(int num)
@@ -44,6 +45,16 @@ String sakusen::comms::errorUtils_parseErrno(int num)
 
 String sakusen::comms::errorUtils_errorMessage(int num)
 {
+#if defined (_MSC_VER)
+    char message[MESSAGE_BUFFER_LEN];
+
+    if (NULL == strerror_s(message, MESSAGE_BUFFER_LEN, num)) {
+    Fatal("error getting error message: " << errorUtils_parseErrno(errno));
+  }
+  return String(message); 
+
+#else
+
   /*char message[MESSAGE_BUFFER_LEN];*/
   /* HACK: This is the obsolete version of strerror_r - I can't find out how to
    * get at the non-obsolete version.  See strerror(3) for more details */
@@ -54,5 +65,6 @@ String sakusen::comms::errorUtils_errorMessage(int num)
   return String(message); */
   /* Because the above doesn't work, we have FIXME: not thread-safe */
   return String(strerror(num));
+#endif //_MSC_VER
 }
 

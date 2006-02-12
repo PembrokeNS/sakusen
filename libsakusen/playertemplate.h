@@ -9,7 +9,7 @@ namespace sakusen {
 
 class MapTemplate;
 
-class PlayerTemplate {
+class LIBSAKUSEN_API PlayerTemplate {
   private:
     PlayerTemplate();
   public:

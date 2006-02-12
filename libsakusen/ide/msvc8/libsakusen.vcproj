@@ -304,11 +304,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\hitpoints.h"
+				RelativePath="..\..\hitpointalteration.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\iarchive-methods.h"
+				RelativePath="..\..\hitpoints.h"
 				>
 			</File>
 			<File
@@ -344,15 +344,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\maptemplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maptemplate.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\moveorderdata.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\moveorderdata.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\oarchive-methods.h"
 				>
 			</File>
 			<File
@@ -421,6 +425,14 @@
 			</File>
 			<File
 				RelativePath="..\..\playerid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\playertemplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\playertemplate.h"
 				>
 			</File>
 			<File
@@ -521,6 +533,14 @@
 			</File>
 			<File
 				RelativePath="..\..\unitid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unittemplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unittemplate.h"
 				>
 			</File>
 			<File
