@@ -1,7 +1,7 @@
 #include "server.h"
 
 #include <libsakusen-global.h>
-#include "world.h"
+#include "completeworld.h"
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"
 #include "message.h"
@@ -29,6 +29,7 @@ using namespace std;
 using namespace __gnu_cxx;
 
 using namespace sakusen;
+using namespace sakusen::server;
 using namespace sakusen::comms;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
@@ -43,7 +44,7 @@ Server::Server(Socket* s, ostream& o, ResourceInterface* r, bool a, bool d) :
   socket(s),
   out(o),
   resourceInterface(r),
-  clients(),
+  clients(10),
   universe(NULL),
   map(NULL),
   mapPlayMode(0),
@@ -72,7 +73,11 @@ Server::Server(Socket* s, ostream& o, ResourceInterface* r, bool a, bool d) :
   assert(reason == "");
   reason = settings.changeRequest(
       "server:application:revision",
+#ifdef REVISION
       numToString(REVISION),
+#else
+      "unknown",
+#endif
       this
     );
   assert(reason == "");
@@ -216,11 +221,11 @@ void Server::changeInClientBranch(
 
 Player* Server::getPlayerPtr(PlayerID id)
 {
-  if (world == NULL) {
+  if (sakusen::server::world == NULL) {
     assert (id<players.size());
     return &players[id];
   } else {
-    return world->getPlayerPtr(id);
+    return sakusen::server::world->getPlayerPtr(id);
   }
 }
 /* Handler for interrupt signals from the keyboard, so that the server can
@@ -350,9 +355,10 @@ void Server::serve()
         }
       } catch (SocketExn* e) {
         out << "Removing client " << clientID_toString(client->getId()) <<
-          " due to causing SocketExn: " << e->what();
+          " due to causing SocketExn: " << e->message;
         removeClient(client);
         clientRemoved = true;
+        delete e;
       }
         
       if (clientRemoved) {
@@ -392,7 +398,11 @@ void Server::serve()
       universe = requestedUniverse;
       requestedUniverse = NULL;
       String reason = settings.changeRequest(
-          "game:universe", universe->getInternalName(), this
+          "game:universe:name", universe->getInternalName(), this
+        );
+      assert(reason == "");
+      reason = settings.changeRequest(
+          "game:universe:hash", universe->getHash(), this
         );
       assert(reason == "");
     }
@@ -434,8 +444,13 @@ void Server::serve()
             player != players.end(); player++) {
           if (!player->isReadyForGameStart()) {
             allPlayersReady = false;
-            out << "Not ready because player '" << player->getName() <<
-              "' not ready\n";
+            out << "Not ready because player ";
+            if (player->getName() == "") {
+              out << (player - players.begin());
+            } else {
+              out << "'" << player->getName() << "'";
+            }
+            out << " not ready\n";
             break;
           }
         }
@@ -463,74 +478,81 @@ void Server::serve()
     }
   } while (!(interrupted || startGame));
 
-  out << "Transitioning to gameplay state" << endl;
+  if (!interrupted) {
+    out << "Transitioning to gameplay state" << endl;
 
-  /* Close the solicitation socket because we aren't going to accept any more
-   * clients
-   * TODO: maybe we can support dynamic join for people whose clients crash,
-   * or adding observers in mid-game. */
-  socket->close();
+    /* Close the solicitation socket because we aren't going to accept any more
+     * clients
+     * TODO: maybe we can support dynamic join for people whose clients crash,
+     * or adding observers in mid-game. */
+    socket->close();
 
-  /* Remove settings tree manipulation permissions from all clients, excpet for
-   * some which remain in the 'playtime' group so that they can do such things
-   * as pause the game */
-  for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
-      clients.begin(); clientIt != clients.end(); ++clientIt) {
-    RemoteClient* client = clientIt->second;
-    client->send(GameStartMessageData());
-    bool wasAdmin = client->hasGroup("admin");
-    client->clearGroups();
-    client->addGroup("world");
-    if (wasAdmin) {
-      client->addGroup("playtime");
-    }
-  }
-
-  /* TODO: The part where we wait for the clients to initialize themselves */
-  
-  /* Now we have the real game loop */
-  world = new World(*map, mapPlayMode, players);
-  /* Note: henceforth, do not use the local field 'players', because world has
-   * a copy of it - that's the one that must be worked with */
-  struct timeval timeNow;
-  struct timeval timeForNextTick;
-  bool warnedLastTime = false;
-  
-  while (!interrupted) {
-    /* find out when we aim to start the next tick */
-    gettimeofday(&timeNow, NULL);
-    timeForNextTick = timeNow + gameSpeed;
-    
-    /* Do the game's stuff */
-    world->incrementGameState();
-    
-    if (dots && world->getTimeNow() % 16 == 0) {
-      out << "." << flush;
-    }
-
-    /* Sleep until it's time for the next tick */
-    gettimeofday(&timeNow, NULL);
-    if (timercmp(&timeNow, &timeForNextTick, <) || gameSpeed == 0) {
-      usleep(timeForNextTick-timeNow);
-      warnedLastTime = false;
-    } else {
-      if (!warnedLastTime) {
-        out << "Warning: server is lagging\n";
-        warnedLastTime = true;
+    /* Remove settings tree manipulation permissions from all clients, excpet for
+     * some which remain in the 'playtime' group so that they can do such things
+     * as pause the game */
+    for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
+        clients.begin(); clientIt != clients.end(); ++clientIt) {
+      RemoteClient* client = clientIt->second;
+      client->send(GameStartMessageData(
+            map->getTopology(), map->getTopRight(), map->getBottomLeft(),
+            map->getGravity()
+          ));
+      bool wasAdmin = client->hasGroup("admin");
+      client->clearGroups();
+      client->addGroup("world");
+      if (wasAdmin) {
+        client->addGroup("playtime");
       }
     }
+
+    /* TODO: The part where we wait for the clients to initialize themselves */
+    
+    /* Now we have the real game loop */
+    new CompleteWorld(*map, mapPlayMode, players);
+      /* constructor assigns itself to global variable, so no need for
+       * assignment here */
+    
+    /* Note: henceforth, do not use the local field 'players', because world has
+     * a copy of it - that's the one that must be worked with */
+    struct timeval timeNow;
+    struct timeval timeForNextTick;
+    bool warnedLastTime = false;
+    
+    while (!interrupted) {
+      /* find out when we aim to start the next tick */
+      gettimeofday(&timeNow, NULL);
+      timeForNextTick = timeNow + gameSpeed;
+      
+      /* Do the game's stuff */
+      sakusen::server::world->incrementGameState();
+      
+      if (dots && sakusen::server::world->getTimeNow() % 16 == 0) {
+        out << "." << flush;
+      }
+
+      /* Sleep until it's time for the next tick */
+      gettimeofday(&timeNow, NULL);
+      if (timercmp(&timeNow, &timeForNextTick, <) || gameSpeed == 0) {
+        usleep(timeForNextTick-timeNow);
+        warnedLastTime = false;
+      } else {
+        if (!warnedLastTime) {
+          out << "Warning: server is lagging\n";
+          warnedLastTime = true;
+        }
+      }
+    }
+
+    delete sakusen::server::world;
   }
-
-  delete world;
-  world = NULL;
-
+  
   if (interrupted) {
     out << "Server interrupted.  Shutting down." << endl;
     while (!clients.empty()) {
       try {
         clients.begin()->second->send(KickMessageData("Server shutting down."));
       } catch (SocketExn* e) {
-        out << "Socket exception while kicking client: " << e->what() << "\n";
+        out << "Socket exception while kicking client: " << e->message << "\n";
         delete e;
       }
       removeClient(clients.begin()->second);
@@ -666,29 +688,37 @@ String Server::stringSettingAlteringCallback(
     if (fullName.front() == "speed") {
       Fatal("speed not a string setting");
     } else if (fullName.front() == "universe") {
-      if (universe != NULL && newValue == universe->getInternalName()) {
-        return "";
-      }
-      ResourceSearchResult result;
-      Universe* u = resourceInterface->search<Universe>(
-          newValue, NULL, &result
-        );
-      switch(result) {
-        case resourceSearchResult_success:
-          assert(u != NULL);
-          delete requestedUniverse;
-          requestedUniverse = u; /* File an asynchronous request to use the
-                                    universe */
+      fullName.pop_front();
+      assert(!fullName.empty());
+      if (fullName.front() == "name") {
+        if (universe != NULL && newValue == universe->getInternalName()) {
           return "";
-        case resourceSearchResult_ambiguous:
-          return "specified universe name ambiguous";
-        case resourceSearchResult_notFound:
-          return "specified universe name not found";
-        case resourceSearchResult_error:
-          return String("error finding resource: ") +
-            resourceInterface->getError();
-        default:
-          Fatal("unexpected ResourceSearchResult: " << result);
+        }
+        ResourceSearchResult result;
+        Universe* u = resourceInterface->search<Universe>(
+            newValue, NULL, &result
+          );
+        switch(result) {
+          case resourceSearchResult_success:
+            assert(u != NULL);
+            delete requestedUniverse;
+            requestedUniverse = u; /* File an asynchronous request to use the
+                                      universe */
+            return "";
+          case resourceSearchResult_ambiguous:
+            return "specified universe name ambiguous";
+          case resourceSearchResult_notFound:
+            return "specified universe name not found";
+          case resourceSearchResult_error:
+            return String("error finding resource: ") +
+              resourceInterface->getError();
+          default:
+            Fatal("unexpected ResourceSearchResult: " << result);
+        }
+      } else if (fullName.front() == "hash") {
+        return "";
+      } else {
+        Fatal("unexpected child of universe branch: " << fullName.front());
       }
     } else if (fullName.front() == "map") {
       if (universe == NULL) {

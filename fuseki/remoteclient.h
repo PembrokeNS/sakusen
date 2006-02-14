@@ -13,7 +13,7 @@ namespace fuseki {
 /* Represents a client which is contacted via a socket of some kind (this could
  * be a TCP socket to another machine, or a Unix socket to another process on
  * the same machine, or whatever else is supported) */
-class RemoteClient : public sakusen::Client, public SettingsUser {
+class RemoteClient : public sakusen::server::Client, public SettingsUser {
   private:
     RemoteClient();
     RemoteClient(const RemoteClient& copy);

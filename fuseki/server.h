@@ -44,7 +44,7 @@ class Server : public SettingsUser {
       /* The map template which we plan to use to build the world.
          NULL if none selected yet.  Owned by this. */
     uint32 mapPlayMode; /* Which mode we plan to play the map on */
-    std::vector<sakusen::Player> players;
+    std::vector<sakusen::server::Player> players;
       /* Players.  Note that this vector *becomes obsolete* as soon as the game
        * is started, because World makes a copy of it and works with that */
     settingsTree::SettingsTree settings; /* The tree of all the settings */
@@ -81,7 +81,7 @@ class Server : public SettingsUser {
         const String& value
       );
   public:
-    sakusen::Player* getPlayerPtr(sakusen::PlayerID id);
+    sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
     inline bool getAllowObservers() { return allowObservers; }
     
     void serve(); /* Do what servers do best */

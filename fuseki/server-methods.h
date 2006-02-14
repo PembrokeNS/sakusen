@@ -34,7 +34,7 @@ String Server::intSettingAlteringCallback(
     assert(!fullName.empty());
     sakusen::PlayerID id = sakusen::playerID_fromString(fullName.front());
     fullName.pop_front();
-    sakusen::Player& player = players[id];
+    sakusen::server::Player& player = players[id];
     assert(!fullName.empty());
     if (fullName.front() == "maxclients") {
       /* We need to ensure that the specified constraint on the number of

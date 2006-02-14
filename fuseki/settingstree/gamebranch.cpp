@@ -4,6 +4,7 @@
 #include "settingstree/stringleaf.h"
 #include "settingstree/intleaf-methods.h"
 #include "settingstree/boolleaf.h"
+#include "settingstree/universebranch.h"
 
 using namespace fuseki::settingsTree;
 
@@ -11,6 +12,7 @@ GameBranch::GameBranch(const Branch* parent, Server* server) :
   Branch("game", "world", "", parent, server)
 {
   addChild(new StringLeaf("universe", "world", "admin", this, server));
+  addChild(new UniverseBranch(this, server));
   addChild(new StringLeaf("map", "world", "admin", this, server));
   addChild(
       new IntLeaf<uint8>("mapplaymode", 0, "world", "admin", this, server)

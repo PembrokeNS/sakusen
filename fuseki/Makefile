@@ -1,7 +1,7 @@
 BIN = fuseki
 SOURCE_DIRS = settingstree
 THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werror -O0 -g3
-LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
+LIB_DEP_NAMES = liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server
 LIBS = -lstdc++ -lpcrecpp
 INCLUDE =
 

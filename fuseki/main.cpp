@@ -12,16 +12,17 @@
 
 #include <cerrno>
 #include <iostream>
+#include <optionsparser.h>
 
 using namespace std;
+using namespace optimal;
 
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::resources;
 using namespace fuseki;
 
-/* struct to store options processed from the command line.
- * Note that use of opt library means that morally-bools are listed as ints */
+/* struct to store options processed from the command line. */
   
 /* TODO: More command line arguments (in particular allow for putting
  * socket elsewhere, changing game name, possibly allow for UDP/TCP socket,
@@ -29,23 +30,26 @@ using namespace fuseki;
 struct Options {
   Options() :
     forceSocket(false),
-    noAbstract(false),
-    noDots(false),
+    abstract(true),
+    dots(true),
     help(false),
     version(false) 
   {}
   ~Options() {}
   bool forceSocket;
-  bool noAbstract;
-  bool noDots;
+  bool abstract;
+  bool dots;
   bool help;
   bool version;
-  int nonOptionIndex;
 };
 
 /* Forward-declarations */
-int startServer(String homePath, Options options);
-void parseCommandLine(int argc, char* const* argv, Options& results);
+int startServer(const String& homePath, const Options& options);
+Options getOptions(
+    const String& optionsFile,
+    int argc,
+    char const* const* argv
+  );
 void usage();
 
 /* Main function of the sakusen server */
@@ -61,21 +65,12 @@ int main(int argc, char* const* argv)
 
   String homePath = String(homePathPtr);
   
-  Options options;
-  
   String fusekiConfigFile =
     homePath + CONFIG_SUBDIR FILE_SEP "fuseki" FILE_SEP "config";
   cout << "Looking for fuseki config file at " << fusekiConfigFile << endl;
-  /* TODO: Parse configuration file */
   
-  /* Parse command line arguments */
-  parseCommandLine(argc, argv, options);
-  
-  if (argc > options.nonOptionIndex) {
-    cout << "Unrecognized option '" << argv[1] << "'." << endl;
-    usage();
-    return EXIT_FAILURE;
-  }
+  /* Parse config file and command line arguments */
+  Options options = getOptions(fusekiConfigFile, argc, argv);
 
   if (options.help) {
     usage();
@@ -111,50 +106,28 @@ void usage()
 
 /* Function to parse the command line */
 
-void parseCommandLine(int argc, char* const* argv, Options& results)
+Options getOptions(const String& optionsFile, int argc, char const* const* argv)
 {
-  struct option options[] = {
-    /* name           args         flag  val (=short version) */
-    { "force-socket", no_argument, NULL, 'f' },
-    { "no-abstract",  no_argument, NULL, 'a' },
-    { "no-dots",      no_argument, NULL, 'd' },
-    { "help",         no_argument, NULL, 'h' },
-    { "version",      no_argument, NULL, 'V' },
-    { 0,              0,           0,    0   }
-  };
-  
-  bool done = false;
-  
-  do {
-    int opt = getopt_long(argc, argv, "fa", options, NULL);
+  OptionsParser parser;
+  Options results;
 
-    switch(opt) {
-      case -1:
-        results.nonOptionIndex = optind;
-        done = true;
-        break;
-      case '?':
-        cout << "Unrecognized option '" << argv[optind] << "'." << endl;
-        usage();
-        exit(EXIT_FAILURE);
-        break;
-      case 'f':
-        results.forceSocket = true;
-        break;
-      case 'a':
-        results.noAbstract = true;
-        break;
-      case 'h':
-        results.help = true;
-        break;
-      case 'V':
-        results.version = true;
-        break;
-    }
-  } while (!done);
+  parser.addOption("force-socket", 'f', &results.forceSocket);
+  parser.addOption("abstract",     'a', &results.abstract);
+  parser.addOption("dots",         'd', &results.dots);
+  parser.addOption("help",         'h', &results.help);
+  parser.addOption("version",      'V', &results.version);
+
+  if (parser.Parse(optionsFile, argc, argv)) {
+    cout << "Error(s) parsing options:\n";
+    cout << stringUtils_join(parser.getErrors(), "\n") << "\n";
+    usage();
+    exit(EXIT_FAILURE);
+  }
+
+  return results;
 }
 
-int startServer(String homePath, Options options)
+int startServer(const String& homePath, const Options& options)
 {
   if (options.version) {
     cout << APPLICATION_NAME " " APPLICATION_VERSION << endl;
@@ -237,7 +210,7 @@ int startServer(String homePath, Options options)
   cout << "Socket created." << endl;
   
   Server server(
-      socket, cout, resourceInterface, !options.noAbstract, !options.noDots
+      socket, cout, resourceInterface, options.abstract, options.dots
     );
   server.serve();
   

@@ -26,6 +26,9 @@ template<typename T>
 String IntLeaf<T>::setValue(const String& s)
 {
   T v = sakusen::numFromString<T>(s);
+  if (v == value) {
+    return "setting already has that value";
+  }
   String reason;
   if ("" != (reason = server->intSettingAlteringCallback(this, v))) {
     return reason;
