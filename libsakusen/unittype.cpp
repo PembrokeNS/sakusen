@@ -1,6 +1,8 @@
 #include "unittype.h"
 
 #include "universe.h"
+#include "region-methods.h"
+#include "oarchive-methods.h"
 
 using namespace sakusen;
 
@@ -11,12 +13,9 @@ UnitType::UnitType(
     uint32 mC,
     uint8 m,
     Point<uint32> si,
-    Point<uint16> mA,
-    Point<uint16> mMA,
-    Point<sint16> mS,
-    Point<sint16> mMS,
-    Angle mHTS,
-    Angle mVTS,
+    Region<sint16> pA,
+    Region<sint16> pV,
+    Region<sint16> pAV,
     const Visibility& visib,
     const Sensors& visio,
     bool f,
@@ -32,12 +31,9 @@ UnitType::UnitType(
   metalCost(mC),
   mass(m),
   size(si),
-  maxAcceleration(mA),
-  maxMinusAcceleration(mMA),
-  maxSpeed(mS),
-  maxMinusSpeed(mMS),
-  maxYawSpeed(mHTS),
-  maxPitchSpeed(mVTS),
+  possibleAccelerations(pA),
+  possibleVelocities(pV),
+  possibleAngularVelocities(pAV),
   visibility(visib),
   vision(visio),
   fixed(f),
@@ -57,12 +53,9 @@ UnitType::UnitType(
     uint32 mC,
     uint8 m,
     Point<uint32> si,
-    Point<uint16> mA,
-    Point<uint16> mMA,
-    Point<sint16> mS,
-    Point<sint16> mMS,
-    Angle mHTS,
-    Angle mVTS,
+    Region<sint16> pA,
+    Region<sint16> pV,
+    Region<sint16> pAV,
     const Visibility& visib,
     const Sensors& visio,
     bool f,
@@ -78,12 +71,9 @@ UnitType::UnitType(
   metalCost(mC),
   mass(m),
   size(si),
-  maxAcceleration(mA),
-  maxMinusAcceleration(mMA),
-  maxSpeed(mS),
-  maxMinusSpeed(mMS),
-  maxYawSpeed(mHTS),
-  maxPitchSpeed(mVTS),
+  possibleAccelerations(pA),
+  possibleVelocities(pV),
+  possibleAngularVelocities(pAV),
   visibility(visib),
   vision(visio),
   fixed(f),
@@ -128,9 +118,10 @@ String UnitType::resolveNames(const Universe* universe)
 void UnitType::store(OArchive& archive) const
 {
   archive << internalName << maxHitPoints <<
-    energyCost << metalCost << mass << size <<
-    maxAcceleration << maxMinusAcceleration << maxSpeed << maxMinusSpeed <<
-    maxYawSpeed << maxPitchSpeed;
+    energyCost << metalCost << mass << size;
+  possibleAccelerations.store(archive);
+  possibleVelocities.store(archive);
+  possibleAngularVelocities.store(archive);
   visibility.store(archive);
   vision.store(archive);
   archive << fixed << ground << surface << air << seabed << weapons <<
@@ -147,16 +138,11 @@ UnitType UnitType::load(IArchive& archive)
   /* armour */
   uint8 mass;
   Point<uint32> size;
-  Point<uint16> maxAcceleration;
-  Point<uint16> maxMinusAcceleration;
-  Point<sint16> maxSpeed;
-  Point<sint16> maxMinusSpeed;
-  Angle maxYawSpeed;
-  Angle maxPitchSpeed;
   archive >> internalName >> maxHitPoints >>
-    energyCost >> metalCost >> mass >> size >>
-    maxAcceleration >> maxMinusAcceleration >> maxSpeed >> maxMinusSpeed >>
-    maxYawSpeed >> maxPitchSpeed;
+    energyCost >> metalCost >> mass >> size;
+  Region<sint16> possibleAccelerations = Region<sint16>::load(archive);
+  Region<sint16> possibleVelocities = Region<sint16>::load(archive);
+  Region<sint16> possibleAngularVelocities = Region<sint16>::load(archive);
   Visibility visibility(archive);
   Sensors vision(archive);
   bool fixed;
@@ -171,10 +157,9 @@ UnitType UnitType::load(IArchive& archive)
 
   return UnitType(
       internalName,
-      maxHitPoints, energyCost, metalCost, mass, size, maxAcceleration,
-      maxMinusAcceleration, maxSpeed, maxMinusSpeed, maxYawSpeed,
-      maxPitchSpeed, visibility, vision, fixed, ground, surface, air, seabed,
-      weapons, corpseUnitType
+      maxHitPoints, energyCost, metalCost, mass, size, possibleAccelerations,
+      possibleVelocities, possibleAngularVelocities, visibility, vision, fixed,
+      ground, surface, air, seabed, weapons, corpseUnitType
     );
 }
 

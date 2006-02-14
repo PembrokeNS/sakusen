@@ -30,6 +30,38 @@ list<String> sakusen::stringUtils_split(
   return result;
 }
 
+String sakusen::stringUtils_join(
+    const list<String>& strings,
+    const String& delim
+  )
+{
+  if (strings.empty()) {
+    return "";
+  }
+  list<String>::const_iterator s = strings.begin();
+  String result = *s;
+  ++s;
+  
+  for (; s != strings.end(); ++s) {
+    result += delim;
+    result += *s;
+  }
+  
+  return result;
+}
+
+String sakusen::stringUtils_makePrintable(const String& s)
+{
+  /* Note that this is UTF-8 safe */
+  String result(s);
+  for (String::iterator c = result.begin(); c != result.end(); ++c) {
+    if (*c < ' ') {
+      *c = '.';
+    }
+  }
+  return result;
+}
+
 String sakusen::stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length

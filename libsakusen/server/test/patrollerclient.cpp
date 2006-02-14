@@ -1,8 +1,8 @@
 #include "patrollerclient.h"
 #include "unit.h"
 
-using namespace sakusen;
-using namespace sakusen::test;
+using namespace sakusen::server;
+using namespace sakusen::server::test;
 
 PatrollerClient::PatrollerClient(Point<sint32> p) :
   patrolTo(p),
@@ -17,9 +17,10 @@ void PatrollerClient::sendUpdate(const Update& update)
     case updateType_unitAdded:
       {
         const UnitAddedUpdateData& data = update.getUnitAddedData();
-        if (data.getUnit()->getId() == 0 &&
+        if (data.getUnit().getId() == 0 &&
             data.getReason() == changeOwnerReason_created) {
-          patrolFrom = data.getUnit()->getPosition();
+          patrolFrom = data.getUnit().getPosition();
+          /*Debug("sending move order");*/
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,
                 Order(MoveOrderData(patrolTo))

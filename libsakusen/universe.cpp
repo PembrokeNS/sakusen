@@ -4,8 +4,13 @@ using namespace std;
 
 using namespace sakusen;
 
-Universe::Universe(const String& in, const std::vector<UnitType>& u) :
+Universe::Universe(
+    const String& in,
+    const String& h,
+    const std::vector<UnitType>& u
+  ) :
   internalName(in),
+  hash(h),
   unitTypes(u)
 {
   constructHashMaps();
@@ -72,7 +77,8 @@ Universe* Universe::loadNew(IArchive& archive)
   String internalName;
   vector<UnitType> unitTypes;
   archive >> internalName >> unitTypes;
-  Universe* u = new Universe(internalName, unitTypes);
+  Universe* u =
+    new Universe(internalName, archive.getSecureHashAsString(), unitTypes);
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {
     delete u;

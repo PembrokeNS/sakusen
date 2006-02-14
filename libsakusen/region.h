@@ -1,22 +1,19 @@
 #ifndef REGION_H
 #define REGION_H
 
-namespace sakusen {
-
-class Region;
-
-}
-
 #include "point.h"
+#include "oarchive.h"
+#include "iarchive.h"
 
 namespace sakusen {
 
 class Unit;
 
+template<typename T>
 class Region {
   public:
-    Region();
-    Region(const Region& copy, const Point<sint32> position);
+    Region() : centre(), radius(0) {}
+    Region(Point<T> c, uint32 r) : centre(c), radius(r) {}
     ~Region() {}
   private:
     /* TODO: Somehow store appropriate region info.
@@ -24,15 +21,18 @@ class Region {
      * In the long term we may want to make this an abstract class with various
      * subclasses, although that may cause some confusion.  
      */
-    Point<sint32> centre;
+    Point<T> centre;
     uint32 radius;
   public:
     /* accessors */
     inline uint64 squareRadius(void) const { return uint64(radius) * radius; }
     /* game mechanics */
-    bool contains(const Point<sint32>& point) const;
-    bool contains(const Unit& unit) const; /* Can't inline these due to cyclic
-                                              include problems */
+    inline bool contains(const Point<T>& point) const;
+    inline bool contains(const Unit& unit) const;
+    inline Point<T> truncateToFit(const Point<T>&) const;
+    
+    void store(OArchive&) const;
+    static Region<T> load(IArchive&);
 };
 
 }

@@ -6,6 +6,8 @@
 #include "updatetype.h"
 #include "ordercondition.h"
 #include "oarchive.h"
+#include "iunit.h"
+#include "completeunit.h"
 
 namespace sakusen {
 
@@ -29,6 +31,7 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
     UnitRemovedUpdateData();
   public:
     UnitRemovedUpdateData(uint32 id, changeOwnerReason reason);
+    UnitRemovedUpdateData(IArchive&);
     ~UnitRemovedUpdateData() {}
   private:
     uint32 id;
@@ -43,17 +46,18 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
   private:
     UnitAddedUpdateData();
   public:
-    UnitAddedUpdateData(const Unit* unit, changeOwnerReason reason);
+    UnitAddedUpdateData(changeOwnerReason reason, const IUnit* unit);
+    UnitAddedUpdateData(IArchive&, const Universe*);
     ~UnitAddedUpdateData() {}
   private:
-    const Unit* unit;
     changeOwnerReason reason;
+    CompleteUnit unit;
   public:
     UpdateData* newCopy() const { return new UnitAddedUpdateData(*this); }
     UpdateType getType() const { return updateType_unitAdded; }
     void store(OArchive& out) const;
-    inline const Unit* getUnit() const { return unit; }
     inline changeOwnerReason getReason() const { return reason; }
+    inline const CompleteUnit& getUnit() const { return unit; }
 };
 
 class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {

@@ -5,6 +5,7 @@
 #include "unit.h"
 #include "universe.h"
 #include "playertemplate.h"
+#include "playerid.h"
 
 namespace sakusen {
 

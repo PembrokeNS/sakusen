@@ -10,6 +10,8 @@ namespace sakusen {
  * Note that current serialization implementation limits us to 256 types. */
 
 enum UpdateType {
+  updateType_none, /* Dummy value because mistakes will most probably lead to
+                      a value of zero */
   updateType_unitRemoved, /* UnitID, changeOwnerReason */
   updateType_unitAdded, /* Unit, changeOwnerReason */
   updateType_orderQueued, /* UnitID, Order, OrderCondition */

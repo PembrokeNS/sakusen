@@ -9,7 +9,7 @@ Update::Update() :
 {
 }
 
-Update::Update(IArchive& in) :
+Update::Update(IArchive& in, const Universe* universe) :
   data(NULL)
 {
   /* If the archive is empty then it's broken.  Leave data NULL and return */
@@ -23,11 +23,17 @@ Update::Update(IArchive& in) :
   UpdateType type = static_cast<UpdateType>(typeInt);
 
   /* Construct the appropriate data */
-  //switch (type) {
-  //  default:
+  switch (type) {
+    case updateType_unitRemoved:
+      data = new UnitRemovedUpdateData(in);
+      break;
+    case updateType_unitAdded:
+      data = new UnitAddedUpdateData(in, universe);
+      break;
+    default:
       Debug("Unknown UpdateType " << type);
-  //    break;
-  //}
+      break;
+  }
 }
 
 Update::Update(const Update& copy) :

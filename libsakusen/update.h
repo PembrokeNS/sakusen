@@ -12,7 +12,7 @@ class LIBSAKUSEN_API Update {
   private:
     Update();
   public:
-    Update(IArchive& in);
+    Update(IArchive& in, const Universe*);
     Update(const Update& copy);
     Update(const UpdateData& data);
     ~Update();
@@ -21,7 +21,10 @@ class LIBSAKUSEN_API Update {
     const UpdateData* data;
   public:
     inline UpdateType getType(void) const { return data->getType(); }
-    inline void store(OArchive& out) const { data->store(out); }
+    inline void store(OArchive& out) const {
+      out << uint8(getType());
+      data->store(out);
+    }
     inline UnitRemovedUpdateData getUnitRemovedData(void) const {
       return *dynamic_cast<const UnitRemovedUpdateData*>(data);
     }

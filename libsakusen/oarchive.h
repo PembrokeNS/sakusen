@@ -5,7 +5,6 @@
 
 #include "stringutils.h"
 #include "point.h"
-#include "weapontype.h"
 
 namespace sakusen {
 
@@ -67,6 +66,16 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint32& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
+    
+    template<typename T, int size>
+    OArchive& insert(const T toStore[size])
+    {
+      for (int i=0; i<size; ++i) {
+        store<T>(toStore[i]);
+      }
+
+      return *this;
+    }
 
     template<typename T>
 	  OArchive& operator<<(const std::vector<T>& toStore)
@@ -100,27 +109,14 @@ class LIBSAKUSEN_API OArchive {
       return *this << p.x << p.y << p.z;
     }
 
-    /* These three lines are required by MSVC, whose templating does seem a
-     * little unusual. */
-    /* These three lines also break compilation under gcc.  I can't believe
-     * that they are really needed under MSVC.  They surely won't be once the
-     * internal compiler error is dealt with
-    OArchive& operator<<(const Point<sint16>& point);
-    OArchive& operator<<(const Point<sint32>& point);
-    OArchive& operator<<(const Point<uint32>& point); */
+    template<int size>
+    inline void magicValue(const char val[size+1]) {
+      /* The '+1' in the array length is to allow for the trailing null char */
+      ensureSpace(size);
+      memcpy(buffer+length, val, size);
+      length += size;
+    }
 };
-
-template<>
-inline void OArchive::store<String>(const String& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
-{
-  *this << toStore->getInternalName();
-}
 
 }
 

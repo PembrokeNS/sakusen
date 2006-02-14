@@ -9,6 +9,7 @@ std::ostream& sakusen::operator<<(std::ostream& output, UpdateType update)
 {
   switch(update) {
     #define CASE(type) case type: output << #type; break;
+    CASE(updateType_none)
     CASE(updateType_unitRemoved)
     CASE(updateType_unitAdded)
     CASE(updateType_orderQueued)

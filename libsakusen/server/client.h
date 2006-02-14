@@ -9,6 +9,7 @@
 #include "update.h"
 
 namespace sakusen {
+namespace server {
 
 class LIBSAKUSEN_API Client {
   private:
@@ -43,7 +44,7 @@ class LIBSAKUSEN_API Client {
     virtual void sendUpdate(const Update& update) = 0;
 };
 
-}
+}}
 
 #endif // CLIENT_H
 

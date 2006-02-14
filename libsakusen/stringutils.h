@@ -20,13 +20,22 @@ class StringHash {
     }
 };
 
-/* Split the string splitee at characters contained in spliton */
+/** \brief Split the string splitee at characters contained in spliton */
 LIBSAKUSEN_API std::list<String> stringUtils_split(
     const String& splitee,
     const String& spliton
   );
 
-/* Convert a String to an number  */
+/** \brief Join the list of strings together, joining them with delim */
+LIBSAKUSEN_API String stringUtils_join(
+    const std::list<String>& strings,
+    const String& delim
+  );
+
+/** \brief Convert all characters of the argument into printable characters */
+String stringUtils_makePrintable(const String&);
+
+/** \brief Convert a String to an number  */
 template<typename T>
 inline T numFromString(String str);
 

@@ -11,23 +11,41 @@ UnitRemovedUpdateData::UnitRemovedUpdateData(
 {
 }
 
+UnitRemovedUpdateData::UnitRemovedUpdateData(IArchive& in) :
+  UpdateData()
+{
+  in >> id;
+  in.extractEnum(reason);
+}
+
 void UnitRemovedUpdateData::store(OArchive& out) const
 {
-  out << uint8(updateType_unitRemoved) << id << uint8(reason);
+  out << id << uint8(reason);
 }
 
 UnitAddedUpdateData::UnitAddedUpdateData(
-    const Unit* u,
-    changeOwnerReason r) :
+    changeOwnerReason r,
+    const IUnit* u
+  ) :
   UpdateData(),
-  unit(u),
-  reason(r)
+  reason(r),
+  unit(u)
 {
 }
 
-void UnitAddedUpdateData::store(OArchive& /*out*/) const
+UnitAddedUpdateData::UnitAddedUpdateData(
+    IArchive& in,
+    const Universe* universe
+  ) :
+  unit(CompleteUnit::load(in, universe))
 {
-  /* TODO: store */
+  in.extractEnum(reason);
+}
+
+void UnitAddedUpdateData::store(OArchive& out) const
+{
+  unit.store(out);
+  out << uint8(reason);
 }
 
 OrderAcceptedUpdateData::OrderAcceptedUpdateData(
@@ -41,7 +59,7 @@ OrderAcceptedUpdateData::OrderAcceptedUpdateData(
 
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
-  out << uint8(updateType_orderAccepted) << unitId << uint8(condition);
+  out << unitId << uint8(condition);
 }
 
 OrderCompletedUpdateData::OrderCompletedUpdateData(
@@ -55,7 +73,7 @@ OrderCompletedUpdateData::OrderCompletedUpdateData(
 
 void OrderCompletedUpdateData::store(OArchive& out) const
 {
-  out << uint8(updateType_orderCompleted) << unitId << uint8(condition);
+  out << unitId << uint8(condition);
 }
 
 OrderQueuedUpdateData::OrderQueuedUpdateData(
@@ -69,8 +87,8 @@ OrderQueuedUpdateData::OrderQueuedUpdateData(
 {
 }
 
-void OrderQueuedUpdateData::store(OArchive& /*out*/) const
+void OrderQueuedUpdateData::store(OArchive& out) const
 {
-  /* TODO: store */
+  out << unitId << order << uint8(condition);
 }
 

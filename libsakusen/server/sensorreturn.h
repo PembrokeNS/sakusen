@@ -7,30 +7,31 @@
 #include "unitid.h"
 
 namespace sakusen {
+namespace server {
 
 typedef uint32 SensorReturnID;
 
 class UnitSensorPair {
   public:
-  UnitSensorPair();
-  ~UnitSensorPair();
+    UnitSensorPair();
+    ~UnitSensorPair();
   private:
-  UnitID spotter;
-  enum sensorType method;
+    UnitID spotter;
+    enum sensorType method;
 };
   
 class SensorReturn {
   public:
-  SensorReturn();
-  ~SensorReturn();
+    SensorReturn();
+    ~SensorReturn();
   private:
-  SensorReturnID srId;
-  std::vector<class UnitSensorPair> returns;
+    SensorReturnID srId;
+    std::vector<class UnitSensorPair> returns;
   public:
-  inline SensorReturnID getId(void) {return srId;}
+    inline SensorReturnID getId(void) {return srId;}
 };
 
-}
+}}
 
 #endif
 

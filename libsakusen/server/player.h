@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef LIBSAKUSEN_SERVER__PLAYER_H
+#define LIBSAKUSEN_SERVER__PLAYER_H
 
 #include "libsakusen-global.h"
 #include <list>
@@ -11,10 +11,11 @@
 #include "playertemplate.h"
 
 namespace sakusen {
+namespace server {
 
-class Unit;
+class LayeredUnit;
 
-class LIBSAKUSEN_API Player {
+class Player {
   private:
     Player();
   public:
@@ -27,7 +28,7 @@ class LIBSAKUSEN_API Player {
     PlayerID playerId; /**< ID of player is assigned by the World constructor */
     String name;
     std::list<Client*> clients;
-    __gnu_cxx::hash_map<uint32, Unit*> units;
+    __gnu_cxx::hash_map<uint32, LayeredUnit*> units;
       /* This is a hashtable of the units belonging to the player, keyed by
          their id */
     uint32 lastUnitId; /* The id of the last unit that was added for this
@@ -50,7 +51,7 @@ class LIBSAKUSEN_API Player {
     void removeUnit(const uint32 id, enum changeOwnerReason why);
       /* any call to removeUnit must be followed by a call to addUnit for
        * another player, otherwise the unit will end up in limbo */
-    void addUnit(Unit* unit, enum changeOwnerReason why);
+    void addUnit(LayeredUnit* unit, enum changeOwnerReason why);
       /* returns the new unit id */
     
     void applyIncomingOrders(void);
@@ -61,7 +62,7 @@ class LIBSAKUSEN_API Player {
     void informClients(const Update& update);
 };
 
-}
+}}
 
-#endif
+#endif // LIBSAKUSEN_SERVER__PLAYER_H
 

@@ -1,8 +1,9 @@
 #include "player.h"
 #include "unit.h"
 #include "updatedata.h"
+#include "layeredunit.h"
 
-using namespace sakusen;
+using namespace sakusen::server;
 
 Player::Player(const PlayerTemplate& t) :
   noClients(t.isNoClients()),
@@ -69,16 +70,16 @@ void Player::detachClient(Client* client)
 
 void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
 {
-  __gnu_cxx::hash_map<uint32, Unit*>::iterator unit = units.find(id);
+  __gnu_cxx::hash_map<uint32, LayeredUnit*>::iterator unit = units.find(id);
   if (unit == units.end()) {
     Fatal("tried to remove a unit which wasn't there");
   }
-  Debug("removing unit " << id << " for player " << playerId);
+  /*Debug("removing unit " << id << " for player " << playerId);*/
   units.erase(id);
   informClients(Update(UnitRemovedUpdateData(id, why)));
 }
 
-void Player::addUnit(Unit* unit, enum changeOwnerReason why)
+void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
 {
   ++lastUnitId;
   if (units.count(lastUnitId)) {
@@ -86,10 +87,8 @@ void Player::addUnit(Unit* unit, enum changeOwnerReason why)
   }
   units[lastUnitId] = unit;
   assert(units.find(lastUnitId) != units.end());
-  /* Debugf(("added unit %d for player %d (%x) (who now has %d units)",
-        lastUnitId, playerId, (unsigned int) this, units.size())); */
   unit->setId(lastUnitId);
-  informClients(Update(UnitAddedUpdateData(unit, why)));
+  informClients(Update(UnitAddedUpdateData(why, unit)));
 }
 
 void Player::applyIncomingOrders(void)
@@ -98,13 +97,14 @@ void Player::applyIncomingOrders(void)
       client != clients.end(); client++) {
     while (!(*client)->orderMessageQueueEmpty()) {
       const OrderMessage message = (*client)->orderMessageQueuePopFront();
-      __gnu_cxx::hash_map<uint32, Unit*>::iterator orderee =
+      __gnu_cxx::hash_map<uint32, LayeredUnit*>::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
         /* FIXME: This should not be a fatal error, but is for debugging */
         Fatal("Order for non-existent unit id " << message.getOrderee() <<
               ", player " << playerId);
       } else {
+        /*Debug("order for unit id " << message.getOrderee());*/
         orderee->second->enqueueOrder(
             message.getCondition(),
             message.getOrder()
@@ -116,6 +116,7 @@ void Player::applyIncomingOrders(void)
 
 void Player::informClients(const Update& update)
 {
+  /*Debug("clients.size()=" << clients.size());*/
   for (std::list<Client*>::iterator client = clients.begin();
       client != clients.end(); client++) {
     /* Debug("informing client"); */

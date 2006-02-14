@@ -145,8 +145,16 @@ template <typename T> class LIBSAKUSEN_API Point {
 
     inline Point<sint16> round16(void) const;
     inline Point<sint32> round32(void) const;
-
 };
+
+template<>
+inline Point<sint16> Point<double>::truncate16(void) const {
+  return Point<sint16>(
+      static_cast<sint16>(trunc(x)),
+      static_cast<sint16>(trunc(y)),
+      static_cast<sint16>(trunc(z))
+    );
+}
 
 template<>
 inline Point<sint32> Point<double>::truncate32(void) const {
@@ -169,3 +177,4 @@ inline Point<sint16> Point<double>::round16(void) const {
 }
 
 #endif // VECTORS_H
+

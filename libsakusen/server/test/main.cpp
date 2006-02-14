@@ -6,7 +6,7 @@
 #include <cerrno>
 
 #include "libsakusen-global.h"
-#include "world.h"
+#include "completeworld.h"
 #include "planemap.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
@@ -16,7 +16,8 @@
 using namespace std;
 
 using namespace sakusen;
-using namespace sakusen::test;
+using namespace sakusen::server;
+using namespace sakusen::server::test;
 
 void doLoadTest(ostream& output)
 {
@@ -32,7 +33,7 @@ void doLoadTest(ostream& output)
   }
 #endif
   /* do test */
-  world->advanceGameState(numFrames);
+  sakusen::server::world->advanceGameState(numFrames);
 #ifndef _MSC_VER
   /* get time after test */
   if (clock_gettime(CLOCK_REALTIME, &endTime)) {
@@ -78,12 +79,9 @@ int main(/* int argc, char** argv */)
         100 /* metalCost */,
         10 /* mass */,
         Point<uint32>(10,10,10) /* size */,
-        Point<uint16>(10,10,10) /* maxAcceleration */,
-        Point<uint16>(10,10,10) /* maxMinusAcceleration */,
-        Point<sint16>(10,10,10) /* maxSpeed */,
-        Point<sint16>(10,10,10) /* maxMinusSpeed */,
-        10 /* maxHorizTurnSpeed */,
-        5 /* maxVertTurnSpeed */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleAccelerations */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleVelocities */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleAngularVelocities */,
         Visibility(),
         Sensors(),
         false /* fixed */,
@@ -96,7 +94,7 @@ int main(/* int argc, char** argv */)
       );
   unitTypes.push_back(commanderType);
   
-  Universe universe("universe", unitTypes);
+  Universe universe("universe", "", unitTypes);
 
   /* Create the map */
   Heightfield heightfield = Heightfield();
@@ -127,10 +125,9 @@ int main(/* int argc, char** argv */)
   players.push_back(realPlayer);
 
   /* Create the world */
-  World* w = new World(t, 0 /* mode */, players);
+  World* w = new CompleteWorld(t, 0 /* mode */, players);
     
   doLoadTest(cout);
-  world = NULL;
   delete w;
   w = NULL;
 
@@ -164,10 +161,9 @@ int main(/* int argc, char** argv */)
     );
 
   /* Create the world */
-  w = new World(t, 0 /* mode */, players);
+  w = new CompleteWorld(t, 0 /* mode */, players);
   
   doLoadTest(cout);
-  world = NULL;
   delete w;
   w = NULL;
 
@@ -177,9 +173,8 @@ int main(/* int argc, char** argv */)
   PatrollerClient patrollerClient(Point<sint32>(2000, 0, 0));
   players.back().attachClient(&patrollerClient);
   
-  w = new World(t, 0 /* mode */, players);
+  w = new CompleteWorld(t, 0 /* mode */, players);
   doLoadTest(cout);
-  world = NULL;
   delete w;
   w = NULL;
 

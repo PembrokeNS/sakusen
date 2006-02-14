@@ -44,12 +44,9 @@ int main(/*int argc, char** argv*/)
         100 /* metalCost */,
         10 /* mass */,
         Point<uint32>(10,10,10) /* size */,
-        Point<uint16>(10,10,10) /* maxAcceleration */,
-        Point<uint16>(10,10,10) /* maxMinusAcceleration */,
-        Point<sint16>(10,10,10) /* maxSpeed */,
-        Point<sint16>(10,10,10) /* maxMinusSpeed */,
-        10 /* maxHorizTurnSpeed */,
-        5 /* maxVertTurnSpeed */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleAccelerations */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleVelocities */,
+        Region<sint16>(Point<sint16>(), 10) /* possibleAngularVelocities */,
         Visibility(),
         Sensors(),
         false /* fixed */,
@@ -62,7 +59,7 @@ int main(/*int argc, char** argv*/)
       );
   unitTypes.push_back(commanderType);
   
-  Universe universe("universe", unitTypes);
+  Universe universe("universe", "", unitTypes);
 
   cout << "Saving Universe" << endl;
   if(resourceInterface->save(&universe))

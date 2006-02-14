@@ -32,11 +32,13 @@ class LIBSAKUSEN_API Universe {
   public:
     Universe(
         const String& internalName,
+        const String& hash,
         const std::vector<UnitType>& unitTypes
       );
     ~Universe() {}
   private:
     String internalName;
+    String hash;
     std::vector<UnitType> unitTypes;
     __gnu_cxx::hash_map<String, UnitTypeID, StringHash> unitIDLookup;
 
@@ -55,6 +57,7 @@ class LIBSAKUSEN_API Universe {
     
     /* accessors */
     inline const String& getInternalName() const { return internalName; }
+    inline const String& getHash() const { return hash; }
     
     /* index/pointer/ID/Name conversions */
     inline const WeaponType* getWeaponTypePtr(const WeaponTypeID id) const

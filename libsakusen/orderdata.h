@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include "oarchive.h"
+
 namespace sakusen {
 
 class LIBSAKUSEN_API OrderData {
@@ -15,6 +17,7 @@ class LIBSAKUSEN_API OrderData {
     virtual OrderData* newCopy(void) const = 0;
       /* Allocates a new copy of this object - caller responsible for freeing
        * memory */
+    virtual void store(OArchive&) const = 0;
 };
 
 }

@@ -8,6 +8,7 @@
 #include "iarchive.h"
 #include "oarchive.h"
 #include "hitpoints.h"
+#include "region.h"
 
 #include <list>
 
@@ -30,12 +31,9 @@ class LIBSAKUSEN_API UnitType {
       uint32 metalCost,
       uint8 mass,
       Point<uint32> size,
-      Point<uint16> maxAcceleration,
-      Point<uint16> maxMinusAcceleration,
-      Point<sint16> maxSpeed,
-      Point<sint16> maxMinusSpeed,
-      Angle maxHorizTurnSpeed,
-      Angle maxVertTurnSpeed,
+      Region<sint16> possibleAccelerations,
+      Region<sint16> possibleVelocities,
+      Region<sint16> possibleAngularVelocities,
       const Visibility& visibility,
       const Sensors& vision,
       bool fixed,
@@ -63,12 +61,9 @@ class LIBSAKUSEN_API UnitType {
       uint32 metalCost,
       uint8 mass,
       Point<uint32> size,
-      Point<uint16> maxAcceleration,
-      Point<uint16> maxMinusAcceleration,
-      Point<sint16> maxSpeed,
-      Point<sint16> maxMinusSpeed,
-      Angle maxHorizTurnSpeed,
-      Angle maxVertTurnSpeed,
+      Region<sint16> possibleAccelerations,
+      Region<sint16> possibleVelocities,
+      Region<sint16> possibleAngularVelocities,
       const Visibility& visibility,
       const Sensors& vision,
       bool fixed,
@@ -88,12 +83,9 @@ class LIBSAKUSEN_API UnitType {
     /* armour */
     uint8 mass;
     Point<uint32> size;
-    Point<uint16> maxAcceleration;
-    Point<uint16> maxMinusAcceleration;
-    Point<sint16> maxSpeed;
-    Point<sint16> maxMinusSpeed;
-    Angle maxYawSpeed;
-    Angle maxPitchSpeed;
+    Region<sint16> possibleAccelerations;
+    Region<sint16> possibleVelocities;
+    Region<sint16> possibleAngularVelocities;
     Visibility visibility;
     Sensors vision;
     bool fixed:1; /* true for buildings, mines */
@@ -117,16 +109,19 @@ class LIBSAKUSEN_API UnitType {
     inline const uint32& getMetalCost() const { return metalCost; }
     inline const uint8& getMass() const { return mass; }
     inline const Point<uint32>& getSize() const { return size; }
-    inline const Point<uint16>& getMaxAcceleration() const { return maxAcceleration; }
-    inline const Point<uint16>& getMaxMinusAcceleration() const { return maxMinusAcceleration; }
-    inline const Point<sint16>& getMaxSpeed() const { return maxSpeed; }
-    inline const Point<sint16>& getMaxMinusSpeed() const { return maxMinusSpeed; }
-    inline const Angle& getMaxYawSpeed() const { return maxYawSpeed; }
-    inline const Angle& getMaxPitchSpeed() const { return maxPitchSpeed; }
+    inline const Region<sint16>& getPossibleAccelerations() const {
+      return possibleAccelerations;
+    }
+    inline const Region<sint16>& getPossibleVelocities() const {
+      return possibleVelocities;
+    }
+    inline const Region<sint16>& getPossibleAngularVelocities() const {
+      return possibleAngularVelocities;
+    }
     inline const Visibility& getVisibility() const { return visibility; }
     inline const Sensors& getVision() const { return vision; }
     inline const std::list<WeaponTypeID> getWeapons() const { return weapons; }
-    inline const UnitTypeID& getCorpseUnitType() const { return corpseUnitType; }
+    inline UnitTypeID getCorpseUnitType() const { return corpseUnitType; }
     
     void store(OArchive&) const;
     static UnitType load(IArchive&);

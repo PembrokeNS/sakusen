@@ -5,6 +5,8 @@
 #include "orderdata.h"
 #include "moveorderdata.h"
 #include "setvelocityorderdata.h"
+#include "oarchive.h"
+#include "iarchive.h"
 
 namespace sakusen {
 
@@ -12,7 +14,7 @@ class LIBSAKUSEN_API Order {
   public:
     Order();
     Order(const Order& copy);
-    Order(const MoveOrderData& d);
+    Order(const OrderData& d);
     ~Order();
     Order& operator=(const Order& copy);
   private:
@@ -32,6 +34,9 @@ class LIBSAKUSEN_API Order {
     inline const SetVelocityOrderData getSetVelocityData(void) const {
       return *dynamic_cast<const SetVelocityOrderData*>(data);
     }
+
+    void store(OArchive&) const;
+    static Order load(IArchive&);
 };
 
 }

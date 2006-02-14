@@ -1,5 +1,5 @@
-#ifndef DEBUGGINGCLIENT_H
-#define DEBUGGINGCLIENT_H
+#ifndef LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
+#define LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 
 #include "libsakusen-global.h"
 
@@ -12,8 +12,9 @@
  * a stream about what messages it receives, etc. */
 
 namespace sakusen {
+namespace server {
 
-class LIBSAKUSEN_API DebuggingClient : public Client {
+class DebuggingClient : public Client {
   public:
     DebuggingClient();
     DebuggingClient(std::ostream& output);
@@ -25,7 +26,7 @@ class LIBSAKUSEN_API DebuggingClient : public Client {
     void sendUpdate(const Update& update);
 };
 
-}
+}}
 
-#endif // DEBUGGINGCLIENT_H
+#endif // LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 

@@ -3,6 +3,7 @@
 
 #include "point.h"
 #include "orderdata.h"
+#include "iarchive.h"
 
 namespace sakusen {
 
@@ -11,12 +12,14 @@ class LIBSAKUSEN_API MoveOrderData : public OrderData {
     MoveOrderData();
   public:
     MoveOrderData(const Point<sint32>& t) : OrderData(), target(t) {}
+    MoveOrderData(IArchive& in) : OrderData() { in >> target; }
     ~MoveOrderData() {};
   private:
     Point<sint32> target;
   public:
     const Point<sint32>& getTarget(void) const { return target; }
     OrderData* newCopy(void) const;
+    void store(OArchive&) const;
 };
 
 }

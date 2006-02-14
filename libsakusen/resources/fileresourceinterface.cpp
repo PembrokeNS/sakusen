@@ -184,7 +184,7 @@ void* FileResourceInterface::internalSearch(
   } catch (DeserializationExn* e) {
     *result = resourceSearchResult_error;
     delete e;
-    error = e->message;
+    error = String("exception: ") + e->message;
     return NULL;
   }
   

@@ -2,6 +2,7 @@
 
 #include "iarchive.h"
 #include "libsakusen-comms-global.h"
+#include "world.h"
 
 using namespace sakusen::comms;
 
@@ -77,6 +78,9 @@ Message::Message(const uint8* buffer, size_t bufferLength) :
       data = new GameStartMessageData(in);
       break;
     case messageType_update:
+      if (world == NULL) {
+        throw new NoWorldDeserializationExn();
+      }
       data = new UpdateMessageData(in);
       break;
     default:

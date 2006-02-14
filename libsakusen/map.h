@@ -14,20 +14,22 @@
 
 namespace sakusen {
 
-class Map;
-
-class LIBSAKUSEN_API Map {
+class Map {
   private:
     Map();
   protected:
     Map(const Map&);
     Map(const MapTemplate&);
+    Map(
+        const Point<sint32>& topRight,
+        const Point<sint32>& bottomLeft,
+        uint16 gravity
+      );
   public:
     virtual ~Map() {}
   private:
     Point<sint32> topRight; /* Excludes top right */
     Point<sint32> bottomLeft; /* Includes bottom left */
-    Heightfield heightfield;
     /* TODO: tiles */
     uint16 gravity;
   public:
@@ -132,7 +134,16 @@ class LIBSAKUSEN_API Map {
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const = 0;
     
-    static Map* newMap(const MapTemplate& t);
+    template<typename MapType>
+    static MapType* newMap(const MapTemplate& t);
+    
+    template<typename MapType>
+    static MapType* newMap(
+        Topology topology,
+        const Point<sint32>& topRight,
+        const Point<sint32>& bottomLeft,
+        uint16 gravity
+      );
 };
 
 }

@@ -7,6 +7,7 @@
 #include "update.h"
 #include "libsakusen-comms-global.h"
 #include "clientid.h"
+#include "topology.h"
 
 namespace sakusen {
 namespace comms {
@@ -216,16 +217,31 @@ class NotifySettingMessageData : public MessageData {
 };
 
 class GameStartMessageData : public MessageData {
-  public:
+  private:
     GameStartMessageData();
+  public:
+    GameStartMessageData(
+        Topology topology,
+        const Point<sint32>& topRight,
+        const Point<sint32>& bottomLeft,
+        uint16 gravity
+      );
     GameStartMessageData(IArchive& in);
     ~GameStartMessageData() {}
   private:
+    Topology topology;
+    Point<sint32> topRight;
+    Point<sint32> bottomLeft;
+    uint16 gravity;
   protected:
     void fillArchive();
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
+    inline Topology getTopology() const { return topology; }
+    inline const Point<sint32>& getTopRight() const { return topRight; }
+    inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
+    inline uint16 getGravity() const { return gravity; }
 };
 
 class UpdateMessageData : public MessageData {

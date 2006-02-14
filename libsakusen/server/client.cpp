@@ -1,6 +1,6 @@
 #include "client.h"
 
-using namespace sakusen;
+using namespace sakusen::server;
 
 Client::Client() :
   playerId(0),

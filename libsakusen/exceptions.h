@@ -6,6 +6,8 @@
 #include <cerrno>
 #include <stdexcept>
 
+#include "stringutils.h"
+
 namespace sakusen {
 
 class Exn {
@@ -28,7 +30,7 @@ class EndOfArchiveDeserializationExn :
     public DeserializationExn {
   public:
     EndOfArchiveDeserializationExn() :
-      DeserializationExn("tried to read past end of arhive") { }
+      DeserializationExn("tried to read past end of archive") { }
     virtual ~EndOfArchiveDeserializationExn() throw() { }
 };
 
@@ -50,6 +52,31 @@ class DuplicateNameDeserializationExn :
           "name '"+name+"' was duplicated"
         ) { }
     virtual ~DuplicateNameDeserializationExn() throw() { }
+};
+
+class NoWorldDeserializationExn :
+    public DeserializationExn {
+  public:
+    NoWorldDeserializationExn() :
+      DeserializationExn("world required for deserialization but missing") {}
+    virtual ~NoWorldDeserializationExn() throw() {}
+};
+
+template<int size>
+class WrongMagicDeserializationExn :
+    public DeserializationExn {
+  public:
+    WrongMagicDeserializationExn(
+        const char expected[size],
+        const uint8* found
+      ) :
+      DeserializationExn(
+          String("wrong magic: expected '") + String(expected, size) +
+          "', found: '" + stringUtils_makePrintable(
+            String(reinterpret_cast<const char*>(found), size)
+          ) + "'"
+        ) {}
+    virtual ~WrongMagicDeserializationExn() throw() {}
 };
 
 }

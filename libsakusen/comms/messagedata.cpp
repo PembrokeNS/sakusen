@@ -2,8 +2,10 @@
 
 #include "libsakusen-global.h"
 
+#include "world.h"
+
 namespace sakusen{
-    namespace comms{
+namespace comms{
 
 MessageData::MessageData() :
   archive()
@@ -323,18 +325,31 @@ MessageData* NotifySettingMessageData::newCopy() const
   return new NotifySettingMessageData(*this);
 }
 
-GameStartMessageData::GameStartMessageData() :
-  MessageData()
+GameStartMessageData::GameStartMessageData(
+    Topology t,
+    const Point<sint32>& tR,
+    const Point<sint32>& bL,
+    uint16 g
+  ) :
+  MessageData(),
+  topology(t),
+  topRight(tR),
+  bottomLeft(bL),
+  gravity(g)
 {
 }
 
-GameStartMessageData::GameStartMessageData(IArchive& /*in*/) :
+GameStartMessageData::GameStartMessageData(IArchive& in) :
   MessageData()
 {
+  uint8 topologyInt;
+  in >> topologyInt >> topRight >> bottomLeft >> gravity;
+  topology = static_cast<Topology>(topologyInt);
 }
 
 void GameStartMessageData::fillArchive()
 {
+  archive << uint8(topology) << topRight << bottomLeft << gravity;
 }
 
 MessageType GameStartMessageData::getType() const
@@ -355,7 +370,7 @@ UpdateMessageData::UpdateMessageData(const Update& u) :
 
 UpdateMessageData::UpdateMessageData(IArchive& in) :
   MessageData(),
-  update(in)
+  update(in, world->getUniverse())
 {
 }
 

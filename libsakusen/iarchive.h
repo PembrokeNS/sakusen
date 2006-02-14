@@ -8,6 +8,7 @@
 
 #include "point.h"
 #include "exceptions.h"
+#include "stringutils.h"
 
 namespace sakusen {
 
@@ -61,6 +62,11 @@ class LIBSAKUSEN_API IArchive {
       return T::load(*this, arg);
     }
   public:
+    inline String getSecureHashAsString() const {
+      return stringUtils_getSecureHashAsString(
+          originalBuffer, (buffer+remainingLength)-originalBuffer
+        );
+    }
     inline bool isFinished() const { return remainingLength == 0; }
     inline IArchive& operator>>(bool& i) {
       assertLength(sizeof(uint8));
@@ -89,6 +95,15 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(String& s);
 
     template<typename T>
+    IArchive& extractEnum(T& result)
+    {
+      uint8 valAsInt;
+      *this >> valAsInt;
+      result = static_cast<T>(valAsInt);
+      return *this;
+    }
+
+    template<typename T>
     IArchive& operator>>(Point<T>& result)
     {
       T x;
@@ -99,6 +114,16 @@ class LIBSAKUSEN_API IArchive {
       *this >> z;
 
       result = Point<T>(x,y,z);
+      return *this;
+    }
+    
+    template<typename T, int size>
+    IArchive& extract(T result[size])
+    {
+      for (int i=0; i<size; ++i) {
+        result[i]=load<T>();
+      }
+
       return *this;
     }
     
@@ -146,7 +171,25 @@ class LIBSAKUSEN_API IArchive {
 
       return *this;
     }
+
+    template<int size>
+    inline void magicValue(const char val[size+1]) {
+      /* The '+1' in the array length is to allow for the trailing null char */
+      assertLength(size);
+      if (0 != memcmp(val, buffer, size)) {
+        throw new WrongMagicDeserializationExn<size>(val, buffer);
+      }
+      advance(size);
+    }
 };
+    
+template<>
+inline uint32 IArchive::load<uint32>()
+{
+  uint32 s;
+  *this >> s;
+  return s;
+}
     
 template<>
 inline String IArchive::load<String>()
