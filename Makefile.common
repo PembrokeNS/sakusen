@@ -105,25 +105,25 @@ ifneq ($(MAKEFRAGS),)
 include $(MAKEFRAGS)
 endif
 
-$(MAKEFRAGS): .makefrags/%.makefrag: %
+$(MAKEFRAGS): .makefrags/%.makefrag: % revision.h
 	@mkdir -p $(dir $@)
-	cpp $(E_INCLUDE) -MP -MM -MG -MF $@.tmp $<
+	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $<
 	@echo "$@ .obj/$(filter-out ./,$(dir $<))`cat $@.tmp`" > $@
 	@rm $@.tmp
 
 # If we're in a working copy then we can make a revision.h containing the
 # current revision number if so desired (this should be automatically
 # generated iff it's included from anywhere).  If we're not in a working copy,
-# we claim revision zero
+# then we don't define anything.
 
 revision.h: $(wildcard .svn/entries)
 	if [ -f .svn/entries ]; \
 	then \
 		echo '#define REVISION '`grep '^   revision=' .svn/entries | \
 			sed 's/^   revision="//' | sed 's/"\/>//' | sort -rn | head -n 1` \
-      > revision.h; \
+      > $@; \
 	else \
-		echo '#define REVISION 0' > revision.h; \
+		echo '' > $@; \
 	fi
 
 .PHONY: all clean
