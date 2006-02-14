@@ -1,11 +1,16 @@
 #include "libsakusen-global.h"
 #include "stringutils.h"
+#include "partialworld.h"
 #include "libsakusen-comms-global.h"
 #include "unixdatagramconnectingsocket.h"
 #include "errorutils.h"
+#include "libsakusen-resources-global.h"
 #include "fileutils.h"
+#include "fileresourceinterface.h"
+
 #include "serverinterface.h"
 #include "asynchronousiohandler.h"
+#include "game/game.h"
 
 /* TODO: This include will need to be guarded by whatever symbol is defined by
  * the --enable-sdl configure switch once such a thing exists */
@@ -16,27 +21,32 @@
 
 #include <iostream>
 #include <list>
+#include <optionsparser.h>
 
 #define NANO 1000000000
 
 using namespace std;
 using namespace __gnu_cxx;
+using namespace optimal;
 
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::resources;
+using namespace sakusen::client;
 using namespace tedomari;
+using namespace tedomari::game;
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
 
 /* struct to store options processed from the command line */
 
 struct Options {
-  Options() : noAbstract(false), historyLength(100), nonOptionIndex(0) {}
+  Options() :
+    abstract(true), evil(false), historyLength(100) {}
   ~Options() {}
-  bool noAbstract;
+  bool abstract;
+  bool evil;
   int historyLength;
-  int nonOptionIndex;
 };
 
 /* enumeration of commands that can be entered at the tedomari prompt */
@@ -54,11 +64,11 @@ enum Command {
 
 /* Forward declarations */
 
-Options parseCommandLine(int argc, char * const * argv);
+Options getOptions(String optionsFile, int argc, char const* const* argv);
 
 UI* newUI();
 
-int main(int argc, char * const * argv)
+int main(int argc, char const* const* argv)
 {
   cout << "*******************************\n"
           "* tedomari (a Sakusen client) *\n"
@@ -72,12 +82,6 @@ int main(int argc, char * const * argv)
   /* For the moment we simply attempt to connect to a socket where fuseki puts
    * it.
    * TODO: allow for connecting elsewhere, or not connecting at all at once */
-
-  /* At present most of this code looks much like the fuseki main function, but
-   * I think that will change in the long run so am not concerned overmuch with
-   * the code duplication */
-  
-  Options options = parseCommandLine(argc, argv);
   
   /* Seek out the home directory */
   char* homePathPtr = getenv("HOME");
@@ -88,10 +92,6 @@ int main(int argc, char * const * argv)
 
   String homePath(homePathPtr);
   
-  /* Construct the path to the socket */
-  String socketPath =
-    homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
-
   /* Construct the path to the tedomari config directory */
   String configPath = homePath + CONFIG_SUBDIR FILE_SEP "tedomari";
   cout << "Using directory " << configPath << " for tedomari configuration\n";
@@ -111,6 +111,12 @@ int main(int argc, char * const * argv)
     }
   }
   
+  Options options = getOptions(configPath + FILE_SEP "config", argc, argv);
+  
+  /* Construct the path to the socket */
+  String socketPath =
+    homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
+
   /* Construct the path to the history file */
   String historyPath = configPath + FILE_SEP "history";
   cout << "Using history file at " << historyPath << "\n";
@@ -132,7 +138,12 @@ int main(int argc, char * const * argv)
 
     cout << "Connected to socket." << endl;
     
-    ServerInterface serverInterface(socket, !options.noAbstract);
+    /* TODO: the ResourceInterface actually needs to be able to access
+     * resources over the network from the server as well as from disk */
+    ResourceInterface* resourceInterface =
+      new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+    Game* game = new Game(resourceInterface);
+    ServerInterface serverInterface(socket, options.abstract, game);
 
     cout << "Getting advertisement." << endl;
     
@@ -162,6 +173,9 @@ int main(int argc, char * const * argv)
                                       their associated cunningness */
 
     struct timespec sleepTime = {0, NANO/25};
+    if (options.evil) {
+      sleepTime.tv_nsec = NANO/250;
+    }
     struct timespec commandSleepTime = {0, 0};
 
     /* Construct our commands */
@@ -288,10 +302,10 @@ int main(int argc, char * const * argv)
       if ("" != (message = serverInterface.flushIncoming())) {
         ioHandler.message(message);
       }
-      if (serverInterface.isGameStarted() && ui == NULL) {
+      if (game->isStarted() && ui == NULL) {
         ui = newUI();
       }
-      if (!serverInterface.isGameStarted() && ui != NULL) {
+      if (!game->isStarted() && ui != NULL) {
         delete ui;
         ui = NULL;
       }
@@ -300,7 +314,13 @@ int main(int argc, char * const * argv)
     
     cout << endl;
     delete ui;
+    ui = NULL;
+    delete game;
+    game = NULL;
+    delete resourceInterface;
+    resourceInterface = NULL;
     delete socket;
+    socket = NULL;
   } while (reconnect);
   
   return EXIT_SUCCESS;
@@ -308,39 +328,22 @@ int main(int argc, char * const * argv)
 
 /* Function to parse the command line */
 
-Options parseCommandLine(int argc, char * const * argv) {
+Options getOptions(String optionsFile, int argc, char const* const* argv) {
   Options results = Options();
-  
-  struct option options[] = {
-    /* name             args               flag  val (=short version) */
-    { "no-abstract",    no_argument,       NULL, 'a' },
-    { "history-length", required_argument, NULL, 'h' },
-    { 0,                0,                 0,    0   }
-  };
-  
-  bool done = false;
-  
-  do {
-    int opt = getopt_long(argc, argv, "ah", options, NULL);
+  OptionsParser parser;
 
-    switch(opt) {
-      case -1:
-        results.nonOptionIndex = optind;
-        done = true;
-        break;
-      case '?':
-        exit(EXIT_FAILURE);
-        break;
-      case 'a':
-        results.noAbstract = true;
-        break;
-      case 'h':
-        results.historyLength = numFromString<int>(optarg);
-        break;
-      default:
-        Fatal("unexpected option");
-    }
-  } while (!done);
+  parser.addOption("abstract",       'a', &results.abstract);
+  parser.addOption("evil",           'e', &results.evil);
+  parser.addOption("history-length", 'h', &results.historyLength);
+
+  if (parser.Parse(optionsFile, argc, argv)) {
+    /* There was a problem */
+    /* TODO: better error handling (a usage message?) */
+    Fatal(
+        "error(s) processing options:\n" <<
+        stringUtils_join(parser.getErrors(), "\n")
+      );
+  }
 
   return results;
 }

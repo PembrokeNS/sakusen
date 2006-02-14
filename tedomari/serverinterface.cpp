@@ -16,15 +16,15 @@ using namespace std;
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace tedomari;
+using namespace tedomari::game;
 
-ServerInterface::ServerInterface(Socket* s, bool a) :
+ServerInterface::ServerInterface(Socket* s, bool a, Game* g) :
   serverSocket(s),
+  game(g),
   abstract(a),
   joined(false),
   localSocket(NULL),
-  privateServerSocket(NULL),
-  gameStarted(false),
-  updateQueue()
+  privateServerSocket(NULL)
 {
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
@@ -49,7 +49,25 @@ void ServerInterface::initialSettingsSetup()
   /* TODO: deal with return values */
   setClientSetting("application:name", APPLICATION_NAME);
   setClientSetting("application:version", APPLICATION_VERSION);
+#ifdef REVISION
   setClientSetting("application:revision", numToString(REVISION));
+#else
+  setClientSetting("application:revision", "unknown");
+#endif
+}
+
+void ServerInterface::settingAlteration(
+    const String& setting,
+    const String& value
+  )
+{
+  if (setting == ":game:universe:name") {
+    universeName = value;
+  }
+  else if (setting == ":game:universe:hash") {
+    /* When the universe is set we need to let game know */
+    game->setUniverse(universeName, value);
+  }
 }
 
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
@@ -89,44 +107,50 @@ String ServerInterface::flushIncoming()
   
   while (joined &&
       0 != (messageLength = localSocket->receive(buf, BUFFER_LEN))) {
-    Message message(buf, messageLength);
-    switch (message.getType()) {
-      case messageType_kick:
-        {
-          KickMessageData data = message.getKickData();
-          out << "Kicked by server (" << data.getReason() << ")\n";
-          leave(false);
-        }
-        break;
-      case messageType_reject:
-        {
-          RejectMessageData data = message.getRejectData();
-          out << "Request rejected by server (" << data.getReason() << ")\n";
-        }
-        break;
-      case messageType_notifySetting:
-        {
-          NotifySettingMessageData data = message.getNotifySettingData();
-          out << "Server reported that value of '" << data.getSetting() <<
-            "' was:\n" << data.getValue() << "\n";
-        }
-        break;
-      case messageType_gameStart:
-        {
-          GameStartMessageData data = message.getGameStartData();
-          out << "Game is starting!\n";
-          gameStarted = true;
-        }
-        break;
-      case messageType_update:
-        {
-          UpdateMessageData data = message.getUpdateData();
-          updateQueue.push(data.getUpdate());
-        }
-        break;
-      default:
-        out << "Unexpected MessageType " << message.getType() << "\n";
-        break;
+    try {
+      Message message(buf, messageLength);
+      switch (message.getType()) {
+        case messageType_kick:
+          {
+            KickMessageData data = message.getKickData();
+            out << "Kicked by server (" << data.getReason() << ")\n";
+            leave(false);
+          }
+          break;
+        case messageType_reject:
+          {
+            RejectMessageData data = message.getRejectData();
+            out << "Request rejected by server (" << data.getReason() << ")\n";
+          }
+          break;
+        case messageType_notifySetting:
+          {
+            NotifySettingMessageData data = message.getNotifySettingData();
+            out << "Server reported that value of '" << data.getSetting() <<
+              "' was:\n" << data.getValue() << "\n";
+            settingAlteration(data.getSetting(), data.getValue());
+          }
+          break;
+        case messageType_gameStart:
+          {
+            GameStartMessageData data = message.getGameStartData();
+            out << "Game is starting!\n";
+            game->start(data);
+          }
+          break;
+        case messageType_update:
+          {
+            UpdateMessageData data = message.getUpdateData();
+            game->pushUpdate(data.getUpdate());
+          }
+          break;
+        default:
+          out << "Unexpected MessageType " << message.getType() << "\n";
+          break;
+      }
+    } catch (DeserializationExn* e) {
+      out << "Deserialization exception: " << e->message << "\n";
+      delete e;
     }
   }
 
@@ -148,7 +172,7 @@ String ServerInterface::join()
     delete localSocket;
     localSocket = NULL;
     String ret = String("Error while sending join message to server: '") +
-      e->what() + "'.\n";
+      e->message + "'.\n";
     delete e;
     return ret;
   }
@@ -203,11 +227,11 @@ bool ServerInterface::leave(bool sendMessage)
     try {
       privateServerSocket->send(LeaveMessageData());
     } catch (SocketExn* e) {
-      Debug("Error sending leave message:" << e->what());
+      Debug("Error sending leave message:" << e->message);
       delete e;
     }
   }
-  gameStarted = false;
+  game->stop();
   joined = false;
   delete localSocket;
   delete privateServerSocket;
