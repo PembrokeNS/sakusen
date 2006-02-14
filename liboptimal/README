@@ -1,0 +1,8 @@
+liboptimal is a library for parsing options in configuration files or on the
+command line.  Although several such libraries already exist, none of the
+others appear to be truly C++ based, or offer all the features that liboptimal
+does (of course, the do tend to offer features that liboptimal doesn't).
+
+Since all sensible names for such libraries are already taken, I chose the
+first word that came to mind beginning with 'opt'.
+

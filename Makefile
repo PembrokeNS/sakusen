@@ -1,4 +1,4 @@
-SUBDIRS = libsakusen fuseki tedomari
+SUBDIRS = libsakusen liboptimal fuseki tedomari
 
 include Makefile.common
 
