@@ -4,9 +4,9 @@
 
 #include <ostream>
 
-using namespace sakusen;
+namespace sakusen{
 
-std::ostream& sakusen::operator<<(
+LIBSAKUSEN_API std::ostream& sakusen::operator<<(
     std::ostream& output,
     OrderType orderType
   )
@@ -23,5 +23,5 @@ std::ostream& sakusen::operator<<(
   }
   return output;
 }
-
+}
 

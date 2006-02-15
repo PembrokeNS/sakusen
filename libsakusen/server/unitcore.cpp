@@ -4,7 +4,8 @@
 #include "player.h"
 #include "unit-methods.h"
 
-using namespace sakusen::server;
+namespace sakusen{
+    namespace server{
 
 UnitCore::UnitCore(const UnitCore& copy, LayeredUnit* o) :
   Unit(copy),
@@ -129,3 +130,5 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   /* TODO: deal with subunits */
 }
 
+}
+}//End Namespace

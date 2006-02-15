@@ -14,7 +14,7 @@
 
 namespace sakusen {
 
-class Map {
+class LIBSAKUSEN_API Map {
   private:
     Map();
   protected:

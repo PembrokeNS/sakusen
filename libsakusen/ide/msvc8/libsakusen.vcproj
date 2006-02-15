@@ -220,14 +220,6 @@
 			Name="Main sources"
 			>
 			<File
-				RelativePath="..\..\action.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\action.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\angle.h"
 				>
 			</File>
@@ -264,23 +256,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\client.cpp"
+				RelativePath="..\..\completeunit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\client.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\effect.h"
+				RelativePath="..\..\completeunit.h"
 				>
 			</File>
 			<File
@@ -320,11 +300,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\iunit.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libsakusen-global.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\libsakusen-global.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\map-methods.h"
 				>
 			</File>
 			<File
@@ -357,6 +345,10 @@
 			</File>
 			<File
 				RelativePath="..\..\moveorderdata.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\oarchive-methods.h"
 				>
 			</File>
 			<File
@@ -396,6 +388,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\ordertype.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\ordertype.h"
 				>
 			</File>
@@ -408,19 +404,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\planemap.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\planemap.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.h"
 				>
 			</File>
 			<File
@@ -452,7 +436,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\region.cpp"
+				RelativePath="..\..\region-methods.h"
 				>
 			</File>
 			<File
@@ -481,10 +465,6 @@
 			</File>
 			<File
 				RelativePath="..\..\resourcetype.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\sensorreturn.h"
 				>
 			</File>
 			<File
@@ -517,6 +497,10 @@
 			</File>
 			<File
 				RelativePath="..\..\topology.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unit-methods.h"
 				>
 			</File>
 			<File
@@ -611,11 +595,6 @@
 				RelativePath="..\..\world.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
 		</Filter>
 		<File
 			RelativePath="ReadMe.txt"

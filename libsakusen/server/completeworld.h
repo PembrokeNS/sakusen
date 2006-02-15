@@ -64,9 +64,9 @@ class CompleteWorld : public World {
       );
 };
 
-extern CompleteWorld* world;
-
-}}
+extern LIBSAKUSEN_API CompleteWorld* world;
+}
+}
 
 #endif // LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 

@@ -3,7 +3,8 @@
 #include "updatedata.h"
 #include "layeredunit.h"
 
-using namespace sakusen::server;
+namespace sakusen{
+    namespace server{
 
 Player::Player(const PlayerTemplate& t) :
   noClients(t.isNoClients()),
@@ -124,3 +125,5 @@ void Player::informClients(const Update& update)
   }
 }
 
+}
+}

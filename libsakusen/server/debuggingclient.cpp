@@ -1,6 +1,7 @@
 #include "debuggingclient.h"
 
-using namespace sakusen::server;
+namespace sakusen{
+    namespace server{
 
 DebuggingClient::DebuggingClient(
     std::ostream& output) :
@@ -15,3 +16,5 @@ void DebuggingClient::sendUpdate(const Update& update)
   outputStream << update << std::endl;
 }
 
+}
+}

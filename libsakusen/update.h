@@ -42,7 +42,7 @@ class LIBSAKUSEN_API Update {
     }
 };
 
-std::ostream& operator<<(std::ostream& output, const Update& update);
+LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, const Update& update);
 
 }
 

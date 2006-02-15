@@ -79,7 +79,7 @@ inline String numToString(T i)
   return s.str();
 }
 
-String stringUtils_getSecureHashAsString(const uint8* buffer, size_t length);
+String LIBSAKUSEN_API stringUtils_getSecureHashAsString(const uint8* buffer, size_t length);
 
 }
 

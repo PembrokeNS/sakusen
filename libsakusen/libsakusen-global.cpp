@@ -2,6 +2,6 @@
 
 #include <iostream>
 
-std::ostream& debugStream = std::cout;
-std::ostream& errorStream = std::cerr;
+LIBSAKUSEN_API std::ostream& debugStream = std::cout;
+LIBSAKUSEN_API std::ostream& errorStream = std::cerr;
 

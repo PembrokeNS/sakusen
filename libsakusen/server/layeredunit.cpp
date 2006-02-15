@@ -5,7 +5,8 @@
 #include "unit-methods.h"
 #include "region-methods.h"
 
-using namespace sakusen::server;
+namespace sakusen{
+    namespace server{
 
 void LayeredUnit::spawn(
     const PlayerID owner,
@@ -269,3 +270,5 @@ bool LayeredUnit::setSonar(bool active) {
   } else return false;
 }
 
+}
+}//End Namespaces

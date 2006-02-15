@@ -3,11 +3,13 @@
 #include "mapplaymode.h"
 #include "region-methods.h"
 #include "map-methods.h"
+#include "libsakusen-global.cpp"
 
 #include <list>
 #include <vector>
 
-using namespace sakusen::server;
+namespace sakusen{
+    namespace server{
 
 CompleteWorld::CompleteWorld(
     const MapTemplate& m,
@@ -22,7 +24,7 @@ CompleteWorld::CompleteWorld(
 {
   /* Some sanity checks */
   if (world) {
-    Debug("World constructed when world != NULL");
+      Debug("World constructed when world != NULL");
   }
   world = this;
 
@@ -183,5 +185,7 @@ void CompleteWorld::applyEntryExitEffects(
   }
 }
 
-CompleteWorld* sakusen::server::world = NULL;
+LIBSAKUSEN_API CompleteWorld* world = NULL;
 
+}
+} //End Namespaces

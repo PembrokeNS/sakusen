@@ -23,5 +23,5 @@ World::~World()
   world = NULL;
 }
 
-LIBSAKUSEN_API World* sakusen::world = NULL;
+LIBSAKUSEN_API World* world = NULL;
 

@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-class SetVelocityOrderData : public OrderData {
+class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
   private:
     SetVelocityOrderData();
   public:

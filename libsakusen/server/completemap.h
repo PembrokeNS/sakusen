@@ -6,7 +6,7 @@
 namespace sakusen {
 namespace server {
 
-class CompleteMap : public Map {
+class LIBSAKUSEN_API CompleteMap : public Map {
   private:
     CompleteMap();
   protected:

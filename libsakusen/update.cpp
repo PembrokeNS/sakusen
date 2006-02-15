@@ -60,7 +60,7 @@ Update& Update::operator=(const Update& copy)
   return *this;
 }
 
-std::ostream& sakusen::operator<<(std::ostream& output, const Update& update)
+LIBSAKUSEN_API std::ostream& sakusen::operator<<(std::ostream& output, const Update& update)
 {
   output << "Update { type=" << update.getType() << " }";
   return output;

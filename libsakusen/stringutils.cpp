@@ -62,7 +62,7 @@ String sakusen::stringUtils_makePrintable(const String& s)
   return result;
 }
 
-String sakusen::stringUtils_getSecureHashAsString(
+String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length
   )

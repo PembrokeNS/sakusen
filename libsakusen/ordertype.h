@@ -2,6 +2,7 @@
 #define ORDERTYPE_H
 
 #include <iosfwd>
+#include "libsakusen-global.h"
 
 namespace sakusen {
 
@@ -14,7 +15,7 @@ enum OrderType {
   orderType_move /* Move the unit to this position */
 };
 
-std::ostream& operator<<(std::ostream& output, OrderType);
+LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, OrderType);
 
 }
 
