@@ -23,11 +23,11 @@ bool PlayerTemplate::sanityCheck(
 {
   for (std::vector<UnitTemplate>::iterator unit = units.begin();
       unit != units.end(); unit++) {
-    if (!universe->containsUnitType(unit->getType())) {
+    if (!universe->containsUnitType(unit->getStatus()->getType())) {
       Debug("MapPlayMode has unit not in universe");
       return true;
     }
-    if (!map.containsPoint(unit->getPosition())) {
+    if (!map.containsPoint(unit->getStatus()->getPosition())) {
       Debug("MapPlayMode has unit outside map");
       return true;
     }

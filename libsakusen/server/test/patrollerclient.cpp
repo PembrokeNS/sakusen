@@ -1,5 +1,4 @@
 #include "patrollerclient.h"
-#include "unit.h"
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -20,7 +19,7 @@ void PatrollerClient::sendUpdate(const Update& update)
         const UnitAddedUpdateData& data = update.getUnitAddedData();
         if (data.getUnit().getId() == 0 &&
             data.getReason() == changeOwnerReason_created) {
-          patrolFrom = data.getUnit().getPosition();
+          patrolFrom = data.getUnit().getStatus()->getPosition();
           /*Debug("sending move order");*/
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,

@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-class Unit;
+class IUnitStatus;
 
 template<typename T>
 class Region {
@@ -28,7 +28,7 @@ class Region {
     inline uint64 squareRadius(void) const { return uint64(radius) * radius; }
     /* game mechanics */
     inline bool contains(const Point<T>& point) const;
-    inline bool contains(const Unit& unit) const;
+    inline bool contains(const IUnitStatus* unit) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
     
     void store(OArchive&) const;

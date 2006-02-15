@@ -6,12 +6,11 @@
 #include "updatetype.h"
 #include "ordercondition.h"
 #include "oarchive.h"
-#include "iunit.h"
+#include "icompleteunit.h"
 #include "completeunit.h"
 
 namespace sakusen {
 
-class Unit;
 class Order;
 
 class LIBSAKUSEN_API UpdateData {
@@ -46,7 +45,7 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
   private:
     UnitAddedUpdateData();
   public:
-    UnitAddedUpdateData(changeOwnerReason reason, const IUnit* unit);
+    UnitAddedUpdateData(changeOwnerReason reason, const ICompleteUnit* unit);
     UnitAddedUpdateData(IArchive&, const Universe*);
     ~UnitAddedUpdateData() {}
   private:

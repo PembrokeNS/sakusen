@@ -2,11 +2,11 @@
 
 #include "completeworld.h"
 #include "unitcore.h"
-#include "unit-methods.h"
 #include "region-methods.h"
+#include "unitstatus-methods.h"
 
 namespace sakusen{
-    namespace server{
+namespace server{
 
 void LayeredUnit::spawn(
     const PlayerID owner,
@@ -25,26 +25,14 @@ void LayeredUnit::spawn(
 
 void LayeredUnit::spawn(const PlayerID owner, const UnitTemplate& t)
 {
-  world->addUnit(LayeredUnit(
-        t.getType(), t.getPosition(), t.getOrientation(), t.getVelocity(),
-        t.getHitPoints(), t.isRadarActive(), t.isSonarActive()
-      ), owner);
+  world->addUnit(LayeredUnit(t), owner);
 }
 
 LayeredUnit::LayeredUnit(
-    const UnitTypeID& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
-    const Point<sint16>& startVelocity,
-    HitPoints startHitPoints,
-    bool startRadarActive,
-    bool startSonarActive
+    const UnitTemplate& t
   ) :
   owner(0),
-  topLayer(new UnitCore(
-        this, startType, startPosition, startOrientation, startVelocity,
-        startHitPoints, startRadarActive, startSonarActive
-      )),
+  topLayer(new UnitCore(this, t.getStatus())),
   unit(topLayer->getCore())
 {
 }
@@ -64,7 +52,7 @@ LayeredUnit::LayeredUnit(
 }
 
 LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
-  IUnit(copy),
+  ICompleteUnit(copy),
   owner(copy.owner),
   topLayer(copy.topLayer->newCopy(this)),
   unit(topLayer->getCore())
@@ -79,25 +67,25 @@ LayeredUnit::~LayeredUnit()
 
 void LayeredUnit::acceptOrder(OrderCondition condition)
 {
-  Order newOrder = getOrder(condition);
+  Order newOrder = unit->orders[condition];
   if (newOrder.isRealOrder()) {
     /* accept the order */
-    unit->setCurrentOrder(newOrder);
+    unit->currentOrder = newOrder;
     
     /* Clear all orders from the queue */
     for (int i=0; i<orderCondition_max; i++) {
-      unit->setOrder(static_cast<OrderCondition>(i), Order());
+      unit->orders[i] = Order();
     }
 
     /* Alter the Unit's state appropriately for the order */
     switch (newOrder.getOrderType()) {
       case orderType_setVelocity:
-        unit->setLinearTarget(linearTargetType_velocity);
-        unit->setTargetVelocity(newOrder.getSetVelocityData().getTarget());
+        unit->linearTarget = linearTargetType_velocity;
+        unit->targetVelocity = newOrder.getSetVelocityData().getTarget();
         break;
       case orderType_move:
-        unit->setLinearTarget(linearTargetType_position);
-        unit->setTargetPosition(newOrder.getMoveData().getTarget());
+        unit->linearTarget = linearTargetType_position;
+        unit->targetPosition = newOrder.getMoveData().getTarget();
         break;
       default:
         Fatal("Unknown OrderType");
@@ -105,29 +93,28 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
 
     /* Inform clients */
     world->getPlayerPtr(owner)->informClients(
-        Update(OrderAcceptedUpdateData(getId(), condition))
+        Update(OrderAcceptedUpdateData(unitId, condition))
       );
   } else {
     /* This part of the function only meant for accepting new orders from
      * success or failure, not other conditions */
     assert(condition == orderCondition_lastOrderSuccess ||
         condition == orderCondition_lastOrderFailure);
-    unit->setCurrentOrder(Order());
+    unit->currentOrder = Order();
     world->getPlayerPtr(owner)->informClients(
-        Update(OrderCompletedUpdateData(getId(), condition))
+        Update(OrderCompletedUpdateData(unitId, condition))
       );
   }
 }  
 
 void LayeredUnit::setPosition(const Point<sint32>& pos)
 {
-  Point<sint32> oldPos = getPosition();
-  if (pos == oldPos)
+  if (pos == unit->position)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(*this, oldPos, pos);
-  unit->setPosition(pos);
+  world->applyEntryExitEffects(*this, unit->position, pos);
+  unit->position = pos;
 }
 
 void LayeredUnit::setPhysics(
@@ -138,16 +125,16 @@ void LayeredUnit::setPhysics(
 {
   setPosition(newPosition);
   if (orientationIsRelative) {
-    unit->setOrientation(newOrientation * getOrientation());
+    unit->orientation = newOrientation * unit->orientation;
     if (zeroVelocity) {
-      unit->zeroVelocity();
+      unit->velocity.zero();
     } else {
-      unit->setVelocity(newOrientation * getVelocity());
+      unit->velocity = newOrientation * unit->velocity;
     }
   } else {
-    unit->setOrientation(newOrientation);
+    unit->orientation = newOrientation;
     if (zeroVelocity) {
-      unit->zeroVelocity();
+      unit->velocity.zero();
     }
   }
 }
@@ -163,19 +150,19 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
    * orders changes */
 
   /* If we've an order to apply right now, then do so */
-  if (getOrder(orderCondition_now).isRealOrder()) {
+  if (unit->orders[orderCondition_now].isRealOrder()) {
     acceptOrder(orderCondition_now);
   }
   
   /* FIXME: Currently we use completely naive alterations to velocity: We allow
    * arbitrary acceleration and any velocity of modulus at most that of
    * maxSpeed */
-  switch (getLinearTarget()) {
+  switch (unit->linearTarget) {
     case linearTargetType_none:
       break;
     case linearTargetType_velocity:
-      if (getPossibleVelocities().contains(getTargetVelocity())) {
-        unit->setVelocity(getTargetVelocity());
+      if (getPossibleVelocities().contains(unit->targetVelocity)) {
+        unit->velocity = unit->targetVelocity;
         /* TODO: inform clients */
       } else {
         acceptOrder(orderCondition_lastOrderFailure);
@@ -184,54 +171,54 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case linearTargetType_position:
       {
         Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
-            getTargetPosition(), getPosition());
+            unit->targetPosition, unit->position);
         Point<sint32> desiredVelocity;
         desiredVelocity =
           getPossibleVelocities().truncateToFit(desiredDirection);
-        if (getVelocity() == desiredVelocity) {
+        if (unit->velocity == desiredVelocity) {
           break;
         }
-        unit->setVelocity(desiredVelocity);
+        unit->velocity = desiredVelocity;
         /* TODO: inform clients */
       }
       break;
     default:
-      Fatal("Unknown linearTargetType '" << getLinearTarget() << "'");
+      Fatal("Unknown linearTargetType '" << unit->linearTarget << "'");
       break;
   }
   
   /* TODO: do collision detection */
   Orientation mapOrientationChange = Orientation();
   setPosition(world->getMap()->addToPosition(
-        getPosition(), getVelocity(), &mapOrientationChange
+        unit->position, unit->velocity, &mapOrientationChange
       ));
   /* If the movement caused us to rotate/reflect (due to moving over a map
    * edge) then update orientation and velocity appropriately */
   if (mapOrientationChange != Orientation()) {
-    unit->setVelocity(mapOrientationChange * getVelocity());
-    unit->setOrientation(mapOrientationChange * getOrientation());
+    unit->velocity = mapOrientationChange * unit->velocity;
+    unit->orientation = mapOrientationChange * unit->orientation;
   }
   
   /* determine if the currentOrder has succeeded or failed, and if so
    * then update the currentOrder appropriately and inform clients */
-  switch (getCurrentOrder().getOrderType()) {
+  switch (unit->currentOrder.getOrderType()) {
     case orderType_none:
       break;
     case orderType_setVelocity:
-      if (getVelocity() ==
-          getCurrentOrder().getSetVelocityData().getTarget()) {
+      if (unit->velocity ==
+          unit->currentOrder.getSetVelocityData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
     case orderType_move:
-      if (getPosition() ==
-          getCurrentOrder().getMoveData().getTarget()) {
+      if (unit->position ==
+          unit->currentOrder.getMoveData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
     default:
       Fatal("Unknown orderType '" <<
-          getCurrentOrder().getOrderType() << "'");
+          unit->currentOrder.getOrderType() << "'");
       break;
   }
   
@@ -248,15 +235,15 @@ void LayeredUnit::enqueueOrder(
   if (condition >= orderCondition_max || condition < 0) {
     Fatal("Unknown OrderCondition");
   }
-  unit->setOrder(condition, order);
+  unit->orders[condition] = order;
   world->getPlayerPtr(owner)->informClients(
-      Update(OrderQueuedUpdateData(getId(), &order, condition))
+      Update(OrderQueuedUpdateData(unitId, &order, condition))
     );
 }
 
 bool LayeredUnit::setRadar(bool active) {
   if (getVision().radarActive.capable) {
-    unit->setRadarActive(active);
+    unit->radarIsActive = active;
     /* TODO: inform clients */
     return active;
   } else return false;
@@ -264,7 +251,7 @@ bool LayeredUnit::setRadar(bool active) {
 
 bool LayeredUnit::setSonar(bool active) {
   if (getVision().sonarActive.capable) {
-    unit->setSonarActive(active);
+    unit->sonarIsActive = active;
     /* TODO: inform clients */
     return active;
   } else return false;
@@ -272,3 +259,4 @@ bool LayeredUnit::setSonar(bool active) {
 
 }
 }//End Namespaces
+

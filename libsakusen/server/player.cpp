@@ -1,10 +1,9 @@
 #include "player.h"
-#include "unit.h"
 #include "updatedata.h"
 #include "layeredunit.h"
 
 namespace sakusen{
-    namespace server{
+namespace server{
 
 Player::Player(const PlayerTemplate& t) :
   noClients(t.isNoClients()),
@@ -127,3 +126,4 @@ void Player::informClients(const Update& update)
 
 }
 }
+

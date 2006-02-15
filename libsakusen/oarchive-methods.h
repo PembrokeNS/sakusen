@@ -4,7 +4,6 @@
 #include "oarchive.h"
 
 #include "weapontype.h"
-#include "unit.h"
 
 namespace sakusen {
 
@@ -30,12 +29,6 @@ template<>
 inline void OArchive::store<UnitTypeID>(const UnitTypeID& toStore)
 {
   *this << toStore->getInternalName();
-}
-
-template<>
-inline void OArchive::store<Unit*>(Unit* const& toStore)
-{
-  *this << toStore->getId();
 }
 
 }

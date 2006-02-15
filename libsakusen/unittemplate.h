@@ -7,6 +7,7 @@
 #include "unittype.h"
 #include "orientation.h"
 #include "universe.h"
+#include "unitstatus.h"
 
 namespace sakusen {
 
@@ -15,48 +16,19 @@ class LIBSAKUSEN_API UnitTemplate {
     UnitTemplate();
   public:
     UnitTemplate(
-      const Universe* universe,
-      const UnitTypeID& type,
-      const Point<sint32>& position,
-      const Orientation& orientation,
-      const Point<sint16>& velocity,
-      HitPoints hitPoints,
-      bool radarIsActive,
-      bool sonarIsActive
-    );
+        const Universe* universe,
+        const UnitStatus& status
+      );
   private:
     const Universe* universe;
       /* a 'private line' to the universe is needed because there's no world
        * when UnitTemplates are being used */
-    UnitTypeID type;
-    Point<sint32> position; /* this maybe needs a 'magic value' for when the
-                               unit is a subunit of another unit */
-    Orientation orientation;
-    Point<sint16> velocity; /* velocity is in distance-units per frame */
-    
-    /* status stuff */
-    HitPoints hitPoints;
-    bool radarIsActive;
-    bool sonarIsActive;
-    std::list<UnitTemplate*> subunits;
-      /* TODO: think hard about this.  What happens
-				 when the subunits belong to another player?
-				 What happens when this Unit is serialized? */
+    UnitStatus status;
+    /* FIXME: subunits are not handled yet when this template is used to
+     * construct a Map */
 
   public:
-    /* accessors */
-    inline UnitTypeID getType(void) const {return type;}
-    inline const Point<sint32>& getPosition(void) const {return position;}
-    void setPosition(const Point<sint32> pos);
-    inline const Orientation& getOrientation(void) const {return orientation;}
-    inline void setOrientation(const Orientation& o) { orientation = o; }
-    inline const Point<sint16>& getVelocity(void) const {return velocity;}
-    inline void setVelocity(const Point<sint16>& v) { velocity = v; }
-    inline HitPoints getHitPoints(void) const {return hitPoints;}
-    inline bool isRadarActive(void) const {return radarIsActive;}
-    bool setRadarActive(bool active);
-    inline bool isSonarActive(void) const {return sonarIsActive;}
-    bool setSonarActive(bool active);
+    const IUnitStatus* getStatus(void) const { return &status; }
     
     typedef Universe loadArgument;
     void store(OArchive&) const;

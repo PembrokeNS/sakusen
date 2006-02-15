@@ -25,7 +25,7 @@ void UnitRemovedUpdateData::store(OArchive& out) const
 
 UnitAddedUpdateData::UnitAddedUpdateData(
     changeOwnerReason r,
-    const IUnit* u
+    const ICompleteUnit* u
   ) :
   UpdateData(),
   reason(r),

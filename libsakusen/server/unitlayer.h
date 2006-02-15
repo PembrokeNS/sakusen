@@ -4,7 +4,7 @@
 #include "hitpointalteration.h"
 #include "playerid.h"
 #include "changeownerreason.h"
-#include "unit.h"
+#include "unitstatus.h"
 
 namespace sakusen {
 namespace server {
@@ -25,7 +25,7 @@ class UnitLayer {
 
     /* methods to do with the layering */
     virtual UnitLayer* newCopy(LayeredUnit* outer) const = 0;
-    virtual Unit* getCore() = 0;
+    virtual UnitStatus* getCore() = 0;
 
     /* accessors */
     virtual PlayerID getOwner() const = 0;

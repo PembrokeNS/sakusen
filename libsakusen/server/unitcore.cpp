@@ -2,13 +2,13 @@
 
 #include "completeworld.h"
 #include "player.h"
-#include "unit-methods.h"
+#include "unitstatus-methods.h"
 
 namespace sakusen{
-    namespace server{
+namespace server{
 
 UnitCore::UnitCore(const UnitCore& copy, LayeredUnit* o) :
-  Unit(copy),
+  UnitStatus(copy),
   outerUnit(o),
   owner(copy.owner)
 {
@@ -19,28 +19,16 @@ UnitCore::UnitCore(
     const UnitTypeID& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity,
-    HitPoints startHitPoints,
-    bool startRadarActive,
-    bool startSonarActive
+    const Point<sint16>& startVelocity
   ) :
-  Unit(
-      startType, startPosition, startOrientation, startVelocity,
-      startHitPoints, startRadarActive, startSonarActive
-    ),
+  UnitStatus(startType, startPosition, startOrientation, startVelocity),
   outerUnit(o),
   owner(0)
 {
 }
 
-UnitCore::UnitCore(
-    LayeredUnit* o,
-    const UnitTypeID& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
-    const Point<sint16>& startVelocity
-  ) :
-  Unit(startType, startPosition, startOrientation, startVelocity),
+UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
+  UnitStatus(status),
   outerUnit(o),
   owner(0)
 {
@@ -48,11 +36,11 @@ UnitCore::UnitCore(
 
 void UnitCore::kill(HitPoints excessDamage) {
   /* do the destruct action */
-  onDestruct();
+  outerUnit->onDestruct();
   /* Change to corpse */
-  changeType(getTypePtr()->getCorpseUnitType(), fullHitPoints);
+  outerUnit->changeType(getTypePtr()->getCorpseUnitType(), fullHitPoints);
   /* Apply excess damage to corpse */
-  damage(excessDamage);
+  outerUnit->damage(excessDamage);
   /* TODO: deal with subunits */
 }
 
@@ -62,7 +50,7 @@ void UnitCore::damage(HitPoints amount) {
   }
   
   if (hitPoints <= amount) {
-    kill(amount-hitPoints);
+    outerUnit->kill(amount-hitPoints);
   } else {
     hitPoints -= amount;
   }
@@ -105,6 +93,7 @@ void UnitCore::changeType(
         break;
       default:
         Debug("[Unit::changeType] Invalid hitpointAlteration");
+        /* intentionally no break */
       case fullHitPoints:
         hitPoints = newType->getMaxHitPoints();
         break;
@@ -123,7 +112,7 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   Player* fromPtr = world->getPlayerPtr(owner);
   Player* toPtr = world->getPlayerPtr(to);
   if (why != changeOwnerReason_created) {
-    fromPtr->removeUnit(unitId, why);
+    fromPtr->removeUnit(outerUnit->getId(), why);
   }
   owner = to;
   toPtr->addUnit(outerUnit, why);

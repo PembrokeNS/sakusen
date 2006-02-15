@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace sakusen{
-    namespace server{
+namespace server{
 
 CompleteWorld::CompleteWorld(
     const MapTemplate& m,
@@ -25,7 +25,7 @@ CompleteWorld::CompleteWorld(
 {
   /* Some sanity checks */
   if (world) {
-      Debug("World constructed when world != NULL");
+    Debug("World constructed when world != NULL");
   }
   world = this;
 
@@ -190,3 +190,4 @@ LIBSAKUSEN_API CompleteWorld* world = NULL;
 
 }
 } //End Namespaces
+

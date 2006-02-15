@@ -1,7 +1,7 @@
 #ifndef UNITCORE_H
 #define UNITCORE_H
 
-#include "unit.h"
+#include "unitstatus.h"
 #include "unitlayer.h"
 
 namespace sakusen {
@@ -9,7 +9,7 @@ namespace server {
 
 class LayeredUnit;
 
-class UnitCore : public UnitLayer, Unit {
+class UnitCore : public UnitLayer, private UnitStatus {
   private:
     UnitCore();
     UnitCore(const UnitCore&);
@@ -20,18 +20,9 @@ class UnitCore : public UnitLayer, Unit {
         const UnitTypeID& startType,
         const Point<sint32>& startPosition,
         const Orientation& startOrientation,
-        const Point<sint16>& startVelocity,
-        HitPoints startHitPoints,
-        bool startRadarActive,
-        bool startSonarActive
-      );
-    UnitCore(
-        LayeredUnit* outerUnit,
-        const UnitTypeID& startType,
-        const Point<sint32>& startPosition,
-        const Orientation& startOrientation,
         const Point<sint16>& startVelocity
       );
+    UnitCore(LayeredUnit* outerUnit, const UnitStatus& status);
   private:
     LayeredUnit* outerUnit;
     PlayerID owner;
@@ -39,7 +30,7 @@ class UnitCore : public UnitLayer, Unit {
     inline UnitLayer* newCopy(LayeredUnit* outer) const {
       return new UnitCore(*this, outer);
     }
-    inline Unit* getCore() { return this; }
+    inline UnitStatus* getCore() { return this; }
     
     /* accessors */
     inline PlayerID getOwner() const { return owner; }

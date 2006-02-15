@@ -140,13 +140,13 @@ int main(/* int argc, char** argv */)
   realPlayersUnits.push_back(
       UnitTemplate(
         &universe,
-        universe.getUnitTypeId(0),
-        Point<sint32>(0,0,0),
-        Orientation(),
-        Point<sint16>(),
-        universe.getUnitTypePtr(uint32(0))->getMaxHitPoints()/*100*/,
-        false,
-        false
+        UnitStatus(
+          &universe,
+          universe.getUnitTypeId(0),
+          Point<sint32>(0,0,0),
+          Orientation(),
+          Point<sint16>()
+        )
       )
     );
   playerTemplates.clear();

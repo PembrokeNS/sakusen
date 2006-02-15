@@ -2,7 +2,6 @@
 #define MAPPLAYMODE_H
 
 #include "libsakusen-global.h"
-#include "unit.h"
 #include "universe.h"
 #include "playertemplate.h"
 #include "playerid.h"

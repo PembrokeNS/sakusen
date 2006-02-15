@@ -3,9 +3,10 @@
 
 #include "point.h"
 #include "visibility.h"
-#include "unit.h"
 
 namespace sakusen {
+
+class ICompleteUnit;
 
 /** \file
  * This file declares the ::BallisticType class. */
@@ -48,7 +49,7 @@ class BallisticType {
      * Subclasses may override this method to perform some action on hitting a
      * Unit. The default action is a nop.
      */
-    virtual void hitUnit(Unit&) {}
+    virtual void hitUnit(ICompleteUnit*) {}
     /** \brief callback for hitting the ground (probably representing a miss)
      * 
      * Subclasses may override this method to perform some action on hitting the

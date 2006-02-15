@@ -5,8 +5,7 @@
 
 #include <list>
 
-#include "unit.h"
-#include "iunit.h"
+#include "icompleteunit.h"
 #include "unitlayer.h"
 #include "unittemplate.h"
 
@@ -29,7 +28,7 @@ namespace server {
  * be handled directly.  It would be bad (and slow) for layers to mess with the
  * physics too much.
  */
-class LIBSAKUSEN_API LayeredUnit : public IUnit {
+class LIBSAKUSEN_API LayeredUnit : public ICompleteUnit {
   public:
     static void spawn(
       const PlayerID owner,
@@ -42,25 +41,18 @@ class LIBSAKUSEN_API LayeredUnit : public IUnit {
       /* factory class */
   private:
     LayeredUnit(); /**< Default constructor should not be used */
-    LayeredUnit(
-      const UnitTypeID& startType,
-      const Point<sint32>& startPosition,
-      const Orientation& startOrientation,
-      const Point<sint16>& startVelocity,
-      HitPoints startHitPoints,
-      bool startRadarActive,
-      bool startSonarActive
-    ); /* constructor intended to be used when spawning a Unit on the map -
-          this is called only by Unit::spawn, and is thus private.
-          owner is expected to be set after construction since it should not
-          be set until *after* the Unit has been added to the World */
+    LayeredUnit(const UnitTemplate&);
+      /**< Constructor used by LayeredUnit::spawn during initial construction
+       * of the Map */
     LayeredUnit(
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
-    ); /* This is a simpler version of the above constructor for when you don't
-          need to specify the extra data */
+    ); /* constructor intended to be used when spawning a Unit on the map -
+          this is called only by Unit::spawn, and is thus private.
+          owner is expected to be set after construction since it should not
+          be set until *after* the Unit has been added to the World */
   public:
     LayeredUnit(const LayeredUnit&); /**< Copy constructor needs to be
                                        different from the default */
@@ -69,60 +61,25 @@ class LIBSAKUSEN_API LayeredUnit : public IUnit {
     ~LayeredUnit();
   private:
     PlayerID owner;
+    uint32 unitId;
     UnitLayer* topLayer;
-    Unit* unit; /**< \brief Shortcut pointer to the Unit at the heart
-                 *
-                 * Not owned by this
-                 */
+    UnitStatus* unit; /**< \brief Shortcut pointer to the Unit at the heart
+                       *
+                       * Not owned by this
+                       */
     
     void acceptOrder(OrderCondition condition);
       /**< Accept a new order from the queue */
   public:
     /* accessors */
-    inline UnitTypeID getType(void) const { return unit->getType(); }
-    inline uint32 getId(void) const { return unit->getId(); }
-    inline void setId(uint32 id) { unit->setId(id); }
-    inline const Point<sint32>& getPosition(void) const {
-      return unit->getPosition();
-    }
-    inline const Orientation& getOrientation(void) const {
-      return unit->getOrientation();
-    }
-    inline const Point<sint16>& getVelocity(void) const {
-      return unit->getVelocity();
-    }
-    inline HitPoints getHitPoints(void) const { return unit->getHitPoints(); }
-    inline bool isRadarActive(void) const { return unit->isRadarActive(); }
-    inline bool isSonarActive(void) const { return unit->isSonarActive(); }
+    inline uint32 getId(void) const { return unitId; }
+    inline const IUnitStatus* getStatus(void) const { return unit; }
+    inline IUnitStatus* getStatus(void) { return unit; }
+    inline void setId(uint32 id) { unitId = id; }
     
     void setPosition(const Point<sint32>& pos);
     bool setRadar(bool active);
     bool setSonar(bool active);
-
-    inline const Order& getOrder(OrderCondition c) const {
-      return unit->getOrder(c);
-    }
-    inline const Order& getCurrentOrder(void) const {
-      return unit->getCurrentOrder();
-    }
-    inline LinearTargetType getLinearTarget(void) const {
-      return unit->getLinearTarget();
-    }
-    inline const Point<sint32>& getTargetPosition(void) const {
-      return unit->getTargetPosition();
-    }
-    inline const Point<sint16>& getTargetVelocity(void) const {
-      return unit->getTargetVelocity();
-    }
-    inline RotationalTargetType getRotationalTarget(void) const {
-      return unit->getRotationalTarget();
-    }
-    inline const Orientation& getTargetOrientation(void) const {
-      return unit->getTargetOrientation();
-    }
-    inline const AngularVelocity& getTargetAngularVelocity(void) const {
-      return unit->getTargetAngularVelocity();
-    }
 
     inline PlayerID getOwner(void) const {return owner;}
     inline HitPoints getMaxHitPoints(void) const {
@@ -176,6 +133,7 @@ class LIBSAKUSEN_API LayeredUnit : public IUnit {
       topLayer->changeOwner(to, why);
       owner = topLayer->getOwner();
     }
+    inline void onDestruct(void) { topLayer->onDestruct(); }
 };
 
 }}

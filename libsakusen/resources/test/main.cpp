@@ -2,7 +2,6 @@
 #include "unittype.h"
 #include "universe.h"
 #include "heightfield.h"
-#include "unit.h"
 #include "mapplaymode.h"
 #include "planemap.h"
 #include "libsakusen-resources-global.h"
@@ -91,13 +90,13 @@ int main(/*int argc, char** argv*/)
   realPlayersUnits.push_back(
       UnitTemplate(
         &universe,
-        universe.getUnitTypeId(0),
-        Point<sint32>(0,0,0),
-        Orientation(),
-        Point<sint16>(),
-        universe.getUnitTypePtr(uint32(0))->getMaxHitPoints(),
-        false,
-        false
+        UnitStatus(
+          &universe,
+          universe.getUnitTypeId(0),
+          Point<sint32>(0,0,0),
+          Orientation(),
+          Point<sint16>()
+        )
       )
     );
   vector<PlayerTemplate> players;
