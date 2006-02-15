@@ -4,6 +4,7 @@
 
 using namespace __gnu_cxx;
 
+using namespace sakusen;
 using namespace sakusen::client;
 
 PartialWorld::PartialWorld(

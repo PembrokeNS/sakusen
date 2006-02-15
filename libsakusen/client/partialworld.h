@@ -9,7 +9,7 @@
 namespace sakusen {
 namespace client {
 
-class PartialWorld : public World {
+class LIBSAKUSEN_API PartialWorld : public World {
   private:
     PartialWorld();
     PartialWorld(const PartialWorld&);

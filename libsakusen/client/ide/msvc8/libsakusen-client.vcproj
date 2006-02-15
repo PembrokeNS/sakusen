@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="libsakusen-server"
-	ProjectGUID="{8B705117-2954-465C-82CC-98C20598B4E3}"
+	Name="libsakusen-client"
+	ProjectGUID="{3E022526-106C-4C4B-987D-A7D476EF37C1}"
 	RootNamespace="libsakusen-server"
 	>
 	<Platforms>
@@ -175,14 +175,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-server.dll"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-client.dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/libsakusen-server.pdb"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-server.lib"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-client.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -220,55 +219,23 @@
 			Name="Main sources"
 			>
 			<File
-				RelativePath="..\..\client.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\client.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\completemap.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completemap.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completeworld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completeworld.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\effect.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fuse.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\layeredunit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\layeredunit.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\libsakusen-global.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\partialmap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\partialworld.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\partialworld.h"
 				>
 			</File>
 			<File
@@ -277,22 +244,6 @@
 			</File>
 			<File
 				RelativePath="..\..\player.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\sensorreturn.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitlayer.h"
 				>
 			</File>
 			<File

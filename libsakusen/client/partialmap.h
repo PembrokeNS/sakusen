@@ -4,7 +4,7 @@
 namespace sakusen {
 namespace client {
 
-class PartialMap : public Map {
+class LIBSAKUSEN_API PartialMap : public Map {
   private:
     PartialMap();
   public:

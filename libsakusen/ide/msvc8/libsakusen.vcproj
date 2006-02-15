@@ -300,10 +300,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\iunit.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\libsakusen-global.cpp"
 				>
 			</File>
@@ -500,18 +496,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\unit-methods.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unit.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\unitid.cpp"
 				>
 			</File>
@@ -598,6 +582,10 @@
 		</Filter>
 		<File
 			RelativePath="ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitstatus.cpp"
 			>
 		</File>
 	</Files>

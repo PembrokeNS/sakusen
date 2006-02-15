@@ -14,7 +14,7 @@
 
 namespace sakusen {
 
-class IUnitStatus {
+class LIBSAKUSEN_API IUnitStatus {
   public:
     virtual ~IUnitStatus() {}
 
