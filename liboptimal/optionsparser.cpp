@@ -72,11 +72,11 @@ void OptionsParser::addOption(
 
 void trim(std::string& s)
 {
-  while (s.find_first_of(" \n\t", 0) == 0) {
+  while (!s.empty() && string(" \n\t").find(s[0]) != string::npos) {
     s.erase(s.begin());
   }
-  while (s.find_last_of(" \n\t", 0) == s.length()-1) {
-    s.erase(s.end());
+  while (!s.empty() && string(" \n\t").find(s[s.length()-1]) != string::npos) {
+    s.erase(--s.end());
   }
 }
 
@@ -90,43 +90,52 @@ bool OptionsParser::Parse(
   ifstream configFile(configFileName.c_str());
   if (configFile.is_open()) {
     string line;
+    getline(configFile, line);
 
     while (!configFile.eof()) {
       /* TODO: line numbers in error messages */
-      configFile >> line;
-      printf("parser processing line: %s", line.c_str());
+      /*printf("parser processing line: %s\n", line.c_str());*/
+      string::size_type commentPos;
+      if (string::npos != (commentPos = line.find('#', 0))) {
+        line = line.substr(0, commentPos);
+      }
       if (line.length() > 0) {
         string::size_type equalsPos = line.find('=', 0);
-        string optionName = line.substr(0, equalsPos);
-        string optionValue = line.substr(equalsPos + 1);
-        trim(optionName);
-        trim(optionValue);
-        if (longOptionTypes.count(optionName)) {
-          switch(longOptionTypes[optionName]) {
-            case optionType_bool:
-              assert(longBoolOptions.count(optionName));
-              if (optionValue == "yes" || optionValue == "true" ||
-                  optionValue == "1") {
-                *longBoolOptions[optionName] = true;
-              } else if (optionValue == "no" || optionValue == "false" ||
-                  optionValue == "0") {
-                *longBoolOptions[optionName] = false;
-              } else {
-                errors.push_back(
-                    configFileName+": option value '"+optionValue+
-                    "' not recognised as a boolean value"
-                  );
-              }
-              break;
-            default:
-              abort();
-          }
+        if (equalsPos == string::npos) {
+          errors.push_back(configFileName+": no '=' character found on line");
         } else {
-          errors.push_back(
-              configFileName+": unrecognized option: '"+optionName+"'"
-            );
+          string optionName = line.substr(0, equalsPos);
+          string optionValue = line.substr(equalsPos + 1);
+          trim(optionName);
+          trim(optionValue);
+          if (longOptionTypes.count(optionName)) {
+            switch(longOptionTypes[optionName]) {
+              case optionType_bool:
+                assert(longBoolOptions.count(optionName));
+                if (optionValue == "yes" || optionValue == "true" ||
+                    optionValue == "1") {
+                  *longBoolOptions[optionName] = true;
+                } else if (optionValue == "no" || optionValue == "false" ||
+                    optionValue == "0") {
+                  *longBoolOptions[optionName] = false;
+                } else {
+                  errors.push_back(
+                      configFileName+": option value '"+optionValue+
+                      "' not recognised as a boolean value"
+                    );
+                }
+                break;
+              default:
+                abort();
+            }
+          } else {
+            errors.push_back(
+                configFileName+": unrecognized option: '"+optionName+"'"
+              );
+          }
         }
       }
+      getline(configFile, line);
     }
   }
 
