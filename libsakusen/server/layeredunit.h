@@ -57,7 +57,7 @@ class LIBSAKUSEN_API LayeredUnit : public ICompleteUnit {
     LayeredUnit(const LayeredUnit&); /**< Copy constructor needs to be
                                        different from the default */
 /* Not written yet. */
-    LayeredUnit& operator=(const LayeredUnit&);
+    //LayeredUnit& operator=(const LayeredUnit&);
     ~LayeredUnit();
   private:
     PlayerID owner;
