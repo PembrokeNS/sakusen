@@ -3,15 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen", "libsakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen_test", "libsakusen_test\libsakusen_test.vcproj", "{6C2B5A2E-820A-47E5-A063-A57555795B5A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen_comms", "..\..\comms\ide\msvc8\libsakusen_comms.vcproj", "{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-server", "..\..\server\ide\msvc8\libsakusen-server.vcproj", "{8B705117-2954-465C-82CC-98C20598B4E3}"
 	ProjectSection(ProjectDependencies) = postProject
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-server-test", "..\..\server\test\ide\msvc8\libsakusen_test.vcproj", "{6C2B5A2E-820A-47E5-A063-A57555795B5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8B705117-2954-465C-82CC-98C20598B4E3} = {8B705117-2954-465C-82CC-98C20598B4E3}
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
@@ -25,10 +26,6 @@ Global
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Debug|Win32.Build.0 = Debug|Win32
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Release|Win32.ActiveCfg = Release|Win32
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982}.Release|Win32.Build.0 = Release|Win32
-		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.Build.0 = Debug|Win32
-		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.ActiveCfg = Release|Win32
-		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.Build.0 = Release|Win32
 		{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}.Debug|Win32.Build.0 = Debug|Win32
 		{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}.Release|Win32.ActiveCfg = Release|Win32
@@ -37,6 +34,10 @@ Global
 		{8B705117-2954-465C-82CC-98C20598B4E3}.Debug|Win32.Build.0 = Debug|Win32
 		{8B705117-2954-465C-82CC-98C20598B4E3}.Release|Win32.ActiveCfg = Release|Win32
 		{8B705117-2954-465C-82CC-98C20598B4E3}.Release|Win32.Build.0 = Release|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Debug|Win32.Build.0 = Debug|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.ActiveCfg = Release|Win32
+		{6C2B5A2E-820A-47E5-A063-A57555795B5A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

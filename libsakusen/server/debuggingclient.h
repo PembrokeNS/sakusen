@@ -14,7 +14,7 @@
 namespace sakusen {
 namespace server {
 
-class DebuggingClient : public Client {
+class LIBSAKUSEN_API DebuggingClient : public Client {
   public:
     DebuggingClient();
     DebuggingClient(std::ostream& output);

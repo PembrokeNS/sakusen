@@ -1,6 +1,7 @@
 #include "patrollerclient.h"
 #include "unit.h"
 
+using namespace sakusen;
 using namespace sakusen::server;
 using namespace sakusen::server::test;
 

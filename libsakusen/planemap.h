@@ -35,6 +35,16 @@ class LIBSAKUSEN_API PlaneMap : public MapType {
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const;
 };
+#if (!defined (_MSC_VER))|| (defined (LIBSAKUSEN_EXPORTS))
+/*There is a reason for this slightly bizarre line. That reason is 
+that for MSVC's linking to work properly, this piece of code should 
+really be in a separate file. But I can't be bothered to move it there,
+and update all the links, etc. 
+The problem is that, when exporting, these pieces of code need to be 
+there so they can be compiled. When importing, these pieces of code 
+cannot be made dllimport, because they are definitions, not declarations.
+But the top level class is dllimport, so these get made it as well. 
+Hence, I make them commented out when the dll is importing. */
 
 template<typename MapType>
 bool PlaneMap<MapType>::resolvePosition(
@@ -83,6 +93,7 @@ Point<sint32> PlaneMap<MapType>::getShortestDifference(
 {
   return op1-op2;
 }
+#endif //Odd exporty thing workaround
 
 }
 

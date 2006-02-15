@@ -4,12 +4,13 @@
 #include <iostream>
 #include <time.h>
 #include <cerrno>
-
 #include "libsakusen-global.h"
 #include "completeworld.h"
 #include "planemap.h"
+#include "point.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
+
 
 #define NANO 1000000000 /* Nanoseconds in a second */
 

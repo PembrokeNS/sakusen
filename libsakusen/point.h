@@ -1,5 +1,5 @@
-#ifndef VECTORS_H
-#define VECTORS_H
+#ifndef POINT_H
+#define POINT_H
 
 #include "libsakusen-global.h"
 
@@ -176,5 +176,5 @@ inline Point<sint16> Point<double>::round16(void) const {
 
 }
 
-#endif // VECTORS_H
+#endif // POINT_H
 

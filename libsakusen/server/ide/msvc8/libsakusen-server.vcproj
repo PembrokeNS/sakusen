@@ -174,15 +174,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
-				OutputFile=".\Debug/libsakusen-server.dll"
+				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-server.dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/libsakusen-server.pdb"
-				ImportLibrary=".\Debug/libsakusen-server.lib"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-server.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -292,10 +292,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

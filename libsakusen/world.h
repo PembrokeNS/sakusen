@@ -7,7 +7,7 @@
 #include "universe.h"
 #include "map.h"
 
-using namespace sakusen;
+namespace sakusen {
 
 class LIBSAKUSEN_API World {
   private:
@@ -40,6 +40,8 @@ class LIBSAKUSEN_API World {
 };
 
 extern LIBSAKUSEN_API World* world;
+
+}
 
 #endif // LIBSAKUSEN__WORLD_H
 

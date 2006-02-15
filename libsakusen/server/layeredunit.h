@@ -29,7 +29,7 @@ namespace server {
  * be handled directly.  It would be bad (and slow) for layers to mess with the
  * physics too much.
  */
-class LayeredUnit : public IUnit {
+class LIBSAKUSEN_API LayeredUnit : public IUnit {
   public:
     static void spawn(
       const PlayerID owner,
@@ -64,6 +64,7 @@ class LayeredUnit : public IUnit {
   public:
     LayeredUnit(const LayeredUnit&); /**< Copy constructor needs to be
                                        different from the default */
+/* Not written yet. */
     LayeredUnit& operator=(const LayeredUnit&);
     ~LayeredUnit();
   private:

@@ -40,7 +40,7 @@ class LIBSAKUSEN_API Client {
     }
     inline bool isObserver() const { return observer; }
 
-    /** interface which must be implemented by sublasses */
+    /** interface which must be implemented by subclasses */
     virtual void sendUpdate(const Update& update) = 0;
 };
 

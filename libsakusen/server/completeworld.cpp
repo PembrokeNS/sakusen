@@ -4,6 +4,7 @@
 #include "region-methods.h"
 #include "map-methods.h"
 #include "libsakusen-global.cpp"
+#include "world.cpp"
 
 #include <list>
 #include <vector>

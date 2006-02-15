@@ -4,6 +4,7 @@
 #include "hitpointalteration.h"
 #include "playerid.h"
 #include "changeownerreason.h"
+#include "unit.h"
 
 namespace sakusen {
 namespace server {

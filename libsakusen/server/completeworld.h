@@ -11,7 +11,7 @@
 namespace sakusen {
 namespace server {
 
-class CompleteWorld : public World {
+class LIBSAKUSEN_API CompleteWorld : public World {
   private:
     CompleteWorld();
     CompleteWorld(const CompleteWorld& copy);
