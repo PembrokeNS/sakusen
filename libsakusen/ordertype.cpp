@@ -6,7 +6,7 @@
 
 namespace sakusen{
 
-LIBSAKUSEN_API std::ostream& sakusen::operator<<(
+LIBSAKUSEN_API std::ostream& operator<<(
     std::ostream& output,
     OrderType orderType
   )
