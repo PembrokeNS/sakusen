@@ -55,7 +55,11 @@
    * we should happen to add the compiler options to alter the default
    * visibility. */
 
-  #define LIBSAKUSEN_API __attribute__ ((visibility ("default")))
+  #if (__GNUC__ >= 4)
+    #define LIBSAKUSEN_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBSAKUSEN_API
+  #endif
 
   /* Define file seperator */
   #define FILE_SEP "/"

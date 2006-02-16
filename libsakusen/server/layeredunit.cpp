@@ -59,6 +59,16 @@ LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
 {
 }
 
+LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
+{
+  delete topLayer;
+  ICompleteUnit::operator=(copy);
+  topLayer = copy.topLayer->newCopy(this);
+  unit = topLayer->getCore();
+
+  return *this;
+}
+
 LayeredUnit::~LayeredUnit()
 {
   delete topLayer;
