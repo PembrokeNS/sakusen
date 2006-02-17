@@ -5,6 +5,7 @@
 #include "world.h"
 #include "partialmap.h"
 #include "completeunit.h"
+#include "update.h"
 
 namespace sakusen {
 namespace client {
@@ -24,10 +25,12 @@ class LIBSAKUSEN_API PartialWorld : public World {
     ~PartialWorld();
   private:
     PartialMap* map;
-    __gnu_cxx::hash_map<uint32, CompleteUnit*> units;
+    __gnu_cxx::hash_map<uint32, CompleteUnit*> units; /* units owned by this */
   public:
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
+
+    void applyUpdate(const Update&);
 };
 
 extern PartialWorld* world;

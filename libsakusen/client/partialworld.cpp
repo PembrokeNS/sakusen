@@ -34,5 +34,40 @@ PartialWorld::~PartialWorld()
   world = NULL;
 }
 
+void PartialWorld::applyUpdate(const Update& update)
+{
+  switch (update.getType()) {
+    case updateType_unitAdded:
+      {
+        UnitAddedUpdateData data = update.getUnitAddedData();
+        if (units.count(data.getUnit().getId())) {
+          Debug("adding unit of existing id");
+          delete units[data.getUnit().getId()];
+        }
+        units[data.getUnit().getId()] = new CompleteUnit(data.getUnit());
+      }
+      break;
+    case updateType_unitRemoved:
+      {
+        UnitRemovedUpdateData data = update.getUnitRemovedData();
+        __gnu_cxx::hash_map<uint32, CompleteUnit*>::iterator unit =
+          units.find(data.getId());
+        if (unit == units.end()) {
+          Debug("tried to remove non-existant unit");
+          break;
+        }
+        delete unit->second;
+        units.erase(unit);
+      }
+      break;
+    /* TODO: order updates */
+    case updateType_orderQueued:
+    case updateType_orderAccepted:
+    case updateType_orderCompleted:
+    default:
+      Fatal("unexpected UpdateType: " << update.getType());
+  }
+}
+
 PartialWorld* sakusen::client::world = NULL;
 

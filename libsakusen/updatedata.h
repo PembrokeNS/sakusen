@@ -39,6 +39,8 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
     UpdateData* newCopy() const { return new UnitRemovedUpdateData(*this); }
     UpdateType getType() const { return updateType_unitRemoved; }
     void store(OArchive& out) const;
+    uint32 getId() const { return id; }
+    changeOwnerReason getReason() const { return reason; }
 };
 
 class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
