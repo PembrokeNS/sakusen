@@ -3,12 +3,31 @@
 #include <string.h>
 
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
 using namespace optimal;
 
 OptionsParser::OptionsParser() :
+  newLine('\n'),
+  assignment('='),
+  /* Initialize hash_maps with few buckets because we are unlikely to need many
+   * */
+  longOptionTypes(10),
+  shortOptionTypes(10),
+  longBoolOptions(10),
+  longIntOptions(10),
+  longStringOptions(10),
+  shortBoolOptions(10),
+  shortIntOptions(10),
+  shortStringOptions(10)
+{
+}
+
+OptionsParser::OptionsParser(char nl) :
+  newLine(nl),
+  assignment('='),
   /* Initialize hash_maps with few buckets because we are unlikely to need many
    * */
   longOptionTypes(10),
@@ -31,11 +50,15 @@ void OptionsParser::addOption(
   assert(0 == longOptionTypes.count(longName));
   assert(0 == shortOptionTypes.count(shortName));
 
-  longOptionTypes[longName] = optionType_bool;
-  shortOptionTypes[shortName] = optionType_bool;
-
-  longBoolOptions[longName] = value;
-  shortBoolOptions[shortName] = value;
+  if (longName != "") {
+    longOptionTypes[longName] = optionType_bool;
+    longBoolOptions[longName] = value;
+  }
+  
+  if (shortName != '\0') {
+    shortOptionTypes[shortName] = optionType_bool;
+    shortBoolOptions[shortName] = value;
+  }
 }
 
 void OptionsParser::addOption(
@@ -47,11 +70,15 @@ void OptionsParser::addOption(
   assert(0 == longOptionTypes.count(longName));
   assert(0 == shortOptionTypes.count(shortName));
 
-  longOptionTypes[longName] = optionType_int;
-  shortOptionTypes[shortName] = optionType_int;
-
-  longIntOptions[longName] = value;
-  shortIntOptions[shortName] = value;
+  if (longName != "") {
+    longOptionTypes[longName] = optionType_int;
+    longIntOptions[longName] = value;
+  }
+  
+  if (shortName != '\0') {
+    shortIntOptions[shortName] = value;
+    shortOptionTypes[shortName] = optionType_int;
+  }
 }
 
 void OptionsParser::addOption(
@@ -63,11 +90,35 @@ void OptionsParser::addOption(
   assert(0 == longOptionTypes.count(longName));
   assert(0 == shortOptionTypes.count(shortName));
 
-  longOptionTypes[longName] = optionType_string;
-  shortOptionTypes[shortName] = optionType_string;
+  if (longName != "") {
+    longOptionTypes[longName] = optionType_string;
+    longStringOptions[longName] = value;
+  }
+  
+  if (shortName != '\0') {
+    shortOptionTypes[shortName] = optionType_string;
+    shortStringOptions[shortName] = value;
+  }
+}
 
-  longStringOptions[longName] = value;
-  shortStringOptions[shortName] = value;
+void OptionsParser::addOption(
+    const string& longName,
+    char shortName,
+    OptionsParser* value
+  )
+{
+  assert(0 == longOptionTypes.count(longName));
+  assert(0 == shortOptionTypes.count(shortName));
+
+  if (longName != "") {
+    longOptionTypes[longName] = optionType_subopts;
+    longSuboptsOptions[longName] = value;
+  }
+  
+  if (shortName != '\0') {
+    shortOptionTypes[shortName] = optionType_subopts;
+    shortSuboptsOptions[shortName] = value;
+  }
 }
 
 void trim(std::string& s)
@@ -80,7 +131,84 @@ void trim(std::string& s)
   }
 }
 
-bool OptionsParser::Parse(
+bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
+{
+  string line;
+
+  while (!stream.eof()) {
+    /* TODO: line numbers in error messages */
+    /* TODO: replace atoi with strtol and do error checking */
+    getline(stream, line, newLine);
+    /*printf("parser processing line: %s\n", line.c_str());*/
+    string::size_type commentPos;
+    if (string::npos != (commentPos = line.find('#', 0))) {
+      line = line.substr(0, commentPos);
+    }
+    trim(line);
+    if (line.length() > 0) {
+      string::size_type equalsPos = line.find(assignment, 0);
+      if (equalsPos == string::npos) {
+        errors.push_back(
+            errorPrefix+": no '"+assignment+"' character found on line"
+          );
+      } else {
+        string optionName = line.substr(0, equalsPos);
+        string optionValue = line.substr(equalsPos + 1);
+        trim(optionName);
+        trim(optionValue);
+        if (longOptionTypes.count(optionName)) {
+          switch(longOptionTypes[optionName]) {
+            case optionType_bool:
+              /*printf("bool option %s, value %s\n", optionName.c_str(),
+                  optionValue.c_str());*/
+              assert(longBoolOptions.count(optionName));
+              if (optionValue == "yes" || optionValue == "true" ||
+                  optionValue == "1" || optionValue == "y") {
+                *longBoolOptions[optionName] = true;
+              } else if (optionValue == "no" || optionValue == "false" ||
+                  optionValue == "0" || optionValue == "f") {
+                *longBoolOptions[optionName] = false;
+              } else {
+                errors.push_back(
+                    errorPrefix+": option value '"+optionValue+
+                    "' not recognised as a boolean value"
+                  );
+              }
+              break;
+            case optionType_int:
+              assert(longIntOptions.count(optionName));
+              *longIntOptions[optionName] = atoi(optionValue.c_str());
+              break;
+            case optionType_string:
+              assert(longStringOptions.count(optionName));
+              *longStringOptions[optionName] = optionValue;
+              break;
+            case optionType_subopts:
+              {
+                assert(longSuboptsOptions.count(optionName));
+                OptionsParser* subParser = longSuboptsOptions[optionName];
+                istringstream s(optionValue);
+                if (subParser->parseStream(s, errorPrefix)) {
+                  /* Append the errors from the subparser to this one */
+                  errors.splice(errors.end(), subParser->getErrors());
+                }
+              }
+              break;
+            default:
+              assert(false);
+          }
+        } else {
+          errors.push_back(
+              errorPrefix+": unrecognized option: '"+optionName+"'"
+            );
+        }
+      }
+    }
+  }
+  return !errors.empty();
+}
+
+bool OptionsParser::parse(
     const string& configFileName,
     int argc,
     char const* const* argv
@@ -89,54 +217,7 @@ bool OptionsParser::Parse(
   errors.clear();
   ifstream configFile(configFileName.c_str());
   if (configFile.is_open()) {
-    string line;
-    getline(configFile, line);
-
-    while (!configFile.eof()) {
-      /* TODO: line numbers in error messages */
-      /*printf("parser processing line: %s\n", line.c_str());*/
-      string::size_type commentPos;
-      if (string::npos != (commentPos = line.find('#', 0))) {
-        line = line.substr(0, commentPos);
-      }
-      if (line.length() > 0) {
-        string::size_type equalsPos = line.find('=', 0);
-        if (equalsPos == string::npos) {
-          errors.push_back(configFileName+": no '=' character found on line");
-        } else {
-          string optionName = line.substr(0, equalsPos);
-          string optionValue = line.substr(equalsPos + 1);
-          trim(optionName);
-          trim(optionValue);
-          if (longOptionTypes.count(optionName)) {
-            switch(longOptionTypes[optionName]) {
-              case optionType_bool:
-                assert(longBoolOptions.count(optionName));
-                if (optionValue == "yes" || optionValue == "true" ||
-                    optionValue == "1") {
-                  *longBoolOptions[optionName] = true;
-                } else if (optionValue == "no" || optionValue == "false" ||
-                    optionValue == "0") {
-                  *longBoolOptions[optionName] = false;
-                } else {
-                  errors.push_back(
-                      configFileName+": option value '"+optionValue+
-                      "' not recognised as a boolean value"
-                    );
-                }
-                break;
-              default:
-                abort();
-            }
-          } else {
-            errors.push_back(
-                configFileName+": unrecognized option: '"+optionName+"'"
-              );
-          }
-        }
-      }
-      getline(configFile, line);
-    }
+    parseStream(configFile, configFileName);
   }
 
   /* Now we process the command line */
@@ -167,7 +248,7 @@ bool OptionsParser::Parse(
               case optionType_int:
                 assert(longIntOptions.count(optionName));
                 if (++i < argc) {
-                  *longIntOptions[optionName] = atoi(argv[++i]);
+                  *longIntOptions[optionName] = atoi(argv[i]);
                 } else {
                   errors.push_back(
                       string("trailing long option '")+optionName+
@@ -178,7 +259,7 @@ bool OptionsParser::Parse(
               case optionType_string:
                 assert(longStringOptions.count(optionName));
                 if (++i < argc) {
-                  *longStringOptions[optionName] = atoi(argv[++i]);
+                  *longStringOptions[optionName] = argv[i];
                 } else {
                   errors.push_back(
                       string("trailing long option '")+optionName+
@@ -186,8 +267,27 @@ bool OptionsParser::Parse(
                     );
                 }
                 break;
+              case optionType_subopts:
+                assert(longSuboptsOptions.count(optionName));
+                if (++i < argc) {
+                  /*printf("subopts option %s, value %s\n", optionName.c_str(),
+                      argv[i]);*/
+                  string optionValue(argv[i]);
+                  istringstream s(optionValue);
+                  OptionsParser* subParser = longSuboptsOptions[optionName];
+                  if (subParser->parseStream(s, "<command line>")) {
+                    /* Append the errors from the subparser to this one */
+                    errors.splice(errors.end(), subParser->getErrors());
+                  }
+                } else {
+                  errors.push_back(
+                      string("trailing option '")+optionName+
+                      "' requires argument for suboptions"
+                    );
+                }
+                break;
               default:
-                abort();
+                assert(false);
             }
           } else {
             errors.push_back(
@@ -232,7 +332,7 @@ bool OptionsParser::Parse(
                 }
                 break;
               default:
-                abort();
+                assert(false);
             }
           } else {
             errors.push_back(
