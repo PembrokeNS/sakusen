@@ -8,6 +8,8 @@
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 
+#include "tedomari-global.h"
+#include "revision.h"
 #include "serverinterface.h"
 #include "asynchronousiohandler.h"
 #include "game/game.h"
@@ -17,7 +19,6 @@
 #include "ui/sdl/sdlui.h"
 
 #include <sys/stat.h>
-#include <getopt.h>
 
 #include <iostream>
 #include <list>
@@ -42,11 +43,16 @@ using namespace tedomari::ui::sdl;
 
 struct Options {
   Options() :
-    abstract(true), evil(false), historyLength(100) {}
+    help(false), version(false), abstract(true), evil(false),
+    historyLength(100), test(false) {}
   ~Options() {}
+  bool help;
+  bool version;
   bool abstract;
   bool evil;
   int historyLength;
+  bool test;
+  SDLUI::Options sdlOptions;
 };
 
 /* enumeration of commands that can be entered at the tedomari prompt */
@@ -64,17 +70,22 @@ enum Command {
 
 /* Forward declarations */
 
+void runTest(const Options& options);
+
+void runClient(
+    const Options& options,
+    const String& homePath,
+    const String& configPath
+  );
+
 Options getOptions(String optionsFile, int argc, char const* const* argv);
 
-UI* newUI();
+UI* newUI(const Options& o);
+
+void usage();
 
 int main(int argc, char const* const* argv)
 {
-  cout << "*******************************\n"
-          "* tedomari (a Sakusen client) *\n"
-          "*  Similus est circo mortis!  *\n"
-          "*******************************" << endl;
-
   if (NULL == setlocale(LC_CTYPE, "")) {
     Fatal("error setting locale");
   }
@@ -112,7 +123,56 @@ int main(int argc, char const* const* argv)
   }
   
   Options options = getOptions(configPath + FILE_SEP "config", argc, argv);
+
+  if (options.help) {
+    usage();
+    exit(EXIT_SUCCESS);
+  }
+
+  if (options.version) {
+    cout << APPLICATION_NAME " " APPLICATION_VERSION " (revision " <<
+      REVISION << ")" << endl;
+    exit(EXIT_SUCCESS);
+  }
   
+  cout << "*******************************\n"
+          "* tedomari (a Sakusen client) *\n"
+          "*  Similus est circo mortis!  *\n"
+          "*******************************" << endl;
+
+  if (options.test) {
+    runTest(options);
+  } else {
+    runClient(options, homePath, configPath);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+void runTest(const Options& options) {
+  UI* ui = newUI(options);
+
+  struct timespec sleepTime = {0, NANO/25};
+  if (options.evil) {
+    sleepTime.tv_nsec = NANO/250;
+  }
+
+  while (true) {
+    ui->update();
+    if (ui->isQuit()) {
+      break;
+    }
+    nanosleep(&sleepTime, NULL);
+  }
+
+  delete ui;
+}
+
+void runClient(
+    const Options& options,
+    const String& homePath,
+    const String& configPath
+  ) {
   /* Construct the path to the socket */
   String socketPath =
     homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
@@ -122,6 +182,7 @@ int main(int argc, char const* const* argv)
   cout << "Using history file at " << historyPath << "\n";
   
   bool reconnect;
+  struct stat tmpStat;
 
   do {
     reconnect = false;
@@ -277,7 +338,7 @@ int main(int argc, char const* const* argv)
               case command_resetUI:
                 if (ui != NULL) {
                   delete ui;
-                  ui = newUI();
+                  ui = newUI(options);
                 }
                 break;
               case command_help:
@@ -302,13 +363,18 @@ int main(int argc, char const* const* argv)
       if ("" != (message = serverInterface.flushIncoming())) {
         ioHandler.message(message);
       }
+      /* Open or close UI appropriately */
       if (game->isStarted() && ui == NULL) {
-        ui = newUI();
+        ui = newUI(options);
       }
       if (!game->isStarted() && ui != NULL) {
         delete ui;
         ui = NULL;
       }
+      /* Update game state */
+      game->flush();
+      /* Allow the UI some processor time */
+      ui->update();
       nanosleep(&sleepTime, NULL);
     }
     
@@ -322,36 +388,60 @@ int main(int argc, char const* const* argv)
     delete socket;
     socket = NULL;
   } while (reconnect);
-  
-  return EXIT_SUCCESS;
+}
+
+void usage() {
+  cout << "tedomari\n"
+          "\n"
+          "Usage: tedomari [OPTIONS]\n"
+          "\n"
+          " -a-, --no-abstract,     do not use the abstract unix socket namespace\n"
+          " -e,  --evil,            try for a higher framerate\n"
+          " -l,  --history-length=LENGTH, store LENGTH commands in the command history\n"
+          "                         upon exiting\n"
+          " -t,  --test,            don't try to connect to a server, just test the UI\n"
+          "      --sdlopts=OPTIONS, pass OPTIONS to the SDL UI\n"
+          " -h,  --help,            display help and exit\n"
+          " -V,  --version,         display version information and exit\n"
+          "" << endl;
 }
 
 /* Function to parse the command line */
-
 Options getOptions(String optionsFile, int argc, char const* const* argv) {
   Options results = Options();
   OptionsParser parser;
+  OptionsParser sdlOptionsParser = SDLUI::getParser(&results.sdlOptions);
 
-  parser.addOption("abstract",       'a', &results.abstract);
-  parser.addOption("evil",           'e', &results.evil);
-  parser.addOption("history-length", 'h', &results.historyLength);
+  parser.addOption("help",           'h',  &results.help);
+  parser.addOption("version",        'V',  &results.version);
+  parser.addOption("abstract",       'a',  &results.abstract);
+  parser.addOption("evil",           'e',  &results.evil);
+  parser.addOption("history-length", 'l',  &results.historyLength);
+  parser.addOption("test",           't',  &results.test);
+  parser.addOption("sdlopts",        '\0', &sdlOptionsParser);
 
-  if (parser.Parse(optionsFile, argc, argv)) {
+  if (parser.parse(optionsFile, argc, argv)) {
     /* There was a problem */
     /* TODO: better error handling (a usage message?) */
-    Fatal(
-        "error(s) processing options:\n" <<
-        stringUtils_join(parser.getErrors(), "\n")
-      );
+    cout << "error(s) processing options:\n" <<
+      stringUtils_join(parser.getErrors(), "\n");
+    usage();
+    exit(EXIT_FAILURE);
   }
+
+  Debug("options.sdlOptions.debug=" << results.sdlOptions.debug);
 
   return results;
 }
 
-UI* newUI()
+UI* newUI(const Options& o)
 {
+  UI* ui;
   /* Hopefully this should be the only mention of SDL anywhere outside of the
    * tedomari::ui::sdl code.
    * TODO: support alternate UIs (OpenGL, DirectX) */
-  return new SDLUI();
+  ui = new SDLUI(o.sdlOptions);
+  ui->setTitle("tedomari");
+  return ui;
 }
+

@@ -49,6 +49,14 @@ void Game::start(const sakusen::comms::GameStartMessageData& data)
     );
 }
 
+void Game::flush()
+{
+  while (!updateQueue.empty()) {
+    sakusen::client::world->applyUpdate(updateQueue.front());
+    updateQueue.pop();
+  }
+}
+
 void Game::stop()
 {
   delete sakusen::client::world;

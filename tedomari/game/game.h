@@ -29,6 +29,7 @@ class Game {
 
     void setUniverse(const String& name, const String& hash);
     void start(const sakusen::comms::GameStartMessageData&);
+    void flush();
     void stop();
 };
 
