@@ -117,7 +117,7 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);
 
-  if (parser.Parse(optionsFile, argc, argv)) {
+  if (parser.parse(optionsFile, argc, argv)) {
     cout << "Error(s) parsing options:\n";
     cout << stringUtils_join(parser.getErrors(), "\n") << "\n";
     usage();
