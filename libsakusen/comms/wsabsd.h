@@ -1,5 +1,5 @@
-#ifndef WINDOWS_AS_BERKELY
-#define WINDOWS_AS_BERKELY
+#ifndef WINDOWS_AS_BERKELEY
+#define WINDOWS_AS_BERKELEY
 //Redefines the windows socket error numbers as standard BSD error numbers. 
 //Actually in winsock.h, but commented out in a rather bizarre manner.
 
