@@ -64,6 +64,7 @@ String sakusen::comms::errorUtils_errorMessage(int num)
   }
   return String(message); */
   /* Because the above doesn't work, we have FIXME: not thread-safe */
+  /* \bug uses thread-unsafe strerror() */
   return String(strerror(num));
 #endif //_MSC_VER
 }

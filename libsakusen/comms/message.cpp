@@ -37,7 +37,7 @@ Message::Message(const uint8* buffer, size_t bufferLength) :
   /* Extract the second byte, which gives the message type */
   MessageType type = MessageType(buffer[1]);
   
-  /* TODO: More stuff in the message header such as endianness, a magic value
+  /** \todo More stuff in the message header such as endianness, a magic value
    * to show that it *really* is a sakusen message */
 
   /* Initialize an archive using the remainder of the buffer */

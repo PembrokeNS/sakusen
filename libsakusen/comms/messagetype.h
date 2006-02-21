@@ -6,7 +6,9 @@
 namespace sakusen {
 namespace comms {
 
-/* Note that current serialization implementation limits us to 256 types */
+/** This contains the magic numbers that indicate what type of message the bearer is.
+ * \note The current serialization method for dealing with enums limits us to 256 message types.
+ */
 enum MessageType {
   messageType_none,
   messageType_solicit,

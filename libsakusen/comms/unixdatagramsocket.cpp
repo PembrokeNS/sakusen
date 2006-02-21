@@ -95,6 +95,7 @@ void UnixDatagramSocket::initialize(const char* p)
   }
 }
 
+/** \brief Closes the socket if it is open */
 UnixDatagramSocket::~UnixDatagramSocket()
 {
   if (!closed) {
@@ -102,6 +103,9 @@ UnixDatagramSocket::~UnixDatagramSocket()
   }
 }
 
+/** \brief Reads \p len bytes of binary from \p buf and sends it.
+ * \param[out] buf Must not be NULL.
+ */
 void UnixDatagramSocket::send(const void* buf, size_t len)
 {
   int retVal = ::send(sockfd, buf, len, 0 /* flags */);
@@ -124,11 +128,18 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
   }
 }
 
+/** \brief sends the given ::Message down the line. */
 void UnixDatagramSocket::send(const Message& message)
 {
   send(message.getBytes(), message.getBytesLength());
 }
 
+/** \brief receives a binary stream from the network
+ * \param[out] buf Must not be NULL, and should point to a buffer into which \p
+ * len bytes can be written.
+ * \param len The maximum number of bytes you are willing to see.
+ * \return The number of bytes actually read.
+ */
 size_t UnixDatagramSocket::receive(void* buf, size_t len)
 {
   ssize_t retVal = recv(sockfd, buf, len, 0);
@@ -141,6 +152,14 @@ size_t UnixDatagramSocket::receive(void* buf, size_t len)
   return retVal;
 }
 
+/** \brief receives a binary stream from the network, with a timeout
+ * \param[out] buf Must not be NULL, and should point to a buffer into which \p
+ * len bytes can be written.
+ * \param len The maximum number of bytes you are willing to see.
+ * \param timeout The length of time you are willing to wait for the buffer to
+ * fill.
+ * \return The number of bytes actually read.
+ */
 size_t UnixDatagramSocket::receive(
     void* buf,
     size_t len,
@@ -162,12 +181,12 @@ size_t UnixDatagramSocket::receive(
     if (timercmp(&timeNow, &endTime, >=)) {
       return 0;
     }
-    /* TODO: possibly sleep for a bit each loop to avoid thrashing the CPU too
-     * much */
+    /** \todo Don't spinlock here; sleep a bit to be nice. */
   }
   return receivedLength;
 }
 
+/** \brief Close a socket, unless it is already closed. */
 void UnixDatagramSocket::close()
 {
   if (!closed) {
@@ -178,6 +197,7 @@ void UnixDatagramSocket::close()
   }
 }
 
+/** \brief Set the async flag on this socket. */
 void UnixDatagramSocket::setAsynchronous(bool val)
 {
   int flags = fcntl(sockfd, F_GETFL);
@@ -195,6 +215,7 @@ void UnixDatagramSocket::setAsynchronous(bool val)
   }
 }
 
+/** \brief Get the address of this socket. */
 String UnixDatagramSocket::getAddress() const {
   if (abstract) {
     return String("unix:abstract:") + (path+1);
