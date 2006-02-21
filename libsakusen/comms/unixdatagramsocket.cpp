@@ -117,8 +117,7 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
         Fatal("message send must be repeated");
         break;
       case ENOTCONN:
-      case 111: /* This errno seems to have no name, but signifies that the
-                   socket has closed */
+      case ECONNREFUSED:
         throw new SocketClosedExn();
         break;
       default:
