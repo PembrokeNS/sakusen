@@ -35,6 +35,16 @@ LIBSAKUSEN_API String stringUtils_join(
 /** \brief Convert all characters of the argument into printable characters */
 String stringUtils_makePrintable(const String&);
 
+/** \brief Converts given unicode character to a UTF-8 string */
+String stringUtils_charToUtf8(uint16);
+
+/** \brief Runs the give iterator backwards until it's pointing at the start of
+ * a UTF-8 character or it matches bound */
+String::iterator stringUtils_findPreviousCharStart(
+    String::iterator i,
+    const String::iterator& bound
+  );
+
 /** \brief Convert a String to an number  */
 template<typename T>
 inline T numFromString(String str);

@@ -62,14 +62,48 @@ String sakusen::stringUtils_makePrintable(const String& s)
   return result;
 }
 
+String sakusen::stringUtils_charToUtf8(uint16 c)
+{
+  /* TODO: Is there an endianness issue here?  I'm not entirely sure how
+   * bitshifts differ under different endiannesses */
+  if (c<0x0080) {
+    return String(1, c);
+  } else if (c<0x0800) {
+    String s(2, '\0');
+    s[0] = (c >> 6) | 0xc0;
+    s[1] = (c & 0x3f) | 0x80;
+    return s;
+  } else {
+    String s(3, '\0');
+    s[0] = (c >> 12) | 0xe0;
+    s[1] = ((c >> 6) & 0x3f) | 0x80;
+    s[2] = (c & 0x3f) | 0x80;
+    return s;
+  }
+}
+
+String::iterator sakusen::stringUtils_findPreviousCharStart(
+    String::iterator i,
+    const String::iterator& bound
+  )
+{
+  do {
+    if (i == bound) {
+      break;
+    }
+    --i;
+  } while (*i & 0xc0 == 0x80);
+  return i;
+}
+
 String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length
   )
 {
-    /*mhash is only for linux and CYGWIN. It would be nice if *
-    we could switch to some other library for crypto things, or if 
-    someone could build an mhash dll for me using CYGWIn, or something.*/
+  /*mhash is only for linux and CYGWIN. It would be nice if *
+  we could switch to some other library for crypto things, or if 
+  someone could build an mhash dll for me using CYGWIn, or something.*/
   /* TODO: Maybe support other hashes */
 #ifndef WIN32
   MHASH thread = mhash_init(MHASH_SHA256);
