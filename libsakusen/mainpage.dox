@@ -6,4 +6,16 @@ libsakusen is the core of Sakusen. It defines the entities involved in the game
 (weapons, units, clients, etc.) and how they interact. It is anticipated that
 all Sakusen clients and servers will use libsakusen; thus, it must be kept as
 fast as possible.
+
+\todo We have some coding style issues to sort out.
+
+\li Do we indent inside \c public: blocks etc.?
+\li Do names of enums start with a capital?
+\li Do we put a prefix on members of an enum?
+\li Where do ctors and dtors go, before or after \c private fields?
+\li Do spaces go in single-line blocks? That is, do we like
+\code uint16 getEnergyCost(void) const {return energyCost;} \endcode
+or
+\code uint16 getEnergyCost(void) const { return energyCost; } \endcode
+
 */
