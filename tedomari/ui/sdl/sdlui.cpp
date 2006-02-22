@@ -1,14 +1,19 @@
 #include "sdlui.h"
 
 #include "libsakusen-global.h"
-#include "sdlutils.h"
+#include "ui/dummyregion.h"
+#include "ui/sdl/sdlregion.h"
+#include "ui/sdl/sdlutils.h"
 
 #include <SDL/SDL.h>
+#include <pango/pangocairo.h>
 
 #include <iomanip>
 
+using namespace std;
 using namespace optimal;
 
+using namespace tedomari::game;
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
 
@@ -18,14 +23,54 @@ using namespace tedomari::ui::sdl;
   #define SDLDebug(msg) if (debug) { Debug(msg); }
 #endif
 
-SDLUI::SDLUI(const Options& options) :
+#define BYTES_PER_PIXEL (4)
+#define BITS_PER_PIXEL (8*BYTES_PER_PIXEL)
+
+/* These mask choices are needed to share the buffer between SDL and cairo */
+#define AMASK 0xff000000
+#define RMASK 0x00ff0000
+#define GMASK 0x0000ff00
+#define BMASK 0x000000ff
+/*
+ * The following mask choices would supposedly be required to share the buffer
+ * between SDL and OpenGL
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  #define RMASK 0xff000000
+  #define BMASK 0x00ff0000
+  #define GMASK 0x0000ff00
+  #define AMASK 0x000000ff
+#else
+  #define RMASK 0x000000ff
+  #define GMASK 0x0000ff00
+  #define BMASK 0x00ff0000
+  #define AMASK 0xff000000
+#endif
+*/
+
+SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
+  UI(new DummyRegion(options.width, options.height), uiConf),
   doubleBuffer(false)
 {
+#ifdef NDEBUG
+  if (options.debug) {
+    Debug("SDL debugging output not supported on release build");
+  }
+  debug = false;
+#else
+  debug = options.debug;
+#endif
+  SDLDebug("Enabled SDL debugging output");
+  
+  /* Initialize SDL */
   if (-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
     Fatal(SDL_GetError());
   }
 
-  uint32 flags = SDL_ANYFORMAT|SDL_RESIZABLE;
+  /* Turn on returning unicode values with keydown events */
+  SDL_EnableUNICODE(true);
+
+  /* Set the video mode */
+  flags = SDL_RESIZABLE|SDL_ANYFORMAT;
   if (options.fullscreen) {
     flags |= SDL_FULLSCREEN;
   }
@@ -39,27 +84,92 @@ SDLUI::SDLUI(const Options& options) :
     flags |= SDL_SWSURFACE;
   }
   
-  screen = SDL_SetVideoMode(options.width, options.height, 24, flags);
+  screen = SDL_SetVideoMode(getWidth(), getHeight(), BITS_PER_PIXEL, flags);
   if (screen == NULL) {
     Fatal(SDL_GetError());
   }
 
-  SDL_EnableUNICODE(true);
+  /* Create our internal buffer */
+  stride = getWidth() * BYTES_PER_PIXEL;
+  bufferLen = stride * getHeight();
+  buffer = new uint8[bufferLen];
 
-#ifdef NDEBUG
-  if (options.debug) {
-    Debug("SDL debugging output not supported on release build");
+  /* Create the SDL interface to that buffer */
+  sdlBuffer = SDL_CreateRGBSurfaceFrom(
+      buffer, getWidth(), getHeight(), BITS_PER_PIXEL, stride, RMASK,
+      GMASK, BMASK, AMASK
+    );
+  if (sdlBuffer == NULL) {
+    Fatal(SDL_GetError());
   }
-  debug = false;
-#else
-  debug = options.debug;
-  SDLDebug("Enabled SDL debugging output");
-#endif
+  
+  /* Create the cairo interface to that buffer */
+  cairoBuffer = cairo_image_surface_create_for_data(
+      buffer, CAIRO_FORMAT_ARGB32, getWidth(), getHeight(), stride
+    );
+  cairoContext = cairo_create(cairoBuffer);
+  pangoContext = pango_cairo_font_map_create_context(
+      reinterpret_cast<PangoCairoFontMap*>(pango_cairo_font_map_get_default())
+    );
+  pango_cairo_update_context(cairoContext, pangoContext);
+
+  /* Provide access to these buffers to the UI and associated controls */
+  replaceRegion(new SDLRegion(this, 0, 0, getWidth(), getHeight()));
+  /* Place the initial control set */
+  initializeControls(game);
+  /* Paint the controls onto the buffer */
+  paint();
 }
 
 SDLUI::~SDLUI()
 {
+  g_object_unref(pangoContext);
+  cairo_destroy(cairoContext);
+  cairo_surface_destroy(cairoBuffer);
+  SDL_FreeSurface(sdlBuffer);
   SDL_Quit();
+  delete[] buffer;
+}
+
+void SDLUI::resize(uint16 width, uint16 height)
+{
+  /* Get the new screen surface */
+  screen = SDL_SetVideoMode(width, height, BITS_PER_PIXEL, flags);
+  /* Create new internal buffer */
+  stride = width * BYTES_PER_PIXEL;
+  delete[] buffer;
+  bufferLen = stride * height;
+  buffer = new uint8[bufferLen];
+  /* Create new SDL interface to buffer */
+  SDL_FreeSurface(sdlBuffer);
+  sdlBuffer = SDL_CreateRGBSurfaceFrom(
+      buffer, width, height, BITS_PER_PIXEL, stride, RMASK, GMASK, BMASK, AMASK
+    );
+  if (sdlBuffer == NULL) {
+    Fatal(SDL_GetError());
+  }
+  /* Create the new cairo interface to the buffer */
+  cairo_destroy(cairoContext);
+  cairo_surface_destroy(cairoBuffer);
+  cairoBuffer = cairo_image_surface_create_for_data(
+      buffer, CAIRO_FORMAT_ARGB32, width, height, stride
+    );
+  cairoContext = cairo_create(cairoBuffer);
+  /* The following call entails a call to pango_layout_context_changed() for
+   * all layouts.  At present this is arranged for by overloading replaceRegion
+   * on those controls which have such a layout.  There might well be a better
+   * way. */
+  pango_cairo_update_context(cairoContext, pangoContext);
+  /* Replace the region of the UI, and trigger the cascade of replacements and
+   * a repainting of the controls */
+  UI::resize(new SDLRegion(this, 0, 0, width, height));
+}
+
+Region* SDLUI::newRegion(uint16 x, uint16 y, uint16 width, uint16 height)
+{
+  assert(x+width <= getWidth());
+  assert(y+height <= getHeight());
+  return new SDLRegion(this, x, y, width, height);
 }
 
 OptionsParser SDLUI::getParser(Options* options)
@@ -83,6 +193,7 @@ void SDLUI::setTitle(const String& title)
 
 void SDLUI::update()
 {
+  /* Poll for events */
   SDL_Event event;
 
   while (SDL_PollEvent(&event)) {
@@ -103,32 +214,29 @@ void SDLUI::update()
       case SDL_KEYDOWN:
         SDLDebug(
             "SDL_KEYDOWN: " << SDL_GetKeyName(event.key.keysym.sym) <<
-            ", char: " << std::hex << std::setw(4) << event.key.keysym.unicode
+            ", char: " << std::hex << std::setw(4) <<
+            event.key.keysym.unicode << std::dec
           );
-        if (isExpectingChars() && 0 != event.key.keysym.unicode) {
-          charInput(event.key.keysym.unicode);
-        } else {
-          keyDown(sdlUtils_getKey(event.key.keysym.sym));
-        }
+        keyDown(
+            sdlUtils_getKey(event.key.keysym.sym), event.key.keysym.unicode
+          );
         break;
       case SDL_KEYUP:
         SDLDebug("SDL_KEYUP: " << SDL_GetKeyName(event.key.keysym.sym));
-        if (!isExpectingChars()) {
-          keyUp(sdlUtils_getKey(event.key.keysym.sym));
-        }
+        keyUp(sdlUtils_getKey(event.key.keysym.sym));
         break;
       case SDL_MOUSEBUTTONDOWN:
         {
           SDL_MouseButtonEvent mouse = event.button;
           SDLDebug("SDL_MOUSEDOWN: button=" << sint32(mouse.button));
-          mouseDown(sdlUtils_getButton(mouse.button), mouse.x, mouse.y);
+          keyDown(sdlUtils_getButton(mouse.button), 0);
         }
         break;
       case SDL_MOUSEBUTTONUP:
         {
           SDL_MouseButtonEvent mouse = event.button;
           SDLDebug("SDL_MOUSEUP: button=" << sint32(mouse.button));
-          mouseUp(sdlUtils_getButton(mouse.button), mouse.x, mouse.y);
+          keyUp(sdlUtils_getButton(mouse.button));
         }
         break;
       case SDL_QUIT:
@@ -142,5 +250,83 @@ void SDLUI::update()
         break;
     }
   }
+
+  /* Update the display */
+  /* TODO: Update only that portion which has been altered */
+  if (0 != SDL_BlitSurface(sdlBuffer, NULL, screen, NULL)) {
+    Debug("SDL_BlitSurface failed: " << SDL_GetError());
+  }
+  if (SDL_Flip(screen)) {
+    Fatal(SDL_GetError());
+  }
+}
+
+PangoLayout* SDLUI::newPangoLayout()
+{
+  return pango_layout_new(pangoContext);
+}
+
+uint32 SDLUI::getSDLColour(const Colour& c)
+{
+  return SDL_MapRGBA(sdlBuffer->format, c.ir(), c.ig(), c.ib(), c.ia());
+}
+
+void SDLUI::cairoSetSource(const Colour& c)
+{
+  cairo_set_source_rgba(cairoContext, c.dr(), c.dg(), c.db(), c.da());
+}
+
+void SDLUI::fillRect(uint16 x, uint16 y, uint16 w, uint16 h, const Colour& c)
+{
+  SDLDebug(
+      "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
+      uint32(c.ia())
+    );
+  cairoSetSource(c);
+  cairo_rectangle(cairoContext, x, y, w, h);
+  cairo_fill(cairoContext);
+}
+
+void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
+{
+  SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
+  /* TODO: check if the surface really needs locking - some don't */
+  SDL_LockSurface(sdlBuffer);
+  cairoSetSource(c);
+  cairo_move_to(cairoContext, x1, y1);
+  cairo_line_to(cairoContext, x2, y2);
+  cairo_stroke(cairoContext);
+  SDL_UnlockSurface(sdlBuffer);
+}
+
+void SDLUI::drawText(double x, double y, const String& text, const Colour& c)
+{
+  SDL_LockSurface(sdlBuffer);
+  cairoSetSource(c);
+  PangoLayout* layout = pango_cairo_create_layout(cairoContext);
+
+  /* Write some text */
+  pango_layout_set_width(layout, -1);
+  /* Note: This function takes a UTF-8 string, as we wish */
+  pango_layout_set_text(layout, text.c_str(), -1);
+  cairo_move_to(cairoContext, x, y);
+  pango_cairo_show_layout(cairoContext, layout);
+
+  /* Cleanup */
+  g_object_unref(layout);
+  SDL_UnlockSurface(sdlBuffer);
+}
+
+void SDLUI::drawText(double x, double y, const SDLLayout* sdlLayout)
+{
+  SDL_LockSurface(sdlBuffer);
+  cairoSetSource(sdlLayout->getColour());
+
+  /* Write some text */
+  cairo_move_to(cairoContext, x, y);
+  pango_cairo_show_layout(cairoContext, sdlLayout->getLayout());
+
+  /* Cleanup */
+  SDL_UnlockSurface(sdlBuffer);
 }
 

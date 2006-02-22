@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 
 #include <iostream>
+#include <fstream>
 #include <list>
 #include <optionsparser.h>
 
@@ -70,7 +71,11 @@ enum Command {
 
 /* Forward declarations */
 
-void runTest(const Options& options);
+void runTest(
+    const Options& options,
+    const String& homePath,
+    const String& configPath
+  );
 
 void runClient(
     const Options& options,
@@ -80,7 +85,7 @@ void runClient(
 
 Options getOptions(String optionsFile, int argc, char const* const* argv);
 
-UI* newUI(const Options& o);
+UI* newUI(const Options& o, const String& uiConfFilename, Game* game);
 
 void usage();
 
@@ -141,7 +146,7 @@ int main(int argc, char const* const* argv)
           "*******************************" << endl;
 
   if (options.test) {
-    runTest(options);
+    runTest(options, homePath, configPath);
   } else {
     runClient(options, homePath, configPath);
   }
@@ -149,8 +154,16 @@ int main(int argc, char const* const* argv)
   return EXIT_SUCCESS;
 }
 
-void runTest(const Options& options) {
-  UI* ui = newUI(options);
+void runTest(
+    const Options& options,
+    const String& homePath,
+    const String& configPath
+  ) {
+  String uiConfFilename = configPath + FILE_SEP "ui.conf";
+  ResourceInterface* resourceInterface =
+    new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  Game* game = new Game(resourceInterface);
+  UI* ui = newUI(options, uiConfFilename, game);
 
   struct timespec sleepTime = {0, NANO/25};
   if (options.evil) {
@@ -166,6 +179,11 @@ void runTest(const Options& options) {
   }
 
   delete ui;
+  ui = NULL;
+  delete game;
+  game = NULL;
+  delete resourceInterface;
+  resourceInterface = NULL;
 }
 
 void runClient(
@@ -173,6 +191,8 @@ void runClient(
     const String& homePath,
     const String& configPath
   ) {
+  String uiConfFilename = configPath + FILE_SEP "ui.conf";
+  
   /* Construct the path to the socket */
   String socketPath =
     homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
@@ -240,7 +260,7 @@ void runClient(
     struct timespec commandSleepTime = {0, 0};
 
     /* Construct our commands */
-    hash_map<String, Command, StringHash> commands;
+    hash_map<String, ::Command, StringHash> commands;
     commands["j"] = commands["join"] = command_join;
     commands["l"] = commands["leave"] = command_leave;
     commands["g"] = commands["get"] = command_get;
@@ -338,7 +358,7 @@ void runClient(
               case command_resetUI:
                 if (ui != NULL) {
                   delete ui;
-                  ui = newUI(options);
+                  ui = newUI(options, uiConfFilename, game);
                 }
                 break;
               case command_help:
@@ -365,7 +385,7 @@ void runClient(
       }
       /* Open or close UI appropriately */
       if (game->isStarted() && ui == NULL) {
-        ui = newUI(options);
+        ui = newUI(options, uiConfFilename, game);
       }
       if (!game->isStarted() && ui != NULL) {
         delete ui;
@@ -434,13 +454,14 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   return results;
 }
 
-UI* newUI(const Options& o)
+UI* newUI(const Options& o, const String& uiConfFilename, Game* game)
 {
   UI* ui;
   /* Hopefully this should be the only mention of SDL anywhere outside of the
    * tedomari::ui::sdl code.
    * TODO: support alternate UIs (OpenGL, DirectX) */
-  ui = new SDLUI(o.sdlOptions);
+  ifstream uiConf(uiConfFilename.c_str());
+  ui = new SDLUI(o.sdlOptions, uiConf, game);
   ui->setTitle("tedomari");
   return ui;
 }

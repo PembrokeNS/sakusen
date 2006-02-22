@@ -1,10 +1,12 @@
 Dependencies:
 
 libsakusen: mhash  libmhash-dev
+
 Fuseki: pcre libpcre-dev
 
 Tedomari:
 readline  libreadline5-dev
 unicode   libunicode-dev
-SDL 	libsdl-dev
+SDL       libsdl-dev
+pango     libpango1.0-dev
 

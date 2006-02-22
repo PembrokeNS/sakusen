@@ -1,9 +1,12 @@
 #ifndef UI__KEY_H
 #define UI__KEY_H
 
+#include "libsakusen-global.h"
+
 namespace tedomari {
 namespace ui {
 
+/** \brief An enumeration of keyboard keys and mouse buttons */
 enum Key {
   K_BACKSPACE,
   K_TAB,
@@ -138,8 +141,22 @@ enum Key {
   K_MENU,
   K_POWER,
   K_EURO,
+
+  K_MOUSELEFT,
+  K_MOUSERIGHT,
+  K_MOUSEMIDDLE,
+  K_MOUSEWHEELUP,
+  K_MOUSEWHEELDOWN,
   K_Unknown
 };
+
+class KeyHash {
+  public:
+    inline size_t operator()(const Key& k) const { return k; }
+};
+
+/** \brief Converts a string name for a key into an enumeration value */
+Key getKey(const String& name);
 
 }}
 

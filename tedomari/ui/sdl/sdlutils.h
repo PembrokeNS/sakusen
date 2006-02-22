@@ -5,14 +5,13 @@
 
 #include <SDL/SDL.h>
 
-#include "ui/button.h"
 #include "ui/key.h"
 
 namespace tedomari {
 namespace ui {
 namespace sdl {
 
-Button sdlUtils_getButton(uint8 b);
+Key sdlUtils_getButton(uint8 b);
 
 Key sdlUtils_getKey(SDLKey);
 

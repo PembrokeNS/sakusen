@@ -10,4 +10,6 @@ Debian package names are also given):
 
 \li readline  libreadline5-dev
 \li unicode   libunicode-dev
+\li SDL       libsdl-dev
+\li pango     libpango1.0-dev
 */

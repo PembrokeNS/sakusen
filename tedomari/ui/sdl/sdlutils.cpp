@@ -3,22 +3,22 @@
 using namespace tedomari::ui;
 
 /** Converts an SDL mouse button value to a Button value */
-Button tedomari::ui::sdl::sdlUtils_getButton(uint8 b)
+Key tedomari::ui::sdl::sdlUtils_getButton(uint8 b)
 {
   switch(b) {
     case SDL_BUTTON_LEFT:
-      return B_LEFT;
+      return K_MOUSELEFT;
     case SDL_BUTTON_RIGHT:
-      return B_RIGHT;
+      return K_MOUSERIGHT;
     case SDL_BUTTON_MIDDLE:
-      return B_MIDDLE;
+      return K_MOUSEMIDDLE;
     case 4:
-      return B_MWHEELUP;
+      return K_MOUSEWHEELUP;
     case 5:
-      return B_MWHEELDOWN;
+      return K_MOUSEWHEELDOWN;
     default:
       Debug("unknown SDL mouse button number");
-      return B_Unknown;
+      return K_Unknown;
   }
 }
 
