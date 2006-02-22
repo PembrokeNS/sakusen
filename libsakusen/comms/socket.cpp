@@ -9,6 +9,7 @@
 #else 
 
 #include "unixdatagramsocket.h"
+#include "udpsocket.h"
 
 #endif //WIN32
 
@@ -31,7 +32,7 @@ Socket* Socket::newConnectionToAddress(const String& address)
     return UnixDatagramSocket::newConnectionToAddress(addressComponents);
 #endif
   } else {
-    return NULL;
+    return UDPSocket::newConnectionToAddress(addressComponents);
   }
 }
 

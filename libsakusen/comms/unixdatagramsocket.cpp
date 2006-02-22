@@ -214,7 +214,7 @@ void UnixDatagramSocket::setAsynchronous(bool val)
   }
 }
 
-/** \brief Get the address of this socket. */
+/** \brief Get the Sakusen-style address of this socket. */
 String UnixDatagramSocket::getAddress() const {
   if (abstract) {
     return String("unix:abstract:") + (path+1);

@@ -19,7 +19,7 @@ class UnixDatagramSocket : public Socket {
   private:
     UnixDatagramSocket();
     /** Copying this would be a bad idea, since the socket would be closed
-     * twice, and other such problems
+     * twice, and other such problems.
      */
     UnixDatagramSocket(const UnixDatagramSocket& copy);
   protected:
