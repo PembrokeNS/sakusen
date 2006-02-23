@@ -126,6 +126,12 @@ void UDPSocket::close()
 
 void UDPSocket::setAsynchronous(bool val)
 {
+#ifdef WIN32
+  unsigned long flags; = 0ul;
+  if (val) flags = 0ul else flags = 1ul;
+  if (0 != ioctlsocket(sockfd, FIONBIO, flags))
+    Fatal("could not set non-blocking; " << errno);
+#else
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {
     Fatal("could not get socket flags");
@@ -139,9 +145,13 @@ void UDPSocket::setAsynchronous(bool val)
       Fatal("could not set socket flags");
     }
   }
+#endif
 }
 
 String UDPSocket::getAddress() const {
+  /** \todo what should go here for a listening socket? What's the use of this,
+   * anyway?
+   */
   return ::String("udp:");
 }
 

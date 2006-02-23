@@ -19,5 +19,5 @@ UDPListeningSocket::UDPListeningSocket(uint16 port) :
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
   if (-1 == bind(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr)))
-    Fatal("Error binding socket");
+    Fatal("Error binding socket" + numToString<int>(errno));
 }
