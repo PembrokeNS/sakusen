@@ -96,13 +96,13 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 /* Define macros for debug and error output */
 
 #define Debug(msg) \
-  debugStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
-    ": " << msg << std::endl;
+  { debugStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
+    ": " << msg << std::endl; }
 
 #define Fatal(msg) \
-  errorStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
+  { errorStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
     ": fatal error: " << msg << std::endl; \
-  abort();
+  abort(); }
 
 #include <cmath>
 
