@@ -8,9 +8,21 @@
 namespace sakusen {
 namespace comms {
 
+
+/** This is a generic class for representing any type of socket.
+ * Socket::newConnectionToAddress(), when given a Sakusen-format
+ * address, will automatically open the right type of socket and connect
+ * to the given address. */
 class Socket {
   public:
     static Socket* newConnectionToAddress(const String& address);
+    /** This function should be called before attempting to instantiate a
+     * ::Socket or any subclass of same. On a Windows box it calls the
+     * Winsock initialization routines; on boxes with BSD sockets it does
+     * nothing ATM, but this is not guaranteed for future versions. It
+     * Fatal()s on failure.
+     */
+    static void socketsInit(void);
     
   /* Abstract class - all constructors must be protected */
   protected:

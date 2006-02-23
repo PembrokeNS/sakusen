@@ -4,19 +4,29 @@
 #include <list>
 
 #ifdef WIN32
-//Whatever I eventually put here.
+#include <winsock2.h>
 
-#else 
+#else /* BSD sockets */
 
 #include "unixdatagramsocket.h"
-#include "udpsocket.h"
 
 #endif //WIN32
+#include "udpsocket.h"
 
 using namespace std;
 
 using namespace sakusen::comms;
 
+void Socket::socketsInit(void)
+{
+#ifdef WIN32
+  WSADATA wsaData;
+  int iResult;
+  iResult = WSAStartup( MAKEWORD(2,2), &wsaData );
+  if ( iResult != NO_ERROR )
+    printf("Error at WSAStartup()\n");
+#endif
+}
 Socket* Socket::newConnectionToAddress(const String& address)
 {
   list<String> addressComponents = stringUtils_split(address, ":");
