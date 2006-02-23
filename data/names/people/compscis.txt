@@ -1,0 +1,16 @@
+Charles Babbage
+Alonzo Church
+Haskell Curry
+Edsger Dijkstra
+Gottlob Frege
+Stephen Cole Kleene
+Roger Needham
+Moses Schönfinkel
+Clive Sinclair
+Richard Stallman
+Christopher Strachey
+Linus Torvalds
+Alan Turing
+David Wheeler
+Sir Maurice Wilkes
+Niklaus Wirth
