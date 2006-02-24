@@ -4,10 +4,11 @@ Blizzard
 Cloudburst
 Cumulus
 Cyclone
-Nimbus
+Gale
 Hurricane
 Lightning
 Mistral
+Nimbus
 Spring
 Storm
 Stormcloud
