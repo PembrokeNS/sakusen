@@ -1,5 +1,5 @@
 #include "libsakusen-global.h"
-#include "unixdatagramlisteningsocket.h"
+#include "socket.h"
 #include "errorutils.h"
 #include "libsakusen-resources-global.h"
 #include "fileresourceinterface.h"
@@ -31,6 +31,7 @@ struct Options {
   Options() :
     forceSocket(false),
     abstract(true),
+    solicitationAddress(),
     dots(true),
     help(false),
     version(false) 
@@ -38,6 +39,7 @@ struct Options {
   ~Options() {}
   bool forceSocket;
   bool abstract;
+  String solicitationAddress;
   bool dots;
   bool help;
   bool version;
@@ -94,11 +96,15 @@ void usage()
           "\n"
           "Usage: fuseki [OPTIONS]\n"
           "\n"
-          " -f,  --force-socket overwrite any existing socket file\n"
-          " -a-, --no-abstract  do not use the abstract unix socket namespace\n"
-          " -d-, --no-dots      do not print dots while server running\n"
-          " -h,  --help         display help and exit\n"
-          " -V,  --version      display version information and exit\n"
+          " -f,  --force-socket    overwrite any existing socket file\n"
+          " -a-, --no-abstract     do not use the abstract unix socket "
+            "namespace\n"
+          " -s,  --solicit ADDRESS bind the solicitation socket at "
+            "sakusen-style address\n"
+          "                        ADDRESS (e.g. udp|localhost)\n"
+          " -d-, --no-dots         do not print dots while server running\n"
+          " -h,  --help            display help and exit\n"
+          " -V,  --version         display version information and exit\n"
           "\n"
           "This is an alpha version of fuseki.  Functionality is extremely "
             "limited." << endl;
@@ -113,6 +119,7 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
 
   parser.addOption("force-socket", 'f', &results.forceSocket);
   parser.addOption("abstract",     'a', &results.abstract);
+  parser.addOption("solicit",      's', &results.solicitationAddress);
   parser.addOption("dots",         'd', &results.dots);
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);
@@ -139,73 +146,80 @@ int startServer(const String& homePath, const Options& options)
           "* Similus est circo mortis! *\n"
           "*****************************" << endl;
 
-  /* This server listens for clients on a unix datagram socket located in
-   * ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
-
-  /* Construct the config directory */
-  struct stat tmpStat;
-  String serverPath = homePath + CONFIG_SUBDIR SOCKET_SUBDIR;
-
-  cout << "Using directory '" << serverPath << "' for socket.\n";
-
-  /* Determine whether the directory exists */
-  
-  while (-1==stat(serverPath.c_str(), &tmpStat)) {
-    switch (errno) {
-      case ENOENT:
-        /* Try to create the directory if it doesn't */
-        cout << "Directory not found, trying to create it." <<
-          endl;
-        if (-1 == fileUtils_mkdirRecursive(serverPath, 0777)) {
-          switch (errno) {
-            case EACCES:
-              Fatal("permission denied when creating directory");
-              break;
-            case ENOENT:
-              Fatal("no such file or directory when creating directory");
-              break;
-            default:
-              Fatal("error " << errorUtils_parseErrno(errno) <<
-                  " creating directory");
-              break;
-          }
-        }
-        break;
-      default:
-        Fatal("could not stat directory");
-        break;
-    }
-  }
-
-  /* Check that config directory is really a directory */
-  if (!S_ISDIR(tmpStat.st_mode)) {
-    Fatal("path '" << serverPath <<
-        "' not a directory");
-  }
-
   /* Create the resource interface */
   /* TODO: make the directories searched configurable */
   ResourceInterface* resourceInterface =
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
 
-  /* Create the socket */
-  String socketPath = serverPath + FILE_SEP "fuseki-socket";
-  
-  cout << "Binding socket at " << socketPath << endl;
+  String socketAddress = options.solicitationAddress;
 
-  if (!stat(socketPath.c_str(), &tmpStat)) {
-    if (options.forceSocket) {
-      cout << "Removing existing socket." << endl;
-      unlink(socketPath.c_str());
-    } else {
-      cout << "Socket already exists.  Another instance of fuseki is already\n"
-        "running or has crashed.  Please delete the socket file or execute\n"
-        "fuseki with the --force-socket option if no other instance is using\n"
-        "it." << endl;
-      return EXIT_FAILURE;
+  if (socketAddress.empty()) {
+    /* By default, this server listens for clients on a unix datagram socket
+     * located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
+
+    /* Construct the server directory */
+    struct stat tmpStat;
+    String serverPath = homePath + CONFIG_SUBDIR SOCKET_SUBDIR;
+
+    cout << "Using directory '" << serverPath << "' for socket.\n";
+    
+    /* Determine whether the directory exists */
+    
+    while (-1==stat(serverPath.c_str(), &tmpStat)) {
+      switch (errno) {
+        case ENOENT:
+          /* Try to create the directory if it doesn't */
+          cout << "Directory not found, trying to create it." <<
+            endl;
+          if (-1 == fileUtils_mkdirRecursive(serverPath, 0777)) {
+            switch (errno) {
+              case EACCES:
+                Fatal("permission denied when creating directory");
+                break;
+              case ENOENT:
+                Fatal("no such file or directory when creating directory");
+                break;
+              default:
+                Fatal("error " << errorUtils_parseErrno(errno) <<
+                    " creating directory");
+                break;
+            }
+          }
+          break;
+        default:
+          Fatal("could not stat directory");
+          break;
+      }
     }
+
+    /* Check that config directory is really a directory */
+    if (!S_ISDIR(tmpStat.st_mode)) {
+      Fatal("path '" << serverPath <<
+          "' not a directory");
+    }
+
+    String socketPath = serverPath + FILE_SEP "fuseki-socket";
+
+    if (!stat(socketPath.c_str(), &tmpStat)) {
+      if (options.forceSocket) {
+        cout << "Removing existing socket." << endl;
+        unlink(socketPath.c_str());
+      } else {
+        cout << "Socket already exists.  Another instance of fuseki is\n"
+          "already running or has crashed.  Please delete the socket file or\n"
+          "execute fuseki with the --force-socket option if no other instance\n"
+          "is using it." << endl;
+        return EXIT_FAILURE;
+      }
+    }
+
+    /* Use the default socket address */
+    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM + socketPath;
   }
-  Socket* socket = new UnixDatagramListeningSocket(socketPath, false);
+  
+  cout << "Binding socket at " << socketAddress << endl;
+  Socket::socketsInit();
+  Socket* socket = Socket::newBindingToAddress(socketAddress);
 
   cout << "Socket created." << endl;
   

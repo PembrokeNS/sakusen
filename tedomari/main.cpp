@@ -44,16 +44,18 @@ using namespace tedomari::ui::sdl;
 
 struct Options {
   Options() :
-    help(false), version(false), abstract(true), evil(false),
-    historyLength(100), test(false) {}
+    abstract(true), unixSockets(true), evil(false), historyLength(100),
+    test(false), solicitationAddress(), help(false), version(false) {}
   ~Options() {}
-  bool help;
-  bool version;
   bool abstract;
+  bool unixSockets;
   bool evil;
   int historyLength;
   bool test;
   SDLUI::Options sdlOptions;
+  String solicitationAddress;
+  bool help;
+  bool version;
 };
 
 /* enumeration of commands that can be entered at the tedomari prompt */
@@ -193,29 +195,27 @@ void runClient(
   ) {
   String uiConfFilename = configPath + FILE_SEP "ui.conf";
   
-  /* Construct the path to the socket */
-  String socketPath =
-    homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
+  String socketAddress = options.solicitationAddress;
+
+  if (socketAddress.empty()) {
+    /* Use default socket */
+    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
+      homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
+  }
 
   /* Construct the path to the history file */
   String historyPath = configPath + FILE_SEP "history";
   cout << "Using history file at " << historyPath << "\n";
   
   bool reconnect;
-  struct stat tmpStat;
 
   do {
     reconnect = false;
     
     /* Connect to the socket */
-    cout << "Trying to connect to socket at " << socketPath << endl;
-
-    if (stat(socketPath.c_str(), &tmpStat)) {
-      cout << "Socket not found.  Could not connect." << endl;
-      exit(EXIT_FAILURE);
-    }
+    cout << "Trying to connect to socket at " << socketAddress << endl;
     
-    Socket* socket = new UnixDatagramConnectingSocket(socketPath, false);
+    Socket* socket = Socket::newConnectionToAddress(socketAddress);
 
     cout << "Connected to socket." << endl;
     
@@ -224,7 +224,9 @@ void runClient(
     ResourceInterface* resourceInterface =
       new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
     Game* game = new Game(resourceInterface);
-    ServerInterface serverInterface(socket, options.abstract, game);
+    ServerInterface serverInterface(
+        socket, options.unixSockets, options.abstract, game
+      );
 
     cout << "Getting advertisement." << endl;
     
@@ -394,7 +396,12 @@ void runClient(
       /* Update game state */
       game->flush();
       /* Allow the UI some processor time */
-      ui->update();
+      if (ui != NULL) {
+        ui->update();
+        if (ui->isQuit()) {
+          finished = true;
+        }
+      }
       nanosleep(&sleepTime, NULL);
     }
     
@@ -416,11 +423,13 @@ void usage() {
           "Usage: tedomari [OPTIONS]\n"
           "\n"
           " -a-, --no-abstract,     do not use the abstract unix socket namespace\n"
+          " -u-, --no-unix,         do not use any unix sockets\n"
           " -e,  --evil,            try for a higher framerate\n"
-          " -l,  --history-length=LENGTH, store LENGTH commands in the command history\n"
+          " -l,  --history-length LENGTH, store LENGTH commands in the command history\n"
           "                         upon exiting\n"
           " -t,  --test,            don't try to connect to a server, just test the UI\n"
-          "      --sdlopts=OPTIONS, pass OPTIONS to the SDL UI\n"
+          "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
+          " -s   --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
           " -h,  --help,            display help and exit\n"
           " -V,  --version,         display version information and exit\n"
           "" << endl;
@@ -432,13 +441,15 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   OptionsParser parser;
   OptionsParser sdlOptionsParser = SDLUI::getParser(&results.sdlOptions);
 
-  parser.addOption("help",           'h',  &results.help);
-  parser.addOption("version",        'V',  &results.version);
   parser.addOption("abstract",       'a',  &results.abstract);
+  parser.addOption("unix",           'u',  &results.unixSockets);
   parser.addOption("evil",           'e',  &results.evil);
   parser.addOption("history-length", 'l',  &results.historyLength);
   parser.addOption("test",           't',  &results.test);
   parser.addOption("sdlopts",        '\0', &sdlOptionsParser);
+  parser.addOption("solicit",        's',  &results.solicitationAddress);
+  parser.addOption("help",           'h',  &results.help);
+  parser.addOption("version",        'V',  &results.version);
 
   if (parser.parse(optionsFile, argc, argv)) {
     /* There was a problem */
@@ -450,6 +461,7 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   }
 
   Debug("options.sdlOptions.debug=" << results.sdlOptions.debug);
+  Debug("options.unixSockets=" << results.unixSockets);
 
   return results;
 }

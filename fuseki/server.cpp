@@ -259,22 +259,29 @@ void Server::serve()
   /* To begin with we have the game init loop */
   do {
     size_t bytesReceived;
+    String receivedFrom;
     /* Look for messages on the solicitation socket */
-    if ((bytesReceived = socket->receive(buf, BUFFER_LEN))) {
+    if ((bytesReceived = socket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
       Message message = Message(buf, bytesReceived);
       if (message.isRealMessage()) {
         switch (message.getType()) {
           case messageType_solicit:
             {
               SolicitMessageData data = message.getSolicitData();
-              const String& address = data.getAddress();
+              String address = data.getAddress();
+              if (address.empty()) {
+                /* If no address specified then we respond to the source of the
+                 * message */
+                address = receivedFrom;
+              }
               Socket* clientSocket = Socket::newConnectionToAddress(address);
               if (NULL != clientSocket) {
                 out << "Advertising to " << clientSocket->getAddress() << ".\n";
                 clientSocket->send(advertisement);
                 delete clientSocket;
               } else {
-                out << "Unsupported socket type requested by client.\n";
+                out << "Unsupported socket type requested by client "
+                  "(address was '" << data.getAddress() << "').\n";
               }
             }
             break;

@@ -2,6 +2,7 @@
 #include "serverinterface.h"
 #include "libsakusen-comms-global.h"
 #include "unixdatagramlisteningsocket.h"
+#include "udplisteningsocket.h"
 #include "socketexception.h"
 #include "tedomari-global.h"
 #include "revision.h"
@@ -18,14 +19,16 @@ using namespace sakusen::comms;
 using namespace tedomari;
 using namespace tedomari::game;
 
-ServerInterface::ServerInterface(Socket* s, bool a, Game* g) :
+ServerInterface::ServerInterface(Socket* s, bool us, bool a, Game* g) :
   serverSocket(s),
   game(g),
+  unixSockets(us),
   abstract(a),
   joined(false),
   localSocket(NULL),
   privateServerSocket(NULL)
 {
+  Debug("unixSockets = " << unixSockets);
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
     /* 1 second timeout used for all incoming server responses.
@@ -72,15 +75,23 @@ void ServerInterface::settingAlteration(
 
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
 {
-  UnixDatagramListeningSocket tempSocket(abstract);
-  String address = tempSocket.getAddress();
-  tempSocket.setAsynchronous(true);
-  serverSocket->send(SolicitMessageData(address));
+  Socket* tempSocket;
+  
+  if (unixSockets) {
+    tempSocket = new UnixDatagramListeningSocket(abstract);
+    String address = tempSocket->getAddress();
+    serverSocket->send(SolicitMessageData(address));
+  } else {
+    tempSocket = serverSocket;
+    serverSocket->send(SolicitMessageData(""));
+  }
+  
+  tempSocket->setAsynchronous(true);
   
   uint8 buffer[BUFFER_LEN];
   size_t messageLength;
 
-  if (0==(messageLength=tempSocket.receive(buffer, BUFFER_LEN, timeout))) {
+  if (0==(messageLength=tempSocket->receive(buffer, BUFFER_LEN, timeout))) {
     return true;
   }
 
@@ -90,6 +101,11 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
     return true;
   }
   *advertisement=message.getAdvertiseData();
+
+  if (unixSockets) {
+    delete tempSocket;
+  }
+  
   return false;
 }
 
@@ -164,7 +180,13 @@ String ServerInterface::join()
   }
   assert(localSocket == NULL);
   assert(privateServerSocket == NULL);
-  localSocket = new UnixDatagramListeningSocket(abstract);
+  if (unixSockets) {
+    localSocket = new UnixDatagramListeningSocket(abstract);
+  } else {
+    /* FIXME: This should really be a TCP socket, not a UDP one, but those
+     * don't exist yet */
+    localSocket = new UDPListeningSocket();
+  }
   localSocket->setAsynchronous(true);
   try {
     serverSocket->send(JoinMessageData(localSocket->getAddress()));

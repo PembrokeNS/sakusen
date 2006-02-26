@@ -16,6 +16,7 @@ class ServerInterface {
   public:
     ServerInterface(
         sakusen::comms::Socket* serverSocket,
+        bool unixSockets,
         bool abstract,
         game::Game* game
       );
@@ -26,6 +27,7 @@ class ServerInterface {
        * this object) */
     game::Game* game; /* not owned by this */
     struct timeval timeout;
+    bool unixSockets; /* OK to use Unix sockets */
     bool abstract; /* OK to use abstract namespace */
     bool joined;
     sakusen::comms::ClientID id;
