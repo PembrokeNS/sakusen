@@ -27,8 +27,15 @@ typedef int NativeSocket;
 #endif
 
 class UDPSocket : public Socket {
+  private:
+    static void interpretAddress(
+        std::list<String>& address,
+        String* hostname,
+        uint16* port
+      );
   public:
-    static Socket* newConnectionToAddress(std::list<String> address);
+    static Socket* newConnectionToAddress(std::list<String>& address);
+    static Socket* newBindingToAddress(std::list<String>& address);
   private:
     /** Copying this would be a bad idea, since the socket would be closed
      * twice, and other such problems.
@@ -39,6 +46,9 @@ class UDPSocket : public Socket {
     UDPSocket();
     /** create the socket and set the port */
     UDPSocket(uint16 myPort);
+  public:
+    virtual ~UDPSocket() { close(); }
+  protected:
     /** whether this socket has been closed already */
     bool closed;
     /** The address of the near endpoint */
@@ -51,9 +61,9 @@ class UDPSocket : public Socket {
     uint16 port;
   public:
     void send(const void* buf, size_t len);
-    void send(const Message& message);
     size_t receive(void* buf, size_t len);
     size_t receive(void* buf, size_t len, const struct timeval& timeout);
+    size_t receiveFrom(void* buf, size_t len, String& from);
     void close();
     void setAsynchronous(bool val);
     String getAddress() const;

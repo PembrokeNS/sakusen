@@ -1,5 +1,6 @@
 #include "udpsocket.h"
 #include "udpconnectingsocket.h"
+#include "udplisteningsocket.h"
 #include "errorutils.h"
 #include "socketexception.h"
 #include "stringutils.h"
@@ -18,28 +19,78 @@
 #include <fcntl.h>
 #define NativeSocketClose(x) ::close(x)
 #define NativeSocketRecv(a,b,c,d) ::recv(a,b,c,d)
+#define NativeSocketRecvFrom(a,b,c,d,e,f) ::recvfrom(a,b,c,d,e,f)
 #endif
+
+using namespace sakusen;
 using namespace sakusen::comms;
 
-Socket* UDPSocket::newConnectionToAddress(std::list< ::String> address)
+/** \brief Extracts hostname and port from a split sakusen-style UDP address
+ * \param address the split address with 'udp' removed
+ * \param[out] hostname the extracted hostname or a null string if there is a
+ * problem interpreting the address
+ * \param[out] port the extracted port or undefined if there is a problem
+ * interpreting the address */
+void UDPSocket::interpretAddress(
+    std::list<String>& address,
+    String* hostname,
+    uint16* port
+  )
 {
-  ::String hostname, port;
-  uint16 nPort;
-  if (address.empty())
-    return NULL;
-  hostname = address.front();
-  address.pop_front();
-  if (address.empty())
-    nPort = 1723;
-  else {
-    port = address.front();
-    nPort = numFromString<uint16>(port);
-    address.pop_front();
-    if (!address.empty())
-      return NULL;
+  if (address.empty()) {
+    *hostname = String();
+    return;
   }
 
-  return new UDPConnectingSocket(hostname, nPort);
+  *hostname = address.front();
+  address.pop_front();
+  if (address.empty()) {
+    /* We might have a port in the hostname, after a ':' */
+    size_t colon = hostname->rfind(':');
+    if (colon == String::npos) {
+      *port = DEFAULT_PORT;
+    } else {
+      *port = numFromString<uint16>(hostname->substr(colon+1));
+      *hostname = hostname->substr(0, colon);
+    }
+  } else {
+    String sPort = address.front();
+    *port = numFromString<uint16>(sPort);
+    address.pop_front();
+    if (!address.empty()) {
+      *hostname = String();
+      return;
+    }
+  }
+}
+
+Socket* UDPSocket::newConnectionToAddress(std::list< ::String>& address)
+{
+  String hostname;
+  uint16 port;
+
+  interpretAddress(address, &hostname, &port);
+
+  if (hostname.empty()) {
+    return NULL;
+  }
+
+  return new UDPConnectingSocket(hostname, port);
+}
+
+Socket* UDPSocket::newBindingToAddress(std::list< ::String>& address)
+{
+  String hostname;
+  uint16 port;
+
+  interpretAddress(address, &hostname, &port);
+
+  if (hostname.empty()) {
+    return NULL;
+  }
+
+  /* hostname is just ignored except for checking the error condition */
+  return new UDPListeningSocket(port);
 }
 
 UDPSocket::UDPSocket()
@@ -69,11 +120,6 @@ void UDPSocket::send(const void* buf, size_t len)
         break;
     }
   }
-}
-
-void UDPSocket::send(const Message& message)
-{
-  send(message.getBytes(), message.getBytesLength());
 }
 
 size_t UDPSocket::receive(void* buf, size_t len)
@@ -114,6 +160,26 @@ size_t UDPSocket::receive(
   return receivedLength;
 }
 
+size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
+{
+  sockaddr_in fromAddr;
+  socklen_t fromLen = sizeof(fromAddr);
+  ssize_t retVal = NativeSocketRecvFrom(
+      sockfd, buf, len, 0, reinterpret_cast<sockaddr*>(&fromAddr), &fromLen
+    );
+  if (retVal == -1) {
+    if (errno == EAGAIN) {
+      return 0;
+    }
+    Fatal("error receiving message");
+  }
+  char fromChar[INET_ADDRSTRLEN];
+  inet_ntop(AF_INET, &fromAddr.sin_addr, fromChar, INET_ADDRSTRLEN);
+  from = String("udp"ADDR_DELIM) + fromChar + ADDR_DELIM +
+    numToString(ntohs(fromAddr.sin_port));
+  return retVal;
+}
+
 void UDPSocket::close()
 {
   if (!closed) {
@@ -149,9 +215,23 @@ void UDPSocket::setAsynchronous(bool val)
 }
 
 String UDPSocket::getAddress() const {
-  /** \todo what should go here for a listening socket? What's the use of this,
-   * anyway?
-   */
-  return ::String("udp:");
+  if (addr.sin_addr.s_addr == INADDR_ANY) {
+    /** \todo In theory the hostname / IP address section of this address needs
+     * to be appropriate for allowing another computer to connect to this
+     * socket when given this address as a string.  I've used the hostname as
+     * given by gethostname, although this is presumably non-portable.
+     * In practice I don't think this will in fact be used in those
+     * circumstances, because it would be broken if the connection were going
+     * through a router or some such thin anyway. */
+    char hostname[HOST_NAME_MAX];
+    gethostname(hostname, HOST_NAME_MAX);
+    return ::String("udp"ADDR_DELIM) + hostname + ADDR_DELIM +
+      numToString(port);
+  } else {
+    char host[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &addr.sin_addr, host, INET_ADDRSTRLEN);
+    return ::String("udp"ADDR_DELIM) + host + ADDR_DELIM +
+      numToString(port);
+  }
 }
 

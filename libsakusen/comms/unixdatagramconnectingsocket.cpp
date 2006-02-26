@@ -1,5 +1,7 @@
 #include "unixdatagramconnectingsocket.h"
 
+#include "errorutils.h"
+
 #include <sys/socket.h>
 
 using namespace sakusen::comms;
@@ -12,7 +14,7 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error connecting socket");
+    Fatal("Error connecting socket: " << errorUtils_errorMessage(errno));
   }
 }
 
@@ -24,7 +26,9 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error connecting socket");
+    Fatal("Error connecting socket (abstract="<<abstract<<", path='"<<path<<
+        "', addr.sun_path='"<<addr.sun_path<<"'): " <<
+        errorUtils_errorMessage(errno));
   }
 }
 

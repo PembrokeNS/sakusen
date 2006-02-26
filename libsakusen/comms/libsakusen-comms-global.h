@@ -21,6 +21,9 @@
  * wire */
 #define BUFFER_LEN 4096
 
+/** ADDR_DELIM is the delimiter for sakusen-style socket addresses */
+#define ADDR_DELIM "|"
+
 /* SOCKET_SUBDIR is the subdirectory of CONFG_SUBDIR where servers are
  * expected to put their sockets */
 #define SOCKET_SUBDIR FILE_SEP "servers"
@@ -28,6 +31,10 @@
 /* SETTINGS_DELIMITER is the character used to split the names of nodes when
  * constructing full names of nodes in the settings tree */
 #define SETTINGS_DELIMITER ":"
+
+/** DEFAULT_PORT is the port that sockets default to using if none is specified
+ * */
+#define DEFAULT_PORT 1723
 
 #endif // LIBSAKUSEN_COMMS_GLOBAL_H
 

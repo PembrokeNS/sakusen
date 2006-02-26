@@ -8,9 +8,9 @@ namespace comms {
 
 class UDPListeningSocket : public UDPSocket {
   private:
-    UDPListeningSocket();
     UDPListeningSocket(const UDPListeningSocket& copy);
   public:
+    UDPListeningSocket();
     UDPListeningSocket(uint16 port);
     ~UDPListeningSocket() {}
 };

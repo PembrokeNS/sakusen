@@ -1,6 +1,7 @@
 #include "unixdatagramsocket.h"
 
 #include "unixdatagramconnectingsocket.h"
+#include "unixdatagramlisteningsocket.h"
 #include "errorutils.h"
 #include "socketexception.h"
 
@@ -17,35 +18,67 @@ using namespace std;
 
 using namespace sakusen::comms;
 
-Socket* UnixDatagramSocket::newConnectionToAddress(list<String> address)
+void UnixDatagramSocket::interpretAddress(
+    list<String>& address,
+    String* path,
+    bool* abstract
+  )
 {
+  *path = String();
   if (address.empty()) {
-    return NULL;
+    return;
   }
   String abstractness = address.front();
   address.pop_front();
-  bool abstract;
   
   if (abstractness == "abstract") {
-    abstract = true;
+    *abstract = true;
   } else if (abstractness == "concrete") {
-    abstract = false;
+    *abstract = false;
   } else {
-    return NULL;
+    return;
   }
 
   if (address.empty()) {
-    return NULL;
+    return;
   }
 
-  String path = address.front();
+  String p = address.front();
   address.pop_front();
 
   if (!address.empty()) {
+    return;
+  }
+
+  *path = p;
+}
+
+Socket* UnixDatagramSocket::newConnectionToAddress(list<String>& address)
+{
+  bool abstract;
+  String path;
+
+  interpretAddress(address, &path, &abstract);
+
+  if (path.empty()) {
     return NULL;
   }
 
   return new UnixDatagramConnectingSocket(path, abstract);
+}
+
+Socket* UnixDatagramSocket::newBindingToAddress(list<String>& address)
+{
+  bool abstract;
+  String path;
+
+  interpretAddress(address, &path, &abstract);
+
+  if (path.empty()) {
+    return NULL;
+  }
+
+  return new UnixDatagramListeningSocket(path, abstract);
 }
 
 UnixDatagramSocket::UnixDatagramSocket(const char* p, bool a) :
@@ -103,9 +136,6 @@ UnixDatagramSocket::~UnixDatagramSocket()
   }
 }
 
-/** \brief Reads \p len bytes of binary from \p buf and sends it.
- * \param[out] buf Must not be NULL.
- */
 void UnixDatagramSocket::send(const void* buf, size_t len)
 {
   int retVal = ::send(sockfd, buf, len, 0 /* flags */);
@@ -127,18 +157,6 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
   }
 }
 
-/** \brief sends the given ::Message down the line. */
-void UnixDatagramSocket::send(const Message& message)
-{
-  send(message.getBytes(), message.getBytesLength());
-}
-
-/** \brief receives a binary stream from the network
- * \param[out] buf Must not be NULL, and should point to a buffer into which \p
- * len bytes can be written.
- * \param len The maximum number of bytes you are willing to see.
- * \return The number of bytes actually read.
- */
 size_t UnixDatagramSocket::receive(void* buf, size_t len)
 {
   ssize_t retVal = recv(sockfd, buf, len, 0);
@@ -151,14 +169,6 @@ size_t UnixDatagramSocket::receive(void* buf, size_t len)
   return retVal;
 }
 
-/** \brief receives a binary stream from the network, with a timeout
- * \param[out] buf Must not be NULL, and should point to a buffer into which \p
- * len bytes can be written.
- * \param len The maximum number of bytes you are willing to see.
- * \param timeout The length of time you are willing to wait for the buffer to
- * fill.
- * \return The number of bytes actually read.
- */
 size_t UnixDatagramSocket::receive(
     void* buf,
     size_t len,
@@ -185,7 +195,12 @@ size_t UnixDatagramSocket::receive(
   return receivedLength;
 }
 
-/** \brief Close a socket, unless it is already closed. */
+size_t UnixDatagramSocket::receiveFrom(void* buf, size_t len, String& from)
+{
+  from.clear();
+  return receive(buf, len);
+}
+
 void UnixDatagramSocket::close()
 {
   if (!closed) {
@@ -196,7 +211,6 @@ void UnixDatagramSocket::close()
   }
 }
 
-/** \brief Set the async flag on this socket. */
 void UnixDatagramSocket::setAsynchronous(bool val)
 {
   int flags = fcntl(sockfd, F_GETFL);
@@ -214,12 +228,11 @@ void UnixDatagramSocket::setAsynchronous(bool val)
   }
 }
 
-/** \brief Get the Sakusen-style address of this socket. */
 String UnixDatagramSocket::getAddress() const {
   if (abstract) {
-    return String("unix:abstract:") + (path+1);
+    return String("unix"ADDR_DELIM"abstract"ADDR_DELIM) + (path+1);
   } else {
-    return String("unix:concrete:") + path;
+    return String("unix"ADDR_DELIM"concrete"ADDR_DELIM) + path;
   }
 }
 

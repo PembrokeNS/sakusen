@@ -12,8 +12,15 @@ namespace sakusen {
 namespace comms {
 
 class UnixDatagramSocket : public Socket {
+  private:
+    static void interpretAddress(
+        std::list<String>& address,
+        String* path,
+        bool* abstract
+      );
   public:
-    static Socket* newConnectionToAddress(std::list<String> address);
+    static Socket* newConnectionToAddress(std::list<String>& address);
+    static Socket* newBindingToAddress(std::list<String>& address);
   
   /* Abstract class - all constructors must be protected */
   private:
@@ -42,9 +49,9 @@ class UnixDatagramSocket : public Socket {
     void initialize(const char* path);
   public:
     void send(const void* buf, size_t len);
-    void send(const Message& message);
     size_t receive(void* buf, size_t len);
     size_t receive(void* buf, size_t len, const struct timeval& timeout);
+    size_t receiveFrom(void* buf, size_t len, String& from);
     void close();
     void setAsynchronous(bool val);
     String getAddress() const;
