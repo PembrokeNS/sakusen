@@ -312,7 +312,7 @@ bool OptionsParser::parse(
               case optionType_int:
                 assert(shortIntOptions.count(*optionChar));
                 if (optionChar[1] == '\0' && ++i < argc) {
-                  *shortIntOptions[*optionChar] = atoi(argv[++i]);
+                  *shortIntOptions[*optionChar] = atoi(argv[i]);
                 } else {
                   errors.push_back(
                       string("short option '")+*optionChar+
@@ -323,7 +323,7 @@ bool OptionsParser::parse(
               case optionType_string:
                 assert(shortStringOptions.count(*optionChar));
                 if (optionChar[1] == '\0' && ++i < argc) {
-                  *shortStringOptions[*optionChar] = atoi(argv[++i]);
+                  *shortStringOptions[*optionChar] = argv[i];
                 } else {
                   errors.push_back(
                       string("short option '")+*optionChar+
