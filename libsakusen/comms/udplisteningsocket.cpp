@@ -8,23 +8,6 @@
 #include <cerrno>
 
 using namespace sakusen::comms;
-UDPListeningSocket::UDPListeningSocket() :
-  UDPSocket()
-{
-  bzero(reinterpret_cast<char *>(&addr), sizeof(addr));
-  /* TODO: support binding to fewer than all local interfaces */
-  addr.sin_addr.s_addr = INADDR_ANY;
-  addr.sin_family = AF_INET;
-  port = 4096;
-  do {
-    /* Get a random port number */
-    ++port;
-    addr.sin_port = htons(port);
-    if (0 == bind(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr)))
-      return;
-  } while (false);
-  Fatal("Error binding socket: " << errorUtils_errorMessage(errno));
-}
 
 UDPListeningSocket::UDPListeningSocket(uint16 port) :
   UDPSocket(port)
