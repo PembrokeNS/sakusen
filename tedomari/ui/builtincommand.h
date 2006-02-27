@@ -12,11 +12,15 @@ class UI;
 
 enum BuiltinCommand {
   builtinCommand_none,
-  builtinCommand_alert,
+  /* command-related commands */
   builtinCommand_alias,
   builtinCommand_bind,
+  /* general UI-related commands */
+  builtinCommand_alert,
   builtinCommand_prompt,
-  builtinCommand_quit
+  builtinCommand_quit,
+  /* map-related commands */
+  builtinCommand_moveMapRelative
 };
 
 /* \brief Execute given buitin command with given arguments

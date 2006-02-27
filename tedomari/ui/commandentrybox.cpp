@@ -51,6 +51,6 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
   } else {
     text += stringUtils_charToUtf8(c);
   }
-  paint();
+  getRegion()->paint();
 }
 

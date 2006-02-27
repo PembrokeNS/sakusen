@@ -28,6 +28,15 @@ void tooManyArgs(const list<String>& args, int expected, UI* ui)
   ui->alert(Alert(o.str()));
 }
 
+void wrongNumberArgs(const list<String>& args, int expected, UI* ui)
+{
+  ostringstream o;
+  o << "Wrong number of arguments to command.  Expected " << expected <<
+    ", got " << args.size();
+  
+  ui->alert(Alert(o.str()));
+}
+
 void executeBuiltinCommand(
     BuiltinCommand cmd,
     list<String>& args,
@@ -75,6 +84,18 @@ void executeBuiltinCommand(
         tooManyArgs(args, 0, ui);
       }
       ui->quitRequest();
+      break;
+    case builtinCommand_moveMapRelative:
+      {
+        if (args.size() != 2) {
+          wrongNumberArgs(args, 2, ui);
+          break;
+        }
+        double dx = numFromString<double>(args.front());
+        args.pop_front();
+        double dy = numFromString<double>(args.front());
+        ui->moveMapRelativeFrac(dx, dy);
+      }
       break;
     default:
       Fatal("Unknown builtin command: " << cmd);

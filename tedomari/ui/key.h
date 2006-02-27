@@ -158,6 +158,9 @@ class KeyHash {
 /** \brief Converts a string name for a key into an enumeration value */
 Key getKey(const String& name);
 
+/** \brief Converts a key into its name, or a null string if no such key */
+String getName(Key);
+
 }}
 
 #endif // UI__KEY_H

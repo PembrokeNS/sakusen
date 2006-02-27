@@ -63,7 +63,9 @@ class SDLUI : public UI {
 
     void cairoSetSource(const Colour& c);
     uint32 getSDLColour(const Colour&);
-    void fillRect(uint16 x, uint16 y, uint16 w, uint16 h, const Colour&);
+    void setClipRect(double x, double y, double w, double h);
+    void resetClip();
+    void fillRect(double x, double y, double w, double h, const Colour&);
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const SDLLayout* layout);

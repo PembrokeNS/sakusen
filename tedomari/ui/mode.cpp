@@ -87,11 +87,12 @@ Mode Mode::getNormal(UI* ui)
 {
   Mode m;
 
-  m.addCommand("alert",  Command(builtinCommand_alert), ui);
-  m.addCommand("alias",  Command(builtinCommand_alias), ui);
-  m.addCommand("bind",   Command(builtinCommand_bind), ui);
-  m.addCommand("prompt", Command(builtinCommand_prompt), ui);
-  m.addCommand("quit",   Command(builtinCommand_quit), ui);
+  m.addCommand("alias",      Command(builtinCommand_alias), ui);
+  m.addCommand("bind",       Command(builtinCommand_bind), ui);
+  m.addCommand("alert",      Command(builtinCommand_alert), ui);
+  m.addCommand("prompt",     Command(builtinCommand_prompt), ui);
+  m.addCommand("quit",       Command(builtinCommand_quit), ui);
+  m.addCommand("movemaprel", Command(builtinCommand_moveMapRelative), ui);
 
   return m;
 }

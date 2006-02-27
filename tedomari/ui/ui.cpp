@@ -13,7 +13,8 @@ using namespace tedomari::game;
 using namespace tedomari::ui;
 
 UI::UI(Region* region, ifstream& uiConf) :
-  Control(0, 0, dockStyle_fill, region), commandEntryBox(NULL), modes(),
+  Control(0, 0, dockStyle_fill, region), activeMapDisplay(NULL),
+  commandEntryBox(NULL), alertDisplay(NULL), modes(),
   mode(NULL), currentModifiers(), expectingChars(false), commandEntry(false),
   quit(false)
 {
@@ -35,10 +36,11 @@ void UI::initializeControls(Game* game)
   commandEntryBox = new CommandEntryBox(
       0, 0, dockStyle_bottom, newRegion(0, getHeight(), getWidth(), 0)
     );
+  activeMapDisplay = new MapDisplay(
+      0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game
+    );
   addSubControl(commandEntryBox);
-  addSubControl(new MapDisplay(
-        0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game
-      ));
+  addSubControl(activeMapDisplay);
   addLayer();
   alertDisplay =
     new AlertDisplay(0, 0, dockStyle_top, newRegion(0, 0, getWidth(), 0));
@@ -116,6 +118,9 @@ void UI::executeCommand(const String& cmdString)
 void UI::alert(const Alert& a)
 {
   alertDisplay->add(a);
+  /* FIXME: realigning all subcontrols is overkill */
+  alignSubControls();
+  paint();
 }
 
 void UI::setCommandEntry(bool on)
@@ -167,7 +172,7 @@ void UI::addBinding(
   ModifiedKey key(keyName);
 
   if (key.getKey() == K_Unknown) {
-    Debug("Unknown modified key name '" << keyName << "'");
+    alert(Alert("Unknown modified key name '" + keyName + "'"));
     return;
   }
   
@@ -185,5 +190,24 @@ void UI::addBinding(
     }
     modeIt->second.addBinding(key, stringUtils_join(cmd, " "));
   }
+}
+
+void UI::moveMapRelative(sint32 dx, sint32 dy)
+{
+  if (activeMapDisplay == NULL) {
+    return;
+  }
+  activeMapDisplay->translate(dx, dy);
+}
+
+void UI::moveMapRelativeFrac(double dx, double dy)
+{
+  if (activeMapDisplay == NULL) {
+    return;
+  }
+  moveMapRelative(
+      sint32(dx*activeMapDisplay->getDexWidth()),
+      sint32(dy*activeMapDisplay->getDexHeight())
+    );
 }
 

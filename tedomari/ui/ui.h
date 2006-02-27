@@ -13,6 +13,7 @@
 #include "ui/mode.h"
 #include "ui/alert.h"
 #include "ui/alertdisplay.h"
+#include "ui/mapdisplay.h"
 
 namespace tedomari {
 namespace ui {
@@ -26,6 +27,7 @@ class UI : protected Control {
     virtual ~UI() {}
   private:
     Converter converter; /**< Converts between UTF-8 and native encodings */
+    MapDisplay* activeMapDisplay; /**< Currently active MapDisplay, or NULL */
     CommandEntryBox* commandEntryBox;
     AlertDisplay* alertDisplay;
     __gnu_cxx::hash_map<String, Mode, sakusen::StringHash> modes;
@@ -78,6 +80,8 @@ class UI : protected Control {
      * the key in question */
     void keyUp(Key);
   public:
+    /** \breif Repaint whole UI */
+    inline void paint() { Control::paint(); }
     /** \brief Determine whether the user has asked to quit */
     inline bool isQuit() const { return quit; }
     /** \brief Set the window title to the given String */
@@ -110,6 +114,9 @@ class UI : protected Control {
         const String& keyName,
         const std::list<String>& cmd
       );
+
+    void moveMapRelative(sint32 dx, sint32 dy);
+    void moveMapRelativeFrac(double dx, double dy);
 };
 
 }}

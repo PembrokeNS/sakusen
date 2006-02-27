@@ -185,7 +185,8 @@ String ServerInterface::join()
   } else {
     /* FIXME: This should really be a TCP socket, not a UDP one, but those
      * don't exist yet */
-    localSocket = new UDPListeningSocket();
+    /* FIXME: Even as a UDP socket, it can't work this way...
+    localSocket = new UDPListeningSocket(); */
   }
   localSocket->setAsynchronous(true);
   try {

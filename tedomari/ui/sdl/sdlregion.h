@@ -28,13 +28,19 @@ class SDLRegion : public Region {
     uint16 x;
     uint16 y;
   public:
-    inline Region* newSubRegion(uint16 xoff, uint16 yoff, uint16 w, uint16 h) {
+    inline void paint() const {
+      /* FIXME: Should only repaint this region, not whole thing */
+      ui->paint();
+    }
+    inline Region* newSubRegion(uint16 xoff, uint16 yoff, uint16 w, uint16 h)
+      const {
       assert(xoff+w <= getWidth());
       assert(yoff+h <= getHeight());
       return new SDLRegion(ui, x+xoff, y+yoff, w, h);
     }
-    inline Layout* newLayout() { return new SDLLayout(ui); }
+    inline Layout* newLayout() const { return new SDLLayout(ui); }
     void flood(Colour);
+    void fillRect(double x, double y, double w, double h, const Colour&);
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const Layout* layout);

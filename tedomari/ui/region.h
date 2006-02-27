@@ -24,19 +24,25 @@ class Region {
     inline uint16 getWidth() const { return width; }
     inline uint16 getHeight() const { return height; }
 
+    virtual void paint() const = 0;
+
     virtual Region* newSubRegion(
         uint16 x,
         uint16 y,
         uint16 width,
         uint16 height
-      ) = 0;
-    inline Region* newSubRegion(const Rectangle<uint16>& area) {
+      ) const = 0;
+    inline Region* newSubRegion(const Rectangle<uint16>& area) const {
       return newSubRegion(area.x, area.y, area.width, area.height);
     }
-    virtual Layout* newLayout() = 0;
+    virtual Layout* newLayout() const = 0;
 
     /* Drawing functions */
     virtual void flood(Colour) = 0;
+    virtual void fillRect(double x, double y, double w, double h, const Colour&) = 0;
+    inline void fillRect(const Rectangle<double>& rect, const Colour& c) {
+      fillRect(rect.x, rect.y, rect.width, rect.height, c);
+    }
     virtual void stroke(
         double x1,
         double y1,

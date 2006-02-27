@@ -8,6 +8,13 @@ void SDLRegion::flood(Colour c)
   ui->fillRect(x, y, getWidth(), getHeight(), c);
 }
 
+void SDLRegion::fillRect(double xoff, double yoff, double w, double h, const Colour& c)
+{
+  ui->setClipRect(x, y, getWidth(), getHeight());
+  ui->fillRect(x+xoff, y+yoff, w, h, c);
+  ui->resetClip();
+}
+
 void SDLRegion::stroke(
     double x1,
     double y1,

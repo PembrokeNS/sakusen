@@ -276,7 +276,16 @@ void SDLUI::cairoSetSource(const Colour& c)
   cairo_set_source_rgba(cairoContext, c.dr(), c.dg(), c.db(), c.da());
 }
 
-void SDLUI::fillRect(uint16 x, uint16 y, uint16 w, uint16 h, const Colour& c)
+void SDLUI::setClipRect(double x, double y, double w, double h) {
+  cairo_rectangle(cairoContext, x, y, w, h);
+  cairo_clip(cairoContext);
+}
+
+void SDLUI::resetClip() {
+  cairo_reset_clip(cairoContext);
+}
+
+void SDLUI::fillRect(double x, double y, double w, double h, const Colour& c)
 {
   SDLDebug(
       "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
