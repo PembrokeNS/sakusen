@@ -174,6 +174,12 @@ inline Point<sint16> Point<double>::round16(void) const {
     );
 }
 
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {
+  out << "(" << p.x << ", " << p.y << ", " << p.z << ")";
+  return out;
+}
+
 }
 
 #endif // POINT_H
