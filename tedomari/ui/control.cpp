@@ -1,9 +1,10 @@
 #include "ui/control.h"
 
-#include "ui/rectangle.h"
+#include "rectangle.h"
 
 using namespace std;
 
+using namespace sakusen;
 using namespace tedomari::ui;
 
 Control::Control(uint16 xoffset, uint16 yoffset, DockStyle ds, Region* r) :
@@ -63,12 +64,12 @@ void Control::alignSubControls()
           controlArea.height =
             min((*subControl)->desiredHeight, remainingArea.height);
           remainingArea.height -= controlArea.height;
-          remainingArea.y = controlArea.getBottom();
+          remainingArea.y = controlArea.getMaxY();
           break;
         case dockStyle_bottom:
           controlArea.height =
             min((*subControl)->desiredHeight, remainingArea.height);
-          controlArea.y = remainingArea.getBottom()-controlArea.height;
+          controlArea.y = remainingArea.getMaxY()-controlArea.height;
           remainingArea.height -= controlArea.height;
           break;
         case dockStyle_fill:

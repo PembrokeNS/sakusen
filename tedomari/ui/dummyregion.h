@@ -16,8 +16,14 @@ class DummyRegion : public Region {
       return new DummyRegion(width, height);
     }
     Layout* newLayout() const { Fatal("not implemented"); }
-    void flood(Colour) {}
+    void setClip() {}
+    void unsetClip() {}
+    void fill(const Colour&) {}
     void fillRect(double, double, double, double, const Colour&) {}
+    void fillPolygon(
+        const std::list< sakusen::Point<double> >&,
+        const Colour&
+      ) {}
     void stroke(double, double, double, double, const Colour&) {}
     void drawText(double, double, const String&, const Colour&) {}
     void drawText(double, double, const Layout*) {}

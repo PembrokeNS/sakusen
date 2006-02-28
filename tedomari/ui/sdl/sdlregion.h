@@ -39,8 +39,14 @@ class SDLRegion : public Region {
       return new SDLRegion(ui, x+xoff, y+yoff, w, h);
     }
     inline Layout* newLayout() const { return new SDLLayout(ui); }
-    void flood(Colour);
+    void setClip();
+    void unsetClip();
+    void fill(const Colour&);
     void fillRect(double x, double y, double w, double h, const Colour&);
+    void fillPolygon(
+        const std::list< sakusen::Point<double> >&,
+        const Colour&
+      );
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const Layout* layout);

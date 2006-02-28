@@ -296,6 +296,23 @@ void SDLUI::fillRect(double x, double y, double w, double h, const Colour& c)
   cairo_fill(cairoContext);
 }
 
+void SDLUI::fillPolygon(
+    const list< sakusen::Point<double> >& poly,
+    const Colour& c
+  )
+{
+  assert(!poly.empty());
+
+  list< sakusen::Point<double> >::const_iterator vertex = poly.begin();
+  cairoSetSource(c);
+  cairo_move_to(cairoContext, vertex->x, vertex->y);
+  while (++vertex != poly.end()) {
+    cairo_line_to(cairoContext, vertex->x, vertex->y);
+  }
+  cairo_close_path(cairoContext);
+  cairo_fill(cairoContext);
+}
+
 void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
 {
   SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);

@@ -66,6 +66,10 @@ class SDLUI : public UI {
     void setClipRect(double x, double y, double w, double h);
     void resetClip();
     void fillRect(double x, double y, double w, double h, const Colour&);
+    void fillPolygon(
+        const std::list< sakusen::Point<double> >& poly,
+        const Colour&
+      );
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const SDLLayout* layout);

@@ -11,7 +11,7 @@ void CommandEntryBox::paint()
 {
   if (visible) {
     /* Black background */
-    getRegion()->flood(Colour::black);
+    getRegion()->fill(Colour::black);
     /* White text */
     getRegion()->drawText(0, 0, ":"+text, Colour::white);
   }

@@ -3,16 +3,38 @@
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
 
-void SDLRegion::flood(Colour c)
+void SDLRegion::setClip()
+{
+  ui->setClipRect(x, y, getWidth(), getHeight());
+}
+
+void SDLRegion::unsetClip()
+{
+  ui->resetClip();
+}
+
+void SDLRegion::fill(const Colour& c)
 {
   ui->fillRect(x, y, getWidth(), getHeight(), c);
 }
 
-void SDLRegion::fillRect(double xoff, double yoff, double w, double h, const Colour& c)
+void SDLRegion::fillRect(
+    double xoff,
+    double yoff,
+    double w,
+    double h,
+    const Colour& c
+  )
 {
-  ui->setClipRect(x, y, getWidth(), getHeight());
   ui->fillRect(x+xoff, y+yoff, w, h, c);
-  ui->resetClip();
+}
+
+void SDLRegion::fillPolygon(
+    const std::list< sakusen::Point<double> >& poly,
+    const Colour& c
+  )
+{
+  ui->fillPolygon(poly, c);
 }
 
 void SDLRegion::stroke(
