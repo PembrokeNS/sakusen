@@ -26,31 +26,34 @@
 # THIS_CXXFLAGS - other args to gcc at compile stage, e.g. "-Werror".
 # THIS_LDFLAGS - other args to libtool at link stage, e.g. "-no-install".
 
-CXX_SOURCES = $(wildcard *.cpp) \
+# Determine the name of this makefile
+
+MY_NAME := $(lastword $(MAKEFILE_LIST))
+
+# Use it to find the top directory
+
+TOP_DIR := $(dir $(MY_NAME))
+
+CXX_SOURCES := $(wildcard *.cpp) \
 	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.cpp))
-C_SOURCES = $(wildcard *.c) \
+C_SOURCES := $(wildcard *.c) \
 	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
-CXX_BASES = $(basename $(CXX_SOURCES))
-C_BASES = $(basename $(C_SOURCES))
-LIBTOOL_OBJS = $(foreach base,$(CXX_BASES) $(C_BASES),.obj/$(base).lo)
-CXX_OBJS = $(foreach base,$(CXX_BASES),.obj/$(base).o)
-C_OBJS = $(foreach base,$(C_BASES),.obj/$(base).o)
-MAKEFRAGS = \
+CXX_BASES := $(basename $(CXX_SOURCES))
+C_BASES := $(basename $(C_SOURCES))
+LIBTOOL_OBJS := $(foreach base,$(CXX_BASES) $(C_BASES),.obj/$(base).lo)
+CXX_OBJS := $(foreach base,$(CXX_BASES),.obj/$(base).o)
+C_OBJS := $(foreach base,$(C_BASES),.obj/$(base).o)
+MAKEFRAGS := \
 	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),.makefrags/$(source).makefrag)
 
 # We replace '-' with '/' in the library name when using it as a directory
 # because e.g. libsakusen-comms is in libsakusen/comms
 
-E_LIB_DEP = $(foreach lib,$(LIB_DEP_NAMES), \
-		$(if $(wildcard ../$(subst -,/,$(lib))), \
-      ../$(subst -,/,$(lib))/$(lib).la) \
-		$(if $(wildcard ../../$(subst -,/,$(lib))), \
-			../../$(subst -,/,$(lib))/$(lib).la) \
-		$(if $(wildcard ../../../$(subst -,/,$(lib))), \
-			../../../$(subst -,/,$(lib))/$(lib).la) \
+E_LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
+		$(TOP_DIR)$(subst -,/,$(lib))/$(lib).la \
 	) \
 	$(LIB_DEP)
-E_INCLUDE = -I. $(foreach lib,$(E_LIB_DEP),-I$(dir $(lib))) $(INCLUDE)
+E_INCLUDE := -I. $(foreach lib,$(E_LIB_DEP),-I$(dir $(lib))) $(INCLUDE)
 
 CXX ?= g++
 CC ?= gcc
@@ -105,7 +108,15 @@ ifneq ($(MAKEFRAGS),)
 include $(MAKEFRAGS)
 endif
 
-$(MAKEFRAGS): .makefrags/%.makefrag: % revision.h
+# We make revision.h a dependency of this Makefile to ensure that it's
+# generated before any of the other makefrags, but only if there is actually a
+# compilation going on in this directory
+
+ifneq ($(BIN),)
+$(MY_NAME): revision.h
+endif
+
+$(MAKEFRAGS): .makefrags/%.makefrag: %
 	@mkdir -p $(dir $@)
 	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $<
 	@echo "$@ .obj/$(filter-out ./,$(dir $<))`cat $@.tmp`" > $@
