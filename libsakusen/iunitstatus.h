@@ -34,6 +34,14 @@ class LIBSAKUSEN_API IUnitStatus {
     virtual RotationalTargetType getRotationalTarget(void) const = 0;
     virtual const Orientation& getTargetOrientation(void) const = 0;
     virtual const AngularVelocity& getTargetAngularVelocity(void) const = 0;
+    
+    inline Point<sint32> localToGlobal(const Point<sint32>& p) const {
+      return getOrientation()*p+getPosition();
+    }
+    
+    inline Point<sint32> globalToLocal(const Point<sint32>& p) const {
+      return getOrientation().inverseMul(p-getPosition());
+    }
 };
 
 }

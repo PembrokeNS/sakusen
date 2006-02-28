@@ -4,28 +4,32 @@
 #include "point.h"
 #include "oarchive.h"
 #include "iarchive.h"
+#include "regiondata.h"
 
 namespace sakusen {
-
-class IUnitStatus;
 
 template<typename T>
 class Region {
   public:
-    Region() : centre(), radius(0) {}
-    Region(Point<T> c, uint32 r) : centre(c), radius(r) {}
-    ~Region() {}
+    /** \brief Constructs region with given data.
+     *
+     * \param d data to use. */
+    Region(const RegionData<T>& d) : data(d.newCopy()) {}
+    /** \brief Constructs region with given data.
+     *
+     * \param d data to use.  Ownership of the pointer is transferred to the
+     * newly constructed Region.  Must not be NULL */
+    Region(RegionData<T>* d) : data(d) { assert(data != NULL); }
+    Region(const Region<T>& copy) : data(copy.data->newCopy()) {}
+    Region& operator=(const Region<T>& copy) {
+      delete data;
+      data = copy.data->newCopy();
+      return *this;
+    }
+    ~Region() { delete data; }
   private:
-    /* TODO: Somehow store appropriate region info.
-     * For the present a sphere (centre and radius) will probably suffice
-     * In the long term we may want to make this an abstract class with various
-     * subclasses, although that may cause some confusion.  
-     */
-    Point<T> centre;
-    uint32 radius;
+    RegionData<T>* data; /* owned by this */
   public:
-    /* accessors */
-    inline uint64 squareRadius(void) const { return uint64(radius) * radius; }
     /* game mechanics */
     inline bool contains(const Point<T>& point) const;
     inline bool contains(const IUnitStatus* unit) const;

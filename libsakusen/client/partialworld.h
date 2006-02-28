@@ -6,6 +6,7 @@
 #include "partialmap.h"
 #include "completeunit.h"
 #include "update.h"
+#include "rectangle.h"
 
 namespace sakusen {
 namespace client {
@@ -29,6 +30,8 @@ class LIBSAKUSEN_API PartialWorld : public World {
   public:
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
+
+    std::list<CompleteUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
 
     void applyUpdate(const Update&);
 };

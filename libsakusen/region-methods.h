@@ -4,15 +4,14 @@
 #include "region.h"
 #include "world.h"
 #include "iunitstatus.h"
+#include "sphereregiondata.h"
 
 namespace sakusen {
 
 template<typename T>
 inline bool Region<T>::contains(const Point<T>& point) const
 {
-  return
-    world->getMap()->getShortestDifference(point, centre).squareLength() <
-    squareRadius();
+  return data->contains(point);
 }
 
 template<>
@@ -24,37 +23,37 @@ inline bool Region<sint32>::contains(const IUnitStatus* unit) const
   return contains(unit->getPosition());
 }
 
-template<>
-inline Point<sint16> Region<sint16>::truncateToFit(const Point<sint16>& p) const
+template<typename T>
+inline Point<T> Region<T>::truncateToFit(const Point<T>& p) const
 {
-  if (contains(p)) {
-    return p;
-  }
-  return (p * radius / p.length()).truncate16();
-}
-
-template<>
-inline Point<sint32> Region<sint32>::truncateToFit(const Point<sint32>& p) const
-{
-  if (contains(p)) {
-    return p;
-  }
-  return (p * radius / p.length()).truncate32();
+  return data->truncateToFit(p);
 }
 
 template<typename T>
 void Region<T>::store(OArchive& archive) const
 {
-  archive << centre << radius;
+  archive.magicValue<1>("R");
+  archive << uint8(data->getType());
+  data->store(archive);
 }
 
 template<typename T>
 Region<T> Region<T>::load(IArchive& archive)
 {
-  Point<T> centre;
-  uint32 radius;
-  archive >> centre >> radius;
-  return Region<T>(centre, radius);
+  archive.magicValue<1>("R");
+  RegionType type;
+  RegionData<T>* data = NULL;
+  archive.extractEnum(type);
+  switch(type) {
+    case regionType_sphere:
+      data = SphereRegionData<T>::loadNew(archive);
+      break;
+    default:
+      throw new DeserializationExn(
+          "unexpected RegionType: " + numToString(type)
+        );
+  }
+  return Region(data);
 }
 
 }

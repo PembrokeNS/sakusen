@@ -5,12 +5,13 @@
 
 #include <list>
 #include "point.h"
+#include "rectangle.h"
 #include "unittype.h"
 #include "iunitstatus.h"
 
 namespace sakusen {
 
-/** \brief An interface providing all proertied of a Unit
+/** \brief An interface providing all proerties of a Unit
  *
  * This class is effectively an interface, giving accessors to all the data
  * that goes with a Unit.  It is used to provide a common ground between client
@@ -33,6 +34,8 @@ class LIBSAKUSEN_API ICompleteUnit {
     virtual const Region<sint16>& getPossibleAngularVelocities(void) const = 0;
     virtual const Visibility& getVisibility(void) const = 0;
     virtual const Sensors& getVision(void) const = 0;
+
+    virtual Rectangle<sint32> getBoundingRectangle(void) const;
 };
 
 }

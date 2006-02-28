@@ -8,6 +8,7 @@
 #include "completeworld.h"
 #include "planemap.h"
 #include "point.h"
+#include "sphereregiondata.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
 
@@ -80,9 +81,12 @@ int main(/* int argc, char** argv */)
         100 /* metalCost */,
         10 /* mass */,
         Point<uint32>(10,10,10) /* size */,
-        Region<sint16>(Point<sint16>(), 10) /* possibleAccelerations */,
-        Region<sint16>(Point<sint16>(), 10) /* possibleVelocities */,
-        Region<sint16>(Point<sint16>(), 10) /* possibleAngularVelocities */,
+        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          /* possibleAccelerations */,
+        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          /* possibleVelocities */,
+        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          /* possibleAngularVelocities */,
         Visibility(),
         Sensors(),
         false /* fixed */,

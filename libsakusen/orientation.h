@@ -18,8 +18,10 @@ enum Reflection {
   reflection_z
 };
 
-/* Class to represent the orientation of a rigid body in three-dimensional
- * space.  The orientation is stored as a matrix which should be applied to the
+/** \brief Class to represent the orientation of a rigid body in
+ * three-dimensional space.
+ *
+ * The orientation is stored as a matrix which should be applied to the
  * object in its default orientation to yield the current one.
  * Note that since some of our map topologies are non-orientable (mobius and
  * kleinBottle) not all orientations are rotations, they can be reflections
@@ -39,7 +41,6 @@ class LIBSAKUSEN_API Orientation {
         OrientationMatrixRow() : row(NULL) {}
         OrientationMatrixRow(const OrientationMatrixRow& copy) :
           row(copy.row) {}
-        ~OrientationMatrixRow() {}
         OrientationMatrixRow(const double* r) : row(r) {}
         inline OrientationMatrixRow& operator=(
             const OrientationMatrixRow& copy)
@@ -47,9 +48,11 @@ class LIBSAKUSEN_API Orientation {
           row = copy.row;
           return *this;
         }
-
+      public:
+        ~OrientationMatrixRow() {}
+      private:
         const double* row;
-        
+      public:
         inline double operator[](const int i) const {
           assert(i>=0);
           assert(i<3);
@@ -85,6 +88,21 @@ class LIBSAKUSEN_API Orientation {
       for (int i=0; i<3; i++) {
         for (int j=0; j<3; j++) {
           result[i] += matrix[i][j] * right[j];
+        }
+      }
+      return result.round16();
+    }
+
+    /* \brief Multiply the inverse of this matrix by the given vector
+     *
+     * It is possible to do this operation quickly because we know the matrix
+     * is orthogonal and thus its inverse is its transpose. */
+    template<typename T>
+    Point<T> inverseMul(const Point<T>& right) const {
+      Point<double> result = Point<double>();
+      for (int i=0; i<3; i++) {
+        for (int j=0; j<3; j++) {
+          result[i] += matrix[j][i] * right[j];
         }
       }
       return result.round16();

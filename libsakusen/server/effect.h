@@ -25,9 +25,10 @@ class Effect {
     Visibility visibility;
     /* TODO: some kind of visibility modification scheme goes here */
 
+    Effect();
   protected:
-    Effect() {}
-    Effect(const Effect&) {}
+    Effect(const Effect& copy) :
+      owner(copy.owner), region(copy.region), visibility(copy.visibility) {}
     
   public:
     virtual ~Effect() {}
