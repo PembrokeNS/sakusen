@@ -12,7 +12,7 @@ using namespace sakusen::comms;
 UDPListeningSocket::UDPListeningSocket(uint16 port) :
   UDPSocket(port)
 {
-  bzero(reinterpret_cast<char *>(&addr), sizeof(addr));
+  memset(&addr, 0, sizeof(addr));
   /* TODO: support binding to fewer than all local interfaces */
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_family = AF_INET;

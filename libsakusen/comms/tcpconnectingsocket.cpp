@@ -1,4 +1,4 @@
-#include "udpconnectingsocket.h"
+#include "tcpconnectingsocket.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -8,9 +8,9 @@
 
 using namespace sakusen::comms;
 
-UDPConnectingSocket::UDPConnectingSocket(
+TCPConnectingSocket::TCPConnectingSocket(
     const ::String hostname, uint16 port):
-  UDPSocket(port),
+  TCPSocket(port),
   remoteHost(hostname)
 {
   struct hostent *endpoint;
@@ -28,5 +28,16 @@ UDPConnectingSocket::UDPConnectingSocket(
   if (-1 == connect(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr))) {
     Fatal("Error connecting socket");
   }
+}
+
+TCPConnectingSocket::TCPConnectingSocket(
+    NativeSocket s,
+    const sockaddr_in& peerAddress
+  ) :
+  TCPSocket(s, peerAddress)
+{
+  char host[INET_ADDRSTRLEN];
+  inet_ntop(AF_INET, &peerAddress, host, INET_ADDRSTRLEN);
+  remoteHost = host;
 }
 

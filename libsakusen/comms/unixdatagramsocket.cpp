@@ -4,15 +4,12 @@
 #include "unixdatagramlisteningsocket.h"
 #include "errorutils.h"
 #include "socketexception.h"
+#include "timeutils.h"
 
 #include <sys/socket.h>
 #include <fcntl.h>
-#include <sys/time.h>
-#include <time.h>
 
 #include <cerrno>
-
-#define MICRO 1000000
 
 using namespace std;
 
@@ -128,14 +125,6 @@ void UnixDatagramSocket::initialize(const char* p)
   }
 }
 
-/** \brief Closes the socket if it is open */
-UnixDatagramSocket::~UnixDatagramSocket()
-{
-  if (!closed) {
-    close();
-  }
-}
-
 void UnixDatagramSocket::send(const void* buf, size_t len)
 {
   int retVal = ::send(sockfd, buf, len, 0 /* flags */);
@@ -157,6 +146,17 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
   }
 }
 
+void UnixDatagramSocket::sendTo(
+    const void* /*buf*/,
+    size_t /*len*/,
+    const String& /*address*/
+  )
+{
+  /* TODO: Maybe write this, although I think it won't ever actually be needed
+   * */
+  Fatal("Not implemeted");
+}
+
 size_t UnixDatagramSocket::receive(void* buf, size_t len)
 {
   ssize_t retVal = recv(sockfd, buf, len, 0);
@@ -169,7 +169,7 @@ size_t UnixDatagramSocket::receive(void* buf, size_t len)
   return retVal;
 }
 
-size_t UnixDatagramSocket::receive(
+size_t UnixDatagramSocket::receiveTimeout(
     void* buf,
     size_t len,
     const struct timeval& timeout
@@ -177,17 +177,12 @@ size_t UnixDatagramSocket::receive(
 {
   struct timeval endTime;
   gettimeofday(&endTime, NULL);
-  endTime.tv_sec += timeout.tv_sec;
-  endTime.tv_usec += timeout.tv_usec;
-  while (endTime.tv_usec >= MICRO) {
-    endTime.tv_usec -= MICRO;
-    ++endTime.tv_sec;
-  }
+  endTime += timeout;
   size_t receivedLength;
   while (0==(receivedLength=receive(buf, len))) {
     struct timeval timeNow;
     gettimeofday(&timeNow, NULL);
-    if (timercmp(&timeNow, &endTime, >=)) {
+    if (timeNow > endTime) {
       return 0;
     }
     /** \todo Don't spinlock here; sleep a bit to be nice. */

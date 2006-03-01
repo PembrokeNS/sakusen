@@ -33,7 +33,7 @@ class UnixDatagramSocket : public Socket {
     UnixDatagramSocket(const char* path, bool abstract);
     UnixDatagramSocket(const String& path, bool abstract);
   public:
-    virtual ~UnixDatagramSocket();
+    virtual ~UnixDatagramSocket() { close(); }
   protected:
     /** whether this socket exists in the abstract namespace (see unix(7)) */
     bool abstract;
@@ -49,9 +49,12 @@ class UnixDatagramSocket : public Socket {
     void initialize(const char* path);
   public:
     void send(const void* buf, size_t len);
+    void sendTo(const void* buf, size_t len, const String& address);
     size_t receive(void* buf, size_t len);
-    size_t receive(void* buf, size_t len, const struct timeval& timeout);
+    size_t receiveTimeout(void* buf, size_t len, const struct timeval& timeout);
     size_t receiveFrom(void* buf, size_t len, String& from);
+    bool isConnectionBased() { return false; }
+    Socket* accept() { Fatal("Not connection-based socket"); }
     void close();
     void setAsynchronous(bool val);
     String getAddress() const;

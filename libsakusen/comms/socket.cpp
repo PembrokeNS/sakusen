@@ -11,7 +11,9 @@
 #include "unixdatagramsocket.h"
 
 #endif //WIN32
+
 #include "udpsocket.h"
+#include "tcpsocket.h"
 
 using namespace std;
 
@@ -44,6 +46,8 @@ Socket* Socket::newConnectionToAddress(const String& address)
 #endif
   } else if (type == "udp") {
     return UDPSocket::newConnectionToAddress(addressComponents);
+  } else if (type == "tcp") {
+    return TCPSocket::newConnectionToAddress(addressComponents);
   } else {
     Debug("Unexpected type: " << type);
     return NULL;
@@ -66,6 +70,8 @@ Socket* Socket::newBindingToAddress(const String& address)
 #endif
   } else if (type == "udp") {
     return UDPSocket::newBindingToAddress(addressComponents);
+  } else if (type == "tcp") {
+    return TCPSocket::newBindingToAddress(addressComponents);
   } else {
     Debug("Unexpected type: " << type);
     return NULL;

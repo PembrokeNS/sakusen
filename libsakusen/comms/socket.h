@@ -40,13 +40,23 @@ class Socket {
   public:
     virtual ~Socket() {}
     /** \brief Reads \p len bytes of binary from \p buf and sends it.
-     * \param[out] buf Must not be NULL.
+     * \param buf Must not be NULL.
      */
     virtual void send(const void* buf, size_t len) = 0;
     /** \brief sends the given ::Message down the line. */
     inline void send(const Message& message)
     {
       send(message.getBytes(), message.getBytesLength());
+    }
+    /** \brief Reads \p len bytes of binary from \p buf and sends it.
+     * \param buf Must not be NULL.
+     * \param address Sakusen-style address to send to.
+     */
+    virtual void sendTo(const void* buf, size_t len, const String& address) = 0;
+    /** \brief sends the given ::Message to the given address. */
+    inline void sendTo(const Message& message, const String& address)
+    {
+      sendTo(message.getBytes(), message.getBytesLength(), address);
     }
     /** \brief receives a binary stream from the network
      * \param[out] buf Must not be NULL, and should point to a buffer into
@@ -63,7 +73,7 @@ class Socket {
      * buffer to fill.
      * \return The number of bytes actually read.
      */
-    virtual size_t receive(
+    virtual size_t receiveTimeout(
         void* buf,
         size_t len,
         const struct timeval& timeout
@@ -78,6 +88,15 @@ class Socket {
      * \return The number of bytes actually read.
      */
     virtual size_t receiveFrom(void* buf, size_t len, String& from) = 0;
+    /** \brief Returns true iff this socket is connections-based (e.g. TCP but
+     * not UDP) */
+    virtual bool isConnectionBased() = 0;
+    /** \brief Accepts a pending connection on this socket
+     *
+     * For a connection-based socket, this will return a new Socket
+     * corresponding to the next pending connection, or NULL if there is no
+     * such.  For a non-connection-based socket, this will Fatal() */
+    virtual Socket* accept() = 0;
     /** \brief Close a socket, unless it is already closed. */
     virtual void close() = 0;
     /** \brief Set the async flag on this socket. */
