@@ -16,15 +16,19 @@ class ServerInterface {
   public:
     ServerInterface(
         sakusen::comms::Socket* serverSocket,
+        const String& joinAddress,
         bool unixSockets,
         bool abstract,
         game::Game* game
       );
     ~ServerInterface();
   private:
-    sakusen::comms::Socket* serverSocket;
-      /* Socket for solicitation/advertising (owned by code that constructs
-       * this object) */
+    /** Socket for solicitation/advertising (owned by code that constructs
+     * this object) */
+    sakusen::comms::Socket* solicitationSocket;
+    /** Address to which join requests should be sent, if different from the
+     * solicitationSocket */
+    String joinAddress;
     game::Game* game; /* not owned by this */
     struct timeval timeout;
     bool unixSockets; /* OK to use Unix sockets */
@@ -32,10 +36,12 @@ class ServerInterface {
     bool joined;
     sakusen::comms::ClientID id;
       /* ID assigned to us by the server (valid only when joined) */
-    sakusen::comms::Socket* localSocket;
+    sakusen::comms::Socket* incomingSocket;
       /* Socket used by the server to talk to us (owned by this) */
-    sakusen::comms::Socket* privateServerSocket;
-      /* Socket the server has reserved for us to talk to it (owned by this) */
+    sakusen::comms::Socket* outgoingSocket;
+      /* Socket the server has reserved for us to talk to it (owned by this,
+       * but might be the same as incomingSocket, so don't delete both before
+       * checking that) */
 
     String universeName;
 

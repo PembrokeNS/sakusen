@@ -20,7 +20,8 @@ class Server : public SettingsUser {
     Server(const Server&);
   public:
     Server(
-        sakusen::comms::Socket* socket,
+        sakusen::comms::Socket* solicitationSocket,
+        sakusen::comms::Socket* joinSocket,
         std::ostream& output,
         sakusen::ResourceInterface* resourceInterface,
         bool abstract,
@@ -32,7 +33,8 @@ class Server : public SettingsUser {
     bool abstract; /* Whether to use abstract sockets for RemoteClients to
                       listen */
     bool dots; /* Whether to print dots constantly */
-    sakusen::comms::Socket* socket; /*Not owned by this */
+    sakusen::comms::Socket* solicitationSocket; /* Not owned by this */
+    sakusen::comms::Socket* joinSocket; /* Not owned by this */
     std::ostream& out;
     sakusen::ResourceInterface* resourceInterface; /* Not owned by this */
     __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
@@ -66,7 +68,11 @@ class Server : public SettingsUser {
     sakusen::comms::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.
        * Returns (ClientID)-1 if there are no free IDs */
-    void addClient(const String& address);
+    void addClient(
+        const String& requestedAddress,
+        const String& fromAddress,
+        sakusen::comms::Socket* existingSocket
+      );
     void removeClient(RemoteClient* client);
     void clearPlayers();
     void createPlayersFor(const sakusen::MapPlayMode& mode);

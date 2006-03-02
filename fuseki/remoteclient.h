@@ -22,6 +22,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
         sakusen::comms::ClientID id,
         Server* server,
         sakusen::comms::Socket* socket,
+        bool createInSocket,
         bool abstract
       );
       /* Uses given socket to contact client.  Transfers ownership of socket to
@@ -79,17 +80,14 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       );
     template<typename T>
     String performIntMagic(
-        /*const settingsTree::Leaf* altering,*/
         const std::list<String>& name,
         T newValue
       );
     String performStringMagic(
-        /*const settingsTree::Leaf* altering,*/
         const std::list<String>& name,
         const String& newValue
       );
     String performStringSetMagic(
-        /*const settingsTree::Leaf* altering,*/
         const std::list<String>& name,
         const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
       );

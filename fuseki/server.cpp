@@ -37,11 +37,19 @@ using namespace fuseki::settingsTree;
 bool interrupted = false; /* Use of static data to monitor interrupt of
                              server instance (c.f. interruptHandler below) */
 
-Server::Server(Socket* s, ostream& o, ResourceInterface* r, bool a, bool d) :
+Server::Server(
+    Socket* ss,
+    Socket* js,
+    ostream& o,
+    ResourceInterface* r,
+    bool a,
+    bool d
+  ) :
   SettingsUser("server"),
   abstract(a),
   dots(d),
-  socket(s),
+  solicitationSocket(ss),
+  joinSocket(js),
   out(o),
   resourceInterface(r),
   clients(10),
@@ -122,7 +130,11 @@ ClientID Server::getFreeClientID()
   return static_cast<ClientID>(-1);
 }
 
-void Server::addClient(const String& address)
+void Server::addClient(
+    const String& requestedAddress,
+    const String& fromAddress,
+    Socket* existingSocket
+  )
 {
   /* Check whether this address is blocked */
   hash_set<String, StringHash> blockedAddresses =
@@ -134,14 +146,27 @@ void Server::addClient(const String& address)
     /* This could be done faster, by saving one regex and not recompiling many
      * all the time, but that requires more magic, and speed is not of the
      * essence at this stage in the game */
-    if (pcrecpp::RE(*i).FullMatch(address)) {
+    pcrecpp::RE re(*i);
+    if ((requestedAddress != "" && re.FullMatch(requestedAddress)) ||
+        (fromAddress != "" && re.FullMatch(fromAddress))) {
       /* We matched a blocked address, so return without even bothering to
        * reject them. */
       out << "Ignoring join request because address is blocked.\n";
+      delete existingSocket;
       return;
     }
   }
-  Socket* socket = Socket::newConnectionToAddress(address);
+
+  Socket* socket = NULL;
+  
+  if (requestedAddress != "") {
+    socket = Socket::newConnectionToAddress(requestedAddress);
+  } else if (NULL != existingSocket) {
+    socket = existingSocket;
+  } else {
+    out << "Could not decide where to send response.\n";
+    return;
+  }
   ClientID id = getFreeClientID();
   if (id == static_cast<ClientID>(-1)) {
     /* No free IDs */
@@ -152,7 +177,8 @@ void Server::addClient(const String& address)
   }
   /* Add the client's branch of the settings tree */
   settings.getClientsBranch()->addClient(id);
-  clients[id] = new RemoteClient(id, this, socket, abstract);
+  clients[id] =
+    new RemoteClient(id, this, socket, requestedAddress!="", abstract);
 }
 
 void Server::removeClient(RemoteClient* client)
@@ -250,8 +276,13 @@ void Server::serve()
   signal(SIGTERM, &interruptHandler);
   out << "Server started.  Hit Ctrl+C to interrupt and shut down server.\n";
   
-  socket->setAsynchronous(true);
+  solicitationSocket->setAsynchronous(true);
+  joinSocket->setAsynchronous(true);
   Message advertisement = Message(AdvertiseMessageData("fuseki", "Game name"));
+
+  /* A list of incoming (probably TCP) connections where we expect to get join
+   * messages from prospective clients */
+  list<pair<Socket*, timeval> > newConnections;
   
   /* A bool to get us out of the loop when it is time to start the game */
   bool startGame = false;
@@ -261,7 +292,8 @@ void Server::serve()
     size_t bytesReceived;
     String receivedFrom;
     /* Look for messages on the solicitation socket */
-    if ((bytesReceived = socket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
+    if ((bytesReceived =
+          solicitationSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
       Message message = Message(buf, bytesReceived);
       if (message.isRealMessage()) {
         switch (message.getType()) {
@@ -269,19 +301,30 @@ void Server::serve()
             {
               SolicitMessageData data = message.getSolicitData();
               String address = data.getAddress();
+              bool respondOnExisting = false;
               if (address.empty()) {
                 /* If no address specified then we respond to the source of the
-                 * message */
+                 * message and use the existing solicitation socket */
                 address = receivedFrom;
+                respondOnExisting = true;
               }
-              Socket* clientSocket = Socket::newConnectionToAddress(address);
-              if (NULL != clientSocket) {
-                out << "Advertising to " << clientSocket->getAddress() << ".\n";
-                clientSocket->send(advertisement);
-                delete clientSocket;
+              Socket* responseSocket = NULL;
+              if (respondOnExisting) {
+                responseSocket = solicitationSocket;
+              } else {
+                responseSocket = Socket::newConnectionToAddress(address);
+              }
+              if (NULL != responseSocket) {
+                out << "Advertising to " << address << ".\n";
+                if (respondOnExisting) {
+                  responseSocket->sendTo(advertisement, address);
+                } else {
+                  responseSocket->send(advertisement);
+                  delete responseSocket;
+                }
               } else {
                 out << "Unsupported socket type requested by client "
-                  "(address was '" << data.getAddress() << "').\n";
+                  "(address was '" << address << "').\n";
               }
             }
             break;
@@ -289,8 +332,9 @@ void Server::serve()
             {
               JoinMessageData data = message.getJoinData();
               out << "Considering adding new client at " <<
-                data.getAddress() << "\n";
-              addClient(data.getAddress());
+                data.getAddress() << " based on message through solicitation "
+                "socket\n";
+              addClient(data.getAddress(), receivedFrom, NULL);
             }
             break;
           default:
@@ -300,6 +344,89 @@ void Server::serve()
       } else {
         out << "Unrecognized message received\n";
       }
+    }
+    
+    /* If we have a seperate join socket then check for messages there too */
+    if (joinSocket != NULL) {
+      if  (joinSocket->isConnectionBased()) {
+        Socket* newConnection = joinSocket->accept();
+        if (newConnection != NULL) {
+          timeval timeout;
+          gettimeofday(&timeout, NULL);
+          /* One second timeout.  TODO: make user-specifiable */
+          timeout += MICRO;
+          newConnections.push_back(
+              pair<Socket*, timeval>(newConnection, timeout)
+            );
+        }
+      } else {
+        if ((bytesReceived =
+            joinSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
+          Message message = Message(buf, bytesReceived);
+          if (message.isRealMessage()) {
+            switch (message.getType()) {
+              case messageType_join:
+                {
+                  JoinMessageData data = message.getJoinData();
+                  out << "Considering adding new client at " <<
+                    data.getAddress() << " based on message through join "
+                    "socket.\n";
+                  addClient(data.getAddress(), receivedFrom, NULL);
+                }
+                break;
+              default:
+                out << "Unexpected MessageType: " << message.getType() << "\n";
+                break;
+            }
+          } else {
+            out << "Unrecognized message received\n";
+          }
+        }
+      }
+    }
+
+    /* Now check the incoming connections to see if any have sent messages yet
+     * */
+    if (!newConnections.empty()) {
+      timeval timeNow;
+      gettimeofday(&timeNow, NULL);
+      for (list<pair<Socket*, timeval> >::iterator conn =
+          newConnections.begin(); conn != newConnections.end(); ) {
+        if ((bytesReceived =
+            conn->first->receive(buf, BUFFER_LEN))) {
+          Message message = Message(buf, bytesReceived);
+          if (message.isRealMessage()) {
+            switch (message.getType()) {
+              case messageType_join:
+                {
+                  JoinMessageData data = message.getJoinData();
+                  out << "Considering adding new client on existing connection"
+                    "\n";
+                  addClient(data.getAddress(), "", conn->first);
+                  conn = newConnections.erase(conn);
+                }
+                break;
+              default:
+                out << "Unexpected MessageType: " << message.getType() << "\n";
+                ++conn;
+                break;
+            }
+          } else {
+            out << "Unrecognized message received\n";
+            ++conn;
+          }
+        } else {
+          /* If we've reached the timeout for this connection, then delete it
+           * */
+          if (conn->second > timeNow) {
+            delete conn->first;
+            conn = newConnections.erase(conn);
+          } else {
+            ++conn;
+          }
+        }
+      }
+        
     }
     
     /* Process client messages */
@@ -492,11 +619,14 @@ void Server::serve()
      * clients
      * TODO: maybe we can support dynamic join for people whose clients crash,
      * or adding observers in mid-game. */
-    socket->close();
+    solicitationSocket->close();
+    if (joinSocket != NULL) {
+      joinSocket->close();
+    }
 
-    /* Remove settings tree manipulation permissions from all clients, excpet for
-     * some which remain in the 'playtime' group so that they can do such things
-     * as pause the game */
+    /* Remove settings tree manipulation permissions from all clients, except
+     * for some which remain in the 'playtime' group so that they can do such
+     * things as pause the game */
     for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
         clients.begin(); clientIt != clients.end(); ++clientIt) {
       RemoteClient* client = clientIt->second;

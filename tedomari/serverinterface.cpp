@@ -19,16 +19,23 @@ using namespace sakusen::comms;
 using namespace tedomari;
 using namespace tedomari::game;
 
-ServerInterface::ServerInterface(Socket* s, bool us, bool a, Game* g) :
-  serverSocket(s),
+ServerInterface::ServerInterface(
+    Socket* s,
+    const String& ja,
+    bool us,
+    bool a,
+    Game* g
+  ) :
+  solicitationSocket(s),
+  joinAddress(ja),
   game(g),
   unixSockets(us),
   abstract(a),
   joined(false),
-  localSocket(NULL),
-  privateServerSocket(NULL)
+  incomingSocket(NULL),
+  outgoingSocket(NULL)
 {
-  Debug("unixSockets = " << unixSockets);
+  /*Debug("unixSockets = " << unixSockets);*/
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
     /* 1 second timeout used for all incoming server responses.
@@ -41,10 +48,12 @@ ServerInterface::~ServerInterface()
     leave(true);
   }
   joined = false; /* Excessive paranoia */
-  delete localSocket;
-  delete privateServerSocket;
-  localSocket = NULL;
-  privateServerSocket = NULL;
+  delete incomingSocket;
+  if (outgoingSocket != incomingSocket) {
+    delete outgoingSocket;
+  }
+  incomingSocket = NULL;
+  outgoingSocket = NULL;
 }
 
 void ServerInterface::initialSettingsSetup()
@@ -80,10 +89,10 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   if (unixSockets) {
     tempSocket = new UnixDatagramListeningSocket(abstract);
     String address = tempSocket->getAddress();
-    serverSocket->send(SolicitMessageData(address));
+    solicitationSocket->send(SolicitMessageData(address));
   } else {
-    tempSocket = serverSocket;
-    serverSocket->send(SolicitMessageData(""));
+    tempSocket = solicitationSocket;
+    solicitationSocket->send(SolicitMessageData(""));
   }
   
   tempSocket->setAsynchronous(true);
@@ -91,7 +100,8 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   uint8 buffer[BUFFER_LEN];
   size_t messageLength;
 
-  if (0==(messageLength=tempSocket->receive(buffer, BUFFER_LEN, timeout))) {
+  if (0 == (messageLength =
+        tempSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
     return true;
   }
 
@@ -115,14 +125,14 @@ String ServerInterface::flushIncoming()
     return "";
   }
 
-  assert(localSocket != NULL);
+  assert(incomingSocket != NULL);
 
   size_t messageLength;
   uint8 buf[BUFFER_LEN];
   ostringstream out;
   
   while (joined &&
-      0 != (messageLength = localSocket->receive(buf, BUFFER_LEN))) {
+      0 != (messageLength = incomingSocket->receive(buf, BUFFER_LEN))) {
     try {
       Message message(buf, messageLength);
       switch (message.getType()) {
@@ -178,22 +188,23 @@ String ServerInterface::join()
   if (joined) {
     Fatal("attempted to join when already joined");
   }
-  assert(localSocket == NULL);
-  assert(privateServerSocket == NULL);
-  if (unixSockets) {
-    localSocket = new UnixDatagramListeningSocket(abstract);
-  } else {
-    /* FIXME: This should really be a TCP socket, not a UDP one, but those
-     * don't exist yet */
-    /* FIXME: Even as a UDP socket, it can't work this way...
-    localSocket = new UDPListeningSocket(); */
-  }
-  localSocket->setAsynchronous(true);
+  assert(incomingSocket == NULL);
+  assert(outgoingSocket == NULL);
   try {
-    serverSocket->send(JoinMessageData(localSocket->getAddress()));
+    if (unixSockets) {
+      incomingSocket = new UnixDatagramListeningSocket(abstract);
+      solicitationSocket->send(JoinMessageData(incomingSocket->getAddress()));
+    } else {
+      Debug(
+          "creating new connection to " << joinAddress << " for join message"
+        );
+      incomingSocket = Socket::newConnectionToAddress(joinAddress);
+      incomingSocket->send(JoinMessageData(""));
+    }
+    incomingSocket->setAsynchronous(true);
   } catch (SocketExn* e) {
-    delete localSocket;
-    localSocket = NULL;
+    delete incomingSocket;
+    incomingSocket = NULL;
     String ret = String("Error while sending join message to server: '") +
       e->message + "'.\n";
     delete e;
@@ -203,9 +214,10 @@ String ServerInterface::join()
   uint8 buffer[BUFFER_LEN];
   size_t messageLength;
 
-  if (0==(messageLength=localSocket->receive(buffer, BUFFER_LEN, timeout))) {
-    delete localSocket;
-    localSocket = NULL;
+  if (0 == (messageLength =
+        incomingSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
+    delete incomingSocket;
+    incomingSocket = NULL;
     return "Timed out while waiting for response to join request.\n";
   }
 
@@ -216,22 +228,26 @@ String ServerInterface::join()
       {
         AcceptMessageData data = message.getAcceptData();
         id = data.getID();
-        privateServerSocket = Socket::newConnectionToAddress(data.getAddress());
+        if (data.getAddress() == "") {
+          outgoingSocket = incomingSocket;
+        } else {
+          outgoingSocket = Socket::newConnectionToAddress(data.getAddress());
+        }
         joined = true;
         initialSettingsSetup();
         return "";
       }
     case messageType_reject:
       {
-        delete localSocket;
-        localSocket = NULL;
+        delete incomingSocket;
+        incomingSocket = NULL;
         RejectMessageData data = message.getRejectData();
         return String("Join request rejected for reason: '") + data.getReason()
           + "'.";
       }
     default:
-      delete localSocket;
-      localSocket = NULL;
+      delete incomingSocket;
+      incomingSocket = NULL;
       ostringstream ret;
       ret << "Unexpected response from server (message type was" <<
         message.getType() << ").";
@@ -244,11 +260,11 @@ bool ServerInterface::leave(bool sendMessage)
   if (!joined) {
     Fatal("attempted to leave when not joined");
   }
-  assert(localSocket != NULL);
-  assert(privateServerSocket != NULL);
+  assert(incomingSocket != NULL);
+  assert(outgoingSocket != NULL);
   if (sendMessage) {
     try {
-      privateServerSocket->send(LeaveMessageData());
+      outgoingSocket->send(LeaveMessageData());
     } catch (SocketExn* e) {
       Debug("Error sending leave message:" << e->message);
       delete e;
@@ -256,22 +272,24 @@ bool ServerInterface::leave(bool sendMessage)
   }
   game->stop();
   joined = false;
-  delete localSocket;
-  delete privateServerSocket;
-  localSocket = NULL;
-  privateServerSocket = NULL;
+  delete incomingSocket;
+  if (outgoingSocket != incomingSocket) {
+    delete outgoingSocket;
+  }
+  incomingSocket = NULL;
+  outgoingSocket = NULL;
   return false;
 }
 
 bool ServerInterface::getSetting(const String& setting)
 {
-  privateServerSocket->send(GetSettingMessageData(setting));
+  outgoingSocket->send(GetSettingMessageData(setting));
   return false;
 }
 
 bool ServerInterface::setSetting(const String& setting, const String& value)
 {
-  privateServerSocket->send(ChangeSettingMessageData(setting, value));
+  outgoingSocket->send(ChangeSettingMessageData(setting, value));
   return false;
 }
 

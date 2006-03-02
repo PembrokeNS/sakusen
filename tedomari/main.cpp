@@ -45,7 +45,8 @@ using namespace tedomari::ui::sdl;
 struct Options {
   Options() :
     abstract(true), unixSockets(true), evil(false), historyLength(100),
-    test(false), solicitationAddress(), help(false), version(false) {}
+    test(false), solicitationAddress(), joinAddress(), help(false),
+    version(false) {}
   ~Options() {}
   bool abstract;
   bool unixSockets;
@@ -54,6 +55,7 @@ struct Options {
   bool test;
   SDLUI::Options sdlOptions;
   String solicitationAddress;
+  String joinAddress;
   bool help;
   bool version;
 };
@@ -225,7 +227,7 @@ void runClient(
       new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
-        socket, options.unixSockets, options.abstract, game
+        socket, options.joinAddress, options.unixSockets, options.abstract, game
       );
 
     cout << "Getting advertisement." << endl;
@@ -430,6 +432,7 @@ void usage() {
           " -t,  --test,            don't try to connect to a server, just test the UI\n"
           "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
           " -s   --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
+          " -j   --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
           " -h,  --help,            display help and exit\n"
           " -V,  --version,         display version information and exit\n"
           "" << endl;
@@ -448,6 +451,7 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   parser.addOption("test",           't',  &results.test);
   parser.addOption("sdlopts",        '\0', &sdlOptionsParser);
   parser.addOption("solicit",        's',  &results.solicitationAddress);
+  parser.addOption("join",           'j',  &results.joinAddress);
   parser.addOption("help",           'h',  &results.help);
   parser.addOption("version",        'V',  &results.version);
 
@@ -457,6 +461,12 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
     cout << "error(s) processing options:\n" <<
       stringUtils_join(parser.getErrors(), "\n");
     usage();
+    exit(EXIT_FAILURE);
+  }
+
+  if (results.joinAddress == "" && !results.unixSockets) {
+    cout << "if you disable unix sockets you must provide an explicit join "
+      "address with --join" << endl;
     exit(EXIT_FAILURE);
   }
 

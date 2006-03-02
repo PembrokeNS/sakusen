@@ -14,6 +14,7 @@ RemoteClient::RemoteClient(
     ClientID i,
     Server* s,
     Socket* socket,
+    bool createInSocket,
     bool abstract
   ) :
   Client(),
@@ -28,9 +29,14 @@ RemoteClient::RemoteClient(
   ready(false),
   autoUnready(false)
 {
-  inSocket = new UnixDatagramListeningSocket(abstract);
+  if (createInSocket) {
+    inSocket = new UnixDatagramListeningSocket(abstract);
+    outSocket->send(Message(AcceptMessageData(inSocket->getAddress(), id)));
+  } else {
+    inSocket = outSocket;
+    outSocket->send(Message(AcceptMessageData("", id)));
+  }
   inSocket->setAsynchronous(true);
-  outSocket->send(Message(AcceptMessageData(inSocket->getAddress(), id)));
 }
 
 RemoteClient::~RemoteClient()
@@ -41,7 +47,9 @@ RemoteClient::~RemoteClient()
   setPlayerId(0, false);
   
   delete inSocket;
-  delete outSocket;
+  if (outSocket != inSocket) {
+    delete outSocket;
+  }
   inSocket = NULL;
   outSocket = NULL;
 }

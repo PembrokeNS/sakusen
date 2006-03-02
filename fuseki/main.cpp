@@ -32,6 +32,7 @@ struct Options {
     forceSocket(false),
     abstract(true),
     solicitationAddress(),
+    joinAddress(),
     dots(true),
     help(false),
     version(false) 
@@ -40,6 +41,7 @@ struct Options {
   bool forceSocket;
   bool abstract;
   String solicitationAddress;
+  String joinAddress;
   bool dots;
   bool help;
   bool version;
@@ -120,6 +122,7 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
   parser.addOption("force-socket", 'f', &results.forceSocket);
   parser.addOption("abstract",     'a', &results.abstract);
   parser.addOption("solicit",      's', &results.solicitationAddress);
+  parser.addOption("join",         'j', &results.joinAddress);
   parser.addOption("dots",         'd', &results.dots);
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);
@@ -151,9 +154,9 @@ int startServer(const String& homePath, const Options& options)
   ResourceInterface* resourceInterface =
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
 
-  String socketAddress = options.solicitationAddress;
+  String solicitationSocketAddress = options.solicitationAddress;
 
-  if (socketAddress.empty()) {
+  if (solicitationSocketAddress.empty()) {
     /* By default, this server listens for clients on a unix datagram socket
      * located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
 
@@ -198,12 +201,12 @@ int startServer(const String& homePath, const Options& options)
           "' not a directory");
     }
 
-    String socketPath = serverPath + FILE_SEP "fuseki-socket";
+    String solicitationSocketPath = serverPath + FILE_SEP "fuseki-socket";
 
-    if (!stat(socketPath.c_str(), &tmpStat)) {
+    if (!stat(solicitationSocketPath.c_str(), &tmpStat)) {
       if (options.forceSocket) {
         cout << "Removing existing socket." << endl;
-        unlink(socketPath.c_str());
+        unlink(solicitationSocketPath.c_str());
       } else {
         cout << "Socket already exists.  Another instance of fuseki is\n"
           "already running or has crashed.  Please delete the socket file or\n"
@@ -214,21 +217,46 @@ int startServer(const String& homePath, const Options& options)
     }
 
     /* Use the default socket address */
-    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM + socketPath;
+    solicitationSocketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM + solicitationSocketPath;
   }
   
-  cout << "Binding socket at " << socketAddress << endl;
+  cout << "Binding solicitation socket at " << solicitationSocketAddress <<
+    endl;
   Socket::socketsInit();
-  Socket* socket = Socket::newBindingToAddress(socketAddress);
+  Socket* solicitationSocket = Socket::newBindingToAddress(solicitationSocketAddress);
+
+  if (solicitationSocket == NULL) {
+    cout << "Error creating solicitation socket.  Check the address and try "
+      "again." << endl;
+    return EXIT_FAILURE;
+  }
+
+  Socket* joinSocket = NULL;
+  
+  if (options.joinAddress == "") {
+    joinSocket = solicitationSocket;
+  } else {
+    joinSocket = Socket::newBindingToAddress(options.joinAddress);
+  }
+
+  if (NULL == joinSocket) {
+    cout << "Error creating join socket.  Check the address and try "
+      "again." << endl;
+    return EXIT_FAILURE;
+  }
 
   cout << "Socket created." << endl;
   
   Server server(
-      socket, cout, resourceInterface, options.abstract, options.dots
+      solicitationSocket, joinSocket, cout, resourceInterface,
+      options.abstract, options.dots
     );
   server.serve();
   
-  delete socket;
+  delete solicitationSocket;
+  if (joinSocket != solicitationSocket) {
+    delete joinSocket;
+  }
   delete resourceInterface;
   return EXIT_SUCCESS;
 }
