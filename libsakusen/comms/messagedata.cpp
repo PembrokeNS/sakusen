@@ -4,6 +4,8 @@
 
 #include "world.h"
 
+using namespace std;
+
 namespace sakusen{
 namespace comms{
 
@@ -362,21 +364,28 @@ MessageData* GameStartMessageData::newCopy() const
   return new GameStartMessageData(*this);
 }
 
-UpdateMessageData::UpdateMessageData(const Update& u) :
+/** \brief Constructs from given time and list of updates
+ *
+ * The list of updates passed to this method is cleared */
+UpdateMessageData::UpdateMessageData(Time t, list<Update>& u) :
   MessageData(),
-  update(u)
+  time(t),
+  updates()
 {
+  updates.swap(u);
 }
 
 UpdateMessageData::UpdateMessageData(IArchive& in) :
   MessageData(),
-  update(in, world->getUniverse())
+  updates()
 {
+  in >> time;
+  in.extract(updates, world->getUniverse());
 }
 
 void UpdateMessageData::fillArchive()
 {
-  update.store(archive);
+  archive << time << updates;
 }
 
 MessageType UpdateMessageData::getType() const

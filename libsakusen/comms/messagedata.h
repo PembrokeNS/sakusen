@@ -248,18 +248,19 @@ class UpdateMessageData : public MessageData {
   private:
     UpdateMessageData();
   public:
-    UpdateMessageData(const Update& update);
+    UpdateMessageData(Time time, std::list<Update>& update);
     UpdateMessageData(IArchive& in);
     ~UpdateMessageData() {}
   private:
-    Update update; /* The address where the client want all future
-                       communication to be sent */
+    Time time; /**< The game time at which these updates apply */
+    std::list<Update> updates; /**< The updates */
   protected:
     void fillArchive();
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
-    inline const Update& getUpdate() const { return update; }
+    inline Time getTime() const { return time; }
+    inline const std::list<Update>& getUpdates() const { return updates; }
 };
 
 }}

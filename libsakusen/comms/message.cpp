@@ -104,9 +104,7 @@ Message& Message::operator=(const Message& copy)
 
 Message::~Message()
 {
-  if (data != NULL) {
-    delete data;
-    data = NULL;
-  }
+  delete data;
+  data = NULL;
 }
 

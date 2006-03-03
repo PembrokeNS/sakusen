@@ -47,5 +47,10 @@ inline bool operator>(const timeval& tv, const timeval& uv)
   return timercmp(&tv, &uv, >);
 }
 
+inline bool operator<(const timeval& tv, const timeval& uv)
+{
+  return timercmp(&tv, &uv, <);
+}
+
 #endif // TIMEUTILS_H
 
