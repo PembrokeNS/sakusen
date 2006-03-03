@@ -22,14 +22,14 @@ class Game {
   private:
     sakusen::ResourceInterface* resourceInterface; /* not owned by this */
     sakusen::Universe* universe; /* owned by this */
-    std::queue<sakusen::Update> updateQueue;
   public:
+    bool dirty;
+    
     inline bool isStarted() const { return sakusen::client::world != NULL; }
-    inline void pushUpdate(const sakusen::Update& u) { updateQueue.push(u); }
+    void pushUpdates(const sakusen::comms::UpdateMessageData& data);
 
     void setUniverse(const String& name, const String& hash);
     void start(const sakusen::comms::GameStartMessageData&);
-    void flush();
     void stop();
 };
 

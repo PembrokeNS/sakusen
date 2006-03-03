@@ -251,6 +251,9 @@ void SDLUI::update()
     }
   }
 
+  /* Call superclass update method */
+  UI::update();
+  
   /* Update the display */
   /* TODO: Update only that portion which has been altered */
   if (0 != SDL_BlitSurface(sdlBuffer, NULL, screen, NULL)) {
@@ -301,6 +304,7 @@ void SDLUI::fillPolygon(
     const Colour& c
   )
 {
+  SDLDebug(c.ir());
   assert(!poly.empty());
 
   list< sakusen::Point<double> >::const_iterator vertex = poly.begin();

@@ -86,8 +86,8 @@ class UI : protected Control {
     inline bool isQuit() const { return quit; }
     /** \brief Set the window title to the given String */
     virtual void setTitle(const String& title) = 0;
-    /** \brief Process all user input */
-    virtual void update() = 0;
+    /** \brief Process all user input and redraw the screen as necessary */
+    virtual void update();
     
     /** \brief Execute the given command
      *

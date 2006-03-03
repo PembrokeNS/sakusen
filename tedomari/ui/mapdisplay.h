@@ -46,6 +46,7 @@ class MapDisplay : public Control {
   public:
     inline double getDexWidth() const { return dexPerPixelX*getWidth(); }
     inline double getDexHeight() const { return dexPerPixelY*getHeight(); }
+    void update();
     void translate(const sakusen::Point<sint32>& d);
     void translate(sint32 dx, sint32 dy);
 };

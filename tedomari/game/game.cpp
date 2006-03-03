@@ -2,7 +2,10 @@
 
 #include "resourceinterface-methods.h"
 
+using namespace std;
+
 using namespace sakusen;
+using namespace sakusen::comms;
 using namespace sakusen::client;
 using namespace tedomari::game;
 
@@ -49,11 +52,18 @@ void Game::start(const sakusen::comms::GameStartMessageData& data)
     );
 }
 
-void Game::flush()
-{
-  while (!updateQueue.empty()) {
-    sakusen::client::world->applyUpdate(updateQueue.front());
-    updateQueue.pop();
+void Game::pushUpdates(const UpdateMessageData& data) {
+  dirty = true;
+  while (data.getTime() > sakusen::client::world->getTimeNow()) {
+    sakusen::client::world->endTick();
+  }
+  if (data.getTime() < sakusen::client::world->getTimeNow()) {
+    Debug("Got updates in wrong order");
+  }
+  list<Update> updates(data.getUpdates());
+  while (!updates.empty()) {
+    sakusen::client::world->applyUpdate(updates.front());
+    updates.pop_front();
   }
 }
 

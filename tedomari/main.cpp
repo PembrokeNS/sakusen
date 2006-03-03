@@ -395,8 +395,6 @@ void runClient(
         delete ui;
         ui = NULL;
       }
-      /* Update game state */
-      game->flush();
       /* Allow the UI some processor time */
       if (ui != NULL) {
         ui->update();

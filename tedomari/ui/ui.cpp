@@ -90,6 +90,12 @@ void UI::keyUp(Key)
   /* TODO */
 }
 
+void UI::update()
+{
+  /* TODO: should call all MapDisplays, once there can be more than one */
+  activeMapDisplay->update();
+}
+
 void UI::executeCommand(const String& cmdName, std::list<String>& args)
 {
   hash_map<String, Command, StringHash>::const_iterator cmd =

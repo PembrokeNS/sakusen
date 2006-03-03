@@ -47,6 +47,14 @@ void MapDisplay::paint()
   }
 }
 
+void MapDisplay::update()
+{
+  if (game->dirty) {
+    game->dirty = false;
+    getRegion()->paint();
+  }
+}
+
 void MapDisplay::translate(const Point<sint32>& d)
 {
   posOfDisplayZero =

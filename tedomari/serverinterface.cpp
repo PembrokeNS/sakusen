@@ -166,8 +166,7 @@ String ServerInterface::flushIncoming()
           break;
         case messageType_update:
           {
-            UpdateMessageData data = message.getUpdateData();
-            game->pushUpdate(data.getUpdate());
+            game->pushUpdates(message.getUpdateData());
           }
           break;
         default:
