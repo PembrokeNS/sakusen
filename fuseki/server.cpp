@@ -189,6 +189,82 @@ void Server::removeClient(RemoteClient* client)
   ensureAdminExists();
 }
 
+void Server::handleClientMessages()
+{
+  for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
+      clientIt!=clients.end(); ) {
+    RemoteClient* client = clientIt->second;
+    bool clientRemoved = false;
+    
+    try {
+      client->flushIncoming();
+      
+      while (!client->messageQueueEmpty()) {
+        const Message& message = client->messageQueuePopFront();
+        switch (message.getType()) {
+          case messageType_leave:
+            out << "Removing client (leaving)\n";
+            removeClient(client);
+            clientRemoved = true;
+            break;
+          case messageType_getSetting:
+            {
+              GetSettingMessageData data = message.getGetSettingData();
+              String setting = data.getSetting();
+              out << "Client requested setting " << setting << "\n";
+              String reason;
+              String value;
+              reason = settings.getRequest(setting, value, client);
+              if (reason != "") {
+                out << "Request rejected (" << reason << ")\n";
+                client->send(RejectMessageData(reason));
+              } else {
+                client->send(NotifySettingMessageData(setting, value));
+              }
+            }
+            break;
+          case messageType_changeSetting:
+            {
+              ChangeSettingMessageData data = message.getChangeSettingData();
+              out << "Client asked to change setting " << data.getSetting() <<
+                "\n";
+              String reason;
+              if (!(reason = settings.changeRequest(
+                    data.getSetting(), data.getValue(), client
+                  )).empty()) {
+                /* That a non-empty string was returned implies that a problem
+                 * occured.  We tell the client as much */
+                out << "Request rejected (" << reason << ")\n";
+                client->send(RejectMessageData(reason));
+              }
+            }
+            break;
+          default:
+            out << "Unexpected MessageType " << message.getType() <<
+              " from client\n";
+            break;
+        }
+        if (clientRemoved) {
+          break;
+        }
+      }
+    } catch (SocketExn* e) {
+      out << "Removing client " << clientID_toString(client->getId()) <<
+        " due to causing SocketExn: " << e->message;
+      removeClient(client);
+      clientRemoved = true;
+      delete e;
+    }
+    
+    if (clientRemoved) {
+      /* erasing invalidates the iterator */
+      clientIt = clients.begin();
+    } else {
+      ++clientIt;
+    }
+  }
+}
+
 void Server::clearPlayers()
 {
   for (hash_map<ClientID, RemoteClient*>::iterator clientIt = clients.begin();
@@ -430,78 +506,7 @@ void Server::serve()
     }
     
     /* Process client messages */
-    for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
-        clientIt!=clients.end(); ) {
-      RemoteClient* client = clientIt->second;
-      bool clientRemoved = false;
-      
-      try {
-        client->flushIncoming();
-        
-        while (!client->messageQueueEmpty()) {
-          const Message& message = client->messageQueuePopFront();
-          switch (message.getType()) {
-            case messageType_leave:
-              out << "Removing client (leaving)\n";
-              removeClient(client);
-              clientRemoved = true;
-              break;
-            case messageType_getSetting:
-              {
-                GetSettingMessageData data = message.getGetSettingData();
-                String setting = data.getSetting();
-                out << "Client requested setting " << setting << "\n";
-                String reason;
-                String value;
-                reason = settings.getRequest(setting, value, client);
-                if (reason != "") {
-                  out << "Request rejected (" << reason << ")\n";
-                  client->send(RejectMessageData(reason));
-                } else {
-                  client->send(NotifySettingMessageData(setting, value));
-                }
-              }
-              break;
-            case messageType_changeSetting:
-              {
-                ChangeSettingMessageData data = message.getChangeSettingData();
-                out << "Client asked to change setting " << data.getSetting() <<
-                  "\n";
-                String reason;
-                if (!(reason = settings.changeRequest(
-                      data.getSetting(), data.getValue(), client
-                    )).empty()) {
-                  /* That a non-empty string was returned implies that a problem
-                   * occured.  We tell the client as much */
-                  out << "Request rejected (" << reason << ")\n";
-                  client->send(RejectMessageData(reason));
-                }
-              }
-              break;
-            default:
-              out << "Unexpected MessageType " << message.getType() <<
-                " from client\n";
-              break;
-          }
-          if (clientRemoved) {
-            break;
-          }
-        }
-      } catch (SocketExn* e) {
-        out << "Removing client " << clientID_toString(client->getId()) <<
-          " due to causing SocketExn: " << e->message;
-        removeClient(client);
-        clientRemoved = true;
-        delete e;
-      }
-        
-      if (clientRemoved) {
-        /* erasing invalidates the iterator */
-        clientIt = clients.begin();
-      } else {
-        ++clientIt;
-      }
-    }
+    handleClientMessages();
 
     if (ensureAdminExistsNextTime) {
       out << "Checking for existence of an admin\n";
@@ -659,9 +664,37 @@ void Server::serve()
       /* find out when we aim to start the next tick */
       gettimeofday(&timeNow, NULL);
       timeForNextTick = timeNow + gameSpeed;
+
+      /* Handle client messages (including accepting incoming orders into
+       * players' order queues) */
+      handleClientMessages();
       
       /* Do the game's stuff */
       sakusen::server::world->incrementGameState();
+
+      /* Send out updates */
+      for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
+          clientIt!=clients.end(); ) {
+        RemoteClient* client = clientIt->second;
+        bool clientRemoved = false;
+        
+        try {
+          client->flushOutgoing(sakusen::server::world->getTimeNow());
+        } catch (SocketExn* e) {
+          out << "Removing client " << clientID_toString(client->getId()) <<
+            " due to causing SocketExn: " << e->message;
+          removeClient(client);
+          clientRemoved = true;
+          delete e;
+        }
+        
+        if (clientRemoved) {
+          /* erasing invalidates the iterator */
+          clientIt = clients.begin();
+        } else {
+          ++clientIt;
+        }
+      }
       
       if (dots && sakusen::server::world->getTimeNow() % 16 == 0) {
         out << "." << flush;
@@ -669,7 +702,7 @@ void Server::serve()
 
       /* Sleep until it's time for the next tick */
       gettimeofday(&timeNow, NULL);
-      if (timercmp(&timeNow, &timeForNextTick, <) || gameSpeed == 0) {
+      if (timeNow < timeForNextTick || gameSpeed == 0) {
         usleep(timeForNextTick-timeNow);
         warnedLastTime = false;
       } else {

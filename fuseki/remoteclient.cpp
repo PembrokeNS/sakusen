@@ -23,7 +23,8 @@ RemoteClient::RemoteClient(
   server(s),
   inSocket(NULL),
   outSocket(socket),
-  messageQueue(),
+  incomingMessageQueue(),
+  outgoingUpdateQueue(),
   admin(false),
   neverAdmin(true),
   ready(false),
@@ -80,16 +81,16 @@ void RemoteClient::flushIncoming()
   while (0 != (messageLength = inSocket->receive(buf, BUFFER_LEN))) {
     Message message(buf, messageLength);
     if (message.isRealMessage()) {
-      messageQueue.push(message);
+      incomingMessageQueue.push(message);
     } else {
       Debug("Unrecognized MessageType");
     }
   }
 }
 
-void RemoteClient::sendUpdate(const Update& update)
+void RemoteClient::flushOutgoing(Time time)
 {
-  send(UpdateMessageData(update));
+  send(UpdateMessageData(time, outgoingUpdateQueue));
 }
 
 String RemoteClient::performBoolMagic(

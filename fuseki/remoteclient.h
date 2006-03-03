@@ -34,7 +34,8 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     Server* server;
     sakusen::comms::Socket* inSocket;
     sakusen::comms::Socket* outSocket;
-    std::queue<sakusen::comms::Message, std::list<sakusen::comms::Message> > messageQueue;
+    std::queue<sakusen::comms::Message, std::list<sakusen::comms::Message> > incomingMessageQueue;
+    std::list<sakusen::Update> outgoingUpdateQueue;
     bool admin; /* Whether I am an admin */
     bool neverAdmin; /* Whether I never want to be an admin */
     bool ready; /* Whether I am ready to start the game */
@@ -57,24 +58,27 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       return ready && (observer || (playerId != 0));
     }
     
-    void flushIncoming(); /* process all pending messages on inSocket */
+    void flushIncoming(); /* process all pending Messages on inSocket */
+    /* send all pending Updates through outSocket */
+    void flushOutgoing(sakusen::Time time);
     inline bool messageQueueEmpty() const {
-      return messageQueue.empty();
+      return incomingMessageQueue.empty();
     }
     inline sakusen::comms::Message messageQueuePopFront() {
-      assert(!messageQueue.empty());
-      sakusen::comms::Message message = messageQueue.front();
-      messageQueue.pop();
+      assert(!incomingMessageQueue.empty());
+      sakusen::comms::Message message = incomingMessageQueue.front();
+      incomingMessageQueue.pop();
       return message;
     }
     inline void send(const sakusen::comms::MessageData& data) {
       outSocket->send(data);
     }
-    void sendUpdate(const sakusen::Update& update);
+    inline void queueUpdate(const sakusen::Update& update) {
+      outgoingUpdateQueue.push_back(update);
+    }
 
     /* Perform magic related to the changing value of a client setting */
     String performBoolMagic(
-        /*const settingsTree::Leaf* altering,*/
         const std::list<String>& name,
         bool newValue
       );
