@@ -4,7 +4,7 @@
 #include "gnu_extensions.h"
 #include "world.h"
 #include "partialmap.h"
-#include "completeunit.h"
+#include "updatedunit.h"
 #include "update.h"
 #include "rectangle.h"
 
@@ -26,7 +26,7 @@ class LIBSAKUSEN_API PartialWorld : public World {
     ~PartialWorld();
   private:
     PartialMap* map;
-    __gnu_cxx::hash_map<uint32, CompleteUnit*> units; /* units owned by this */
+    __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
   public:
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
@@ -34,6 +34,7 @@ class LIBSAKUSEN_API PartialWorld : public World {
     std::list<CompleteUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
 
     void applyUpdate(const Update&);
+    void endTick();
 };
 
 extern PartialWorld* world;

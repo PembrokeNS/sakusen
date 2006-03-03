@@ -26,7 +26,7 @@ PartialWorld::PartialWorld(
 PartialWorld::~PartialWorld()
 {
   while (!units.empty()) {
-    hash_map<uint32, CompleteUnit*>::iterator b = units.begin();
+    hash_map<uint32, UpdatedUnit*>::iterator b = units.begin();
     delete b->second;
     units.erase(b);
   }
@@ -47,7 +47,7 @@ list<CompleteUnit*> PartialWorld::getUnitsIntersecting(
   /* TODO: make this fast by storing data sensibly */
   list<CompleteUnit*> result;
 
-  for (hash_map<uint32, CompleteUnit*>::iterator unit = units.begin();
+  for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
     if (rect.fastIntersects(unit->second)) {
       result.push_back(unit->second);
@@ -67,13 +67,13 @@ void PartialWorld::applyUpdate(const Update& update)
           Debug("adding unit of existing id");
           delete units[data.getUnit().getId()];
         }
-        units[data.getUnit().getId()] = new CompleteUnit(data.getUnit());
+        units[data.getUnit().getId()] = new UpdatedUnit(data.getUnit());
       }
       break;
     case updateType_unitRemoved:
       {
         UnitRemovedUpdateData data = update.getUnitRemovedData();
-        __gnu_cxx::hash_map<uint32, CompleteUnit*>::iterator unit =
+        __gnu_cxx::hash_map<uint32, UpdatedUnit*>::iterator unit =
           units.find(data.getId());
         if (unit == units.end()) {
           Debug("tried to remove non-existant unit");
@@ -90,6 +90,19 @@ void PartialWorld::applyUpdate(const Update& update)
     default:
       Fatal("unexpected UpdateType: " << update.getType());
   }
+}
+
+void PartialWorld::endTick()
+{
+  for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
+      unit != units.end(); ++unit) {
+    if (unit->second->updated) {
+      unit->second->updated = false;
+    } else {
+      unit->second->incrementState();
+    }
+  }
+  ++timeNow;
 }
 
 PartialWorld* sakusen::client::world = NULL;
