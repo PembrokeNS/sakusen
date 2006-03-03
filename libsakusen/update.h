@@ -12,19 +12,15 @@ class LIBSAKUSEN_API Update {
   private:
     Update();
   public:
-    Update(IArchive& in, const Universe*);
     Update(const Update& copy);
     Update(const UpdateData& data);
+    Update(UpdateData* data);
     ~Update();
     Update& operator=(const Update& copy);
   private:
     const UpdateData* data;
   public:
     inline UpdateType getType(void) const { return data->getType(); }
-    inline void store(OArchive& out) const {
-      out << uint8(getType());
-      data->store(out);
-    }
     inline UnitRemovedUpdateData getUnitRemovedData(void) const {
       return *dynamic_cast<const UnitRemovedUpdateData*>(data);
     }
@@ -40,6 +36,13 @@ class LIBSAKUSEN_API Update {
     inline OrderQueuedUpdateData getOrderQueuedData(void) const {
       return *dynamic_cast<const OrderQueuedUpdateData*>(data);
     }
+
+    typedef Universe loadArgument;
+    inline void store(OArchive& out) const {
+      out << uint8(getType());
+      data->store(out);
+    }
+    static Update load(IArchive& in, const loadArgument*);
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, const Update& update);

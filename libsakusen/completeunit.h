@@ -28,7 +28,8 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
       );
   public:
     CompleteUnit(const ICompleteUnit* copy);
-  private:
+    virtual ~CompleteUnit() {}
+  protected:
     uint32 unitId;
     UnitStatus status;
     

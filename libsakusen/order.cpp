@@ -22,12 +22,10 @@ Order::Order(const OrderData& d) :
 
 Order::~Order()
 {
-  if (data != NULL) {
-    /* Debugf(("[Order::~Order()] this=%x, data=%x",
-          (unsigned int) this, (unsigned int) data)); */
-    delete data;
-    data = NULL;
-  }
+  /* Debugf(("[Order::~Order()] this=%x, data=%x",
+        (unsigned int) this, (unsigned int) data)); */
+  delete data;
+  data = NULL;
 }
 
 Order& Order::operator=(const Order& copy)

@@ -9,33 +9,6 @@ Update::Update() :
 {
 }
 
-Update::Update(IArchive& in, const Universe* universe) :
-  data(NULL)
-{
-  /* If the archive is empty then it's broken.  Leave data NULL and return */
-  if (in.isFinished()) {
-    return;
-  }
-
-  /* Get the type */
-  uint8 typeInt;
-  in >> typeInt;
-  UpdateType type = static_cast<UpdateType>(typeInt);
-
-  /* Construct the appropriate data */
-  switch (type) {
-    case updateType_unitRemoved:
-      data = new UnitRemovedUpdateData(in);
-      break;
-    case updateType_unitAdded:
-      data = new UnitAddedUpdateData(in, universe);
-      break;
-    default:
-      Debug("Unknown UpdateType " << type);
-      break;
-  }
-}
-
 Update::Update(const Update& copy) :
   data( copy.data ? copy.data->newCopy() : NULL )
 {
@@ -46,12 +19,15 @@ Update::Update(const UpdateData& d) :
 {
 }
 
+Update::Update(UpdateData* d) :
+  data(d)
+{
+}
+
 Update::~Update()
 {
-  if (data != NULL) {
-    delete data;
-    data = NULL;
-  }
+  delete data;
+  data = NULL;
 }
 
 Update& Update::operator=(const Update& copy)
@@ -64,5 +40,28 @@ LIBSAKUSEN_API std::ostream& sakusen::operator<<(std::ostream& output, const Upd
 {
   output << "Update { type=" << update.getType() << " }";
   return output;
+}
+
+Update Update::load(IArchive& in, const Universe* universe)
+{
+  /* If the archive is empty then it's broken.  Return a dud update */
+  if (in.isFinished()) {
+    return Update();
+  }
+
+  /* Get the type */
+  UpdateType type;
+  in.extractEnum(type);
+
+  /* Construct the appropriate data */
+  switch (type) {
+    case updateType_unitRemoved:
+      return Update(new UnitRemovedUpdateData(in));
+    case updateType_unitAdded:
+      return Update(new UnitAddedUpdateData(in, universe));
+    default:
+      Debug("Unknown UpdateType " << type);
+      return Update();
+  }
 }
 

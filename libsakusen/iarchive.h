@@ -155,9 +155,9 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
-    template<typename T>
+    template<typename T, template<typename> class Container>
     IArchive& extract(
-        std::vector<T>& result,
+        Container<T>& result,
         const typename T::loadArgument* arg
       )
     {
