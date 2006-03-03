@@ -120,7 +120,7 @@ void Player::informClients(const Update& update)
   for (std::list<Client*>::iterator client = clients.begin();
       client != clients.end(); client++) {
     /* Debug("informing client"); */
-    (*client)->sendUpdate(update);
+    (*client)->queueUpdate(update);
   }
 }
 

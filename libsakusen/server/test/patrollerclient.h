@@ -20,7 +20,8 @@ class PatrollerClient : public Client {
     Point<sint32> patrolFrom;
     bool headedOutward;
   public:
-    void sendUpdate(const Update& update);
+    void flushOutgoing(Time) {}
+    void queueUpdate(const Update& update);
 };
 
 }}}

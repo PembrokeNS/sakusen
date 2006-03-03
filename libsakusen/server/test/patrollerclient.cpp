@@ -11,7 +11,7 @@ PatrollerClient::PatrollerClient(Point<sint32> p) :
 {
 }
 
-void PatrollerClient::sendUpdate(const Update& update)
+void PatrollerClient::queueUpdate(const Update& update)
 {
   switch (update.getType()) {
     case updateType_unitAdded:

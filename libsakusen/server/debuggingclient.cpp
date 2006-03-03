@@ -11,7 +11,7 @@ DebuggingClient::DebuggingClient(
 {
 }
 
-void DebuggingClient::sendUpdate(const Update& update)
+void DebuggingClient::queueUpdate(const Update& update)
 {
   outputStream << update << std::endl;
 }
