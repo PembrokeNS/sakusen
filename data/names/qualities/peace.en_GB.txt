@@ -2,13 +2,17 @@ Allegiance
 Alliance
 Ambassador
 Amity
+Arbiter
+Diplomatic
 Faithful
 Fraternity
 Freedom
+Goodwill
 Liberty
 Loyal
 Makepeace
 Merciful
+Obedient
 Peacemaker
 Union
 Unity

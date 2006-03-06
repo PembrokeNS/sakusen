@@ -1,0 +1,17 @@
+Cavalier
+Chieftain
+Courier
+Crusader
+Druid
+Emperor
+Harlequin
+Paladin
+President
+Saladin
+Senator
+Sepoy
+Templar
+Tribune
+Trooper
+Viceroy
+Viscount

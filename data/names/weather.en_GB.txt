@@ -4,6 +4,7 @@ Blizzard
 Cloudburst
 Cumulus
 Cyclone
+Fulminate
 Gale
 Hurricane
 Lightning
