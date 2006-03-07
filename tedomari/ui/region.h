@@ -35,7 +35,7 @@ class Region {
         uint16 height
       ) const = 0;
     inline Region* newSubRegion(const sakusen::Rectangle<uint16>& area) const {
-      return newSubRegion(area.x, area.y, area.width, area.height);
+      return newSubRegion(area.getMinX(), area.getMinY(), area.getWidth(), area.getHeight());
     }
     virtual Layout* newLayout() const = 0;
 
@@ -58,7 +58,7 @@ class Region {
         const sakusen::Rectangle<double>& rect,
         const Colour& c
       ) {
-      fillRect(rect.x, rect.y, rect.width, rect.height, c);
+      fillRect(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight(), c);
     }
     virtual void stroke(
         double x1,

@@ -19,7 +19,7 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
   }
 
   return Rectangle<sint32>(
-      pos.x-iExtents[0], pos.y-iExtents[1], 2*iExtents[0], 2*iExtents[1]
-    );
+      pos.x-iExtents[0], pos.y-iExtents[1], pos.x+iExtents[0], pos.y+iExtents[1]
+  );
 }
 

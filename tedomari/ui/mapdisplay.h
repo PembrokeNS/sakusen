@@ -57,10 +57,10 @@ inline sakusen::Rectangle<double> MapDisplay::dexToPixel(
   /* Note that the direction of increasing y is reversed during this
    * conversion */
   return sakusen::Rectangle<double>(
-      (r.x-posOfDisplayZero.x)/dexPerPixelX,
-      (posOfDisplayZero.y-r.y-r.height)/dexPerPixelY,
-      r.width/dexPerPixelX,
-      r.height/dexPerPixelY
+      (r.getMinX() - posOfDisplayZero.x)/dexPerPixelX,
+      (posOfDisplayZero.y - r.getMaxY())/dexPerPixelY,
+      (r.getMaxX() - posOfDisplayZero.x)/dexPerPixelX,
+      (posOfDisplayZero.y - r.getMinY())/dexPerPixelY
     );
 }
 
@@ -74,10 +74,10 @@ inline sakusen::Rectangle<sint32> MapDisplay::pixelToDex(
    * much smaller than a pixel, and doing it properly would require more
    * operations, I'm not worried about this small discrepancy */
   return sakusen::Rectangle<sint32>(
-      sint32(floor(r.x*dexPerPixelX))+posOfDisplayZero.x,
-      posOfDisplayZero.y-sint32(ceil(r.getMaxY()*dexPerPixelY)),
-      sint32(ceil(r.width * dexPerPixelX)),
-      sint32(ceil(r.height * dexPerPixelY))
+      sint32(floor(r.getMinX()*dexPerPixelX)) + posOfDisplayZero.x,
+      posOfDisplayZero.y - sint32(ceil(r.getMaxY()*dexPerPixelY)),
+      sint32(ceil(r.getMaxX()*dexPerPixelX)) + posOfDisplayZero.x,
+      posOfDisplayZero.y - sint32(floor(r.getMinY()*dexPerPixelY))
     );
 }
 

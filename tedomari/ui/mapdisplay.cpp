@@ -16,12 +16,12 @@ void MapDisplay::paint()
     r->fill(Colour::green);
     r->stroke(0, 0, r->getWidth(), r->getHeight(), Colour::red);
   } else {
-    /* TODO: obviously we need a bit more functionality */
+    /** \todo obviously we need a bit more functionality */
     r->setClip();
     r->fill(Colour::red);
     Map* m = sakusen::world->getMap();
     r->fillRect(dexToPixel(
-          Rectangle<sint32>(m->left(), m->bottom(), m->width(), m->height())
+          Rectangle<sint32>(m->left(), m->bottom(), m->right(), m->top())
         ), Colour::green);
     Rectangle<sint32> displayRect = pixelToDex(
         Rectangle<double>(0, 0, getWidth(), getHeight())

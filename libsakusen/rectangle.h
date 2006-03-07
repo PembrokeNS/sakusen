@@ -3,28 +3,53 @@
 
 #include "point.h"
 
+/** \file
+ * A ::Rectangle is the region enclosed by two points in the plane. The
+ * bottom-left point is inside the rectangle but the top-right point is
+ * outside. This means you can't have a rectangle which all points are inside
+ * but you can have a rectangle with zero area.
+ *
+ * \todo What happens when you have a Rectangle<sint32> whose points are
+ * greater than 2^31 apart and you take the width/height?
+ */
 namespace sakusen {
 
 class ICompleteUnit;
 
 template<typename T>
 struct Rectangle {
-  Rectangle() : x(0), y(0), width(0), height(0) {}
-  Rectangle(T xoffset, T yoffset, T w, T h) :
-    x(xoffset), y(yoffset), width(w), height(h) {}
-  T x; /**< The minimum value of x */
-  T y; /**< The minimum value of y */
-  T width;
-  T height;
+  /* fields */
+  T minx; /**< The minimum value of x */
+  T miny; /**< The minimum value of y */
+  T maxx; /**< The maximum value of x */
+  T maxy; /**< The maximum value of y */
 
-  inline T getMaxX() const { return x+width; }
-  inline T getMaxY() const { return y+height; }
+  /* methods */
+  Rectangle() : minx(0), miny(0), maxx(0), maxy(0) {}
+  /** Constructor, does the obvious thing. It must be the case that \p x1 \< \p
+   * x2 and \p y1 \< \p y2.
+   *
+   * \param x1,y1 Bottom-left corner
+   * \param x2,y2 Bottom-right corner
+   */
+  Rectangle(T x1, T y1, T x2, T y2) :
+    minx(x1), miny(y1), maxx(x2), maxy(y2) {}
+
+  inline T getWidth() const { return maxx - minx; }
+  inline T getHeight() const { return maxy - miny; }
+  inline T getMinX() const { return minx; }
+  inline T getMinY() const { return miny; }
+  inline T getMaxX() const { return maxx; }
+  inline T getMaxY() const { return maxy; }
   inline bool contains(const Point<T>& p) const {
-    return p.x >= x && p.x < getMaxX() && p.y >= y && p.y < getMaxY();
+    return p.x >= minx && p.x < getMaxX() && p.y >= miny && p.y < getMaxY();
   }
-  bool intersects(const Rectangle<T> r) const {
-    return r.x < getMaxX() && r.getMaxX() > x &&
-      r.y < getMaxY() && r.getMaxY() > y;
+  /** Originally wasn't marked inline but functions defined in the class
+   * body in C++ get to be inline by default.
+   */
+  inline bool intersects(const Rectangle<T> r) const {
+    return r.minx < getMaxX() && r.getMaxX() > minx &&
+      r.miny < getMaxY() && r.getMaxY() > miny;
   }
   bool fastIntersects(const ICompleteUnit*) const;
 };

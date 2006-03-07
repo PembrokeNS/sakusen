@@ -50,6 +50,8 @@ void Control::replaceRegion(Region* newRegion)
   }
 }
 
+/** \bug If I knew what this function were supposed to do, I could
+ * check, but I suspect it is wrong. DH */
 void Control::alignSubControls()
 {
   for (list< list<Control*> >::iterator layer = subControls.begin();
@@ -61,26 +63,23 @@ void Control::alignSubControls()
       Rectangle<uint16> controlArea(remainingArea);
       switch ((*subControl)->getDockStyle()) {
         case dockStyle_top:
-          controlArea.height =
-            min((*subControl)->desiredHeight, remainingArea.height);
-          remainingArea.height -= controlArea.height;
-          remainingArea.y = controlArea.getMaxY();
+          controlArea.maxy = controlArea.miny +
+            min((*subControl)->desiredHeight, remainingArea.getHeight());
+          remainingArea.miny = controlArea.maxy;
           break;
         case dockStyle_bottom:
-          controlArea.height =
-            min((*subControl)->desiredHeight, remainingArea.height);
-          controlArea.y = remainingArea.getMaxY()-controlArea.height;
-          remainingArea.height -= controlArea.height;
+          controlArea.miny = controlArea.maxy -
+	    min((*subControl)->desiredHeight, remainingArea.getHeight());
+          remainingArea.maxy = controlArea.miny;
           break;
         case dockStyle_fill:
-          remainingArea.x = remainingArea.width;
-          remainingArea.width = 0;
+          remainingArea.minx = remainingArea.maxx;
           break;
         default:
           Fatal("Unexpected DockStyle: " << (*subControl)->getDockStyle());
       }
-      (*subControl)->x = remainingArea.x;
-      (*subControl)->y = remainingArea.y;
+      (*subControl)->x = remainingArea.getMinX();
+      (*subControl)->y = remainingArea.getMinY();
       (*subControl)->replaceRegion(region->newSubRegion(controlArea));
       (*subControl)->alignSubControls();
     }
