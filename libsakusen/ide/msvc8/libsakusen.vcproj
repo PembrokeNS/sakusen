@@ -300,6 +300,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\icompleteunit.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\icompleteunit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\iunitstatus.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libsakusen-global.cpp"
 				>
 			</File>
@@ -432,11 +444,31 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\rectangle-methods.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\rectangle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\rectangleregiondata.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\region-methods.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\region.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\regiondata.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\regiontype.h"
 				>
 			</File>
 			<File
@@ -480,6 +512,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\sphereregiondata.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\stringutils.cpp"
 				>
 			</File>
@@ -501,6 +537,18 @@
 			</File>
 			<File
 				RelativePath="..\..\unitid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unitstatus-methods.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unitstatus.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unitstatus.h"
 				>
 			</File>
 			<File
@@ -582,10 +630,6 @@
 		</Filter>
 		<File
 			RelativePath="ReadMe.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\..\unitstatus.cpp"
 			>
 		</File>
 	</Files>
