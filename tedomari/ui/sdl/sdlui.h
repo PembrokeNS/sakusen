@@ -71,6 +71,7 @@ class SDLUI : public UI {
         const Colour&
       );
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
+    void drawRect(double x, double y, double w, double h, const Colour& c);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const SDLLayout* layout);
 };

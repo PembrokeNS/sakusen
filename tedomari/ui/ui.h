@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 
 #include "stringutils.h"
+#include "ptrhash.h"
 
 #include "converter.h"
 #include "game/game.h"
@@ -14,6 +15,7 @@
 #include "ui/alert.h"
 #include "ui/alertdisplay.h"
 #include "ui/mapdisplay.h"
+#include "ui/function.h"
 
 namespace tedomari {
 namespace ui {
@@ -44,6 +46,19 @@ class UI : protected Control {
     bool expectingChars;
     bool commandEntry;
     bool quit;
+
+    sakusen::Point<double> mousePos;
+
+    /** \brief The last selection rectangle */
+    sakusen::Rectangle<sint32> lastRectangle;
+
+    /** \brief The units currently selected */
+    __gnu_cxx::hash_set<
+        sakusen::client::UpdatedUnit*,
+        sakusen::PtrHash<sakusen::client::UpdatedUnit>
+      > selection;
+
+    std::list<String> tokenise(const String&);
   protected:
     /** \brief Create and position initial controls
      *
@@ -79,11 +94,28 @@ class UI : protected Control {
      * Called by a subclass to indicate that a key has been released, passing
      * the key in question */
     void keyUp(Key);
+
+    /** \brief Indicate mouse movement
+     *
+     * Called by a subclass to indicate that the mouse cursor has moved,
+     * passing the position moved to */
+    inline void mouseMove(const sakusen::Point<double>& p) {
+      mousePos = p;
+      activeMapDisplay->mouseMove(
+          activeMapDisplay->getRegion()->globalToLocal(p)
+        );
+    }
   public:
-    /** \breif Repaint whole UI */
-    inline void paint() { Control::paint(); }
+    inline const __gnu_cxx::hash_set<
+        sakusen::client::UpdatedUnit*,
+        sakusen::PtrHash<sakusen::client::UpdatedUnit>
+      >& getSelection() {
+      return selection;
+    }
     /** \brief Determine whether the user has asked to quit */
     inline bool isQuit() const { return quit; }
+    /** \breif Repaint whole UI */
+    inline void paint() { Control::paint(); }
     /** \brief Set the window title to the given String */
     virtual void setTitle(const String& title) = 0;
     /** \brief Process all user input and redraw the screen as necessary */
@@ -93,7 +125,10 @@ class UI : protected Control {
      *
      * \warning Modifies its argument args */
     void executeCommand(const String& cmdName, std::list<String>& args);
-    void executeCommand(const String& cmd);
+    void executeCommand(std::list<String>& tokens);
+
+    void executeCommands(std::list<String>& tokens);
+    void executeCommands(const String& cmd);
     
     /** \brief Add an alert to the list */
     void alert(const Alert&);
@@ -102,6 +137,8 @@ class UI : protected Control {
 
     /** \brief Indicate quit request */
     inline void quitRequest() { quit = true; }
+
+    void switchMode(const String& modeName);
 
     void addAlias(
         const String& mode,
@@ -115,8 +152,13 @@ class UI : protected Control {
         const std::list<String>& cmd
       );
 
+    void addFunction(const String& mode, const Function& function);
+
     void moveMapRelative(sint32 dx, sint32 dy);
     void moveMapRelativeFrac(double dx, double dy);
+    void dragRegion(bool start);
+    void selectUnits(const String& selection);
+    void selectUnitsIn(const sakusen::Rectangle<sint32>&);
 };
 
 }}

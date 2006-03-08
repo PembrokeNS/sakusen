@@ -9,7 +9,10 @@
 namespace tedomari {
 namespace ui {
 
+class UI;
+
 class Control {
+  friend class UI;
   private:
     Control();
     Control(const Control&);

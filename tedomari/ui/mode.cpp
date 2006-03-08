@@ -75,7 +75,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
   }
 }
 
-void Mode::addBinding(const ModifiedKey& key, const String& cmd)
+void Mode::addBinding(const ModifiedKeyEvent& key, const std::list<String>& cmd)
 {
   if (bindings.count(key)) {
     Debug("replacing existing binding");
@@ -83,17 +83,47 @@ void Mode::addBinding(const ModifiedKey& key, const String& cmd)
   bindings[key] = cmd;
 }
 
-Mode Mode::getNormal(UI* ui)
+void Mode::addFunction(const Function& function, UI* ui)
+{
+  addCommand(function.getName(), Command(function), ui);
+}
+
+#define ADD_COMMAND(name) \
+  m.addCommand(#name, Command(builtinCommand_ ## name, #name), ui)
+
+Mode Mode::getCommon(UI* ui)
 {
   Mode m;
 
-  m.addCommand("alias",      Command(builtinCommand_alias), ui);
-  m.addCommand("bind",       Command(builtinCommand_bind), ui);
-  m.addCommand("alert",      Command(builtinCommand_alert), ui);
-  m.addCommand("prompt",     Command(builtinCommand_prompt), ui);
-  m.addCommand("quit",       Command(builtinCommand_quit), ui);
-  m.addCommand("movemaprel", Command(builtinCommand_moveMapRelative), ui);
+  ADD_COMMAND(alias);
+  ADD_COMMAND(bind);
+  ADD_COMMAND(func);
+  ADD_COMMAND(switchmode);
+  ADD_COMMAND(alert);
+  ADD_COMMAND(prompt);
+  ADD_COMMAND(quit);
+  ADD_COMMAND(movemaprelfrac);
+  ADD_COMMAND(startdragregion);
+  ADD_COMMAND(stopdragregion);
 
   return m;
 }
+
+Mode Mode::getNormal(UI* ui)
+{
+  Mode m(getCommon(ui));
+
+  return m;
+}
+
+Mode Mode::getUnit(UI* ui)
+{
+  Mode m(getCommon(ui));
+
+  ADD_COMMAND(select);
+
+  return m;
+}
+
+#undef ADD_COMMAND
 

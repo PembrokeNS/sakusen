@@ -2,13 +2,16 @@
 
 #include "stringutils.h"
 #include "ui/mapdisplay.h"
+#include "ui/modifiedkeyevent.h"
 
 #include <fstream>
+#include <pcrecpp.h>
 
 using namespace std;
 using namespace __gnu_cxx;
 
 using namespace sakusen;
+using namespace sakusen::client;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 
@@ -19,14 +22,63 @@ UI::UI(Region* region, ifstream& uiConf) :
   quit(false)
 {
   modes["normal"] = Mode::getNormal(this);
+  modes["unit"] =   Mode::getUnit(this);
   mode = &modes["normal"];
 
+  list<String> tokens;
+  uint16 depth = 0;
+  
   /* Execute all the commands from the configuration stream */
   while (uiConf.is_open() && !uiConf.eof()) {
     String line;
     getline(uiConf, line);
-    executeCommand(converter.convertNativeToUTF8(line));
+    list<String> newTokens(tokenise(converter.convertNativeToUTF8(line)));
+    for (list<String>::iterator token = newTokens.begin();
+        token != newTokens.end(); ++token) {
+      if (*token == "{") {
+        ++depth;
+      } else if (*token == "}") {
+        if (0 == depth) {
+          alert(Alert("Unexpected '}' in configuration file"));
+        } else {
+          --depth;
+        }
+      }
+    }
+    tokens.splice(tokens.end(), newTokens);
+    if (depth == 0) {
+      executeCommands(tokens);
+      tokens.clear();
+    }
   }
+
+  if (0 != depth) {
+    alert(Alert("Expected '}' at end of configuration file"));
+  }
+}
+
+list<String> UI::tokenise(const String& s)
+{
+  pcrecpp::StringPiece piece(s);
+  pcrecpp::RE re(
+      "\\s*([+-]?[a-zA-Z_]+|-?[0-9\\.]+|'[^']*'|{|}|;)", pcrecpp::UTF8()
+    );
+  list<String> tokens;
+  String token;
+  
+  while(re.Consume(&piece, &token)) {
+    assert(!token.empty());
+    /*QDebug("adding token '" << token << "'");*/
+    tokens.push_back(token);
+  }
+
+  pcrecpp::RE("\\s+").Consume(&piece);
+
+  if (!piece.empty()) {
+    alert(Alert(String("Unexpected character '") + piece[0] + "' in command"));
+  }
+
+  return tokens;
 }
 
 void UI::initializeControls(Game* game)
@@ -37,7 +89,8 @@ void UI::initializeControls(Game* game)
       0, 0, dockStyle_bottom, newRegion(0, getHeight(), getWidth(), 0)
     );
   activeMapDisplay = new MapDisplay(
-      0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game
+      0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game,
+      this
     );
   addSubControl(commandEntryBox);
   addSubControl(activeMapDisplay);
@@ -76,18 +129,32 @@ void UI::keyDown(Key k, uint16 c)
   /* TODO: process mappings */
 
   /* process bindings */
-  hash_map<ModifiedKey, String, ModifiedKeyHash>::const_iterator binding =
-    mode->getBindings().find(ModifiedKey(k, currentModifiers));
+  hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
+    const_iterator binding =
+    mode->getBindings().find(ModifiedKeyEvent(k, currentModifiers, true));
   if (binding != mode->getBindings().end()) {
-    executeCommand(binding->second);
+    list<String> tokens(binding->second);
+    executeCommands(tokens);
   } else {
-    Debug("Unbound key: " << k);
+    Debug("Unbound key: +" << getName(k));
   }
 }
 
-void UI::keyUp(Key)
+void UI::keyUp(Key k)
 {
-  /* TODO */
+  /* TODO: process modifications */
+  /* TODO: process mappings */
+
+  /* process bindings */
+  hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
+    const_iterator binding =
+    mode->getBindings().find(ModifiedKeyEvent(k, currentModifiers, false));
+  if (binding != mode->getBindings().end()) {
+    list<String> tokens(binding->second);
+    executeCommands(tokens);
+  } else {
+    Debug("Unbound key: -" << getName(k));
+  }
 }
 
 void UI::update()
@@ -98,6 +165,10 @@ void UI::update()
 
 void UI::executeCommand(const String& cmdName, std::list<String>& args)
 {
+  QDebug(
+      "executing '" << cmdName << "' with args '" <<
+      stringUtils_join(args, "' '") << "'"
+    );
   hash_map<String, Command, StringHash>::const_iterator cmd =
     mode->getCommands().find(cmdName);
   
@@ -108,30 +179,101 @@ void UI::executeCommand(const String& cmdName, std::list<String>& args)
   }
 }
 
-void UI::executeCommand(const String& cmdString)
+void UI::executeCommand(std::list<String>& tokens)
 {
-  Debug("executing command '" << cmdString << "'");
-  /* TODO: smarter parsing */
-  list<String> args = stringUtils_split(cmdString, " \n\t\r");
-  if (args.empty()) {
+  for (list<String>::iterator token = tokens.begin(); token != tokens.end();
+      ++token) {
+    assert(!token->empty());
+    /* Strip quotes from token */
+    if ((*token)[0] == '\'') {
+      token->erase(token->begin());
+      assert(!token->empty());
+      assert(*--token->end() == '\'');
+      token->erase(--token->end());
+    }
+  }
+    
+  String cmdName = tokens.front();
+  tokens.pop_front();
+  executeCommand(cmdName, tokens);
+}
+
+void UI::executeCommands(list<String>& tokens)
+{
+  /* We search through the list for special tokens (';', '{', '}') to help us
+   * split the list into commands */
+  uint16 depth = 0;
+  list<String>::iterator stop = tokens.begin();
+
+  while (stop != tokens.end()) {
+    if (*stop == "{") {
+      ++depth;
+      ++stop;
+      continue;
+    }
+    if (*stop == "}") {
+      if (depth > 0) {
+        --depth;
+        ++stop;
+        continue;
+      } else {
+        alert(Alert("Too many close braces"));
+        return;
+      }
+    }
+    if (*stop == ";") {
+      if (stop == tokens.begin()) {
+        ++stop;
+        continue;
+      }
+      if (depth == 0) {
+        list<String> cmdTokens;
+        cmdTokens.splice(cmdTokens.end(), tokens, tokens.begin(), stop);
+        executeCommand(cmdTokens);
+        ++stop;
+        tokens.pop_front();
+        continue;
+      }
+    }
+    ++stop;
+  }
+
+  if (0 != depth) {
+    alert(Alert("Expected '}' at end of command"));
     return;
   }
-  String cmdName = args.front();
-  args.pop_front();
-  executeCommand(cmdName, args);
+
+  if (!tokens.empty()) {
+    executeCommand(tokens);
+  }
+}
+
+void UI::executeCommands(const String& cmdString)
+{
+  /*Debug("executing command '" << cmdString << "'");*/
+  /* TODO: smarter parsing */
+  list<String> tokens = tokenise(cmdString);
+  if (tokens.empty()) {
+    return;
+  }
+  executeCommands(tokens);
 }
 
 void UI::alert(const Alert& a)
 {
-  alertDisplay->add(a);
-  /* FIXME: realigning all subcontrols is overkill */
-  alignSubControls();
-  paint();
+  if (alertDisplay == NULL) {
+    QDebug("Alert: " + a.getMessage());
+  } else {
+    alertDisplay->add(a);
+    /* FIXME: realigning all subcontrols is overkill */
+    alignSubControls();
+    paint();
+  }
 }
 
 void UI::setCommandEntry(bool on)
 {
-  if (on == commandEntry) {
+  if (on == commandEntry || commandEntryBox == NULL) {
     return;
   }
 
@@ -145,6 +287,16 @@ void UI::setCommandEntry(bool on)
   }
   alignSubControls();
   paint();
+}
+
+void UI::switchMode(const String& modeName)
+{
+  hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(modeName);
+  if (modeIt == modes.end()) {
+    alert(Alert("No such mode '" + modeName + "'"));
+    return;
+  }
+  mode = &modeIt->second;
 }
 
 void UI::addAlias(
@@ -175,9 +327,9 @@ void UI::addBinding(
     const std::list<String>& cmd
   )
 {
-  ModifiedKey key(keyName);
+  ModifiedKeyEvent keyEvent(keyName);
 
-  if (key.getKey() == K_Unknown) {
+  if (keyEvent.getModifiedKey().getKey() == K_Unknown) {
     alert(Alert("Unknown modified key name '" + keyName + "'"));
     return;
   }
@@ -186,7 +338,7 @@ void UI::addBinding(
     /* Special case: add to all modes */
     for (hash_map<String, Mode, StringHash>::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
-      modeIt->second.addBinding(key, stringUtils_join(cmd, " "));
+      modeIt->second.addBinding(keyEvent, cmd);
     }
   } else {
     hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(mode);
@@ -194,7 +346,25 @@ void UI::addBinding(
       Debug("no such mode '" << mode << "'");
       return;
     }
-    modeIt->second.addBinding(key, stringUtils_join(cmd, " "));
+    modeIt->second.addBinding(keyEvent, cmd);
+  }
+}
+
+void UI::addFunction(const String& mode, const Function& function)
+{
+  if (mode == "all") {
+    /* Special case: add to all modes */
+    for (hash_map<String, Mode, StringHash>::iterator modeIt = modes.begin();
+        modeIt != modes.end(); ++modeIt) {
+      modeIt->second.addFunction(function, this);
+    }
+  } else {
+    hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(mode);
+    if (modeIt == modes.end()) {
+      Debug("no such mode '" << mode << "'");
+      return;
+    }
+    modeIt->second.addFunction(function, this);
   }
 }
 
@@ -215,5 +385,33 @@ void UI::moveMapRelativeFrac(double dx, double dy)
       sint32(dx*activeMapDisplay->getDexWidth()),
       sint32(dy*activeMapDisplay->getDexHeight())
     );
+}
+
+void UI::dragRegion(bool start)
+{
+  if (start) {
+    activeMapDisplay->startDrag();
+  } else {
+    lastRectangle = activeMapDisplay->stopDrag();
+  }
+}
+
+void UI::selectUnits(const String& selection)
+{
+  /* TODO: this string should be interpretable in more ways */
+  if (selection == "lastrectangle") {
+    selectUnitsIn(lastRectangle);
+    return;
+  }
+
+  alert(Alert("Unrecognized selection '" + selection + "'"));
+}
+
+void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
+{
+  list<UpdatedUnit*> units(sakusen::client::world->getUnitsIntersecting(r));
+  selection.clear();
+  selection.insert(units.begin(), units.end());
+  paint();
 }
 

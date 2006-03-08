@@ -50,8 +50,21 @@ void Control::replaceRegion(Region* newRegion)
   }
 }
 
-/** \bug If I knew what this function were supposed to do, I could
- * check, but I suspect it is wrong. DH */
+/** \brief Aligns the subcontrols of this control according to their deisred
+ * widths, heights, etc.
+ *
+ * Each layer of subcontrols is one element of the subControls list, and is
+ * itself a list of controls.  Each layer is allocated the entire area of this
+ * control to distribute its controls amongst.  Space is allocated on a
+ * first-com-first-serverd basis, working through the list, according to each
+ * subcontrol's properties.  The pertinent properties are the DockStyle, which
+ * describes which edge of the control the subcontrol is attached to (or, in
+ * the case of dockStyle_fill, that the control wishes to take all the
+ * remaining are) and desired width and height.
+ *
+ * The controls is the later layers will overlap the
+ * controls in the earlier layers so they should either not cover the whole
+ * area or be transparent if the earlier layers are to be at all visible. */
 void Control::alignSubControls()
 {
   for (list< list<Control*> >::iterator layer = subControls.begin();
@@ -69,7 +82,7 @@ void Control::alignSubControls()
           break;
         case dockStyle_bottom:
           controlArea.miny = controlArea.maxy -
-	    min((*subControl)->desiredHeight, remainingArea.getHeight());
+            min((*subControl)->desiredHeight, remainingArea.getHeight());
           remainingArea.maxy = controlArea.miny;
           break;
         case dockStyle_fill:

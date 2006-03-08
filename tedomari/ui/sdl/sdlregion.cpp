@@ -48,6 +48,17 @@ void SDLRegion::stroke(
   ui->stroke(x+x1, y+y1, x+x2, y+y2, c);
 }
 
+void SDLRegion::drawRect(
+    double xoff,
+    double yoff,
+    double w,
+    double h,
+    const Colour& c
+  )
+{
+  ui->drawRect(x+xoff, y+yoff, w, h, c);
+}
+
 void SDLRegion::drawText(
     double xoff,
     double yoff,

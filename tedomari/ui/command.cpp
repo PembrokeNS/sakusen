@@ -17,7 +17,7 @@ void Command::execute(std::list<String>& args, UI* ui) const
       ui->executeCommand(fullName, args);
       break;
     case commandType_builtin:
-      executeBuiltinCommand(builtin, args, ui);
+      executeBuiltinCommand(builtin, name, args, ui);
       break;
     case commandType_alias:
       {
@@ -27,6 +27,16 @@ void Command::execute(std::list<String>& args, UI* ui) const
         extraArgs.splice(extraArgs.end(), args);
         ui->executeCommand(cmdName, extraArgs);
       }
+      break;
+    case commandType_function:
+      if (args.size() != function.getNumArgs()) {
+        ui->alert(Alert(
+              "Wrong number of arguments to function '" + function.getName() +
+              "'"
+            ));
+        break;
+      }
+      function.execute(args, ui);
       break;
     default:
       Fatal("Unexpected CommandType: " << type);

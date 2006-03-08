@@ -244,6 +244,10 @@ void SDLUI::update()
         quitRequest();
         break;
       case SDL_MOUSEMOTION:
+        {
+          SDL_MouseMotionEvent mouse = event.motion;
+          mouseMove(sakusen::Point<double>(mouse.x, mouse.y, 0));
+        }
         break;
       default:
         Debug("Unexpected SDL_Event type: " << sint32(event.type));
@@ -320,13 +324,18 @@ void SDLUI::fillPolygon(
 void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
 {
   SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
-  /* TODO: check if the surface really needs locking - some don't */
-  SDL_LockSurface(sdlBuffer);
   cairoSetSource(c);
   cairo_move_to(cairoContext, x1, y1);
   cairo_line_to(cairoContext, x2, y2);
   cairo_stroke(cairoContext);
-  SDL_UnlockSurface(sdlBuffer);
+}
+
+void SDLUI::drawRect(double x, double y, double w, double h, const Colour& c)
+{
+  SDLDebug("x=" << x << ", y=" << y << ", w=" << w << ", h=" << h);
+  cairoSetSource(c);
+  cairo_rectangle(cairoContext, x, y, w, h);
+  cairo_stroke(cairoContext);
 }
 
 void SDLUI::drawText(double x, double y, const String& text, const Colour& c)

@@ -38,6 +38,16 @@ class SDLRegion : public Region {
       assert(yoff+h <= getHeight());
       return new SDLRegion(ui, x+xoff, y+yoff, w, h);
     }
+    inline sakusen::Point<double> globalToLocal(
+        const sakusen::Point<double>& p
+      ) {
+      return p - sakusen::Point<double>(x, y, 0);
+    }
+    inline sakusen::Point<double> localToGlobal(
+        const sakusen::Point<double>& p
+      ) {
+      return p + sakusen::Point<double>(x, y, 0);
+    }
     inline Layout* newLayout() const { return new SDLLayout(ui); }
     void setClip();
     void unsetClip();
@@ -48,6 +58,7 @@ class SDLRegion : public Region {
         const Colour&
       );
     void stroke(double x1, double y1, double x2, double y2, const Colour&);
+    void drawRect(double x, double y, double w, double h, const Colour& c);
     void drawText(double x, double y, const String& text, const Colour&);
     void drawText(double x, double y, const Layout* layout);
 };

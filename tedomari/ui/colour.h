@@ -47,6 +47,8 @@ class Colour {
     static const Colour magenta;
     static const Colour yellow;
     static const Colour white;
+
+    static Colour grey(double g) { return Colour(g, g, g); }
 };
 
 }}

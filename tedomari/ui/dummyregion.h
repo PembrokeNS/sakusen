@@ -15,6 +15,12 @@ class DummyRegion : public Region {
       const {
       return new DummyRegion(width, height);
     }
+    sakusen::Point<double> globalToLocal(const sakusen::Point<double>&) {
+      Fatal("not implemented");
+    }
+    sakusen::Point<double> localToGlobal(const sakusen::Point<double>&) {
+      Fatal("not implemented");
+    }
     Layout* newLayout() const { Fatal("not implemented"); }
     void setClip() {}
     void unsetClip() {}
@@ -25,6 +31,7 @@ class DummyRegion : public Region {
         const Colour&
       ) {}
     void stroke(double, double, double, double, const Colour&) {}
+    void drawRect(double, double, double, double, const Colour&) {}
     void drawText(double, double, const String&, const Colour&) {}
     void drawText(double, double, const Layout*) {}
 };

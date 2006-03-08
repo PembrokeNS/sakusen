@@ -33,7 +33,7 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
         break;
       case '\n':
       case '\r':
-        ui->executeCommand(text);
+        ui->executeCommands(text);
         text = "";
         ui->setCommandEntry(false);
         return;

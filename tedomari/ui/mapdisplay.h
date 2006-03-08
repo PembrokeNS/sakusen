@@ -8,6 +8,9 @@
 namespace tedomari {
 namespace ui {
 
+class UI;
+
+/* TODO: rethink this to take into account bizarre map topologies */
 class MapDisplay : public Control {
   private:
     MapDisplay();
@@ -18,16 +21,21 @@ class MapDisplay : public Control {
         uint16 y,
         DockStyle ds,
         Region* r,
-        tedomari::game::Game* g
+        tedomari::game::Game* g,
+        UI* u
       ) :
-      Control(x, y, ds, r), game(g), posOfDisplayZero(),
+      Control(x, y, ds, r), game(g), ui(u), posOfDisplayZero(),
       dexPerPixelX(1), dexPerPixelY(1)
     {}
   private:
     tedomari::game::Game* game; /* Not owned by this */
+    UI* ui; /* Not owned by this */
     sakusen::Point<sint32> posOfDisplayZero;
     double dexPerPixelX;
     double dexPerPixelY;
+    sakusen::Point<double> mousePos;
+    bool dragging;
+    sakusen::Point<sint32> dragStart;
 
     /* Methods to convert between coordinate systems */
     inline sakusen::Rectangle<double> dexToPixel(
@@ -41,14 +49,21 @@ class MapDisplay : public Control {
     inline sakusen::Point<double> dexToPixel(
         const sakusen::Point<sint32>&
       ) const;
+    
+    inline sakusen::Point<sint32> pixelToDex(
+        const sakusen::Point<double>&
+      ) const;
   protected:
     void paint();
   public:
     inline double getDexWidth() const { return dexPerPixelX*getWidth(); }
     inline double getDexHeight() const { return dexPerPixelY*getHeight(); }
     void update();
+    void mouseMove(const sakusen::Point<double>&);
     void translate(const sakusen::Point<sint32>& d);
     void translate(sint32 dx, sint32 dy);
+    void startDrag();
+    sakusen::Rectangle<sint32> stopDrag();
 };
 
 inline sakusen::Rectangle<double> MapDisplay::dexToPixel(
@@ -87,6 +102,16 @@ inline sakusen::Point<double> MapDisplay::dexToPixel(
   return sakusen::Point<double>(
       (p.x-posOfDisplayZero.x)/dexPerPixelX,
       (posOfDisplayZero.y-p.y)/dexPerPixelY,
+      0
+    );
+}
+
+inline sakusen::Point<sint32> MapDisplay::pixelToDex(
+    const sakusen::Point<double>& p
+  ) const {
+  return sakusen::Point<sint32>(
+      sint32(round(p.x*dexPerPixelX))+posOfDisplayZero.x,
+      posOfDisplayZero.y-sint32(round(p.y*dexPerPixelY)),
       0
     );
 }

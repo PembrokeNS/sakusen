@@ -37,6 +37,12 @@ class Region {
     inline Region* newSubRegion(const sakusen::Rectangle<uint16>& area) const {
       return newSubRegion(area.getMinX(), area.getMinY(), area.getWidth(), area.getHeight());
     }
+    virtual sakusen::Point<double> globalToLocal(
+        const sakusen::Point<double>&
+      ) = 0;
+    virtual sakusen::Point<double> localToGlobal(
+        const sakusen::Point<double>&
+      ) = 0;
     virtual Layout* newLayout() const = 0;
 
     /* Drawing functions */
@@ -67,6 +73,16 @@ class Region {
         double y2,
         const Colour&
       ) = 0;
+    virtual void drawRect(
+        double x,
+        double y,
+        double w,
+        double h,
+        const Colour& c
+      ) = 0;
+    inline void drawRect(const sakusen::Rectangle<double>& r, const Colour& c) {
+      drawRect(r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), c);
+    }
     virtual void drawText(
         double x,
         double y,
