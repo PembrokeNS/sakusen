@@ -4,7 +4,8 @@
 namespace sakusen {
 
 enum RegionType {
-  regionType_sphere
+  regionType_sphere,
+  regionType_rectangle
 };
 
 }

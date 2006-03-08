@@ -2,6 +2,8 @@
 #define UI__RECTANGLE_H
 
 #include "point.h"
+#include "iarchive.h"
+#include "oarchive.h"
 
 /** \file
  * A ::Rectangle is the region enclosed by two points in the plane. The
@@ -34,6 +36,9 @@ struct Rectangle {
    */
   Rectangle(T x1, T y1, T x2, T y2) :
     minx(x1), miny(y1), maxx(x2), maxy(y2) {}
+  Rectangle(const Point<T>& c1, const Point<T>& c2) :
+    minx(std::min(c1.x, c2.x)), miny(std::min(c1.y, c2.y)),
+    maxx(std::max(c1.x, c2.x)), maxy(std::max(c1.y, c2.y)) {}
 
   inline T getWidth() const { return maxx - minx; }
   inline T getHeight() const { return maxy - miny; }
@@ -44,14 +49,23 @@ struct Rectangle {
   inline bool contains(const Point<T>& p) const {
     return p.x >= minx && p.x < getMaxX() && p.y >= miny && p.y < getMaxY();
   }
-  /** Originally wasn't marked inline but functions defined in the class
-   * body in C++ get to be inline by default.
-   */
   inline bool intersects(const Rectangle<T> r) const {
     return r.minx < getMaxX() && r.getMaxX() > minx &&
       r.miny < getMaxY() && r.getMaxY() > miny;
   }
   bool fastIntersects(const ICompleteUnit*) const;
+
+  void store(OArchive& out) const {
+    out << minx << miny << maxx << maxy;
+  }
+  static Rectangle<T> load(IArchive& in) {
+    T minx;
+    T miny;
+    T maxx;
+    T maxy;
+    in >> minx >> miny >> maxx >> maxy;
+    return Rectangle<T>(minx, miny, maxx, maxy);
+  }
 };
 
 }

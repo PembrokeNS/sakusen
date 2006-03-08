@@ -3,17 +3,18 @@
 
 #include "regiondata.h"
 #include "world.h"
+#include "rectangle.h"
 
 namespace sakusen {
 
-/** \brief Describes a region which is a rectangle in x-y and infinite in teh
+/** \brief Describes a region which is a rectangle in x-y and infinite in the
  * z-direction. */
 template<typename T>
 class RectangleRegionData : public RegionData<T> {
   public:
-    RectangleRegionData(const Rectangle& r) : rectangle(r) {}
+    RectangleRegionData(const Rectangle<T>& r) : rectangle(r) {}
   private:
-    Rectangle rectangle;
+    Rectangle<T> rectangle;
   public:
     inline bool contains(const Point<T>& point) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
@@ -36,22 +37,21 @@ inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
     return p;
   }
   Point<T> t(p);
-  t.x = std::min(std::max(t.x, rectangle.x), rectangle.getMaxX());
-  t.y = std::min(std::max(t.y, rectangle.y), rectangle.getMaxY());
+  t.x = std::min(std::max(t.x, rectangle.getMinX()), rectangle.getMaxX());
+  t.y = std::min(std::max(t.y, rectangle.getMinY()), rectangle.getMaxY());
   return t;
 }
 
 template<typename T>
 void RectangleRegionData<T>::store(OArchive& archive) const
 {
-  archive << rectangle;
+  rectangle.store(archive);
 }
 
 template<typename T>
-SphereRegionData<T>* SphereRegionData<T>::loadNew(IArchive& archive)
+RectangleRegionData<T>* RectangleRegionData<T>::loadNew(IArchive& archive)
 {
-  Rectangle rectangle;
-  archive >> rectangle;
+  Rectangle<T> rectangle = Rectangle<T>::load(archive);
   return new RectangleRegionData<T>(rectangle);
 }
 

@@ -93,16 +93,26 @@
 extern LIBSAKUSEN_API std::ostream& debugStream;
 extern LIBSAKUSEN_API std::ostream& errorStream;
 
-/* Define macros for debug and error output */
+/* Define macros for debug and error output.  They're inside loops to absorb
+ * the semicolon that should be used after calling them. */
 
 #define Debug(msg) \
-  { debugStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
-    ": " << msg << std::endl; }
+  do { \
+    debugStream << __FILE__ << ":" << __LINE__ << ":" << \
+      __PRETTY_FUNCTION__ <<  ": " << msg << std::endl; \
+  } while(false)
+
+#define QDebug(msg) \
+  do { \
+    debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << std::endl; \
+  } while(false)
 
 #define Fatal(msg) \
-  { errorStream << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << \
-    ": fatal error: " << msg << std::endl; \
-  abort(); }
+  do { \
+    errorStream << __FILE__ << ":" << __LINE__ << ":" << \
+      __PRETTY_FUNCTION__ <<  ": fatal error: " << msg << std::endl; \
+    abort(); \
+  } while(false)
 
 #include <cmath>
 

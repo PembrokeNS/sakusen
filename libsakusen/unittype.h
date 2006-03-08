@@ -2,13 +2,8 @@
 #define UNITTYPE_H
 
 #include "libsakusen-global.h"
-#include "point.h"
-#include "visibility.h"
 #include "weapon.h"
-#include "iarchive.h"
-#include "oarchive.h"
-#include "hitpoints.h"
-#include "region.h"
+#include "unittypedata.h"
 
 #include <list>
 
@@ -26,16 +21,9 @@ class LIBSAKUSEN_API UnitType {
     /** Constructs from all required data */
     UnitType(
       String internalName,
-      HitPoints maxHitPoints,
+      const UnitTypeData& dynamicData,
       uint32 energyCost,
       uint32 metalCost,
-      uint8 mass,
-      Point<uint32> size,
-      Region<sint16> possibleAccelerations,
-      Region<sint16> possibleVelocities,
-      Region<sint16> possibleAngularVelocities,
-      const Visibility& visibility,
-      const Sensors& vision,
       bool fixed,
       bool ground,
       bool surface,
@@ -56,16 +44,9 @@ class LIBSAKUSEN_API UnitType {
      */
     UnitType(
       String internalName,
-      HitPoints maxHitPoints,
+      const UnitTypeData& dynamicData,
       uint32 energyCost,
       uint32 metalCost,
-      uint8 mass,
-      Point<uint32> size,
-      Region<sint16> possibleAccelerations,
-      Region<sint16> possibleVelocities,
-      Region<sint16> possibleAngularVelocities,
-      const Visibility& visibility,
-      const Sensors& vision,
       bool fixed,
       bool ground,
       bool surface,
@@ -77,17 +58,9 @@ class LIBSAKUSEN_API UnitType {
     virtual ~UnitType() {}
   private:
     String internalName;
-    HitPoints maxHitPoints;
+    UnitTypeData dynamicData;
     uint32 energyCost;
     uint32 metalCost;
-    /* armour */
-    uint8 mass;
-    Point<uint32> size;
-    Region<sint16> possibleAccelerations;
-    Region<sint16> possibleVelocities;
-    Region<sint16> possibleAngularVelocities;
-    Visibility visibility;
-    Sensors vision;
     bool fixed:1; /* true for buildings, mines */
     bool ground:1; /* true for buildings, ground units, planes that can land
                       without a runway, hovercraft */
@@ -104,22 +77,9 @@ class LIBSAKUSEN_API UnitType {
 
     /* accessors */
     inline const String& getInternalName() const { return internalName; }
-    inline const HitPoints& getMaxHitPoints() const { return maxHitPoints; }
+    inline const UnitTypeData& getDynamicData() const { return dynamicData; }
     inline const uint32& getEnergyCost() const { return energyCost; }
     inline const uint32& getMetalCost() const { return metalCost; }
-    inline const uint8& getMass() const { return mass; }
-    inline const Point<uint32>& getSize() const { return size; }
-    inline const Region<sint16>& getPossibleAccelerations() const {
-      return possibleAccelerations;
-    }
-    inline const Region<sint16>& getPossibleVelocities() const {
-      return possibleVelocities;
-    }
-    inline const Region<sint16>& getPossibleAngularVelocities() const {
-      return possibleAngularVelocities;
-    }
-    inline const Visibility& getVisibility() const { return visibility; }
-    inline const Sensors& getVision() const { return vision; }
     inline const std::list<WeaponTypeID> getWeapons() const { return weapons; }
     inline UnitTypeID getCorpseUnitType() const { return corpseUnitType; }
     

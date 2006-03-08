@@ -5,7 +5,11 @@ namespace client {
 
 void UpdatedUnit::incrementState()
 {
-  status.position += status.velocity;
+  if (updated) {
+    updated = false;
+  } else {
+    status.position += status.velocity;
+  }
 }
 
 }}

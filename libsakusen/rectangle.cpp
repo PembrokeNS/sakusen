@@ -1,6 +1,3 @@
-#ifndef RECTANGLE_METHODS_H
-#define RECTANGLE_METHODS_H
-
 #include "rectangle.h"
 #include "icompleteunit.h"
 
@@ -15,13 +12,11 @@ namespace sakusen {
 template<>
 bool Rectangle<sint32>::fastIntersects(const ICompleteUnit* unit) const
 {
-  if (contains(unit->getStatus()->getPosition())) {
+  if (contains(unit->getIStatus()->getPosition())) {
     return true;
   }
   return intersects(unit->getBoundingRectangle());
 }
 
 }
-
-#endif // RECTANGLE_METHODS_H
 

@@ -71,36 +71,16 @@ class LIBSAKUSEN_API LayeredUnit : public ICompleteUnit {
       /**< Accept a new order from the queue */
   public:
     /* accessors */
+    inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
-    inline const IUnitStatus* getStatus(void) const { return unit; }
-    inline IUnitStatus* getStatus(void) { return unit; }
     inline void setId(uint32 id) { unitId = id; }
+    inline const IUnitStatus* getIStatus(void) const { return unit; }
+    /*inline IUnitStatus* getStatus(void) { return unit; }*/
+    inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
     
     void setPosition(const Point<sint32>& pos);
     bool setRadar(bool active);
     bool setSonar(bool active);
-
-    inline PlayerID getOwner(void) const {return owner;}
-    inline HitPoints getMaxHitPoints(void) const {
-      return topLayer->getMaxHitPoints();
-    }
-    inline uint8 getMass(void) const {return topLayer->getMass();}
-    inline const Point<uint32>& getSize(void) const {
-      return topLayer->getSize();
-    }
-    inline const Region<sint16>& getPossibleAccelerations(void) const {
-      return topLayer->getPossibleAccelerations();
-    }
-    inline const Region<sint16>& getPossibleVelocities(void) const {
-      return topLayer->getPossibleVelocities();
-    }
-    inline const Region<sint16>& getPossibleAngularVelocities(void) const {
-      return topLayer->getPossibleAngularVelocities();
-    }
-    inline const Visibility& getVisibility(void) const {
-      return topLayer->getVisibility();
-    }
-    inline const Sensors& getVision(void) const {return topLayer->getVision();}
     
     /* game mechanics methods */
     void setPhysics(

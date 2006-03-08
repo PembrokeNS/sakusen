@@ -171,7 +171,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case linearTargetType_none:
       break;
     case linearTargetType_velocity:
-      if (getPossibleVelocities().contains(unit->targetVelocity)) {
+      if (topLayer->getPossibleVelocities().contains(unit->targetVelocity)) {
         unit->velocity = unit->targetVelocity;
         /* TODO: inform clients */
       } else {
@@ -184,7 +184,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
             unit->targetPosition, unit->position);
         Point<sint32> desiredVelocity;
         desiredVelocity =
-          getPossibleVelocities().truncateToFit(desiredDirection);
+          topLayer->getPossibleVelocities().truncateToFit(desiredDirection);
         if (unit->velocity == desiredVelocity) {
           break;
         }
@@ -252,7 +252,7 @@ void LayeredUnit::enqueueOrder(
 }
 
 bool LayeredUnit::setRadar(bool active) {
-  if (getVision().radarActive.capable) {
+  if (topLayer->getVision().radarActive.capable) {
     unit->radarIsActive = active;
     /* TODO: inform clients */
     return active;
@@ -260,7 +260,7 @@ bool LayeredUnit::setRadar(bool active) {
 }
 
 bool LayeredUnit::setSonar(bool active) {
-  if (getVision().sonarActive.capable) {
+  if (topLayer->getVision().sonarActive.capable) {
     unit->sonarIsActive = active;
     /* TODO: inform clients */
     return active;

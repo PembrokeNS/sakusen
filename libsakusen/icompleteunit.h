@@ -23,18 +23,9 @@ class LIBSAKUSEN_API ICompleteUnit {
   public:
     /* accessors */
     virtual uint32 getId(void) const = 0;
-    virtual const IUnitStatus* getStatus(void) const = 0;
-    virtual IUnitStatus* getStatus(void) = 0;
+    virtual const IUnitStatus* getIStatus(void) const = 0;
+    virtual const IUnitTypeData* getITypeData(void) const = 0;
     
-    virtual HitPoints getMaxHitPoints(void) const = 0;
-    virtual uint8 getMass(void) const = 0;
-    virtual const Point<uint32>& getSize(void) const = 0;
-    virtual const Region<sint16>& getPossibleAccelerations(void) const = 0;
-    virtual const Region<sint16>& getPossibleVelocities(void) const = 0;
-    virtual const Region<sint16>& getPossibleAngularVelocities(void) const = 0;
-    virtual const Visibility& getVisibility(void) const = 0;
-    virtual const Sensors& getVision(void) const = 0;
-
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
 };
 

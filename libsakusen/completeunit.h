@@ -17,14 +17,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
     CompleteUnit(
         uint32 uI,
         const UnitStatus& st,
-        HitPoints mHP,
-        uint8 m,
-        const Point<uint32>& s,
-        const Region<sint16>& pA,
-        const Region<sint16>& pV,
-        const Region<sint16>& pAV,
-        const Visibility& visib,
-        const Sensors& visio
+        const UnitTypeData& tD
       );
   public:
     CompleteUnit(const ICompleteUnit* copy);
@@ -34,34 +27,14 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
     UnitStatus status;
     
     /* modifiable stuff from UnitType */
-    HitPoints maxHitPoints;
-    uint8 mass;
-    Point<uint32> size;
-    Region<sint16> possibleAccelerations;
-    Region<sint16> possibleVelocities;
-    Region<sint16> possibleAngularVelocities;
-    Visibility visibility;
-    Sensors vision;
-
+    UnitTypeData typeData;
   public:
     /* accessors */
     inline uint32 getId(void) const {return unitId;}
-    inline IUnitStatus* getStatus(void) { return &status; }
-    inline const IUnitStatus* getStatus(void) const { return &status; }
-    inline HitPoints getMaxHitPoints(void) const { return maxHitPoints; }
-    inline uint8 getMass(void) const {return mass;}
-    inline const Point<uint32>& getSize(void) const {return size;}
-    inline const Region<sint16>& getPossibleAccelerations() const {
-      return possibleAccelerations;
-    }
-    inline const Region<sint16>& getPossibleVelocities() const {
-      return possibleVelocities;
-    }
-    inline const Region<sint16>& getPossibleAngularVelocities() const {
-      return possibleAngularVelocities;
-    }
-    inline const Visibility& getVisibility(void) const {return visibility;}
-    inline const Sensors& getVision(void) const {return vision;}
+    inline const UnitStatus& getStatus(void) const { return status; }
+    inline const IUnitStatus* getIStatus(void) const { return &status; }
+    inline const UnitTypeData& getTypeData(void) const { return typeData; }
+    inline const IUnitTypeData* getITypeData(void) const { return &typeData; }
 
     typedef Universe loadArgument;
     void store(OArchive&) const;

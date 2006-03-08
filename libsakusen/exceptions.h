@@ -62,12 +62,12 @@ class NoWorldDeserializationExn :
     virtual ~NoWorldDeserializationExn() throw() {}
 };
 
-template<int size>
 class WrongMagicDeserializationExn :
     public DeserializationExn {
   public:
     WrongMagicDeserializationExn(
-        const char expected[size],
+        const char* expected,
+        int size,
         const uint8* found
       ) :
       DeserializationExn(

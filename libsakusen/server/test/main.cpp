@@ -76,19 +76,21 @@ int main(/* int argc, char** argv */)
   UnitType commanderType =
     UnitType(
         "commander" /* name */,
-        100 /* maxHitPoints */,
+        UnitTypeData(
+          100 /* maxHitPoints */,
+          10 /* mass */,
+          Point<uint32>(10,10,10) /* size */,
+          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+            /* possibleAccelerations */,
+          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+            /* possibleVelocities */,
+          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+            /* possibleAngularVelocities */,
+          Visibility(),
+          Sensors()
+        ),
         100 /* energyCost */,
         100 /* metalCost */,
-        10 /* mass */,
-        Point<uint32>(10,10,10) /* size */,
-        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
-          /* possibleAccelerations */,
-        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
-          /* possibleVelocities */,
-        Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
-          /* possibleAngularVelocities */,
-        Visibility(),
-        Sensors(),
         false /* fixed */,
         true /* ground */,
         false /* surface */,

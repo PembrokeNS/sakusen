@@ -1,4 +1,4 @@
-/* \page nonreproducibility Non-Reproducibility
+/** \page nonreproducibility Non-Reproducibility
 
 Since we obviously want replays to work properly (unlike the majority), I'm
 concerned about the reproducibilty of the game engine.  If everything is
@@ -19,3 +19,8 @@ This occurs in two places so far:
 - In the computation of vector lengths.  I see no solution here, but I'm sure
   there exist integer arithmetic algorithms to do anything we want to do with
   vector lengths.
+
+I talked to a programmer who writes software that models conservatories, and he
+had in the past hit this problem with floating point arithmetic.  He was forced
+to write his own implementation of floating point numbers to solve this
+problem.

@@ -31,7 +31,7 @@ class LIBSAKUSEN_API PartialWorld : public World {
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
 
-    std::list<CompleteUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
+    std::list<UpdatedUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
 
     void applyUpdate(const Update&);
     void endTick();

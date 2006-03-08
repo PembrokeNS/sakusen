@@ -15,10 +15,10 @@ UnitTemplate::UnitTemplate(
                           playing the game */
   assert (!status.radarIsActive || universe->getUnitTypePtr(
         status.type
-      )->getVision().radarActive.capable);
+      )->getDynamicData().getVision().radarActive.capable);
   assert (!status.sonarIsActive || universe->getUnitTypePtr(
         status.type
-      )->getVision().sonarActive.capable);
+      )->getDynamicData().getVision().sonarActive.capable);
 }
 
 void UnitTemplate::store(OArchive& out) const

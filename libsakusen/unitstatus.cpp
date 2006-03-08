@@ -117,7 +117,7 @@ UnitStatus::UnitStatus(
   initializeWeapons(
       getTypePtr(), world->getUniverse()
     );
-  hitPoints = getTypePtr()->getMaxHitPoints();
+  hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
 }
 
 UnitStatus::UnitStatus(
@@ -141,7 +141,8 @@ UnitStatus::UnitStatus(
   initializeWeapons(
       universe->getUnitTypePtr(type), universe
     );
-  hitPoints = universe->getUnitTypePtr(type)->getMaxHitPoints();
+  hitPoints =
+    universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints();
 }
 
 void UnitStatus::initializeWeapons(

@@ -1,4 +1,4 @@
-/** \page memory "Memory management"
+/** \page memory Memory management
 This is the gospel of libsakusen memory mangement according to John.
 
 In what follows, 'server' refers to the executable which links against

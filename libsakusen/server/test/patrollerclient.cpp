@@ -19,7 +19,7 @@ void PatrollerClient::queueUpdate(const Update& update)
         const UnitAddedUpdateData& data = update.getUnitAddedData();
         if (data.getUnit().getId() == 0 &&
             data.getReason() == changeOwnerReason_created) {
-          patrolFrom = data.getUnit().getStatus()->getPosition();
+          patrolFrom = data.getUnit().getStatus().getPosition();
           /*Debug("sending move order");*/
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,

@@ -14,10 +14,10 @@ class UpdatedUnit : public CompleteUnit {
       CompleteUnit(copy), updated(false)
     {}
     virtual ~UpdatedUnit() {}
-
+  private:
     /** Whether this Unit has already been updated this tick */
     bool updated;
-
+  public:
     void incrementState();
 };
 

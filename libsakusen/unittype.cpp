@@ -1,23 +1,15 @@
 #include "unittype.h"
 
 #include "universe.h"
-#include "region-methods.h"
 #include "oarchive-methods.h"
 
 using namespace sakusen;
 
 UnitType::UnitType(
-    String in,
-    HitPoints mHP,
+    String iN,
+    const UnitTypeData& dD,
     uint32 eC,
     uint32 mC,
-    uint8 m,
-    Point<uint32> si,
-    Region<sint16> pA,
-    Region<sint16> pV,
-    Region<sint16> pAV,
-    const Visibility& visib,
-    const Sensors& visio,
     bool f,
     bool g,
     bool su,
@@ -25,17 +17,10 @@ UnitType::UnitType(
     bool se,
     const std::list<WeaponTypeID>& w,
     const UnitTypeID& cUT) :
-  internalName(in),
-  maxHitPoints(mHP),
+  internalName(iN),
+  dynamicData(dD),
   energyCost(eC),
   metalCost(mC),
-  mass(m),
-  size(si),
-  possibleAccelerations(pA),
-  possibleVelocities(pV),
-  possibleAngularVelocities(pAV),
-  visibility(visib),
-  vision(visio),
   fixed(f),
   ground(g),
   surface(su),
@@ -47,17 +32,10 @@ UnitType::UnitType(
 }
 
 UnitType::UnitType(
-    String in,
-    HitPoints mHP,
+    String iN,
+    const UnitTypeData& dD,
     uint32 eC,
     uint32 mC,
-    uint8 m,
-    Point<uint32> si,
-    Region<sint16> pA,
-    Region<sint16> pV,
-    Region<sint16> pAV,
-    const Visibility& visib,
-    const Sensors& visio,
     bool f,
     bool g,
     bool su,
@@ -65,17 +43,10 @@ UnitType::UnitType(
     bool se,
     const std::list<String>& w,
     const String& cUT) :
-  internalName(in),
-  maxHitPoints(mHP),
+  internalName(iN),
+  dynamicData(dD),
   energyCost(eC),
   metalCost(mC),
-  mass(m),
-  size(si),
-  possibleAccelerations(pA),
-  possibleVelocities(pV),
-  possibleAngularVelocities(pAV),
-  visibility(visib),
-  vision(visio),
   fixed(f),
   ground(g),
   surface(su),
@@ -117,13 +88,9 @@ String UnitType::resolveNames(const Universe* universe)
 
 void UnitType::store(OArchive& archive) const
 {
-  archive << internalName << maxHitPoints <<
-    energyCost << metalCost << mass << size;
-  possibleAccelerations.store(archive);
-  possibleVelocities.store(archive);
-  possibleAngularVelocities.store(archive);
-  visibility.store(archive);
-  vision.store(archive);
+  archive << internalName;
+  dynamicData.store(archive);
+  archive << energyCost << metalCost;
   archive << fixed << ground << surface << air << seabed << weapons <<
     (corpseUnitType == NULL ? String("") : corpseUnitType->getInternalName());
     /* FIXME: assumes UnitTypeID is UnitType* */
@@ -132,19 +99,11 @@ void UnitType::store(OArchive& archive) const
 UnitType UnitType::load(IArchive& archive)
 {
   String internalName;
-  HitPoints maxHitPoints;
+  archive >> internalName;
+  UnitTypeData dynamicData = UnitTypeData::load(archive);
   uint32 energyCost;
   uint32 metalCost;
-  /* armour */
-  uint8 mass;
-  Point<uint32> size;
-  archive >> internalName >> maxHitPoints >>
-    energyCost >> metalCost >> mass >> size;
-  Region<sint16> possibleAccelerations = Region<sint16>::load(archive);
-  Region<sint16> possibleVelocities = Region<sint16>::load(archive);
-  Region<sint16> possibleAngularVelocities = Region<sint16>::load(archive);
-  Visibility visibility(archive);
-  Sensors vision(archive);
+  archive >> energyCost >> metalCost;
   bool fixed;
   bool ground;
   bool surface;
@@ -156,9 +115,7 @@ UnitType UnitType::load(IArchive& archive)
     corpseUnitType;
 
   return UnitType(
-      internalName,
-      maxHitPoints, energyCost, metalCost, mass, size, possibleAccelerations,
-      possibleVelocities, possibleAngularVelocities, visibility, vision, fixed,
+      internalName, dynamicData, energyCost, metalCost, fixed,
       ground, surface, air, seabed, weapons, corpseUnitType
     );
 }

@@ -1,7 +1,6 @@
 #include "partialworld.h"
 
 #include "map-methods.h"
-#include "rectangle-methods.h"
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -40,12 +39,12 @@ PartialWorld::~PartialWorld()
  *
  * \warning For speed, this may return a few extra units that do not in fact
  * intersect the rectangle */
-list<CompleteUnit*> PartialWorld::getUnitsIntersecting(
+list<UpdatedUnit*> PartialWorld::getUnitsIntersecting(
     const Rectangle<sint32>& rect
   )
 {
   /* TODO: make this fast by storing data sensibly */
-  list<CompleteUnit*> result;
+  list<UpdatedUnit*> result;
 
   for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
@@ -96,11 +95,7 @@ void PartialWorld::endTick()
 {
   for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
-    if (unit->second->updated) {
-      unit->second->updated = false;
-    } else {
-      unit->second->incrementState();
-    }
+    unit->second->incrementState();
   }
   ++timeNow;
 }

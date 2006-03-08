@@ -19,14 +19,11 @@ namespace sakusen {
  * It's worth noting that the libstdc++ docs say that doing precisely this is a
  * Bad Thing, because the << and >> operators should only be used for formatted
  * input and output.  The correct solution is make these classes ([IO]Archive)
- * inheritors from streambuf, but I don't know how to do that.
- * Besides that, we have the problems of endianess and bit patterns
- * (particularly for floating point types) which mean that it might be better
- * to textify numbers rather than writing them as binary.  At the very least we
- * need to get an error on machines with the "wrong" endianess (although that
- * requires using the autotools).
- * TODO: deal with all of the above diatrabe.
- * The name IArchive foolows the istream/ostream convention */
+ * subclasses of streambuf, but I don't know how to do that.
+ * Besides that, we have the problem of differnt floating point formats (solved
+ * at present by storing such numbers as text).
+ * TODO: deal with all of the above.
+ * The name IArchive follows the istream/ostream convention */
 class LIBSAKUSEN_API IArchive {
   private:
     IArchive();
@@ -155,9 +152,26 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
-    template<typename T, template<typename> class Container>
+    template<typename T>
     IArchive& extract(
-        Container<T>& result,
+        std::vector<T>& result,
+        const typename T::loadArgument* arg
+      )
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>(arg));
+      }
+
+      return *this;
+    }
+
+    template<typename T>
+    IArchive& extract(
+        std::list<T>& result,
         const typename T::loadArgument* arg
       )
     {
@@ -177,7 +191,8 @@ class LIBSAKUSEN_API IArchive {
       /* The '+1' in the array length is to allow for the trailing null char */
       assertLength(size);
       if (0 != memcmp(val, buffer, size)) {
-        throw new WrongMagicDeserializationExn<size>(val, buffer);
+        Debug("Wrong magic");
+        throw new WrongMagicDeserializationExn(val, size, buffer);
       }
       advance(size);
     }

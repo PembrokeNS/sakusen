@@ -76,6 +76,8 @@ IArchive& IArchive::operator>>(String& s)
       static_cast<size_t>(length)
     );
   advance(length);
+  /* TODO: This would be a good time to check that the string is valid UTF-8
+   * (perhaps as a compile-time option) */
   return *this;
 }
 

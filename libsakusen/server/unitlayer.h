@@ -16,10 +16,10 @@ class LayeredUnit;
  * Essentially an interface specifying what methods should be implemented by
  * any layer of a LayeredUnit.
  */
-class UnitLayer {
+class UnitLayer : public IUnitTypeData {
   protected:
     UnitLayer() {}
-    UnitLayer(const UnitLayer&) {}
+    UnitLayer(const UnitLayer& copy) : IUnitTypeData(copy) {}
   public:
     virtual ~UnitLayer() {}
 
@@ -27,16 +27,8 @@ class UnitLayer {
     virtual UnitLayer* newCopy(LayeredUnit* outer) const = 0;
     virtual UnitStatus* getCore() = 0;
 
-    /* accessors */
+    /* accessors (more accessors are inherited from IUnitTypeData) */
     virtual PlayerID getOwner() const = 0;
-    virtual HitPoints getMaxHitPoints(void) const = 0;
-    virtual uint8 getMass(void) const = 0;
-    virtual const Point<uint32>& getSize(void) const = 0;
-    virtual const Region<sint16>& getPossibleAccelerations(void) const = 0;
-    virtual const Region<sint16>& getPossibleVelocities(void) const = 0;
-    virtual const Region<sint16>& getPossibleAngularVelocities(void) const = 0;
-    virtual const Visibility& getVisibility(void) const = 0;
-    virtual const Sensors& getVision(void) const = 0;
 
     /* game mechanics */
     virtual void kill(HitPoints excessDamage) = 0;

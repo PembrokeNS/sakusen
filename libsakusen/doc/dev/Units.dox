@@ -1,0 +1,71 @@
+/** \page Units
+
+There is something of a confusion of classes with 'Unit' in their name in the
+library at present.  This page is intended to clarify what they are and what
+they are for.
+
+First consider the different types of data associated with a unit:
+
+\li <i>Static UnitType data</i> is data such as the mineral cost to build the
+unit, which is inherently a property of the UnitType and will not change, or is
+not even relevant, once a unit exists.
+\li <i>Dynamic UnitType data</i> is data such as the mass of the unit, which is
+initially a property of the UnitType, but can change after the unit comes into
+existence.
+\li <i>Unit status data</i> (or just <i>status</i>) is data such as the position
+of the unit, which will never appear on a UnitType.  Note that part of the
+status is the unit's type.
+\li Finally, <i>ownership data</i> is the owner and id of the unit.  This is
+distinguished from the status because it is handled differently in servers and
+clients.
+
+Each of dynamic UnitType data and status is encapsulated in a class.  These
+are sakusen::UnitTypeData and sakusen::UnitStatus respectively.  Furthermore,
+implements a corresponding interface - sakusen::IUnitTypeData and
+sakusen::IUnitStatus respectively.  The classes are used whenever the data in
+question needs to be stored, and any other classes which also represent dynamic
+UnitType data or status also implements one of the interfaces.
+
+These two classes are combined, together with the unit id, in
+sakusen::CompleteUnit.  This encapsulates all the data about a Unit that is
+known to both client and server.  It is this class that is used to transmit
+data between the two (e.g. in sakusen::UnitAddedUpdateData, which is sent
+from server to client whenever the client's player gains a unit).  Again,
+there is a corresponding interface sakusen::ICompleteUnit.
+
+The first place these classes are used are in making sakusen::MapTemplate.  In
+particular, sakusen::UnitTemplate contains a sakusen::UnitStatus to describe
+the initial state of the unit (I suspect this will have to be promoted to a
+full sakusen::CompleteUnit at some point).
+
+In sakusen::server there are another slew of unit-related classes.  The server
+represents a unit as a sakusen::server::LayeredUnit, which implements
+sakusen::ICompleteUnit, but is structured very differently from CompleteUnit.
+The dynamic UnitType data is processed through a series of
+sakusen::server::UnitLayer objects, each of which implements
+sakusen::IUnitTypeData.  The bottom layer is always a
+sakusen::server::UnitCore, which provides its implementation of
+sakusen::IUnitTypeData directly from the sakusen::UnitType of the object.
+Other layers are at liberty to provide the data in an almost arbitrary fashion.
+
+The status os a sakusen::server::LayeredUnit bypasses the
+layers and shortcuts directly to the sakusen::server::UnitCore, which inherits
+from sakusen::UnitStatus and thus implements sakusen::IUnitStatus.
+
+Clients do not know about these layers, and they follow the core library's
+approach more closely.  A client stores its Units as
+sakusen::client::UpdatedUnit objects.  sakusen::client::UpdatedUnit is a
+subclass of sakusen::CompleteUnit with some additional fields and methods for
+updating itself according to messages from the server.
+
+It might seem mad to have so many different classes just to represent one
+concept, but it appears to be the best way to compromise between the need for a
+common ground for the server and client to enable them to communicate and the
+need for each of them to handle units in their own way.  It also helps reduce
+code duplication - without the sakusen::UnitTypeData and sakusen::UnitStatus
+classes, the same list of fields and accessor methods would appear in numerous
+places and ensuring that they all remain in sync with one another becomes a
+significant task.
+
+*/
+

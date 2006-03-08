@@ -5,6 +5,7 @@
 #include "world.h"
 #include "iunitstatus.h"
 #include "sphereregiondata.h"
+#include "rectangleregiondata.h"
 
 namespace sakusen {
 
@@ -47,6 +48,9 @@ Region<T> Region<T>::load(IArchive& archive)
   switch(type) {
     case regionType_sphere:
       data = SphereRegionData<T>::loadNew(archive);
+      break;
+    case regionType_rectangle:
+      data = RectangleRegionData<T>::loadNew(archive);
       break;
     default:
       throw new DeserializationExn(

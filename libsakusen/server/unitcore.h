@@ -35,26 +35,28 @@ class UnitCore : public UnitLayer, private UnitStatus {
     /* accessors */
     inline PlayerID getOwner() const { return owner; }
     inline HitPoints getMaxHitPoints() const {
-      return getTypePtr()->getMaxHitPoints();
+      return getTypePtr()->getDynamicData().getMaxHitPoints();
     }
-    inline uint8 getMass(void) const { return getTypePtr()->getMass(); }
+    inline uint8 getMass(void) const {
+      return getTypePtr()->getDynamicData().getMass();
+    }
     inline const Point<uint32>& getSize(void) const {
-      return getTypePtr()->getSize();
+      return getTypePtr()->getDynamicData().getSize();
     }
     inline const Region<sint16>& getPossibleAccelerations(void) const {
-      return getTypePtr()->getPossibleAccelerations();
+      return getTypePtr()->getDynamicData().getPossibleAccelerations();
     }
     inline const Region<sint16>& getPossibleVelocities(void) const {
-      return getTypePtr()->getPossibleVelocities();
+      return getTypePtr()->getDynamicData().getPossibleVelocities();
     }
     inline const Region<sint16>& getPossibleAngularVelocities(void) const {
-      return getTypePtr()->getPossibleAngularVelocities();
+      return getTypePtr()->getDynamicData().getPossibleAngularVelocities();
     }
     inline const Visibility& getVisibility(void) const {
-      return getTypePtr()->getVisibility();
+      return getTypePtr()->getDynamicData().getVisibility();
     }
     inline const Sensors& getVision(void) const {
-      return getTypePtr()->getVision();
+      return getTypePtr()->getDynamicData().getVision();
     }
 
     /* game mechanics */
