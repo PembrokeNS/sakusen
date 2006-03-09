@@ -34,6 +34,11 @@ MY_NAME := $(lastword $(MAKEFILE_LIST))
 
 TOP_DIR := $(dir $(MY_NAME))
 
+# Determine whether we're compiling a library or an executable
+
+
+IS_LIB := $(filter %.la,$(BIN))
+
 CXX_SOURCES := $(wildcard *.cpp) \
 	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.cpp))
 C_SOURCES := $(wildcard *.c) \
@@ -75,15 +80,21 @@ clean:
 		; \
 	done
 
-# Build the binary
-
-$(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
-	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
-
 # Use other Makefiles to build prerequisite libraries
 
 $(E_LIB_DEP): %.la:
 	$(MAKE) -C $(dir $@) $(notdir $@)
+
+# The compile/link commands depend of whether we're building a library or an
+# executable
+
+ifneq ($(IS_LIB),)
+# When it is a library:
+
+# Build the binary
+
+$(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
+	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
 
 # Libtool objects are made when normal objects are
 
@@ -101,6 +112,29 @@ $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	libtool --tag=CC --mode=compile $(CC) $(CFLAGS) $(E_INCLUDE) $(THIS_CFLAGS) -c \
 		-o $@ $*.c
+else
+# When it is an executable
+
+# Build the binary
+
+$(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
+	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $^
+
+# The actual compile commands (source dependencies will come from the makefrag
+# file).  Unlike the above, we *don't* use libtool, so as to speed up the
+# compile
+
+$(CXX_OBJS): .obj/%.o:
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -c \
+		-o $@ $*.cpp
+
+$(C_OBJS): .obj/%.o:
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(E_INCLUDE) $(THIS_CFLAGS) -c \
+		-o $@ $*.c
+
+endif
 
 # Here follows cunningness to make the makefile handle headers properly
 
