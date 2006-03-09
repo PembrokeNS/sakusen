@@ -239,6 +239,16 @@ void Server::handleClientMessages()
               }
             }
             break;
+          case messageType_order:
+            {
+              out << "Received order from client\n";
+              if (sakusen::world == NULL) {
+                out << "Ignoring order because game not started\n";
+              } else {
+                client->enqueueOrder(message.getOrderData().getOrderMessage());
+              }
+            }
+            break;
           default:
             out << "Unexpected MessageType " << message.getType() <<
               " from client\n";

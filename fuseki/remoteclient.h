@@ -53,6 +53,9 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     inline void setAdmin(bool value);
     inline bool isNeverAdmin() { return neverAdmin; }
     inline bool isAutoUnready() { return autoUnready; }
+    inline void enqueueOrder(const sakusen::OrderMessage& o) {
+      orderMessageQueue.push(o);
+    }
 
     inline bool isReadyForGameStart() {
       return ready && (observer || (playerId != 0));
