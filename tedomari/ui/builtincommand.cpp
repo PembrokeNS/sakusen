@@ -167,6 +167,15 @@ void executeBuiltinCommand(
         ui->selectUnits(args.front());
       }
       break;
+    case builtinCommand_move:
+      {
+        if (args.size() != 1) {
+          wrongNumberArgs(name, args, 1, ui);
+          break;
+        }
+        ui->move(ui->getSelection(), args.front());
+      }
+      break;
     default:
       Fatal("Unknown builtin command: " << cmd);
   }

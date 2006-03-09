@@ -53,6 +53,8 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
         return;
       case commandType_abbreviation:
         {
+          /* Replace the existing command with the new one */
+          existing->second = cmd;
           /* Fix all abbreviations down to the next branch */
           String abbrev(name.begin(), --name.end());
           while (!abbrev.empty()) {
@@ -121,6 +123,7 @@ Mode Mode::getUnit(UI* ui)
   Mode m(getCommon(ui));
 
   ADD_COMMAND(select);
+  ADD_COMMAND(move);
 
   return m;
 }

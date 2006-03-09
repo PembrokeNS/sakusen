@@ -63,6 +63,7 @@ class ServerInterface {
       /* Try to join server.  Returns true iff an error occurs */
     bool leave(bool sendMessage);
       /* Try to leave server.  Returns true iff an error occurs */
+    bool send(const sakusen::comms::MessageData& message);
     bool getSetting(const String& setting);
       /* Get a setting from the server.  Returns true iff an error occurs */
     bool setSetting(const String& setting, const String& value);

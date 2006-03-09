@@ -43,7 +43,7 @@ void MapDisplay::paint()
       corners.push_back(dexToPixel(status.localToGlobal(corner)));
       corner.x *= -1;
       corners.push_back(dexToPixel(status.localToGlobal(corner)));
-      bool selected = ui->getSelection().count(*unit);
+      bool selected = ui->getSelection().count((*unit)->getId());
       Colour colour = ( selected ? Colour::magenta : Colour::blue );
       r->fillPolygon(corners, colour);
     }

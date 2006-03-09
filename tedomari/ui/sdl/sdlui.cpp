@@ -48,7 +48,7 @@ using namespace tedomari::ui::sdl;
 */
 
 SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
-  UI(new DummyRegion(options.width, options.height), uiConf),
+  UI(new DummyRegion(options.width, options.height), uiConf, game),
   doubleBuffer(false)
 {
 #ifdef NDEBUG
@@ -116,7 +116,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   /* Provide access to these buffers to the UI and associated controls */
   replaceRegion(new SDLRegion(this, 0, 0, getWidth(), getHeight()));
   /* Place the initial control set */
-  initializeControls(game);
+  initializeControls();
   /* Paint the controls onto the buffer */
   paint();
 }

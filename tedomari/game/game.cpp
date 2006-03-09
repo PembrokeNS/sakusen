@@ -1,6 +1,8 @@
 #include "game.h"
 
 #include "resourceinterface-methods.h"
+#include "messagedata.h"
+#include "serverinterface.h"
 
 using namespace std;
 
@@ -11,6 +13,7 @@ using namespace tedomari::game;
 
 Game::Game(ResourceInterface* rI) :
   resourceInterface(rI),
+  serverInterface(NULL),
   universe(NULL)
 {
 }
@@ -40,9 +43,13 @@ void Game::setUniverse(const String& name, const String& hash)
   }
 }
 
-void Game::start(const sakusen::comms::GameStartMessageData& data)
+void Game::start(
+    const sakusen::comms::GameStartMessageData& data,
+    ServerInterface* sI
+  )
 {
   assert(universe != NULL);
+  serverInterface = sI;
   new PartialWorld(
       universe,
       data.getTopology(),
@@ -67,7 +74,13 @@ void Game::pushUpdates(const UpdateMessageData& data) {
   }
 }
 
+void Game::order(const OrderMessage& o)
+{
+  serverInterface->send(OrderMessageData(o));
+}
+
 void Game::stop()
 {
   delete sakusen::client::world;
+  serverInterface = NULL;
 }

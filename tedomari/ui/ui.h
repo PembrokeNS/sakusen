@@ -25,10 +25,11 @@ class UI : protected Control {
     UI();
     UI(const UI&);
   public:
-    UI(Region* region, std::ifstream& uiConf);
+    UI(Region* region, std::ifstream& uiConf, tedomari::game::Game*);
     virtual ~UI() {}
   private:
     Converter converter; /**< Converts between UTF-8 and native encodings */
+    tedomari::game::Game* game;
     MapDisplay* activeMapDisplay; /**< Currently active MapDisplay, or NULL */
     CommandEntryBox* commandEntryBox;
     AlertDisplay* alertDisplay;
@@ -52,11 +53,8 @@ class UI : protected Control {
     /** \brief The last selection rectangle */
     sakusen::Rectangle<sint32> lastRectangle;
 
-    /** \brief The units currently selected */
-    __gnu_cxx::hash_set<
-        sakusen::client::UpdatedUnit*,
-        sakusen::PtrHash<sakusen::client::UpdatedUnit>
-      > selection;
+    /** \brief The friendly units currently selected (by unitid) */
+    __gnu_cxx::hash_set<uint32> selection;
 
     std::list<String> tokenise(const String&);
   protected:
@@ -65,7 +63,7 @@ class UI : protected Control {
      * Called by a subclass (probably constructor) to create the first controls
      * and place them on the UI.
      */
-    void initializeControls(tedomari::game::Game* game);
+    void initializeControls();
 
     /** \brief Create a new Region
      *
@@ -106,10 +104,7 @@ class UI : protected Control {
         );
     }
   public:
-    inline const __gnu_cxx::hash_set<
-        sakusen::client::UpdatedUnit*,
-        sakusen::PtrHash<sakusen::client::UpdatedUnit>
-      >& getSelection() {
+    inline const __gnu_cxx::hash_set<uint32>& getSelection() {
       return selection;
     }
     /** \brief Determine whether the user has asked to quit */
@@ -159,6 +154,12 @@ class UI : protected Control {
     void dragRegion(bool start);
     void selectUnits(const String& selection);
     void selectUnitsIn(const sakusen::Rectangle<sint32>&);
+
+    void move(const __gnu_cxx::hash_set<uint32>& units, const String& target);
+    void move(
+        const __gnu_cxx::hash_set<uint32>& units,
+        const sakusen::Point<sint32>& target
+      );
 };
 
 }}

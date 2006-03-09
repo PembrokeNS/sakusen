@@ -26,7 +26,8 @@ enum BuiltinCommand {
   builtinCommand_startdragregion,
   builtinCommand_stopdragregion,
   /* unit-related commands */
-  builtinCommand_select
+  builtinCommand_select,
+  builtinCommand_move
 };
 
 /* \brief Execute given buitin command with given arguments

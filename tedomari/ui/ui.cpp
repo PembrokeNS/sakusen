@@ -15,8 +15,8 @@ using namespace sakusen::client;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 
-UI::UI(Region* region, ifstream& uiConf) :
-  Control(0, 0, dockStyle_fill, region), activeMapDisplay(NULL),
+UI::UI(Region* region, ifstream& uiConf, Game* g) :
+  Control(0, 0, dockStyle_fill, region), game(g), activeMapDisplay(NULL),
   commandEntryBox(NULL), alertDisplay(NULL), modes(),
   mode(NULL), currentModifiers(), expectingChars(false), commandEntry(false),
   quit(false)
@@ -81,7 +81,7 @@ list<String> UI::tokenise(const String& s)
   return tokens;
 }
 
-void UI::initializeControls(Game* game)
+void UI::initializeControls()
 {
   /* For the moment we just make a map display control
    * TODO: make many more things */
@@ -411,7 +411,28 @@ void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
 {
   list<UpdatedUnit*> units(sakusen::client::world->getUnitsIntersecting(r));
   selection.clear();
-  selection.insert(units.begin(), units.end());
+  for (list<UpdatedUnit*>::iterator unit = units.begin(); unit != units.end();
+      ++unit) {
+    selection.insert((*unit)->getId());
+  }
   paint();
+}
+
+/** \todo Replace this method with the order-queue related things */
+void UI::move(const hash_set<uint32>& units, const String& target)
+{
+  if (target == "cursor") {
+    move(units, activeMapDisplay->getMousePos());
+  }
+}
+
+void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
+{
+  Order order = Order(MoveOrderData(target));
+  
+  for (hash_set<uint32>::iterator unit = units.begin(); unit != units.end();
+      ++unit) {
+    game->order(OrderMessage(*unit, orderCondition_now, order));
+  }
 }
 

@@ -161,7 +161,7 @@ String ServerInterface::flushIncoming()
           {
             GameStartMessageData data = message.getGameStartData();
             out << "Game is starting!\n";
-            game->start(data);
+            game->start(data, this);
           }
           break;
         case messageType_update:
@@ -277,6 +277,12 @@ bool ServerInterface::leave(bool sendMessage)
   }
   incomingSocket = NULL;
   outgoingSocket = NULL;
+  return false;
+}
+
+bool ServerInterface::send(const MessageData& message)
+{
+  outgoingSocket->send(message);
   return false;
 }
 

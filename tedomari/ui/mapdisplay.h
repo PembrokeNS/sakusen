@@ -58,6 +58,9 @@ class MapDisplay : public Control {
   public:
     inline double getDexWidth() const { return dexPerPixelX*getWidth(); }
     inline double getDexHeight() const { return dexPerPixelY*getHeight(); }
+    inline sakusen::Point<sint32> getMousePos() const {
+      return pixelToDex(mousePos);
+    }
     void update();
     void mouseMove(const sakusen::Point<double>&);
     void translate(const sakusen::Point<sint32>& d);
