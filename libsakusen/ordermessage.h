@@ -22,6 +22,9 @@ class LIBSAKUSEN_API OrderMessage {
     uint32 getOrderee(void) const { return orderee; }
     const OrderCondition& getCondition(void) const { return condition; }
     const Order& getOrder(void) const { return order; }
+
+    void store(OArchive&) const;
+    static OrderMessage load(IArchive&);
 };
 
 }

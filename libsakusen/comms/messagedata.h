@@ -8,6 +8,7 @@
 #include "libsakusen-comms-global.h"
 #include "clientid.h"
 #include "topology.h"
+#include "ordermessage.h"
 
 namespace sakusen {
 namespace comms {
@@ -242,6 +243,23 @@ class GameStartMessageData : public MessageData {
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
     inline uint16 getGravity() const { return gravity; }
+};
+
+class OrderMessageData : public MessageData {
+  private:
+    OrderMessageData();
+  public:
+    OrderMessageData(const OrderMessage&);
+    OrderMessageData(IArchive& in);
+    ~OrderMessageData() {}
+  private:
+    OrderMessage orderMessage; /**< The order message */
+  protected:
+    void fillArchive();
+  public:
+    MessageType getType() const;
+    MessageData* newCopy() const;
+    inline const OrderMessage& getOrderMessage() const { return orderMessage; }
 };
 
 class UpdateMessageData : public MessageData {

@@ -364,6 +364,33 @@ MessageData* GameStartMessageData::newCopy() const
   return new GameStartMessageData(*this);
 }
 
+OrderMessageData::OrderMessageData(const OrderMessage& oM) :
+  MessageData(),
+  orderMessage(oM)
+{
+}
+
+OrderMessageData::OrderMessageData(IArchive& in) :
+  MessageData(),
+  orderMessage(OrderMessage::load(in))
+{
+}
+
+void OrderMessageData::fillArchive()
+{
+  orderMessage.store(archive);
+}
+
+MessageType OrderMessageData::getType() const
+{
+  return messageType_order;
+}
+
+MessageData* OrderMessageData::newCopy() const
+{
+  return new OrderMessageData(*this);
+}
+
 /** \brief Constructs from given time and list of updates
  *
  * The list of updates passed to this method is cleared */

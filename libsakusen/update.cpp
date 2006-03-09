@@ -59,6 +59,12 @@ Update Update::load(IArchive& in, const Universe* universe)
       return Update(new UnitRemovedUpdateData(in));
     case updateType_unitAdded:
       return Update(new UnitAddedUpdateData(in, universe));
+    case updateType_orderQueued:
+      return Update(new OrderQueuedUpdateData(in));
+    case updateType_orderCompleted:
+      return Update(new OrderCompletedUpdateData(in));
+    case updateType_orderAccepted:
+      return Update(new OrderAcceptedUpdateData(in));
     default:
       Debug("Unknown UpdateType " << type);
       return Update();

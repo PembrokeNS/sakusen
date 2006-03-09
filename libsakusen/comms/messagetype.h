@@ -22,6 +22,7 @@ enum MessageType {
   messageType_changeSetting,
   messageType_notifySetting,
   messageType_gameStart,
+  messageType_order,
   messageType_update
 };
 

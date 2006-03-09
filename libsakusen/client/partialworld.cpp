@@ -82,10 +82,42 @@ void PartialWorld::applyUpdate(const Update& update)
         units.erase(unit);
       }
       break;
-    /* TODO: order updates */
     case updateType_orderQueued:
+      {
+        OrderQueuedUpdateData data(update.getOrderQueuedData());
+        hash_map<uint32, UpdatedUnit*>::iterator unit =
+          units.find(data.getUnitId());
+        if (unit == units.end()) {
+          Debug("Update for non-existant unit");
+          break;
+        }
+        unit->second->orderQueued(data);
+      }
+      break;
     case updateType_orderAccepted:
+      {
+        OrderAcceptedUpdateData data(update.getOrderAcceptedData());
+        hash_map<uint32, UpdatedUnit*>::iterator unit =
+          units.find(data.getUnitId());
+        if (unit == units.end()) {
+          Debug("Update for non-existant unit");
+          break;
+        }
+        unit->second->orderAccepted(data);
+      }
+      break;
     case updateType_orderCompleted:
+      {
+        OrderCompletedUpdateData data(update.getOrderCompletedData());
+        hash_map<uint32, UpdatedUnit*>::iterator unit =
+          units.find(data.getUnitId());
+        if (unit == units.end()) {
+          Debug("Update for non-existant unit");
+          break;
+        }
+        unit->second->orderCompleted(data);
+      }
+      break;
     default:
       Fatal("unexpected UpdateType: " << update.getType());
   }

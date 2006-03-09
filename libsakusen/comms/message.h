@@ -30,42 +30,24 @@ class Message {
     inline size_t getBytesLength(void) const {
       return data->getArchive().getLength();
     }
-    inline AdvertiseMessageData getAdvertiseData(void) const {
-      return *dynamic_cast<const AdvertiseMessageData*>(data);
+#define GETDATA(type) \
+    inline type##MessageData get##type##Data(void) const { \
+      return *dynamic_cast<const type##MessageData*>(data); \
     }
-    inline SolicitMessageData getSolicitData(void) const {
-      return *dynamic_cast<const SolicitMessageData*>(data);
-    }
-    inline JoinMessageData getJoinData(void) const {
-      return *dynamic_cast<const JoinMessageData*>(data);
-    }
-    inline AcceptMessageData getAcceptData(void) const {
-      return *dynamic_cast<const AcceptMessageData*>(data);
-    }
-    inline RejectMessageData getRejectData(void) const {
-      return *dynamic_cast<const RejectMessageData*>(data);
-    }
-    inline KickMessageData getKickData(void) const {
-      return *dynamic_cast<const KickMessageData*>(data);
-    }
-    inline LeaveMessageData getLeaveData(void) const {
-      return *dynamic_cast<const LeaveMessageData*>(data);
-    }
-    inline GetSettingMessageData getGetSettingData(void) const {
-      return *dynamic_cast<const GetSettingMessageData*>(data);
-    }
-    inline ChangeSettingMessageData getChangeSettingData(void) const {
-      return *dynamic_cast<const ChangeSettingMessageData*>(data);
-    }
-    inline NotifySettingMessageData getNotifySettingData(void) const {
-      return *dynamic_cast<const NotifySettingMessageData*>(data);
-    }
-    inline GameStartMessageData getGameStartData(void) const {
-      return *dynamic_cast<const GameStartMessageData*>(data);
-    }
-    inline UpdateMessageData getUpdateData(void) const {
-      return *dynamic_cast<const UpdateMessageData*>(data);
-    }
+    GETDATA(Advertise)
+    GETDATA(Solicit)
+    GETDATA(Join)
+    GETDATA(Accept)
+    GETDATA(Reject)
+    GETDATA(Kick)
+    GETDATA(Leave)
+    GETDATA(GetSetting)
+    GETDATA(ChangeSetting)
+    GETDATA(NotifySetting)
+    GETDATA(GameStart)
+    GETDATA(Order)
+    GETDATA(Update)
+#undef GETDATA
 };
 
 }}

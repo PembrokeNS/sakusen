@@ -66,11 +66,14 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
     OrderAcceptedUpdateData();
   public:
     OrderAcceptedUpdateData(uint32 unitId, OrderCondition condition);
+    OrderAcceptedUpdateData(IArchive&);
     ~OrderAcceptedUpdateData() {}
   private:
     uint32 unitId;
     OrderCondition condition;
   public:
+    inline uint32 getUnitId() const { return unitId; }
+    inline OrderCondition getCondition() const { return condition; }
     UpdateData* newCopy() const { return new OrderAcceptedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderAccepted; }
     void store(OArchive& out) const;
@@ -81,6 +84,7 @@ class LIBSAKUSEN_API OrderCompletedUpdateData : public UpdateData {
     OrderCompletedUpdateData();
   public:
     OrderCompletedUpdateData(uint32 unitId, OrderCondition condition);
+    OrderCompletedUpdateData(IArchive&);
     ~OrderCompletedUpdateData() {}
   private:
     uint32 unitId;
@@ -99,15 +103,19 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
   public:
     OrderQueuedUpdateData(
         uint32 unitId,
-        const Order* order,
+        const Order& order,
         OrderCondition condition
       );
+    OrderQueuedUpdateData(IArchive&);
     ~OrderQueuedUpdateData() {}
   private:
     uint32 unitId;
-    const Order* order;
+    Order order;
     OrderCondition condition;
   public:
+    inline uint32 getUnitId() const { return unitId; }
+    inline OrderCondition getCondition() const { return condition; }
+    inline const Order& getOrder() const { return order; }
     UpdateData* newCopy() const { return new OrderQueuedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderQueued; }
     void store(OArchive& out) const;

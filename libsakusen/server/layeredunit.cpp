@@ -247,7 +247,7 @@ void LayeredUnit::enqueueOrder(
   }
   unit->orders[condition] = order;
   world->getPlayerPtr(owner)->informClients(
-      Update(OrderQueuedUpdateData(unitId, &order, condition))
+      Update(OrderQueuedUpdateData(unitId, order, condition))
     );
 }
 

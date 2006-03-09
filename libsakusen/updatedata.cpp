@@ -57,6 +57,12 @@ OrderAcceptedUpdateData::OrderAcceptedUpdateData(
 {
 }
 
+OrderAcceptedUpdateData::OrderAcceptedUpdateData(IArchive& in)
+{
+  in >> unitId;
+  in.extractEnum(condition);
+}
+
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
   out << unitId << uint8(condition);
@@ -71,6 +77,12 @@ OrderCompletedUpdateData::OrderCompletedUpdateData(
 {
 }
 
+OrderCompletedUpdateData::OrderCompletedUpdateData(IArchive& in)
+{
+  in >> unitId;
+  in.extractEnum(condition);
+}
+
 void OrderCompletedUpdateData::store(OArchive& out) const
 {
   out << unitId << uint8(condition);
@@ -78,7 +90,7 @@ void OrderCompletedUpdateData::store(OArchive& out) const
 
 OrderQueuedUpdateData::OrderQueuedUpdateData(
     uint32 u,
-    const Order* o,
+    const Order& o,
     OrderCondition c) :
   UpdateData(),
   unitId(u),
@@ -87,8 +99,17 @@ OrderQueuedUpdateData::OrderQueuedUpdateData(
 {
 }
 
+OrderQueuedUpdateData::OrderQueuedUpdateData(IArchive& in)
+{
+  in >> unitId;
+  order = Order::load(in);
+  in.extractEnum(condition);
+}
+
 void OrderQueuedUpdateData::store(OArchive& out) const
 {
-  out << unitId << order << uint8(condition);
+  out << unitId;
+  order.store(out);
+  out << uint8(condition);
 }
 

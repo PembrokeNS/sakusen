@@ -12,3 +12,21 @@ OrderMessage::OrderMessage(
 {
 }
 
+void OrderMessage::store(OArchive& out) const
+{
+  out << orderee << uint8(condition);
+  order.store(out);
+}
+
+OrderMessage OrderMessage::load(IArchive& in)
+{
+  uint32 orderee;
+  OrderCondition orderCondition;
+  
+  in >> orderee;
+  in.extractEnum(orderCondition);
+  Order order(Order::load(in));
+
+  return OrderMessage(orderee, orderCondition, order);
+}
+
