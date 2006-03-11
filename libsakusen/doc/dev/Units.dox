@@ -67,5 +67,20 @@ classes, the same list of fields and accessor methods would appear in numerous
 places and ensuring that they all remain in sync with one another becomes a
 significant task.
 
+Clients are kept appraised as to the state of a unit via Updates of type
+updateType_unitAltered.  Such updates are sent by the server whenever anything
+about the unit changes, with the exception that, if not informed to the
+contrary, the client is to assume that the velocity and angular velocity of the
+unit remain fixed, and update the position and orientation appropriately.  This
+prevents an update being sent every tick for any moving unit.  The server
+doesn't send these updates as it observes changes to the unit, but rather
+allows all the changes that occur in one tick to accumulate, and sends them all
+as one update at the end of the tick.  At present the update consist of all
+unit data (it carries a sakusen::CompleteUnit).  If it should appear sensible,
+things could be arranged so that only some data is transmitted if only some
+data has changed, but that seems unnecessarily complicated for this early stage
+of the devlopment.  Also, analysis of actual game transmissions would be
+helpful in deciding exactly how to optimize this.
+
 */
 

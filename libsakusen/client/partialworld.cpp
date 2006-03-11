@@ -82,6 +82,18 @@ void PartialWorld::applyUpdate(const Update& update)
         units.erase(unit);
       }
       break;
+    case updateType_unitAltered:
+      {
+        UnitAlteredUpdateData data = update.getUnitAlteredData();
+        __gnu_cxx::hash_map<uint32, UpdatedUnit*>::iterator unit =
+          units.find(data.getUnit().getId());
+        if (unit == units.end()) {
+          Debug("tried to alter non-existant unit");
+          break;
+        }
+        unit->second->alter(data.getUnit());
+      }
+      break;
     case updateType_orderQueued:
       {
         OrderQueuedUpdateData data(update.getOrderQueuedData());

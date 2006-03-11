@@ -59,6 +59,8 @@ Update Update::load(IArchive& in, const Universe* universe)
       return Update(new UnitRemovedUpdateData(in));
     case updateType_unitAdded:
       return Update(new UnitAddedUpdateData(in, universe));
+    case updateType_unitAltered:
+      return Update(new UnitAlteredUpdateData(in, universe));
     case updateType_orderQueued:
       return Update(new OrderQueuedUpdateData(in));
     case updateType_orderCompleted:

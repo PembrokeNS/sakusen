@@ -33,7 +33,8 @@ LayeredUnit::LayeredUnit(
   ) :
   owner(0),
   topLayer(new UnitCore(this, t.getStatus())),
-  unit(topLayer->getCore())
+  unit(topLayer->getCore()),
+  dirty(false)
 {
 }
 
@@ -47,7 +48,8 @@ LayeredUnit::LayeredUnit(
   topLayer(new UnitCore(
         this, startType, startPosition, startOrientation, startVelocity
       )),
-  unit(topLayer->getCore())
+  unit(topLayer->getCore()),
+  dirty(false)
 {
 }
 
@@ -55,7 +57,8 @@ LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
   ICompleteUnit(copy),
   owner(copy.owner),
   topLayer(copy.topLayer->newCopy(this)),
-  unit(topLayer->getCore())
+  unit(topLayer->getCore()),
+  dirty(false)
 {
 }
 
@@ -115,7 +118,17 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
         Update(OrderCompletedUpdateData(unitId, condition))
       );
   }
-}  
+}
+
+void LayeredUnit::clearDirty()
+{
+  if (dirty) {
+    dirty = false;
+    world->getPlayerPtr(owner)->informClients(
+        Update(UnitAlteredUpdateData(this))
+      );
+  }
+}
 
 void LayeredUnit::setPosition(const Point<sint32>& pos)
 {
@@ -147,6 +160,7 @@ void LayeredUnit::setPhysics(
       unit->velocity.zero();
     }
   }
+  setDirty();
 }
 
 void LayeredUnit::incrementState(const Time& /*timeNow*/)
@@ -156,24 +170,21 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   /* Note that with this order system each unit can accept only one new order
    * per game cycle - if two arrive from the clients in the same game cycle
    * then things might get overwritten or lost - clients will need to be aware
-   * of this and pay attention to the reports from the server about the units
-   * orders changes */
+   * of this and pay attention to the reports from the server about the unit's
+   * orders' changes */
 
   /* If we've an order to apply right now, then do so */
   if (unit->orders[orderCondition_now].isRealOrder()) {
     acceptOrder(orderCondition_now);
   }
   
-  /* FIXME: Currently we use completely naive alterations to velocity: We allow
-   * arbitrary acceleration and any velocity of modulus at most that of
-   * maxSpeed */
   switch (unit->linearTarget) {
     case linearTargetType_none:
       break;
     case linearTargetType_velocity:
       if (topLayer->getPossibleVelocities().contains(unit->targetVelocity)) {
         unit->velocity = unit->targetVelocity;
-        /* TODO: inform clients */
+        setDirty();
       } else {
         acceptOrder(orderCondition_lastOrderFailure);
       }
@@ -189,7 +200,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
           break;
         }
         unit->velocity = desiredVelocity;
-        /* TODO: inform clients */
+        setDirty();
       }
       break;
     default:
@@ -198,7 +209,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   }
   
   /* TODO: do collision detection */
-  Orientation mapOrientationChange = Orientation();
+  Orientation mapOrientationChange;
   setPosition(world->getMap()->addToPosition(
         unit->position, unit->velocity, &mapOrientationChange
       ));
@@ -254,7 +265,7 @@ void LayeredUnit::enqueueOrder(
 bool LayeredUnit::setRadar(bool active) {
   if (topLayer->getVision().radarActive.capable) {
     unit->radarIsActive = active;
-    /* TODO: inform clients */
+    setDirty();
     return active;
   } else return false;
 }
@@ -262,7 +273,7 @@ bool LayeredUnit::setRadar(bool active) {
 bool LayeredUnit::setSonar(bool active) {
   if (topLayer->getVision().sonarActive.capable) {
     unit->sonarIsActive = active;
-    /* TODO: inform clients */
+    setDirty();
     return active;
   } else return false;
 }

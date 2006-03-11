@@ -48,6 +48,25 @@ void UnitAddedUpdateData::store(OArchive& out) const
   out << uint8(reason);
 }
 
+UnitAlteredUpdateData::UnitAlteredUpdateData(const ICompleteUnit* u) :
+  UpdateData(),
+  unit(u)
+{
+}
+
+UnitAlteredUpdateData::UnitAlteredUpdateData(
+    IArchive& in,
+    const Universe* universe
+  ) :
+  unit(CompleteUnit::load(in, universe))
+{
+}
+
+void UnitAlteredUpdateData::store(OArchive& out) const
+{
+  unit.store(out);
+}
+
 OrderAcceptedUpdateData::OrderAcceptedUpdateData(
     uint32 u,
     OrderCondition c) :

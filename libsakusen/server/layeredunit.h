@@ -62,21 +62,29 @@ class LIBSAKUSEN_API LayeredUnit : public ICompleteUnit {
     PlayerID owner;
     uint32 unitId;
     UnitLayer* topLayer;
-    UnitStatus* unit; /**< \brief Shortcut pointer to the Unit at the heart
-                       *
-                       * Not owned by this
-                       */
-    
+    /** \brief Shortcut pointer to the UnitStatus at the heart
+     *
+     * Not owned by this */
+    UnitStatus* unit;
+
+    /* \brief Indicates that information must be transmitted to client
+     *
+     * This bool is true iff vhanges have occured to the unit which have yet to
+     * be transmitted to the clients */
+    bool dirty;
+
+    /** Accept a new order from the queue */
     void acceptOrder(OrderCondition condition);
-      /**< Accept a new order from the queue */
   public:
     /* accessors */
     inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
     inline void setId(uint32 id) { unitId = id; }
     inline const IUnitStatus* getIStatus(void) const { return unit; }
-    /*inline IUnitStatus* getStatus(void) { return unit; }*/
     inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
+
+    inline void setDirty(void) { dirty = true; }
+    void clearDirty(void);
     
     void setPosition(const Point<sint32>& pos);
     bool setRadar(bool active);

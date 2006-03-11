@@ -154,15 +154,18 @@ void CompleteWorld::incrementGameState(void)
      * Effects can cause Fuses which can cause Effects
      * again, all in the course of one game cycle, not to mention
      * the fact that dying units also cause things, etc. */
-
-  /* game state changes caused by all of this are generally sent to clients by
-   * the innermost relevant method. */
   
   /* TODO: create the appropriate sensor returns and send them to clients,
    * as well as informing them of the removal of old ones */
   
   /* TODO: send to clients:
    * - newly explored/altered portions of the map */
+
+  /* Once everything has happened that can happen, we induce all units to send
+   * to clients any information about their changedness */
+  for (std::list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
+    j->clearDirty();
+  }
 }
 
 void CompleteWorld::applyEntryExitEffects(

@@ -14,6 +14,7 @@ enum UpdateType {
                       a value of zero */
   updateType_unitRemoved, /* UnitID, changeOwnerReason */
   updateType_unitAdded, /* Unit, changeOwnerReason */
+  updateType_unitAltered, /* Unit */
   updateType_orderQueued, /* UnitID, Order, OrderCondition */
     /* Given order placed in the queue with the given condition */
   updateType_orderCompleted, /* UnitID, OrderCondition */

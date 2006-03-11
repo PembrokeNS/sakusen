@@ -54,7 +54,7 @@ void UnitCore::damage(HitPoints amount) {
   } else {
     hitPoints -= amount;
   }
-  /* TODO: inform clients */
+  outerUnit->setDirty();
 }
 
 void UnitCore::repair(HitPoints amount, bool superhealth) {
@@ -70,7 +70,7 @@ void UnitCore::repair(HitPoints amount, bool superhealth) {
     else
       hitPoints += amount;
   }
-  /* TODO: inform clients */
+  outerUnit->setDirty();
 }
 
 void UnitCore::changeType(
@@ -79,7 +79,7 @@ void UnitCore::changeType(
   ) {
   const UnitType* newType;
   if ((newType = world->getUniverse()->getUnitTypePtr(to)) == NULL) {
-    Debug("[Unit::changeType] Invalid UnitTypeID");
+    Debug("Invalid UnitTypeID");
   } else {
     switch (hpAlteration)
     {
@@ -94,7 +94,7 @@ void UnitCore::changeType(
           std::min(hitPoints, newType->getDynamicData().getMaxHitPoints());
         break;
       default:
-        Debug("[Unit::changeType] Invalid hitpointAlteration");
+        Debug("Invalid hitpointAlteration");
         /* intentionally no break */
       case fullHitPoints:
         hitPoints = newType->getDynamicData().getMaxHitPoints();
@@ -105,7 +105,7 @@ void UnitCore::changeType(
     /* TODO: check everything is within the new bounds (e.g. speed)
      * (unless the engine does that for us at next tick) */
     /* TODO: deal with subunits */
-    /* TODO: inform clients */
+    outerUnit->setDirty();
   }
 }
 
@@ -113,6 +113,7 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   /* existence check goes here */
   Player* fromPtr = world->getPlayerPtr(owner);
   Player* toPtr = world->getPlayerPtr(to);
+  outerUnit->clearDirty();
   if (why != changeOwnerReason_created) {
     fromPtr->removeUnit(outerUnit->getId(), why);
   }
@@ -122,4 +123,5 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
 }
 
 }
-}//End Namespace
+}//End Namespaces
+

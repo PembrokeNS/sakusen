@@ -61,6 +61,22 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
     inline const CompleteUnit& getUnit() const { return unit; }
 };
 
+class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
+  private:
+    UnitAlteredUpdateData();
+  public:
+    UnitAlteredUpdateData(const ICompleteUnit* unit);
+    UnitAlteredUpdateData(IArchive&, const Universe*);
+    ~UnitAlteredUpdateData() {}
+  private:
+    CompleteUnit unit;
+  public:
+    UpdateData* newCopy() const { return new UnitAlteredUpdateData(*this); }
+    UpdateType getType() const { return updateType_unitAltered; }
+    void store(OArchive& out) const;
+    inline const CompleteUnit& getUnit() const { return unit; }
+};
+
 class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   private:
     OrderAcceptedUpdateData();

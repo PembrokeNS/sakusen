@@ -12,12 +12,6 @@ enum Rotation {
   rotation_anticlockwise
 };
 
-enum Reflection {
-  reflection_x,
-  reflection_y,
-  reflection_z
-};
-
 /** \brief Class to represent the orientation of a rigid body in
  * three-dimensional space.
  *
@@ -62,11 +56,12 @@ class LIBSAKUSEN_API Orientation {
     Orientation();
     Orientation(Rotation rotation, Angle amount);
       /* Constructs an orientation corresponding to specified rotation */
-    Orientation(Reflection reflection);
-      /* Constructs an orientation corresponding to specified reflection */
     ~Orientation() {}
   private:
-    Orientation(double matrix[3][3]);
+    Orientation(double[3][3]);
+    Orientation(
+        double, double, double, double, double, double, double, double, double
+      );
     double matrix[3][3]; /* indexed by rows then columns,
                             matrix acts on the left */
   public:
@@ -107,6 +102,12 @@ class LIBSAKUSEN_API Orientation {
       }
       return result.round16();
     }
+
+    /* Some particular orientations */
+    static const Orientation identity;
+    static const Orientation reflectionX;
+    static const Orientation reflectionY;
+    static const Orientation reflectionZ;
 
     void store(OArchive&) const;
     static Orientation load(IArchive&);

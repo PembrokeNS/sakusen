@@ -27,6 +27,9 @@ class LIBSAKUSEN_API Update {
     inline UnitAddedUpdateData getUnitAddedData(void) const {
       return *dynamic_cast<const UnitAddedUpdateData*>(data);
     }
+    inline UnitAlteredUpdateData getUnitAlteredData(void) const {
+      return *dynamic_cast<const UnitAlteredUpdateData*>(data);
+    }
     inline OrderAcceptedUpdateData getOrderAcceptedData(void) const {
       return *dynamic_cast<const OrderAcceptedUpdateData*>(data);
     }

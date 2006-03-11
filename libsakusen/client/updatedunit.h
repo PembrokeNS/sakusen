@@ -12,18 +12,19 @@ class UpdatedUnit : public CompleteUnit {
     UpdatedUnit();
   public:
     UpdatedUnit(const CompleteUnit& copy) :
-      CompleteUnit(copy), updated(false)
+      CompleteUnit(copy), altered(false)
     {}
     virtual ~UpdatedUnit() {}
   private:
-    /** Whether this Unit has already been updated this tick */
-    bool updated;
+    /** Whether this Unit has already been altered this tick */
+    bool altered;
 
     void clearOrders();
   public:
     void orderQueued(const OrderQueuedUpdateData& data);
     void orderAccepted(const OrderAcceptedUpdateData& data);
     void orderCompleted(const OrderCompletedUpdateData& data);
+    void alter(const CompleteUnit&);
     void incrementState();
 };
 
