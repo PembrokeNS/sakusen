@@ -3,12 +3,13 @@
 
 #include "regiondata.h"
 #include "world.h"
+#include "libsakusen-global.h"
 
 namespace sakusen {
 
 /** \brief Describes a region which is spherical */
 template<typename T>
-class SphereRegionData : public RegionData<T> {
+class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
   public:
     SphereRegionData() : centre(), radius(0) {}
     SphereRegionData(const Point<T>& c, uint32 r) : centre(c), radius(r) {}
@@ -22,13 +23,22 @@ class SphereRegionData : public RegionData<T> {
     
     RegionType getType() const { return regionType_sphere; }
     RegionData<T>* newCopy() const { return new SphereRegionData<T>(*this); }
-    void store(OArchive&) const;
-    static SphereRegionData<T>* loadNew(IArchive&);
+    void store(OArchive& archive) const
+    {
+       archive << centre << radius;
+    }
+    static SphereRegionData<T>* loadNew(IArchive& archive)
+   {
+       Point<T> centre;
+       uint32 radius;
+       archive >> centre >> radius;
+       return new SphereRegionData<T>(centre, radius);
+   }
 };
 
 template<typename T>
 inline bool SphereRegionData<T>::contains(const Point<T>& point) const {
-  return world->getMap()->getShortestDifference(point, centre).
+    return world->getMap()->getShortestDifference(point, centre).
     squareLength() < squareRadius();
 }
 
@@ -54,21 +64,7 @@ inline Point<sint32> SphereRegionData<sint32>::truncateToFit(
   return (p * radius / p.length()).truncate32();
 }
 
-template<typename T>
-void SphereRegionData<T>::store(OArchive& archive) const
-{
-  archive << centre << radius;
-}
-
-template<typename T>
-SphereRegionData<T>* SphereRegionData<T>::loadNew(IArchive& archive)
-{
-  Point<T> centre;
-  uint32 radius;
-  archive >> centre >> radius;
-  return new SphereRegionData<T>(centre, radius);
-}
-
+template LIBSAKUSEN_API SphereRegionData<sint16>;
 }
 
 #endif // SPHEREREGIONDATA_H

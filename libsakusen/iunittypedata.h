@@ -8,7 +8,7 @@
 
 namespace sakusen {
 
-class IUnitTypeData {
+class LIBSAKUSEN_API IUnitTypeData {
   public:
     virtual ~IUnitTypeData() {}
     virtual HitPoints getMaxHitPoints(void) const = 0;

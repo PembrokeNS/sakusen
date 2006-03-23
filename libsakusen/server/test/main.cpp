@@ -9,6 +9,7 @@
 #include "planemap.h"
 #include "point.h"
 #include "sphereregiondata.h"
+#include "region.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
 
@@ -33,7 +34,11 @@ void doLoadTest(ostream& output)
     cerr << "errno=" << errno << endl;
     exit(1);
   }
+#else
+  time_t startTime, endTime;
+  time(&startTime);
 #endif
+
   /* do test */
   sakusen::server::world->advanceGameState(numFrames);
 #ifndef _MSC_VER
@@ -57,7 +62,16 @@ void doLoadTest(ostream& output)
       endl;
   }
 #else
+  time(&endTime);
+  time_t timeTaken = endTime - startTime;
+  float FrameRate = timeTaken/numFrames;
   cout << "Test complete." << endl;
+  if(timeTaken){
+    cout << "Framerate: "<<FrameRate<<" fps "<<endl;
+  } 
+  else{
+    cout<<"Test to fast to time."<<endl;
+  }
 #endif
 }
 

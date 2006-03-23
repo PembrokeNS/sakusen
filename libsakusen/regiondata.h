@@ -2,6 +2,8 @@
 #define REGIONDATA_H
 
 #include "regiontype.h"
+#include "point.h"
+#include "oarchive.h"
 
 namespace sakusen {
 
@@ -9,7 +11,7 @@ class IUnitStatus;
 
 /** \brief Abstract class representing some sort of data describing a region */
 template<typename T>
-class RegionData {
+class LIBSAKUSEN_API RegionData {
   protected:
     RegionData() {}
     RegionData(const RegionData&) {}

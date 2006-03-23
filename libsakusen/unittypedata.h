@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-class UnitTypeData : public IUnitTypeData {
+class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
   private:
     UnitTypeData();
   public:

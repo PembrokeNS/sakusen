@@ -19,7 +19,7 @@ namespace sakusen {
 class ICompleteUnit;
 
 template<typename T>
-struct Rectangle {
+struct LIBSAKUSEN_API Rectangle {
   /* fields */
   T minx; /**< The minimum value of x */
   T miny; /**< The minimum value of y */

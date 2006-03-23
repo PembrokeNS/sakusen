@@ -103,7 +103,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
 {
   /*mhash is only for linux and CYGWIN. It would be nice if *
   we could switch to some other library for crypto things, or if 
-  someone could build an mhash dll for me using CYGWIn, or something.*/
+  someone could build an mhash dll for me using CYGWIN, or something.*/
   /* TODO: Maybe support other hashes */
 #ifndef WIN32
   MHASH thread = mhash_init(MHASH_SHA256);

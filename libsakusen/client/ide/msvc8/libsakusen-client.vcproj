@@ -227,6 +227,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\orientation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\orientation.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\partialmap.h"
 				>
 			</File>
@@ -244,6 +252,22 @@
 			</File>
 			<File
 				RelativePath="..\..\player.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\updatedunit.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\updatedunit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\updatetype.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\updatetype.h"
 				>
 			</File>
 			<File

@@ -1,5 +1,4 @@
 #include "updatedunit.h"
-
 #include "partialworld.h"
 
 namespace sakusen {

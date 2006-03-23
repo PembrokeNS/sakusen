@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\box.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\changeownerreason.h"
 				>
 			</File>
@@ -309,6 +313,10 @@
 			</File>
 			<File
 				RelativePath="..\..\iunitstatus.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\iunittypedata.h"
 				>
 			</File>
 			<File
@@ -432,6 +440,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\ptrhash.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\quadratic.cpp"
 				>
 			</File>
@@ -444,7 +456,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\rectangle-methods.h"
+				RelativePath="..\..\rectangle.cpp"
 				>
 			</File>
 			<File
@@ -565,6 +577,14 @@
 			</File>
 			<File
 				RelativePath="..\..\unittype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unittypedata.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unittypedata.h"
 				>
 			</File>
 			<File
