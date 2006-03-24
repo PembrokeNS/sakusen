@@ -11,6 +11,9 @@
     #define LIBSAKUSEN_CLIENT_API   __declspec(dllimport)
     #define LIBSAKUSEN_CLIENT_EXIMP
   #endif
+#else
+  #define LIBSAKUSEN_CLIENT_API
 #endif
 
 #endif // LIBSAKUSEN_CLIENT_GLOBAL_H
+

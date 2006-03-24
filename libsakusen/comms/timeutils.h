@@ -41,7 +41,7 @@ inline void timeUtils_getTime(timeval* tv)
   tv->tv_sec = long(intTime.QuadPart / 10000000 - 11644732800);
   tv->tv_usec = long((intTime.QuadPart % 10000000) / 10);
 #else
-  gettimeofday(&endTime, NULL);
+  gettimeofday(tv, NULL);
 #endif
 }
 

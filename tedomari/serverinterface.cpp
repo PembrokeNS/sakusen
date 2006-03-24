@@ -95,7 +95,7 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
     solicitationSocket->send(SolicitMessageData(""));
   }
   
-  tempSocket->setAsynchronous(true);
+  tempSocket->setNonBlocking(true);
   
   uint8 buffer[BUFFER_LEN];
   size_t messageLength;
@@ -200,7 +200,7 @@ String ServerInterface::join()
       incomingSocket = Socket::newConnectionToAddress(joinAddress);
       incomingSocket->send(JoinMessageData(""));
     }
-    incomingSocket->setAsynchronous(true);
+    incomingSocket->setNonBlocking(true);
   } catch (SocketExn* e) {
     delete incomingSocket;
     incomingSocket = NULL;

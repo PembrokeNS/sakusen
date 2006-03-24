@@ -103,9 +103,7 @@ class LIBSAKUSEN_API Point {
       z -= right.z;
     }
 
-    inline Point<double> operator*(const double scale) const {
-      return Point<double>(x*scale,y*scale,z*scale);
-    }
+    inline Point<double> operator*(const double scale) const;
 
     template <typename U>
     inline void operator*=(const U right) {
@@ -180,6 +178,71 @@ class LIBSAKUSEN_API Point<double> {
       }
     }
 
+    template <typename U>
+    inline bool operator==(const Point<U>& right) const {
+      return x==right.x && y==right.y && z==right.z;
+    }
+
+    /* Order operators use the product order.  Note that this is a partial
+     * order only, not a total order (so don't use Point<T>s in an
+     * ordered container) */
+    template <typename U>
+    inline bool operator<=(const Point<U>& right) const {
+      return x<=right.x && y<=right.y && z<=right.z;
+    }
+
+    template <typename U>
+    inline bool operator<(const Point<U>& right) const {
+      return x<right.x && y<right.y && z<right.z;
+    }
+    
+    template <typename U>
+    inline bool operator>=(const Point<U>& right) const {
+      return x>=right.x && y>=right.y && z>=right.z;
+    }
+
+    template <typename U>
+    inline bool operator>(const Point<U>& right) const {
+      return x>right.x && y>right.y && z>right.z;
+    }
+    
+    inline Point<double> operator-() const {
+      Point <double> result(-x,-y,-z);
+      return result;
+    }
+
+    template <typename U>
+    inline Point<double> operator+(const Point<U>& right) const {
+      Point<double> result(x+right.x,y+right.y,z+right.z);
+      return result;
+    }
+
+    template <typename U>
+    inline void operator+=(const Point<U>& right) {
+      x += right.x;
+      y += right.y;
+      z += right.z;
+    }
+
+    template <typename U>
+    inline Point<double> operator-(const Point<U>& right) const {
+      Point<double> result(x-right.x,y-right.y,z-right.z);
+      return result;
+    }
+
+    template <typename U>
+    inline void operator-=(const Point<U>& right) {
+      x -= right.x;
+      y -= right.y;
+      z -= right.z;
+    }
+
+    template<typename U>
+    inline Point<double> operator*(U scale) const {
+      Point<double> result(x*scale,y*scale,z*scale);
+			return result;
+    }
+
     template<typename U>
     inline Point<double> operator/(U scale) const {
       Point<double> result(x/scale,y/scale,z/scale);
@@ -211,6 +274,10 @@ inline Point<double> Point<T>::operator/(double scale) const {
 	return result;
 }
 
+template<typename T>
+inline Point<double> Point<T>::operator*(double scale) const {
+  return Point<double>(x*scale,y*scale,z*scale);
+}
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {

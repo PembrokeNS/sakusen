@@ -33,7 +33,7 @@ class PlaneMap : public MapType {
     Topology getTopology(void) const { return topology_plane; }
     bool resolvePosition(
         const Point<sint32>& pos, Point<sint32>* resolved,
-        Orientation* orientation
+        Orientation*
       ) const
     {
       Point <sint32> p = pos;

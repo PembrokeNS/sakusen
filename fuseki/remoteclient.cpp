@@ -37,7 +37,7 @@ RemoteClient::RemoteClient(
     inSocket = outSocket;
     outSocket->send(Message(AcceptMessageData("", id)));
   }
-  inSocket->setAsynchronous(true);
+  inSocket->setNonBlocking(true);
 }
 
 RemoteClient::~RemoteClient()

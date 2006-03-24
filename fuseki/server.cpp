@@ -362,8 +362,8 @@ void Server::serve()
   signal(SIGTERM, &interruptHandler);
   out << "Server started.  Hit Ctrl+C to interrupt and shut down server.\n";
   
-  solicitationSocket->setAsynchronous(true);
-  joinSocket->setAsynchronous(true);
+  solicitationSocket->setNonBlocking(true);
+  joinSocket->setNonBlocking(true);
   Message advertisement = Message(AdvertiseMessageData("fuseki", "Game name"));
 
   /* A list of incoming (probably TCP) connections where we expect to get join

@@ -50,7 +50,7 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
   if (contains(p)) {
     return p;
   }
-  return (p * radius / p.length()).truncate<T>();
+  return (p * radius / p.length()).Point<double>::truncate<T>();
 }
 
 #ifdef _MSC_VER
