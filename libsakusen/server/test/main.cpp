@@ -24,7 +24,7 @@ using namespace sakusen::server::test;
 
 void doLoadTest(ostream& output)
 {
-  uint32 numFrames = 1000;
+  uint32 numTicks = 1000;
 #ifndef _MSC_VER
   struct timespec startTime;
   struct timespec endTime;
@@ -40,7 +40,7 @@ void doLoadTest(ostream& output)
 #endif
 
   /* do test */
-  sakusen::server::world->advanceGameState(numFrames);
+  sakusen::server::world->advanceGameState(numTicks);
 #ifndef _MSC_VER
   /* get time after test */
   if (clock_gettime(CLOCK_REALTIME, &endTime)) {
@@ -52,7 +52,7 @@ void doLoadTest(ostream& output)
   uint64 timeTaken = endTime.tv_sec - startTime.tv_sec;
   timeTaken *= NANO;
   timeTaken += endTime.tv_nsec - startTime.tv_nsec;
-  timeTaken /= numFrames;
+  timeTaken /= numTicks;
   output << "Test complete: ";
   output << endl;
   if (timeTaken) {
@@ -63,14 +63,13 @@ void doLoadTest(ostream& output)
   }
 #else
   time(&endTime);
-  time_t timeTaken = endTime - startTime;
-  float FrameRate = timeTaken/numFrames;
+  float timeTaken = endTime - startTime;
   cout << "Test complete." << endl;
-  if(timeTaken){
-    cout << "Framerate: "<<FrameRate<<" fps "<<endl;
+  if (0 != timeTaken) {
+    cout << "Tickrate: "<<numTicks / timeTaken<<" tps "<<endl;
   } 
-  else{
-    cout<<"Test to fast to time."<<endl;
+  else {
+    cout<<"Test too fast to time."<<endl;
   }
 #endif
 }

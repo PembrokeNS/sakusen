@@ -85,7 +85,7 @@ class LIBSAKUSEN_API Orientation {
           result[i] += matrix[i][j] * right[j];
         }
       }
-      return result.round16();
+      return result.round<T>();
     }
 
     /* \brief Multiply the inverse of this matrix by the given vector
@@ -100,7 +100,7 @@ class LIBSAKUSEN_API Orientation {
           result[i] += matrix[j][i] * right[j];
         }
       }
-      return result.round16();
+      return result.round<T>();
     }
 
     /* Some particular orientations */

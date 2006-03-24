@@ -146,7 +146,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_EXPORTS;WIN32"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -179,7 +179,7 @@
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/libsakusen-server.pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-server.lib"
@@ -268,7 +268,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\libsakusen-global.cpp"
+				RelativePath="..\..\libsakusen-server-global.h"
 				>
 			</File>
 			<File
@@ -293,10 +293,6 @@
 			</File>
 			<File
 				RelativePath="..\..\unitlayer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\world.cpp"
 				>
 			</File>
 		</Filter>

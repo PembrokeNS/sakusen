@@ -38,9 +38,6 @@ class LIBSAKUSEN_API Region {
     void store(OArchive&) const;
     static Region<T> load(IArchive&);
 };
-//This line generates vast quantities of warnings, but does allow it to compile. Not, alas, to run.
-//Suspect that if I can get it to compile without this line it will be fine.
-template LIBSAKUSEN_API Region<sint16>;
 
 }
 #endif // REGION_H

@@ -206,7 +206,7 @@ void UnixDatagramSocket::close()
   }
 }
 
-void UnixDatagramSocket::setAsynchronous(bool val)
+void UnixDatagramSocket::setNonBlocking(bool val)
 {
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {

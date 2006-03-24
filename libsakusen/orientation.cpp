@@ -76,7 +76,7 @@ bool Orientation::operator==(const Orientation& right) const
   return true;
 }
 
-const Orientation Orientation::identity = Orientation();
+const Orientation LIBSAKUSEN_API Orientation::identity = Orientation();
 const Orientation Orientation::reflectionX =
   Orientation(-1, 0, 0, 0,  1, 0, 0, 0,  1);
 const Orientation Orientation::reflectionY =

@@ -15,20 +15,13 @@ inline bool Region<T>::contains(const Point<T>& point) const
   return data->contains(point);
 }
 
-template<>
-inline bool Region<sint32>::contains(const IUnitStatus* unit) const
-{
-  /* TODO: maybe we want to check whether it intersects the unit or completely
-   * contains the unit, rather than simply whether it contains the centre, as
-   * here */
-  return contains(unit->getPosition());
-}
-
 template<typename T>
 inline Point<T> Region<T>::truncateToFit(const Point<T>& p) const
 {
   return data->truncateToFit(p);
 }
+
+#ifdef LIBSAKUSEN_METHOD_DEFINITIONS
 
 template<typename T>
 void Region<T>::store(OArchive& archive) const
@@ -60,6 +53,12 @@ Region<T> Region<T>::load(IArchive& archive)
   return Region(data);
 }
 
+#endif
+
+#ifdef _MSC_VER
+template LIBSAKUSEN_API Region<sint16>;
+template LIBSAKUSEN_API Region<sint32>;
+#endif
 
 }
 

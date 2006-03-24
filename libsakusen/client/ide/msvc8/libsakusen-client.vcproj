@@ -146,7 +146,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_EXPORTS;WIN32"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_CLIENT_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -179,7 +179,7 @@
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-client.lib"
 				TargetMachine="1"
@@ -223,15 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\libsakusen-global.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\orientation.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\orientation.h"
+				RelativePath="..\..\libsakusen-client-global.h"
 				>
 			</File>
 			<File
@@ -260,18 +252,6 @@
 			</File>
 			<File
 				RelativePath="..\..\updatedunit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\updatetype.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\updatetype.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\world.cpp"
 				>
 			</File>
 		</Filter>

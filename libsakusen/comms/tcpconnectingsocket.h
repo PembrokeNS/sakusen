@@ -21,7 +21,7 @@ class TCPConnectingSocket : public TCPSocket {
     ~TCPConnectingSocket() {}
 
     bool isConnectionBased() { return false; }
-    Socket* accept() { Fatal("Not connection-based socket"); }
+    Socket* accept() { Fatal("Not connection-based socket"); return NULL; /* Return statement for the benefit of MSVC */ }
 };
 
 }}

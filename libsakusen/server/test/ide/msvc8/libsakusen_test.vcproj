@@ -75,9 +75,9 @@
 				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-server-test.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="../Debug/libsakusen_test.pdb"
+				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/libsakusen_test.pdb"
 				SubSystem="1"
 				TargetMachine="1"
 			/>

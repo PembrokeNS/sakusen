@@ -187,7 +187,7 @@ void CompleteWorld::applyEntryExitEffects(
   }
 }
 
-LIBSAKUSEN_API CompleteWorld* world = NULL;
+LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;
 
 }
 } //End Namespaces

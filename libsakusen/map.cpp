@@ -1,7 +1,5 @@
 #include "map.h"
 
-#include "planemap.h"
-
 using namespace std;
 
 using namespace sakusen;

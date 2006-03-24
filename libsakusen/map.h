@@ -6,9 +6,6 @@
 #include "libsakusen-global.h"
 #include "point.h"
 #include "topology.h"
-#include "heightfield.h"
-#include "mapplaymode.h"
-#include "universe.h"
 #include "iarchive.h"
 #include "maptemplate.h"
 

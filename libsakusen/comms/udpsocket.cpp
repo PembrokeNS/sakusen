@@ -5,13 +5,11 @@
 #include "errorutils.h"
 #include "socketexception.h"
 
-#include <sys/socket.h>
-
 #ifdef WIN32
-#define errno WSAGetLastError()
+#include "wsabsd.h"
+#define NativeReceiveReturnType int
 #else // BSD sockets
-#define NativeSocketRecv(a,b,c,d) ::recv(a,b,c,d)
-#define NativeSocketRecvFrom(a,b,c,d,e,f) ::recvfrom(a,b,c,d,e,f)
+#define NativeReceiveReturnType ssize_t
 #endif
 
 using namespace sakusen;
@@ -61,7 +59,7 @@ void UDPSocket::send(const void* buf, size_t len)
 {
   int retVal;
  
-  retVal = ::send(sockfd, buf, len, 0);
+  retVal = ::send(sockfd, reinterpret_cast<const char*>(buf), len, 0);
   if (retVal == -1) {
     switch (errno) {
       case ENOTCONN:
@@ -104,7 +102,7 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
   int retVal;
  
   retVal = ::sendto(
-      sockfd, buf, len, 0, reinterpret_cast<sockaddr*>(&dest), sizeof(dest)
+      sockfd, reinterpret_cast<const char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&dest), sizeof(dest)
     );
   if (retVal == -1) {
     switch (errno) {
@@ -121,7 +119,7 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
 
 size_t UDPSocket::receive(void* buf, size_t len)
 {
-  ssize_t retVal = NativeSocketRecv(sockfd, buf, len, 0);
+  NativeReceiveReturnType retVal = ::recv(sockfd, reinterpret_cast<char*>(buf), len, 0);
   if (retVal == -1) {
     if (errno == EAGAIN) {
       return 0;
@@ -135,8 +133,8 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
 {
   sockaddr_in fromAddr;
   socklen_t fromLen = sizeof(fromAddr);
-  ssize_t retVal = NativeSocketRecvFrom(
-      sockfd, buf, len, 0, reinterpret_cast<sockaddr*>(&fromAddr), &fromLen
+  NativeReceiveReturnType retVal = ::recvfrom(
+      sockfd, reinterpret_cast<char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&fromAddr), &fromLen
     );
   if (retVal == -1) {
     if (errno == EAGAIN) {
@@ -144,8 +142,13 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
     }
     Fatal("error receiving message");
   }
+#ifdef WIN32
+  /** \bug Not thread-safe */
+  char* fromChar = inet_ntoa(fromAddr.sin_addr);
+#else
   char fromChar[INET_ADDRSTRLEN];
   inet_ntop(AF_INET, &fromAddr.sin_addr, fromChar, INET_ADDRSTRLEN);
+#endif
   from = getType() + ADDR_DELIM + fromChar + ADDR_DELIM +
     numToString(ntohs(fromAddr.sin_port));
   return retVal;

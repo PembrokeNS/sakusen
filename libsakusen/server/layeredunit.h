@@ -2,6 +2,7 @@
 #define LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 
 #include "libsakusen-global.h"
+#include "libsakusen-server-global.h"
 
 #include <list>
 
@@ -28,7 +29,7 @@ namespace server {
  * be handled directly.  It would be bad (and slow) for layers to mess with the
  * physics too much.
  */
-class LIBSAKUSEN_API LayeredUnit : public ICompleteUnit {
+class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
   public:
     static void spawn(
       const PlayerID owner,

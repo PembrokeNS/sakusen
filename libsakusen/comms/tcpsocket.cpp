@@ -5,13 +5,11 @@
 #include "errorutils.h"
 #include "socketexception.h"
 
-#include <sys/socket.h>
-
 #ifdef WIN32
-#define errno WSAGetLastError()
+#include "wsabsd.h"
+#define NativeReceiveReturnType int
 #else // BSD sockets
-#define NativeSocketRecv(a,b,c,d) ::recv(a,b,c,d)
-#define NativeSocketRecvFrom(a,b,c,d,e,f) ::recvfrom(a,b,c,d,e,f)
+#define NativeReceiveReturnType ssize_t
 #endif
 
 using namespace sakusen;
@@ -74,11 +72,11 @@ TCPSocket::TCPSocket(NativeSocket s, const sockaddr_in& peerAddress) :
 void TCPSocket::send(const void* buf, size_t len)
 {
   /* Prefix the message by its length */
-  uint8 longerBuf[len+2];
+  uint8* longerBuf = new uint8[len+2];
   *reinterpret_cast<uint16*>(longerBuf) = htons(len);
   memcpy(longerBuf+2, buf, len);
   
-  int retVal = ::send(sockfd, longerBuf, len+2, 0);
+  int retVal = ::send(sockfd, reinterpret_cast<char*>(longerBuf), len+2, 0);
   if (retVal == -1) {
     switch (errno) {
       case ENOTCONN:
@@ -90,6 +88,8 @@ void TCPSocket::send(const void* buf, size_t len)
         break;
     }
   }
+
+  delete[] longerBuf;
 }
 
 void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*address*/)
@@ -148,8 +148,8 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   /* We fetch as much as possible and buffer it locally */
   do {
     if (bufferCapacity > bufferLength) {
-      ssize_t received = NativeSocketRecv(
-          sockfd, buffer+bufferLength, bufferCapacity - bufferLength, 0
+      NativeReceiveReturnType received = recv(
+          sockfd, reinterpret_cast<char*>(buffer+bufferLength), bufferCapacity - bufferLength, 0
         );
       if (received == -1) {
         if (errno == EAGAIN) {
@@ -198,5 +198,6 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
 size_t TCPSocket::receiveFrom(void* /*buf*/, size_t /*len*/, String& /*from*/)
 {
   Fatal("not implemented");
+  return 0; /* Return statement for the benefit of MSVC */
 }
 

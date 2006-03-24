@@ -145,4 +145,3 @@ void PartialWorld::endTick()
 }
 
 PartialWorld* sakusen::client::world = NULL;
-

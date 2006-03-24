@@ -56,7 +56,7 @@ class UnixDatagramSocket : public Socket {
     bool isConnectionBased() { return false; }
     Socket* accept() { Fatal("Not connection-based socket"); }
     void close();
-    void setAsynchronous(bool val);
+    void setNonBlocking(bool val);
     String getAddress() const;
 };
 

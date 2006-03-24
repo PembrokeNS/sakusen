@@ -179,7 +179,7 @@
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/libsakusen.pdb"
 				ImportLibrary=".\Debug/libsakusen.lib"
@@ -469,6 +469,10 @@
 			</File>
 			<File
 				RelativePath="..\..\region-methods.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\region.cpp"
 				>
 			</File>
 			<File

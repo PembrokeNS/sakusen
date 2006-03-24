@@ -11,7 +11,7 @@
 namespace sakusen {
 namespace server {
 
-class LIBSAKUSEN_API CompleteWorld : public World {
+class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   private:
     CompleteWorld();
     CompleteWorld(const CompleteWorld& copy);
@@ -64,7 +64,7 @@ class LIBSAKUSEN_API CompleteWorld : public World {
       );
 };
 
-extern LIBSAKUSEN_API CompleteWorld* world;
+extern LIBSAKUSEN_SERVER_API CompleteWorld* world;
 }
 }
 

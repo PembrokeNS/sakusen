@@ -92,7 +92,7 @@ String::iterator sakusen::stringUtils_findPreviousCharStart(
       break;
     }
     --i;
-  } while (*i & 0xc0 == 0x80);
+  } while ((*i & 0xc0) == 0x80);
   return i;
 }
 

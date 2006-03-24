@@ -4,11 +4,9 @@
 #include "stringutils.h"
 #include "timeutils.h"
 
-#include <sys/socket.h>
 #include <cerrno>
 
 #ifdef WIN32
-#define errno WSAGetLastError()
 #define NativeSocketClose(x) closesocket(x)
 #else // BSD sockets
 #include <fcntl.h>
@@ -60,16 +58,16 @@ void IPSocket::interpretAddress(
 size_t IPSocket::receiveTimeout(
     void* buf,
     size_t len,
-    const struct timeval& timeout
+    const struct ::timeval& timeout
   )
 {
   struct timeval endTime;
-  gettimeofday(&endTime, NULL);
+  timeUtils_getTime(&endTime);
   endTime += timeout;
   size_t receivedLength;
   while (0==(receivedLength=receive(buf, len))) {
     struct timeval timeNow;
-    gettimeofday(&timeNow, NULL);
+    timeUtils_getTime(&timeNow);
     if (timeNow > endTime) {
       return 0;
     }
@@ -88,12 +86,12 @@ void IPSocket::close()
   }
 }
 
-void IPSocket::setAsynchronous(bool val)
+void IPSocket::setNonBlocking(bool val)
 {
 #ifdef WIN32
-  unsigned long flags; = 0ul;
-  if (val) flags = 0ul else flags = 1ul;
-  if (0 != ioctlsocket(sockfd, FIONBIO, flags))
+  unsigned long flags = 0ul;
+  if (val) flags = 0ul; else flags = 1ul;
+  if (0 != ioctlsocket(sockfd, FIONBIO, &flags))
     Fatal("could not set non-blocking; " << errno);
 #else
   int flags = fcntl(sockfd, F_GETFL);
@@ -121,13 +119,21 @@ String IPSocket::getAddress() const {
      * In practice I don't think this will in fact be used in those
      * circumstances, because it would be broken if the connection were going
      * through a router or some such thin anyway. */
+#ifdef WIN32
+    String hostname; /** \bug We make no attempt to solve this issue under Windows */
+#else
     char hostname[HOST_NAME_MAX];
     gethostname(hostname, HOST_NAME_MAX);
+#endif
     return getType() + ADDR_DELIM + hostname + ADDR_DELIM +
       numToString(port);
   } else {
+#ifdef WIN32
+    char* host = inet_ntoa(addr.sin_addr);
+#else
     char host[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &addr.sin_addr, host, INET_ADDRSTRLEN);
+#endif
     return getType() + ADDR_DELIM + host + ADDR_DELIM +
       numToString(port);
   }

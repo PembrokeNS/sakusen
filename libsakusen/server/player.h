@@ -15,7 +15,7 @@ namespace server {
 
 class LayeredUnit;
 
-class LIBSAKUSEN_API Player {
+class LIBSAKUSEN_SERVER_API Player {
   private:
     Player();
   public:

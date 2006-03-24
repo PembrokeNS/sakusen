@@ -4,8 +4,7 @@
 #include "libsakusen-comms-global.h"
 #include "socket.h"
 
-#ifdef WINDOWS
-#include "win32.h"
+#ifdef WIN32
 #include <winsock2.h>
 #else
 #include <sys/types.h>
@@ -62,7 +61,7 @@ class IPSocket : public Socket {
   public:
     size_t receiveTimeout(void* buf, size_t len, const struct timeval& timeout);
     void close();
-    void setAsynchronous(bool val);
+    void setNonBlocking(bool val);
     String getAddress() const;
     /* \brief Returns the first section of the sakusen-style address for this
      * socket (e.g. "udp" or "tcp") */

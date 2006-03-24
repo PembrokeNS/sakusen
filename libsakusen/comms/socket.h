@@ -4,6 +4,7 @@
 #include <sys/types.h>
 
 #include "message.h"
+#include "timeutils.h"
 
 namespace sakusen {
 namespace comms {
@@ -100,7 +101,7 @@ class Socket {
     /** \brief Close a socket, unless it is already closed. */
     virtual void close() = 0;
     /** \brief Set the async flag on this socket. */
-    virtual void setAsynchronous(bool val) = 0;
+    virtual void setNonBlocking(bool val) = 0;
     /** \brief Get the Sakusen-style address of this socket. */
     virtual String getAddress() const = 0;
 };

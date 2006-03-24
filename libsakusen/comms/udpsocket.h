@@ -29,7 +29,7 @@ class UDPSocket : public IPSocket {
     size_t receive(void* buf, size_t len);
     size_t receiveFrom(void* buf, size_t len, String& from);
     bool isConnectionBased() { return false; }
-    Socket* accept() { Fatal("Not connection-based socket"); }
+    Socket* accept() { Fatal("Not connection-based socket"); return NULL; /* Return statement for the benefit of MSVC */ }
     String getType() const { return "udp"; }
 };
 

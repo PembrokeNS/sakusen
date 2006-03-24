@@ -11,7 +11,7 @@
 namespace sakusen {
 namespace client {
 
-class LIBSAKUSEN_API PartialWorld : public World {
+class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   private:
     PartialWorld();
     PartialWorld(const PartialWorld&);
@@ -37,7 +37,7 @@ class LIBSAKUSEN_API PartialWorld : public World {
     void endTick();
 };
 
-extern PartialWorld* world;
+extern LIBSAKUSEN_CLIENT_API PartialWorld* world;
 
 }}
 

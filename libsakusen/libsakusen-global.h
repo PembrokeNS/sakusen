@@ -9,17 +9,18 @@
 
 #if defined(_MSC_VER)
 
-    #if(_MSC_VER<1310)
+  #if(_MSC_VER<1310)
     /*1310 is VC2003. None of this will work with earlier compilers, and later 
     ones are free, so there is really no reason to not upgrade */
     #error Need at least MSVC 7.1 to work.
-    #endif 
+  #endif 
 
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)
     #define LIBSAKUSEN_EXIMP extern
+    #define LIBSAKUSEN_METHOD_DEFINITIONS
   #else
     #define LIBSAKUSEN_API   __declspec(dllimport)
     #define LIBSAKUSEN_EXIMP
@@ -29,12 +30,16 @@
    * This is mostly to do with stuff from std, but in at least one case it 
    * was very important.  In the long run we should do without disabling 
    * this warning. */
-   #pragma warning(disable: 4251)
+  #pragma warning(disable: 4251)
 
-//Alias of __PRETTY_FUNCTION for 
-    #define __PRETTY_FUNCTION__ __FUNCDNAME__
+  /* Disable "not all code paths return a value" warning because the
+   * compiler is too stupid to exhibit it properly */
+  #pragma warning(disable: 4715)
 
-/* Define file seperator */
+  //Alias of __PRETTY_FUNCTION for 
+  #define __PRETTY_FUNCTION__ __FUNCDNAME__
+
+  /* Define file seperator */
   #define FILE_SEP "\\"
   #define FILE_SEPC '\\'
   
@@ -60,6 +65,8 @@
   #else
     #define LIBSAKUSEN_API
   #endif
+
+  #define LIBSAKUSEN_METHOD_DEFINITIONS
 
   /* Define file seperator */
   #define FILE_SEP "/"

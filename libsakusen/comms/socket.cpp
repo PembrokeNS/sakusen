@@ -26,7 +26,7 @@ void Socket::socketsInit(void)
   int iResult;
   iResult = WSAStartup( MAKEWORD(2,2), &wsaData );
   if ( iResult != NO_ERROR )
-    printf("Error at WSAStartup()\n");
+    Fatal("Error at WSAStartup()");
 #endif
 }
 

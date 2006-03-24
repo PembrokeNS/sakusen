@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="libsakusen_comms"
+	Name="libsakusen-comms"
 	ProjectGUID="{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
+	RootNamespace="libsakusen-comms"
 	>
 	<Platforms>
 		<Platform
@@ -170,11 +171,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\ide\msvc8\Debug\libsakusen.lib"
+				AdditionalDependencies="..\..\..\ide\msvc8\Debug\libsakusen.lib ws2_32.lib"
 				OutputFile=".\Debug/libsakusen_comms.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/libsakusen_comms.pdb"
 				ImportLibrary=".\Debug/libsakusen_comms.lib"
@@ -224,6 +225,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\ipsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ipsocket.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\libsakusen-comms-global.h"
 			>
 		</File>
@@ -261,6 +270,54 @@
 		</File>
 		<File
 			RelativePath="..\..\socketexception.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcpconnectingsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcpconnectingsocket.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcplisteningsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcplisteningsocket.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcpsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\tcpsocket.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\timeutils.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\timeutils.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\udpconnectingsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\udpconnectingsocket.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\udplisteningsocket.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\udplisteningsocket.h"
 			>
 		</File>
 		<File

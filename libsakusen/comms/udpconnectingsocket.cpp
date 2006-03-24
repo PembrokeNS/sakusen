@@ -4,7 +4,6 @@
 #include <winsock2.h>
 #include "wsabsd.h"
 #endif
-#include <sys/socket.h>
 
 using namespace sakusen::comms;
 

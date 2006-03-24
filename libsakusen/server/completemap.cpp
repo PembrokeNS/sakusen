@@ -1,7 +1,5 @@
 #include "completemap.h"
 
-#include "planemap.h"
-
 using namespace std;
 
 using namespace sakusen;
@@ -10,6 +8,16 @@ using namespace sakusen::server;
 CompleteMap::CompleteMap(const MapTemplate& t) :
   Map(t),
   heightfield(t.getHeightfield())
+{
+}
+
+CompleteMap::CompleteMap(
+    const Point<sint32>& topRight,
+    const Point<sint32>& bottomLeft,
+    uint16 gravity
+  ) :
+  Map(topRight, bottomLeft, gravity),
+  heightfield()
 {
 }
 

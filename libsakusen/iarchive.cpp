@@ -68,7 +68,7 @@ IArchive& IArchive::operator>>(double& d)
 
 IArchive& IArchive::operator>>(String& s)
 {
-  uint8 length;
+  uint32 length;
   *this >> length;
   assertLength(length);
   s = String(

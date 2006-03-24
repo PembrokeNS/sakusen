@@ -42,29 +42,21 @@ inline bool SphereRegionData<T>::contains(const Point<T>& point) const {
     squareLength() < squareRadius();
 }
 
-template<>
-inline Point<sint16> SphereRegionData<sint16>::truncateToFit(
-    const Point<sint16>& p
+template<typename T>
+inline Point<T> SphereRegionData<T>::truncateToFit(
+    const Point<T>& p
   ) const
 {
   if (contains(p)) {
     return p;
   }
-  return (p * radius / p.length()).truncate16();
+  return (p * radius / p.length()).truncate<T>();
 }
 
-template<>
-inline Point<sint32> SphereRegionData<sint32>::truncateToFit(
-    const Point<sint32>& p
-  ) const
-{
-  if (contains(p)) {
-    return p;
-  }
-  return (p * radius / p.length()).truncate32();
-}
-
+#ifdef _MSC_VER
 template LIBSAKUSEN_API SphereRegionData<sint16>;
+#endif
+
 }
 
 #endif // SPHEREREGIONDATA_H

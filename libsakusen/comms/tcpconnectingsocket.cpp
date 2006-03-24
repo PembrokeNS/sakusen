@@ -4,7 +4,6 @@
 #include <winsock2.h>
 #include "wsabsd.h"
 #endif
-#include <sys/socket.h>
 
 using namespace sakusen::comms;
 
@@ -36,8 +35,13 @@ TCPConnectingSocket::TCPConnectingSocket(
   ) :
   TCPSocket(s, peerAddress)
 {
+#ifdef WIN32
+  /** \bug Not thread-safe */
+  char* host = inet_ntoa(peerAddress.sin_addr);
+#else
   char host[INET_ADDRSTRLEN];
   inet_ntop(AF_INET, &peerAddress, host, INET_ADDRSTRLEN);
+#endif
   remoteHost = host;
 }
 

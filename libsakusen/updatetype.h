@@ -1,6 +1,8 @@
 #ifndef UPDATETYPE_H
 #define UPDATETYPE_H
 
+#include "libsakusen-global.h"
+
 #include <iosfwd>
 
 namespace sakusen {
@@ -24,7 +26,7 @@ enum UpdateType {
     /* Order accepted from specified queue entry */
 };
 
-std::ostream& operator<<(std::ostream& output, UpdateType update);
+LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, UpdateType update);
 
 }
 

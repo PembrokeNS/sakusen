@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include "libsakusen-global.h"
+#include "libsakusen-server-global.h"
 
 #include <queue>
 #include "playerid.h"
@@ -11,7 +12,7 @@
 namespace sakusen {
 namespace server {
 
-class LIBSAKUSEN_API Client {
+class LIBSAKUSEN_SERVER_API Client {
   private:
     Client(const Client& copy);
   protected:
