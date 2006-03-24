@@ -1,8 +1,9 @@
 Adversary
+Aggressive
 Antagonist
-Audacious
 Assiduous
 Attacker
+Audacious
 Avenger
 Belligerent
 Berserker
@@ -12,6 +13,7 @@ Bruiser
 Bustler
 Challenger
 Champion
+Chaos
 Combatant
 Courageous
 Dauntless
@@ -19,6 +21,7 @@ Demolisher
 Destruction
 Devastation
 Dreadnought
+Enmity
 Fearless
 Ferocious
 Formidable
@@ -28,6 +31,7 @@ Gladiator
 Hostile
 Hunter
 Immortal
+Implacable
 Impregnable
 Indefatigable
 Indomitable
@@ -36,6 +40,7 @@ Intolerable
 Invicta
 Invincible
 Invulnerable
+Malice
 Pouncer
 Powerful
 Punitive
@@ -50,11 +55,13 @@ Tenacious
 Terrible
 Thrasher
 Tormentor
+Ultimatum
 Unbroken
 Undaunted
 Unsinkable
 Unsparing
 Untamed
+Uproar
 Valiant
 Vanquisher
 Vehement

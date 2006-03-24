@@ -1,12 +1,14 @@
 Aeon
 Axial
 Azimuth
+Closure
 Comet
 Constellation
 Cosmos
 Eclipse
 Enthalpy
 Entropy
+Entscheidungsproblem
 Equinox
 Galaxy
 Helios
@@ -20,6 +22,7 @@ Northbridge
 North Star
 Nova
 Ontology
+Phenotype
 Photon
 Phylogeny
 Polaris
