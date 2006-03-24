@@ -57,6 +57,7 @@ Sickle
 Six-Shooter
 Spearhead
 Strongbow
+Sword
 Tomahawk
 Trebuchet
 Trident
