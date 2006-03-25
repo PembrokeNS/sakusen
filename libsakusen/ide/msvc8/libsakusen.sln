@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen", "libsakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen_comms", "..\..\comms\ide\msvc8\libsakusen_comms.vcproj", "{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-comms", "..\..\comms\ide\msvc8\libsakusen_comms.vcproj", "{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-server", "..\..\server\ide\msvc8\libsakusen-server.vcproj", "{8B705117-2954-465C-82CC-98C20598B4E3}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +17,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-server-test", ".
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-client", "..\..\client\ide\msvc8\libsakusen-client.vcproj", "{3E022526-106C-4C4B-987D-A7D476EF37C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-resources", "..\..\resources\ide\msvc8\libsakusen-resources.vcproj", "{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
@@ -47,6 +52,10 @@ Global
 		{3E022526-106C-4C4B-987D-A7D476EF37C1}.Debug|Win32.Build.0 = Debug|Win32
 		{3E022526-106C-4C4B-987D-A7D476EF37C1}.Release|Win32.ActiveCfg = Release|Win32
 		{3E022526-106C-4C4B-987D-A7D476EF37C1}.Release|Win32.Build.0 = Release|Win32
+		{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}.Debug|Win32.Build.0 = Debug|Win32
+		{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}.Release|Win32.ActiveCfg = Release|Win32
+		{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
