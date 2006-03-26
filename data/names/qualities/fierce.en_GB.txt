@@ -28,6 +28,7 @@ Formidable
 Fortitude
 Furious
 Gladiator
+Havoc
 Hostile
 Hunter
 Immortal
