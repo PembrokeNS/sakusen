@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="libsakusen-server"
-	ProjectGUID="{8B705117-2954-465C-82CC-98C20598B4E3}"
+	Name="libsakusen-resources"
+	ProjectGUID="{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}"
 	RootNamespace="libsakusen-server"
 	>
 	<Platforms>
@@ -115,7 +115,6 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
@@ -145,8 +144,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
+				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\;..\..\..\comms"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -220,79 +219,47 @@
 			Name="Main sources"
 			>
 			<File
-				RelativePath="..\..\client.cpp"
+				RelativePath="..\..\fileresourceinterface.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\client.h"
+				RelativePath="..\..\fileresourceinterface.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\completemap.cpp"
+				RelativePath="..\..\fileutils.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\completemap.h"
+				RelativePath="..\..\fileutils.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\completeworld.cpp"
+				RelativePath="..\..\libsakusen-resources-global.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\completeworld.h"
+				RelativePath="..\..\lockingfile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\debuggingclient.cpp"
+				RelativePath="..\..\lockingfile.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\debuggingclient.h"
+				RelativePath="..\..\lockingfilereader.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\effect.h"
+				RelativePath="..\..\lockingfilereader.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\fuse.h"
+				RelativePath="..\..\lockingfilewriter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\layeredunit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\layeredunit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libsakusen-server-global.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\sensorreturn.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitlayer.h"
+				RelativePath="..\..\lockingfilewriter.h"
 				>
 			</File>
 		</Filter>
