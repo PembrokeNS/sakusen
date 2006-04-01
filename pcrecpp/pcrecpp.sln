@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcrecpp", "pcrecpp\pcrecpp.vcproj", "{1B29ED8B-2374-469E-9C94-00BC95E4FD5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B}.Debug|Win32.Build.0 = Debug|Win32
+		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B}.Release|Win32.ActiveCfg = Release|Win32
+		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
