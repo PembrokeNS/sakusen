@@ -20,6 +20,7 @@
 using namespace std;
 
 using namespace sakusen;
+using namespace sakusen::comms;
 
 namespace sakusen {
 namespace resources {
