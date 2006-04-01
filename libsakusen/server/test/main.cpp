@@ -35,8 +35,8 @@ void doLoadTest(ostream& output)
     exit(1);
   }
 #else
-  time_t startTime, endTime;
-  time(&startTime);
+  clock_t startTime, endTime;
+  startTime=clock();
 #endif
 
   /* do test */
@@ -62,11 +62,11 @@ void doLoadTest(ostream& output)
       endl;
   }
 #else
-  time(&endTime);
-  float timeTaken = endTime - startTime;
+  endTime=clock();
+  clock_t timeTaken = endTime - startTime;
   cout << "Test complete." << endl;
   if (0 != timeTaken) {
-    cout << "Tickrate: "<<numTicks / timeTaken<<" tps "<<endl;
+    cout << "Tickrate: "<<numTicks / timeTaken<<" t/ms "<<endl;
   } 
   else {
     cout<<"Test too fast to time."<<endl;
@@ -200,6 +200,11 @@ int main(/* int argc, char** argv */)
 
   /* Done */
   cout << "All tests completed successfully." << endl;
+
+#ifdef _MSC_VER
+  cout<<"Total time taken: "<<clock()<<"ms"<<endl;
+#endif
+
   return 0;
 }
 
