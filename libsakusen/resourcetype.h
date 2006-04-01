@@ -1,6 +1,8 @@
 #ifndef RESOURCETYPE_H
 #define RESOURCETYPE_H
 
+#include "libsakusen-global.h"
+
 #include <iosfwd>
 
 namespace sakusen {
@@ -12,7 +14,7 @@ enum ResourceType {
   resourceType_mapTemplate
 };
 
-std::ostream& operator<<(std::ostream& output, ResourceType resource);
+LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceType resource);
 
 }
 

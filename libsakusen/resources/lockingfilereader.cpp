@@ -1,6 +1,10 @@
 #include "lockingfilereader.h"
 
+#include "fileioexn.h"
+#include "fileutils.h"
+
 #include <fcntl.h>
+#include <stdio.h>
 
 using namespace sakusen::resources;
 
@@ -12,7 +16,11 @@ LockingFileReader::LockingFileReader(const String& fileName) :
 
 short LockingFileReader::getLockType() const
 {
+#ifdef WIN32
+  return 0;
+#else
   return F_RDLCK;
+#endif
 }
 
 int LockingFileReader::open()
@@ -51,14 +59,14 @@ sint64 LockingFileReader::getLength(bool block)
   return length;
 }
 
-ssize_t LockingFileReader::getWholeFile(
+size_t LockingFileReader::getWholeFile(
     uint8* buffer,
-    ssize_t bufferLen,
+    size_t bufferLen,
     bool block
   )
 {
   if (-1 == getLength(block)) {
-    return -1;
+    throw new FileIOExn("getLength");
   }
   if (bufferLen < length) {
     Debug("buffer of insufficient size");
@@ -67,16 +75,14 @@ ssize_t LockingFileReader::getWholeFile(
   }
   
   if (-1 == fseek(stream, 0, SEEK_SET)) {
-    return -1;
+    throw new FileIOExn("fseek");
   }
 
   /* It's totally bizarre that this fflush should be necessary, but it is */
   if (EOF == fflush(stream)) {
-    return -1;
+    throw new FileIOExn("fflush");
   }
-  
-  /* TODO: I note that if length>SSIZE_MAX, then this might cause problems (the
-   * result is undefined), so we would need to read the file in chunks */
-  return read(fd, buffer, length);
+
+  return fileUtils_read(fd, buffer, length);
 }
 

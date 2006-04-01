@@ -492,6 +492,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\resourceinterface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\resourceinterface.h"
 				>
 			</File>
@@ -652,10 +656,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

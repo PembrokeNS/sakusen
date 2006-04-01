@@ -13,7 +13,7 @@ namespace sakusen {
  * and deserialization, so that knowledge about the underlying storage medium
  * is not needed.
  */
-class ResourceInterface {
+class LIBSAKUSEN_API ResourceInterface {
   protected:
     ResourceInterface() {}
     ResourceInterface(const ResourceInterface&) {}

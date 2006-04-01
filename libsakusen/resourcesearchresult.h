@@ -1,6 +1,8 @@
 #ifndef RESOURCESEARCHRESULT_H
 #define RESOURCESEARCHRESULT_H
 
+#include "libsakusen-global.h"
+
 #include <iosfwd>
 
 namespace sakusen {
@@ -19,7 +21,7 @@ enum ResourceSearchResult {
                                while reading it */
 };
 
-std::ostream& operator<<(std::ostream& output, ResourceSearchResult resource);
+LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceSearchResult resource);
 
 }
 

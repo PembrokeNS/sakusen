@@ -2,6 +2,7 @@
 
 #include "libsakusen-resources-global.h"
 #include "iarchive.h"
+#include "resourcetype.h"
 #include "maptemplate.h"
 #include "errorutils.h"
 #include "lockingfilereader.h"
@@ -9,14 +10,14 @@
 #include "fileutils.h"
 
 #include <sys/stat.h>
-#include <dirent.h>
 
 #include <pcrecpp.h>
 
 using namespace std;
 
-using namespace sakusen::resources;
+using namespace sakusen;
 using namespace sakusen::comms;
+using namespace sakusen::resources;
 
 FileResourceInterface::FileResourceInterface(const String& d) :
   saveDirectory(d),
@@ -29,47 +30,6 @@ FileResourceInterface::FileResourceInterface(const std::list<String>& d) :
   saveDirectory(d.front()),
   directories(d)
 {
-}
-
-/* static data for use by prefixFilter, set by findMatches */
-String prefix;
-
-int prefixFilter(const struct dirent* entry)
-{
-  /* Returns non-zero iff the entry name starts with prefix */
-  return 0 == String(entry->d_name).compare(0, prefix.size(), prefix);
-}
-
-std::list<String> FileResourceInterface::findMatches(
-    const String& directory,
-    const String& name
-  ) const
-{
-  /* TODO: This function needs to be more general to cope with such things as
-   * archives and subdirectories, but for the moment it just searches for plain
-   * old files. */
-
-  /* The existence of the directory should already have been checked, so any
-   * error is a real problem */
-  prefix = name;
-  struct dirent** nameList;
-  int numEntries =
-    scandir(directory.c_str(), &nameList, prefixFilter, versionsort);
-
-  if (numEntries == -1) {
-    Fatal("error scanning directory: " << errorUtils_errorMessage(errno));
-  }
-
-  /* Put all the results into the list in String format */
-  list<String> result;
-  
-  while (numEntries--) {
-    result.push_front(directory + FILE_SEP + nameList[numEntries]->d_name);
-    free(nameList[numEntries]);
-  }
-  free(nameList);
-  
-  return result;
 }
 
 String FileResourceInterface::getSubdir(ResourceType type)
@@ -93,6 +53,7 @@ void* FileResourceInterface::internalSearch(
 {
   /* Find the appropriate subdirectory name */
   String subdir = getSubdir(type);
+  /*QDebug("Searching for " << name << " in subdir " << subdir);*/
 
   /* Search through all our directories to find all matching files */
   list<String> matchingFiles;
@@ -100,15 +61,16 @@ void* FileResourceInterface::internalSearch(
   for (list<String>::const_iterator directory = directories.begin();
       directory != directories.end(); directory++) {
     String resourceDir = *directory + subdir;
-    struct stat s;
-    if (-1 == stat(resourceDir.c_str(), &s)) {
+    NativeStructStat s;
+    if (-1 == NativeStat(resourceDir.c_str(), &s)) {
       /* The directory was not there (or other
        * error), but this is not an error, because a
        * resource repository might not have all the different types of resource
        * in it. */
+      /*QDebug("Could not stat resource search path '" << resourceDir << "' (" << errorUtils_parseErrno(errno) << ")");*/
       continue;
     }
-    list<String> newMatches = findMatches(resourceDir, name);
+    list<String> newMatches = fileUtils_findMatches(resourceDir, name);
     matchingFiles.splice(matchingFiles.end(), newMatches);
   }
 
@@ -145,7 +107,7 @@ void* FileResourceInterface::internalSearch(
     Fatal("file size exceeded arbitrary limit");
   }
   uint8* fileAsArray = new uint8[length];
-  ssize_t bytesRead;
+  size_t bytesRead;
   if (length != (bytesRead = file.getWholeFile(fileAsArray, length, true))) {
     switch (bytesRead) {
       case -1:

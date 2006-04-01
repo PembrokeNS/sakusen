@@ -175,14 +175,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-server.dll"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/libsakusen-server.pdb"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-server.lib"
+				ProgramDatabaseFile=".\Debug/$(ProjectName).pdb"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

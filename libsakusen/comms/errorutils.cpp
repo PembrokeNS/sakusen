@@ -33,6 +33,7 @@ String sakusen::comms::errorUtils_parseErrno(int num)
     CASE(E2BIG)
     CASE(EILSEQ)
     CASE(EBADMSG)
+    CASE(ENOENT)
 #undef CASE
     default:
       std::ostringstream message;

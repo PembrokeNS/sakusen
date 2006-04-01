@@ -1,6 +1,9 @@
 #include "lockingfilewriter.h"
 
+#include "fileutils.h"
+
 #include <fcntl.h>
+#include <stdio.h>
 
 using namespace sakusen::resources;
 
@@ -11,8 +14,11 @@ LockingFileWriter::LockingFileWriter(const String& name) :
 
 short LockingFileWriter::getLockType() const
 {
+#ifdef WIN32
+  return 0;
+#else
   return F_WRLCK;
-  //return F_RDLCK;
+#endif
 }
 
 int LockingFileWriter::open()
@@ -43,9 +49,9 @@ bool LockingFileWriter::write(const uint8* buffer, size_t length, bool block)
   buf[255]='\0';
   Debug("writing " << length << " bytes to file " << buf << " (" <<
       charsRead << ")");*/
-  ssize_t numBytes = ::write(fd, buffer, length);
+  size_t numBytes = fileUtils_write(fd, buffer, length);
   /*Debug("wrote " << numBytes << " bytes");*/
-  if (static_cast<size_t>(numBytes) != length) {
+  if (size_t(numBytes) != length) {
     return true;
   }
   return false;

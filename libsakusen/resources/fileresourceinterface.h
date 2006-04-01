@@ -1,6 +1,8 @@
 #ifndef FILERESOURCEINTERFACE_H
 #define FILERESOURCEINTERFACE_H
 
+#include "libsakusen-resources-global.h"
+
 #include <list>
 
 #include "resourceinterface.h"
@@ -8,7 +10,7 @@
 namespace sakusen {
 namespace resources {
 
-class FileResourceInterface : public ResourceInterface {
+class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface {
   private:
     FileResourceInterface();
   public:
@@ -21,14 +23,6 @@ class FileResourceInterface : public ResourceInterface {
 
     String getSubdir(ResourceType type);
     
-    /** \brief Returns all files in the directory matching the given name
-     *
-     * \warning This method is not thread-safe!
-     */
-    std::list<String> findMatches(
-        const String& directory,
-        const String& name
-      ) const;
   protected:
     virtual void* internalSearch(
         String name,

@@ -1,3 +1,4 @@
+
 #include "point.h"
 #include "unittype.h"
 #include "universe.h"
@@ -6,8 +7,9 @@
 #include "planemap.h"
 #include "sphereregiondata.h"
 #include "libsakusen-resources-global.h"
-#include "fileresourceinterface.h"
 #include "resourceinterface-methods.h"
+#include "fileresourceinterface.h"
+#include "fileutils.h"
 
 #include <iostream>
 
@@ -28,11 +30,12 @@ using namespace sakusen::resources;
 
 int main(/*int argc, char** argv*/)
 {
-  char* homePath = getenv("HOME");
+  String homePath = fileUtils_getHome();
+  String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
   
-  cout << "Creating ResourceInterface" << endl;
+  cout << "Creating ResourceInterface with data root " << dataDir << endl;
   ResourceInterface* resourceInterface =
-    new FileResourceInterface(String(homePath) + CONFIG_SUBDIR DATA_SUBDIR);
+    new FileResourceInterface(dataDir);
   
   cout << "Creating Universe" << endl;
   vector<UnitType> unitTypes;

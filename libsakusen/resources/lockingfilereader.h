@@ -32,11 +32,11 @@ class LockingFileReader : public LockingFile {
     /** \brief Reads entire file into buffer
      *
      * This function attempts to read the entire file into the buffer.  If
-     * successful, it returns the number of bytes read.  On error, it returns
-     * -1.  if \a length is insufficient to store the entire file, it does
-     *  nothing and returns 0
+     * successful, it returns the number of bytes read.  On error, it throws a
+     * FileIOExn.  if \a length is insufficient to store the entire file, it does
+     * nothing and returns 0
      */
-    ssize_t getWholeFile(uint8* buffer, ssize_t length, bool block);
+    size_t getWholeFile(uint8* buffer, size_t length, bool block);
 };
 
 }}

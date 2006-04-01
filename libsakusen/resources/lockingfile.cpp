@@ -3,6 +3,7 @@
 #include "errorutils.h"
 
 #include <fcntl.h>
+#include <stdio.h>
 
 #include <cerrno>
 
@@ -50,24 +51,26 @@ bool LockingFile::getLock(bool /*block*/)
   if (-1 == open()) {
     return true;
   }
-  //int cmd = ( block ? F_SETLKW : F_SETLK );
+#if 0
+  /* FIXME: Locking Just Doesn't Work.  We omit and hope for the best */
   struct flock lock;
   lock.l_type = getLockType();
   lock.l_whence = SEEK_CUR;
   lock.l_start = 0;
   lock.l_len = 1; /* Means to the end of the file */
   
-  /* FIXME: Locking Just Doesn't Work.  We omit and hope for the best */
   //if (-1 == fcntl(fd, cmd, &lock)/*lockf(fd, cmd, 0)*/) {
   //  return true;
   //}
   
   //haveLock = true;
+#endif
   return false;
 }
 
 bool LockingFile::releaseLock()
 {
+#if 0
   if (!haveLock) {
     return false;
   }
@@ -86,6 +89,7 @@ bool LockingFile::releaseLock()
   }
   
   haveLock = false;
+#endif
   return false;
 }
 

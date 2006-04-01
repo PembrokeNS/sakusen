@@ -1,8 +1,9 @@
 #ifndef LOCKINGFILEWRITER_H
 #define LOCKINGFILEWRITER_H
 
-#include "lockingfile.h"
+#include "libsakusen-resources-global.h"
 #include "oarchive.h"
+#include "lockingfile.h"
 
 namespace sakusen {
 namespace resources {

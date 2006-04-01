@@ -144,7 +144,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\;..\..\..\comms"
+				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\..\..\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -173,15 +173,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-server.dll"
+				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib $(SolutionDir)$(ConfigurationName)\libsakusen-comms.lib ..\..\..\..\pcrecpp\debug\pcrecpp.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/libsakusen-server.pdb"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-server.lib"
+				ProgramDatabaseFile=".\Debug/$(ProjectName).pdb"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -218,6 +218,10 @@
 		<Filter
 			Name="Main sources"
 			>
+			<File
+				RelativePath="..\..\fileioexn.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\fileresourceinterface.cpp"
 				>

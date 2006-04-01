@@ -17,4 +17,7 @@ The game has several components:
 \li \ref sakusen::resources
 \li \ref fuseki
 \li \ref tedomari
+
+Also included is a Windows port of pcrecpp, which requires the Windows port of
+pcre.  This should not be used on other platforms.
 */

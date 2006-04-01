@@ -112,8 +112,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="..\..\..\ide\msvc8\Debug"
+			IntermediateDirectory="..\..\..\ide\msvc8\Debug"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -171,14 +171,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\ide\msvc8\Debug\libsakusen.lib ws2_32.lib"
-				OutputFile=".\Debug/libsakusen_comms.dll"
+				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib ws2_32.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/libsakusen_comms.pdb"
-				ImportLibrary=".\Debug/libsakusen_comms.lib"
+				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.pdb"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.lib"
 				TargetMachine="1"
 			/>
 			<Tool
