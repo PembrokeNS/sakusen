@@ -9,6 +9,7 @@
 using namespace std;
 
 using namespace sakusen;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 SettingsTree::SettingsTree(Server* server) :

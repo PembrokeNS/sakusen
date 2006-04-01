@@ -4,6 +4,7 @@
 
 using namespace std;
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 Leaf::Leaf(

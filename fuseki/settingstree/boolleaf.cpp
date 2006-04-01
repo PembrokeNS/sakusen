@@ -2,6 +2,7 @@
 
 #include "server.h"
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 BoolLeaf::BoolLeaf(

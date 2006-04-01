@@ -2,6 +2,7 @@
 
 #include "settingstree/stringleaf.h"
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 ApplicationBranch::ApplicationBranch(

@@ -5,6 +5,7 @@
 using namespace __gnu_cxx;
 
 using namespace sakusen;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 StringListLeaf::StringListLeaf(

@@ -6,6 +6,7 @@
 #include "settingstree/boolleaf.h"
 #include "settingstree/universebranch.h"
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 GameBranch::GameBranch(const Branch* parent, Server* server) :

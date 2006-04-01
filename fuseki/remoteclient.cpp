@@ -1,7 +1,9 @@
 #include "remoteclient.h"
 
 #include "messagedata.h"
+#ifndef WIN32
 #include "unixdatagramlisteningsocket.h"
+#endif
 #include "server.h"
 
 using namespace __gnu_cxx;
@@ -31,8 +33,12 @@ RemoteClient::RemoteClient(
   autoUnready(false)
 {
   if (createInSocket) {
+#ifdef WIN32
+    Fatal("Seperate inSocket not supported on this platform");
+#else
     inSocket = new UnixDatagramListeningSocket(abstract);
     outSocket->send(Message(AcceptMessageData(inSocket->getAddress(), id)));
+#endif
   } else {
     inSocket = outSocket;
     outSocket->send(Message(AcceptMessageData("", id)));

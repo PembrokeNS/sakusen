@@ -5,15 +5,6 @@
 
 #include <sys/stat.h>
 
-#ifdef WIN32
-#include <direct.h>
-#include <io.h>
-#define NativeMkdir(a,b) _mkdir(a)
-#else
-#include <dirent.h>
-#define NativeMkdir(a,b) mkdir(a, b)
-#endif
-
 #include <cerrno>
 #include <list>
 

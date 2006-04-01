@@ -3,11 +3,25 @@
 
 #include <string>
 #include <list>
-#include <ext/hash_map>
+
+#ifdef _GNUC_
+  #include <ext/hash_map>
+
+  #define LIBOPTIMAL_API
+#else
+  #include <hash_map>
+  #define __gnu_cxx std
+
+  #ifdef LIBOPTIMAL_EXPORTS
+    #define LIBOPTIMAL_API _declspec(dllexport)
+  #else
+    #define LIBOPTIMAL_API _declspec(dllexport)
+  #endif
+#endif
 
 namespace optimal {
 
-class OptionsParser {
+class LIBOPTIMAL_API OptionsParser {
   public:
     OptionsParser();
     OptionsParser(char newLine);

@@ -1,6 +1,8 @@
 #ifndef MESSAGETYPE_H
 #define MESSAGETYPE_H
 
+#include "libsakusen-comms-global.h"
+
 #include <iosfwd>
 
 namespace sakusen {
@@ -26,7 +28,7 @@ enum MessageType {
   messageType_update
 };
 
-std::ostream& operator<<(std::ostream& output, MessageType type);
+LIBSAKUSEN_COMMS_API std::ostream& operator<<(std::ostream& output, MessageType type);
 
 }}
 

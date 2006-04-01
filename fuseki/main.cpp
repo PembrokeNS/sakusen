@@ -8,7 +8,6 @@
 #include "server.h"
 
 #include <sys/stat.h>
-#include <getopt.h>
 
 #include <cerrno>
 #include <iostream>
@@ -61,13 +60,7 @@ void usage();
 int main(int argc, char* const* argv)
 {
   /* Seek out the home directory */
-  char* homePathPtr = getenv("HOME");
-
-  if (homePathPtr == NULL) {
-    Fatal("no home directory found.");
-  }
-
-  String homePath = String(homePathPtr);
+  String homePath = fileUtils_getHome();
   
   String fusekiConfigFile =
     homePath + CONFIG_SUBDIR FILE_SEP "fuseki" FILE_SEP "config";
@@ -206,7 +199,7 @@ int startServer(const String& homePath, const Options& options)
     if (!stat(solicitationSocketPath.c_str(), &tmpStat)) {
       if (options.forceSocket) {
         cout << "Removing existing socket." << endl;
-        unlink(solicitationSocketPath.c_str());
+        NativeUnlink(solicitationSocketPath.c_str());
       } else {
         cout << "Socket already exists.  Another instance of fuseki is\n"
           "already running or has crashed.  Please delete the socket file or\n"

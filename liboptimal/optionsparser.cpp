@@ -1,6 +1,7 @@
 #include "optionsparser.h"
 
 #include <string.h>
+#include <assert.h>
 
 #include <fstream>
 #include <sstream>
@@ -127,7 +128,9 @@ void trim(std::string& s)
     s.erase(s.begin());
   }
   while (!s.empty() && string(" \n\t").find(s[s.length()-1]) != string::npos) {
-    s.erase(--s.end());
+    string::iterator end = s.end();
+    --end;
+    s.erase(end);
   }
 }
 

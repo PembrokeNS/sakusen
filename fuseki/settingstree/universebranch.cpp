@@ -2,6 +2,7 @@
 
 #include "settingstree/stringleaf.h"
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 UniverseBranch::UniverseBranch(const Branch* parent, Server* server) :

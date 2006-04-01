@@ -5,7 +5,6 @@
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"
 #include "message.h"
-#include "unixdatagramconnectingsocket.h"
 #include "remoteclient.h"
 #include "socketexception.h"
 #include "resourceinterface-methods.h"
@@ -16,14 +15,11 @@
 #include "timeutils.h"
 #include "revision.h"
 
-#include <sys/time.h>
 #include <time.h>
 #include <signal.h>
 
 #include <ostream>
 #include <pcrecpp.h>
-
-#define NANO 1000000000 /* Nanoseconds in a second */
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -356,7 +352,7 @@ void interruptHandler(int /*signal*/)
 void Server::serve()
 {
   uint8 buf[BUFFER_LEN];
-  struct timespec sleepTime = {0, NANO/10};
+  struct timeval sleepTime = {0, MICRO/10};
   /* FIXME: signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
@@ -438,7 +434,7 @@ void Server::serve()
         Socket* newConnection = joinSocket->accept();
         if (newConnection != NULL) {
           timeval timeout;
-          gettimeofday(&timeout, NULL);
+          timeUtils_getTime(&timeout);
           /* One second timeout.  TODO: make user-specifiable */
           timeout += MICRO;
           newConnections.push_back(
@@ -475,7 +471,7 @@ void Server::serve()
      * */
     if (!newConnections.empty()) {
       timeval timeNow;
-      gettimeofday(&timeNow, NULL);
+      timeUtils_getTime(&timeNow);
       for (list<pair<Socket*, timeval> >::iterator conn =
           newConnections.begin(); conn != newConnections.end(); ) {
         if ((bytesReceived =
@@ -621,7 +617,7 @@ void Server::serve()
       checkForGameStartNextTime = false;
     }
     
-    nanosleep(&sleepTime, NULL);
+    timeUtils_sleep(sleepTime);
     if (dots) {
       out << "." << flush;
     }
@@ -672,7 +668,7 @@ void Server::serve()
     
     while (!interrupted) {
       /* find out when we aim to start the next tick */
-      gettimeofday(&timeNow, NULL);
+      timeUtils_getTime(&timeNow);
       timeForNextTick = timeNow + gameSpeed;
 
       /* Handle client messages (including accepting incoming orders into
@@ -711,9 +707,9 @@ void Server::serve()
       }
 
       /* Sleep until it's time for the next tick */
-      gettimeofday(&timeNow, NULL);
+      timeUtils_getTime(&timeNow);
       if (timeNow < timeForNextTick || gameSpeed == 0) {
-        usleep(timeForNextTick-timeNow);
+        timeUtils_sleep(timeForNextTick-timeNow);
         warnedLastTime = false;
       } else {
         if (!warnedLastTime) {

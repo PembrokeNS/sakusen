@@ -9,6 +9,7 @@
 #endif
 
 #include "libsakusen-global.h"
+#include "libsakusen-comms-global.h"
 
 #define MICRO 1000000
 
@@ -17,10 +18,10 @@
  * operator overloading
  */
 
-void timeUtils_canonicalize(timeval& tv);
+LIBSAKUSEN_COMMS_API void timeUtils_canonicalize(timeval& tv);
 
 /** \brief Wrapper function for getting the time since it's OS-dependant */
-inline void timeUtils_getTime(timeval* tv)
+LIBSAKUSEN_COMMS_API inline void timeUtils_getTime(timeval* tv)
 {
 #ifdef WIN32
   /** \bug According to the docs, we should not use the system time to do
@@ -45,21 +46,37 @@ inline void timeUtils_getTime(timeval* tv)
 #endif
 }
 
-inline timeval operator+(timeval tv, sint32 usec)
+/** \brief Wrapper for OS-depenant sleep functions */
+LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const uint32& usec)
+{
+#ifdef WIN32
+  Sleep(usec);
+#else
+  usleep(usec);
+#endif
+}
+
+/** \brief A Sleep function taking a timeval */
+LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const timeval& tv)
+{
+  timeUtils_sleep(tv.tv_sec*MICRO+tv.tv_usec);
+}
+
+LIBSAKUSEN_COMMS_API inline timeval operator+(timeval tv, sint32 usec)
 {
   tv.tv_usec += usec;
   timeUtils_canonicalize(tv);
   return tv;
 }
 
-inline timeval& operator+=(timeval& tv, sint32 usec)
+LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, sint32 usec)
 {
   tv.tv_usec += usec;
   timeUtils_canonicalize(tv);
   return tv;
 }
 
-inline timeval& operator+=(timeval& tv, const timeval& tu)
+LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, const timeval& tu)
 {
   tv.tv_usec += tu.tv_usec;
   tv.tv_sec += tu.tv_sec;
@@ -67,17 +84,17 @@ inline timeval& operator+=(timeval& tv, const timeval& tu)
   return tv;
 }
 
-inline sint32 operator-(const timeval& tv, const timeval& uv)
+LIBSAKUSEN_COMMS_API inline sint32 operator-(const timeval& tv, const timeval& uv)
 {
   return (tv.tv_sec - uv.tv_sec)*MICRO + tv.tv_usec - uv.tv_usec;
 }
 
-inline bool operator>(const timeval& tv, const timeval& uv)
+LIBSAKUSEN_COMMS_API inline bool operator>(const timeval& tv, const timeval& uv)
 {
   return timercmp(&tv, &uv, >);
 }
 
-inline bool operator<(const timeval& tv, const timeval& uv)
+LIBSAKUSEN_COMMS_API inline bool operator<(const timeval& tv, const timeval& uv)
 {
   return timercmp(&tv, &uv, <);
 }

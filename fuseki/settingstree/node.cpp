@@ -8,6 +8,7 @@
 using namespace std;
 
 using namespace sakusen;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 Node::Node(
@@ -23,7 +24,7 @@ Node::Node(
   writingGroups(),
   server(s)
 {
-  assert(p == NULL ^ !n.empty());
+  assert((p == NULL) == n.empty());
   assert(s != NULL);
 
   readingGroups.insert("server");

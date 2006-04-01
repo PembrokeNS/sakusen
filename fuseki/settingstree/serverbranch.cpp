@@ -5,6 +5,7 @@
 #include "settingstree/intleaf-methods.h"
 #include "settingstree/boolleaf.h"
 
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 ServerBranch::ServerBranch(const Branch* parent, Server* server) :

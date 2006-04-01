@@ -13,7 +13,7 @@
 namespace sakusen {
 namespace comms {
 
-class MessageData {
+class LIBSAKUSEN_COMMS_API MessageData {
   /* Abstract class - all constructors must be protected */
   protected:
     MessageData();
@@ -39,7 +39,7 @@ class MessageData {
     virtual MessageData* newCopy() const = 0;
 };
 
-class SolicitMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API SolicitMessageData : public MessageData {
   private:
     SolicitMessageData();
   public:
@@ -57,7 +57,7 @@ class SolicitMessageData : public MessageData {
     inline const String& getAddress() const { return address; }
 };
 
-class AdvertiseMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API AdvertiseMessageData : public MessageData {
   private:
   public:
     AdvertiseMessageData();
@@ -76,7 +76,7 @@ class AdvertiseMessageData : public MessageData {
     String getGameName() const;
 };
 
-class JoinMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API JoinMessageData : public MessageData {
   private:
     JoinMessageData();
   public:
@@ -94,7 +94,7 @@ class JoinMessageData : public MessageData {
     inline const String& getAddress() const { return address; }
 };
 
-class AcceptMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API AcceptMessageData : public MessageData {
   private:
     AcceptMessageData();
   public:
@@ -114,7 +114,7 @@ class AcceptMessageData : public MessageData {
     inline const ClientID& getID() const { return id; }
 };
 
-class RejectMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API RejectMessageData : public MessageData {
   private:
     RejectMessageData();
   public:
@@ -131,7 +131,7 @@ class RejectMessageData : public MessageData {
     inline const String& getReason() const { return reason; }
 };
 
-class KickMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API KickMessageData : public MessageData {
   private:
     KickMessageData();
   public:
@@ -148,7 +148,7 @@ class KickMessageData : public MessageData {
     inline const String& getReason() const { return reason; }
 };
 
-class LeaveMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API LeaveMessageData : public MessageData {
   private:
   public:
     LeaveMessageData();
@@ -162,7 +162,7 @@ class LeaveMessageData : public MessageData {
     MessageData* newCopy() const;
 };
 
-class GetSettingMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API GetSettingMessageData : public MessageData {
   private:
     GetSettingMessageData();
   public:
@@ -179,7 +179,7 @@ class GetSettingMessageData : public MessageData {
     inline const String& getSetting() const { return setting; }
 };
 
-class ChangeSettingMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API ChangeSettingMessageData : public MessageData {
   private:
     ChangeSettingMessageData();
   public:
@@ -198,7 +198,7 @@ class ChangeSettingMessageData : public MessageData {
     inline const String& getValue() const { return value; }
 };
 
-class NotifySettingMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
   private:
     NotifySettingMessageData();
   public:
@@ -217,7 +217,7 @@ class NotifySettingMessageData : public MessageData {
     inline const String& getValue() const { return value; }
 };
 
-class GameStartMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
   private:
     GameStartMessageData();
   public:
@@ -245,7 +245,7 @@ class GameStartMessageData : public MessageData {
     inline uint16 getGravity() const { return gravity; }
 };
 
-class OrderMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
   private:
     OrderMessageData();
   public:
@@ -262,7 +262,7 @@ class OrderMessageData : public MessageData {
     inline const OrderMessage& getOrderMessage() const { return orderMessage; }
 };
 
-class UpdateMessageData : public MessageData {
+class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
   private:
     UpdateMessageData();
   public:

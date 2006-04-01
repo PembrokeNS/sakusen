@@ -7,7 +7,7 @@
 namespace sakusen {
 namespace comms {
 
-class Message {
+class LIBSAKUSEN_COMMS_API Message {
   public:
     Message();
     Message(const Message& copy);

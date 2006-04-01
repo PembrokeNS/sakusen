@@ -3,6 +3,7 @@
 #include "settingstree/clientbranch.h"
 
 using namespace sakusen::comms;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 ClientsBranch::ClientsBranch(const Branch* parent, Server* server) :

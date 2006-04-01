@@ -6,6 +6,7 @@
 
 using namespace sakusen;
 using namespace sakusen::comms;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 PlayerBranch::PlayerBranch(

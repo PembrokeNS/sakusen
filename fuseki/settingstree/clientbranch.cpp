@@ -5,6 +5,7 @@
 #include "settingstree/intleaf.h"
 
 using namespace sakusen::comms;
+using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 ClientBranch::ClientBranch(ClientID id, const Branch* parent, Server* server) :

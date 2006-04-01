@@ -2,7 +2,7 @@
 #define FUSEKI__SETTINGSTREE__BRANCH_H
 
 #include <list>
-#include <ext/hash_map>
+#include "gnu_extensions.h"
 
 #include "libsakusen-global.h"
 #include "stringutils.h"

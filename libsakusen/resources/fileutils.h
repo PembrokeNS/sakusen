@@ -9,14 +9,22 @@
 #include "libsakusen-resources-global.h"
 
 #ifdef WIN32
+#include <direct.h>
+#include <io.h>
+#define NativeMkdir(a,b) _mkdir(a)
 /** \bug This should be _stat(a,b), but it doesn't seem to work properly.
  * This workaround of calling it 0 works because the struct stat part of
  * the result is not used anywhere at the moment */
 #define NativeStat(a,b) 0/* _stat(a,b) */
 #define NativeStructStat struct _stat
+#define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
+#define NativeUnlink(a) _unlink(a)
 #else
+#include <dirent.h>
+#define NativeMkdir(a,b) mkdir(a, b)
 #define NativeStat(a,b) stat(a,b)
 #define NativeStructStat struct stat
+#define NativeUnlink(a) unlink(a)
 #endif
 
 namespace sakusen {

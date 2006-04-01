@@ -14,7 +14,7 @@ namespace comms {
  * 
  * Socket::newConnectionToAddress() and Socket::newBindingToAddress() can be
  * used to create Sockets */
-class Socket {
+class LIBSAKUSEN_COMMS_API Socket {
   public:
     /* \brief Creates a new Socket object connected to the given address.
      * \param address Sakusen-format address to connect to.
