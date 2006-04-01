@@ -174,14 +174,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
@@ -216,86 +215,82 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Main sources"
+		<File
+			RelativePath="..\..\client.cpp"
 			>
-			<File
-				RelativePath="..\..\client.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\client.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completemap.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completemap.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completeworld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\completeworld.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\debuggingclient.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\effect.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fuse.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\layeredunit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\layeredunit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libsakusen-server-global.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\sensorreturn.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitcore.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\unitlayer.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\client.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\completemap.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\completemap.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\completeworld.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\completeworld.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\debuggingclient.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\debuggingclient.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\effect.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\fuse.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\layeredunit.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\layeredunit.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\libsakusen-server-global.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\player.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\player.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\sensorreturn.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitcore.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitcore.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitlayer.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

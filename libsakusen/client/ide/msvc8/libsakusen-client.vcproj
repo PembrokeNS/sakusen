@@ -174,14 +174,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-client.dll"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-client.lib"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -215,46 +214,42 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Main sources"
+		<File
+			RelativePath="..\..\client.h"
 			>
-			<File
-				RelativePath="..\..\client.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libsakusen-client-global.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\partialmap.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\partialworld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\partialworld.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\player.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\updatedunit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\updatedunit.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\libsakusen-client-global.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\partialmap.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\partialworld.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\partialworld.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\player.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\player.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\updatedunit.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\updatedunit.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

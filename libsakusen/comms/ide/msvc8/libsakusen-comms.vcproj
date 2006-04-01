@@ -171,14 +171,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib ws2_32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.dll"
+				AdditionalDependencies="ws2_32.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.pdb"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\libsakusen-comms.lib"
+				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

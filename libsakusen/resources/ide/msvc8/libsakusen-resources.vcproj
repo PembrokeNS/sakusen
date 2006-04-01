@@ -173,14 +173,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)$(ConfigurationName)\libsakusen.lib $(SolutionDir)$(ConfigurationName)\libsakusen-comms.lib ..\..\..\..\pcrecpp\debug\pcrecpp.lib"
+				AdditionalDependencies="..\..\..\..\pcrecpp\debug\pcrecpp.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib;..\..\..\ide\msvc8\Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/$(ProjectName).pdb"
+				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
@@ -215,58 +215,54 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Main sources"
+		<File
+			RelativePath="..\..\fileioexn.h"
 			>
-			<File
-				RelativePath="..\..\fileioexn.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fileresourceinterface.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fileresourceinterface.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fileutils.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\fileutils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libsakusen-resources-global.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfile.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfile.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfilereader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfilereader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfilewriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\lockingfilewriter.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\fileresourceinterface.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\fileresourceinterface.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\fileutils.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\fileutils.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\libsakusen-resources-global.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfile.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfile.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfilereader.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfilereader.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfilewriter.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\lockingfilewriter.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
