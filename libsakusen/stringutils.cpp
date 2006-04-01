@@ -2,10 +2,12 @@
 
 #include <iomanip>
 
-/* See below for why this is here */
-#ifndef WIN32
+/* I seem to have now ported mhash. Which worries me a little. */
+#ifdef _MSC_VER
+#include <mutils/mhash_config.h>
+#endif //_MSC_VER
+
 #include <mhash.h>
-#endif
 
 using namespace std;
 
@@ -101,11 +103,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     size_t length
   )
 {
-  /*mhash is only for linux and CYGWIN. It would be nice if *
-  we could switch to some other library for crypto things, or if 
-  someone could build an mhash dll for me using CYGWIN, or something.*/
   /* TODO: Maybe support other hashes */
-#ifndef WIN32
   MHASH thread = mhash_init(MHASH_SHA256);
   /* FIXME: Commented out because it generates an old style cast warning (silly
    * reason...)
@@ -126,13 +124,14 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
      * zeroes
     stream << hex << setw(2) << uint32(hash[i]); */
     char byte[3];
-    snprintf(byte, 3, "%02x", hash[i]);
+    #ifdef _MSC_VER
+      _snprintf(byte, 3, "%02x", hash[i]);
+    #else
+      snprintf(byte, 3, "%02x", hash[i]);
+    #endif //_MSC_VER Also, lol Microsoft.
     byte[2] = '\0';
     stream << byte;
   }
   return stream.str();
-#else
-  return "00000000000000000000000000000000";
-#endif
 }
 
