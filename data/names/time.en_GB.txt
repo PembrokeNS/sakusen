@@ -4,6 +4,7 @@ Chronometer
 Concurrency
 Countdown
 Elapse
+Eternity
 Expiry
 Epoch
 Grandfather

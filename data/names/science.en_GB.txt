@@ -15,6 +15,7 @@ Helios
 Inertia
 Interrupt
 Logon
+Magnitude
 Myriad
 Nadir
 Nebula

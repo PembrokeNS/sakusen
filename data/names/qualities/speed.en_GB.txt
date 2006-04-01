@@ -8,4 +8,5 @@ Nimble
 Rapid
 Speedy
 Sprightly
+Subito
 Tracker

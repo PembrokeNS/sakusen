@@ -4,7 +4,9 @@ Astute
 Crafty
 Dextrous
 Guile
+Ingenious
 Intelligent
+Inventor
 Magician
 Prudent
 Scheme
