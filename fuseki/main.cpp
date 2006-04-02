@@ -23,7 +23,7 @@ using namespace fuseki;
 
 /* struct to store options processed from the command line. */
   
-/* TODO: More command line arguments (in particular allow for putting
+/* \todo More command line arguments (in particular allow for putting
  * socket elsewhere, changing game name, possibly allow for UDP/TCP socket,
  * etc.). */
 struct Options {
@@ -146,7 +146,7 @@ int startServer(const String& homePath, const Options& options)
           "*****************************" << endl;
 
   /* Create the resource interface */
-  /* TODO: make the directories searched configurable */
+  /* \todo make the directories searched configurable */
   ResourceInterface* resourceInterface =
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
 
