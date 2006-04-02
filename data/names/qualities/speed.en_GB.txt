@@ -4,6 +4,7 @@ Courser
 Flash
 Flight
 Godspeed
+Haste
 Nimble
 Rapid
 Speedy

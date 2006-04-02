@@ -1,18 +1,66 @@
 Aeon
+Ages of Man
 Anachronism
+Antiquity
+Arc de Fin
+Blink of an Eye
+Blue Moon
+Calends
+Carpe Diem
+Carpe Noctem
 Chronometer
-Concurrency
+Coeval
+Concurrence
+Continuity
 Countdown
+Duration
 Elapse
 Eternity
 Expiry
+Ephemerid
 Epoch
+Evanescent
+Filibuster
+Frequency
+Future Perfect
+Futurity
+Golden Age
 Grandfather
+Great Cycle
+Henceforth
 Historic
 Hourglass
+Ides
+Immemorial
+Instant
+Interim
+Interlude
+Isochronous
+Longevity
+Mañana
+Meridian
+Metronome
+Millennium
+Momentary
+Nones
+Numquam
 Periodic
+Perpetuity
+Posterity
+Precedent
+Premonition
+Preterite
+Prolepsis
 Recurrent
+Retrospective
 Sands of Time
+Sempiternal
 Serendipity
+Simultaneity
+Sine Die
 Synchrony
 Tempus Fugit
+Time Passes
+Timeline
+Transience
+Yesteryear
