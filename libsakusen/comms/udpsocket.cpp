@@ -61,13 +61,13 @@ void UDPSocket::send(const void* buf, size_t len)
  
   retVal = ::send(sockfd, reinterpret_cast<const char*>(buf), len, 0);
   if (retVal == -1) {
-    switch (errno) {
+    switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw new SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(errno) << " sending message");
+        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -105,13 +105,13 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
       sockfd, reinterpret_cast<const char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&dest), sizeof(dest)
     );
   if (retVal == -1) {
-    switch (errno) {
+    switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw new SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(errno) << " sending message");
+        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -121,10 +121,10 @@ size_t UDPSocket::receive(void* buf, size_t len)
 {
   NativeReceiveReturnType retVal = ::recv(sockfd, reinterpret_cast<char*>(buf), len, 0);
   if (retVal == -1) {
-    if (errno == EAGAIN) {
+    if (socket_errno == EAGAIN) {
       return 0;
     }
-    Fatal("error receiving message: " << errorUtils_errorMessage(errno));
+    Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
   }
   return retVal;
 }
@@ -137,10 +137,10 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
       sockfd, reinterpret_cast<char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&fromAddr), &fromLen
     );
   if (retVal == -1) {
-    if (errno == EAGAIN) {
+    if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
       return 0;
     }
-    Fatal("error receiving message");
+    Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
   }
 #ifdef WIN32
   /** \bug Not thread-safe */

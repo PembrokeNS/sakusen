@@ -80,7 +80,7 @@ void IPSocket::close()
 {
   if (!closed) {
     if (-1 == NativeSocketClose(sockfd)) {
-      Fatal("Error " << errorUtils_parseErrno(errno) << " closing socket");
+      Fatal("Error " << errorUtils_parseErrno(socket_errno) << " closing socket");
     }
     closed = true;
   }
@@ -90,9 +90,9 @@ void IPSocket::setNonBlocking(bool val)
 {
 #ifdef WIN32
   unsigned long flags = 0ul;
-  if (val) flags = 0ul; else flags = 1ul;
+  if (val) flags = 1ul; else flags = 0ul;
   if (0 != ioctlsocket(sockfd, FIONBIO, &flags))
-    Fatal("could not set non-blocking; " << errno);
+    Fatal("could not set non-blocking; " << socket_errno);
 #else
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {

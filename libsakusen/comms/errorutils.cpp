@@ -4,12 +4,6 @@
 #include <sstream>
 #include "libsakusen-comms-global.h"
 
-#if defined (_MSC_VER)
-#include <winsock2.h>
-#include "wsabsd.h"
-#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
-#endif //_MSC_VER
-
 String sakusen::comms::errorUtils_parseErrno(int num)
 {
   switch(num) {
@@ -47,9 +41,9 @@ String sakusen::comms::errorUtils_parseErrno(int num)
 String sakusen::comms::errorUtils_errorMessage(int num)
 {
 #if defined (_MSC_VER)
-    char message[MESSAGE_BUFFER_LEN];
+  char message[MESSAGE_BUFFER_LEN];
 
-    if (NULL == strerror_s(message, MESSAGE_BUFFER_LEN, num)) {
+  if (NULL == strerror_s(message, MESSAGE_BUFFER_LEN, num)) {
     Fatal("error getting error message: " << errorUtils_parseErrno(errno));
   }
   return String(message); 

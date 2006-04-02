@@ -78,13 +78,13 @@ void TCPSocket::send(const void* buf, size_t len)
   
   int retVal = ::send(sockfd, reinterpret_cast<char*>(longerBuf), len+2, 0);
   if (retVal == -1) {
-    switch (errno) {
+    switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw new SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(errno) << " sending message");
+        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -130,13 +130,13 @@ void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*addr
       sizeof(dest)
     );
   if (retVal == -1) {
-    switch (errno) {
+    switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw new SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(errno) << " sending message");
+        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -152,10 +152,10 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
           sockfd, reinterpret_cast<char*>(buffer+bufferLength), bufferCapacity - bufferLength, 0
         );
       if (received == -1) {
-        if (errno == EAGAIN) {
+        if (socket_errno == EAGAIN) {
           break;
         }
-        Fatal("error receiving message: " << errorUtils_errorMessage(errno));
+        Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
       }
       if (received != 0) {
         Debug("received = " << received);

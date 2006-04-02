@@ -61,6 +61,9 @@ void* FileResourceInterface::internalSearch(
   for (list<String>::const_iterator directory = directories.begin();
       directory != directories.end(); directory++) {
     String resourceDir = *directory + subdir;
+#ifndef WIN32
+    /** \bug For some reason this fails to find the directory under Windows.
+     * This needs investigation */
     NativeStructStat s;
     if (-1 == NativeStat(resourceDir.c_str(), &s)) {
       /* The directory was not there (or other
@@ -70,6 +73,7 @@ void* FileResourceInterface::internalSearch(
       /*QDebug("Could not stat resource search path '" << resourceDir << "' (" << errorUtils_parseErrno(errno) << ")");*/
       continue;
     }
+#endif
     list<String> newMatches = fileUtils_findMatches(resourceDir, name);
     matchingFiles.splice(matchingFiles.end(), newMatches);
   }

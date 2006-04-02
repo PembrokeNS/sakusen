@@ -21,10 +21,10 @@ TCPListeningSocket::TCPListeningSocket(uint16 port) :
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
   if (-1 == bind(sockfd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr))) {
-    Fatal("Error binding socket: " << errorUtils_errorMessage(errno));
+    Fatal("Error binding socket: " << errorUtils_errorMessage(socket_errno));
   }
   if (-1 == listen(sockfd, BACKLOG)) {
-    Fatal("Error binding socket: " << errorUtils_errorMessage(errno));
+    Fatal("Error binding socket: " << errorUtils_errorMessage(socket_errno));
   }
 }
 
@@ -37,8 +37,11 @@ Socket* TCPListeningSocket::accept()
   if (-1 == (newSocket = ::accept(
           sockfd, reinterpret_cast<sockaddr*>(&peerAddress), &addrlen
         ))) {
-    switch (errno) {
+    switch (socket_errno) {
       case EAGAIN:
+#if EAGAIN != EWOULDBLOCK
+      case EWOULDBLOCK:
+#endif
 #ifndef WIN32 /* Actually this should be on linux only */
       /* According to accept(2), all of the following errors should be treated
        * like EAGAIN */
@@ -55,7 +58,7 @@ Socket* TCPListeningSocket::accept()
       default:
         Fatal(
             "Error accepting new connection: " <<
-            errorUtils_errorMessage(errno)
+            errorUtils_errorMessage(socket_errno)
           );
     }
   }

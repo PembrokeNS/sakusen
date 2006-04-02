@@ -4,6 +4,12 @@
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
 
+#if defined (_MSC_VER)
+#include <winsock2.h>
+#include "wsabsd.h"
+#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
+#endif //_MSC_VER
+
 namespace sakusen {
 namespace comms {
 

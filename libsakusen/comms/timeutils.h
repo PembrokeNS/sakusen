@@ -50,7 +50,7 @@ LIBSAKUSEN_COMMS_API inline void timeUtils_getTime(timeval* tv)
 LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const uint32& usec)
 {
 #ifdef WIN32
-  Sleep(usec);
+  Sleep(usec/1000);
 #else
   usleep(usec);
 #endif

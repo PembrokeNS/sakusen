@@ -6,12 +6,16 @@
 
 #ifdef WIN32
 #include <winsock2.h>
+
+#define socket_errno WSAGetLastError()
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+
+#define socket_errno errno
 #endif
 
 namespace sakusen {
