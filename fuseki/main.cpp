@@ -21,11 +21,11 @@ using namespace sakusen::comms;
 using namespace sakusen::resources;
 using namespace fuseki;
 
-/* struct to store options processed from the command line. */
   
-/* \todo More command line arguments (in particular allow for putting
- * socket elsewhere, changing game name, possibly allow for UDP/TCP socket,
- * etc.). */
+/** Stores command-line options.
+ * \todo More command line arguments (in particular allow for putting socket
+ * elsewhere, changing game name, possibly allow for UDP/TCP socket, etc.).
+ */
 struct Options {
   Options() :
     forceSocket(false),
@@ -82,7 +82,7 @@ int main(int argc, char* const* argv)
   return startServer(homePath, options);
 }
 
-/* Function to print usage information */
+/** Prints usage information */
 
 void usage()
 {
@@ -108,7 +108,7 @@ void usage()
             "limited." << endl;
 }
 
-/* Function to parse the command line */
+/** Parses the command line */
 
 Options getOptions(const String& optionsFile, int argc, char const* const* argv)
 {
@@ -146,7 +146,7 @@ int startServer(const String& homePath, const Options& options)
           "*****************************" << endl;
 
   /* Create the resource interface */
-  /* \todo make the directories searched configurable */
+  /** \todo make the directories searched configurable */
   ResourceInterface* resourceInterface =
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
 
