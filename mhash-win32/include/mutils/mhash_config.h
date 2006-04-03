@@ -4,7 +4,7 @@
 #undef ENABLE_ADLER32
 
 /* "CRC32 Algorithm" */
-#define ENABLE_CRC32 1
+#undef ENABLE_CRC32
 
 /* "GOST Algorithm" */
 #undef ENABLE_GOST
@@ -37,7 +37,7 @@
 #undef ENABLE_SNEFRU
 
 /* "Tiger Algorithm" */
-#define ENABLE_TIGER 1
+#undef ENABLE_TIGER
 
 /* "Whirlpool Algorithm" */
 #undef ENABLE_WHIRLPOOL

@@ -400,6 +400,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\lib\md2.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\lib\md4.c"
 				>
 				<FileConfiguration
@@ -509,6 +513,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\lib\sha512_sha384.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\lib\snefru.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\lib\stdfns.c"
 				>
 			</File>
@@ -554,6 +566,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\..\lib\whirlpool.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -568,7 +584,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\mhash.h"
+				RelativePath="..\..\include\mutils\mglobal.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mutils\mhash.h"
 				>
 			</File>
 			<File
@@ -592,6 +612,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\lib\mhash_md2.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\lib\mhash_md4.h"
 				>
 			</File>
@@ -608,14 +632,46 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\lib\mhash_sha256_sha224.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\lib\mhash_sha512_sha384.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\lib\mhash_snefru.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\lib\mhash_tiger.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\lib\mhash_whirlpool.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mutils\mincludes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mutils\mtypes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mutils\mutils.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
+			Name="Config Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\..\include\mutils\mhash_config.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

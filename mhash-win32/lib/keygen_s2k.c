@@ -39,11 +39,11 @@ mutils_error _mhash_gen_key_s2k_simple(hashid algorithm,
 	MHASH td;
 	mutils_word32 block_size = mhash_get_block_size(algorithm);
 
-	total = times * block_size;
-
-	times = key_size / block_size;
+  times = key_size / block_size;
 
 	if (key_size % block_size != 0) times++;
+
+  total = times * block_size;
 
 	key = mutils_malloc(total);
 

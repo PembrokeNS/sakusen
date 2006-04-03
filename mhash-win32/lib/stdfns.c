@@ -32,7 +32,7 @@
  * to validate inputs.
  */
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void *
 mutils_malloc(const mutils_word32 n)
 {
@@ -53,7 +53,7 @@ mutils_malloc(const mutils_word32 n)
 	return(ptr);
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void
 mutils_free(const void *ptr)
 {
@@ -65,7 +65,7 @@ mutils_free(const void *ptr)
 	return;
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void
 mutils_bzero(void *s, const mutils_word32 n)
 {
@@ -83,7 +83,7 @@ mutils_bzero(void *s, const mutils_word32 n)
 	}
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void
 mutils_memset(void *s, const mutils_word8 c, const mutils_word32 n)
 {
@@ -117,7 +117,7 @@ mutils_memset(void *s, const mutils_word8 c, const mutils_word32 n)
 	}
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void
 mutils_memcpy(void *dest, const void *src, const mutils_word32 n)
 {
@@ -185,9 +185,9 @@ WIN32DLL_DEFINE
 mutils_word32 *
 mutils_word32nswap(mutils_word32 *x, mutils_word32 n, mutils_boolean destructive)
 {
-	mutils_word32 loop;
+//	mutils_word32 loop;
 	mutils_word32 *buffer;
-	mutils_word32 *ptr;
+//	mutils_word32 *ptr;
 
 	if (destructive == MUTILS_FALSE)
 	{
@@ -218,7 +218,7 @@ mutils_word32nswap(mutils_word32 *x, mutils_word32 n, mutils_boolean destructive
 	return(buffer);
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 void
 mutils_memmove(void *dest, const void *src, const mutils_word32 n)
 {
@@ -255,7 +255,7 @@ mutils_memmove(void *dest, const void *src, const mutils_word32 n)
 	}
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 int
 mutils_memcmp(const void *s1, const void *s2, const mutils_word32 n)
 {
@@ -285,10 +285,14 @@ mutils_memcmp(const void *s1, const void *s2, const mutils_word32 n)
  * is not a robust solution.
  */
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 mutils_word32
 mutils_strlen(const mutils_word8 *str)
 {
+
+  #undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
+  #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
+
 	mutils_word32 ret;
 	mutils_word8 *endStr = (mutils_word8 *) str;
 
@@ -307,7 +311,7 @@ mutils_strlen(const mutils_word8 *str)
 	return(ret);
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 mutils_word8 *
 mutils_strdup(const mutils_word8 *str)
 {
@@ -339,7 +343,7 @@ mutils_strdup(const mutils_word8 *str)
 	return(ret);
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 mutils_word8 *
 mutils_strcat(mutils_word8 *dest, const mutils_word8 *src)
 {
@@ -351,10 +355,10 @@ mutils_strcat(mutils_word8 *dest, const mutils_word8 *src)
 	{
 		return(dest);
 	}
-	return((mutils_word8 *) strcat((char *) dest, (char *) src));
+  return((mutils_word8 *) strcat_s((char *) dest, strlen(dest), (char *) src));
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 mutils_word8 *
 mutils_strcpy(mutils_word8 *dest, const mutils_word8 *src)
 {
@@ -362,10 +366,10 @@ mutils_strcpy(mutils_word8 *dest, const mutils_word8 *src)
 	{
 		return(NULL);
 	}
-	return((mutils_word8 *) strcpy((char *) dest, (char *) src));
+	return((mutils_word8 *) strcpy_s((char *) dest, strlen(dest), (char *) src));
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 mutils_word8 *
 mutils_strncpy(mutils_word8 *dest, const mutils_word8 *src, const mutils_word32 n)
 {
@@ -377,10 +381,10 @@ mutils_strncpy(mutils_word8 *dest, const mutils_word8 *src, const mutils_word32 
 	{
 		return(NULL);
 	}
-	return((mutils_word8 *) strncpy((char *) dest, (char *) src, n));
+	return((mutils_word8 *) strncpy_s((char *) dest, strlen(dest), (char *) src, n));
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 int
 mutils_strcmp(const mutils_word8 *src1, const mutils_word8 *src2)
 {
@@ -399,7 +403,7 @@ mutils_strcmp(const mutils_word8 *src1, const mutils_word8 *src2)
 	return(strcmp((char *) src1, (char *) src2));
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 int
 mutils_strncmp(const mutils_word8 *src1, const mutils_word8 *src2, const mutils_word32 n)
 {
@@ -422,7 +426,7 @@ mutils_strncmp(const mutils_word8 *src1, const mutils_word8 *src2, const mutils_
 	return(strncmp((char *) src1, (char *) src2, n));
 }
 
-WIN32DLL_DEFINE
+//WIN32DLL_DEFINE
 long
 mutils_strtol(const mutils_word8 *nptr, mutils_word8 **endptr, const mutils_word8 base)
 {
@@ -492,8 +496,8 @@ mutils_thequals(mutils_word8 *text, mutils_word8 *hash, const mutils_word32 len)
 	mutils_word8  *ptrText = text;
 	mutils_word8  *ptrHash = hash;
 	mutils_word32  loop;
-	mutils_word8   temp;
-	mutils_boolean equals;
+//	mutils_word8   temp;
+//	mutils_boolean equals;
 
 	for (loop = 0; loop < len; loop++, ptrHash++)
 	{

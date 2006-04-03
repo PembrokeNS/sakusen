@@ -2,6 +2,7 @@
  *    Copyright (C) 1998 Nikos Mavroyanopoulos
  *    Copyright (C) 1999,2000 Sascha Schumman, Nikos Mavroyanopoulos
  *    Copyright (C) 2001 Nikos Mavroyanopoulos
+ *    2006 - Ported to windows and modifed by Simeon Bird from mhash 0.9.6
  *
  *    This library is free software; you can redistribute it and/or modify it 
  *    under the terms of the GNU Library General Public License as published 

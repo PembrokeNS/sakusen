@@ -125,7 +125,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     stream << hex << setw(2) << uint32(hash[i]); */
     char byte[3];
     #ifdef _MSC_VER
-      _snprintf(byte, 3, "%02x", hash[i]);
+      _snprintf_s(byte, 3, 3, "%02x", hash[i]);
     #else
       snprintf(byte, 3, "%02x", hash[i]);
     #endif //_MSC_VER Also, lol Microsoft.

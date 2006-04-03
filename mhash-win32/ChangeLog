@@ -1,3 +1,6 @@
+2006-04-04 Simeon Bird
+		Misc. changes to port to Windows.
+
 2006-01-01 12:00  imipak
 
 	Virtually all files impacted by forcing unsigned types for unsigned

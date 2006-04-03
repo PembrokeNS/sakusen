@@ -119,25 +119,27 @@ typedef enum __mutils_error_codes
 #define mutils_error mutils_word32
 
 #include <mutils/mglobal.h>
+/* WIN32DLL_DEFINE 's removed. */
+void *mutils_malloc(const mutils_word32 n);
+void mutils_free(const void *ptr);
 
-WIN32DLL_DEFINE void *mutils_malloc(const mutils_word32 n);
-WIN32DLL_DEFINE void mutils_free(const void *ptr);
+void mutils_bzero(void *s, const mutils_word32 n);
 
-WIN32DLL_DEFINE void mutils_bzero(void *s, const mutils_word32 n);
+void mutils_memset(void *dest, const mutils_word8 c, const mutils_word32 n);
+void mutils_memcpy(void *dest, const void *src, const mutils_word32 n);
+void mutils_memmove(void *dest, const void *src, const mutils_word32 n);
+int mutils_memcmp(const void *s1, const void *s2, const mutils_word32 n);
 
-WIN32DLL_DEFINE void mutils_memset(void *dest, const mutils_word8 c, const mutils_word32 n);
-WIN32DLL_DEFINE void mutils_memcpy(void *dest, const void *src, const mutils_word32 n);
-WIN32DLL_DEFINE void mutils_memmove(void *dest, const void *src, const mutils_word32 n);
-WIN32DLL_DEFINE int mutils_memcmp(const void *s1, const void *s2, const mutils_word32 n);
+mutils_word32 mutils_strlen(const mutils_word8 *str);
+mutils_word8 *mutils_strdup(const mutils_word8 *str);
+mutils_word8 *mutils_strcat(mutils_word8 *dest, const mutils_word8 *src);
+mutils_word8 *mutils_strcpy(mutils_word8 *dest, const mutils_word8 *src);
+mutils_word8 *mutils_strncpy(mutils_word8 *dest, const mutils_word8 *src, const mutils_word32 n);
+int mutils_strcmp(const mutils_word8 *src1, const mutils_word8 *src2);
+int mutils_strncmp(const mutils_word8 *src1, const mutils_word8 *src2, const mutils_word32 n);
+long mutils_strtol(const mutils_word8 *nptr, mutils_word8 **endptr, const mutils_word8 base);
 
-WIN32DLL_DEFINE mutils_word32 mutils_strlen(const mutils_word8 *str);
-WIN32DLL_DEFINE mutils_word8 *mutils_strdup(const mutils_word8 *str);
-WIN32DLL_DEFINE mutils_word8 *mutils_strcat(mutils_word8 *dest, const mutils_word8 *src);
-WIN32DLL_DEFINE mutils_word8 *mutils_strcpy(mutils_word8 *dest, const mutils_word8 *src);
-WIN32DLL_DEFINE mutils_word8 *mutils_strncpy(mutils_word8 *dest, const mutils_word8 *src, const mutils_word32 n);
-WIN32DLL_DEFINE int mutils_strcmp(const mutils_word8 *src1, const mutils_word8 *src2);
-WIN32DLL_DEFINE int mutils_strncmp(const mutils_word8 *src1, const mutils_word8 *src2, const mutils_word32 n);
-WIN32DLL_DEFINE long mutils_strtol(const mutils_word8 *nptr, mutils_word8 **endptr, const mutils_word8 base);
+/* WIN32DLL_DEFINE 's stopped being removed */
 
 WIN32DLL_DEFINE mutils_word32 mutils_word32swap(mutils_word32 x);
 WIN32DLL_DEFINE mutils_word32 *mutils_word32nswap(mutils_word32 *x, mutils_word32 n, mutils_boolean destructive);
