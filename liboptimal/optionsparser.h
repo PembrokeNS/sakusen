@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 
-#ifdef _GNUC_
+#ifdef __GNUC__
   #include <ext/hash_map>
 
   #define LIBOPTIMAL_API
