@@ -1,13 +1,18 @@
 #include "stringutils.h"
 #include "serverinterface.h"
 #include "libsakusen-comms-global.h"
-#include "unixdatagramlisteningsocket.h"
+
 #include "udplisteningsocket.h"
 #include "socketexception.h"
 #include "tedomari-global.h"
 #include "revision.h"
 
-#include <sys/time.h>
+#ifndef _MSC_VER
+  #include "unixdatagramlisteningsocket.h"
+  #include <sys/time.h>
+#endif
+
+
 #include <time.h>
 #include <ostream>
 #include <sstream>

@@ -15,7 +15,7 @@ using namespace sakusen::client;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 
-UI::UI(Region* region, ifstream& uiConf, Game* g) :
+UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
   Control(0, 0, dockStyle_fill, region), game(g), activeMapDisplay(NULL),
   commandEntryBox(NULL), alertDisplay(NULL), modes(),
   mode(NULL), currentModifiers(), expectingChars(false), commandEntry(false),
@@ -101,7 +101,7 @@ void UI::initializeControls()
   alignSubControls();
 }
 
-void UI::resize(Region* newRegion)
+void UI::resize(tedomari::ui::Region* newRegion)
 {
   replaceRegion(newRegion);
 
@@ -188,8 +188,8 @@ void UI::executeCommand(std::list<String>& tokens)
     if ((*token)[0] == '\'') {
       token->erase(token->begin());
       assert(!token->empty());
-      assert(*--token->end() == '\'');
-      token->erase(--token->end());
+      assert(*(token->end()-1) == '\'');
+      token->erase(token->end()-1);
     }
   }
     
@@ -430,7 +430,7 @@ void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
 {
   Order order = Order(MoveOrderData(target));
   
-  for (hash_set<uint32>::iterator unit = units.begin(); unit != units.end();
+  for (hash_set<uint32>::iterator unit = *units.begin(); unit != units.end();
       ++unit) {
     game->order(OrderMessage(*unit, orderCondition_now, order));
   }

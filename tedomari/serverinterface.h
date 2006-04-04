@@ -2,7 +2,10 @@
 #define SERVERINTERFACE_H
 
 #include <time.h>
-#include <sys/time.h>
+
+#ifndef _MSC_VER
+  #include <sys/time.h>
+#endif
 
 #include "socket.h"
 #include "game/game.h"

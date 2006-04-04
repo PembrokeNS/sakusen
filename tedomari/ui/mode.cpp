@@ -17,7 +17,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
     /* No command of that name already exists, so we can proceed */
     commands[name] = cmd;
     /* Add also all non-ambiguous abbreviations of the command */
-    String abbrev(name.begin(), --name.end());
+    String abbrev(name.begin(), name.end()-1);
     String ambiguity;
     bool ambiguous = false;
     while (!abbrev.empty()) {
@@ -43,7 +43,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
             return;
         }
       }
-      abbrev.erase(--abbrev.end(), abbrev.end());
+      abbrev.erase(abbrev.end()-1, abbrev.end());
     }
   } else {
     /* Command of that name already exists */
@@ -56,7 +56,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
           /* Replace the existing command with the new one */
           existing->second = cmd;
           /* Fix all abbreviations down to the next branch */
-          String abbrev(name.begin(), --name.end());
+          String abbrev(name.begin(), name.end()-1);
           while (!abbrev.empty()) {
             existing = commands.find(abbrev);
             assert(existing != commands.end());
@@ -66,7 +66,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
             } else {
               break;
             }
-            abbrev.erase(--abbrev.end(), abbrev.end());
+            abbrev.erase(abbrev.end()-1, abbrev.end());
           }
         }
         return;

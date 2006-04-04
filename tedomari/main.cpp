@@ -2,16 +2,24 @@
 #include "stringutils.h"
 #include "partialworld.h"
 #include "libsakusen-comms-global.h"
-#include "unixdatagramconnectingsocket.h"
+
 #include "errorutils.h"
 #include "libsakusen-resources-global.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 
+#ifndef _MSC_VER
+  #include "unixdatagramconnectingsocket.h"
+  #include "asynchronousiohandler.h"
+#else 
+  #include <locale.h>
+#endif
+
+
 #include "tedomari-global.h"
 #include "revision.h"
 #include "serverinterface.h"
-#include "asynchronousiohandler.h"
+
 #include "game/game.h"
 
 /* TODO: This include will need to be guarded by whatever symbol is defined by
@@ -168,6 +176,7 @@ void runTest(
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
   Game* game = new Game(resourceInterface);
   UI* ui = newUI(options, uiConfFilename, game);
+#ifndef _MSC_VER
 
   struct timespec sleepTime = {0, NANO/25};
   if (options.evil) {
@@ -181,6 +190,8 @@ void runTest(
     }
     nanosleep(&sleepTime, NULL);
   }
+
+#endif
 
   delete ui;
   ui = NULL;
