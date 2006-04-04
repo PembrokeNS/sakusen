@@ -68,6 +68,12 @@ struct LIBSAKUSEN_API Rectangle {
   }
 };
 
+#ifdef _MSC_VER
+template LIBSAKUSEN_API Rectangle<uint16>;
+template LIBSAKUSEN_API Rectangle<sint32>;
+template LIBSAKUSEN_API Rectangle<double>;
+#endif
+
 }
 
 #endif // UI__RECTANGLE_H

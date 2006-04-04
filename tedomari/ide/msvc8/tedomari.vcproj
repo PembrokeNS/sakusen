@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\pcrecpp;.;..\.."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_SDL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\..\..\pcrecpp\debug\pcrecpp.lib ws2_32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
@@ -299,42 +300,6 @@
 				RelativePath="..\..\ui\ui.h"
 				>
 			</File>
-			<Filter
-				Name="sdl"
-				>
-				<File
-					RelativePath="..\..\ui\sdl\sdllayout.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdllayout.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlregion.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlregion.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlui.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlui.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlutils.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlutils.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="game"

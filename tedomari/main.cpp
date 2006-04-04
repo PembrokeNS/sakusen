@@ -21,9 +21,11 @@
 
 #include "game/game.h"
 
-/* TODO: This include will need to be guarded by whatever symbol is defined by
- * the --enable-sdl configure switch once such a thing exists */
+#include "ui/ui.h"
+
+#ifndef DISABLE_SDL
 #include "ui/sdl/sdlui.h"
+#endif
 
 #include <sys/stat.h>
 
@@ -43,7 +45,10 @@ using namespace sakusen::client;
 using namespace tedomari;
 using namespace tedomari::game;
 using namespace tedomari::ui;
+
+#ifndef DISABLE_SDL
 using namespace tedomari::ui::sdl;
+#endif
 
 /* struct to store options processed from the command line */
 
@@ -58,7 +63,9 @@ struct Options {
   bool evil;
   int historyLength;
   bool test;
+#ifndef DISABLE_SDL
   SDLUI::Options sdlOptions;
+#endif
   String solicitationAddress;
   String joinAddress;
   bool help;
@@ -442,14 +449,18 @@ void usage() {
 Options getOptions(String optionsFile, int argc, char const* const* argv) {
   Options results = Options();
   OptionsParser parser;
+#ifndef DISABLE_SDL
   OptionsParser sdlOptionsParser = SDLUI::getParser(&results.sdlOptions);
+#endif
 
   parser.addOption("abstract",       'a',  &results.abstract);
   parser.addOption("unix",           'u',  &results.unixSockets);
   parser.addOption("evil",           'e',  &results.evil);
   parser.addOption("history-length", 'l',  &results.historyLength);
   parser.addOption("test",           't',  &results.test);
+#ifndef DISABLE_SDL
   parser.addOption("sdlopts",        '\0', &sdlOptionsParser);
+#endif
   parser.addOption("solicit",        's',  &results.solicitationAddress);
   parser.addOption("join",           'j',  &results.joinAddress);
   parser.addOption("help",           'h',  &results.help);
@@ -470,20 +481,23 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
     exit(EXIT_FAILURE);
   }
 
-  Debug("options.sdlOptions.debug=" << results.sdlOptions.debug);
-  Debug("options.unixSockets=" << results.unixSockets);
+  /*Debug("options.unixSockets=" << results.unixSockets);*/
 
   return results;
 }
 
 UI* newUI(const Options& o, const String& uiConfFilename, Game* game)
 {
-  UI* ui;
+  UI* ui = NULL;
   /* Hopefully this should be the only mention of SDL anywhere outside of the
    * tedomari::ui::sdl code.
    * TODO: support alternate UIs (OpenGL, DirectX) */
   ifstream uiConf(uiConfFilename.c_str());
+#ifndef DISABLE_SDL
   ui = new SDLUI(o.sdlOptions, uiConf, game);
+#else
+  Fatal("No UI enabled at compile time");
+#endif
   ui->setTitle("tedomari");
   return ui;
 }
