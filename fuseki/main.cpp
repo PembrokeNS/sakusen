@@ -23,8 +23,7 @@ using namespace fuseki;
 
   
 /** Stores command-line options.
- * \todo More command line arguments (in particular allow for putting socket
- * elsewhere, changing game name, possibly allow for UDP/TCP socket, etc.).
+ * \todo More command line arguments (changing game name, etc.).
  */
 /** Made complicated by UNIX having UNIX sockets and Windows not. 
  * Use of a UNIX socket in Windows results in crash, and Complications(R)
