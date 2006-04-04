@@ -92,9 +92,13 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   Socket* tempSocket;
   
   if (unixSockets) {
+#ifdef WIN32
+    Fatal("Unix sockets not supported under Windows");
+#else
     tempSocket = new UnixDatagramListeningSocket(abstract);
     String address = tempSocket->getAddress();
     solicitationSocket->send(SolicitMessageData(address));
+#endif
   } else {
     tempSocket = solicitationSocket;
     solicitationSocket->send(SolicitMessageData(""));
@@ -196,8 +200,12 @@ String ServerInterface::join()
   assert(outgoingSocket == NULL);
   try {
     if (unixSockets) {
+#ifdef WIN32
+      Fatal("Unix sockets not supported under Windows");
+#else
       incomingSocket = new UnixDatagramListeningSocket(abstract);
       solicitationSocket->send(JoinMessageData(incomingSocket->getAddress()));
+#endif
     } else {
       Debug(
           "creating new connection to " << joinAddress << " for join message"

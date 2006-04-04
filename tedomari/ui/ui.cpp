@@ -430,7 +430,7 @@ void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
 {
   Order order = Order(MoveOrderData(target));
   
-  for (hash_set<uint32>::iterator unit = *units.begin(); unit != units.end();
+  for (hash_set<uint32>::const_iterator unit = units.begin(); unit != units.end();
       ++unit) {
     game->order(OrderMessage(*unit, orderCondition_now, order));
   }

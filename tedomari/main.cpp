@@ -2,7 +2,7 @@
 #include "stringutils.h"
 #include "partialworld.h"
 #include "libsakusen-comms-global.h"
-
+#include "timeutils.h"
 #include "errorutils.h"
 #include "libsakusen-resources-global.h"
 #include "fileutils.h"
@@ -10,13 +10,12 @@
 
 #ifndef _MSC_VER
   #include "unixdatagramconnectingsocket.h"
-  #include "asynchronousiohandler.h"
 #else 
   #include <locale.h>
 #endif
 
-
 #include "tedomari-global.h"
+#include "asynchronousiohandler.h"
 #include "revision.h"
 #include "serverinterface.h"
 
@@ -32,8 +31,6 @@
 #include <fstream>
 #include <list>
 #include <optionsparser.h>
-
-#define NANO 1000000000
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -112,13 +109,7 @@ int main(int argc, char const* const* argv)
    * TODO: allow for connecting elsewhere, or not connecting at all at once */
   
   /* Seek out the home directory */
-  char* homePathPtr = getenv("HOME");
-
-  if (homePathPtr == NULL) {
-    Fatal("no home directory found");
-  }
-
-  String homePath(homePathPtr);
+  String homePath = fileUtils_getHome();
   
   /* Construct the path to the tedomari config directory */
   String configPath = homePath + CONFIG_SUBDIR FILE_SEP "tedomari";
@@ -147,8 +138,11 @@ int main(int argc, char const* const* argv)
   }
 
   if (options.version) {
-    cout << APPLICATION_NAME " " APPLICATION_VERSION " (revision " <<
-      REVISION << ")" << endl;
+    cout << APPLICATION_NAME " " APPLICATION_VERSION;
+#ifdef REVISION
+    cout << " (revision " << REVISION << ")";
+#endif
+    cout << endl;
     exit(EXIT_SUCCESS);
   }
   
@@ -176,11 +170,10 @@ void runTest(
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
   Game* game = new Game(resourceInterface);
   UI* ui = newUI(options, uiConfFilename, game);
-#ifndef _MSC_VER
 
-  struct timespec sleepTime = {0, NANO/25};
+  struct timeval sleepTime = {0, MICRO/25};
   if (options.evil) {
-    sleepTime.tv_nsec = NANO/250;
+    sleepTime.tv_usec = MICRO/250;
   }
 
   while (true) {
@@ -188,10 +181,8 @@ void runTest(
     if (ui->isQuit()) {
       break;
     }
-    nanosleep(&sleepTime, NULL);
+    timeUtils_sleep(sleepTime);
   }
-
-#endif
 
   delete ui;
   ui = NULL;
@@ -268,11 +259,11 @@ void runClient(
                                       general fashion.  Maybe use regexes and
                                       their associated cunningness */
 
-    struct timespec sleepTime = {0, NANO/25};
+    struct timeval sleepTime = {0, MICRO/25};
     if (options.evil) {
-      sleepTime.tv_nsec = NANO/250;
+      sleepTime.tv_usec = MICRO/250;
     }
-    struct timespec commandSleepTime = {0, 0};
+    struct timeval commandSleepTime = {0, 0};
 
     /* Construct our commands */
     hash_map<String, ::Command, StringHash> commands;
@@ -304,7 +295,7 @@ void runClient(
       /* Process commands enterred through stdin */
       String command;
       String message;
-      if (ioHandler.getCommand(command, &commandSleepTime)) {
+      if (ioHandler.getCommand(command, commandSleepTime)) {
         list<String> words = stringUtils_split(command, whitespace);
         if (!words.empty()) {
           String commandName = words.front();
@@ -413,7 +404,7 @@ void runClient(
           finished = true;
         }
       }
-      nanosleep(&sleepTime, NULL);
+      timeUtils_sleep(sleepTime);
     }
     
     cout << endl;

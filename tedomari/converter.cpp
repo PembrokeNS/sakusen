@@ -7,6 +7,11 @@
 using namespace sakusen::comms;
 using namespace tedomari;
 
+#ifdef DISABLE_CONVERSION
+Converter::Converter() {}
+Converter::~Converter() {}
+#else
+
 Converter::Converter() :
   nativeToUTF8(unicode_iconv_open("UTF-8", nl_langinfo(CODESET))),
   UTF8ToNative(unicode_iconv_open(nl_langinfo(CODESET), "UTF-8"))
@@ -36,4 +41,4 @@ String Converter::convert(const String& s, unicode_iconv_t conv)
   }
   return String(out);
 }
-
+#endif // DISABLE_CONVERSION

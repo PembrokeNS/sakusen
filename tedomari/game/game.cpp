@@ -9,6 +9,7 @@ using namespace std;
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::client;
+using namespace tedomari;
 using namespace tedomari::game;
 
 Game::Game(ResourceInterface* rI) :

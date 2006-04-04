@@ -7,6 +7,7 @@
 
 #include "libsakusen-global.h"
 #include "converter.h"
+#include "timeutils.h"
 
 namespace tedomari {
 
@@ -37,19 +38,21 @@ class AsynchronousIOHandler {
     std::queue<String> commandBuffer;
     String lastLine;
     bool eof;
-    void updateBuffer(const struct timespec* timeout);
+    void updateBuffer(const struct timeval& timeout);
       /* read as many chars as are available */
     Converter converter;
+#ifdef DISABLE_READLINE
+    String inputBuffer; /**< Chars which have been input but not terminated with a newline */
+#endif
   public:
     inline bool getEof() const { return eof; }
-    void prompt(); /* Display prompt */
-    bool getCommand(String& command, const struct timespec* timeout);
+    bool getCommand(String& command, const struct timeval& timeout);
       /* If a command is ready, put it into the string and return true, else
        * return false.  Wait until a period of length timeout occurs *between*
        * characters being input. */
     void message(const String& message);
       /* Display given message, and follow it with the prompt and any partial
-       * mesage which has been input so far */
+       * command which has been input so far */
 };
 
 }

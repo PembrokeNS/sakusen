@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\pcrecpp;.;..\.."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

@@ -1,8 +1,10 @@
 #include "asynchronousiohandler.h"
 #include "errorutils.h"
 
+#ifndef DISABLE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
+#endif
 
 #include <fcntl.h>
 
@@ -14,8 +16,89 @@ using namespace std;
 using namespace sakusen::comms;
 using namespace tedomari;
 
-/* Static data for the static function below to use */
+#ifdef DISABLE_READLINE
 
+#define INPUT_BUFFER_LEN 512
+
+#ifdef WIN32
+#define NativeRead _read
+#define NativeReadReturnType int
+#include <io.h>
+#else
+#define NativeRead read
+#define NativeReadReturnType ssize_t
+#endif
+
+AsynchronousIOHandler::AsynchronousIOHandler(
+    FILE* in,
+    ostream& o,
+    String hf,
+    int hl
+  ) :
+  infd(fileno(in)),
+  out(o),
+  historyFile(hf),
+  historyLength(hl),
+  commandBuffer(),
+  eof(false),
+  inputBuffer()
+{
+}
+
+AsynchronousIOHandler::~AsynchronousIOHandler()
+{
+}
+
+void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
+{
+  fd_set inSet;
+  FD_ZERO(&inSet);
+  FD_SET(infd, &inSet);
+  
+  while(true) {
+    switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
+      case -1:
+        Fatal("select failed , errno=" << errno << " (" <<
+          errorUtils_parseErrno(errno) << ")");
+      case 0:
+        /* Nothing further */
+        return;
+      case 1:
+        /* There is something to read */
+        {
+          char buf[INPUT_BUFFER_LEN];
+          /* Read what we can from the input file descriptor */
+          NativeReadReturnType bytesRead = NativeRead(infd, buf, INPUT_BUFFER_LEN);
+          if (bytesRead < 0)
+            Fatal("error reading input: " << errorUtils_errorMessage(errno));
+          /* Append what we've read to the input buffer */
+          inputBuffer.append(buf, bytesRead);
+          /* Strip newline-delimited commands from the input buffer */
+          String::iterator nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+          while (nl != inputBuffer.end()) {
+            commandBuffer.push(String(inputBuffer.begin(), nl));
+            inputBuffer.erase(inputBuffer.begin(), nl);
+            nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+          }
+        }
+        break;
+      default:
+        Fatal("Unexpected return value from select.");
+    }
+  }
+}
+
+void AsynchronousIOHandler::message(const String& message)
+{
+  struct timeval timeout = {0, 0};
+  updateBuffer(timeout);
+  out << "\n" << converter.convertUTF8ToNative(message) <<
+    "> " << inputBuffer;
+}
+
+#else // DISABLE_READLINE
+
+/* Static data for the static function below to use */
 AsynchronousIOHandler* handler = NULL;
 
 /* Static function because it needs to be used as a C-style function pointer */
@@ -84,17 +167,17 @@ AsynchronousIOHandler::~AsynchronousIOHandler()
   handler = NULL;
 }
 
-void AsynchronousIOHandler::updateBuffer(const struct timespec* timeout)
+void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout)
 {
   fd_set inSet;
   FD_ZERO(&inSet);
   FD_SET(infd, &inSet);
   
   while(true) {
-    switch(pselect(infd+1, &inSet, NULL, NULL, timeout, NULL)) {
+    switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
         Fatal("select failed , errno=" << errno << " (" <<
-          errorUtils_parseErrno(errno) <<")");
+          errorUtils_parseErrno(errno) << ")");
       case 0:
         /* Nothing further */
         return;
@@ -108,9 +191,20 @@ void AsynchronousIOHandler::updateBuffer(const struct timespec* timeout)
   }
 }
 
+void AsynchronousIOHandler::message(const String& message)
+{
+  struct timespec timeout = {0, 0};
+  updateBuffer(&timeout);
+  out << "\n" << converter.convertUTF8ToNative(message);
+  rl_on_new_line();
+  rl_redisplay();
+}
+
+#endif // DISABLE_READLINE
+
 bool AsynchronousIOHandler::getCommand(
     String& command,
-    const struct timespec* timeout)
+    const struct timeval& timeout)
 {
   updateBuffer(timeout);
   if (!commandBuffer.empty()) {
@@ -121,13 +215,3 @@ bool AsynchronousIOHandler::getCommand(
 
   return false;
 }
-
-void AsynchronousIOHandler::message(const String& message)
-{
-  struct timespec timeout = {0, 0};
-  updateBuffer(&timeout);
-  out << "\n" << converter.convertUTF8ToNative(message);
-  rl_on_new_line();
-  rl_redisplay();
-}
-
