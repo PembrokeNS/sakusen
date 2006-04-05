@@ -231,6 +231,10 @@ void runClient(
     
     Socket* socket = Socket::newConnectionToAddress(socketAddress);
 
+    if (socket == NULL) {
+      Fatal("socket type not supported, please check the address and try again");
+    }
+
     cout << "Connected to socket." << endl;
     
     /* TODO: the ResourceInterface actually needs to be able to access
