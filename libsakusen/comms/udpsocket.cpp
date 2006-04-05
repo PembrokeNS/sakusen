@@ -121,7 +121,7 @@ size_t UDPSocket::receive(void* buf, size_t len)
 {
   NativeReceiveReturnType retVal = ::recv(sockfd, reinterpret_cast<char*>(buf), len, 0);
   if (retVal == -1) {
-    if (socket_errno == EAGAIN) {
+    if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
       return 0;
     }
     Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
@@ -140,7 +140,7 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
     if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
       return 0;
     }
-    Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
+    Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
   }
 #ifdef WIN32
   /** \bug Not thread-safe */

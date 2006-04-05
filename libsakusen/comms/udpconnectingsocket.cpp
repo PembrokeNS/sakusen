@@ -1,4 +1,5 @@
 #include "udpconnectingsocket.h"
+#include "errorutils.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -17,7 +18,7 @@ UDPConnectingSocket::UDPConnectingSocket(
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    Fatal("host " << hostname << " not found.");
+    Fatal("host " << hostname << " not found: " << errorUtils_parseErrno(socket_errno));
   }
 
   memset(&addr, 0, sizeof(addr));

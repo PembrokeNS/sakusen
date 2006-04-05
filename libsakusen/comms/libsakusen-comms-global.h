@@ -17,6 +17,12 @@
   #define LIBSAKUSEN_COMMS_API
 #endif
 
+#ifdef WIN32
+  #define socket_errno WSAGetLastError()
+#else
+  #define socket_errno errno
+#endif
+
 /* The value 108 is used in sys/un.h, but not declared to anything.  The
  * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit */
 #define UNIX_PATH_MAX 108

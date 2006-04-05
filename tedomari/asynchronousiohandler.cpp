@@ -58,8 +58,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   while(true) {
     switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
-        Fatal("select failed , errno=" << errno << " (" <<
-          errorUtils_parseErrno(errno) << ")");
+        Fatal("select failed: " << errorUtils_parseErrno(socket_errno));
       case 0:
         /* Nothing further */
         return;

@@ -10,6 +10,9 @@ String sakusen::comms::errorUtils_parseErrno(int num)
 #define CASE(name) case name: return #name;
     CASE(EACCES)
     CASE(EAGAIN)
+#if EAGAIN != EWOULDBLOCK
+    CASE(EWOULDBLOCK)
+#endif
     CASE(EBADF)
     CASE(ECONNRESET)
     CASE(EDESTADDRREQ)
@@ -44,7 +47,7 @@ String sakusen::comms::errorUtils_errorMessage(int num)
   char message[MESSAGE_BUFFER_LEN];
 
   if (NULL == strerror_s(message, MESSAGE_BUFFER_LEN, num)) {
-    Fatal("error getting error message: " << errorUtils_parseErrno(errno));
+    return "error getting error message for errno " + errorUtils_parseErrno(num);
   }
   return String(message); 
 
@@ -55,7 +58,7 @@ String sakusen::comms::errorUtils_errorMessage(int num)
    * get at the non-obsolete version.  See strerror(3) for more details */
   /* This doesn't work anyway...
   if (NULL == strerror_r(num, message, MESSAGE_BUFFER_LEN)) {
-    Fatal("error getting error message: " << errorUtils_parseErrno(errno));
+    return "error getting error message for errno " + errorUtils_parseErrno(errno);
   }
   return String(message); */
   /* Because the above doesn't work, we have FIXME: not thread-safe */

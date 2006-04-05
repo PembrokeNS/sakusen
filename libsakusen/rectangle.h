@@ -32,7 +32,7 @@ struct LIBSAKUSEN_API Rectangle {
    * x2 and \p y1 \< \p y2.
    *
    * \param x1,y1 Bottom-left corner
-   * \param x2,y2 Bottom-right corner
+   * \param x2,y2 Top-right corner
    */
   Rectangle(T x1, T y1, T x2, T y2) :
     minx(x1), miny(y1), maxx(x2), maxy(y2) {}

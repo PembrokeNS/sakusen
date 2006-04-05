@@ -158,6 +158,9 @@ int main(int argc, char const* const* argv)
           "*  Similus est circo mortis!  *\n"
           "*******************************" << endl;
 
+  /* Initialize sockets */
+  Socket::socketsInit();
+
   if (options.test) {
     runTest(options, homePath, configPath);
   } else {
