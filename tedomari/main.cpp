@@ -286,7 +286,7 @@ void runClient(
     UI* ui = NULL;
 
     bool finished = false;
-    String whitespace = " \t\r\n"; /* TODO: obtain whitespace in some more
+    String whitespace = " \t\r\n"; /** \todo obtain whitespace in some more
                                       general fashion.  Maybe use regexes and
                                       their associated cunningness */
 

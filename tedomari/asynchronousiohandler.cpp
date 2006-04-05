@@ -24,6 +24,8 @@ using namespace tedomari;
 #define NativeRead _read
 #define NativeReadReturnType int
 #include <io.h>
+#include <conio.h>
+#include <stdio.h>
 #else
 #define NativeRead read
 #define NativeReadReturnType ssize_t
@@ -54,7 +56,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   fd_set inSet;
   FD_ZERO(&inSet);
   FD_SET(infd, &inSet);
-  
+#ifndef _MSC_VER
   while(true) {
     switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
@@ -85,6 +87,30 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
         Fatal("Unexpected return value from select.");
     }
   }
+#else
+  if(_kbhit())
+  {
+    char buf[INPUT_BUFFER_LEN];
+
+    /* Read what we can from the input file descriptor */
+    if(gets_s(buf, INPUT_BUFFER_LEN)==NULL)
+      Fatal("error reading input: " << errorUtils_errorMessage(errno));
+    /* Append what we've read to the input buffer */
+    inputBuffer.append(buf, strnlen(buf, INPUT_BUFFER_LEN));
+    /* Strip newline-delimited commands from the input buffer */
+    String::iterator nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+    while (nl != inputBuffer.end()){
+      commandBuffer.push(String(inputBuffer.begin(), nl));
+      inputBuffer.erase(inputBuffer.begin(), nl);
+      nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+    }
+  }
+  else
+  {
+    return;
+    }
+#endif
+
 }
 
 void AsynchronousIOHandler::message(const String& message)
@@ -97,7 +123,7 @@ void AsynchronousIOHandler::message(const String& message)
 
 #else // DISABLE_READLINE
 
-/** \breif Static data for tedomari::line_callback_handler to use
+/** \brief Static data for tedomari::line_callback_handler to use
  * 
  * \internal */
 AsynchronousIOHandler* handler = NULL;
