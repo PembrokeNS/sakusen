@@ -166,12 +166,12 @@ AsynchronousIOHandler::~AsynchronousIOHandler()
   handler = NULL;
 }
 
-void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout)
+void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout2)
 {
   fd_set inSet;
   FD_ZERO(&inSet);
   FD_SET(infd, &inSet);
-  
+  struct timeval timeout=timeout2;
   while(true) {
     switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
@@ -192,8 +192,8 @@ void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout)
 
 void AsynchronousIOHandler::message(const String& message)
 {
-  struct timespec timeout = {0, 0};
-  updateBuffer(&timeout);
+  struct timeval timeout = {0, 0};
+  updateBuffer(timeout);
   out << "\n" << converter.convertUTF8ToNative(message);
   rl_on_new_line();
   rl_redisplay();

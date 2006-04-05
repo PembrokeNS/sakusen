@@ -50,8 +50,8 @@ struct Options {
   bool abstract;
   #ifndef WIN32
     bool forceSocket;
-    String solicitationAddress(),
-    String joinAddress(),
+    String solicitationAddress;
+    String joinAddress;
   #else
     String udpAddress;
     String tcpAddress;
