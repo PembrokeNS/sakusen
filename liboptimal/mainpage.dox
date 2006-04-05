@@ -1,0 +1,34 @@
+/** \namespace optimal
+\brief Options parsing library
+
+Liboptimal is a library which parses options given on the command line, and
+optionally also from a configuration file.  It supports options in long,
+short or both forms.  It also supports suboptions.
+
+The option with short name 'o' and long name "option" can be either a boolean
+option, an option with a value, or an option taking suboptions.
+
+If it is boolean then it can be set or unset
+in a configuration file with
+
+option=yes
+option=no
+
+On the command line it can be activated with "--option" or "-o" and deactivated
+with "--nooption" or "-o-".
+
+If can be assigned a value then that can be done in the config file as
+
+option=VALUE
+
+or on the command line as "--option VALUE" or "-o VALUE".
+
+If it takes suboptions, then these are given as its value, as if they were
+being specified in a configuration file, but delimited by some other character
+than newline (probably ':').  So, a suboption "subopt" can be assigned a value
+in a configuration file with
+
+option=subopt=VALUE
+
+or on the command line with "--option subopt=VALUE" or "-o subopt=VALUE".
+*/

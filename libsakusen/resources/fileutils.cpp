@@ -16,6 +16,12 @@ using namespace sakusen::comms;
 namespace sakusen {
 namespace resources {
 
+/** \brief Wrapper for native read function.
+ *
+ * Returns number of bytes read.  Throws FileIOExn on error
+ *
+ * \todo Perhaps should be inlined?
+ */
 size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
 {
 #ifdef WIN32
@@ -30,6 +36,12 @@ size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
   return retVal;
 }
 
+/** \brief Wrapper for native write function.
+ *
+ * Returns number of bytes written.  Throws FileIOExn on error
+ *
+ * \todo Perhaps should be inlined?
+ */
 size_t fileUtils_write(int fd, const void* buffer, size_t length)
 {
 #ifdef WIN32
@@ -80,6 +92,13 @@ int fileUtils_mkdirRecursive(String path, mode_t mode)
   return 0;
 }
 
+/** \brief Returns all files in the directory whose name
+ * begins with the given name.
+ * 
+ * \todo More general behaviour is needed.
+ *
+ * \warning This method is not thread-safe!
+ */
 #ifdef WIN32
 list<String> fileUtils_findMatches(
     const String& directory,
@@ -144,6 +163,8 @@ std::list<String> fileUtils_findMatches(
 }
 #endif
 
+/** \brief Gets a home directory suitable for the current
+ * platform */
 String fileUtils_getHome()
 {
 #ifdef WIN32

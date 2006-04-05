@@ -191,7 +191,7 @@ String RemoteClient::performStringMagic(
 String RemoteClient::performStringSetMagic(
     /*const settingsTree::Leaf* altering,*/
     const std::list<String>& name,
-    const hash_set<String, StringHash>& /*newValue*/
+    const __gnu_cxx::hash_set<String, sakusen::StringHash>& /*newValue*/
   )
 {
   assert(!name.empty());

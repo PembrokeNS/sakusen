@@ -50,27 +50,44 @@ using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
 #endif
 
-/* struct to store options processed from the command line */
+namespace tedomari {
 
+/** struct to store options processed from the configuration
+ * file and command line */
 struct Options {
+  /** Default constructor sets all options to their default values */
   Options() :
     abstract(true), unixSockets(true), evil(false), historyLength(100),
     test(false), solicitationAddress(), joinAddress(), help(false),
     version(false) {}
-  ~Options() {}
+  /** Whether to use the abstract unix socket namespace where possible */
   bool abstract;
+  /** Whether to use unix sockets where possible */
   bool unixSockets;
+  /** When set, tedomari will sleep less */
   bool evil;
+  /** Number of commands to save between executions from the tedomari terminal
+   * prompt */
   int historyLength;
+  /** When set, tedomari does not attempt to connect to a server, but rather
+   * runs the GUI in a test mode */
   bool test;
 #ifndef DISABLE_SDL
+  /** Has various suboptions related to the SDL GUI.  See
+   * tedomari::ui:sdl::SDLUI::Options */
   SDLUI::Options sdlOptions;
 #endif
+  /** Address to use to solicit a server */
   String solicitationAddress;
+  /** Address to use to join a server */
   String joinAddress;
+  /** When set, tedomari prints a help message and exits */
   bool help;
+  /** When set, tedomari prints version information and exits */
   bool version;
 };
+
+} /* end namespace tedomari */
 
 /* enumeration of commands that can be entered at the tedomari prompt */
 

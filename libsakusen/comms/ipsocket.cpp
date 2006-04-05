@@ -58,7 +58,7 @@ void IPSocket::interpretAddress(
 size_t IPSocket::receiveTimeout(
     void* buf,
     size_t len,
-    const struct ::timeval& timeout
+    const struct timeval& timeout
   )
 {
   struct timeval endTime;

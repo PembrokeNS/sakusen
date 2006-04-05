@@ -28,6 +28,7 @@ using namespace sakusen::resources;
  * check that they can be reopened.
  */
 
+/** \brief main function for test */
 int main(/*int argc, char** argv*/)
 {
   String homePath = fileUtils_getHome();

@@ -15,7 +15,7 @@
 using namespace sakusen;
 using namespace sakusen::comms;
 
-Socket* TCPSocket::newConnectionToAddress(std::list< ::String>& address)
+Socket* TCPSocket::newConnectionToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -29,7 +29,7 @@ Socket* TCPSocket::newConnectionToAddress(std::list< ::String>& address)
   return new TCPConnectingSocket(hostname, port);
 }
 
-Socket* TCPSocket::newBindingToAddress(std::list< ::String>& address)
+Socket* TCPSocket::newBindingToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;

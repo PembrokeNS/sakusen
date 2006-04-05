@@ -97,10 +97,15 @@ void AsynchronousIOHandler::message(const String& message)
 
 #else // DISABLE_READLINE
 
-/* Static data for the static function below to use */
+/** \breif Static data for tedomari::line_callback_handler to use
+ * 
+ * \internal */
 AsynchronousIOHandler* handler = NULL;
 
-/* Static function because it needs to be used as a C-style function pointer */
+/** \brief Static function because it needs to be used as a C-style function
+ * pointer
+ *
+ * \internal */
 void tedomari::line_callback_handler(char* line)
 {
   /* The readline library has passed us this completed line of input - we pass

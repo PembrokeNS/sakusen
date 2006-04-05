@@ -9,6 +9,16 @@
 
 namespace tedomari {
 
+/** \brief Handles conversion of text between the native encoding (used for
+ * terminal I/O) and UTF-8 (used for all sakusen strings internally)
+ *
+ * When DISABLE_CONVERSION is defined, this class performs no alterations to
+ * the strings it is given to convert, but simply passes them on verbatim.
+ * 
+ * \warning This may yield invalid UTF-8 strings
+ *
+ * Otherwise, the unicode library is used to convert strings between the native
+ * encoding (as determined by locale settings) and UTF-8. */
 class Converter {
   private:
     /** Copying not possible, due to unicode_iconv_t members */

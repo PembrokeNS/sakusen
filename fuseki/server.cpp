@@ -36,7 +36,7 @@ bool interrupted = false; /* Use of static data to monitor interrupt of
 Server::Server(
     Socket* ss,
     Socket* js,
-    ostream& o,
+    std::ostream& o,
     ResourceInterface* r,
     bool a,
     bool d
@@ -932,8 +932,8 @@ String Server::stringSettingAlteringCallback(
 }
 
 String Server::stringSetSettingAlteringCallback(
-    settingsTree::Leaf* altering,
-    const hash_set<String, StringHash>& newValue
+    fuseki::settingsTree::Leaf* altering,
+    const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
   )
 {
   /* Perform magic associated with the setting */

@@ -11,6 +11,7 @@
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
 
+/** Number of microseconds in a second */
 #define MICRO 1000000
 
 /** \file

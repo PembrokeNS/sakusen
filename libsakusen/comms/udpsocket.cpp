@@ -15,7 +15,7 @@
 using namespace sakusen;
 using namespace sakusen::comms;
 
-Socket* UDPSocket::newConnectionToAddress(std::list< ::String>& address)
+Socket* UDPSocket::newConnectionToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -29,7 +29,7 @@ Socket* UDPSocket::newConnectionToAddress(std::list< ::String>& address)
   return new UDPConnectingSocket(hostname, port);
 }
 
-Socket* UDPSocket::newBindingToAddress(std::list< ::String>& address)
+Socket* UDPSocket::newBindingToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;

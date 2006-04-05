@@ -1,0 +1,191 @@
+/** \page usingtedomari Using tedomari
+
+This is a brief introduction to using tedomari as it stands.  Note that the
+methods described herein should be made obsolete at some point, so check how
+recent this document is compared with the sources before believing what it
+says.
+
+We describe how to use the tedomari terminal prompt (this is what you see
+<i>before</i> you start the GUI &mdash;
+no description of the GUI is given here).
+
+The \c join and \c leave commands allow you
+to connect to or disconnect from the
+server.  At present only one server is supported (at an address specified on
+the command-line, if anywhere).
+
+\todo Allow the user to solicit many servers and join any one.  Addresses
+shouldn't really be given on the command line at all.
+
+The \c reconnect command will begin again with a new solicitation from the
+server.  This is appropriate if the server has been shut down and restarted
+while tedomari was running.
+
+The \c resetui command will close the GUI and reopen it.  When the game has not
+started it does nothing.
+
+The most versatile commanda are the \c get and
+\c set commands.  At present these must
+be used for all pre-game-start configuration.  It will probably help while you
+are experimenting to watch the output from the server to see what effect the
+commands you are executing have on it.
+
+The \c get command serves as a dual-purpose ls and cat for the settings tree.
+When you \c get a branch of the settings tree, you get a list of the child
+nodes of that branch.  When you \c get a leaf, you get its value.
+
+For example, we can begin exploring at the root node of the tree (':') and work
+through successive child nodes as follows:
+
+\verbatim
+> g :
+>
+Server reported that value of ':' was:
+4 items
+players
+server
+game
+clients
+> g game
+>
+Server reported that value of 'game' was:
+5 items
+universe
+speed
+map
+mapplaymode
+paused
+> g game:universe
+>
+Server reported that value of 'game:universe' was:
+2 items
+name
+hash
+> g game:universe:name
+>
+Server reported that value of 'game:universe:name' was:
+
+\endverbatim
+
+The first three commands returned lists of child nodes, and the last the value
+of the node "game:universe:name" (which was the null string, in this case).
+Note that the leading ':' has been omitted from node addresses when not
+referring to the root node ':'.
+
+To start a game, you have to actually set some settings.  We might, for
+example, try to set which universe we wish to play in, like this:
+
+\verbatim
+> s game:universe:name u
+>
+Request rejected by server (cannot write to node ':game:universe:name': permission denied)
+\endverbatim
+
+Our request was rejected because we do not have admin privelages.  Assuming we
+are client 0, our admin status is stored at clients:0:admin.  If we try to set
+ourselves to be an admin, then we get this:
+
+\verbatim
+> s clients:0:admin true
+>
+Request rejected by server (cannot write to node ':clients:0:admin': permission denied)
+\endverbatim
+
+So we are no further forward.  Only an admin can set admin status.  But how can
+we resolve this, since there are no admin clients?  Well, we have to get the
+server to set our admin status for us.  We can do this as follows:
+
+\verbatim
+> s clients:0:neveradmin false
+>
+Server reported that value of ':clients:0:neveradmin' was:
+false
+Server reported that value of ':clients:0:admin' was:
+true
+\endverbatim
+
+Essentially, this is saying to the server "I don't not want to be an admin".
+The server automatically ensures that there is at least one admin at all times,
+where possible, so in this case we got automatically promoted to admin status.
+If another client were to join and try the same trick, it wouldn't work.  We
+would have to promote them ourselves.
+
+Now we can set the universe like we wanted to before:
+
+\verbatim
+> s game:universe:name u
+>
+Server reported that value of ':game:universe:name' was:
+u
+Server reported that value of ':game:universe:name' was:
+universe
+Server reported that value of ':game:universe:hash' was:
+812ecb88359476b9c163cea45a720cfd1226e824081dd1d3817201a76ab26a2c
+\endverbatim
+
+Note that the server auto-completed the short name "u" to the full name
+"universe", since that was the only universe with that prefix.  Also, the
+server provides the hash of the universe so our client can check it has exactly
+the right version.
+
+Next we can set the map:
+
+\verbatim
+> s game:map m
+>
+Server reported that value of ':game:map' was:
+m
+Server reported that value of ':game:map' was:
+map
+\endverbatim
+
+This works in much the same way, but now we don't need the hash, since the
+client does not need to have a copy of the map file to take part in the game.
+
+If you were paying attention to the server output you might have seen:
+
+\verbatim
+Client asked to change setting game:map
+Checking for game start
+Not ready because player 1 not ready
+\endverbatim
+
+The server will monitor the situation and start the game as soon as possible.
+At present it's not starting because player 1 is not ready.  This is because
+player 1 has no client.
+
+\todo There should be a way to ask the server what reason is preventing the
+game from starting at the moment.
+
+We can fix this problem by assigning ourselves to player 1, thus:
+
+\verbatim
+> s clients:0:player 1
+>
+Server reported that value of ':clients:0:player' was:
+1
+\endverbatim
+
+This time the server said:
+
+\verbatim
+Client asked to change setting clients:0:player
+Checking for game start
+Not ready because client '0' not ready
+\endverbatim
+
+Now it is us who is not ready.  This is because we have not set our 'ready'
+flag.  We can do this with:
+
+\verbatim
+> s clients:0:ready true
+>
+Server reported that value of ':clients:0:ready' was:
+true
+>
+Game is starting!
+\endverbatim
+
+Hey presto!  The game has started.
+*/
+

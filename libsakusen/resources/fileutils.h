@@ -30,38 +30,17 @@
 namespace sakusen {
 namespace resources {
 
-/** \brief Wrapper for native read function.
- *
- * Returns number of bytes read.  Throws FileIOExn on error
- *
- * \todo Perhaps should be inlined?
- */
 LIBSAKUSEN_RESOURCES_API size_t fileUtils_read(int fd, void* buffer, size_t bufferLen);
 
-/** \brief Wrapper for native write function.
- *
- * Returns number of bytes written.  Throws FileIOExn on error
- *
- * \todo Perhaps should be inlined?
- */
 LIBSAKUSEN_RESOURCES_API size_t fileUtils_write(int fd, const void* buffer, size_t length);
 
 LIBSAKUSEN_RESOURCES_API int fileUtils_mkdirRecursive(String path, mode_t mode);
 
-/** \brief Returns all files in the directory whose name
- * begins with the given name.
- * 
- * \todo More general behaviour is needed.
- *
- * \warning This method is not thread-safe!
- */
 LIBSAKUSEN_RESOURCES_API std::list<String> fileUtils_findMatches(
     const String& directory,
     const String& name
   );
 
-/** \brief Gets a home directory suitable for the current
- * platform */
 LIBSAKUSEN_RESOURCES_API String fileUtils_getHome();
 
 }}

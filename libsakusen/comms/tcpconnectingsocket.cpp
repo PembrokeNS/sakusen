@@ -8,7 +8,8 @@
 using namespace sakusen::comms;
 
 TCPConnectingSocket::TCPConnectingSocket(
-    const ::String hostname, uint16 port):
+    const String hostname, uint16 port
+  ) :
   TCPSocket(port),
   remoteHost(hostname)
 {
