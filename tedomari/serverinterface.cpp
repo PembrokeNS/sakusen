@@ -41,7 +41,7 @@ ServerInterface::ServerInterface(
   outgoingSocket(NULL)
 {
   /*Debug("unixSockets = " << unixSockets);*/
-  timeout.tv_sec = 1;
+  timeout.tv_sec = 5;
   timeout.tv_usec = 0;
     /* 1 second timeout used for all incoming server responses.
      * TODO: make timeout user-specifiable */
