@@ -10,6 +10,7 @@
 
 #include <cerrno>
 #include <ostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -45,6 +46,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
   eof(false),
   inputBuffer()
 {
+  out << "> " << flush;
 }
 
 AsynchronousIOHandler::~AsynchronousIOHandler()
@@ -78,7 +80,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
           String::iterator nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
           while (nl != inputBuffer.end()) {
             commandBuffer.push(String(inputBuffer.begin(), nl));
-            inputBuffer.erase(inputBuffer.begin(), nl);
+            inputBuffer.erase(inputBuffer.begin(), nl+1);
             nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
           }
         }
@@ -88,29 +90,29 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     }
   }
 #else
-  if(_kbhit())
+  /* Read what we can from the console */
+  while (_kbhit())
   {
-    char buf[INPUT_BUFFER_LEN];
-
-    /* Read what we can from the input file descriptor */
-    if(gets_s(buf, INPUT_BUFFER_LEN)==NULL)
-      Fatal("error reading input: " << errorUtils_errorMessage(errno));
     /* Append what we've read to the input buffer */
-    inputBuffer.append(buf, strnlen(buf, INPUT_BUFFER_LEN));
-    /* Strip newline-delimited commands from the input buffer */
-    String::iterator nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
-    while (nl != inputBuffer.end()){
-      commandBuffer.push(String(inputBuffer.begin(), nl));
-      inputBuffer.erase(inputBuffer.begin(), nl);
-      nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+    int chr = _getche();
+    /*QDebug("[updateBuffer] got char " << chr);*/
+    inputBuffer += static_cast<char>(chr);
+    if (chr == '\n' || chr == '\r') {
+      out << "> " << flush;
     }
   }
-  else
-  {
-    return;
-    }
-#endif
 
+  static const char newlines[2] = { '\n', '\r' };
+
+  /* Strip newline-delimited commands from the input buffer */
+  String::iterator nl = find_first_of(inputBuffer.begin(), inputBuffer.end(), newlines, newlines+2);
+  while (nl != inputBuffer.end()){
+    /*QDebug("[updateBuffer] found command");*/
+    commandBuffer.push(String(inputBuffer.begin(), nl));
+    inputBuffer.erase(inputBuffer.begin(), nl+1);
+    nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+  }
+#endif
 }
 
 void AsynchronousIOHandler::message(const String& message)
@@ -118,7 +120,7 @@ void AsynchronousIOHandler::message(const String& message)
   struct timeval timeout = {0, 0};
   updateBuffer(timeout);
   out << "\n" << converter.convertUTF8ToNative(message) <<
-    "> " << inputBuffer;
+    "> " << inputBuffer << flush;
 }
 
 #else // DISABLE_READLINE

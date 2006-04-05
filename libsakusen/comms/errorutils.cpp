@@ -15,6 +15,7 @@ String sakusen::comms::errorUtils_parseErrno(int num)
 #endif
     CASE(EBADF)
     CASE(ECONNRESET)
+    CASE(ECONNABORTED)
     CASE(EDESTADDRREQ)
     CASE(EFAULT)
     CASE(EINTR)

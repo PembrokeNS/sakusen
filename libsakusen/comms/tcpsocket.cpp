@@ -152,13 +152,16 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
           sockfd, reinterpret_cast<char*>(buffer+bufferLength), bufferCapacity - bufferLength, 0
         );
       if (received == -1) {
-        if (socket_errno == EAGAIN) {
+        if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
           break;
         }
-        Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
+        if (socket_errno == ECONNABORTED) {
+          throw new SocketClosedExn();
+        }
+        Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
       }
       if (received != 0) {
-        Debug("received = " << received);
+        /*Debug("received = " << received);*/
       }
       bufferLength += received;
       if (bufferCapacity > bufferLength) {
@@ -182,7 +185,7 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   }
   uint16 nextMessageLen = ntohs(*reinterpret_cast<uint16*>(buffer));
   assert(nextMessageLen > 0);
-  Debug("nextMessageLen=" << nextMessageLen);
+  /*Debug("nextMessageLen=" << nextMessageLen);*/
   if (bufferLength >= nextMessageLen + 2U) {
     if (len < nextMessageLen) {
       Fatal("insufficient space in buffer for message");
