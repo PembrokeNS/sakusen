@@ -81,6 +81,7 @@ void TCPSocket::send(const void* buf, size_t len)
     switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
+      case ECONNABORTED:
         throw new SocketClosedExn();
         break;
       default:
