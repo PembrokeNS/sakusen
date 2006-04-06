@@ -15,13 +15,18 @@ class DummyRegion : public Region {
       const {
       return new DummyRegion(width, height);
     }
-    sakusen::Point<double> globalToLocal(const sakusen::Point<double>&) {
+    sakusen::Point<double> globalToLocal(const sakusen::Point<double>& global) {
       Fatal("not implemented");
+      return global; //Make VC happy
     }
-    sakusen::Point<double> localToGlobal(const sakusen::Point<double>&) {
+    sakusen::Point<double> localToGlobal(const sakusen::Point<double>& local) {
       Fatal("not implemented");
+      return local; //Make VC happy
     }
-    Layout* newLayout() const { Fatal("not implemented"); }
+    Layout* newLayout() const { 
+      Fatal("not implemented"); 
+      return 0; //Make VC happy
+    }
     void setClip() {}
     void unsetClip() {}
     void fill(const Colour&) {}

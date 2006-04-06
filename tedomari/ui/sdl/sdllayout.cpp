@@ -1,6 +1,7 @@
 #include "ui/sdl/sdllayout.h"
-
+#ifndef DISABLE_PANGO
 #include <pango/pangocairo.h>
+
 
 using namespace tedomari::ui::sdl;
 
@@ -36,3 +37,34 @@ void SDLLayout::contextChanged()
   pango_layout_context_changed(layout);
 }
 
+#else
+
+using namespace tedomari::ui::sdl;
+
+SDLLayout::SDLLayout(SDLUI* ui)
+{
+ /* May need to attach and detach the layout so that we can be informed
+   * whenever the context changes - for the moment we don't for simplicity */
+  //ui->attachLayout(this);
+}
+
+SDLLayout::~SDLLayout()
+{
+  //ui->detachLayout(this);
+ }
+
+void SDLLayout::setText(const String& t)
+{
+ }
+
+uint16 SDLLayout::getHeight() const
+{
+  return 0;
+ }
+
+void SDLLayout::contextChanged()
+{
+ 
+}
+
+#endif

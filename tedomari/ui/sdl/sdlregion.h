@@ -29,7 +29,7 @@ class SDLRegion : public Region {
     uint16 y;
   public:
     inline void paint() const {
-      /* FIXME: Should only repaint this region, not whole thing */
+      /** \bug Should only repaint this region, not whole thing */
       ui->paint();
     }
     inline Region* newSubRegion(uint16 xoff, uint16 yoff, uint16 w, uint16 h)

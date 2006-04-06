@@ -6,7 +6,10 @@
 #include "ui/sdl/sdlutils.h"
 
 #include <SDL/SDL.h>
+
+#ifndef DISABLE_PANGO
 #include <pango/pangocairo.h>
+#endif
 
 #include <iomanip>
 
@@ -103,6 +106,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
     Fatal(SDL_GetError());
   }
   
+  #ifndef DISABLE_PANGO
   /* Create the cairo interface to that buffer */
   cairoBuffer = cairo_image_surface_create_for_data(
       buffer, CAIRO_FORMAT_ARGB32, getWidth(), getHeight(), stride
@@ -112,7 +116,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
       reinterpret_cast<PangoCairoFontMap*>(pango_cairo_font_map_get_default())
     );
   pango_cairo_update_context(cairoContext, pangoContext);
-
+  #endif
   /* Provide access to these buffers to the UI and associated controls */
   replaceRegion(new SDLRegion(this, 0, 0, getWidth(), getHeight()));
   /* Place the initial control set */
@@ -123,9 +127,11 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
 
 SDLUI::~SDLUI()
 {
+  #ifndef DISABLE_PANGO
   g_object_unref(pangoContext);
   cairo_destroy(cairoContext);
   cairo_surface_destroy(cairoBuffer);
+  #endif
   SDL_FreeSurface(sdlBuffer);
   SDL_Quit();
   delete[] buffer;
@@ -149,6 +155,7 @@ void SDLUI::resize(uint16 width, uint16 height)
     Fatal(SDL_GetError());
   }
   /* Create the new cairo interface to the buffer */
+  #ifndef DISABLE_PANGO
   cairo_destroy(cairoContext);
   cairo_surface_destroy(cairoBuffer);
   cairoBuffer = cairo_image_surface_create_for_data(
@@ -162,6 +169,7 @@ void SDLUI::resize(uint16 width, uint16 height)
   pango_cairo_update_context(cairoContext, pangoContext);
   /* Replace the region of the UI, and trigger the cascade of replacements and
    * a repainting of the controls */
+  #endif
   UI::resize(new SDLRegion(this, 0, 0, width, height));
 }
 
@@ -268,14 +276,16 @@ void SDLUI::update()
   }
 }
 
-PangoLayout* SDLUI::newPangoLayout()
-{
-  return pango_layout_new(pangoContext);
-}
-
 uint32 SDLUI::getSDLColour(const Colour& c)
 {
   return SDL_MapRGBA(sdlBuffer->format, c.ir(), c.ig(), c.ib(), c.ia());
+}
+
+#ifndef DISABLE_PANGO
+
+PangoLayout* SDLUI::newPangoLayout()
+{
+  return pango_layout_new(pangoContext);
 }
 
 void SDLUI::cairoSetSource(const Colour& c)
@@ -369,3 +379,57 @@ void SDLUI::drawText(double x, double y, const SDLLayout* sdlLayout)
   SDL_UnlockSurface(sdlBuffer);
 }
 
+#else
+
+void SDLUI::cairoSetSource(const Colour& c)
+{
+}
+
+void SDLUI::setClipRect(double x, double y, double w, double h) {
+}
+
+void SDLUI::resetClip() {}
+
+void SDLUI::fillRect(double x, double y, double w, double h, const Colour& c)
+{
+  SDLDebug(
+      "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
+      uint32(c.ia())
+    );
+}
+
+void SDLUI::fillPolygon(
+    const list< sakusen::Point<double> >& poly,
+    const Colour& c
+  )
+{
+  SDLDebug(c.ir());
+  assert(!poly.empty());
+
+  list< sakusen::Point<double> >::const_iterator vertex = poly.begin();
+}
+
+void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
+{
+  SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
+}
+
+void SDLUI::drawRect(double x, double y, double w, double h, const Colour& c)
+{
+  SDLDebug("x=" << x << ", y=" << y << ", w=" << w << ", h=" << h);
+}
+
+void SDLUI::drawText(double x, double y, const String& text, const Colour& c)
+{
+  SDL_LockSurface(sdlBuffer);
+  /* Cleanup */
+  SDL_UnlockSurface(sdlBuffer);
+}
+
+void SDLUI::drawText(double x, double y, const SDLLayout* sdlLayout)
+{
+  SDL_LockSurface(sdlBuffer);
+  /* Cleanup */
+  SDL_UnlockSurface(sdlBuffer);
+}
+#endif //DISABLE_PANGO

@@ -59,7 +59,9 @@ class SDLUI : public UI {
     void setTitle(const String& title);
     void update();
 
+  #ifndef DISABLE_PANGO
     PangoLayout* newPangoLayout();
+  #endif
 
     void cairoSetSource(const Colour& c);
     uint32 getSDLColour(const Colour&);
