@@ -22,6 +22,10 @@
 #include "ui/sdl/sdlui.h"
 #endif
 
+#ifdef WIN32
+#include <locale.h>
+#endif
+
 #include <sys/stat.h>
 
 #include <iostream>

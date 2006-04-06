@@ -25,7 +25,7 @@ class MapDisplay : public Control {
         UI* u
       ) :
       Control(x, y, ds, r), game(g), ui(u), posOfDisplayZero(),
-      dexPerPixelX(1), dexPerPixelY(1)
+      dexPerPixelX(1), dexPerPixelY(1), dragging(false)
     {}
   private:
     tedomari::game::Game* game; /* Not owned by this */
