@@ -5,13 +5,9 @@
 
 #ifdef WIN32
 #include <winsock2.h>
-
-#else /* BSD sockets */
-
-#include "unixdatagramsocket.h"
-
 #endif //WIN32
 
+#include "unixdatagramsocket.h"
 #include "udpsocket.h"
 #include "tcpsocket.h"
 
@@ -39,8 +35,8 @@ Socket* Socket::newConnectionToAddress(const String& address)
   String type = addressComponents.front();
   addressComponents.pop_front();
   if (type == "unix") {
-#ifdef WIN32
-    return NULL; /* Unix sockets not supported on Windows */
+#ifdef DISABLE_UNIX_SOCKETS
+    return NULL; /* Unix sockets not supported */
 #else
     return UnixDatagramSocket::newConnectionToAddress(addressComponents);
 #endif
@@ -63,7 +59,7 @@ Socket* Socket::newBindingToAddress(const String& address)
   String type = addressComponents.front();
   addressComponents.pop_front();
   if (type == "unix") {
-#ifdef WIN32
+#ifdef DISABLE_UNIX_SOCKETS
     return NULL; /* Unix sockets not supported on Windows */
 #else
     return UnixDatagramSocket::newBindingToAddress(addressComponents);

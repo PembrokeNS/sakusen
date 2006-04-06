@@ -1,6 +1,8 @@
 #ifndef UNIXDATAGRAMLISTENINGSOCKET_H
 #define UNIXDATAGRAMLISTENINGSOCKET_H
 
+#ifndef DISABLE_UNIX_SOCKETS
+
 #include "unixdatagramsocket.h"
 
 namespace sakusen {
@@ -20,6 +22,8 @@ class UnixDatagramListeningSocket : public UnixDatagramSocket {
 };
 
 }}
+
+#endif // DISABLE_UNIX_SOCKETS
 
 #endif // UNIXDATAGRAMLISTENINGSOCKET_H
 

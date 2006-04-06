@@ -1,6 +1,6 @@
 #include "ipsocket.h"
 #include "errorutils.h"
-#include "socketexception.h"
+#include "socketexn.h"
 #include "stringutils.h"
 #include "timeutils.h"
 

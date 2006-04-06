@@ -10,6 +10,7 @@
 #include "unittype.h"
 #include "iarchive.h"
 #include "oarchive.h"
+#include "beamtype.h"
 
 namespace sakusen {
 
@@ -60,10 +61,14 @@ class LIBSAKUSEN_API Universe {
     inline const String& getHash() const { return hash; }
     
     /* index/pointer/ID/Name conversions */
-    inline const WeaponType* getWeaponTypePtr(const WeaponTypeID id) const
+    inline const BeamType* getBeamTypePtr(BeamTypeID id) const {
+      return id;
+    }
+    inline const WeaponType* getWeaponTypePtr(WeaponTypeID id) const
     {
       return id;
     }
+    WeaponTypeID getWeaponTypeID(String weaponTypeName) const;
     inline const UnitTypeID getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
@@ -77,7 +82,6 @@ class LIBSAKUSEN_API Universe {
     {
       return getUnitTypePtr(getUnitTypeId(i));
     }
-    WeaponTypeID getWeaponTypeID(String weaponTypeName) const;
     UnitTypeID getUnitTypeID(String unitTypeName) const;
     
     bool containsUnitType(const UnitTypeID id) const;

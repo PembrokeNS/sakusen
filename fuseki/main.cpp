@@ -21,45 +21,55 @@ using namespace sakusen::comms;
 using namespace sakusen::resources;
 using namespace fuseki;
 
-  
+namespace fuseki {
+
 /** Stores command-line options.
  * \todo More command line arguments (changing game name, etc.).
- */
-/** Made complicated by UNIX having UNIX sockets and Windows not. 
+ *
+ * Made complicated by UNIX having UNIX sockets and Windows not. 
  * Use of a UNIX socket in Windows results in crash, and Complications(R)
  * So under windows solicit==udp
  * and joining==tcp */
 struct Options {
+  /** \brief Default constructor
+   *
+   * Initializes all options to their default values */
   Options() :
-    
+#ifndef DISABLE_UNIX_SOCKETS
     abstract(true),
-    #ifndef WIN32 
-      forceSocket(false), //This seems only to be used in UNIX sockets.
-      solicitationAddress(),
-      joinAddress(),
-    #else
-      udpAddress(),
-      tcpAddress(),
-    #endif
+    forceSocket(false),
+    unixAddress(),
+#endif
+    udpAddress("localhost"),
+    tcpAddress("localhost"),
     dots(true),
     help(false),
     version(false) 
   {}
-  ~Options() {}
   
+#ifndef DISABLE_UNIX_SOCKETS
+  /** Whether to use abstract unix socket namespace where possible */
   bool abstract;
-  #ifndef WIN32
-    bool forceSocket;
-    String solicitationAddress;
-    String joinAddress;
-  #else
-    String udpAddress;
-    String tcpAddress;
-  #endif
+  /** Whether to delete an existing unix socket to replace it with a new
+   * solicitation / joining one */
+  bool forceSocket;
+  /** What address to use for unix socket solicitation / joining socket */
+  String unixAddress;
+#endif
+  /** What address to use for UDP solicitation socket */
+  String udpAddress;
+  /** What address to use for TCP joining socket */
+  String tcpAddress;
+  /** When set, fuseki will print dots all the time so that you know it is
+   * alive */
   bool dots;
+  /** When set, fuseki will print a help message and exit */
   bool help;
+  /** When set, fuseki will print version information and exit */
   bool version;
 };
+
+}
 
 /* Forward-declarations */
 int startServer(const String& homePath, const Options& options);
@@ -105,55 +115,44 @@ void usage()
           "from clients through a unix(7) socket.\n"
           "\n"
           "Usage: fuseki [OPTIONS]\n"
-          "\n";
-#ifndef WIN32
-   cout<< " -f,  --force-socket    overwrite any existing socket file\n"
-          " -s,  --solicit ADDRESS bind the solicitation socket at "
-          "sakusen-style address \n"
-          "                        ADDRESS (e.g. udp|localhost)\n"
-          "(default is a UNIX socket in ~/.sakusen/fuseki)\n"
-          "Do not try to solicit for a tcp socket.\n"
-          " -j,  --join ADDRESS    bind the join socket at "
-          "sakusen-style address\n"
-          "                        ADDRESS (e.g. tcp|localhost)\n"
-          "(default is a UNIX socket in ~/.sakusen/fuseki)\n"
-          "Do not try to create a udp join socket.\n";
-#else
-    cout<<" -u,  --udp ADDRESS      Create udp socket at ADDRESS.\n"
-          "Default: localhost \n."
-          " -t,  --tcp ADDRESS      Create tcp socket at ADDRESS.\n"
-          "Default: localhost \n."
-          "Port need not be specified in either case.\n"
-          "Some examples: \n"
-          "fuseki -u localhost \n"
-          "fuseki -u 192.168.1.1:1776 -t 192.168.1.1:1775 \n";        
-#endif
-   cout<<" -a-, --no-abstract     do not use the abstract unix socket "
-            "namespace\n" 
+          "\n"
           " -d-, --no-dots         do not print dots while server running\n"
           " -h,  --help            display help and exit\n"
           " -V,  --version         display version information and exit\n"
+#ifndef DISABLE_UNIX_SOCKETS
+          " -a-, --no-abstract     do not use the abstract unix socket namespace\n" 
+          " -f,  --force-socket    overwrite any existing socket file\n"
+          " -x,  --unix ADDRESS    bind the unix solicitation socket at sakusen-style address \n"
+          "                        ADDRESS (e.g. concrete|/var/fuskeki/socket)\n"
+          "                        (default is a UNIX socket in ~/.sakusen/fuseki)\n"
+#endif
+          " -u,  --udp ADDRESS     Bind udp socket at ADDRESS.\n"
+          "                        Default: localhost, specify a null ADDRESS to disable\n."
+          " -t,  --tcp ADDRESS     Bind tcp socket at ADDRESS.\n"
+          "                        Default: localhost, specift a null ADDRESS to disable\n."
+          "\n"
+          "Port for UDP and TCP sockets defaults to "<<DEFAULT_PORT<<" if not specified.\n"
+          "Some examples: \n"
+          "fuseki -u localhost \n"
+          "fuseki -u 192.168.1.1:1776 -t 192.168.1.1:1775 \n"
           "\n"
           "This is an alpha version of fuseki.  Functionality is extremely "
             "limited." << endl;
 }
 
-/** Parses the command line */
-
+/** Parses the config file and command line */
 Options getOptions(const String& optionsFile, int argc, char const* const* argv)
 {
   OptionsParser parser;
   Options results;
 
-  parser.addOption("abstract",     'a', &results.abstract);
-  #ifndef WIN32
-    parser.addOption("solicit",      's', &results.solicitationAddress);
-    parser.addOption("join",         'j', &results.joinAddress);
+  #ifndef DISABLE_UNIX_SOCKETS
+    parser.addOption("abstract",     'a', &results.abstract);
+    parser.addOption("unix",         'x', &results.unixAddress);
     parser.addOption("force-socket", 'f', &results.forceSocket);
-  #else
-    parser.addOption("udp",          'u', &results.udpAddress);
-    parser.addOption("tcp",          't', &results.tcpAddress);
   #endif
+  parser.addOption("udp",          'u', &results.udpAddress);
+  parser.addOption("tcp",          't', &results.tcpAddress);
   parser.addOption("dots",         'd', &results.dots);
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);
@@ -185,19 +184,21 @@ int startServer(const String& homePath, const Options& options)
   ResourceInterface* resourceInterface =
     new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
   
-  #ifndef WIN32
-  /*No UNIX sockets on windows.*/
-  String solicitationSocketAddress = options.solicitationAddress;
+  /* Initialize sockets */
+  Socket::socketsInit();
   
-  if (solicitationSocketAddress.empty()) {
-    /* By default, *on UNIX* this server listens for clients on a unix datagram socket
-     * located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
+  #ifndef DISABLE_UNIX_SOCKETS
+  String unixSocketAddress = options.unixAddress;
+  
+  if (unixSocketAddress.empty()) {
+    /* By default, when Unix sockets enabled, this server listens for clients
+     * on a unix datagram socket located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
 
     /* Construct the server directory */
     struct stat tmpStat;
     String serverPath = homePath + CONFIG_SUBDIR SOCKET_SUBDIR;
 
-    cout << "Using directory '" << serverPath << "' for socket.\n";
+    cout << "Using directory '" << serverPath << "' for unix socket.\n";
     
     /* Determine whether the directory exists */
     
@@ -234,12 +235,12 @@ int startServer(const String& homePath, const Options& options)
           "' not a directory");
     }
 
-    String solicitationSocketPath = serverPath + FILE_SEP "fuseki-socket";
+    String unixSocketPath = serverPath + FILE_SEP "fuseki-socket";
 
-    if (!stat(solicitationSocketPath.c_str(), &tmpStat)) {
+    if (!stat(unixSocketPath.c_str(), &tmpStat)) {
       if (options.forceSocket) {
         cout << "Removing existing socket." << endl;
-        NativeUnlink(solicitationSocketPath.c_str());
+        NativeUnlink(unixSocketPath.c_str());
       } else {
         cout << "Socket already exists.  Another instance of fuseki is\n"
           "already running or has crashed.  Please delete the socket file or\n"
@@ -250,86 +251,79 @@ int startServer(const String& homePath, const Options& options)
     }
 
     /* Use the default socket address */
-    solicitationSocketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM + solicitationSocketPath;
+    unixSocketAddress = "concrete"ADDR_DELIM + unixSocketPath;
   }
 
-  cout << "Starting to solicit at " << solicitationSocketAddress <<endl;
-  Socket::socketsInit();
-  Socket* solicitationSocket = Socket::newBindingToAddress(solicitationSocketAddress);
+  cout << "Creating unix socket " << unixSocketAddress << endl;
+  Socket* unixSocket =
+    Socket::newBindingToAddress("unix"ADDR_DELIM+unixSocketAddress);
 
-  if (solicitationSocket == NULL) {
-    cout << "Error creating solicitation socket.  Check the address and try "
+  if (unixSocket == NULL) {
+    cout << "Error creating unix socket.  Check the address and try "
       "again." << endl;
     return EXIT_FAILURE;
   }
-
-  Socket* joinSocket = NULL;
+  #endif // DISABLE_UNIX_SOCKETS
   
-  if (options.joinAddress == "") {
-    joinSocket = solicitationSocket;
-  } else {
-    joinSocket = Socket::newBindingToAddress(options.joinAddress);
-  }
-
-  if (NULL == joinSocket) {
-    cout << "Error creating join socket.  Check the address and try "
-      "again." << endl;
-    return EXIT_FAILURE;
-  }
- #else  //Win32
-   /* On Windows, UNIX datagram sockets are not supported. 
-   So we use udp sockets for solicitation, and tcp sockets for joining.*/
-  /*Not using UNIX sockets simplifies the required logic tremendously, 
-  so I thought it tidier seperating it out completely. */
-  String BindAddress="";
-  if (options.udpAddress == "")
-    BindAddress="localhost";
-  else
-    BindAddress=options.udpAddress;
+  String bindAddress = options.udpAddress;
+  Socket* udpSocket = NULL;
   
-  cout << "Starting UDP (solicitation) socket at " <<BindAddress<<endl;
-  Socket::socketsInit();
-  Socket* solicitationSocket = Socket::newBindingToAddress("udp|"+BindAddress);
+  if (!bindAddress.empty()) {
+    cout << "Starting UDP (solicitation) socket at " << bindAddress << endl;
+    udpSocket = Socket::newBindingToAddress("udp"ADDR_DELIM+bindAddress);
 
-  if (solicitationSocket == NULL) {
+    if (udpSocket == NULL) {
       cout << "Error creating UDP socket at:"<< endl;
-      cout << "udp|"+ BindAddress << endl;
+      cout << bindAddress << endl;
       cout << "Check the address and try again." << endl;
-    return EXIT_FAILURE;
+      return EXIT_FAILURE;
+    }
   }
 
-  Socket* joinSocket = NULL;
+  bindAddress = options.tcpAddress;
+  Socket* tcpSocket = NULL;
   
-  if (options.tcpAddress == "")
-    BindAddress="localhost";
-  else
-    BindAddress=options.tcpAddress;
-  
-  cout << "Starting TCP (joining) socket at " <<BindAddress<<endl;
+  if (!bindAddress.empty()) {
+    cout << "Starting TCP (joining) socket at " << bindAddress << endl;
+    tcpSocket = Socket::newBindingToAddress("tcp"ADDR_DELIM+bindAddress);
 
-  joinSocket = Socket::newBindingToAddress("tcp|"+BindAddress);
-
-  if (joinSocket==NULL) {
-   cout << "Error creating TCP (joining) socket at:" << endl;
-      cout << "tcp|"+BindAddress << endl;
+    if (tcpSocket==NULL) {
+      cout << "Error creating TCP (joining) socket at:" << endl;
+      cout << bindAddress << endl;
       cout << "Check the address and try again." << endl;
-    return EXIT_FAILURE;
+      return EXIT_FAILURE;
+    }
   }
-
-#endif //Win32
 
   cout << "Sockets created." << endl;
+
+#ifdef DISABLE_UNIX_SOCKETS
+  if (udpSocket == NULL) {
+    cout << "There is no solicitation socket.  This server cannot work." <<
+      endl;
+    return EXIT_FAILURE;
+  }
+  
+  if (tcpSocket == NULL) {
+    cout << "There is no join socket.  This server cannot work." << endl;
+    return EXIT_FAILURE;
+  }
+#endif
   
   Server server(
-      solicitationSocket, joinSocket, cout, resourceInterface,
-      options.abstract, options.dots
+      cout, resourceInterface,
+#ifndef DISABLE_UNIX_SOCKETS
+      options.abstract, unixSocket,
+#endif
+      udpSocket, tcpSocket, options.dots
     );
   server.serve();
-  
-  delete solicitationSocket;
-  if (joinSocket != solicitationSocket) {
-    delete joinSocket;
-  }
+ 
+#ifndef DISABLE_UNIX_SOCKETS
+  delete unixSocket;
+#endif
+  delete tcpSocket;
+  delete udpSocket;
   delete resourceInterface;
   return EXIT_SUCCESS;
 }

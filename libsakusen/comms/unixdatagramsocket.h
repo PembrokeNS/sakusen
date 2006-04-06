@@ -1,6 +1,8 @@
 #ifndef UNIXDATAGRAMSOCKET_H
 #define UNIXDATAGRAMSOCKET_H
 
+#ifndef DISABLE_UNIX_SOCKETS
+
 #include "libsakusen-comms-global.h"
 #include "socket.h"
 
@@ -61,6 +63,8 @@ class UnixDatagramSocket : public Socket {
 };
 
 }}
+
+#endif // DISABLE_UNIX_SOCKETS
 
 #endif // UNIXDATAGRAMSOCKET_H
 

@@ -98,7 +98,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     /*QDebug("[updateBuffer] got char " << chr);*/
     inputBuffer += static_cast<char>(chr);
     if (chr == '\n' || chr == '\r') {
-      out << "> " << flush;
+      out << "\n> " << flush;
     }
   }
 

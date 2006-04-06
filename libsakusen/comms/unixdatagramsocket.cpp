@@ -1,9 +1,11 @@
+#ifndef DISABLE_UNIX_SOCKETS
+
 #include "unixdatagramsocket.h"
 
 #include "unixdatagramconnectingsocket.h"
 #include "unixdatagramlisteningsocket.h"
 #include "errorutils.h"
-#include "socketexception.h"
+#include "socketexn.h"
 #include "timeutils.h"
 
 #include <sys/socket.h>
@@ -230,4 +232,6 @@ String UnixDatagramSocket::getAddress() const {
     return String("unix"ADDR_DELIM"concrete"ADDR_DELIM) + path;
   }
 }
+
+#endif // DISABLE_UNIX_SOCKETS
 

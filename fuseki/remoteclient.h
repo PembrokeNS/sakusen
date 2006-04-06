@@ -22,8 +22,11 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
         sakusen::comms::ClientID id,
         Server* server,
         sakusen::comms::Socket* socket,
-        bool createInSocket,
+        bool createInSocket
+#ifndef DISABLE_UNIX_SOCKETS
+        ,
         bool abstract
+#endif
       );
       /* Uses given socket to contact client.  Transfers ownership of socket to
        * this.

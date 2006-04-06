@@ -63,6 +63,8 @@ LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const timeval& tv)
   timeUtils_sleep(tv.tv_sec*MICRO+tv.tv_usec);
 }
 
+/** \brief Returns a timeval which is \a tv incremented by \a usec
+ * microseconds */
 LIBSAKUSEN_COMMS_API inline timeval operator+(timeval tv, sint32 usec)
 {
   tv.tv_usec += usec;
@@ -70,6 +72,8 @@ LIBSAKUSEN_COMMS_API inline timeval operator+(timeval tv, sint32 usec)
   return tv;
 }
 
+/** \brief Increases the timeval \a tv by \a usec
+ * microseconds */
 LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, sint32 usec)
 {
   tv.tv_usec += usec;
@@ -77,24 +81,31 @@ LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, sint32 usec)
   return tv;
 }
 
-LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, const timeval& tu)
+/** \brief Increases the timeval \a tv by \a tu */
+LIBSAKUSEN_COMMS_API inline timeval& operator+=(timeval& tv, const timeval& uv)
 {
-  tv.tv_usec += tu.tv_usec;
-  tv.tv_sec += tu.tv_sec;
+  tv.tv_usec += uv.tv_usec;
+  tv.tv_sec += uv.tv_sec;
   timeUtils_canonicalize(tv);
   return tv;
 }
 
-LIBSAKUSEN_COMMS_API inline sint32 operator-(const timeval& tv, const timeval& uv)
+/** \brief Gets the number of microseconds from \a tv to \a tu */
+LIBSAKUSEN_COMMS_API inline sint32 operator-(
+    const timeval& tv,
+    const timeval& uv
+  )
 {
   return (tv.tv_sec - uv.tv_sec)*MICRO + tv.tv_usec - uv.tv_usec;
 }
 
+/** \brief Compares the two timeval arguments */
 LIBSAKUSEN_COMMS_API inline bool operator>(const timeval& tv, const timeval& uv)
 {
   return timercmp(&tv, &uv, >);
 }
 
+/** \brief Compares the two timeval arguments */
 LIBSAKUSEN_COMMS_API inline bool operator<(const timeval& tv, const timeval& uv)
 {
   return timercmp(&tv, &uv, <);

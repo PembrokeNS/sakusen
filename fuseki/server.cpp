@@ -6,7 +6,7 @@
 #include "libsakusen-comms-global.h"
 #include "message.h"
 #include "remoteclient.h"
-#include "socketexception.h"
+#include "socketexn.h"
 #include "resourceinterface-methods.h"
 #include "fuseki-global.h"
 #include "settingstree/stringlistleaf.h"
@@ -30,22 +30,25 @@ using namespace sakusen::comms;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-bool interrupted = false; /* Use of static data to monitor interrupt of
-                             server instance (c.f. interruptHandler below) */
-
 Server::Server(
-    Socket* ss,
-    Socket* js,
     std::ostream& o,
     ResourceInterface* r,
+#ifndef DISABLE_UNIX_SOCKETS
     bool a,
+    Socket* unS,
+#endif
+    Socket* udS,
+    Socket* tS,
     bool d
   ) :
   SettingsUser("server"),
-  abstract(a),
   dots(d),
-  solicitationSocket(ss),
-  joinSocket(js),
+#ifndef DISABLE_UNIX_SOCKETS
+  abstract(a),
+  unixSocket(unS),
+#endif
+  udpSocket(udS),
+  tcpSocket(tS),
   out(o),
   resourceInterface(r),
   clients(10),
@@ -107,6 +110,41 @@ Server::~Server()
   map = NULL;
   requestedUniverse = NULL;
   requestedMap = NULL;
+}
+
+void Server::advertise(
+    const SolicitMessageData& data,
+    const String& receivedFrom,
+    Socket* receivedOn,
+    const Message& advertisement
+  )
+{
+  String address = data.getAddress();
+  bool respondOnExisting = false;
+  if (address.empty()) {
+    /* If no address specified then we respond to the source of the
+     * message and use the existing solicitation socket */
+    address = receivedFrom;
+    respondOnExisting = true;
+  }
+  Socket* responseSocket = NULL;
+  if (respondOnExisting) {
+    responseSocket = receivedOn;
+  } else {
+    responseSocket = Socket::newConnectionToAddress(address);
+  }
+  if (NULL != responseSocket) {
+    out << "Advertising to " << address << ".\n";
+    if (respondOnExisting) {
+      responseSocket->sendTo(advertisement, address);
+    } else {
+      responseSocket->send(advertisement);
+      delete responseSocket;
+    }
+  } else {
+    out << "Unsupported socket type requested by client "
+      "(address was '" << address << "').\n";
+  }
 }
 
 ClientID Server::getFreeClientID()
@@ -174,7 +212,11 @@ void Server::addClient(
   /* Add the client's branch of the settings tree */
   settings.getClientsBranch()->addClient(id);
   clients[id] =
-    new RemoteClient(id, this, socket, requestedAddress!="", abstract);
+    new RemoteClient(id, this, socket, requestedAddress!=""
+#ifndef DISABLE_UNIX_SOCKETS
+        , abstract
+#endif
+      );
 }
 
 void Server::removeClient(RemoteClient* client)
@@ -336,6 +378,10 @@ Player* Server::getPlayerPtr(PlayerID id)
     return sakusen::server::world->getPlayerPtr(id);
   }
 }
+
+bool interrupted = false; /* Use of static data to monitor interrupt of
+                             server instance (c.f. interruptHandler below) */
+
 /* Handler for interrupt signals from the keyboard, so that the server can
  * shutdown gracefully.  Because signals are an inherently C thing, there seems
  * to be no nice way to handle them in an OO way, and thus I am reduced to
@@ -358,8 +404,15 @@ void Server::serve()
   signal(SIGTERM, &interruptHandler);
   out << "Server started.  Hit Ctrl+C to interrupt and shut down server.\n";
   
-  solicitationSocket->setNonBlocking(true);
-  joinSocket->setNonBlocking(true);
+#ifndef DISABLE_UNIX_SOCKETS
+  unixSocket->setNonBlocking(true);
+#endif
+  if (udpSocket != NULL) {
+    udpSocket->setNonBlocking(true);
+  }
+  if (tcpSocket != NULL) {
+    tcpSocket->setNonBlocking(true);
+  }
   Message advertisement = Message(AdvertiseMessageData("fuseki", "Game name"));
 
   /* A list of incoming (probably TCP) connections where we expect to get join
@@ -373,48 +426,28 @@ void Server::serve()
   do {
     size_t bytesReceived;
     String receivedFrom;
-    /* Look for messages on the solicitation socket */
+#ifndef DISABLE_UNIX_SOCKETS
+    /* Look for messages on the unix socket, which can be solicit or join
+     * messages */
     if ((bytesReceived =
-          solicitationSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
+          unixSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
       Message message = Message(buf, bytesReceived);
       if (message.isRealMessage()) {
         switch (message.getType()) {
           case messageType_solicit:
             {
               SolicitMessageData data = message.getSolicitData();
-              String address = data.getAddress();
-              bool respondOnExisting = false;
-              if (address.empty()) {
-                /* If no address specified then we respond to the source of the
-                 * message and use the existing solicitation socket */
-                address = receivedFrom;
-                respondOnExisting = true;
-              }
-              Socket* responseSocket = NULL;
-              if (respondOnExisting) {
-                responseSocket = solicitationSocket;
-              } else {
-                responseSocket = Socket::newConnectionToAddress(address);
-              }
-              if (NULL != responseSocket) {
-                out << "Advertising to " << address << ".\n";
-                if (respondOnExisting) {
-                  responseSocket->sendTo(advertisement, address);
-                } else {
-                  responseSocket->send(advertisement);
-                  delete responseSocket;
-                }
-              } else {
-                out << "Unsupported socket type requested by client "
-                  "(address was '" << address << "').\n";
-              }
+                advertise(
+                    data, receivedFrom, unixSocket,
+                    advertisement
+                  );
             }
             break;
           case messageType_join:
             {
               JoinMessageData data = message.getJoinData();
               out << "Considering adding new client at " <<
-                data.getAddress() << " based on message through solicitation "
+                data.getAddress() << " based on message through unix "
                 "socket\n";
               addClient(data.getAddress(), receivedFrom, NULL);
             }
@@ -427,48 +460,56 @@ void Server::serve()
         out << "Unrecognized message received\n";
       }
     }
+#endif // DISABLE_UNIX_SOCKETS
     
-    /* If we have a seperate join socket then check for messages there too */
-    if (joinSocket != NULL) {
-      if  (joinSocket->isConnectionBased()) {
-        Socket* newConnection = joinSocket->accept();
-        if (newConnection != NULL) {
-          timeval timeout;
-          timeUtils_getTime(&timeout);
-          /* One second timeout.  TODO: make user-specifiable */
-          timeout += MICRO;
-          newConnections.push_back(
-              pair<Socket*, timeval>(newConnection, timeout)
-            );
-        }
-      } else {
-        if ((bytesReceived =
-            joinSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
-          Message message = Message(buf, bytesReceived);
-          if (message.isRealMessage()) {
-            switch (message.getType()) {
-              case messageType_join:
-                {
-                  JoinMessageData data = message.getJoinData();
-                  out << "Considering adding new client at " <<
-                    data.getAddress() << " based on message through join "
-                    "socket.\n";
-                  addClient(data.getAddress(), receivedFrom, NULL);
-                }
-                break;
-              default:
-                out << "Unexpected MessageType: " << message.getType() << "\n";
-                break;
-            }
-          } else {
-            out << "Unrecognized message received\n";
+    /* Look for solicit messages on the udp socket */
+    if (udpSocket != NULL) {
+      if ((bytesReceived =
+            udpSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
+        Message message = Message(buf, bytesReceived);
+        if (message.isRealMessage()) {
+          switch (message.getType()) {
+            case messageType_solicit:
+              {
+                SolicitMessageData data = message.getSolicitData();
+                advertise(
+                    data, receivedFrom, udpSocket,
+                    advertisement
+                  );
+              }
+              break;
+            default:
+              out << "Unexpected MessageType: " << message.getType() << "\n";
+              break;
           }
+        } else {
+          out << "Unrecognized message received\n";
         }
       }
     }
+    
+    /* If we have a seperate tcp socket then check for messages there too */
+    if (tcpSocket != NULL) {
+      while (true) {
+        Socket* newConnection = tcpSocket->accept();
+        if (newConnection == NULL) {
+          break;
+        }
+        
+        newConnection->setNonBlocking(true);
+        timeval timeout;
+        timeUtils_getTime(&timeout);
+        /* \todo We use a straight one second timeout.  It should be
+         * user-specifiable */
+        timeout += MICRO;
+        newConnections.push_back(
+            pair<Socket*, timeval>(newConnection, timeout)
+          );
+      }
+    }
 
-    /* Now check the incoming connections to see if any have sent messages yet
-     * */
+    /* Now check the incoming TCP connections to see if any have sent messages
+     * yet */
     if (!newConnections.empty()) {
       timeval timeNow;
       timeUtils_getTime(&timeNow);
@@ -508,7 +549,6 @@ void Server::serve()
           }
         }
       }
-        
     }
     
     /* Process client messages */
@@ -626,13 +666,18 @@ void Server::serve()
   if (!interrupted) {
     out << "Transitioning to gameplay state" << endl;
 
-    /* Close the solicitation socket because we aren't going to accept any more
-     * clients
+    /* Close the solicitation and join socket because we aren't going to
+     * accept any more clients
      * TODO: maybe we can support dynamic join for people whose clients crash,
      * or adding observers in mid-game. */
-    solicitationSocket->close();
-    if (joinSocket != NULL) {
-      joinSocket->close();
+#ifndef DISABLE_UNIX_SOCKETS
+    unixSocket->close();
+#endif
+    if (udpSocket != NULL) {
+      udpSocket->close();
+    }
+    if (tcpSocket != NULL) {
+      tcpSocket->close();
     }
 
     /* Remove settings tree manipulation permissions from all clients, except

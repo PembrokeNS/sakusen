@@ -119,18 +119,9 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   mhash_deinit(thread, hash);
   
   ostringstream stream;
+  stream << hex << setfill('0');
   for (int i=0; i<32; i++) {
-    /* Following command doesn't work becase I can't figure out how to pad with
-     * zeroes
-    stream << hex << setw(2) << uint32(hash[i]); */
-    char byte[3];
-    #ifdef _MSC_VER
-      _snprintf_s(byte, 3, 3, "%02x", hash[i]);
-    #else
-      snprintf(byte, 3, "%02x", hash[i]);
-    #endif //_MSC_VER Also, lol Microsoft.
-    byte[2] = '\0';
-    stream << byte;
+    stream << setw(2) << uint32(hash[i]);
   }
   return stream.str();
 }

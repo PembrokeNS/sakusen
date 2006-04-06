@@ -1,3 +1,5 @@
+#ifndef DISABLE_UNIX_SOCKETS
+
 #include "unixdatagramlisteningsocket.h"
 #include "errorutils.h"
 
@@ -55,4 +57,6 @@ String UnixDatagramListeningSocket::makeRandomPath(bool abstract)
   os << "sakusen-" << getpid() << "-" << tv.tv_sec << "-" << tv.tv_usec;
   return os.str();
 }
+
+#endif // DISABLE_UNIX_SOCKETS
 

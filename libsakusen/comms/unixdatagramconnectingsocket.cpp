@@ -1,3 +1,5 @@
+#ifndef DISABLE_UNIX_SOCKETS
+
 #include "unixdatagramconnectingsocket.h"
 
 #include "errorutils.h"
@@ -31,4 +33,6 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
         errorUtils_errorMessage(errno));
   }
 }
+
+#endif // DISABLE_UNIX_SOCKETS
 

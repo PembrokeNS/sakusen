@@ -1,19 +1,14 @@
-#include "stringutils.h"
 #include "serverinterface.h"
-#include "libsakusen-comms-global.h"
 
+#include "stringutils.h"
+#include "libsakusen-comms-global.h"
+#include "timeutils.h"
 #include "udplisteningsocket.h"
-#include "socketexception.h"
+#include "unixdatagramlisteningsocket.h"
+#include "socketexn.h"
 #include "tedomari-global.h"
 #include "revision.h"
 
-#ifndef _MSC_VER
-  #include "unixdatagramlisteningsocket.h"
-  #include <sys/time.h>
-#endif
-
-
-#include <time.h>
 #include <ostream>
 #include <sstream>
 
@@ -27,15 +22,19 @@ using namespace tedomari::game;
 ServerInterface::ServerInterface(
     Socket* s,
     const String& ja,
+#ifndef DISABLE_UNIX_SOCKETS
     bool us,
     bool a,
+#endif
     Game* g
   ) :
   solicitationSocket(s),
   joinAddress(ja),
   game(g),
+#ifndef DISABLE_UNIX_SOCKETS
   unixSockets(us),
   abstract(a),
+#endif
   joined(false),
   incomingSocket(NULL),
   outgoingSocket(NULL)
@@ -90,19 +89,19 @@ void ServerInterface::settingAlteration(
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
 {
   Socket* tempSocket;
-  
+
+#ifndef DISABLE_UNIX_SOCKETS
   if (unixSockets) {
-#ifdef WIN32
-    Fatal("Unix sockets not supported under Windows");
-#else
     tempSocket = new UnixDatagramListeningSocket(abstract);
     String address = tempSocket->getAddress();
     solicitationSocket->send(SolicitMessageData(address));
-#endif
   } else {
+#endif
     tempSocket = solicitationSocket;
     solicitationSocket->send(SolicitMessageData(""));
+#ifndef DISABLE_UNIX_SOCKETS
   }
+#endif
   
   tempSocket->setNonBlocking(true);
   
@@ -121,9 +120,11 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   }
   *advertisement=message.getAdvertiseData();
 
+#ifndef DISABLE_UNIX_SOCKETS
   if (unixSockets) {
     delete tempSocket;
   }
+#endif
   
   return false;
 }
@@ -199,20 +200,26 @@ String ServerInterface::join()
   assert(incomingSocket == NULL);
   assert(outgoingSocket == NULL);
   try {
+#ifndef DISABLE_UNIX_SOCKETS
     if (unixSockets) {
-#ifdef WIN32
-      Fatal("Unix sockets not supported under Windows");
-#else
       incomingSocket = new UnixDatagramListeningSocket(abstract);
+      /** \bug We're assuming equal solicitation and join addresses */
       solicitationSocket->send(JoinMessageData(incomingSocket->getAddress()));
-#endif
     } else {
-      Debug(
+#endif
+      /*Debug(
           "creating new connection to " << joinAddress << " for join message"
-        );
+        );*/
       incomingSocket = Socket::newConnectionToAddress(joinAddress);
+      if (incomingSocket == NULL) {
+        return "Could not connect to address '" + joinAddress +
+          "'.  Perhaps you need to specify a join address,  or you have "
+          "specified an invalid one?";
+      }
       incomingSocket->send(JoinMessageData(""));
+#ifndef DISABLE_UNIX_SOCKETS
     }
+#endif
     incomingSocket->setNonBlocking(true);
   } catch (SocketExn* e) {
     delete incomingSocket;

@@ -21,6 +21,13 @@ class SocketClosedExn : public SocketExn {
     virtual ~SocketClosedExn() throw() { }
 };
 
+class HostNotFoundExn : public SocketExn {
+  public:
+    HostNotFoundExn(const String& hostname) :
+      SocketExn("Host '"+hostname+"' not found") { }
+    virtual ~HostNotFoundExn() throw() { }
+};
+
 }}
 
 #endif // LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H

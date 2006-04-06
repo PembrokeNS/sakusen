@@ -20,21 +20,27 @@ class Server : public SettingsUser {
     Server(const Server&);
   public:
     Server(
-        sakusen::comms::Socket* solicitationSocket,
-        sakusen::comms::Socket* joinSocket,
         std::ostream& output,
         sakusen::ResourceInterface* resourceInterface,
+#ifndef DISABLE_UNIX_SOCKETS
         bool abstract,
+        sakusen::comms::Socket* unixSocket,
+#endif
+        sakusen::comms::Socket* udpSocket,
+        sakusen::comms::Socket* tcpSocket,
         bool dots
       ); /* Caller must ensure that socket remains open until the server is
           * out of use */
     ~Server();
   private:
-    bool abstract; /* Whether to use abstract sockets for RemoteClients to
-                      listen */
     bool dots; /* Whether to print dots constantly */
-    sakusen::comms::Socket* solicitationSocket; /* Not owned by this */
-    sakusen::comms::Socket* joinSocket; /* Not owned by this */
+#ifndef DISABLE_UNIX_SOCKETS
+     /** Whether to use abstract sockets for RemoteClients to listen */
+    bool abstract;
+    sakusen::comms::Socket* unixSocket;
+#endif
+    sakusen::comms::Socket* udpSocket; /* Not owned by this */
+    sakusen::comms::Socket* tcpSocket; /* Not owned by this */
     std::ostream& out;
     sakusen::ResourceInterface* resourceInterface; /* Not owned by this */
     __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
@@ -65,6 +71,12 @@ class Server : public SettingsUser {
 
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */
 
+    void advertise(
+        const sakusen::comms::SolicitMessageData& data,
+        const String& receivedFrom,
+        sakusen::comms::Socket* receivedOn,
+        const sakusen::comms::Message& advertisement
+      );
     sakusen::comms::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.
        * Returns (ClientID)-1 if there are no free IDs */

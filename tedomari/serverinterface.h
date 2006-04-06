@@ -20,8 +20,10 @@ class ServerInterface {
     ServerInterface(
         sakusen::comms::Socket* serverSocket,
         const String& joinAddress,
+#ifndef DISABLE_UNIX_SOCKETS
         bool unixSockets,
         bool abstract,
+#endif
         game::Game* game
       );
     ~ServerInterface();
@@ -34,8 +36,10 @@ class ServerInterface {
     String joinAddress;
     game::Game* game; /* not owned by this */
     struct timeval timeout;
+#ifndef DISABLE_UNIX_SOCKETS
     bool unixSockets; /* OK to use Unix sockets */
     bool abstract; /* OK to use abstract namespace */
+#endif
     bool joined;
     /** ID assigned to us by the server (valid only when joined) */
     sakusen::comms::ClientID id;

@@ -3,7 +3,7 @@
 #include "tcplisteningsocket.h"
 #include "stringutils.h"
 #include "errorutils.h"
-#include "socketexception.h"
+#include "socketexn.h"
 
 #ifdef WIN32
 #include "wsabsd.h"

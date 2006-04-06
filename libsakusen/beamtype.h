@@ -17,11 +17,11 @@ namespace sakusen {
 class BeamType {
   friend class Beam;
   private:
-  /** the visibility of this beam
-   * \todo As beams can be quite long, we need to think about what we will do if
-   * someone can see one end of a beam but not the other, or just the middle, or
-   * even the start and end of a bean but not the middle.
-   */
+    /** the visibility of this beam
+     * \todo As beams can be quite long, we need to think about what we will
+     * do if someone can see one end of a beam but not the other, or just the
+     * middle, or even the start and end of a bean but not the middle.
+     */
     Visibility vis;
     /** The flags store information on what the beam interacts with and what it
      * can go through. See the enumeration below.
@@ -37,13 +37,15 @@ class BeamType {
      */
     Time duration; /* 0 iff it lasts 'til explicitly stopped */
   protected:
+    /** \name Constructors
+     *
+     * The constructors are protected so only subclasses can call them */
     //@{
-    /** the constructors are protected so only subclasses can call them */
     BeamType();
     BeamType(const BeamType&);
     //@}
   public:
-    /** This enumeration is used for the ::flags field. For each type of hit,
+    /** This enumeration is used for the flags field. For each type of hit,
      * 'interactWith' is set iff the appropriate callback should be called on
      * this type of collision. 'passThrough' is clear iff the beam should stop
      * once it hits one of this type of thing.
@@ -57,9 +59,9 @@ class BeamType {
       passThroughWater = 32,
     };
     ~BeamType();
+    /** \name Flag accessors
+     * These allow you to examine the flags. */
     //@{
-    /* \name accessors */
-    /** These allow you to examine the ::flags. */
     inline bool getInteractWithUnits(void) {return ((flags & interactWithUnits) != 0);}
     inline bool getPassThroughUnits(void) {return ((flags & passThroughUnits) != 0);}
     inline bool getInteractWithLand(void) {return ((flags & interactWithLand) != 0);}
@@ -69,6 +71,10 @@ class BeamType {
     //@}
 };
 
+/** \brief A typedef for internal storage of references to BeamTypes
+ *
+ * For maximum generality, a value of type BeamTypeID should be converted to a
+ * BeamType* by calling sakusen::Universe::getBeamTypePtr */
 typedef const BeamType* BeamTypeID;
 
 }

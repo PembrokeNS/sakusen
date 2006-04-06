@@ -1,4 +1,5 @@
 #include "tcpconnectingsocket.h"
+#include "socketexn.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -18,7 +19,7 @@ TCPConnectingSocket::TCPConnectingSocket(
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    Fatal("host " << hostname << " not found.");
+    throw new HostNotFoundExn(hostname);
   }
 
   memset(&addr, 0, sizeof(addr));

@@ -4,15 +4,10 @@
 #include "libsakusen-comms-global.h"
 #include "timeutils.h"
 #include "errorutils.h"
+#include "unixdatagramconnectingsocket.h"
 #include "libsakusen-resources-global.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
-
-#ifndef _MSC_VER
-  #include "unixdatagramconnectingsocket.h"
-#else 
-  #include <locale.h>
-#endif
 
 #include "tedomari-global.h"
 #include "asynchronousiohandler.h"
@@ -57,13 +52,24 @@ namespace tedomari {
 struct Options {
   /** Default constructor sets all options to their default values */
   Options() :
-    abstract(true), unixSockets(true), evil(false), historyLength(100),
-    test(false), solicitationAddress(), joinAddress(), help(false),
-    version(false) {}
+#ifndef DISABLE_UNIX_SOCKETS
+    abstract(true),
+    unixSockets(true),
+#endif
+    evil(false),
+    historyLength(100),
+    test(false),
+    solicitationAddress(),
+    joinAddress(),
+    help(false),
+    version(false)
+  {}
+#ifndef DISABLE_UNIX_SOCKETS
   /** Whether to use the abstract unix socket namespace where possible */
   bool abstract;
   /** Whether to use unix sockets where possible */
   bool unixSockets;
+#endif
   /** When set, tedomari will sleep less */
   bool evil;
   /** Number of commands to save between executions from the tedomari terminal
@@ -229,10 +235,23 @@ void runClient(
   String socketAddress = options.solicitationAddress;
 
   if (socketAddress.empty()) {
+#ifdef DISABLE_UNIX_SOCKETS
+    cout << "You must provide an address for solicitation with --solicit." <<
+      endl;
+    exit(EXIT_FAILURE);
+#else
     /* Use default socket */
     socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
       homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
+#endif
   }
+
+#ifdef DISABLE_UNIX_SOCKETS
+  if (options.joinAddress.empty()) {
+    cout << "You must provide an address for joining with --join" << endl;
+    exit(EXIT_FAILURE);
+  }
+#endif
 
   /* Construct the path to the history file */
   String historyPath = configPath + FILE_SEP "history";
@@ -249,7 +268,9 @@ void runClient(
     Socket* socket = Socket::newConnectionToAddress(socketAddress);
 
     if (socket == NULL) {
-      Fatal("socket type not supported, please check the address and try again");
+      cout << "Socket type not supported, please check the address and try "
+        "again" << endl;
+      exit(EXIT_FAILURE);
     }
 
     cout << "Connected to socket." << endl;
@@ -260,7 +281,11 @@ void runClient(
       new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
-        socket, options.joinAddress, options.unixSockets, options.abstract, game
+        socket, options.joinAddress,
+#ifndef DISABLE_UNIX_SOCKETS
+        options.unixSockets, options.abstract,
+#endif
+        game
       );
 
     cout << "Getting advertisement." << endl;
@@ -344,7 +369,7 @@ void runClient(
                 if (serverInterface.isJoined()) {
                   ioHandler.message("Already joined.\n");
                 } else if ("" != (message = serverInterface.join())) {
-                  ioHandler.message(message);
+                  ioHandler.message(message+"\n");
                 } else {
                   ioHandler.message(
                       String("Joined.  Assigned client ID ") +
@@ -455,8 +480,10 @@ void usage() {
           "\n"
           "Usage: tedomari [OPTIONS]\n"
           "\n"
+#ifndef DISABLE_UNIX_SOCKETS
           " -a-, --no-abstract,     do not use the abstract unix socket namespace\n"
           " -u-, --no-unix,         do not use any unix sockets\n"
+#endif
           " -e,  --evil,            try for a higher framerate\n"
           " -l,  --history-length LENGTH, store LENGTH commands in the command history\n"
           "                         upon exiting\n"
@@ -477,8 +504,10 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   OptionsParser sdlOptionsParser = SDLUI::getParser(&results.sdlOptions);
 #endif
 
+#ifndef DISABLE_UNIX_SOCKETS
   parser.addOption("abstract",       'a',  &results.abstract);
   parser.addOption("unix",           'u',  &results.unixSockets);
+#endif
   parser.addOption("evil",           'e',  &results.evil);
   parser.addOption("history-length", 'l',  &results.historyLength);
   parser.addOption("test",           't',  &results.test);
@@ -496,12 +525,6 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
     cout << "error(s) processing options:\n" <<
       stringUtils_join(parser.getErrors(), "\n");
     usage();
-    exit(EXIT_FAILURE);
-  }
-
-  if (results.joinAddress == "" && !results.unixSockets) {
-    cout << "if you disable unix sockets you must provide an explicit join "
-      "address with --join" << endl;
     exit(EXIT_FAILURE);
   }
 
