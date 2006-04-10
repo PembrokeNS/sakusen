@@ -18,6 +18,7 @@ class LockingFileWriter : public LockingFile {
   protected:
     virtual short getLockType() const;
     virtual int open();
+    virtual bool getLock(bool block);
   public:
     bool write(const uint8* buffer, size_t length, bool block);
     inline bool write(const OArchive& archive, bool block) {

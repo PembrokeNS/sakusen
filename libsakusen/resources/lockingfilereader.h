@@ -14,29 +14,10 @@ class LockingFileReader : public LockingFile {
     LockingFileReader(const String& fileName);
     ~LockingFileReader() {}
   protected:
-    sint64 length; /* The length of the file, or -1 if uncertain */
-    
+    bool getLock(bool block);
     short getLockType() const;
     int open();
   public:
-    bool releaseLock();
-
-    /* \brief Get length of file
-     *
-     * This attempts to get the length of the file.  Returns -1 on error.
-     * \a block indicates whether a blocking call should be made if a lock must
-     * be obtained.
-     */
-    sint64 getLength(bool block);
-
-    /** \brief Reads entire file into buffer
-     *
-     * This function attempts to read the entire file into the buffer.  If
-     * successful, it returns the number of bytes read.  On error, it throws a
-     * FileIOExn.  if \a length is insufficient to store the entire file, it does
-     * nothing and returns 0
-     */
-    size_t getWholeFile(uint8* buffer, size_t length, bool block);
 };
 
 }}

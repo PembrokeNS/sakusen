@@ -8,6 +8,7 @@
 #include "lockingfilereader.h"
 #include "lockingfilewriter.h"
 #include "fileutils.h"
+#include "fileioexn.h"
 
 #include <sys/stat.h>
 
@@ -94,16 +95,18 @@ void* FileResourceInterface::internalSearch(
   String fileName = matchingFiles.front();
 
   LockingFileReader file(fileName);
-  /* FIXME: This blocks until a lock is achieved.  This could be a bad thing */
-  sint64 length = file.getLength(true);
-  if (length == -1) {
+  /** \bug This blocks until a lock is achieved.  This could be a bad thing */
+  uint64 length;
+  try {
+    length = file.getLength(true);
+  } catch (FileIOExn& e) {
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
     error = String("error getting length of file '") + fileName + "': " +
       errorUtils_errorMessage(errno);
     return NULL;
   }
-  /* FIXME: For the moment we have a length constraint to prevent excessive
+  /** \bug For the moment we have a length constraint to prevent excessive
    * memory allocation.  In the long run we probably want to make IArchive
    * abstract so that we can have a version that extracts data directly from
    * the file rather than copying it all over the place as we do at present */
@@ -128,7 +131,7 @@ void* FileResourceInterface::internalSearch(
     }
   }
   file.releaseLock();
-  /* TODO: double-check the hash of the data to ensure that there's been no
+  /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
   IArchive fileAsArchive(fileAsArray, length);
   delete[] fileAsArray;
@@ -187,7 +190,7 @@ bool FileResourceInterface::internalSave(
   String extension;
   OArchive archive;
 
-  /* TODO: The following switch could be neatly made into a template method */
+  /** \todo The following switch could be neatly made into a template method */
   switch(type) {
     case resourceType_universe:
       {
@@ -227,7 +230,7 @@ bool FileResourceInterface::internalSave(
 
   LockingFileWriter writer(directory + fullName);
 
-  /* Currently blocks until a lock can be obtained.  This might be bad */
+  /** \bug Currently blocks until a lock can be obtained.  This might be bad */
   if (writer.write(archive, true)) {
     error = "error writing file: " + errorUtils_errorMessage(errno);
     return true;

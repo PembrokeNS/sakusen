@@ -21,8 +21,11 @@
 #define NativeUnlink(a) _unlink(a)
 #else
 #include <dirent.h>
+#include <sys/stat.h>
+#include <sys/unistd.h>
 #define NativeMkdir(a,b) mkdir(a, b)
 #define NativeStat(a,b) stat(a,b)
+#define NativeFstat(a,b) fstat(a,b)
 #define NativeStructStat struct stat
 #define NativeUnlink(a) unlink(a)
 #endif
