@@ -47,6 +47,11 @@ RemoteClient::RemoteClient(
   inSocket->setNonBlocking(true);
 }
 
+/** \brief Destructor
+ *
+ * The destructor will detach this client from any player to whom it may be
+ * attached, and destroy the associated sockets.  Further behavior is not
+ * excluded */
 RemoteClient::~RemoteClient()
 {
   /* Must setPlayerId so as to detach from any player to whom we

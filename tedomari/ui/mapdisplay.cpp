@@ -61,8 +61,8 @@ void MapDisplay::paint()
 
 void MapDisplay::update()
 {
-  if (game->dirty) {
-    game->dirty = false;
+  if (game->isDirty()) {
+    game->clearDirty();
     getRegion()->paint();
   }
 }

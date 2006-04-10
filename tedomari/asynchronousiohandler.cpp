@@ -178,7 +178,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
         if (0 == history_set_pos(history_length)) {
           Debug("error setting history position");
         }
-        /* TODO: set the value of lastLine appropriately */
+        /** \todo set the value of lastLine appropriately */
       } else {
         Debug("error reading history");
       }

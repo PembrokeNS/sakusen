@@ -66,5 +66,5 @@ void SDLLayout::contextChanged()
 {
  
 }
+#endif // DISABLE_PANGO
 
-#endif

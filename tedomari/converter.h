@@ -41,9 +41,11 @@ class Converter {
     unicode_iconv_t UTF8ToNative;
   public:
     String convert(const String&, unicode_iconv_t conv);
+    /** \brief Converts a string from the native codeset to UTF-8 */
     inline String convertNativeToUTF8(const String& s) {
       return convert(s, nativeToUTF8);
     }
+    /** \brief Converts a string from UTF-8 to the native codeset */
     inline String convertUTF8ToNative(const String& s) {
       return convert(s, UTF8ToNative);
     }

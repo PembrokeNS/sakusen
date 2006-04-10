@@ -14,11 +14,32 @@
 
 namespace fuseki {
 
+/** \brief Represents a server.
+ *
+ * This class manages all communication with clients, adding and removing
+ * clients, maintainance of the settings tree and game initialization and
+ * shutdown. */
 class Server : public SettingsUser {
   private:
     Server();
     Server(const Server&);
   public:
+    /** \brief Standard constructor
+     *
+     * \param output Stream to use for output.
+     * \param resourceInterface ResourceInterface to use to load game data.
+     * \param abstract Whether to use abstract unix socket namespace where
+     * possible.
+     * \param unixSocket A Socket on which to listen for both
+     * solicitation and join messages.
+     * \param udpSocket A Socket on which to listen for solicitation messages.
+     * \param tcpSocket A Socket on which to listen for join messages.
+     * \param dots Whether to print dots so as to indicate that the server is
+     * alive.
+     *
+     * Caller must ensure that the various sockets remain open until the
+     * server is out of use.  Ownership of the socket objects is not
+     * transferred to the Server. */
     Server(
         std::ostream& output,
         sakusen::ResourceInterface* resourceInterface,
@@ -29,11 +50,11 @@ class Server : public SettingsUser {
         sakusen::comms::Socket* udpSocket,
         sakusen::comms::Socket* tcpSocket,
         bool dots
-      ); /* Caller must ensure that socket remains open until the server is
-          * out of use */
+      );
     ~Server();
   private:
-    bool dots; /* Whether to print dots constantly */
+    /** Whether to print dots constantly */
+    bool dots;
 #ifndef DISABLE_UNIX_SOCKETS
      /** Whether to use abstract sockets for RemoteClients to listen */
     bool abstract;
@@ -103,19 +124,23 @@ class Server : public SettingsUser {
     sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
     inline bool getAllowObservers() { return allowObservers; }
     
-    void serve(); /* Do what servers do best */
+    void serve();
     void checkForGameStart();
-      /* Called when a client has reason to believe that it might now be
-       * possible for the game to start (e.g. because they just set their
-       * ready flag). */
     void ensureAdminExists();
-      /* Called to induce the server to create an admin if none already exists.
-       * Called if any client loses admin status or leaves or permits admin
-       * status */
 
-    /* Functions that are called to advise server that the setting on the given
-     * leaf wants to be altered.  Returns reason why it can't be, or null
-     * string if it can. */
+    /* \name Settings tree callbacks
+     *
+     * These methods are called by leaves of the settings tree to advise the
+     * server that the setting on the given
+     * leaf wants to be altered.  These methods do not themselves perform any
+     * alteration of the settings tree, but they do execute the associated
+     * magic.
+     *
+     * \param altering The leaf being altered.
+     * \param newValue The new value of the leaf.
+     * \return Empty string if the alteration may be performed, or a reason why
+     * it cannot be performed otherwise. */
+    //@{
     String boolSettingAlteringCallback(
         settingsTree::Leaf* altering,
         bool newValue
@@ -133,6 +158,7 @@ class Server : public SettingsUser {
         settingsTree::Leaf* altering,
         const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
       );
+    //@}
 
     void settingAlteredCallback(settingsTree::Leaf* altered);
 };

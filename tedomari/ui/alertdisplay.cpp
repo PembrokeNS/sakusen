@@ -2,10 +2,9 @@
 
 using namespace tedomari::ui;
 
-/* TODO: make alerts disappear after a while */
-
 void AlertDisplay::refreshText()
 {
+  /** \todo Make alerts disappear after a while */
   String text;
   bool first = true;
   for (int i=lastOnDisplay; i != nextSlot; i = (i+1)%9) {
@@ -14,7 +13,7 @@ void AlertDisplay::refreshText()
     } else {
       text += "\n";
     }
-    /* TODO: colour, etc. in the text */
+    /** \todo Colour, etc. in the text */
     text += alerts[i].getMessage();
   }
   layout->setText(text);

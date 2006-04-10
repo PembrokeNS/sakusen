@@ -17,7 +17,7 @@ PlayerBranch::PlayerBranch(
   ) :
   Branch(playerID_toString(id), "world", "", parent, server)
 {
-  String playerGroup = String("player") + clientID_toString(id);
+  String playerGroup = String("player") + playerID_toString(id);
   String playerAdminGroup = playerGroup+",admin";
   
   addChild(new StringLeaf(

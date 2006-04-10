@@ -28,6 +28,10 @@ Game::~Game()
   universe = NULL;
 }
 
+/** \brief Loads the specified Universe and stores it for later use
+ *
+ * \param name Internal name of the Universe
+ * \param hash Hash of the Universe (as hex string) */
 void Game::setUniverse(const String& name, const String& hash)
 {
   ResourceSearchResult result;
@@ -39,7 +43,7 @@ void Game::setUniverse(const String& name, const String& hash)
     case resourceSearchResult_notFound:
     case resourceSearchResult_ambiguous:
     case resourceSearchResult_error:
-      /* TODO: better error handling */
+      /** \todo Better error handling */
       Fatal("problem loading universe");
   }
 }
@@ -85,3 +89,4 @@ void Game::stop()
   delete sakusen::client::world;
   serverInterface = NULL;
 }
+

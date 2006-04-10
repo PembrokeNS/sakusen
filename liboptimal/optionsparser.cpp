@@ -139,8 +139,8 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
   string line;
 
   while (!stream.eof()) {
-    /* TODO: line numbers in error messages */
-    /* TODO: replace atoi with strtol and do error checking */
+    /** \todo Line numbers in error messages */
+    /** \todo Replace atoi with strtol and do error checking */
     getline(stream, line, newLine);
     /*printf("parser processing line: %s\n", line.c_str());*/
     string::size_type commentPos;

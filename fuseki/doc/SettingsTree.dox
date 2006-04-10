@@ -1,0 +1,150 @@
+/** \page settingstree Settings Tree
+
+The settings tree is managed by the server and it is through it that clients
+can affect various aspects of the game.
+
+The settings tree is organised much like a file system, in a tree with branches
+(like directories) and leaves (like files).  Branches and leaves are
+collectively called nodes.  Each leaf has an associated value,
+which can be of one of the following types:
+
+<ul>
+  <li><var>int</var> some integer type</li>
+  <li><var>string</var> a simple string value</li>
+  <li><var>bool</var> boolean</li>
+  <li><var>stringset</var> an unordered list of string values</li>
+</ul>
+
+However, all of these must be converted to and from string representations when
+communicating with the clients.
+
+When setting a boolean value, carious strings are recongnised: "1", "on" and
+"true" are interpreted as true, while "0", "off" and "false" are interpreted as
+false.  When getting a boolean value, the result is always either "true" or
+"false".
+
+When altering a string set value, the assignment will be interpreted according
+to its first character:
+
+<ul>
+  <li>&quot;+<var>value</var>&quot; adds <var>value</var> to the set.
+  <li>&quot;-<var>value</var>&quot; removes <var>value</var> from the set.
+  <li>&quot;0&quot; clears the set.
+</ul>
+
+Each node also has a list of groups with read permission for that node, and
+another list of groups with write permission.  To get the value of a leaf, or
+to list the children of a branch, you
+must have read permissions for it and all its parent nodes to the root of the
+tree.  To alter the value of a leaf or add/remove child nodes to/from a branch
+you must have read and write permisions for it and read permissions for all its
+parent nodes to the root of the tree.
+
+Each group is identified by a string name. At present the following exist:
+
+<ul>
+  <li><var>world</var> A cover-all group that includes all users.</li>
+  <li><var>server</var> A group to which only the server belongs and which has
+  absolute permissions everywhere (analagous to root in a unix file
+  system)</li>
+  <li><var>admin</var> A group to which some (administrator) clients can
+  belong, which gives them additional permissions</li>
+  <li><var>playtime</var> A group with permissions to alter the game state in
+  some limited ways once
+  the game has started (e.g. pause the game, change the game speed).</li>
+  <li><var>client<var>n</var></var> A group to which only client <var>n</var>
+  belongs.
+  <li><var>player<var>n</var></var> A group to which clients attached to player
+  <var>n</var> belong.
+</ul>
+
+Many leaves of the settings tree have <dfn>magic</dfn> associated with them.
+This means that altering the value can cause the server to perform other
+actions.
+
+The settings tree as I presently imagine it stands as follows.  Some has been
+implemented.
+
+<ul>
+  <li>server
+  <ul>
+    <li>application
+    <ul>
+      <li>name</li>
+      <li>version</li>
+      <li>revision</li>
+    </ul></li>
+    <li>blockedaddresses</li>
+    <li>allowobservers</li>
+    <li>deadclienttimeout</li>
+    <li>countdown</li>
+  </ul></li>
+
+  <li>game
+  <ul>
+    <li>name</li>
+    <li>universe
+    <ul>
+      <li>name</li>
+      <li>hash</li>
+    </ul></li>
+    <li>map</li>
+    <li>mapplaymode</li>
+    <li>usesuggesteduniverse</li>
+    <li>speed</li>
+    <li>paused</li>
+  </ul></li>
+      
+  <li>clients
+  <ul>
+    <li><var>n</var>
+    <ul>
+      <li>application
+      <ul>
+        <li>name</li>
+        <li>version</li>
+        <li>revision</li>
+      </ul></li>
+      <li>ping</li>
+      <li>admin</li>
+      <li>neveradmin</li>
+      <li>observer</li>
+      <li>player</li>
+      <li>ready</li>
+      <li>controller
+      <ul>
+        <li>name</li>
+        <li>comments</li>
+        <li>guidance
+        <ul>
+          <li>...</li>
+        </ul></li>
+      </ul></li>
+      <li>kicked</li>
+      <li>connection</li>
+      <li>autounready</li>
+      <li>capabilities
+      <ul>
+        <li>...</li>
+      </ul></li>
+    </ul></li>
+  </ul></li>
+
+  <li>players
+  <ul>
+    <li><var>n</var>
+    <ul>
+      <li>name</li>
+      <li>race</li>
+      <li>racefixed</li>
+      <li>maxclients</li>
+      <li>noclients</li>
+      <li>colour (also color?)</li>
+      <li>handicap</li>
+    </ul></li>
+  </ul></li>
+</ul>
+
+\todo Describe what these settings mean, their permissions, and their
+associated magic.
+*/

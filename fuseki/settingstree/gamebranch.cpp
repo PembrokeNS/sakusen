@@ -12,7 +12,6 @@ using namespace fuseki::settingsTree;
 GameBranch::GameBranch(const Branch* parent, Server* server) :
   Branch("game", "world", "", parent, server)
 {
-  addChild(new StringLeaf("universe", "world", "admin", this, server));
   addChild(new UniverseBranch(this, server));
   addChild(new StringLeaf("map", "world", "admin", this, server));
   addChild(

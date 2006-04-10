@@ -208,12 +208,14 @@ void SDLUI::update()
     switch (event.type) {
       case SDL_ACTIVEEVENT:
         SDLDebug("SDL_ACTIVEEVENT");
-        /* TODO: Something appropriate.  When minimizing, we should lower CPU
-         * consumption appropriately */
+        /** \todo Something appropriate.  When minimizing, we should lower CPU
+         * consumption appropriately.  Also we need to consider the status of
+         * modifier keys (e.g. when ctrl is released when the UI does not have
+         * focus) */
         break;
       case SDL_VIDEOEXPOSE:
         SDLDebug("SDL_VIDEOEXPOSE");
-        /* TODO: redraw the screen */
+        /** \todo Redraw the screen */
         break;
       case SDL_VIDEORESIZE:
         SDLDebug("SDL_VIDEORESIZE");
@@ -267,7 +269,7 @@ void SDLUI::update()
   UI::update();
   
   /* Update the display */
-  /* TODO: Update only that portion which has been altered */
+  /** \todo Update only that portion which has been altered */
   if (0 != SDL_BlitSurface(sdlBuffer, NULL, screen, NULL)) {
     Debug("SDL_BlitSurface failed: " << SDL_GetError());
   }

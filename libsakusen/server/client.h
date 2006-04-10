@@ -28,7 +28,8 @@ class LIBSAKUSEN_SERVER_API Client {
     std::queue<OrderMessage> orderMessageQueue;
     bool observer;
   public:
-    /* accessors */
+    /** \name Accessors */
+    //@{
     inline PlayerID getPlayerId() const { return playerId; }
     inline void setPlayerId(const PlayerID& id) { playerId = id; }
     inline bool orderMessageQueueEmpty(void) const {
@@ -40,10 +41,17 @@ class LIBSAKUSEN_SERVER_API Client {
       return message;
     }
     inline bool isObserver() const { return observer; }
+    //@}
 
-    /** interface which must be implemented by subclasses */
-    virtual void flushOutgoing(Time time) = 0;
+    /** \name Interface which must be implemented by subclasses */
+    //@{
+    /** \brief Queue an Update to be sent to the client */
     virtual void queueUpdate(const Update& update) = 0;
+    /** \brief Forward all queued Updates to the client
+     *
+     * \param time The game time to which the dispatched Updates correspond */
+    virtual void flushOutgoing(Time time) = 0;
+    //@}
 };
 
 }}

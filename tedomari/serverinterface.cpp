@@ -40,10 +40,9 @@ ServerInterface::ServerInterface(
   outgoingSocket(NULL)
 {
   /*Debug("unixSockets = " << unixSockets);*/
+  /** \todo Make timeout user-specifiable (currently 5 seconds) */
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
-    /* 1 second timeout used for all incoming server responses.
-     * TODO: make timeout user-specifiable */
 }
 
 ServerInterface::~ServerInterface()
@@ -62,7 +61,7 @@ ServerInterface::~ServerInterface()
 
 void ServerInterface::initialSettingsSetup()
 {
-  /* TODO: deal with return values */
+  /** \todo deal with return values */
   setClientSetting("application:name", APPLICATION_NAME);
   setClientSetting("application:version", APPLICATION_VERSION);
 #ifdef REVISION

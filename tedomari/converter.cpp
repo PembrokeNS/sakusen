@@ -12,20 +12,31 @@ Converter::Converter() {}
 Converter::~Converter() {}
 #else
 
+/** \brief Default constructor
+ *
+ * Uses nl_langinfo(3) to determine native codeset for conversion */
 Converter::Converter() :
   nativeToUTF8(unicode_iconv_open("UTF-8", nl_langinfo(CODESET))),
   UTF8ToNative(unicode_iconv_open(nl_langinfo(CODESET), "UTF-8"))
 {
   Debug("native codeset is " << nl_langinfo(CODESET));
-  /* TODO: error checking */
+  /** \todo Error checking */
 }
 
+/** \brief Destructor */
 Converter::~Converter()
 {
   unicode_iconv_close(nativeToUTF8);
   unicode_iconv_close(UTF8ToNative);
 }
 
+/** \brief Convert string using given converter
+ *
+ * \param s String to convert
+ * \param conv Converter to use
+ *
+ * It is not expected that this method be used externally.  The other methods
+ * are generally more useful */
 String Converter::convert(const String& s, unicode_iconv_t conv)
 {
   char out[CONVERT_BUFFER_LEN];

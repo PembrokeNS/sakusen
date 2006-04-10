@@ -369,6 +369,13 @@ void Server::changeInClientBranch(
   }
 }
 
+/** \brief Converts a PlayerID into a pointer to a player
+ *
+ * \param id PlayerID to convert.
+ * \return Pointer to Player with given id.
+ *
+ * Behaviour is undefined if the id is invalid.
+ * \todo Proper error handling */
 Player* Server::getPlayerPtr(PlayerID id)
 {
   if (sakusen::server::world == NULL) {
@@ -395,11 +402,15 @@ void interruptHandler(int /*signal*/)
   interrupted = true;
 }
 
+/** \brief Runs the server
+ *
+ * This method will not return until either an entire game has taken place or
+ * the server is interrupted */
 void Server::serve()
 {
   uint8 buf[BUFFER_LEN];
   struct timeval sleepTime = {0, MICRO/10};
-  /* FIXME: signal is deprecated.  Use sigaction(2) instead */
+  /** \bug signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
   out << "Server started.  Hit Ctrl+C to interrupt and shut down server.\n";
@@ -667,9 +678,9 @@ void Server::serve()
     out << "Transitioning to gameplay state" << endl;
 
     /* Close the solicitation and join socket because we aren't going to
-     * accept any more clients
-     * TODO: maybe we can support dynamic join for people whose clients crash,
-     * or adding observers in mid-game. */
+     * accept any more clients */
+    /** \todo Maybe we can support dynamic join for people whose clients crash,
+     * adding observers in mid-game, etc. */
 #ifndef DISABLE_UNIX_SOCKETS
     unixSocket->close();
 #endif
@@ -698,7 +709,8 @@ void Server::serve()
       }
     }
 
-    /* TODO: The part where we wait for the clients to initialize themselves */
+    /** \todo The part where we wait for the clients to initialize themselves
+     * */
     
     /* Now we have the real game loop */
     new CompleteWorld(*map, mapPlayMode, players);
@@ -782,16 +794,32 @@ void Server::serve()
   }
 }
 
+/** \brief Request an (asynchronous) check for game start
+ *
+ * This causes the server (when it next has an opportunity) to check whther the
+ * game can be started, and, if it can, then start the game.  The check is
+ * asynchronous, in the sense that this method returns before it has been
+ * performed.
+ *
+ * This is called when something has reason to believe that it might now be
+ * possible for the game to start (e.g. a client calls because they just set
+ * their ready flag). */
 void Server::checkForGameStart()
 {
-  /* Request an (asynchronous) check for game start the next time the main loop
-   * gets around to that part */
   checkForGameStartNextTime = true;
 }
 
+/* \brief Requests an (asynchronous) check to see whether an admin exists
+ *
+ * This causes the server (when it next has an opportunity) to check whether
+ * any client has admin status.  If there is no such client, and one is willing
+ * to assume admin status, then that client is automatically promoted to admin
+ * status.
+ * 
+ * This is called if any client loses admin status or leaves or permits admin
+ * status. */
 void Server::ensureAdminExists()
 {
-  /* Request a check next time around */
   ensureAdminExistsNextTime = true;
 }
 
@@ -1037,6 +1065,11 @@ String Server::stringSetSettingAlteringCallback(
   }
 }
 
+/** \brief Called after a leaf of the settings tree had changed its value
+ *
+ * This method informs all clients of the change to the settings tree and also
+ * clears the readiness flag on any clients who had requested that it be
+ * automatically cleared when a setting was changed. */
 void Server::settingAlteredCallback(Leaf* altered)
 {
   String fullName = altered->getFullName();

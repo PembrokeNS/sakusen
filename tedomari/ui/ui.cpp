@@ -83,8 +83,9 @@ list<String> UI::tokenise(const String& s)
 
 void UI::initializeControls()
 {
-  /* For the moment we just make a map display control
-   * TODO: make many more things */
+  /** \todo Make many more things.
+   * For the moment we just make a map display control and a command entry box
+   * */
   commandEntryBox = new CommandEntryBox(
       0, 0, dockStyle_bottom, newRegion(0, getHeight(), getWidth(), 0)
     );
@@ -113,7 +114,7 @@ void UI::resize(tedomari::ui::Region* newRegion)
 void UI::keyDown(Key k, uint16 c)
 {
   if (expectingChars) {
-    /* TODO: process custom key->char mappings */
+    /** \todo Process custom key->char mappings */
     if (0 != c) {
       /* For now we assume that the chars must be being sent to the
        * commandEntryBox.  If there's anything else to which chars can be sent
@@ -122,13 +123,13 @@ void UI::keyDown(Key k, uint16 c)
       commandEntryBox->sendChar(c, this);
       return;
     }
-    /* TODO: deal with other keys which should be significant in this context,
+    /** \todo Deal with other keys which should be significant in this context,
      * such as the arrow keys */
   }
-  /* TODO: process modifications */
-  /* TODO: process mappings */
+  /** \todo Process modifications */
+  /** \todo Process mappings */
 
-  /* process bindings */
+  /* Process bindings */
   hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
     const_iterator binding =
     mode->getBindings().find(ModifiedKeyEvent(k, currentModifiers, true));
@@ -142,8 +143,8 @@ void UI::keyDown(Key k, uint16 c)
 
 void UI::keyUp(Key k)
 {
-  /* TODO: process modifications */
-  /* TODO: process mappings */
+  /** \todo Process modifications */
+  /** \todo Process mappings */
 
   /* process bindings */
   hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
@@ -159,7 +160,7 @@ void UI::keyUp(Key k)
 
 void UI::update()
 {
-  /* TODO: should call all MapDisplays, once there can be more than one */
+  /** \todo Should call all MapDisplays, once there can be more than one */
   activeMapDisplay->update();
 }
 
@@ -251,7 +252,6 @@ void UI::executeCommands(list<String>& tokens)
 void UI::executeCommands(const String& cmdString)
 {
   /*Debug("executing command '" << cmdString << "'");*/
-  /* TODO: smarter parsing */
   list<String> tokens = tokenise(cmdString);
   if (tokens.empty()) {
     return;
@@ -265,7 +265,7 @@ void UI::alert(const Alert& a)
     QDebug("Alert: " + a.getMessage());
   } else {
     alertDisplay->add(a);
-    /* FIXME: realigning all subcontrols is overkill */
+    /** \bug Realigning all subcontrols is overkill */
     alignSubControls();
     paint();
   }
@@ -281,7 +281,8 @@ void UI::setCommandEntry(bool on)
   commandEntryBox->setVisible(on);
 
   if (commandEntry) {
-    commandEntryBox->setDesiredHeight(20 /* FIXME: Should be appropriate height for font size */);
+    commandEntryBox->setDesiredHeight(20
+        /** \bug Should be appropriate height for font size */);
   } else {
     commandEntryBox->setDesiredHeight(0);
   }
@@ -398,7 +399,7 @@ void UI::dragRegion(bool start)
 
 void UI::selectUnits(const String& selection)
 {
-  /* TODO: this string should be interpretable in more ways */
+  /** \todo This string should be interpretable in more ways */
   if (selection == "lastrectangle") {
     selectUnitsIn(lastRectangle);
     return;

@@ -8,7 +8,10 @@ namespace ui {
 
 class UI;
 
-/* TODO: If there ever exist more text boxes then this class should inherit
+/** \brief Represents the textbox which is used for input of commands in their
+ * long form.
+ *
+ * \todo If there ever exist more text boxes then this class should inherit
  * from a TextBox class, and the code be divided appropriately */
 class CommandEntryBox : public Control {
   public:

@@ -10,7 +10,9 @@ namespace ui {
 
 class UI;
 
-/* TODO: rethink this to take into account bizarre map topologies */
+/** \brief Represents one view of a portion of the map on the UI.
+ *
+ * \todo Rethink this to take into account bizarre map topologies */
 class MapDisplay : public Control {
   private:
     MapDisplay();

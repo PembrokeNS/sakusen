@@ -139,8 +139,8 @@ int main(int argc, char const* const* argv)
   }
 
   /* For the moment we simply attempt to connect to a socket where fuseki puts
-   * it.
-   * TODO: allow for connecting elsewhere, or not connecting at all at once */
+   * it. */
+  /** \todo Allow for connecting elsewhere, or not connecting at all at once */
   
   /* Seek out the home directory */
   String homePath = fileUtils_getHome();
@@ -279,7 +279,7 @@ void runClient(
 
     cout << "Connected to socket." << endl;
     
-    /* TODO: the ResourceInterface actually needs to be able to access
+    /** \todo The ResourceInterface actually needs to be able to access
      * resources over the network from the server as well as from disk */
     ResourceInterface* resourceInterface =
       new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
@@ -525,7 +525,6 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
 
   if (parser.parse(optionsFile, argc, argv)) {
     /* There was a problem */
-    /* TODO: better error handling (a usage message?) */
     cout << "error(s) processing options:\n" <<
       stringUtils_join(parser.getErrors(), "\n");
     usage();
@@ -540,9 +539,7 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
 UI* newUI(const Options& o, const String& uiConfFilename, Game* game)
 {
   UI* ui = NULL;
-  /* Hopefully this should be the only mention of SDL anywhere outside of the
-   * tedomari::ui::sdl code.
-   * TODO: support alternate UIs (OpenGL, DirectX) */
+  /** \todo Support alternate UIs (OpenGL, DirectX) */
   ifstream uiConf(uiConfFilename.c_str());
 #ifndef DISABLE_SDL
   ui = new SDLUI(o.sdlOptions, uiConf, game);

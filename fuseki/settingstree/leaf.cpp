@@ -64,13 +64,16 @@ String Leaf::changeRequestListRef(
 String Leaf::getRequestListRef(
     list<String>& nodeAddress,
     String& value,
-    const SettingsUser*) const
+    const SettingsUser* user) const
 {
+  if (!user->hasReadPermissionFor(this)) {
+    return String("cannot read node '") + getFullName() +
+      "': permission denied";
+  }
+  
   if (!nodeAddress.empty()) {
     return String("node '") + getFullName() + "' is a leaf and has no child";
   }
-  
-  /* TODO: check permissions of user */
 
   value = getValue();
   return "";

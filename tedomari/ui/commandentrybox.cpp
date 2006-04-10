@@ -24,7 +24,7 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
     switch (c) {
       case '\b':
         if (text.empty()) {
-          /* TODO: complain */
+          /** \todo Beep */
         } else {
           String::iterator newEnd =
             stringUtils_findPreviousCharStart(text.end(), text.begin());
@@ -41,11 +41,11 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
         ui->setCommandEntry(false);
         return;
       case '\t':
-        /* TODO: tab completion */
+        /** \todo Tab completion */
         break;
       default:
         Debug("Unexpected unprintable character " << c);
-        /* TODO: make a beep or something */
+        /* \todo Make a beep or something */
         break;
     }
   } else {
