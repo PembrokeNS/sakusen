@@ -18,12 +18,15 @@
 
 #include "ui/ui.h"
 
-#ifndef DISABLE_CAIRO
-#include "ui/sdl/cairo/cairoui.h"
+#ifndef DISABLE_SDL
+  #include "ui/sdl/sdlui.h"
+  #ifndef DISABLE_CAIRO
+    #include "ui/sdl/cairo/cairoui.h"
+  #endif
 #endif
 
 #ifdef WIN32
-#include <locale.h>
+  #include <locale.h>
 #endif
 
 #include <sys/stat.h>
@@ -46,10 +49,10 @@ using namespace tedomari::game;
 using namespace tedomari::ui;
 
 #ifndef DIABLE_SDL
-using namespace tedomari::ui::sdl;
-#endif
-#ifndef DISABLE_CAIRO
-using namespace tedomari::ui::sdl::cairo;
+  using namespace tedomari::ui::sdl;
+  #ifndef DISABLE_CAIRO
+    using namespace tedomari::ui::sdl::cairo;
+  #endif
 #endif
 
 namespace tedomari {
@@ -495,7 +498,9 @@ void usage() {
           " -l,  --history-length LENGTH, store LENGTH commands in the command history\n"
           "                         upon exiting\n"
           " -t,  --test,            don't try to connect to a server, just test the UI\n"
+#ifndef DISABLE_SDL
           "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
+#endif
           " -s   --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
           " -j   --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
           " -h,  --help,            display help and exit\n"

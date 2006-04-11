@@ -2,6 +2,7 @@
 #define FILEUTILS_H
 
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #include <list>
 
@@ -12,16 +13,13 @@
 #include <direct.h>
 #include <io.h>
 #define NativeMkdir(a,b) _mkdir(a)
-/** \bug This should be _stat(a,b), but it doesn't seem to work properly.
- * This workaround of calling it 0 works because the struct stat part of
- * the result is not used anywhere at the moment */
 #define NativeStat(a,b) _stat(a,b)
+#define NativeFstat(a,b) _fstat(a,b)
 #define NativeStructStat struct _stat
-#define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
+#define S_ISDIR(mode) (((mode) & _S_IFDIR) != 0)
 #define NativeUnlink(a) _unlink(a)
 #else
 #include <dirent.h>
-#include <sys/stat.h>
 #include <sys/unistd.h>
 #define NativeMkdir(a,b) mkdir(a, b)
 #define NativeStat(a,b) stat(a,b)

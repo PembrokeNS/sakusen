@@ -81,7 +81,7 @@ uint64 LockingFile::getLength(bool block)
   if (getLock(block)) {
     throw new FileIOExn("getLock");
   }
-  if (fstat(fd, &statResult) == -1) {
+  if (NativeFstat(fd, &statResult) == -1) {
     throw new FileIOExn("fstat");
   }
   length = static_cast<uint64>(statResult.st_size);

@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\pcrecpp;.;..\.."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_PANGO;DISABLE_UNIX_SOCKETS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -304,22 +304,6 @@
 			<Filter
 				Name="sdl"
 				>
-				<File
-					RelativePath="..\..\ui\sdl\sdllayout.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdllayout.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlregion.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\ui\sdl\sdlregion.h"
-					>
-				</File>
 				<File
 					RelativePath="..\..\ui\sdl\sdlui.cpp"
 					>
