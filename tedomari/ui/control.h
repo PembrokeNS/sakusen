@@ -28,13 +28,23 @@ class Control {
     Region* region; /* Owned by this */
     std::list< std::list<Control*> > subControls;
   protected:
+    /** \brief Gets the Region occupied by this control */
     inline Region* getRegion() { return region; }
     virtual void replaceRegion(Region* region);
+    /** \brief Adds a new layer of subcontrols on top of all existing layers.
+     * Subsequently added subcontrols will be added to this new layer.  See
+     * Control::alignSubcontrols() for more details on how subcontrols are
+     * arranged */
     inline void addLayer() { subControls.push_back(std::list<Control*>()); }
+    /** \brief Adds a new subcontrol to the top layer of subcontrols of this
+     * Control.  See Control::alignSubcontrols() for more details on how
+     * subcontrols are arranged */
     inline void addSubControl(Control* c) { subControls.back().push_back(c); }
     void alignSubControls();
     virtual void paint();
   public:
+    /** \name Accessors */
+    //@{
     inline DockStyle getDockStyle() { return dockStyle; }
     inline uint16 getX() const { return x; }
     inline uint16 getY() const { return y; }
@@ -42,6 +52,7 @@ class Control {
     inline void setDesiredHeight(uint16 h) { desiredHeight = h; }
     inline uint16 getWidth() const { return region->getWidth(); }
     inline uint16 getHeight() const { return region->getHeight(); }
+    //@}
 };
 
 }}

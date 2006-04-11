@@ -12,8 +12,11 @@ class Node;
 
 }
 
-/* This abstract class represents an object which can access or alter the
- * settings tree */
+/** \brief Abstract class representing an object which can access or alter the
+ * settings tree
+ *
+ * This class keeps track of what groups a user of the settings tree belongs to
+ * so that permissions can be calculated appropriately. */
 class SettingsUser {
   private:
     SettingsUser();
@@ -27,6 +30,7 @@ class SettingsUser {
     std::set<String> groups;
 
   public:
+    /** \return true iff this user belongs to the group \a group */
     inline bool hasGroup(const String& group) const {
       return groups.find(group) != groups.end();
     }

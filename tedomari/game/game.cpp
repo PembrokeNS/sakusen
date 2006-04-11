@@ -19,6 +19,10 @@ Game::Game(ResourceInterface* rI) :
 {
 }
 
+/** \brief Destructor
+ *
+ * The destructor will stop the game and destroy world if appropriate.  Further
+ * behavior is not excluded. */
 Game::~Game()
 {
   if (sakusen::client::world != NULL) {
@@ -64,6 +68,10 @@ void Game::start(
     );
 }
 
+/** \brief Applies updates to game state
+ *
+ * Processes the given updates and alters the game state appropriately.  Also
+ * sets dirty flag. */
 void Game::pushUpdates(const UpdateMessageData& data) {
   dirty = true;
   while (data.getTime() > sakusen::client::world->getTimeNow()) {
@@ -79,11 +87,15 @@ void Game::pushUpdates(const UpdateMessageData& data) {
   }
 }
 
+/** \brief Sends given order to server at once
+ *
+ * \param o The order to send */
 void Game::order(const OrderMessage& o)
 {
   serverInterface->send(OrderMessageData(o));
 }
 
+/** \brief Stops the game and destroys the world */
 void Game::stop()
 {
   delete sakusen::client::world;

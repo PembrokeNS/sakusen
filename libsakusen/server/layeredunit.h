@@ -68,7 +68,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
      * Not owned by this */
     UnitStatus* unit;
 
-    /* \brief Indicates that information must be transmitted to client
+    /** \brief Indicates that information must be transmitted to client
      *
      * This bool is true iff vhanges have occured to the unit which have yet to
      * be transmitted to the clients */

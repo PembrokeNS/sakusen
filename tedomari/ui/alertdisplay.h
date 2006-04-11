@@ -10,13 +10,22 @@ namespace ui {
 
 class AlertDisplay : public Control {
   private:
+    /** \name Private constructors
+     *
+     * These constructors should not be used */
+    //@{
     AlertDisplay();
     AlertDisplay(const AlertDisplay&);
+    //@}
   public:
+    /** \brief Standard constructor.
+     *
+     * Arguments are the same as those for Control. */
     AlertDisplay(uint16 x, uint16 y, DockStyle ds, Region* r) :
       Control(x, y, ds, r), nextSlot(1), lastOnDisplay(1),
       layout(r->newLayout())
     {}
+    /** \brief Destructor */
     ~AlertDisplay() {
       delete layout;
     }

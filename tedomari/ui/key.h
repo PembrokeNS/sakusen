@@ -150,8 +150,10 @@ enum Key {
   K_Unknown
 };
 
+/** \brief A hash functor for Key */
 class KeyHash {
   public:
+    /** \brief Computes hash of Key \a k */
     inline size_t operator()(const Key& k) const { return k; }
 };
 

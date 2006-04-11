@@ -122,13 +122,14 @@ class Server : public SettingsUser {
       );
   public:
     sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
+    /** \return true iff the server is currently allowing observers */
     inline bool getAllowObservers() { return allowObservers; }
     
     void serve();
     void checkForGameStart();
     void ensureAdminExists();
 
-    /* \name Settings tree callbacks
+    /** \name Settings tree callbacks
      *
      * These methods are called by leaves of the settings tree to advise the
      * server that the setting on the given

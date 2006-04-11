@@ -510,7 +510,7 @@ void Server::serve()
         newConnection->setNonBlocking(true);
         timeval timeout;
         timeUtils_getTime(&timeout);
-        /* \todo We use a straight one second timeout.  It should be
+        /** \todo We use a straight one second timeout.  It should be
          * user-specifiable */
         timeout += MICRO;
         newConnections.push_back(
@@ -809,7 +809,7 @@ void Server::checkForGameStart()
   checkForGameStartNextTime = true;
 }
 
-/* \brief Requests an (asynchronous) check to see whether an admin exists
+/** \brief Requests an (asynchronous) check to see whether an admin exists
  *
  * This causes the server (when it next has an opportunity) to check whether
  * any client has admin status.  If there is no such client, and one is willing

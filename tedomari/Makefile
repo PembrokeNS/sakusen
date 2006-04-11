@@ -1,5 +1,5 @@
 BIN = tedomari
-SOURCE_DIRS = ui ui/sdl game
+SOURCE_DIRS = ui ui/sdl ui/sdl/cairo game
 THIS_CXXFLAGS = `pkg-config --cflags pangocairo` \
 	-Wall -W -Wno-format -Woverloaded-virtual -Werror -O0 -g3
 THIS_CFLAGS = -Wall -W -Wno-format -O0 -g3

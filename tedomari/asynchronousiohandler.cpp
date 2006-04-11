@@ -133,7 +133,7 @@ AsynchronousIOHandler* handler = NULL;
 /** \brief Static function because it needs to be used as a C-style function
  * pointer
  *
- * \internal */
+ * \relates AsynchronousIOHandler */
 void tedomari::line_callback_handler(char* line)
 {
   /* The readline library has passed us this completed line of input - we pass

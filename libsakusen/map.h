@@ -107,7 +107,7 @@ class LIBSAKUSEN_API Map {
       return p;
     }
     
-    /* \brief Increments the given \a pos by \a inc, taking into account map
+    /** \brief Increments the given \a pos by \a inc, taking into account map
      * topology
      *
      * As above, but alters \a orientation as appropriate when moving over map
@@ -119,7 +119,7 @@ class LIBSAKUSEN_API Map {
       return addToPosition(pos, Point<sint32>(inc), orientation);
     }
     
-    /* \brief Finds the shortest vector from op2 to op1
+    /** \brief Finds the shortest vector from op2 to op1
      *
      * Intuitively, this function returns \a op1 - \a op2.
      * Technically, it returns the shortest vector \c x such that

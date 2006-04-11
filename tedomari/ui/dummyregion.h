@@ -4,6 +4,8 @@
 namespace tedomari {
 namespace ui {
 
+/** \brief This method implements most of the methods of Region with syubs
+ * which do nothing. */
 class DummyRegion : public Region {
   private:
     DummyRegion();

@@ -11,7 +11,7 @@ namespace server {
 
 class LayeredUnit;
 
-/* \brief Base class for all layers on LayeredUnits
+/** \brief Base class for all layers on LayeredUnits
  *
  * Essentially an interface specifying what methods should be implemented by
  * any layer of a LayeredUnit.

@@ -9,9 +9,6 @@
 
 namespace sakusen {
 
-/** \file
- * This file contains the ::Ballistic class. */
-
 /** \brief Represents a ballistic projectile, like a bullet.
  *
  * This is a lightweight object that represents an object whose path is a
@@ -52,10 +49,11 @@ class Ballistic {
   /** \name mechanics
    * Functions to deal with game mechanics */
   //@{
-  /* \brief Factory method, spawning a new ::Ballistic
+  /** \brief Factory method, spawning a new sakusen::Ballistic
    *
-   * This factory method spawns a ::Ballistic with the given parameters and
-   * ensures it is registered as an active ::Ballistic.
+   * This factory method spawns a sakusen::Ballistic
+   * with the given parameters and
+   * ensures it is registered as an active sakusen::Ballistic.
    */
   static void spawn(
       const BallisticTypeID type,
@@ -63,9 +61,10 @@ class Ballistic {
       const Point<sint32>& startPosition,
       const Point<sint16>& startVelocity
     );
-  /* \brief gets the position
+  /** \brief gets the position
    *
-   * This trivial function causes the underlying ::Quadratic to be evaluated for
+   * This trivial function causes the underlying
+   * sakusen::Quadratic to be evaluated for
    * time \p t, returning the position in space that the projectile occupies at
    * this time.
    */

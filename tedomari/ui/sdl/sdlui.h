@@ -5,17 +5,17 @@
 
 #include "ui/ui.h"
 
+#ifdef NDEBUG
+  #define SDLDebug(msg)
+#else
+  #define SDLDebug(msg) if (debug) { Debug(msg); }
+#endif
+
 struct SDL_Surface;
-typedef struct _cairo_surface cairo_surface_t;
-typedef struct _cairo cairo_t;
-typedef struct _PangoLayout PangoLayout;
-typedef struct _PangoContext PangoContext;
 
 namespace tedomari {
 namespace ui {
 namespace sdl {
-
-class SDLLayout;
 
 class SDLUI : public UI {
   public:
@@ -36,7 +36,7 @@ class SDLUI : public UI {
   public:
     SDLUI(const Options&, std::ifstream& uiConf, tedomari::game::Game*);
     ~SDLUI();
-  private:
+  protected:
 #ifndef NDEBUG
     bool debug; /**< Should we print debugging info */
 #endif
@@ -48,34 +48,14 @@ class SDLUI : public UI {
     size_t bufferLen;
     uint16 stride; /**< The offset between consecutive rows in buffer */
     SDL_Surface* sdlBuffer; /**< SDL's wrapper of buffer */
-    cairo_surface_t* cairoBuffer; /**< cairo's wrapper of buffer */
-    cairo_t* cairoContext; /**< Context for cairoBuffer */
-    PangoContext* pangoContext;
-  protected:
-    void resize(uint16 width, uint16 height);
-    Region* newRegion(uint16 x, uint16 y, uint16 width, uint16 height);
+
+    virtual void resize(uint16 width, uint16 height);
   public:
     static optimal::OptionsParser getParser(Options* options);
     void setTitle(const String& title);
     void update();
 
-  #ifndef DISABLE_PANGO
-    PangoLayout* newPangoLayout();
-  #endif
-
-    void cairoSetSource(const Colour& c);
     uint32 getSDLColour(const Colour&);
-    void setClipRect(double x, double y, double w, double h);
-    void resetClip();
-    void fillRect(double x, double y, double w, double h, const Colour&);
-    void fillPolygon(
-        const std::list< sakusen::Point<double> >& poly,
-        const Colour&
-      );
-    void stroke(double x1, double y1, double x2, double y2, const Colour&);
-    void drawRect(double x, double y, double w, double h, const Colour& c);
-    void drawText(double x, double y, const String& text, const Colour&);
-    void drawText(double x, double y, const SDLLayout* layout);
 };
 
 }}}

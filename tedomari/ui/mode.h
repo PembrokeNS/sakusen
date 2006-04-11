@@ -11,6 +11,10 @@
 namespace tedomari {
 namespace ui {
 
+/** \brief Represents a possible state of the UI
+ *
+ * A Mode describes a way for the UI to respond to input.  It includes such
+ * things as bindings of keys to Commands, and Commands themselves. */
 class Mode {
   private:
     __gnu_cxx::hash_map<

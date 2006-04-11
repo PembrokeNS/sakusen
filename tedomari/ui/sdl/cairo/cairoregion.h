@@ -1,21 +1,22 @@
-#ifndef UI__SDLREGION_H
-#define UI__SDLREGION_H
+#ifndef UI_SDL_CAIRO__CAIROREGION_H
+#define UI_SDL_CAIRO__CAIROREGION_H
 
 #include "ui/region.h"
-#include "ui/sdl/sdlui.h"
-#include "ui/sdl/sdllayout.h"
+#include "ui/sdl/cairo/cairoui.h"
+#include "ui/sdl/cairo/cairolayout.h"
 
 namespace tedomari {
 namespace ui {
 namespace sdl {
+namespace cairo {
 
-class SDLRegion : public Region {
+class CairoRegion : public Region {
   private:
-    SDLRegion();
-    SDLRegion(const SDLRegion&);
+    CairoRegion();
+    CairoRegion(const CairoRegion&);
   public:
-    SDLRegion(
-        SDLUI* u,
+    CairoRegion(
+        CairoUI* u,
         uint16 xoffset,
         uint16 yoffset,
         uint16 width,
@@ -24,7 +25,7 @@ class SDLRegion : public Region {
       Region(width, height), ui(u), x(xoffset), y(yoffset)
     {}
   private:
-    SDLUI* ui; /* Not owned by this */
+    CairoUI* ui; /* Not owned by this */
     uint16 x;
     uint16 y;
   public:
@@ -36,7 +37,7 @@ class SDLRegion : public Region {
       const {
       assert(xoff+w <= getWidth());
       assert(yoff+h <= getHeight());
-      return new SDLRegion(ui, x+xoff, y+yoff, w, h);
+      return new CairoRegion(ui, x+xoff, y+yoff, w, h);
     }
     inline sakusen::Point<double> globalToLocal(
         const sakusen::Point<double>& p
@@ -48,7 +49,7 @@ class SDLRegion : public Region {
       ) {
       return p + sakusen::Point<double>(x, y, 0);
     }
-    inline Layout* newLayout() const { return new SDLLayout(ui); }
+    inline Layout* newLayout() const { return new CairoLayout(ui); }
     void setClip();
     void unsetClip();
     void fill(const Colour&);
@@ -63,7 +64,7 @@ class SDLRegion : public Region {
     void drawText(double x, double y, const Layout* layout);
 };
 
-}}}
+}}}}
 
-#endif // UI__SDLREGION_H
+#endif // UI_SDL_CAIRO__CAIROREGION_H
 

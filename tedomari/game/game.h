@@ -25,6 +25,10 @@ class Game {
     Game();
     Game(const Game&);
   public:
+    /** \brief Standard constructor
+     *
+     * \param resourceInterface The ResourceInterface that the Game should use
+     * to load required game data. */
     Game(sakusen::ResourceInterface* resourceInterface);
     ~Game();
   private:
@@ -32,21 +36,35 @@ class Game {
     ServerInterface* serverInterface; /* not owned by this */
     sakusen::Universe* universe; /* owned by this */
     
-    /** true iff there have been changes to the game state which have not yet
-     * propogated to the UI */
     bool dirty;
   public:
+    /** \brief Checks for changes to game state
+     *
+     * \return true iff there have been changes to the game state which have
+     * not yet propogated to the UI */
     bool isDirty() const { return dirty; }
+    /** \brief Clears dirty flag
+     *
+     * This method called by the UI to indicate that it has updated itself to
+     * the current game state. */
     void clearDirty() { dirty = false; }
     /** Returns true iff the game is underway */
     inline bool isStarted() const { return sakusen::client::world != NULL; }
-    void pushUpdates(const sakusen::comms::UpdateMessageData& data);
-
+    
     void setUniverse(const String& name, const String& hash);
+    /** \brief Starts the game
+     *
+     * Creates world and starts the game.  A previous call to setUniverse
+     * should have been made successfully.
+     *
+     * \param data Data from server describing initial game state.
+     * \param serverInterface ServerInterface to be used to communicate with
+     * server. */
     void start(
-        const sakusen::comms::GameStartMessageData&,
+        const sakusen::comms::GameStartMessageData& data,
         ServerInterface* serverInterface
       );
+    void pushUpdates(const sakusen::comms::UpdateMessageData& data);
     void order(const sakusen::OrderMessage&);
     void stop();
 };

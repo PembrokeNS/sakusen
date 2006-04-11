@@ -9,6 +9,8 @@ using namespace __gnu_cxx;
 namespace tedomari {
 namespace ui {
 
+/** \brief Generates a hash table for looking up key values from their names.
+ * */
 hash_map<String, Key, StringHash> initializeKeyLookup()
 {
   hash_map<String, Key, StringHash> l;
@@ -23,6 +25,7 @@ hash_map<String, Key, StringHash> initializeKeyLookup()
   return l;
 }
 
+/** \brief Hash table of keys indexed by name */
 hash_map<String, Key, StringHash> keyLookup = initializeKeyLookup();
 
 Key getKey(const String& name)
@@ -35,6 +38,7 @@ Key getKey(const String& name)
   }
 }
 
+/** \brief Converts a Key into a string name for that key */
 String getName(Key k)
 {
   switch (k) {

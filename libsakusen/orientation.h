@@ -88,7 +88,7 @@ class LIBSAKUSEN_API Orientation {
       return result.round<T>();
     }
 
-    /* \brief Multiply the inverse of this matrix by the given vector
+    /** \brief Multiply the inverse of this matrix by the given vector
      *
      * It is possible to do this operation quickly because we know the matrix
      * is orthogonal and thus its inverse is its transpose. */

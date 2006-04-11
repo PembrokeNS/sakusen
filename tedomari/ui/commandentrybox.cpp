@@ -38,6 +38,7 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
         ui->setCommandEntry(false);
         return;
       case 27: /* ESC */
+        text = "";
         ui->setCommandEntry(false);
         return;
       case '\t':
@@ -45,7 +46,7 @@ void CommandEntryBox::sendChar(uint16 c, UI* ui)
         break;
       default:
         Debug("Unexpected unprintable character " << c);
-        /* \todo Make a beep or something */
+        /** \todo Make a beep or something */
         break;
     }
   } else {

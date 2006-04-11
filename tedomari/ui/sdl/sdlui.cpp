@@ -2,14 +2,9 @@
 
 #include "libsakusen-global.h"
 #include "ui/dummyregion.h"
-#include "ui/sdl/sdlregion.h"
 #include "ui/sdl/sdlutils.h"
 
 #include <SDL/SDL.h>
-
-#ifndef DISABLE_PANGO
-#include <pango/pangocairo.h>
-#endif
 
 #include <iomanip>
 
@@ -19,12 +14,6 @@ using namespace optimal;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
-
-#ifdef NDEBUG
-  #define SDLDebug(msg)
-#else
-  #define SDLDebug(msg) if (debug) { Debug(msg); }
-#endif
 
 #define BYTES_PER_PIXEL (4)
 #define BITS_PER_PIXEL (8*BYTES_PER_PIXEL)
@@ -36,7 +25,8 @@ using namespace tedomari::ui::sdl;
 #define BMASK 0x000000ff
 /*
  * The following mask choices would supposedly be required to share the buffer
- * between SDL and OpenGL
+ * between SDL and OpenGL.  Given that the first one goes R,B,G, I find this
+ * most implausible
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   #define RMASK 0xff000000
   #define BMASK 0x00ff0000
@@ -105,33 +95,10 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   if (sdlBuffer == NULL) {
     Fatal(SDL_GetError());
   }
-  
-  #ifndef DISABLE_PANGO
-  /* Create the cairo interface to that buffer */
-  cairoBuffer = cairo_image_surface_create_for_data(
-      buffer, CAIRO_FORMAT_ARGB32, getWidth(), getHeight(), stride
-    );
-  cairoContext = cairo_create(cairoBuffer);
-  pangoContext = pango_cairo_font_map_create_context(
-      reinterpret_cast<PangoCairoFontMap*>(pango_cairo_font_map_get_default())
-    );
-  pango_cairo_update_context(cairoContext, pangoContext);
-  #endif
-  /* Provide access to these buffers to the UI and associated controls */
-  replaceRegion(new SDLRegion(this, 0, 0, getWidth(), getHeight()));
-  /* Place the initial control set */
-  initializeControls();
-  /* Paint the controls onto the buffer */
-  paint();
 }
 
 SDLUI::~SDLUI()
 {
-  #ifndef DISABLE_PANGO
-  g_object_unref(pangoContext);
-  cairo_destroy(cairoContext);
-  cairo_surface_destroy(cairoBuffer);
-  #endif
   SDL_FreeSurface(sdlBuffer);
   SDL_Quit();
   delete[] buffer;
@@ -154,30 +121,6 @@ void SDLUI::resize(uint16 width, uint16 height)
   if (sdlBuffer == NULL) {
     Fatal(SDL_GetError());
   }
-  /* Create the new cairo interface to the buffer */
-  #ifndef DISABLE_PANGO
-  cairo_destroy(cairoContext);
-  cairo_surface_destroy(cairoBuffer);
-  cairoBuffer = cairo_image_surface_create_for_data(
-      buffer, CAIRO_FORMAT_ARGB32, width, height, stride
-    );
-  cairoContext = cairo_create(cairoBuffer);
-  /* The following call entails a call to pango_layout_context_changed() for
-   * all layouts.  At present this is arranged for by overloading replaceRegion
-   * on those controls which have such a layout.  There might well be a better
-   * way. */
-  pango_cairo_update_context(cairoContext, pangoContext);
-  /* Replace the region of the UI, and trigger the cascade of replacements and
-   * a repainting of the controls */
-  #endif
-  UI::resize(new SDLRegion(this, 0, 0, width, height));
-}
-
-Region* SDLUI::newRegion(uint16 x, uint16 y, uint16 width, uint16 height)
-{
-  assert(x+width <= getWidth());
-  assert(y+height <= getHeight());
-  return new SDLRegion(this, x, y, width, height);
 }
 
 OptionsParser SDLUI::getParser(Options* options)
@@ -283,155 +226,3 @@ uint32 SDLUI::getSDLColour(const Colour& c)
   return SDL_MapRGBA(sdlBuffer->format, c.ir(), c.ig(), c.ib(), c.ia());
 }
 
-#ifndef DISABLE_PANGO
-
-PangoLayout* SDLUI::newPangoLayout()
-{
-  return pango_layout_new(pangoContext);
-}
-
-void SDLUI::cairoSetSource(const Colour& c)
-{
-  cairo_set_source_rgba(cairoContext, c.dr(), c.dg(), c.db(), c.da());
-}
-
-void SDLUI::setClipRect(double x, double y, double w, double h) {
-  cairo_rectangle(cairoContext, x, y, w, h);
-  cairo_clip(cairoContext);
-}
-
-void SDLUI::resetClip() {
-  cairo_reset_clip(cairoContext);
-}
-
-void SDLUI::fillRect(double x, double y, double w, double h, const Colour& c)
-{
-  SDLDebug(
-      "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
-      uint32(c.ia())
-    );
-  cairoSetSource(c);
-  cairo_rectangle(cairoContext, x, y, w, h);
-  cairo_fill(cairoContext);
-}
-
-void SDLUI::fillPolygon(
-    const list< sakusen::Point<double> >& poly,
-    const Colour& c
-  )
-{
-  SDLDebug(c.ir());
-  assert(!poly.empty());
-
-  list< sakusen::Point<double> >::const_iterator vertex = poly.begin();
-  cairoSetSource(c);
-  cairo_move_to(cairoContext, vertex->x, vertex->y);
-  while (++vertex != poly.end()) {
-    cairo_line_to(cairoContext, vertex->x, vertex->y);
-  }
-  cairo_close_path(cairoContext);
-  cairo_fill(cairoContext);
-}
-
-void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
-{
-  SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
-  cairoSetSource(c);
-  cairo_move_to(cairoContext, x1, y1);
-  cairo_line_to(cairoContext, x2, y2);
-  cairo_stroke(cairoContext);
-}
-
-void SDLUI::drawRect(double x, double y, double w, double h, const Colour& c)
-{
-  SDLDebug("x=" << x << ", y=" << y << ", w=" << w << ", h=" << h);
-  cairoSetSource(c);
-  cairo_rectangle(cairoContext, x, y, w, h);
-  cairo_stroke(cairoContext);
-}
-
-void SDLUI::drawText(double x, double y, const String& text, const Colour& c)
-{
-  SDL_LockSurface(sdlBuffer);
-  cairoSetSource(c);
-  PangoLayout* layout = pango_cairo_create_layout(cairoContext);
-
-  /* Write some text */
-  pango_layout_set_width(layout, -1);
-  /* Note: This function takes a UTF-8 string, as we wish */
-  pango_layout_set_text(layout, text.c_str(), -1);
-  cairo_move_to(cairoContext, x, y);
-  pango_cairo_show_layout(cairoContext, layout);
-
-  /* Cleanup */
-  g_object_unref(layout);
-  SDL_UnlockSurface(sdlBuffer);
-}
-
-void SDLUI::drawText(double x, double y, const SDLLayout* sdlLayout)
-{
-  SDL_LockSurface(sdlBuffer);
-  cairoSetSource(sdlLayout->getColour());
-
-  /* Write some text */
-  cairo_move_to(cairoContext, x, y);
-  pango_cairo_show_layout(cairoContext, sdlLayout->getLayout());
-
-  /* Cleanup */
-  SDL_UnlockSurface(sdlBuffer);
-}
-
-#else
-
-void SDLUI::cairoSetSource(const Colour& c)
-{
-}
-
-void SDLUI::setClipRect(double x, double y, double w, double h) {
-}
-
-void SDLUI::resetClip() {}
-
-void SDLUI::fillRect(double x, double y, double w, double h, const Colour& c)
-{
-  SDLDebug(
-      "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
-      uint32(c.ia())
-    );
-}
-
-void SDLUI::fillPolygon(
-    const list< sakusen::Point<double> >& poly,
-    const Colour& c
-  )
-{
-  SDLDebug(c.ir());
-  assert(!poly.empty());
-
-  list< sakusen::Point<double> >::const_iterator vertex = poly.begin();
-}
-
-void SDLUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
-{
-  SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
-}
-
-void SDLUI::drawRect(double x, double y, double w, double h, const Colour& c)
-{
-  SDLDebug("x=" << x << ", y=" << y << ", w=" << w << ", h=" << h);
-}
-
-void SDLUI::drawText(double x, double y, const String& text, const Colour& c)
-{
-  SDL_LockSurface(sdlBuffer);
-  /* Cleanup */
-  SDL_UnlockSurface(sdlBuffer);
-}
-
-void SDLUI::drawText(double x, double y, const SDLLayout* sdlLayout)
-{
-  SDL_LockSurface(sdlBuffer);
-  /* Cleanup */
-  SDL_UnlockSurface(sdlBuffer);
-}
-#endif //DISABLE_PANGO

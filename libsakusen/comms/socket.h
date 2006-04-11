@@ -9,25 +9,27 @@
 namespace sakusen {
 namespace comms {
 
-
 /** \brief This is a generic class for representing any type of socket.
  * 
  * Socket::newConnectionToAddress() and Socket::newBindingToAddress() can be
  * used to create Sockets */
 class LIBSAKUSEN_COMMS_API Socket {
   public:
-    /* \brief Creates a new Socket object connected to the given address.
+    /** \brief Creates a new Socket object connected to the given address.
      * \param address Sakusen-format address to connect to.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
     static Socket* newConnectionToAddress(const String& address);
-    /* \brief Creates a new Socket object bound to the given address.
+    /** \brief Creates a new Socket object bound to the given address.
      * \param address Sakusen-format address to bind socket at.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
     static Socket* newBindingToAddress(const String& address);
-    /** This function should be called before attempting to instantiate a
-     * ::Socket or any subclass of same. On a Windows box it calls the
+    /** \brief Initialize sockets
+     *
+     * This function should be called before attempting to instantiate a
+     * sakusen::comms::Socket or any subclass
+     * of same. On a Windows box it calls the
      * Winsock initialization routines; on boxes with BSD sockets it does
      * nothing ATM, but this is not guaranteed for future versions. It
      * Fatal()s on failure.

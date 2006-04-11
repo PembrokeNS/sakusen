@@ -10,6 +10,8 @@ using namespace sakusen;
 namespace tedomari {
 namespace ui {
 
+/** \brief Constructs and displays an Alert indicating that too few arguments
+ * have been given to a command */
 void tooFewArgs(
     const String& name,
     const list<String>& args,
@@ -24,6 +26,8 @@ void tooFewArgs(
   ui->alert(Alert(o.str()));
 }
 
+/** \brief Constructs and displays an Alert indicating that too many arguments
+ * have been given to a command */
 void tooManyArgs(const list<String>& args, int expected, UI* ui)
 {
   ostringstream o;
@@ -33,6 +37,8 @@ void tooManyArgs(const list<String>& args, int expected, UI* ui)
   ui->alert(Alert(o.str()));
 }
 
+/** \brief Constructs and displays an Alert indicating that the wrong number of
+ * arguments have been given to a command */
 void wrongNumberArgs(
     const String& name,
     const list<String>& args,
@@ -46,6 +52,15 @@ void wrongNumberArgs(
   ui->alert(Alert(o.str()));
 }
 
+/** \brief Execute a builtin command
+ *
+ * \param cmd Built-in command to execute.
+ * \param name Name of the command as seen by the user.
+ * \param args Arguments given to the command.
+ * \param ui The UI to which the command was given.
+ *
+ * \warning The \a args argument may be altered as a side effect of executing
+ * this function. */
 void executeBuiltinCommand(
     BuiltinCommand cmd,
     const String& name,

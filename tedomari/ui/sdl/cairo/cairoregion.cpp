@@ -1,24 +1,24 @@
-#include "sdlregion.h"
+#include "ui/sdl/cairo/cairoregion.h"
 
 using namespace tedomari::ui;
-using namespace tedomari::ui::sdl;
+using namespace tedomari::ui::sdl::cairo;
 
-void SDLRegion::setClip()
+void CairoRegion::setClip()
 {
   ui->setClipRect(x, y, getWidth(), getHeight());
 }
 
-void SDLRegion::unsetClip()
+void CairoRegion::unsetClip()
 {
   ui->resetClip();
 }
 
-void SDLRegion::fill(const Colour& c)
+void CairoRegion::fill(const Colour& c)
 {
   ui->fillRect(x, y, getWidth(), getHeight(), c);
 }
 
-void SDLRegion::fillRect(
+void CairoRegion::fillRect(
     double xoff,
     double yoff,
     double w,
@@ -29,7 +29,7 @@ void SDLRegion::fillRect(
   ui->fillRect(x+xoff, y+yoff, w, h, c);
 }
 
-void SDLRegion::fillPolygon(
+void CairoRegion::fillPolygon(
     const std::list< sakusen::Point<double> >& poly,
     const Colour& c
   )
@@ -37,7 +37,7 @@ void SDLRegion::fillPolygon(
   ui->fillPolygon(poly, c);
 }
 
-void SDLRegion::stroke(
+void CairoRegion::stroke(
     double x1,
     double y1,
     double x2,
@@ -48,7 +48,7 @@ void SDLRegion::stroke(
   ui->stroke(x+x1, y+y1, x+x2, y+y2, c);
 }
 
-void SDLRegion::drawRect(
+void CairoRegion::drawRect(
     double xoff,
     double yoff,
     double w,
@@ -59,7 +59,7 @@ void SDLRegion::drawRect(
   ui->drawRect(x+xoff, y+yoff, w, h, c);
 }
 
-void SDLRegion::drawText(
+void CairoRegion::drawText(
     double xoff,
     double yoff,
     const String& text,
@@ -69,8 +69,8 @@ void SDLRegion::drawText(
   ui->drawText(x+xoff, y+yoff, text, c);
 }
 
-void SDLRegion::drawText(double xoff, double yoff, const Layout* layout)
+void CairoRegion::drawText(double xoff, double yoff, const Layout* layout)
 {
-  ui->drawText(x+xoff, y+yoff, dynamic_cast<const SDLLayout*>(layout));
+  ui->drawText(x+xoff, y+yoff, dynamic_cast<const CairoLayout*>(layout));
 }
 

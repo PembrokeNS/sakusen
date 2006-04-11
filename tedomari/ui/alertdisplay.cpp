@@ -26,6 +26,12 @@ void AlertDisplay::replaceRegion(Region* region)
   layout->contextChanged();
 }
 
+/** \brief Adds a new Alert to the AlertDisplay
+ *
+ * \param alert Alert to add.
+ *
+ * If there are already 9 Alerts visible, then the oldest one will be removed
+ * to make space for the new one. */
 void AlertDisplay::add(const Alert& alert)
 {
   alerts[nextSlot++] = alert;

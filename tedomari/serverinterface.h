@@ -61,8 +61,6 @@ class ServerInterface {
 
     String universeName;
 
-    /** Do initial setup of settings for us on the server (e.g. tell our
-     * client application, etc.) */
     void initialSettingsSetup();
     void settingAlteration(const String& setting, const String& value);
   public:
@@ -72,46 +70,13 @@ class ServerInterface {
     inline sakusen::comms::ClientID getID() const { return id; }
     //@}
     
-    /** Try to get advertisement from server.  Returns true iff an error
-     * occurs */
     bool getAdvertisement(sakusen::comms::AdvertiseMessageData* advertisement);
-    /** Deal with all pending messages from server.
-     *
-     * \return Output that should be given to the user. */
     String flushIncoming();
-    /** \brief Try to join server.
-     *
-     * \return Empty string if there is no problem, otherwise an error message
-     * */
     String join();
-    /** \brief Try to leave server.
-     *
-     * \param sendMessage Whether to send a message to the server indicating
-     * that we are leaving.
-     * \return true iff an error occurs */
     bool leave(bool sendMessage);
-    /** \brief Send the given message to the server
-     *
-     * \param message Message to send
-     * \return true iff an error occurs */
     bool send(const sakusen::comms::MessageData& message);
-    /** \brief Request a setting from the server (asynchronously).
-     *
-     * \param setting Address of the setting to request
-     * \return true iff an error occurs */
     bool getSetting(const String& setting);
-    /** \brief Requests a setting change on the server (asynchronously).
-     *
-     * \param setting Address of the setting to change
-     * \param value Value to assign to the setting
-     * \return true iff an error occurs */
     bool setSetting(const String& setting, const String& value);
-    /** \brief Requests a setting change  our client settings tree.
-     * 
-     * \param setting Address of the setting to change relative to the client
-     * branch
-     * \param value Value to assign to the setting
-     * \return true iff an error occurs */
     bool setClientSetting(const String& setting, const String& value);
 };
 

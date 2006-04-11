@@ -28,7 +28,8 @@ class ofstream
 
 template<typename T>
 class list {
-  T item;
+  public:
+    T item;
 };
 
 }

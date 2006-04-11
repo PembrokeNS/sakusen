@@ -10,6 +10,7 @@ namespace ui {
 
 class UI;
 
+/** \brief Enumeration of commands built in the the GUI */
 enum BuiltinCommand {
   builtinCommand_none,
   /* command-related commands */
@@ -30,9 +31,6 @@ enum BuiltinCommand {
   builtinCommand_move
 };
 
-/* \brief Execute given buitin command with given arguments
- *
- * \warning Modifies its argument args */
 void executeBuiltinCommand(
     BuiltinCommand,
     const String& name,

@@ -15,6 +15,9 @@ class UI;
  * from a TextBox class, and the code be divided appropriately */
 class CommandEntryBox : public Control {
   public:
+    /** \brief Standard constructor
+     *
+     * The arguments are the same as those for Control */
     CommandEntryBox(uint16 x, uint16 y, DockStyle ds, Region* region) :
     Control(x, y, ds, region) {}
   private:
@@ -23,6 +26,7 @@ class CommandEntryBox : public Control {
   protected:
     void paint();
   public:
+    /** \brief Set whether the command entry box is visible */
     inline void setVisible(bool v) { visible = v; }
     void sendChar(uint16 c, UI* ui);
 };

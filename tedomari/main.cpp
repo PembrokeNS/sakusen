@@ -18,8 +18,8 @@
 
 #include "ui/ui.h"
 
-#ifndef DISABLE_SDL
-#include "ui/sdl/sdlui.h"
+#ifndef DISABLE_CAIRO
+#include "ui/sdl/cairo/cairoui.h"
 #endif
 
 #ifdef WIN32
@@ -45,8 +45,11 @@ using namespace tedomari;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 
-#ifndef DISABLE_SDL
+#ifndef DIABLE_SDL
 using namespace tedomari::ui::sdl;
+#endif
+#ifndef DISABLE_CAIRO
+using namespace tedomari::ui::sdl::cairo;
 #endif
 
 namespace tedomari {
@@ -541,8 +544,8 @@ UI* newUI(const Options& o, const String& uiConfFilename, Game* game)
   UI* ui = NULL;
   /** \todo Support alternate UIs (OpenGL, DirectX) */
   ifstream uiConf(uiConfFilename.c_str());
-#ifndef DISABLE_SDL
-  ui = new SDLUI(o.sdlOptions, uiConf, game);
+#ifndef DISABLE_CAIRO
+  ui = new CairoUI(o.sdlOptions, uiConf, game);
 #else
   Fatal("No UI enabled at compile time");
 #endif

@@ -45,6 +45,10 @@ ServerInterface::ServerInterface(
   timeout.tv_usec = 0;
 }
 
+/** \brief Destructor
+ *
+ * The destructor sends a leave message to the server if appropriate, and
+ * closes associated sockets.  Further behaviour is not excluded. */
 ServerInterface::~ServerInterface()
 {
   if (joined) {
@@ -59,6 +63,8 @@ ServerInterface::~ServerInterface()
   outgoingSocket = NULL;
 }
 
+/** Do initial setup of settings for us on the server (e.g. tell our
+ * client application, etc.) */
 void ServerInterface::initialSettingsSetup()
 {
   /** \todo deal with return values */
@@ -77,6 +83,7 @@ void ServerInterface::settingAlteration(
   )
 {
   if (setting == ":game:universe:name") {
+    /* Store the universe name for use when the hash arrives */
     universeName = value;
   }
   else if (setting == ":game:universe:hash") {
@@ -85,6 +92,9 @@ void ServerInterface::settingAlteration(
   }
 }
 
+/** \brief Try to get advertisement from server.
+ *
+ * \return true iff an error occurs */
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
 {
   Socket* tempSocket;
@@ -128,6 +138,9 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   return false;
 }
 
+/** \brief Deal with all pending messages from server.
+ *
+ * \return Output that should be given to the user. */
 String ServerInterface::flushIncoming()
 {
   if (!joined) {
@@ -191,6 +204,10 @@ String ServerInterface::flushIncoming()
   return out.str();
 }
 
+/** \brief Try to join server.
+ *
+ * \return Empty string if there is no problem, otherwise an error message
+ * */
 String ServerInterface::join()
 {
   if (joined) {
@@ -273,6 +290,11 @@ String ServerInterface::join()
   }
 }
 
+/** \brief Try to leave server.
+ *
+ * \param sendMessage Whether to send a message to the server indicating
+ * that we are leaving.
+ * \return true iff an error occurs */
 bool ServerInterface::leave(bool sendMessage)
 {
   if (!joined) {
@@ -299,38 +321,55 @@ bool ServerInterface::leave(bool sendMessage)
   return false;
 }
 
+/** \brief Send the given message to the server at once
+ *
+ * \param message Message to send
+ * \return true iff an error occurs */
 bool ServerInterface::send(const MessageData& message)
 {
   outgoingSocket->send(message);
   return false;
 }
 
+/** \brief Request a setting from the server (asynchronously).
+ *
+ * \param setting Address of the setting to request
+ * \return true iff an error occurs */
 bool ServerInterface::getSetting(const String& setting)
 {
   outgoingSocket->send(GetSettingMessageData(setting));
   return false;
 }
 
+/** \brief Requests a setting change on the server (asynchronously).
+ *
+ * \param setting Address of the setting to change
+ * \param value Value to assign to the setting
+ * \return true iff an error occurs */
 bool ServerInterface::setSetting(const String& setting, const String& value)
 {
   outgoingSocket->send(ChangeSettingMessageData(setting, value));
   return false;
 }
 
+/** \brief Requests a setting change  our client settings tree.
+ * 
+ * \param setting Address of the setting to change relative to the client
+ * branch
+ * \param value Value to assign to the setting
+ * \return true iff an error occurs */
 bool ServerInterface::setClientSetting(
-    const String& localSetting,
+    const String& setting,
     const String& value
   )
 {
-  ostringstream settingStream;
-  settingStream << "clients:" << clientID_toString(id);
-  
-  if (localSetting.length() != 0 && localSetting[0] != ':') {
-    settingStream << SETTINGS_DELIMITER;
+  String delim;
+  if (setting.length() != 0 && setting[0] != ':') {
+    delim = SETTINGS_DELIMITER;
   }
-
-  settingStream << localSetting;
-
-  return setSetting(settingStream.str(), value);
+  
+  return setSetting(
+      "clients:" + clientID_toString(id) + delim + setting, value
+    );
 }
 

@@ -14,9 +14,9 @@ namespace sakusen {
  * appropriate classes are sakusen::server::CompleteMap and
  * sakusen::client::PartialMap.
  *
- * \warning Windows programmers note: This class should *NOT* have a
- * LIBSAKUSEN_API indicator.  The import/export status must be determined at
- * instantiation time (as is done in libsakusen-clien and -server
+ * \warning Windows programmers note: This class should <b>not</b> have a
+ * LIBSAKUSEN_API attribute.  The import/export status must be determined at
+ * instantiation time (as is done in libsakusen-client and -server)
  */
 template<typename MapType>
 class PlaneMap : public MapType {

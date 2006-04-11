@@ -63,7 +63,7 @@ class IPSocket : public Socket {
     void close();
     void setNonBlocking(bool val);
     String getAddress() const;
-    /* \brief Returns the first section of the sakusen-style address for this
+    /** \brief Returns the first section of the sakusen-style address for this
      * socket (e.g. "udp" or "tcp") */
     virtual String getType() const = 0;
 };

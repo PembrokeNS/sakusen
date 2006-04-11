@@ -1,24 +1,25 @@
-#ifndef UI_SDL__SDLLAYOUT_H
-#define UI_SDL__SDLLAYOUT_H
+#ifndef UI_SDL_CAIRO__CAIROLAYOUT_H
+#define UI_SDL_CAIRO__CAIROLAYOUT_H
 
 #include "ui/layout.h"
-#include "ui/sdl/sdlui.h"
+#include "ui/sdl/cairo/cairoui.h"
 
 typedef struct _PangoLayout PangoLayout;
 
 namespace tedomari {
 namespace ui {
 namespace sdl {
+namespace cairo {
 
-class SDLLayout : public Layout {
+class CairoLayout : public Layout {
   private:
-    SDLLayout();
-    SDLLayout(const SDLLayout&);
+    CairoLayout();
+    CairoLayout(const CairoLayout&);
   public:
-    SDLLayout(SDLUI*);
-    ~SDLLayout();
+    CairoLayout(CairoUI*);
+    ~CairoLayout();
   private:
-    SDLUI* ui;
+    CairoUI* ui;
     PangoLayout* layout;
   public:
     void setText(const String& t);
@@ -28,7 +29,7 @@ class SDLLayout : public Layout {
     void contextChanged();
 };
 
-}}}
+}}}}
 
-#endif // UI_SDL__SDLLAYOUT_H
+#endif // UI_SDL_CAIRO__CAIROLAYOUT_H
 

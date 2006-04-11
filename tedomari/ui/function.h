@@ -10,6 +10,10 @@ namespace ui {
 
 class UI;
 
+/** \brief Represents a user-defined function
+ *
+ * This class represents a sequence of commands gathered in a function by a
+ * user. */
 class Function {
   public:
     Function() : name(), numArgs(0), body() {}
