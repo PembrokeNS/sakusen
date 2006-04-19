@@ -47,6 +47,7 @@ Puffin
 Quail
 Raven
 Rook
+Shrike
 Skylark
 Sparrow
 Sparrowhawk

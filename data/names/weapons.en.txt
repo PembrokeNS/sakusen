@@ -6,6 +6,8 @@ Bagshot
 Bat
 Battleaxe
 Bertha
+Boomerang
+Broadside
 Broadsword
 Caltrop
 Carbine
@@ -31,6 +33,7 @@ Harpoon
 Helmet
 Hilt
 Howitzer
+Ironside
 Javelin
 Katana
 Kusarigama

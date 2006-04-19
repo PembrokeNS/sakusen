@@ -1,5 +1,7 @@
+Adar
 Adjutant
 Agha
+Bugler
 Cavalier
 Centurion
 Chieftain
@@ -16,6 +18,7 @@ Harlequin
 Imperator
 Legate
 Magistrate
+Minstrel
 Monarch
 Paladin
 Pasha
@@ -31,6 +34,8 @@ Senator
 Sepoy
 Shogun
 Sirdar
+Sovereign
+Standard-bearer
 Subaltern
 Sultan
 Templar
@@ -38,6 +43,7 @@ Tetrarch
 Tribune
 Triumvir
 Trooper
+Trumpeter
 Tsar
 Viceroy
 Viscount

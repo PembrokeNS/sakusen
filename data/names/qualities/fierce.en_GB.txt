@@ -13,7 +13,9 @@ Bruiser
 Bustler
 Challenger
 Champion
+Charger
 Combatant
+Conqueror
 Courageous
 Dauntless
 Demolisher
@@ -46,6 +48,7 @@ Powerful
 Punitive
 Relentless
 Revenge
+Ruffian
 Savage
 Smiter
 Spiteful

@@ -3,6 +3,7 @@ Artisan
 Astute
 Crafty
 Dextrous
+Exploit
 Guile
 Ingenious
 Intelligent

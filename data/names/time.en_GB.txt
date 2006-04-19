@@ -16,6 +16,7 @@ Countdown
 Duration
 Elapse
 Eternity
+Eventide
 Expiry
 Ephemerid
 Epoch
