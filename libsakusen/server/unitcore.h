@@ -9,6 +9,10 @@ namespace server {
 
 class LayeredUnit;
 
+/** \brief The lowest UnitLayer in a LayeredUnit.
+ *
+ * See \ref Units for more details on how the various Unit classes fit together
+ * */
 class UnitCore : public UnitLayer, private UnitStatus {
   private:
     UnitCore();
@@ -59,12 +63,14 @@ class UnitCore : public UnitLayer, private UnitStatus {
       return getTypePtr()->getDynamicData().getVision();
     }
 
-    /* game mechanics */
+    /** \name Game mechanics */
+    //@{
     void kill(HitPoints excessDamage);
     void damage(HitPoints amount);
     void repair(HitPoints amount, bool superhealth);
     void changeType(const UnitTypeID& to, hitPointAlteration hpAlteration);
     void changeOwner(const PlayerID to, enum changeOwnerReason why);
+    //@}
     
     /* callbacks */
     virtual void onCreate(void) {}

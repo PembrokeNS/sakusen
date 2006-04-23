@@ -16,6 +16,9 @@ std::ostream& sakusen::operator<<(std::ostream& output, UpdateType update)
     CASE(updateType_orderQueued)
     CASE(updateType_orderCompleted)
     CASE(updateType_orderAccepted)
+    CASE(updateType_sensorReturnsRemoved)
+    CASE(updateType_sensorReturnsAdded)
+    CASE(updateType_sensorReturnsAltered)
     #undef CASE
     default:
       output << "updateType_" << static_cast<uint32>(update);

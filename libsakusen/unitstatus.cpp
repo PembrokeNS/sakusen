@@ -167,8 +167,8 @@ void UnitStatus::store(OArchive& out, const Universe* universe) const
   /* TODO: weapons */
   out.insert<Order, orderCondition_max>(orders);
   currentOrder.store(out);
-  out << uint8(linearTarget) << targetPosition <<
-    targetVelocity << uint8(rotationalTarget);
+  (out.insertEnum(linearTarget) << targetPosition <<
+    targetVelocity).insertEnum(rotationalTarget);
   targetOrientation.store(out);
   out << targetAngularVelocity;
 }

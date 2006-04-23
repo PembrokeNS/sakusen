@@ -1,5 +1,7 @@
 #include "universe.h"
 
+#include "oarchive-methods.h"
+
 using namespace std;
 
 using namespace sakusen;

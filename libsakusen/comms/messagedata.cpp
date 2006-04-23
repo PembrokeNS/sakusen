@@ -1,7 +1,7 @@
 #include "messagedata.h"
 
 #include "libsakusen-global.h"
-
+#include "oarchive-methods.h"
 #include "world.h"
 
 using namespace std;
@@ -344,14 +344,12 @@ GameStartMessageData::GameStartMessageData(
 GameStartMessageData::GameStartMessageData(IArchive& in) :
   MessageData()
 {
-  uint8 topologyInt;
-  in >> topologyInt >> topRight >> bottomLeft >> gravity;
-  topology = static_cast<Topology>(topologyInt);
+  in.extractEnum(topology) >> topRight >> bottomLeft >> gravity;
 }
 
 void GameStartMessageData::fillArchive()
 {
-  archive << uint8(topology) << topRight << bottomLeft << gravity;
+  archive.insertEnum(topology) << topRight << bottomLeft << gravity;
 }
 
 MessageType GameStartMessageData::getType() const

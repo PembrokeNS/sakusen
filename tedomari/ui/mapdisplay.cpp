@@ -9,6 +9,22 @@ using namespace sakusen::client;
 
 using namespace tedomari::ui;
 
+void MapDisplay::drawUnit(const ICompleteUnit* unit, const Colour& colour)
+{
+  list< Point<double> > corners;
+
+  Point<uint32> corner = unit->getITypeData()->getSize();
+  const UnitStatus& status = unit->getIStatus();
+  corners.push_back(dexToPixel(status.localToGlobal(corner)));
+  corner.x *= -1;
+  corners.push_back(dexToPixel(status.localToGlobal(corner)));
+  corner.y *= -1;
+  corners.push_back(dexToPixel(status.localToGlobal(corner)));
+  corner.x *= -1;
+  corners.push_back(dexToPixel(status.localToGlobal(corner)));
+  getRegion()->fillPolygon(corners, colour);
+}
+
 void MapDisplay::paint()
 {
   Region* r = getRegion();
@@ -28,28 +44,29 @@ void MapDisplay::paint()
     Rectangle<sint32> displayRect = pixelToDex(
         Rectangle<double>(0, 0, getWidth(), getHeight())
       );
+    
     list<UpdatedUnit*> unitsToDraw =
       sakusen::client::world->getUnitsIntersecting(displayRect);
     for (list<UpdatedUnit*>::iterator unit = unitsToDraw.begin();
         unit != unitsToDraw.end(); ++unit) {
-      list< Point<double> > corners;
-
-      Point<uint32> corner = (*unit)->getTypeData().getSize();
-      const UnitStatus& status = (*unit)->getStatus();
-      corners.push_back(dexToPixel(status.localToGlobal(corner)));
-      corner.x *= -1;
-      corners.push_back(dexToPixel(status.localToGlobal(corner)));
-      corner.y *= -1;
-      corners.push_back(dexToPixel(status.localToGlobal(corner)));
-      corner.x *= -1;
-      corners.push_back(dexToPixel(status.localToGlobal(corner)));
       bool selected = ui->getSelection().count((*unit)->getId());
       Colour colour = ( selected ? Colour::magenta : Colour::blue );
-      r->fillPolygon(corners, colour);
+      drawUnit(*unit, colour);
+    }
+    
+    list<UpdatedSensorReturns*> returnsToDraw =
+      sakusen::client::world->getSensorReturnsIntersecting(displayRect);
+    for (list<UpdatedSensorReturns*>::iterator retrn = returnsToDraw.begin();
+        retrn != returnsToDraw.end(); ++retrn) {
+      if ((*retrn)->getPerception() & perception_unit) {
+        drawUnit((*retrn)->getUnit(), Colour::yellow);
+      } else {
+        Fatal("Not implemented");
+      }
     }
     
     if (dragging) {
-      Debug("Drawing the selection rectangle");
+      /*Debug("Drawing the selection rectangle");*/
       /* Draw the selection rectangle as it stands */
       Rectangle<double> selection(dexToPixel(dragStart), mousePos);
       r->drawRect(selection, Colour::grey(0.5));

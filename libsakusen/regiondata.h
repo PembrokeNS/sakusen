@@ -3,6 +3,7 @@
 
 #include "regiontype.h"
 #include "point.h"
+#include "rectangle.h"
 #include "oarchive.h"
 
 namespace sakusen {
@@ -20,6 +21,8 @@ class LIBSAKUSEN_API RegionData {
   public:
     virtual bool contains(const Point<T>& point) const = 0;
     virtual Point<T> truncateToFit(const Point<T>&) const = 0;
+    virtual Point<T> getBestPosition() const = 0;
+    virtual Rectangle<T> getBoundingRectangle() const = 0;
     
     virtual RegionType getType() const = 0;
     virtual RegionData* newCopy() const = 0;

@@ -37,7 +37,7 @@ Order& Order::operator=(const Order& copy)
 
 void Order::store(OArchive& out) const
 {
-  out << uint8(type);
+  out.insertEnum(type);
   if (data != NULL) {
     data->store(out);
   }

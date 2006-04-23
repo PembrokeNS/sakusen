@@ -1,5 +1,6 @@
 #include "rectangle.h"
 #include "icompleteunit.h"
+#include "isensorreturns.h"
 
 namespace sakusen {
 
@@ -16,6 +17,15 @@ bool Rectangle<sint32>::fastIntersects(const ICompleteUnit* unit) const
     return true;
   }
   return intersects(unit->getBoundingRectangle());
+}
+
+template<>
+bool Rectangle<sint32>::fastIntersects(const ISensorReturns* returns) const
+{
+  if (contains(returns->getBestPosition())) {
+    return true;
+  }
+  return intersects(returns->getBoundingRectangle());
 }
 
 }

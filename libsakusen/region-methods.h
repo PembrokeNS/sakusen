@@ -21,13 +21,25 @@ inline Point<T> Region<T>::truncateToFit(const Point<T>& p) const
   return data->truncateToFit(p);
 }
 
+template<typename T>
+inline Point<T> Region<T>::getBestPosition() const
+{
+  return data->getBestPosition();
+}
+
+template<typename T>
+inline Rectangle<T> Region<T>::getBoundingRectangle() const
+{
+  return data->getBoundingRectangle();
+}
+
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS
 
 template<typename T>
 void Region<T>::store(OArchive& archive) const
 {
   archive.magicValue<1>("R");
-  archive << uint8(data->getType());
+  archive.insertEnum(data->getType());
   data->store(archive);
 }
 

@@ -70,7 +70,7 @@ Server reported that value of 'game:universe:name' was:
 The first three commands returned lists of child nodes, and the last the value
 of the node "game:universe:name" (which was the null string, in this case).
 Note that the leading ':' has been omitted from node addresses when not
-referring to the root node ':'.
+referring to the root node ':', but this is not necessary.
 
 To start a game, you have to actually set some settings.  We might, for
 example, try to set which universe we wish to play in, like this:
@@ -122,6 +122,13 @@ universe
 Server reported that value of ':game:universe:hash' was:
 812ecb88359476b9c163cea45a720cfd1226e824081dd1d3817201a76ab26a2c
 \endverbatim
+
+If you get a message saying that the universe was not found, then run
+libsakusen-resources-test.  This will create this test universe for you.
+Similarly, if you get a message indicating that there was an error loading the
+universe, then your version is probably out of date (the file format changes
+quite frequently) &mdash; this problem should also be solved by running
+libsakusen-resources-test.
 
 Note that the server auto-completed the short name "u" to the full name
 "universe", since that was the only universe with that prefix.  Also, the

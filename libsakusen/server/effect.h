@@ -18,12 +18,14 @@ class Effect;
 namespace sakusen {
 namespace server {
 
+/** \brief Represents an alteration to some region of space in the game.
+ *
+ * \todo Some kind of visibility modification scheme. */
 class Effect {
   private:
     PlayerID owner;
     Region<sint32> region;
     Visibility visibility;
-    /* TODO: some kind of visibility modification scheme goes here */
 
     Effect();
   protected:

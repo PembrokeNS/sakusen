@@ -5,6 +5,7 @@
 #include "oarchive.h"
 #include "iarchive.h"
 #include "regiondata.h"
+#include "rectangle.h"
 
 namespace sakusen {
 
@@ -34,6 +35,8 @@ class LIBSAKUSEN_API Region {
     inline bool contains(const Point<T>& point) const;
     inline bool contains(const IUnitStatus* unit) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
+    inline Point<T> getBestPosition() const;
+    inline Rectangle<T> getBoundingRectangle() const;
     
     void store(OArchive&) const;
     static Region<T> load(IArchive&);

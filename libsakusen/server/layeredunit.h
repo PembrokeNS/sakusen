@@ -9,6 +9,7 @@
 #include "icompleteunit.h"
 #include "unitlayer.h"
 #include "unittemplate.h"
+#include "dynamicsensorreturns.h"
 
 namespace sakusen {
 namespace server {
@@ -62,15 +63,18 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
   private:
     PlayerID owner;
     uint32 unitId;
-    UnitLayer* topLayer;
+    UnitLayer* topLayer; /* owned by this */
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
-     * Not owned by this */
+     * Not owned by this (except insofar as it may be equal to topLayer) */
     UnitStatus* unit;
+    /** \brief Sensor returns from this unit, indexed by the player doing the
+     * sensing. */
+    __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef> sensorReturns;
 
     /** \brief Indicates that information must be transmitted to client
      *
-     * This bool is true iff vhanges have occured to the unit which have yet to
+     * This bool is true iff changes have occured to the unit which have yet to
      * be transmitted to the clients */
     bool dirty;
 
@@ -83,6 +87,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline void setId(uint32 id) { unitId = id; }
     inline const IUnitStatus* getIStatus(void) const { return unit; }
     inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
+    inline __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
+      getSensorReturns(void) { return sensorReturns; }
+    inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
+      getSensorReturns(void) const { return sensorReturns; }
 
     inline void setDirty(void) { dirty = true; }
     void clearDirty(void);

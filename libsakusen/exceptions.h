@@ -79,6 +79,17 @@ class WrongMagicDeserializationExn :
     virtual ~WrongMagicDeserializationExn() throw() {}
 };
 
+class EnumDeserializationExn :
+    public DeserializationExn {
+  public:
+    EnumDeserializationExn(const String& name, int value) :
+      DeserializationExn(
+          "enumeration value '"+name+"' out of range (value was "+
+          numToString(value) + ")"
+        ) {}
+    virtual ~EnumDeserializationExn() throw() {}
+};
+
 }
 
 #endif // LIBSAKUSEN__EXCEPTIONS_H

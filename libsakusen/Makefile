@@ -1,4 +1,4 @@
-SUBDIRS = comms resources server client
+SUBDIRS = server client comms resources
 BIN = libsakusen.la
 LIBS = -lstdc++ -lm -lmhash
 THIS_CXXFLAGS = -Wall -W -Wold-style-cast -Wno-format -Woverloaded-virtual -Werror -O0 -g3

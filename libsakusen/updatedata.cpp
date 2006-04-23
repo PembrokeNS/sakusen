@@ -20,7 +20,7 @@ UnitRemovedUpdateData::UnitRemovedUpdateData(IArchive& in) :
 
 void UnitRemovedUpdateData::store(OArchive& out) const
 {
-  out << id << uint8(reason);
+  (out << id).insertEnum(reason);
 }
 
 UnitAddedUpdateData::UnitAddedUpdateData(
@@ -45,7 +45,7 @@ UnitAddedUpdateData::UnitAddedUpdateData(
 void UnitAddedUpdateData::store(OArchive& out) const
 {
   unit.store(out);
-  out << uint8(reason);
+  out.insertEnum(reason);
 }
 
 UnitAlteredUpdateData::UnitAlteredUpdateData(const ICompleteUnit* u) :
@@ -84,7 +84,7 @@ OrderAcceptedUpdateData::OrderAcceptedUpdateData(IArchive& in)
 
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
-  out << unitId << uint8(condition);
+  (out << unitId).insertEnum(condition);
 }
 
 OrderCompletedUpdateData::OrderCompletedUpdateData(
@@ -104,7 +104,7 @@ OrderCompletedUpdateData::OrderCompletedUpdateData(IArchive& in)
 
 void OrderCompletedUpdateData::store(OArchive& out) const
 {
-  out << unitId << uint8(condition);
+  (out << unitId).insertEnum(condition);
 }
 
 OrderQueuedUpdateData::OrderQueuedUpdateData(
@@ -129,6 +129,69 @@ void OrderQueuedUpdateData::store(OArchive& out) const
 {
   out << unitId;
   order.store(out);
-  out << uint8(condition);
+  out.insertEnum(condition);
+}
+
+SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(
+    SensorReturnsID i
+  ) :
+  UpdateData(),
+  id(i)
+{
+}
+
+SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(IArchive& in) :
+  UpdateData()
+{
+  in >> id;
+}
+
+void SensorReturnsRemovedUpdateData::store(OArchive& out) const
+{
+  out << id;
+}
+
+SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
+    const ISensorReturns* r
+  ) :
+  UpdateData(),
+  returns(r)
+{
+}
+
+SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
+    IArchive& in,
+    const Universe* universe
+  ) :
+  UpdateData(),
+  returns(SensorReturns::load(in, universe))
+{
+}
+
+void SensorReturnsAddedUpdateData::store(OArchive& out) const
+{
+  returns.store(out);
+}
+
+SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
+    const ISensorReturns* r
+  ) :
+  UpdateData(),
+  returns(r)
+{
+}
+
+SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
+    IArchive& in,
+    const Universe* universe
+  ) :
+  UpdateData(),
+  returns(SensorReturns::load(in, universe))
+{
+}
+
+void SensorReturnsAlteredUpdateData::store(OArchive& out) const
+{
+  returns.store(out);
 }
 

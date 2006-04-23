@@ -67,6 +67,12 @@ Update Update::load(IArchive& in, const Universe* universe)
       return Update(new OrderCompletedUpdateData(in));
     case updateType_orderAccepted:
       return Update(new OrderAcceptedUpdateData(in));
+    case updateType_sensorReturnsRemoved:
+      return Update(new SensorReturnsRemovedUpdateData(in));
+    case updateType_sensorReturnsAdded:
+      return Update(new SensorReturnsAddedUpdateData(in, universe));
+    case updateType_sensorReturnsAltered:
+      return Update(new SensorReturnsAlteredUpdateData(in, universe));
     default:
       Debug("Unknown UpdateType " << type);
       return Update();

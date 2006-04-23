@@ -72,7 +72,8 @@
   #define FILE_SEP "/"
   #define FILE_SEPC '/'
 
-  /*Define Types the gcc way. */
+  /* Define types the gcc way. */
+  #define __STDC_LIMIT_MACROS /* defined so that UINT32_MAX gets defined */
   #include <stdint.h>
   typedef uint8_t  uint8;
   typedef int8_t   sint8;

@@ -14,7 +14,7 @@ OrderMessage::OrderMessage(
 
 void OrderMessage::store(OArchive& out) const
 {
-  out << orderee << uint8(condition);
+  (out << orderee).insertEnum(condition);
   order.store(out);
 }
 

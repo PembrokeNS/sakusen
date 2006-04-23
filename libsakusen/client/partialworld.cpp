@@ -43,13 +43,34 @@ list<UpdatedUnit*> PartialWorld::getUnitsIntersecting(
     const Rectangle<sint32>& rect
   )
 {
-  /* TODO: make this fast by storing data sensibly */
+  /** \todo make this fast by storing data sensibly */
   list<UpdatedUnit*> result;
 
   for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
     if (rect.fastIntersects(unit->second)) {
       result.push_back(unit->second);
+    }
+  }
+
+  return result;
+}
+
+/** \brief Return a list of sensor returns intersecting the given rectangle
+ *
+ * \warning For speed, this may return a few extra sensor returns that do not
+ * in fact intersect the rectangle */
+list<UpdatedSensorReturns*> PartialWorld::getSensorReturnsIntersecting(
+    const Rectangle<sint32>& rect
+  )
+{
+  /** \todo make this fast by storing data sensibly */
+  list<UpdatedSensorReturns*> result;
+
+  for (hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
+      sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
+    if (rect.fastIntersects(returns->second)) {
+      result.push_back(returns->second);
     }
   }
 
@@ -130,6 +151,44 @@ void PartialWorld::applyUpdate(const Update& update)
         unit->second->orderCompleted(data);
       }
       break;
+    case updateType_sensorReturnsAdded:
+      {
+        SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
+        if (sensorReturns.count(data.getSensorReturns().getId())) {
+          Debug("adding sensor returns of existing id");
+          delete sensorReturns[data.getSensorReturns().getId()];
+        }
+        sensorReturns[data.getSensorReturns().getId()] =
+          new UpdatedSensorReturns(data.getSensorReturns());
+      }
+      break;
+    case updateType_sensorReturnsRemoved:
+      {
+        SensorReturnsRemovedUpdateData data =
+          update.getSensorReturnsRemovedData();
+        __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
+          sensorReturns.find(data.getId());
+        if (returns == sensorReturns.end()) {
+          Debug("tried to remove non-existant unit");
+          break;
+        }
+        delete returns->second;
+        sensorReturns.erase(returns);
+      }
+      break;
+    case updateType_sensorReturnsAltered:
+      {
+        SensorReturnsAlteredUpdateData data =
+          update.getSensorReturnsAlteredData();
+        __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
+          sensorReturns.find(data.getSensorReturns().getId());
+        if (returns == sensorReturns.end()) {
+          Debug("tried to alter non-existant unit");
+          break;
+        }
+        returns->second->alter(data.getSensorReturns());
+      }
+      break;
     default:
       Fatal("unexpected UpdateType: " << update.getType());
   }
@@ -145,3 +204,4 @@ void PartialWorld::endTick()
 }
 
 PartialWorld* sakusen::client::world = NULL;
+

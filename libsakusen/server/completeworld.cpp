@@ -7,6 +7,9 @@
 #include <list>
 #include <vector>
 
+using namespace std;
+using namespace __gnu_cxx;
+
 namespace sakusen{
 namespace server{
 
@@ -155,8 +158,12 @@ void CompleteWorld::incrementGameState(void)
      * again, all in the course of one game cycle, not to mention
      * the fact that dying units also cause things, etc. */
   
-  /* TODO: create the appropriate sensor returns and send them to clients,
+  /* create the appropriate sensor returns and send them to clients,
    * as well as informing them of the removal of old ones */
+  for (vector<Player>::iterator player = players.begin();
+      player != players.end(); ++player) {
+    player->checkSensorReturns();
+  }
   
   /* TODO: send to clients:
    * - newly explored/altered portions of the map */

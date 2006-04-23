@@ -55,6 +55,8 @@ class MapDisplay : public Control {
     inline sakusen::Point<sint32> pixelToDex(
         const sakusen::Point<double>&
       ) const;
+
+    void drawUnit(const sakusen::ICompleteUnit* unit, const Colour&);
   protected:
     void paint();
   public:

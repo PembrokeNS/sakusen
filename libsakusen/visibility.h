@@ -5,6 +5,7 @@
 #include "angle.h"
 #include "iarchive.h"
 #include "oarchive.h"
+#include "eachsensorreturn.h"
 
 namespace sakusen {
 
@@ -40,24 +41,25 @@ namespace sakusen {
 /** \brief describes a type of sensor
  * 
  * This enumeration holds a type of sensor. It is expected to be used where a
- * sensor has to be described, e.g. in a ::SensorReturn to describe by what
+ * sensor has to be described, e.g. in a SensorReturn to describe by what
  * sensor an object was detected.
  */
-enum sensorType {
+enum SensorType {
   optical,
   infraRed,
   radarPassive,
   radarActive,
   sonarPassive,
   sonarActive,
-  seismar
+  seismar,
+  sensorType_max
 };
 
 /** \brief describes an object's visibility to each type of sensor 
  *
- * This class is just a collection of uint8's, each describing how visible the
+ * This class is just a collection of sint8's, each describing how visible the
  * appropriate object is to a type of sensor. For two objects A and B, A's
- * ::Sensors, B's ::Visiblity, the distance between A and B, the topography of
+ * Sensors, B's Visiblity, the distance between A and B, the topography of
  * the area and the local atmospheric conditions all contribute to how reliably
  * (if at all) A can detect B.
  *
@@ -73,7 +75,7 @@ enum sensorType {
  */
 class LIBSAKUSEN_API Visibility {
   public:
-    /** default constructor -- zeroes all values */
+    /** default constructor &mdash; zeroes all values */
     Visibility();
     /** constructs by extracting data from archive */
     Visibility(IArchive&);
@@ -83,13 +85,13 @@ class LIBSAKUSEN_API Visibility {
      * future versions.
      */
     ~Visibility() {}
-    uint8 optical;
-    uint8 infraRed;
-    uint8 radar;
-    uint8 passiveRadar;
-    uint8 sonar;
-    uint8 passiveSonar;
-    uint8 seismar;
+    sint8 optical;
+    sint8 infraRed;
+    sint8 radar;
+    sint8 passiveRadar;
+    sint8 sonar;
+    sint8 passiveSonar;
+    sint8 seismar;
     void store(OArchive& archive) const {
       archive << optical << infraRed << radar << passiveRadar << sonar <<
         passiveSonar << seismar;
@@ -112,6 +114,15 @@ struct LIBSAKUSEN_API SensorCapability {
   uint32 range; /**< corresponds to distances in the world */
   Angle falloff; /**< describes the rate of falloff from looking straight
                    ahead */
+
+  void updateReturn(
+      SensorReturn& retrn,
+      SensorType type,
+      bool* changed,
+      Perception* maxPerception,
+      uint32* bestRadius
+    ) const;
+  
   inline void store(OArchive& archive) const {
     archive << capable << range << falloff;
   }
@@ -119,7 +130,7 @@ struct LIBSAKUSEN_API SensorCapability {
 
 /** \brief Describes an object's overall sensor capabilities.
  *
- * This struct contains a ::SensorCapability for each sensor type, thus contains
+ * This struct contains a SensorCapability for each sensor type, thus contains
  * all the information related to any one object's sensors.
  */
 struct  LIBSAKUSEN_API Sensors {
@@ -149,6 +160,13 @@ struct  LIBSAKUSEN_API Sensors {
   struct SensorCapability radarActive;
   struct SensorCapability sonarPassive;
   struct SensorCapability sonarActive;
+
+  void updateReturns(
+      EachSensorReturn& returns,
+      bool* changed,
+      Perception* maxPerception,
+      uint32* bestRadius
+    ) const;
   
   void store(OArchive& archive) const {
     optical.store(archive);
@@ -164,3 +182,4 @@ struct  LIBSAKUSEN_API Sensors {
 }
 
 #endif
+

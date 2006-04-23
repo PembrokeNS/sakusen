@@ -34,6 +34,7 @@ LayeredUnit::LayeredUnit(
   owner(0),
   topLayer(new UnitCore(this, t.getStatus())),
   unit(topLayer->getCore()),
+  sensorReturns(10),
   dirty(false)
 {
 }
@@ -49,6 +50,7 @@ LayeredUnit::LayeredUnit(
         this, startType, startPosition, startOrientation, startVelocity
       )),
   unit(topLayer->getCore()),
+  sensorReturns(10),
   dirty(false)
 {
 }
@@ -242,10 +244,6 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
           unit->currentOrder.getOrderType() << "'");
       break;
   }
-  
-  /* TODO: update player's worldview based on what this unit senses */
-  /* TODO: update *other* players' worldviews (adding SensorReturn for this
-   * unit) (unless this is done in World::incrementGameState) */
 }
 
 void LayeredUnit::enqueueOrder(

@@ -1,6 +1,10 @@
 #include "player.h"
 #include "updatedata.h"
 #include "layeredunit.h"
+#include "completeworld.h"
+
+using namespace std;
+using namespace __gnu_cxx;
 
 namespace sakusen{
 namespace server{
@@ -12,7 +16,9 @@ Player::Player(const PlayerTemplate& t) :
   name(""),
   clients(),
   units(),
-  lastUnitId(static_cast<uint32>(-1))
+  lastUnitId(static_cast<uint32>(-1)),
+  sensorReturns(),
+  lastSensorReturnsId(static_cast<SensorReturnsID>(-1))
 {
   assert(raceFixed || !noClients);
 }
@@ -24,7 +30,9 @@ Player::Player(const Player& copy) :
   name(copy.name),
   clients(copy.clients),
   units(copy.units),
-  lastUnitId(copy.lastUnitId)
+  lastUnitId(copy.lastUnitId),
+  sensorReturns(copy.sensorReturns),
+  lastSensorReturnsId(copy.lastSensorReturnsId)
 {
 }
 
@@ -89,6 +97,53 @@ void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
   assert(units.find(lastUnitId) != units.end());
   unit->setId(lastUnitId);
   informClients(Update(UnitAddedUpdateData(why, unit)));
+}
+
+void Player::checkSensorReturns()
+{
+  for (list<LayeredUnit>::iterator unit = world->getUnits().begin();
+      unit != world->getUnits().end(); ++unit) {
+    /* check whether this unit already has a return to this player */
+    hash_map<PlayerID, DynamicSensorReturnsRef>::iterator it =
+      unit->getSensorReturns().find(playerId);
+    if (it != unit->getSensorReturns().end()) {
+      /* we have a sensor return, so we update it */
+      DynamicSensorReturns& returns = it->second->second;
+      returns.update();
+      /* If it's gone, then remove it */
+      if (returns.empty()) {
+        informClients(Update(SensorReturnsRemovedUpdateData(returns.getId())));
+        sensorReturns.erase(it->second);
+        unit->getSensorReturns().erase(it);
+      } else if (returns.isDirty()) {
+        /* It's changed, so inform clients */
+        informClients(Update(SensorReturnsAlteredUpdateData(&returns)));
+        returns.clearDirty();
+      }
+    } else if (unit->getOwner() != playerId) {
+      /* we have no sensor return, so we determine whether one should exist
+       * */
+      SensorReturnsID newId = lastSensorReturnsId + 1;
+      DynamicSensorReturns newReturns(newId, &*unit, this);
+      if (!newReturns.empty()) {
+        /* Clear the dirty flag that will certainly have been set */
+        newReturns.clearDirty();
+        pair<DynamicSensorReturnsRef, bool> inserted = sensorReturns.insert(
+            pair<SensorReturnsID, DynamicSensorReturns>(newId, newReturns)
+          );
+        if (!inserted.second) {
+          Fatal("SensorReturnsID wrapped around");
+        }
+        unit->getSensorReturns().insert(
+              pair<PlayerID, DynamicSensorReturnsRef>(playerId, inserted.first)
+            );
+        informClients(
+            Update(SensorReturnsAddedUpdateData(&inserted.first->second))
+          );
+        lastSensorReturnsId = newId;
+      }
+    }
+  }
 }
 
 void Player::applyIncomingOrders(void)

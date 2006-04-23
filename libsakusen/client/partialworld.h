@@ -5,6 +5,7 @@
 #include "world.h"
 #include "partialmap.h"
 #include "updatedunit.h"
+#include "updatedsensorreturns.h"
 #include "update.h"
 #include "rectangle.h"
 
@@ -27,11 +28,16 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   private:
     PartialMap* map;
     __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
+    __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*> sensorReturns;
+      /* sensor returns owned by this */
   public:
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
 
     std::list<UpdatedUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
+    std::list<UpdatedSensorReturns*> getSensorReturnsIntersecting(
+        const Rectangle<sint32>&
+      );
 
     void applyUpdate(const Update&);
     void endTick();

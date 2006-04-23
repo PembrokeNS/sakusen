@@ -20,6 +20,8 @@ class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
     inline uint64 squareRadius() const { return uint64(radius) * radius; }
     inline bool contains(const Point<T>& point) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
+    inline Point<T> getBestPosition() const { return centre; }
+    inline Rectangle<T> getBoundingRectangle() const;
     
     RegionType getType() const { return regionType_sphere; }
     RegionData<T>* newCopy() const { return new SphereRegionData<T>(*this); }
@@ -51,6 +53,17 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
     return p;
   }
   return (p * radius / p.length()).Point<double>::truncate<T>();
+}
+
+template<typename T>
+inline Rectangle<T> SphereRegionData<T>::getBoundingRectangle() const
+{
+  return Rectangle<T>(
+      centre.x-radius,
+      centre.y-radius,
+      centre.x+radius,
+      centre.y+radius
+    );
 }
 
 #ifdef _MSC_VER

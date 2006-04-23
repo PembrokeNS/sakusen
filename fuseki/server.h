@@ -51,6 +51,7 @@ class Server : public SettingsUser {
         sakusen::comms::Socket* tcpSocket,
         bool dots
       );
+    /** \brief Destructor */
     ~Server();
   private:
     /** Whether to print dots constantly */

@@ -152,10 +152,22 @@ int main(/* int argc, char** argv */)
   w = NULL;
 
   /* Now another test, this time with a unit */
-  cout << "Performing test with one unit..." << endl;
+  cout << "Performing test with one unit each..." << endl;
   
   /* Create the map */
   heightfield = Heightfield();
+  neutralPlayersUnits.push_back(
+      UnitTemplate(
+        &universe,
+        UnitStatus(
+          &universe,
+          universe.getUnitTypeId(0),
+          Point<sint32>(20,20,20),
+          Orientation(),
+          Point<sint16>()
+        )
+      )
+    );
   realPlayersUnits.push_back(
       UnitTemplate(
         &universe,

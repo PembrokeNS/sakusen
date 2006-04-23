@@ -29,10 +29,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T>
-    inline void store(const T& toStore)
-    {
-      toStore.store(*this);
-    }
+    inline void store(const T& toStore);
   public:
     inline size_t getLength() const { return length; }
     inline const uint8* getBytes() const { return buffer; }
@@ -66,6 +63,12 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint32& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
+
+    template<typename T>
+    OArchive& insertEnum(const T& value)
+    {
+      return *this << static_cast<uint8>(value);
+    }
     
     template<typename T, int size>
     OArchive& insert(const T toStore[size])
@@ -98,6 +101,20 @@ class LIBSAKUSEN_API OArchive {
       for(typename std::list<T>::const_iterator i = toStore.begin();
           i != toStore.end(); ++i) {
         store(*i);
+      }
+
+      return *this;
+    }
+
+    template<typename T, typename U, typename THash>
+    OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore)
+    {
+      *this << uint32(toStore.size());
+  
+      for(typename __gnu_cxx::hash_map<T, U, THash>::const_iterator i =
+          toStore.begin(); i != toStore.end(); ++i) {
+        store(i->first);
+        store(i->second);
       }
 
       return *this;

@@ -18,6 +18,8 @@ class RectangleRegionData : public RegionData<T> {
   public:
     inline bool contains(const Point<T>& point) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
+    inline Point<T> getBestPosition() const;
+    inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     
     RegionType getType() const { return regionType_rectangle; }
     RegionData<T>* newCopy() const { return new RectangleRegionData<T>(*this); }
@@ -40,6 +42,16 @@ inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
   t.x = std::min(std::max(t.x, rectangle.getMinX()), rectangle.getMaxX());
   t.y = std::min(std::max(t.y, rectangle.getMinY()), rectangle.getMaxY());
   return t;
+}
+
+template<typename T>
+inline Point<T> RectangleRegionData<T>::getBestPosition() const
+{
+  return Point<T>(
+      (rectangle.getMinX() + rectangle.getMaxX()) / 2,
+      (rectangle.getMinY() + rectangle.getMaxY()) / 2,
+      0
+    );
 }
 
 template<typename T>

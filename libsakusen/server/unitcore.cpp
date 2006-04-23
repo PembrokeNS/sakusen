@@ -34,6 +34,10 @@ UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
 {
 }
 
+/** \brief Kill the unit.
+ *
+ * \param excessDamage Amount of 'spillover' damage to apply to whatever corpse
+ * replaces the unit, if any. */
 void UnitCore::kill(HitPoints excessDamage) {
   /* do the destruct action */
   outerUnit->onDestruct();
@@ -41,7 +45,7 @@ void UnitCore::kill(HitPoints excessDamage) {
   outerUnit->changeType(getTypePtr()->getCorpseUnitType(), fullHitPoints);
   /* Apply excess damage to corpse */
   outerUnit->damage(excessDamage);
-  /* TODO: deal with subunits */
+  /** \todo deal with subunits */
 }
 
 void UnitCore::damage(HitPoints amount) {
@@ -73,6 +77,10 @@ void UnitCore::repair(HitPoints amount, bool superhealth) {
   outerUnit->setDirty();
 }
 
+/** \brief Change the type of this unit
+ *
+ * \param to New type of the unit.
+ * \param hpAlteration How to compute the HP of the newly transformed unit */
 void UnitCore::changeType(
     const UnitTypeID& to,
     hitPointAlteration hpAlteration
@@ -102,13 +110,17 @@ void UnitCore::changeType(
     }
     type = to;
 
-    /* TODO: check everything is within the new bounds (e.g. speed)
+    /* \todo Check everything is within the new bounds (e.g. speed)
      * (unless the engine does that for us at next tick) */
-    /* TODO: deal with subunits */
+    /* \todo Deal with subunits */
     outerUnit->setDirty();
   }
 }
 
+/** \brief Change unit ownership
+ *
+ * \param to New owner of the unit.
+ * \param why Reason for the ownership change */
 void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   /* existence check goes here */
   Player* fromPtr = world->getPlayerPtr(owner);
@@ -119,7 +131,7 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   }
   owner = to;
   toPtr->addUnit(outerUnit, why);
-  /* TODO: deal with subunits */
+  /* \todo Deal with subunits */
 }
 
 }

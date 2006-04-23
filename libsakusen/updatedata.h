@@ -8,6 +8,7 @@
 #include "oarchive.h"
 #include "icompleteunit.h"
 #include "completeunit.h"
+#include "sensorreturns.h"
 
 namespace sakusen {
 
@@ -135,6 +136,60 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
     UpdateData* newCopy() const { return new OrderQueuedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderQueued; }
     void store(OArchive& out) const;
+};
+
+class LIBSAKUSEN_API SensorReturnsRemovedUpdateData : public UpdateData {
+  private:
+    SensorReturnsRemovedUpdateData();
+  public:
+    SensorReturnsRemovedUpdateData(SensorReturnsID id);
+    SensorReturnsRemovedUpdateData(IArchive&);
+    ~SensorReturnsRemovedUpdateData() {}
+  private:
+    SensorReturnsID id;
+  public:
+    UpdateData* newCopy() const {
+      return new SensorReturnsRemovedUpdateData(*this);
+    }
+    UpdateType getType() const { return updateType_sensorReturnsRemoved; }
+    void store(OArchive& out) const;
+    SensorReturnsID getId() const { return id; }
+};
+
+class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
+  private:
+    SensorReturnsAddedUpdateData();
+  public:
+    SensorReturnsAddedUpdateData(const ISensorReturns* returns);
+    SensorReturnsAddedUpdateData(IArchive&, const Universe*);
+    ~SensorReturnsAddedUpdateData() {}
+  private:
+    SensorReturns returns;
+  public:
+    UpdateData* newCopy() const {
+      return new SensorReturnsAddedUpdateData(*this);
+    }
+    UpdateType getType() const { return updateType_sensorReturnsAdded; }
+    void store(OArchive& out) const;
+    inline const SensorReturns& getSensorReturns() const { return returns; }
+};
+
+class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
+  private:
+    SensorReturnsAlteredUpdateData();
+  public:
+    SensorReturnsAlteredUpdateData(const ISensorReturns* returns);
+    SensorReturnsAlteredUpdateData(IArchive&, const Universe*);
+    ~SensorReturnsAlteredUpdateData() {}
+  private:
+    SensorReturns returns;
+  public:
+    UpdateData* newCopy() const {
+      return new SensorReturnsAlteredUpdateData(*this);
+    }
+    UpdateType getType() const { return updateType_sensorReturnsAltered; }
+    void store(OArchive& out) const;
+    inline const SensorReturns& getSensorReturns() const { return returns; }
 };
 
 }

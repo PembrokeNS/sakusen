@@ -29,8 +29,8 @@ class LIBSAKUSEN_COMMS_API MessageData {
          * because what we're really doing here is lazy evaluation, rather than
          * *real* alteration.  At least, that's what I tell myself.  It makes me
          * feel better. - JJB */
-        const_cast<OArchive&>(archive) << uint8(NETWORK_PROTOCOL_VERSION) <<
-          uint8(getType());
+        (const_cast<OArchive&>(archive) << uint8(NETWORK_PROTOCOL_VERSION)).
+          insertEnum(getType());
         const_cast<MessageData*>(this)->fillArchive();
       }
       return archive;

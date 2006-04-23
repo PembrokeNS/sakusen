@@ -38,6 +38,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       units.push_back(unit);
       units.back().changeOwner(owner, changeOwnerReason_created);
     }
+    inline std::list<LayeredUnit>& getUnits(void) { return units; }
     
     /* By calling this function, you transfer ownership of the pointer to the
      * World.  The effect shall be deleted by the World when it is removed or

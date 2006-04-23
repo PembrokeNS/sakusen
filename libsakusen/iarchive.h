@@ -48,10 +48,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
-    inline T load()
-    {
-      return T::load(*this);
-    }
+    inline T load();
 
     template<typename T>
     inline T load(const typename T::loadArgument* arg)
@@ -152,6 +149,22 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
+    template<typename T, typename U, typename THash>
+    IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result)
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        if (!result.insert(std::pair<T, U>(load<T>(), load<U>())).second) {
+          throw new DeserializationExn("Duplicate key in hash_map");
+        }
+      }
+
+      return *this;
+    }
+
     template<typename T>
     IArchive& extract(
         std::vector<T>& result,
@@ -197,7 +210,39 @@ class LIBSAKUSEN_API IArchive {
       advance(size);
     }
 };
-    
+
+template<>
+inline uint8 IArchive::load<uint8>()
+{
+  uint8 s;
+  *this >> s;
+  return s;
+}
+
+template<>
+inline sint8 IArchive::load<sint8>()
+{
+  sint8 s;
+  *this >> s;
+  return s;
+}
+
+template<>
+inline uint16 IArchive::load<uint16>()
+{
+  uint16 s;
+  *this >> s;
+  return s;
+}
+
+template<>
+inline sint16 IArchive::load<sint16>()
+{
+  sint16 s;
+  *this >> s;
+  return s;
+}
+
 template<>
 inline uint32 IArchive::load<uint32>()
 {
@@ -205,13 +250,27 @@ inline uint32 IArchive::load<uint32>()
   *this >> s;
   return s;
 }
-    
+
+template<>
+inline sint32 IArchive::load<sint32>()
+{
+  sint32 s;
+  *this >> s;
+  return s;
+}
+
 template<>
 inline String IArchive::load<String>()
 {
   String s;
   *this >> s;
   return s;
+}
+
+template<typename T>
+inline T IArchive::load()
+{
+  return T::load(*this);
 }
 
 }

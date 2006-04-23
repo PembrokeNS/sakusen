@@ -17,6 +17,7 @@
 namespace sakusen {
 
 class ICompleteUnit;
+class ISensorReturns;
 
 template<typename T>
 struct LIBSAKUSEN_API Rectangle {
@@ -54,6 +55,7 @@ struct LIBSAKUSEN_API Rectangle {
       r.miny < getMaxY() && r.getMaxY() > miny;
   }
   bool fastIntersects(const ICompleteUnit*) const;
+  bool fastIntersects(const ISensorReturns*) const;
 
   void store(OArchive& out) const {
     out << minx << miny << maxx << maxy;

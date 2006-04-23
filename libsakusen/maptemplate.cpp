@@ -1,5 +1,7 @@
 #include "maptemplate.h"
 
+#include "oarchive-methods.h"
+
 using namespace std;
 
 using namespace sakusen;
@@ -48,7 +50,7 @@ MapTemplate::MapTemplate(
 
 void MapTemplate::store(OArchive& archive) const
 {
-  archive << uint8(getTopology()) << internalName;
+  archive.insertEnum(getTopology()) << internalName;
   archive << topRight << bottomLeft;
   heightfield.store(archive);
   archive << gravity << playModes;

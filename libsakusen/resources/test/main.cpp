@@ -37,6 +37,20 @@ int main(/*int argc, char** argv*/)
   cout << "Creating ResourceInterface with data root " << dataDir << endl;
   ResourceInterface* resourceInterface =
     new FileResourceInterface(dataDir);
+
+  cout << "Cleaning out existing test files" << endl;
+  list<String> universes =
+    fileUtils_findMatches(dataDir + "/universe", "universe.");
+  while (!universes.empty()) {
+    NativeUnlink(universes.front().c_str());
+    universes.pop_front();
+  }
+  list<String> maps =
+    fileUtils_findMatches(dataDir + "/maptemplate", "map.");
+  while (!maps.empty()) {
+    NativeUnlink(maps.front().c_str());
+    maps.pop_front();
+  }
   
   cout << "Creating Universe" << endl;
   vector<UnitType> unitTypes;
@@ -97,6 +111,18 @@ int main(/*int argc, char** argv*/)
   Heightfield heightfield = Heightfield();
   vector<UnitTemplate> neutralPlayersUnits;
   vector<UnitTemplate> realPlayersUnits;
+  neutralPlayersUnits.push_back(
+      UnitTemplate(
+        &universe,
+        UnitStatus(
+          &universe,
+          universe.getUnitTypeId(0),
+          Point<sint32>(50,-50,0),
+          Orientation(),
+          Point<sint16>()
+        )
+      )
+    );
   realPlayersUnits.push_back(
       UnitTemplate(
         &universe,

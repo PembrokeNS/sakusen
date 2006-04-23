@@ -9,6 +9,7 @@
 #include "updatetype.h"
 #include "changeownerreason.h"
 #include "playertemplate.h"
+#include "dynamicsensorreturns.h"
 
 namespace sakusen {
 namespace server {
@@ -33,14 +34,20 @@ class LIBSAKUSEN_SERVER_API Player {
          their id */
     uint32 lastUnitId; /* The id of the last unit that was added for this
                           player */
+    __gnu_cxx::hash_map<SensorReturnsID, DynamicSensorReturns> sensorReturns;
+    SensorReturnsID lastSensorReturnsId;
   public:
     /* accessors */
+    PlayerID getId() const { return playerId; }
     void setPlayerId(const PlayerID& id);
     inline const String& getName(void) const { return name; }
     inline void setName(const String& n) { name = n; }
     inline uint16 getNumClients(void) const { return clients.size(); }
     void attachClient(Client* client);
     void detachClient(Client* client);
+    const __gnu_cxx::hash_map<uint32, LayeredUnit*>& getUnits(void) const {
+      return units;
+    }
 
     inline bool isReadyForGameStart(void) const {
       /* FIXME: should check that a race is selected */
@@ -53,6 +60,7 @@ class LIBSAKUSEN_SERVER_API Player {
        * another player, otherwise the unit will end up in limbo */
     void addUnit(LayeredUnit* unit, enum changeOwnerReason why);
       /* returns the new unit id */
+    void checkSensorReturns();
     
     void applyIncomingOrders(void);
       /* gets the orders received from each client and applies them to update

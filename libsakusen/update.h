@@ -21,28 +21,24 @@ class LIBSAKUSEN_API Update {
     const UpdateData* data;
   public:
     inline UpdateType getType(void) const { return data->getType(); }
-    inline UnitRemovedUpdateData getUnitRemovedData(void) const {
-      return *dynamic_cast<const UnitRemovedUpdateData*>(data);
+#define GET(type) \
+    inline type##UpdateData get##type##Data(void) const { \
+      return *dynamic_cast<const type##UpdateData*>(data); \
     }
-    inline UnitAddedUpdateData getUnitAddedData(void) const {
-      return *dynamic_cast<const UnitAddedUpdateData*>(data);
-    }
-    inline UnitAlteredUpdateData getUnitAlteredData(void) const {
-      return *dynamic_cast<const UnitAlteredUpdateData*>(data);
-    }
-    inline OrderAcceptedUpdateData getOrderAcceptedData(void) const {
-      return *dynamic_cast<const OrderAcceptedUpdateData*>(data);
-    }
-    inline OrderCompletedUpdateData getOrderCompletedData(void) const {
-      return *dynamic_cast<const OrderCompletedUpdateData*>(data);
-    }
-    inline OrderQueuedUpdateData getOrderQueuedData(void) const {
-      return *dynamic_cast<const OrderQueuedUpdateData*>(data);
-    }
+    GET(UnitRemoved)
+    GET(UnitAdded)
+    GET(UnitAltered)
+    GET(OrderAccepted)
+    GET(OrderCompleted)
+    GET(OrderQueued)
+    GET(SensorReturnsRemoved)
+    GET(SensorReturnsAdded)
+    GET(SensorReturnsAltered)
+#undef GET
 
     typedef Universe loadArgument;
     inline void store(OArchive& out) const {
-      out << uint8(getType());
+      out.insertEnum(getType());
       data->store(out);
     }
     static Update load(IArchive& in, const loadArgument*);
