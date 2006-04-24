@@ -24,11 +24,12 @@ CompleteWorld::CompleteWorld(
   fuseQueue(),
   players(p)
 {
-  /* yes, these two variables hold the same number. But it makes type-checking
-   * easier, and the optimizer will deal with them.
+  /* yes, these first two variables hold the same number. But it makes
+   * type-checking easier, and the optimizer will deal with them.
    */
   size_t vectorSize;
   uint32 numPlayers;
+  uint8 i;
 
   /* Some sanity checks */
   if (world) {
@@ -49,14 +50,13 @@ CompleteWorld::CompleteWorld(
   /* TODO: more sanity checks */
   
   /* assign player ids */
-  sint32 i;
   
-  for (i=numPlayers-1; i>=0; i--) {
+  for (i=0; i < numPlayers; i--) {
     players[i].setPlayerId(i);
   }
   
   /* put units on the map as specified in map */
-  for (i=numPlayers-1; i>=0; i--) {
+  for (i=0; i < numPlayers; i--) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
     for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
