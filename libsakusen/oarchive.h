@@ -61,8 +61,6 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint16& i);
     OArchive& operator<<(const uint32& i);
     OArchive& operator<<(const sint32& i);
-    OArchive& operator<<(const uint64& i);
-    OArchive& operator<<(const sint64& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
 

@@ -28,32 +28,32 @@ bool Rectangle<sint32>::fastIntersects(const ISensorReturns* returns) const
   return intersects(returns->getBoundingRectangle());
 }
 
-//Added to stop VC giving warnings about lack of suitable functions
+/* Added to stop VC giving warnings about lack of suitable functions */
 template<>
-bool Rectangle<uint16>::fastIntersects(const ICompleteUnit* unit) const
+bool Rectangle<uint16>::fastIntersects(const ICompleteUnit*) const
 {
-  static_cast<void>(unit);
+  Fatal("this method should not be called");
   return true;
 }
 
 template<>
-bool Rectangle<uint16>::fastIntersects(const ISensorReturns* returns) const
+bool Rectangle<uint16>::fastIntersects(const ISensorReturns*) const
 {
-  static_cast<void>(returns);
+  Fatal("this method should not be called");
   return true;
 }
 
 template<>
-bool Rectangle<double>::fastIntersects(const ICompleteUnit* unit) const
+bool Rectangle<double>::fastIntersects(const ICompleteUnit*) const
 {
-  static_cast<void>(unit);
+  Fatal("this method should not be called");
   return true;
 }
 
 template<>
-bool Rectangle<double>::fastIntersects(const ISensorReturns* returns) const
+bool Rectangle<double>::fastIntersects(const ISensorReturns*) const
 {
-  static_cast<void>(returns);
+  Fatal("this method should not be called");
   return true;
 }
 

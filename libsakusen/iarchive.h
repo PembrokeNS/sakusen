@@ -85,8 +85,6 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(sint16& i);
     IArchive& operator>>(uint32& i);
     IArchive& operator>>(sint32& i);
-    IArchive& operator>>(uint64& i);
-    IArchive& operator>>(sint64& i);
     IArchive& operator>>(double& d);
     IArchive& operator>>(String& s);
 

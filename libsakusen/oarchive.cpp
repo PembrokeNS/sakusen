@@ -97,22 +97,6 @@ OArchive& OArchive::operator<<(const sint32& i)
   return *this;
 }
 
-OArchive& OArchive::operator<<(const uint64& i)
-{
-  ensureSpace(sizeof(uint64));
-  *reinterpret_cast<uint64*>(buffer+length) = ntohl(i);
-  length += sizeof(uint64);
-  return *this;
-}
-
-OArchive& OArchive::operator<<(const sint64& i)
-{
-  ensureSpace(sizeof(sint64));
-  *reinterpret_cast<sint64*>(buffer+length) = ntohl(i);
-  length += sizeof(sint64);
-  return *this;
-}
-
 OArchive& OArchive::operator<<(const double& d)
 {
   *this << numToString(d);
