@@ -67,11 +67,6 @@ Region<T> Region<T>::load(IArchive& archive)
 
 #endif
 
-#ifdef _MSC_VER
-template LIBSAKUSEN_API Region<sint16>;
-template LIBSAKUSEN_API Region<sint32>;
-#endif
-
 }
 
 #endif // REGION_METHODS_H

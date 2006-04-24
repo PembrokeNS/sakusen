@@ -14,7 +14,7 @@ typedef uint32 SensorReturnsID;
 
 typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
 
-class ISensorReturns {
+class LIBSAKUSEN_API ISensorReturns {
   public:
     virtual ~ISensorReturns() {}
 

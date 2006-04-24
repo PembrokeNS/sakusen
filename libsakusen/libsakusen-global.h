@@ -54,6 +54,26 @@
   typedef signed __int64       sint64;
   typedef unsigned __int64     uint64;
 
+  //Limit constants following the types.
+  #define SINT8_MIN _I8_MIN
+  #define SINT8_MAX _I8_MAX
+  #define UINT8_MAX _UI8_MAX  
+  
+  #define SINT16_MIN _I16_MIN
+  #define SINT16_MAX _I16_MAX
+  #define UINT16_MAX _UI16_MAX  
+
+  #define SINT32_MIN _I32_MIN
+  #define SINT32_MAX _I32_MAX
+  #define UINT32_MAX _UI32_MAX  
+
+  #define SINT64_MIN _I64_MIN
+  #define SINT64_MAX _I64_MAX
+  #define UINT64_MAX _UI64_MAX  
+
+  #define _USE_MATH_DEFINES 1;
+  //Carries several maths constants with it.
+
 #elif defined(__GNUC__)
 
   /* In gcc, we have the following dll export thing, which will do nothing unless
@@ -122,6 +142,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
     abort(); \
   } while(false)
 
+
 #include <cmath>
 
 #if defined(_MSC_VER)
@@ -134,8 +155,8 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   {
     return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
   }
-  /* it also appears to lack a value of pi */
-  #define M_PI 3.14159265358979
+
+
 #endif
 
 /* end platform-dependent code */

@@ -25,7 +25,7 @@ namespace resources {
 size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
 {
 #ifdef WIN32
-  int retVal = _read(fd, buffer, bufferLen);
+  int retVal = _read(fd, buffer, (sint32)bufferLen);
 #else
   /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the
    * result is undefined), so we would need to read the file in chunks */
@@ -45,7 +45,7 @@ size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
 size_t fileUtils_write(int fd, const void* buffer, size_t length)
 {
 #ifdef WIN32
-  int retVal = _write(fd, buffer, length);
+  int retVal = _write(fd, buffer, (sint32)length);
 #else
   /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the
    * result is undefined), so we would need to read the file in chunks */
@@ -168,8 +168,14 @@ std::list<String> fileUtils_findMatches(
 String fileUtils_getHome()
 {
 #ifdef WIN32
-  String path(getenv("HOMEDRIVE"));
-  path += getenv("HOMEPATH");
+  char *buffer;
+  errno_t err;
+  err=_dupenv_s(&buffer, NULL, "HOMEDRIVE");
+  String path(buffer);
+  err=_dupenv_s(&buffer, NULL, "HOMEPATH");
+  path += buffer;
+  if(err)
+    Fatal("Error getting environment variable");
   return path;
 #else
   return getenv("HOME");

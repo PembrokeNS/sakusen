@@ -55,7 +55,7 @@ String Server::intSettingAlteringCallback(
     fullName.pop_front();
     assert(!fullName.empty());
     if (fullName.front() == "allowobservers") {
-      setAllowObservers(newValue);
+      setAllowObservers(newValue!=0);
       return "";
     } else {
       Fatal("unexpected child of server branch: " << fullName.front());

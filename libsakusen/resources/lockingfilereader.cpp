@@ -48,16 +48,26 @@ bool LockingFileReader::getLock(bool /*block*/)
 
 int LockingFileReader::open()
 {
-  stream = fopen(fileName.c_str(), "rb");
-  if (stream == NULL) {
-    return -1;
-  }
-  fd = fileno(stream);
+  #ifdef _MSC_VER //Secure deprecation warning
+    errno_t err;
+    err = fopen_s(&stream, fileName.c_str(), "rb");
+    if (err) {
+      return -1;
+    }
+    fd = _fileno(stream);
+  #else
+    stream = fopen(fileName.c_str(), "rb");
+    if (stream == NULL) {
+      return -1;
+    }
+    fd = fileno(stream);
+  #endif
   /* This function should not fail, but on the off chance... */
   if (fd == -1) {
     stream = NULL;
     return -1;
   }
+
   return 0;
 }
 

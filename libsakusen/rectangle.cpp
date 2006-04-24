@@ -28,5 +28,35 @@ bool Rectangle<sint32>::fastIntersects(const ISensorReturns* returns) const
   return intersects(returns->getBoundingRectangle());
 }
 
+//Added to stop VC giving warnings about lack of suitable functions
+template<>
+bool Rectangle<uint16>::fastIntersects(const ICompleteUnit* unit) const
+{
+  return true;
 }
 
+template<>
+bool Rectangle<uint16>::fastIntersects(const ISensorReturns* returns) const
+{
+  return true;
+}
+
+template<>
+bool Rectangle<double>::fastIntersects(const ICompleteUnit* unit) const
+{
+  return true;
+}
+
+template<>
+bool Rectangle<double>::fastIntersects(const ISensorReturns* returns) const
+{
+  return true;
+}
+
+#ifdef _MSC_VER
+template LIBSAKUSEN_API Rectangle<uint16>;
+template LIBSAKUSEN_API Rectangle<sint32>;
+template LIBSAKUSEN_API Rectangle<double>;
+#endif
+
+}

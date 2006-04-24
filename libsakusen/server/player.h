@@ -42,7 +42,7 @@ class LIBSAKUSEN_SERVER_API Player {
     void setPlayerId(const PlayerID& id);
     inline const String& getName(void) const { return name; }
     inline void setName(const String& n) { name = n; }
-    inline uint16 getNumClients(void) const { return clients.size(); }
+    inline uint16 getNumClients(void) const { return (uint16)clients.size(); }
     void attachClient(Client* client);
     void detachClient(Client* client);
     const __gnu_cxx::hash_map<uint32, LayeredUnit*>& getUnits(void) const {

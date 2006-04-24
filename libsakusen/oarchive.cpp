@@ -105,7 +105,7 @@ OArchive& OArchive::operator<<(const double& d)
 
 OArchive& OArchive::operator<<(const String& s)
 {
-  uint32 sLength = s.length();
+  uint32 sLength = (uint32)s.length();
   *this << sLength;
   ensureSpace(sLength);
   memcpy(buffer+length, s.c_str(), sLength);

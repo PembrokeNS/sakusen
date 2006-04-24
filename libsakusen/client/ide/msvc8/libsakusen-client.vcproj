@@ -243,6 +243,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\updatedsensorreturns.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\updatedunit.cpp"
 			>
 		</File>

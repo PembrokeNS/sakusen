@@ -265,6 +265,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\eachsensorreturn.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\eachsensorreturn.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\exceptions.h"
 			>
 		</File>
@@ -306,6 +314,14 @@
 		</File>
 		<File
 			RelativePath="..\..\icompleteunit.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\isensorreturns.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\isensorreturns.h"
 			>
 		</File>
 		<File
@@ -417,6 +433,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\perception.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\planemap.h"
 			>
 		</File>
@@ -510,6 +530,22 @@
 		</File>
 		<File
 			RelativePath="..\..\resourcetype.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\sensorreturn.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\sensorreturn.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\sensorreturns.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\sensorreturns.h"
 			>
 		</File>
 		<File

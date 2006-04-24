@@ -97,6 +97,8 @@ void* FileResourceInterface::internalSearch(
   LockingFileReader file(fileName);
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
   uint64 length;
+  //This used to be a uint64, but having uint64's running around is messy
+  //and it is limited to 2^20 below anyway.
   try {
     length = file.getLength(true);
   } catch (FileIOExn& e) {
@@ -106,6 +108,7 @@ void* FileResourceInterface::internalSearch(
       errorUtils_errorMessage(errno);
     return NULL;
   }
+
   /** \bug For the moment we have a length constraint to prevent excessive
    * memory allocation.  In the long run we probably want to make IArchive
    * abstract so that we can have a version that extracts data directly from
@@ -113,9 +116,9 @@ void* FileResourceInterface::internalSearch(
   if (length > (1 << 20)) {
     Fatal("file size exceeded arbitrary limit");
   }
-  uint8* fileAsArray = new uint8[length];
+  uint8* fileAsArray = new uint8[(size_t)length];
   size_t bytesRead;
-  if (length != (bytesRead = file.getWholeFile(fileAsArray, length, true))) {
+  if (length != (uint64)(bytesRead = file.getWholeFile(fileAsArray, (size_t)length, true))) {
     switch (bytesRead) {
       case -1:
         error = String("error reading file: ") + errorUtils_errorMessage(errno);
@@ -123,7 +126,7 @@ void* FileResourceInterface::internalSearch(
         delete[] fileAsArray;
         return NULL;
       default:
-        error = String("read only ") + numToString(bytesRead) +
+        error = String("read only ") + numToString((sint32)bytesRead) +
           " of " + numToString(length) + " bytes";
         *result = resourceSearchResult_error;
         delete[] fileAsArray;
@@ -133,7 +136,7 @@ void* FileResourceInterface::internalSearch(
   file.releaseLock();
   /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
-  IArchive fileAsArchive(fileAsArray, length);
+  IArchive fileAsArchive(fileAsArray, (size_t)length);
   delete[] fileAsArray;
   void* resource = NULL;
 

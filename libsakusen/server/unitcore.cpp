@@ -93,13 +93,13 @@ void UnitCore::changeType(
     {
       case scaleHitPoints:
         /* The cast to uint64 is intended to prevent overflow */
-        hitPoints = uint64(hitPoints) *
+        hitPoints = (HitPoints)(uint64(hitPoints) *
           newType->getDynamicData().getMaxHitPoints() /
-          type->getDynamicData().getMaxHitPoints();
+          type->getDynamicData().getMaxHitPoints());
         break;
       case fixHitPoints:
         hitPoints =
-          std::min(hitPoints, newType->getDynamicData().getMaxHitPoints());
+          (HitPoints)std::min(hitPoints, newType->getDynamicData().getMaxHitPoints());
         break;
       default:
         Debug("Invalid hitpointAlteration");

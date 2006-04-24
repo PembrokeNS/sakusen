@@ -38,7 +38,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     String hf,
     int hl
   ) :
-  infd(fileno(in)),
+  infd(_fileno(in)),
   out(o),
   historyFile(hf),
   historyLength(hl),

@@ -16,7 +16,7 @@ void LayeredUnit::spawn(
     const Point<sint16>& startVelocity
   )
 {
-  Point<sint32> startPosition = startNear; /* FIXME: find empty spot to start */
+  Point<sint32> startPosition = startNear; /** \bug: find empty spot to start */
   world->addUnit(
       LayeredUnit(type, startPosition, startOrientation, startVelocity),
       owner

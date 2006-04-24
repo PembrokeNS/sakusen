@@ -69,7 +69,7 @@ String sakusen::stringUtils_charToUtf8(uint16 c)
   /* TODO: Is there an endianness issue here?  I'm not entirely sure how
    * bitshifts differ under different endiannesses */
   if (c<0x0080) {
-    return String(1, c);
+    return String(1, (char)c);
   } else if (c<0x0800) {
     String s(2, '\0');
     s[0] = (c >> 6) | 0xc0;
@@ -112,7 +112,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   }
   */
   
-  mhash(thread, buffer, length);
+  mhash(thread, buffer, (mutils_word32)length);
 
   uint8 hash[32];
   

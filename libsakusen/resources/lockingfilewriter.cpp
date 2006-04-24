@@ -23,11 +23,20 @@ short LockingFileWriter::getLockType() const
 
 int LockingFileWriter::open()
 {
-  stream = fopen(fileName.c_str(), "wb");
-  if (stream == NULL) {
-    return -1;
-  }
-  fd = fileno(stream);
+  #ifdef _MSC_VER //Secure deprecation warning
+    errno_t err;
+    err = fopen_s(&stream, fileName.c_str(), "rb");
+    if (err) {
+      return -1;
+    }
+    fd = _fileno(stream);
+  #else
+    stream = fopen(fileName.c_str(), "wb");
+    if (stream == NULL) {
+      return -1;
+    }
+    fd = fileno(stream);
+  #endif
   if (fd == -1) {
     stream = NULL;
     return -1;

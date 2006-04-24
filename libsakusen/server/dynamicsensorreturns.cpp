@@ -3,6 +3,7 @@
 #include "player.h"
 #include "layeredunit.h"
 #include "sphereregiondata.h"
+#include "limits.h"
 
 using namespace __gnu_cxx;
 

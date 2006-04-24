@@ -49,7 +49,7 @@ void MapDisplay::paint()
       sakusen::client::world->getUnitsIntersecting(displayRect);
     for (list<UpdatedUnit*>::iterator unit = unitsToDraw.begin();
         unit != unitsToDraw.end(); ++unit) {
-      bool selected = ui->getSelection().count((*unit)->getId());
+      bool selected = ((ui->getSelection().count((*unit)->getId()))!=0);
       Colour colour = ( selected ? Colour::magenta : Colour::blue );
       drawUnit(*unit, colour);
     }

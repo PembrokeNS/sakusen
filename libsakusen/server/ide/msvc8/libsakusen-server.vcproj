@@ -248,6 +248,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\dynamicsensorreturns.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\dynamicsensorreturns.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\effect.h"
 			>
 		</File>
@@ -273,10 +281,6 @@
 		</File>
 		<File
 			RelativePath="..\..\player.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\sensorreturn.h"
 			>
 		</File>
 		<File

@@ -35,7 +35,7 @@ CompleteWorld::CompleteWorld(
   }
   const MapPlayMode* playMode = &m.getPlayModes()[mode];
   
-  if (!playMode->acceptableNumberOfPlayers(players.size())) {
+  if (!playMode->acceptableNumberOfPlayers((uint32)players.size())) {
     Fatal("Number of players not acceptable for this map and mode");
   }
   /* TODO: more sanity checks */
@@ -43,12 +43,12 @@ CompleteWorld::CompleteWorld(
   /* assign player ids */
   sint32 i;
   
-  for (i=players.size()-1; i>=0; i--) {
+  for (i=(sint32)players.size()-1; i>=0; i--) {
     players[i].setPlayerId(i);
   }
   
   /* put units on the map as specified in map */
-  for (i=players.size()-1; i>=0; i--) {
+  for (i=(sint32)players.size()-1; i>=0; i--) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
     for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
