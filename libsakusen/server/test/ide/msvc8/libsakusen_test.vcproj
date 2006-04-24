@@ -136,12 +136,16 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="../../..,..,../stlfixes"
+				Optimization="3"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\..\..\;..\..\..\..\..\STLport\stlport;..\..\..\..\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/libsakusen_test.pch"
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -161,12 +165,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ../Release/libsakusen.lib"
-				OutputFile="../Release/libsakusen_test.exe"
-				LinkIncremental="2"
+				AdditionalDependencies="stlport.5.0.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).exe"
+				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\..\..\STLport\lib"
 				ProgramDatabaseFile="../Release/libsakusen_test.pdb"
 				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool

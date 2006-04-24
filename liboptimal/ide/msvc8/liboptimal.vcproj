@@ -42,6 +42,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBOPTIMAL_EXPORTS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -59,10 +60,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -113,7 +116,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\..\..\STLport\STLport"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBOPTIMAL_EXPORTS;"
+				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -131,11 +141,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				LinkIncremental="2"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\STLport\lib&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

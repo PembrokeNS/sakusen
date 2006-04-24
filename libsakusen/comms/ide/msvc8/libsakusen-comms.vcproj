@@ -47,20 +47,26 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_COMMS_EXPORTS"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Release/libsakusen_comms.pch"
+				Optimization="3"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="../../;..\..\..\;..\..\..\..\STLport\stlport"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_COMMS_EXPORTS;DISABLE_UNIX_SOCKETS"
+				StringPooling="false"
+				SmallerTypeCheck="false"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="false"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -75,12 +81,17 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\Release/libsakusen_comms.dll"
+				AdditionalDependencies="ws2_32.lib stlport.5.0.lib"
+				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\..\STLport\lib"
+				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
 				ProgramDatabaseFile=".\Release/libsakusen_comms.pdb"
-				ImportLibrary=".\Release/libsakusen_comms.lib"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -178,7 +189,7 @@
 				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)/$(ProjectName).lib"
+				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
