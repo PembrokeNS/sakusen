@@ -93,13 +93,13 @@ void UnitCore::changeType(
     {
       case scaleHitPoints:
         /* The cast to uint64 is intended to prevent overflow */
-        hitPoints = (HitPoints)(uint64(hitPoints) *
-          newType->getDynamicData().getMaxHitPoints() /
-          type->getDynamicData().getMaxHitPoints());
+        hitPoints = static_cast<HitPoints>((static_cast<uint64>(hitPoints) *
+          static_cast<uint64>(newType->getDynamicData().getMaxHitPoints())) /
+          static_cast<uint64>(type->getDynamicData().getMaxHitPoints()));
         break;
       case fixHitPoints:
         hitPoints =
-          (HitPoints)std::min(hitPoints, newType->getDynamicData().getMaxHitPoints());
+          static_cast<HitPoints>(std::min(hitPoints, newType->getDynamicData().getMaxHitPoints()));
         break;
       default:
         Debug("Invalid hitpointAlteration");
@@ -110,9 +110,9 @@ void UnitCore::changeType(
     }
     type = to;
 
-    /* \todo Check everything is within the new bounds (e.g. speed)
+    /** \todo Check everything is within the new bounds (e.g. speed)
      * (unless the engine does that for us at next tick) */
-    /* \todo Deal with subunits */
+    /** \todo Deal with subunits */
     outerUnit->setDirty();
   }
 }

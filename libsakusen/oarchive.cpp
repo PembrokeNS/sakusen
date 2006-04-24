@@ -97,6 +97,22 @@ OArchive& OArchive::operator<<(const sint32& i)
   return *this;
 }
 
+OArchive& OArchive::operator<<(const uint64& i)
+{
+  ensureSpace(sizeof(uint64));
+  *reinterpret_cast<uint64*>(buffer+length) = ntohl(i);
+  length += sizeof(uint64);
+  return *this;
+}
+
+OArchive& OArchive::operator<<(const sint64& i)
+{
+  ensureSpace(sizeof(sint64));
+  *reinterpret_cast<sint64*>(buffer+length) = ntohl(i);
+  length += sizeof(sint64);
+  return *this;
+}
+
 OArchive& OArchive::operator<<(const double& d)
 {
   *this << numToString(d);
@@ -105,8 +121,11 @@ OArchive& OArchive::operator<<(const double& d)
 
 OArchive& OArchive::operator<<(const String& s)
 {
-  uint32 sLength = (uint32)s.length();
-  *this << sLength;
+  size_t sLength = s.length();
+  /** \todo Probably this should be an exception rather than a Fatal, but maybe
+   * we should handle it altogether differently?
+   */
+  *this << static_cast<uint32>(sLength);
   ensureSpace(sLength);
   memcpy(buffer+length, s.c_str(), sLength);
   length += sLength;

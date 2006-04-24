@@ -39,8 +39,8 @@ inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
     return p;
   }
   Point<T> t(p);
-  t.x = (T)std::min(std::max(t.x, rectangle.getMinX()), rectangle.getMaxX());
-  t.y = (T)std::min(std::max(t.y, rectangle.getMinY()), rectangle.getMaxY());
+  t.x = static_cast<T>(std::min(std::max(t.x, rectangle.getMinX()), rectangle.getMaxX()));
+  t.y = static_cast<T>(std::min(std::max(t.y, rectangle.getMinY()), rectangle.getMaxY()));
   return t;
 }
 

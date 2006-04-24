@@ -32,24 +32,28 @@ bool Rectangle<sint32>::fastIntersects(const ISensorReturns* returns) const
 template<>
 bool Rectangle<uint16>::fastIntersects(const ICompleteUnit* unit) const
 {
+  static_cast<void>(unit);
   return true;
 }
 
 template<>
 bool Rectangle<uint16>::fastIntersects(const ISensorReturns* returns) const
 {
+  static_cast<void>(returns);
   return true;
 }
 
 template<>
 bool Rectangle<double>::fastIntersects(const ICompleteUnit* unit) const
 {
+  static_cast<void>(unit);
   return true;
 }
 
 template<>
 bool Rectangle<double>::fastIntersects(const ISensorReturns* returns) const
 {
+  static_cast<void>(returns);
   return true;
 }
 
@@ -60,3 +64,4 @@ template LIBSAKUSEN_API Rectangle<double>;
 #endif
 
 }
+

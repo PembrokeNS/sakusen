@@ -26,7 +26,7 @@ class Player {
   public:
     /* accessors */
     inline const String& getName(void) const { return name; }
-    inline uint16 getNumClients(void) const { return (uint16)clients.size(); }
+    inline uint16 getNumClients(void) const { return static_cast<uint16>(clients.size()); }
 };
 
 }}

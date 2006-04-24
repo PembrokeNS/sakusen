@@ -1,4 +1,5 @@
 Centaur
+Cerberus
 Chimera
 Pegasus
 Phoenix

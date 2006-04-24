@@ -52,6 +52,8 @@ void* FileResourceInterface::internalSearch(
     ResourceSearchResult* result
   )
 {
+  uint64 length;
+  size_t lengthAsSizeT;
   /* Find the appropriate subdirectory name */
   String subdir = getSubdir(type);
   /*QDebug("Searching for " << name << " in subdir " << subdir);*/
@@ -96,9 +98,6 @@ void* FileResourceInterface::internalSearch(
 
   LockingFileReader file(fileName);
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
-  uint64 length;
-  //This used to be a uint64, but having uint64's running around is messy
-  //and it is limited to 2^20 below anyway.
   try {
     length = file.getLength(true);
   } catch (FileIOExn& e) {
@@ -108,6 +107,7 @@ void* FileResourceInterface::internalSearch(
       errorUtils_errorMessage(errno);
     return NULL;
   }
+  lengthAsSizeT = static_cast<size_t>(length);
 
   /** \bug For the moment we have a length constraint to prevent excessive
    * memory allocation.  In the long run we probably want to make IArchive
@@ -116,9 +116,9 @@ void* FileResourceInterface::internalSearch(
   if (length > (1 << 20)) {
     Fatal("file size exceeded arbitrary limit");
   }
-  uint8* fileAsArray = new uint8[(size_t)length];
+  uint8* fileAsArray = new uint8[lengthAsSizeT];
   size_t bytesRead;
-  if (length != (uint64)(bytesRead = file.getWholeFile(fileAsArray, (size_t)length, true))) {
+  if (lengthAsSizeT != (bytesRead = file.getWholeFile(fileAsArray, lengthAsSizeT, true))) {
     switch (bytesRead) {
       case -1:
         error = String("error reading file: ") + errorUtils_errorMessage(errno);
@@ -126,7 +126,7 @@ void* FileResourceInterface::internalSearch(
         delete[] fileAsArray;
         return NULL;
       default:
-        error = String("read only ") + numToString((sint32)bytesRead) +
+        error = String("read only ") + numToString(static_cast<sint32>(bytesRead)) +
           " of " + numToString(length) + " bytes";
         *result = resourceSearchResult_error;
         delete[] fileAsArray;
@@ -136,7 +136,7 @@ void* FileResourceInterface::internalSearch(
   file.releaseLock();
   /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
-  IArchive fileAsArchive(fileAsArray, (size_t)length);
+  IArchive fileAsArchive(fileAsArray, lengthAsSizeT);
   delete[] fileAsArray;
   void* resource = NULL;
 

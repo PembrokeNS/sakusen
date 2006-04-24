@@ -38,8 +38,8 @@ struct LIBSAKUSEN_API Rectangle {
   Rectangle(T x1, T y1, T x2, T y2) :
     minx(x1), miny(y1), maxx(x2), maxy(y2) {}
   Rectangle(const Point<T>& c1, const Point<T>& c2) :
-    minx((T)std::min(c1.x, c2.x)), miny((T)std::min(c1.y, c2.y)),
-    maxx((T)std::max(c1.x, c2.x)), maxy((T)std::max(c1.y, c2.y)) {}
+    minx(static_cast<T>(std::min(c1.x, c2.x))), miny(static_cast<T>(std::min(c1.y, c2.y))),
+    maxx(static_cast<T>(std::max(c1.x, c2.x))), maxy(static_cast<T>(std::max(c1.y, c2.y))) {}
 
   inline T getWidth() const { return maxx - minx; }
   inline T getHeight() const { return maxy - miny; }

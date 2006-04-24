@@ -83,7 +83,7 @@ String Branch::getRequestListRef(
   
   if (setting.empty()) {
     ostringstream out;
-    out << (sint32)children.size() << " items";
+    out << static_cast<uint32>(children.size()) << " items";
     for (__gnu_cxx::hash_map<String, Node*, StringHash>::const_iterator
         child = children.begin(); child != children.end(); child++) {
       out << "\n" << child->second->getName();

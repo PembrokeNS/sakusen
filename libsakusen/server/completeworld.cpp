@@ -24,6 +24,12 @@ CompleteWorld::CompleteWorld(
   fuseQueue(),
   players(p)
 {
+  /* yes, these two variables hold the same number. But it makes type-checking
+   * easier, and the optimizer will deal with them.
+   */
+  size_t vectorSize;
+  uint32 numPlayers;
+
   /* Some sanity checks */
   if (world) {
     Debug("World constructed when world != NULL");
@@ -35,7 +41,9 @@ CompleteWorld::CompleteWorld(
   }
   const MapPlayMode* playMode = &m.getPlayModes()[mode];
   
-  if (!playMode->acceptableNumberOfPlayers((uint32)players.size())) {
+  vectorSize = players.size();
+  numPlayers = static_cast<uint32>(vectorSize);
+  if (!playMode->acceptableNumberOfPlayers(numPlayers)) {
     Fatal("Number of players not acceptable for this map and mode");
   }
   /* TODO: more sanity checks */
@@ -43,12 +51,12 @@ CompleteWorld::CompleteWorld(
   /* assign player ids */
   sint32 i;
   
-  for (i=(sint32)players.size()-1; i>=0; i--) {
+  for (i=numPlayers-1; i>=0; i--) {
     players[i].setPlayerId(i);
   }
   
   /* put units on the map as specified in map */
-  for (i=(sint32)players.size()-1; i>=0; i--) {
+  for (i=numPlayers-1; i>=0; i--) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
     for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();

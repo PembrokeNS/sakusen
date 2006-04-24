@@ -323,7 +323,7 @@ void Server::clearPlayers()
     }
   }
   while (!players.empty()) {
-    PlayerID id = (PlayerID)players.size()-1;
+    PlayerID id = static_cast<PlayerID>(players.size()-1);
     players.pop_back();
     settings.getPlayersBranch()->removePlayer(id);
   }
