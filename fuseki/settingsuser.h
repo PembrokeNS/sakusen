@@ -21,7 +21,7 @@ class SettingsUser {
   private:
     SettingsUser();
   protected:
-    /* \brief Standard constructor
+    /** \brief Standard constructor
      *
      * Initializes user as a member of the groups "world" and \a group. */
     SettingsUser(const String& group);

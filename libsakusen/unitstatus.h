@@ -1,5 +1,5 @@
-#ifndef LIBSAKUSEN__UNIT_H
-#define LIBSAKUSEN__UNIT_H
+#ifndef LIBSAKUSEN__UNITSTATUS_H
+#define LIBSAKUSEN__UNITSTATUS_H
 
 #include "libsakusen-global.h"
 
@@ -20,17 +20,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
         bool rIA,
         bool sIA,
         const std::list<uint32>& su,
-        const std::list<Weapon>& w,
-        /* conditioned orders */
-        Order ord[orderCondition_max],
-        const Order& cO,
-        /* current goals which have been set by orders */
-        const LinearTargetType& lT,
-        const Point<sint32>& tP,
-        const Point<sint16>& tV,
-        const RotationalTargetType& rT,
-        const Orientation& tO,
-        const AngularVelocity& tAV
+        const std::list<Weapon>& w
       );
   public:
     UnitStatus(const IUnitStatus* copy);
@@ -72,20 +62,6 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     std::list<uint32> subunits; /* ids of subunits which must belong to the
                                    same player as this unit */
     std::list<Weapon> weapons;
-    
-    /* conditioned orders */
-    Order orders[orderCondition_max];
-    Order currentOrder; /* The last order given - the one which awaits its
-			   success or failure */
-    /* current goals which have been set by orders */
-    LinearTargetType linearTarget; /* Whether we're currently trying to
-                                      achieve a position or a velocity */
-    Point<sint32> targetPosition; /* The position we're trying to reach */
-    Point<sint16> targetVelocity; /* The velocity we're trying to achieve */
-    RotationalTargetType rotationalTarget;
-    Orientation targetOrientation; /* The orientation we're trying to reach */
-    AngularVelocity targetAngularVelocity; /* The angular velocity we're trying
-					      to achieve */
 
     void initializeWeapons(const UnitType* typePtr, const Universe* universe);
   public:
@@ -99,29 +75,6 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     inline bool isRadarActive(void) const {return radarIsActive;}
     inline bool isSonarActive(void) const {return sonarIsActive;}
 
-    inline const Order& getOrder(OrderCondition c) const {
-      assert(c>=0);
-      assert(c<orderCondition_max);
-      return orders[c];
-    }
-    inline const Order& getCurrentOrder(void) const { return currentOrder; }
-    inline LinearTargetType getLinearTarget(void) const { return linearTarget; }
-    inline const Point<sint32>& getTargetPosition(void) const {
-      return targetPosition;
-    }
-    inline const Point<sint16>& getTargetVelocity(void) const {
-      return targetVelocity;
-    }
-    inline RotationalTargetType getRotationalTarget(void) const {
-      return rotationalTarget;
-    }
-    inline const Orientation& getTargetOrientation(void) const {
-      return targetOrientation;
-    }
-    inline const AngularVelocity& getTargetAngularVelocity(void) const {
-      return targetAngularVelocity;
-    }
-
     typedef Universe loadArgument;
     void store(OArchive&, const Universe*) const;
     static UnitStatus load(IArchive&, const loadArgument*);
@@ -129,5 +82,5 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
 
 }
 
-#endif // LIBSAKUSEN__UNIT_H
+#endif // LIBSAKUSEN__UNITSTATUS_H
 

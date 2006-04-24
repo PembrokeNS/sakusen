@@ -4,6 +4,7 @@
 #include "oarchive.h"
 
 #include "weapontype.h"
+#include "unittype.h"
 
 namespace sakusen {
 

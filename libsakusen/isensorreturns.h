@@ -14,6 +14,11 @@ typedef uint32 SensorReturnsID;
 
 typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
 
+/** \brief Interface to a collection of all sensor returns from a single unit
+ * to a single player.
+ *
+ * \todo As well as an approximate location (the region), we need an
+ * approximate size for the sensed unit. */
 class LIBSAKUSEN_API ISensorReturns {
   public:
     virtual ~ISensorReturns() {}

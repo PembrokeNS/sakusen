@@ -34,6 +34,7 @@ LayeredUnit::LayeredUnit(
   owner(0),
   topLayer(new UnitCore(this, t.getStatus())),
   unit(topLayer->getCore()),
+  orders(),
   sensorReturns(10),
   dirty(false)
 {
@@ -50,6 +51,7 @@ LayeredUnit::LayeredUnit(
         this, startType, startPosition, startOrientation, startVelocity
       )),
   unit(topLayer->getCore()),
+  orders(),
   sensorReturns(10),
   dirty(false)
 {
@@ -60,8 +62,11 @@ LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
   owner(copy.owner),
   topLayer(copy.topLayer->newCopy(this)),
   unit(topLayer->getCore()),
+  orders(copy.orders),
+  sensorReturns(copy.sensorReturns),
   dirty(false)
 {
+  assert(!copy.dirty);
 }
 
 LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
@@ -70,6 +75,10 @@ LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
   ICompleteUnit::operator=(copy);
   topLayer = copy.topLayer->newCopy(this);
   unit = topLayer->getCore();
+  orders = copy.orders;
+  sensorReturns = copy.sensorReturns;
+  dirty = false;
+  assert(!copy.dirty);
 
   return *this;
 }
@@ -82,29 +91,8 @@ LayeredUnit::~LayeredUnit()
 
 void LayeredUnit::acceptOrder(OrderCondition condition)
 {
-  Order newOrder = unit->orders[condition];
-  if (newOrder.isRealOrder()) {
-    /* accept the order */
-    unit->currentOrder = newOrder;
-    
-    /* Clear all orders from the queue */
-    for (int i=0; i<orderCondition_max; i++) {
-      unit->orders[i] = Order();
-    }
-
-    /* Alter the Unit's state appropriately for the order */
-    switch (newOrder.getOrderType()) {
-      case orderType_setVelocity:
-        unit->linearTarget = linearTargetType_velocity;
-        unit->targetVelocity = newOrder.getSetVelocityData().getTarget();
-        break;
-      case orderType_move:
-        unit->linearTarget = linearTargetType_position;
-        unit->targetPosition = newOrder.getMoveData().getTarget();
-        break;
-      default:
-        Fatal("Unknown OrderType");
-    }
+  if (orders.getOrder(condition).isRealOrder()) {
+    orders.acceptOrder(condition);
 
     /* Inform clients */
     world->getPlayerPtr(owner)->informClients(
@@ -115,7 +103,7 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
      * success or failure, not other conditions */
     assert(condition == orderCondition_lastOrderSuccess ||
         condition == orderCondition_lastOrderFailure);
-    unit->currentOrder = Order();
+    orders.clear();
     world->getPlayerPtr(owner)->informClients(
         Update(OrderCompletedUpdateData(unitId, condition))
       );
@@ -176,16 +164,18 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
    * orders' changes */
 
   /* If we've an order to apply right now, then do so */
-  if (unit->orders[orderCondition_now].isRealOrder()) {
+  if (orders.getOrder(orderCondition_now).isRealOrder()) {
     acceptOrder(orderCondition_now);
   }
   
-  switch (unit->linearTarget) {
+  switch (orders.getLinearTarget()) {
     case linearTargetType_none:
       break;
     case linearTargetType_velocity:
-      if (topLayer->getPossibleVelocities().contains(unit->targetVelocity)) {
-        unit->velocity = unit->targetVelocity;
+      if (topLayer->getPossibleVelocities().contains(
+            orders.getTargetVelocity()
+          )) {
+        unit->velocity = orders.getTargetVelocity();
         setDirty();
       } else {
         acceptOrder(orderCondition_lastOrderFailure);
@@ -194,7 +184,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case linearTargetType_position:
       {
         Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
-            unit->targetPosition, unit->position);
+            orders.getTargetPosition(), unit->position);
         Point<sint32> desiredVelocity;
         desiredVelocity =
           topLayer->getPossibleVelocities().truncateToFit(desiredDirection);
@@ -206,7 +196,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
       }
       break;
     default:
-      Fatal("Unknown linearTargetType '" << unit->linearTarget << "'");
+      Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
       break;
   }
   
@@ -224,24 +214,24 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   
   /* determine if the currentOrder has succeeded or failed, and if so
    * then update the currentOrder appropriately and inform clients */
-  switch (unit->currentOrder.getOrderType()) {
+  switch (orders.getCurrentOrder().getOrderType()) {
     case orderType_none:
       break;
     case orderType_setVelocity:
       if (unit->velocity ==
-          unit->currentOrder.getSetVelocityData().getTarget()) {
+          orders.getCurrentOrder().getSetVelocityData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
     case orderType_move:
       if (unit->position ==
-          unit->currentOrder.getMoveData().getTarget()) {
+          orders.getCurrentOrder().getMoveData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
     default:
       Fatal("Unknown orderType '" <<
-          unit->currentOrder.getOrderType() << "'");
+          orders.getCurrentOrder().getOrderType() << "'");
       break;
   }
 }
@@ -254,7 +244,7 @@ void LayeredUnit::enqueueOrder(
   if (condition >= orderCondition_max || condition < 0) {
     Fatal("Unknown OrderCondition");
   }
-  unit->orders[condition] = order;
+  orders.enqueueOrder(condition, order);
   world->getPlayerPtr(owner)->informClients(
       Update(OrderQueuedUpdateData(unitId, order, condition))
     );

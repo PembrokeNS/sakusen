@@ -10,6 +10,7 @@
 #include "unitlayer.h"
 #include "unittemplate.h"
 #include "dynamicsensorreturns.h"
+#include "unitorders.h"
 
 namespace sakusen {
 namespace server {
@@ -68,6 +69,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
      *
      * Not owned by this (except insofar as it may be equal to topLayer) */
     UnitStatus* unit;
+
+    UnitOrders orders;
+    
     /** \brief Sensor returns from this unit, indexed by the player doing the
      * sensing. */
     __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef> sensorReturns;

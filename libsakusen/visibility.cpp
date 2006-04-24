@@ -24,17 +24,16 @@ void SensorCapability::updateReturn(
     SensorType /*type*/,
     bool* changed,
     Perception* maxPerception,
-    uint32* bestRadius
+    uint32* /*bestRadius*/
   ) const
 {
-  *bestRadius = 0;
   /** \todo Actually make this a real test, rather than an always-full result.
    * */
-  if (retrn.perception != perception_full) {
-    retrn.perception = perception_full;
+  if (retrn.perception != perception_unit) {
+    retrn.perception = perception_unit;
     *changed = true;
   }
-  *maxPerception = perception_full;
+  *maxPerception |= perception_unit;
 }
 
 void Sensors::updateReturns(

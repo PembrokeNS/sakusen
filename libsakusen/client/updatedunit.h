@@ -3,6 +3,7 @@
 
 #include "completeunit.h"
 #include "updatedata.h"
+#include "unitorders.h"
 
 namespace sakusen {
 namespace client {
@@ -12,14 +13,13 @@ class UpdatedUnit : public CompleteUnit {
     UpdatedUnit();
   public:
     UpdatedUnit(const CompleteUnit& copy) :
-      CompleteUnit(copy), altered(false)
+      CompleteUnit(copy), orders(), altered(false)
     {}
     virtual ~UpdatedUnit() {}
   private:
+    UnitOrders orders;
     /** Whether this Unit has already been altered this tick */
     bool altered;
-
-    void clearOrders();
   public:
     void orderQueued(const OrderQueuedUpdateData& data);
     void orderAccepted(const OrderAcceptedUpdateData& data);

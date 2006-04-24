@@ -4,32 +4,20 @@
 namespace sakusen {
 namespace client {
 
-void UpdatedUnit::clearOrders()
-{
-  for (int i=0; i<orderCondition_max; ++i) {
-    status.orders[i] = Order();
-  }
-}
-
 void UpdatedUnit::orderQueued(const OrderQueuedUpdateData& data)
 {
   assert(data.getCondition() < orderCondition_max);
-  status.orders[data.getCondition()] = data.getOrder();
+  orders.enqueueOrder(data.getCondition(), data.getOrder());
 }
 
 void UpdatedUnit::orderAccepted(const OrderAcceptedUpdateData& data)
 {
-  assert(data.getCondition() < orderCondition_max);
-  status.currentOrder = status.orders[data.getCondition()];
-  assert(status.currentOrder.isRealOrder());
-  clearOrders();
+  orders.acceptOrder(data.getCondition());
 }
 
-void UpdatedUnit::orderCompleted(const OrderCompletedUpdateData& data)
+void UpdatedUnit::orderCompleted(const OrderCompletedUpdateData& /*data*/)
 {
-  assert(data.getCondition() < orderCondition_max);
-  status.currentOrder = Order();
-  clearOrders();
+  orders.clear();
 }
 
 void UpdatedUnit::alter(const CompleteUnit& to)

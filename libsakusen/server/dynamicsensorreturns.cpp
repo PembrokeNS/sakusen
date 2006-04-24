@@ -91,16 +91,16 @@ void DynamicSensorReturns::update()
       sensers.erase(returnsIt);
     } else if (returnsIt == sensers.end() &&
         thisPerception != perception_none) {
-      /* Note: If SensorReturn has a non-trivial copy constructor then the
-       * following will not work properly. */
       sensers[unitIt->first] = *returns;
     }
-    perception = static_cast<Perception>(perception | thisPerception);
+    perception |= thisPerception;
   }
 
   if (dirty) {
     if (0 != (perception & perception_region)) {
       delete region;
+      /* \todo Add some randomness to the position of the centre of the region,
+       * otherwise it might as well just be a point */
       region = new Region<sint32>(new SphereRegionData<sint32>(
             sensee->getIStatus()->getPosition(), bestRadius
           ));
