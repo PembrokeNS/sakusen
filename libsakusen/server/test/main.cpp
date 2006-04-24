@@ -66,7 +66,7 @@ void doLoadTest(ostream& output)
   clock_t timeTaken = endTime - startTime;
   cout << "Test complete." << endl;
   if (0 != timeTaken) {
-    cout << "Tickrate: "<<numTicks / timeTaken<<" t/ms "<<endl;
+    cout << "Tickrate: "<<1000 * numTicks / timeTaken<<" tps "<<endl;
   } 
   else {
     cout<<"Test too fast to time."<<endl;

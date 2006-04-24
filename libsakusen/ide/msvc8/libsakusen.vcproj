@@ -601,6 +601,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\unitorders.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitorders.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\unitstatus-methods.h"
 			>
 		</File>

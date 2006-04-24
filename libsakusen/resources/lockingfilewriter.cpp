@@ -25,7 +25,7 @@ int LockingFileWriter::open()
 {
   #ifdef _MSC_VER //Secure deprecation warning
     errno_t err;
-    err = fopen_s(&stream, fileName.c_str(), "rb");
+    err = fopen_s(&stream, fileName.c_str(), "wb");
     if (err) {
       return -1;
     }
@@ -86,6 +86,7 @@ bool LockingFileWriter::write(const uint8* buffer, size_t length, bool block)
   size_t numBytes = fileUtils_write(fd, buffer, length);
   /*Debug("wrote " << numBytes << " bytes");*/
   if (size_t(numBytes) != length) {
+    /*QDebug("write failed. tried to write "<<length<<" bytes, but wrote "<<numBytes<<" bytes.");*/
     return true;
   }
   return false;
