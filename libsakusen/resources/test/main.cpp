@@ -168,6 +168,37 @@ int main(/*int argc, char** argv*/)
     default:
       break;
   }
+
+  cout << "Creating two-player map" << endl;
+  vector<UnitTemplate> realPlayer2sUnits;
+  realPlayer2sUnits.push_back(
+      UnitTemplate(
+        &universe,
+        UnitStatus(
+          &universe,
+          universe.getUnitTypeId(0),
+          Point<sint32>(100,-100,0),
+          Orientation(),
+          Point<sint16>()
+        )
+      )
+    );
+  players.push_back(PlayerTemplate(false, false, realPlayer2sUnits));
+  playMode = MapPlayMode(3, 3, players);
+  playModes.clear();
+  playModes.push_back(playMode);
+  delete t;
+  t = new MapTemplate(
+      &universe, "2map", Point<sint32>(10000,10000,10000),
+      Point<sint32>(-10000,-10000,-10000), topology_plane,
+      heightfield, 10 /* gravity */, playModes
+    );
+
+  cout << "Saving two player map" << endl;
+  if (resourceInterface->save(t)) {
+    cout << resourceInterface->getError() << endl;
+    return EXIT_FAILURE;
+  }
   
   delete reloadedTemplate;
   delete reloadedUniverse;

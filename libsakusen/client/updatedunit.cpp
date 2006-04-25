@@ -17,7 +17,8 @@ void UpdatedUnit::orderAccepted(const OrderAcceptedUpdateData& data)
 
 void UpdatedUnit::orderCompleted(const OrderCompletedUpdateData& /*data*/)
 {
-  orders.clear();
+  orders.clearQueue();
+  orders.clearCurrent();
 }
 
 void UpdatedUnit::alter(const CompleteUnit& to)

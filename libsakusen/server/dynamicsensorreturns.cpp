@@ -28,7 +28,7 @@ DynamicSensorReturns::DynamicSensorReturns(
 
 PlayerID DynamicSensorReturns::getOwner() const
 {
-  if (0 != (perception & perception_owner)) {
+  if (0 != (perception & (perception_owner | perception_unit))) {
     return sensee->getOwner();
   } else {
     return 0;
@@ -56,6 +56,16 @@ const ICompleteUnit* DynamicSensorReturns::getUnit() const
 /** \brief Update the sensor return for a new game state */
 void DynamicSensorReturns::update()
 {
+  /* If the player is player 0 then they get to see everything (so that
+   * observers can see everything) */
+  if (senserOwner->getId() == 0) {
+    if (perception != perception_unit) {
+      perception = perception_unit;
+      dirty = true;
+    }
+    return;
+  }
+    
   /* If the player owns the unit, then clear and quit */
   if (sensee->getOwner() == senserOwner->getId()) {
     sensers.clear();
@@ -96,18 +106,20 @@ void DynamicSensorReturns::update()
     perception |= thisPerception;
   }
 
-  if (dirty) {
-    if (0 != (perception & perception_region)) {
-      delete region;
-      /* \todo Add some randomness to the position of the centre of the region,
-       * otherwise it might as well just be a point */
-      region = new Region<sint32>(new SphereRegionData<sint32>(
-            sensee->getIStatus()->getPosition(), bestRadius
-          ));
-    } else {
-      delete region;
-      region = NULL;
-    }
+  if (0 != (perception & perception_region)) {
+    /* We need to set dirty every time, because presumably the random component
+     * could change every tick, and also we aren't informed by the unit
+     * whenever its position changes, so that could have altered too. */
+    dirty = true;
+    delete region;
+    /* \todo Add some randomness to the position of the centre of the region,
+     * otherwise it might as well just be a point */
+    region = new Region<sint32>(new SphereRegionData<sint32>(
+          sensee->getIStatus()->getPosition(), bestRadius
+        ));
+  } else {
+    delete region;
+    region = NULL;
   }
 }
 

@@ -43,6 +43,7 @@ list<UpdatedUnit*> PartialWorld::getUnitsIntersecting(
     const Rectangle<sint32>& rect
   )
 {
+  /*QDebug("checking " << units.size() << " units for intersection");*/
   /** \todo make this fast by storing data sensibly */
   list<UpdatedUnit*> result;
 

@@ -112,7 +112,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   }
   */
   
-  mhash(thread, buffer, static_cast<mutils_word32>(length));
+  mhash(thread, buffer, length);
 
   uint8 hash[32];
   

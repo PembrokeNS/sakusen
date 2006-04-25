@@ -47,6 +47,7 @@ void MapDisplay::paint()
     
     list<UpdatedUnit*> unitsToDraw =
       sakusen::client::world->getUnitsIntersecting(displayRect);
+    /*QDebug("drawing " << unitsToDraw.size() << " units");*/
     for (list<UpdatedUnit*>::iterator unit = unitsToDraw.begin();
         unit != unitsToDraw.end(); ++unit) {
       bool selected = ((ui->getSelection().count((*unit)->getId()))!=0);
@@ -56,6 +57,7 @@ void MapDisplay::paint()
     
     list<UpdatedSensorReturns*> returnsToDraw =
       sakusen::client::world->getSensorReturnsIntersecting(displayRect);
+    /*QDebug("drawing " << unitsToDraw.size() << " sensor returns");*/
     for (list<UpdatedSensorReturns*>::iterator retrn = returnsToDraw.begin();
         retrn != returnsToDraw.end(); ++retrn) {
       if ((*retrn)->getPerception() & perception_unit) {
@@ -97,7 +99,7 @@ void MapDisplay::translate(const Point<sint32>& d)
   posOfDisplayZero =
     sakusen::world->getMap()->addToPosition(posOfDisplayZero, d);
   getRegion()->paint();
-  Debug("posOfDisplayZero=" << posOfDisplayZero);
+  /*Debug("posOfDisplayZero=" << posOfDisplayZero);*/
 }
 
 void MapDisplay::translate(sint32 dx, sint32 dy)

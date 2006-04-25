@@ -36,8 +36,10 @@ ServerInterface::ServerInterface(
   abstract(a),
 #endif
   joined(false),
+  id(0),
   incomingSocket(NULL),
-  outgoingSocket(NULL)
+  outgoingSocket(NULL),
+  universeName()
 {
   /*Debug("unixSockets = " << unixSockets);*/
   /** \todo Make timeout user-specifiable (currently 5 seconds) */
@@ -75,6 +77,11 @@ void ServerInterface::initialSettingsSetup()
 #else
   setClientSetting("application:revision", "unknown");
 #endif
+
+  /* we request the universe name and hash so that our game can be set up
+   * correctly if they were set before we joined */
+  getSetting("game:universe:name");
+  getSetting("game:universe:hash");
 }
 
 void ServerInterface::settingAlteration(
@@ -84,9 +91,17 @@ void ServerInterface::settingAlteration(
 {
   if (setting == ":game:universe:name") {
     /* Store the universe name for use when the hash arrives */
+    /*QDebug("storing universe name");*/
     universeName = value;
   }
   else if (setting == ":game:universe:hash") {
+    /* If the universe name is not set, then we must have caught the tail end
+     * of a report that was in progress when we joined.  The hash *should*
+     * arrive again after the name, so for now we wait */
+    if (universeName.empty()) {
+      Debug("got universe hash without name");
+      return;
+    }
     /* When the universe is set we need to let game know */
     game->setUniverse(universeName, value);
   }

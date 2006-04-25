@@ -96,7 +96,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
       getSensorReturns(void) const { return sensorReturns; }
 
-    inline void setDirty(void) { dirty = true; }
+    void setDirty(void);
     void clearDirty(void);
     
     void setPosition(const Point<sint32>& pos);

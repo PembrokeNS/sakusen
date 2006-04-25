@@ -89,6 +89,7 @@ void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
 
 void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
 {
+  /*QDebug("[Player::addUnit]");*/
   ++lastUnitId;
   if (units.count(lastUnitId)) {
     Fatal("tried to insert a unit with an existing id");

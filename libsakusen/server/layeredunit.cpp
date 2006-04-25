@@ -5,6 +5,8 @@
 #include "region-methods.h"
 #include "unitstatus-methods.h"
 
+using namespace __gnu_cxx;
+
 namespace sakusen{
 namespace server{
 
@@ -103,10 +105,28 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
      * success or failure, not other conditions */
     assert(condition == orderCondition_lastOrderSuccess ||
         condition == orderCondition_lastOrderFailure);
-    orders.clear();
+    orders.clearQueue();
+    orders.clearCurrent();
     world->getPlayerPtr(owner)->informClients(
         Update(OrderCompletedUpdateData(unitId, condition))
       );
+  }
+}
+
+void LayeredUnit::setDirty()
+{
+  /* The following algorithm assumes that dirty flags on sensor returns and
+   * units are cleared at sufficiently close to the same time that it's safe to
+   * assume that if we're still dirty, then so are they. */
+  if (!dirty) {
+    dirty = true;
+    for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
+        sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
+      DynamicSensorReturns& r = returns->second->second;
+      if (0 != (r.getPerception() & perception_unit)) {
+        r.setDirty();
+      }
+    }
   }
 }
 

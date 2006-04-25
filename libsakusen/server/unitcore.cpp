@@ -4,6 +4,8 @@
 #include "player.h"
 #include "unitstatus-methods.h"
 
+using namespace __gnu_cxx;
+
 namespace sakusen{
 namespace server{
 
@@ -125,12 +127,25 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   /* existence check goes here */
   Player* fromPtr = world->getPlayerPtr(owner);
   Player* toPtr = world->getPlayerPtr(to);
-  outerUnit->clearDirty();
   if (why != changeOwnerReason_created) {
+    /* We clear the dirty flag so that the old owner gets to see the very last
+     * changes to the unit, if any */
+    outerUnit->clearDirty();
     fromPtr->removeUnit(outerUnit->getId(), why);
   }
   owner = to;
   toPtr->addUnit(outerUnit, why);
+  /* We also need to ensure that sensor returns from this unit are flagged so
+   * that the change of ownership is transmitted. */
+  for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
+      outerUnit->getSensorReturns().begin();
+      returns != outerUnit->getSensorReturns().end(); ++returns) {
+    DynamicSensorReturns& r = returns->second->second;
+    if (0 != (r.getPerception() & (perception_unit | perception_owner))) {
+      r.setDirty();
+    }
+  }
+  
   /* \todo Deal with subunits */
 }
 

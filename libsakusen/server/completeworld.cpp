@@ -51,12 +51,12 @@ CompleteWorld::CompleteWorld(
   
   /* assign player ids */
   
-  for (i=0; i < numPlayers; i--) {
+  for (i=0; i < numPlayers; i++) {
     players[i].setPlayerId(i);
   }
   
   /* put units on the map as specified in map */
-  for (i=0; i < numPlayers; i--) {
+  for (i=0; i < numPlayers; i++) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
     for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();

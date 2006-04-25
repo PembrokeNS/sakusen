@@ -5,6 +5,7 @@
 #include "timeutils.h"
 #include "errorutils.h"
 #include "unixdatagramconnectingsocket.h"
+#include "socketexn.h"
 #include "libsakusen-resources-global.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
@@ -274,8 +275,15 @@ void runClient(
     
     /* Connect to the socket */
     cout << "Trying to connect to socket at " << socketAddress << endl;
+    Socket* socket = NULL;
     
-    Socket* socket = Socket::newConnectionToAddress(socketAddress);
+    try {
+      socket = Socket::newConnectionToAddress(socketAddress);
+    } catch (SocketExn* e) {
+      cout << "Failed to connect: " << e->message;
+      delete e;
+      exit(EXIT_FAILURE);
+    }
 
     if (socket == NULL) {
       cout << "Socket type not supported, please check the address and try "

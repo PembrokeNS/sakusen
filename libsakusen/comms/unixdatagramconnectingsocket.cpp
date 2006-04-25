@@ -3,6 +3,7 @@
 #include "unixdatagramconnectingsocket.h"
 
 #include "errorutils.h"
+#include "socketexn.h"
 
 #include <sys/socket.h>
 
@@ -16,7 +17,9 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error connecting socket: " << errorUtils_errorMessage(errno));
+    throw new SocketExn(
+        "Error connecting socket: " + errorUtils_errorMessage(errno)
+      );
   }
 }
 
@@ -28,9 +31,9 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error connecting socket (abstract="<<abstract<<", path='"<<path<<
-        "', addr.sun_path='"<<addr.sun_path<<"'): " <<
-        errorUtils_errorMessage(errno));
+    throw new SocketExn(
+        "Error connecting socket: " + errorUtils_errorMessage(errno)
+      );
   }
 }
 

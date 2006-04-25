@@ -39,6 +39,7 @@ class DynamicSensorReturns : public ISensorReturns {
     inline const SensorReturnMap& getSensorReturns() const { return sensers; }
     inline bool empty() const { return sensers.empty(); }
     inline bool isDirty() const { return dirty; }
+    inline void setDirty() { dirty = true; }
     inline void clearDirty() { dirty = false; }
     void update();
 };

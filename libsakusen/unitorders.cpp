@@ -38,11 +38,10 @@ UnitOrders::UnitOrders() :
 void UnitOrders::acceptOrder(OrderCondition condition)
 {
   assert(condition < orderCondition_max);
-  const Order& newOrder = orders[condition];
   /* accept the order */
-  currentOrder = newOrder;
+  currentOrder = orders[condition];
   
-  clear();
+  clearQueue();
 
   /* Alter the Unit's state appropriately for the order */
   switch (currentOrder.getOrderType()) {
@@ -59,7 +58,7 @@ void UnitOrders::acceptOrder(OrderCondition condition)
   }
 }
 
-void UnitOrders::clear()
+void UnitOrders::clearQueue()
 {
   /* Clear all orders from the queue */
   for (int i=0; i<orderCondition_max; i++) {

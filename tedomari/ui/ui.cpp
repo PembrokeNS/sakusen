@@ -154,7 +154,7 @@ void UI::keyUp(Key k)
     list<String> tokens(binding->second);
     executeCommands(tokens);
   } else {
-    Debug("Unbound key: -" << getName(k));
+    /*Debug("Unbound key: -" << getName(k));*/
   }
 }
 

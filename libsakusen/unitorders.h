@@ -70,7 +70,8 @@ class LIBSAKUSEN_API UnitOrders {
     }
 
     void acceptOrder(OrderCondition condition);
-    void clear();
+    void clearQueue();
+    inline void clearCurrent() { currentOrder = Order(); }
 
     void store(OArchive&) const;
     static UnitOrders load(IArchive&);
