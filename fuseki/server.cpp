@@ -252,12 +252,17 @@ void Server::handleClientMessages()
               out << "Client requested setting " << setting << "\n";
               String reason;
               String value;
-              reason = settings.getRequest(setting, value, client);
+              const Node* node = NULL;
+              reason = settings.getRequest(setting, value, node, client);
               if (reason != "") {
                 out << "Request rejected (" << reason << ")\n";
                 client->send(RejectMessageData(reason));
               } else {
-                client->send(NotifySettingMessageData(setting, value));
+                /* We send back node->getFullName() rather than just setting to
+                 * ensure that it is in canonical form */
+                client->send(
+                    NotifySettingMessageData(node->getFullName(), value)
+                  );
               }
             }
             break;

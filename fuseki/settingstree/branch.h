@@ -48,6 +48,7 @@ class Branch : public Node {
     virtual String getRequestListRef(
         std::list<String>& setting,
         String& value,
+        const Node*& node,
         const SettingsUser* user
       ) const;
   public:

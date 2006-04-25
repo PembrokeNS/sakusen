@@ -32,6 +32,7 @@ class Leaf : public Node {
     virtual String getRequestListRef(
         std::list<String>& nodeAddress,
         String& value,
+        const Node*& node,
         const SettingsUser* client
       ) const;
     virtual String setValue(const String& v) = 0;

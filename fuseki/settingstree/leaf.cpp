@@ -64,6 +64,7 @@ String Leaf::changeRequestListRef(
 String Leaf::getRequestListRef(
     list<String>& nodeAddress,
     String& value,
+    const Node*& node,
     const SettingsUser* user) const
 {
   if (!user->hasReadPermissionFor(this)) {
@@ -76,6 +77,7 @@ String Leaf::getRequestListRef(
   }
 
   value = getValue();
+  node = this;
   return "";
 }
 

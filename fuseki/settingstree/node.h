@@ -69,13 +69,15 @@ class Node {
     virtual String getRequestListRef(
         std::list<String>& nodeAddress,
         String& value,
+        const Node*& node,
         const SettingsUser* user
       ) const = 0; /* Note: alters its arguments nodeAddress, value */
     inline String getRequestList(
         std::list<String> nodeAddress,
         String& value,
+        const Node*& node,
         const SettingsUser* user
-      ) const { return getRequestListRef(nodeAddress, value, user); }
+      ) const { return getRequestListRef(nodeAddress, value, node, user); }
 };
 
 }}

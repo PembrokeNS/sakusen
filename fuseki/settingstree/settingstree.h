@@ -31,6 +31,7 @@ class SettingsTree : public Branch {
     String getRequest(
         const String& node,
         String& value,
+        const Node*& node,
         const SettingsUser* user
       ) const;
     Node* getNode(const String& nodeAddress);

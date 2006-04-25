@@ -61,10 +61,11 @@ String SettingsTree::changeRequest(
 String SettingsTree::getRequest(
     const String& nodeAddress,
     String& value,
+    const Node*& node,
     const SettingsUser* user) const
 {
   return getRequestList(
-      stringNodeAddressToList(nodeAddress), value, user
+      stringNodeAddressToList(nodeAddress), value, node, user
     );
 }
 

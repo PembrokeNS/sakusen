@@ -74,6 +74,7 @@ String Branch::changeRequestListRef(
 String Branch::getRequestListRef(
     list<String>& setting,
     String& value,
+    const Node*& node,
     const SettingsUser* user) const
 {
   if (!user->hasReadPermissionFor(this)) {
@@ -89,6 +90,7 @@ String Branch::getRequestListRef(
       out << "\n" << child->second->getName();
     }
     value = out.str();
+    node = this;
     return "";
   }
 
@@ -101,7 +103,7 @@ String Branch::getRequestListRef(
 
   setting.pop_front();
   
-  return child->getRequestListRef(setting, value, user);
+  return child->getRequestListRef(setting, value, node, user);
 }
 
 Node* Branch::getChild(String name)
