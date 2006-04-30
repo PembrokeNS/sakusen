@@ -29,7 +29,7 @@ class SettingsTree : public Branch {
         const SettingsUser* user
       );
     String getRequest(
-        const String& node,
+        const String& nodeAddress,
         String& value,
         const Node*& node,
         const SettingsUser* user
