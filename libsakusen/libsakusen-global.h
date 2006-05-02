@@ -55,20 +55,20 @@
   typedef unsigned __int64     uint64;
 
   //Limit constants following the types.
-  #define SINT8_MIN _I8_MIN
-  #define SINT8_MAX _I8_MAX
+  #define INT8_MIN _I8_MIN
+  #define INT8_MAX _I8_MAX
   #define UINT8_MAX _UI8_MAX  
   
-  #define SINT16_MIN _I16_MIN
-  #define SINT16_MAX _I16_MAX
+  #define INT16_MIN _I16_MIN
+  #define INT16_MAX _I16_MAX
   #define UINT16_MAX _UI16_MAX  
 
-  #define SINT32_MIN _I32_MIN
-  #define SINT32_MAX _I32_MAX
+  #define INT32_MIN _I32_MIN
+  #define INT32_MAX _I32_MAX
   #define UINT32_MAX _UI32_MAX  
 
-  #define SINT64_MIN _I64_MIN
-  #define SINT64_MAX _I64_MAX
+  #define INT64_MIN _I64_MIN
+  #define INT64_MAX _I64_MAX
   #define UINT64_MAX _UI64_MAX  
 
   #define _USE_MATH_DEFINES 1;

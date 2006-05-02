@@ -58,10 +58,10 @@ struct LIBSAKUSEN_API Rectangle {
   bool fastIntersects(const ISensorReturns*) const;
   inline Rectangle<T> intersect(const Rectangle<T>& right) const {
     return Rectangle<T>(
-        std::max(minx, right.minx),
-        std::max(miny, right.miny),
-        std::min(maxx, right.maxx),
-        std::min(maxy, right.maxy)
+        static_cast<T>(std::max(minx, right.minx)),
+        static_cast<T>(std::max(miny, right.miny)),
+        static_cast<T>(std::min(maxx, right.maxx)),
+        static_cast<T>(std::min(maxy, right.maxy))
       );
   }
 
