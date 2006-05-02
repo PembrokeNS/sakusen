@@ -49,6 +49,11 @@ class LIBSAKUSEN_API Point {
       return x==right.x && y==right.y && z==right.z;
     }
 
+    template <typename U>
+    inline bool operator!=(const Point<U>& right) const {
+      return x!=right.x || y!=right.y || z!=right.z;
+    }
+
     /* Order operators use the product order.  Note that this is a partial
      * order only, not a total order (so don't use Point<T>s in an
      * ordered container) */

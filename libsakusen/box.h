@@ -6,7 +6,7 @@
 
 namespace sakusen {
 
-/** Represents an axis-aligned box (cube) in 3D space.
+/** Represents an axis-aligned box (cuboid) in 3D space.
  *
  * A box is defined by its two corner points x1 and x2, where x1 \<= x2.
  * A point p is inside the box if forall basis vectors e, x1_e \<= p_e
@@ -20,15 +20,15 @@ class LIBSAKUSEN_API Box {
     Point<T> min;
     Point<T> max;
   public:
-    /** Uses the default ::Point twice to create an empty ::Box. */
+    /** Uses the default Point twice to create an empty ::Box. */
     Box(): min(), max() {}
-    /** Creates a ::Box with the given corners. The caller is
+    /** Creates a Box with the given corners. The caller is
      * responsible for ensuring that \p x1 \<= \p x2.
      */
-    Box(Point<T> x1, Point<T> x2): min(x1), min(x2) {}
+    Box(Point<T> x1, Point<T> x2): min(x1), max(x2) {}
     Box(const Box<T>& b): min(b.min), max(b.max) {}
     ~Box() {}
-    /** For a ::Box \c b, \c b[0] is the lower-left corner, and \c b[1]
+    /** For a Box \c b, \c b[0] is the lower-left corner, and \c b[1]
      * is the upper-right corner.
      */
     inline T& operator[](const int i) const {
@@ -42,6 +42,14 @@ class LIBSAKUSEN_API Box {
       }
     }
 
+    inline const Point<T>& getMin() const {
+      return min;
+    }
+
+    inline const Point<T>& getMax() const {
+      return max;
+    }
+
     inline bool operator==(const Box b) const {
       return min == b.min && max == b.max;
     }
@@ -51,13 +59,13 @@ class LIBSAKUSEN_API Box {
       return out;
     }
 
-    /** Tests whether \c this is a valid ::Box. */
+    /** Tests whether \c this is a valid Box. */
     inline bool isValid() const {
-      return (min < max);
+      return (min <= max);
     }
 
-    /** \brief Tests whether this ::Box is empty (i.e. there does not exist
-     * a ::Point inside it).
+    /** \brief Tests whether this Box is empty (i.e. there does not exist
+     * a Point inside it).
      * 
      * In fact, it just compares the lower-left point and the upper-right
      * point for equality.
@@ -70,6 +78,11 @@ class LIBSAKUSEN_API Box {
     bool intersects(const Box<T>& b) const;
     Box<T> intersection(const Box<T>& b) const;
     Box<T> enclosure(const Box<T>& b) const;
+
+    /** \brief Gets the smallest Rectangle bounding this Box */
+    Rectangle<T> rectangle() const {
+      return Rectangle<T>(min.x, min.y, max.x, max.y);
+    }
 };
 
 /** \brief Tests whether \p p is inside this ::Box.
@@ -132,12 +145,12 @@ Box<T> Box<T>::intersection(const Box<T>& b) const {
 
 /** \brief Unions \p b with this one and returns the result.
  *
- * This returns the smallest ::Box that contains both this one and \p b.
+ * This returns the smallest Box that contains both this one and \p b.
  * Unless the boxes are neatly aligned, the result will also contain
  * lots of points outside the two, but you can't help that.
  *
  * If both boxes are empty, the result will not necessarily be empty. It
- * will be the minimal ::Box that contains the corners of both. If that
+ * will be the minimal Box that contains the corners of both. If that
  * annoys you, check for emptiness first.
  *
  * \todo Use fewer branches.

@@ -34,6 +34,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     /* accessors */
     inline Map* getMap(void) { return map; }
     inline const Map* getMap(void) const { return map; }
+    inline const CompleteMap* getCompleteMap(void) const { return map; }
     inline void addUnit(const LayeredUnit& unit, PlayerID owner) {
       units.push_back(unit);
       units.back().changeOwner(owner, changeOwnerReason_created);

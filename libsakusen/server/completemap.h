@@ -18,13 +18,17 @@ class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
     CompleteMap(
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-        uint16 gravity
+        uint16 gravity,
+        const Heightfield& heightfield
       );
   public:
     virtual ~CompleteMap() {}
   private:
     Heightfield heightfield;
+
+    void sanityCheck();
   public:
+    inline const Heightfield& getHeightfield() const { return heightfield; }
     static Map* newMap(const MapTemplate& t);
 };
 

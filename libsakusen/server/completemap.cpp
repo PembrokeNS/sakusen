@@ -9,16 +9,35 @@ CompleteMap::CompleteMap(const MapTemplate& t) :
   Map(t),
   heightfield(t.getHeightfield())
 {
+  sanityCheck();
 }
 
 CompleteMap::CompleteMap(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
-    uint16 gravity
+    uint16 gravity,
+    const Heightfield& h
   ) :
   Map(topRight, bottomLeft, gravity),
-  heightfield()
+  heightfield(h)
 {
+  sanityCheck();
+}
+
+void CompleteMap::sanityCheck()
+{
+  if (0 != width() % heightfield.getHorizontalResolution() ||
+      0 != height() % heightfield.getHorizontalResolution()) {
+    Fatal("heightfield resolution not eact factor of map dimensions");
+  }
+  if (heightfield.getWidth() !=
+      1+width()/heightfield.getHorizontalResolution()) {
+    Fatal("heightfield width incorrect");
+  }
+  if (heightfield.getHeight() !=
+      1+height()/heightfield.getHorizontalResolution()) {
+    Fatal("heightfield height incorrect");
+  }
 }
 
 Map* CompleteMap::newMap(const MapTemplate& t)

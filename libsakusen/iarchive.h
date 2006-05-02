@@ -122,6 +122,16 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T>
+    IArchive& extract(T* result, size_t size)
+    {
+      for (size_t i=0; i<size; ++i) {
+        result[i] = load<T>();
+      }
+
+      return *this;
+    }
+    
+    template<typename T>
     IArchive& operator>>(std::vector<T>& result)
     {
       assert(result.empty());

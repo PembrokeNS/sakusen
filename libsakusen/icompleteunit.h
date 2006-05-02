@@ -6,6 +6,7 @@
 #include <list>
 #include "point.h"
 #include "rectangle.h"
+#include "box.h"
 #include "unittype.h"
 #include "iunitstatus.h"
 
@@ -27,6 +28,7 @@ class LIBSAKUSEN_API ICompleteUnit {
     virtual const IUnitTypeData* getITypeData(void) const = 0;
     
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
+    virtual Box<sint32> getBoundingBox(void) const;
 };
 
 }

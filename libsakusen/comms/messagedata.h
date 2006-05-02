@@ -217,6 +217,11 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
     inline const String& getValue() const { return value; }
 };
 
+/** \brief Message providing data needed by client to initialize the game
+ *
+ * \todo We don't want to actually pass this much information (in particular,
+ * we do not wish to reveal the map bounds in advance), but for the moment we
+ * do so, because it makes writing the client much easier. */
 class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
   private:
     GameStartMessageData();

@@ -79,6 +79,16 @@ class LIBSAKUSEN_API OArchive {
 
       return *this;
     }
+    
+    template<typename T>
+    OArchive& insert(const T* toStore, size_t size)
+    {
+      for (size_t i=0; i<size; ++i) {
+        store<T>(toStore[i]);
+      }
+
+      return *this;
+    }
 
     template<typename T>
 	  OArchive& operator<<(const std::vector<T>& toStore)

@@ -51,6 +51,11 @@ int main(/*int argc, char** argv*/)
     NativeUnlink(maps.front().c_str());
     maps.pop_front();
   }
+  maps = fileUtils_findMatches(dataDir + "/maptemplate", "2map.");
+  while (!maps.empty()) {
+    NativeUnlink(maps.front().c_str());
+    maps.pop_front();
+  }
   
   cout << "Creating Universe" << endl;
   vector<UnitType> unitTypes;
@@ -61,7 +66,7 @@ int main(/*int argc, char** argv*/)
           100 /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(10,10,10) /* size */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 4))
             /* possibleAccelerations */,
           Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
             /* possibleVelocities */,
@@ -75,7 +80,7 @@ int main(/*int argc, char** argv*/)
         false /* fixed */,
         true /* ground */,
         false /* surface */,
-        false /* air */,
+        true /* gravity */,
         true /* seabed */,
         std::list<WeaponTypeID>(),
         NULL /* corpseUnitType */
@@ -108,7 +113,8 @@ int main(/*int argc, char** argv*/)
   }
 
   cout << "Creating map" << endl;
-  Heightfield heightfield = Heightfield();
+#define MAP_WIDTH 1000
+  Heightfield heightfield(2*MAP_WIDTH, 2, 2, 2);
   vector<UnitTemplate> neutralPlayersUnits;
   vector<UnitTemplate> realPlayersUnits;
   neutralPlayersUnits.push_back(
@@ -142,8 +148,8 @@ int main(/*int argc, char** argv*/)
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
   MapTemplate* t = new MapTemplate(
-      &universe, "map", Point<sint32>(10000,10000,10000),
-      Point<sint32>(-10000,-10000,-10000), topology_plane,
+      &universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
 
@@ -189,8 +195,8 @@ int main(/*int argc, char** argv*/)
   playModes.push_back(playMode);
   delete t;
   t = new MapTemplate(
-      &universe, "2map", Point<sint32>(10000,10000,10000),
-      Point<sint32>(-10000,-10000,-10000), topology_plane,
+      &universe, "2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
 

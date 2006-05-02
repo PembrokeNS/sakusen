@@ -23,3 +23,22 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
   );
 }
 
+Box<sint32> ICompleteUnit::getBoundingBox(void) const
+{
+  double dExtents[3];
+  Point<sint32> pExtents;
+  const Point<sint32>& pos = getIStatus()->getPosition();
+  const Orientation& orientation = getIStatus()->getOrientation();
+  const Point<uint32>& size = getITypeData()->getSize();
+  
+  for (int i=0; i<3; i++) {
+    dExtents[i] = 0;
+    for (int j=0; j<3; j++) {
+      dExtents[i] += fabs(orientation[i][j])*size[j];
+    }
+    pExtents[i] = sint32(ceil(dExtents[i]));
+  }
+
+  return Box<sint32>(pos-pExtents, pos+pExtents);
+}
+

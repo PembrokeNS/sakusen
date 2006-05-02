@@ -4,6 +4,7 @@
 #include <iostream>
 #include <time.h>
 #include <cerrno>
+
 #include "libsakusen-global.h"
 #include "completeworld.h"
 #include "planemap.h"
@@ -93,7 +94,7 @@ int main(/* int argc, char** argv */)
           100 /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(10,10,10) /* size */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 4))
             /* possibleAccelerations */,
           Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
             /* possibleVelocities */,
@@ -107,7 +108,7 @@ int main(/* int argc, char** argv */)
         false /* fixed */,
         true /* ground */,
         false /* surface */,
-        false /* air */,
+        true /* gravity */,
         true /* seabed */,
         std::list<WeaponTypeID>(),
         NULL /* corpseUnitType */
@@ -117,7 +118,7 @@ int main(/* int argc, char** argv */)
   Universe universe("universe", "", unitTypes);
 
   /* Create the map */
-  Heightfield heightfield = Heightfield();
+  Heightfield heightfield(1, 2, 1, 1);
   vector<UnitTemplate> neutralPlayersUnits;
   vector<UnitTemplate> realPlayersUnits;
   PlayerTemplate neutralPlayerTemplate =
@@ -155,14 +156,15 @@ int main(/* int argc, char** argv */)
   cout << "Performing test with one unit each..." << endl;
   
   /* Create the map */
-  heightfield = Heightfield();
+#define MAP_WIDTH 5000
+  heightfield = Heightfield(2*MAP_WIDTH, 2, 2, 2);
   neutralPlayersUnits.push_back(
       UnitTemplate(
         &universe,
         UnitStatus(
           &universe,
           universe.getUnitTypeId(0),
-          Point<sint32>(20,20,20),
+          Point<sint32>(20,20,10),
           Orientation(),
           Point<sint16>()
         )
@@ -174,7 +176,7 @@ int main(/* int argc, char** argv */)
         UnitStatus(
           &universe,
           universe.getUnitTypeId(0),
-          Point<sint32>(0,0,0),
+          Point<sint32>(0,0,10),
           Orientation(),
           Point<sint16>()
         )
@@ -187,8 +189,8 @@ int main(/* int argc, char** argv */)
   playModes.clear();
   playModes.push_back(playMode);
   t = MapTemplate(
-      &universe, "Toy map", Point<sint32>(10000,10000,10000),
-      Point<sint32>(-10000,-10000,-10000), topology_plane,
+      &universe, "Toy map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
       heightfield, 10 /* gravity */, playModes
     );
 
@@ -202,7 +204,7 @@ int main(/* int argc, char** argv */)
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
   
-  PatrollerClient patrollerClient(Point<sint32>(2000, 0, 0));
+  PatrollerClient patrollerClient(Point<sint32>(MAP_WIDTH/2, 0, 10));
   players.back().attachClient(&patrollerClient);
   
   w = new CompleteWorld(t, 0 /* mode */, players);

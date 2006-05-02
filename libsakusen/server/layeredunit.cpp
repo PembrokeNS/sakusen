@@ -18,7 +18,7 @@ void LayeredUnit::spawn(
     const Point<sint16>& startVelocity
   )
 {
-  Point<sint32> startPosition = startNear; /** \bug: find empty spot to start */
+  Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
   world->addUnit(
       LayeredUnit(type, startPosition, startOrientation, startVelocity),
       owner
@@ -35,7 +35,7 @@ LayeredUnit::LayeredUnit(
   ) :
   owner(0),
   topLayer(new UnitCore(this, t.getStatus())),
-  unit(topLayer->getCore()),
+  status(topLayer->getCore()),
   orders(),
   sensorReturns(10),
   dirty(false)
@@ -52,7 +52,7 @@ LayeredUnit::LayeredUnit(
   topLayer(new UnitCore(
         this, startType, startPosition, startOrientation, startVelocity
       )),
-  unit(topLayer->getCore()),
+  status(topLayer->getCore()),
   orders(),
   sensorReturns(10),
   dirty(false)
@@ -63,7 +63,7 @@ LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
   ICompleteUnit(copy),
   owner(copy.owner),
   topLayer(copy.topLayer->newCopy(this)),
-  unit(topLayer->getCore()),
+  status(topLayer->getCore()),
   orders(copy.orders),
   sensorReturns(copy.sensorReturns),
   dirty(false)
@@ -76,7 +76,7 @@ LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
   delete topLayer;
   ICompleteUnit::operator=(copy);
   topLayer = copy.topLayer->newCopy(this);
-  unit = topLayer->getCore();
+  status = topLayer->getCore();
   orders = copy.orders;
   sensorReturns = copy.sensorReturns;
   dirty = false;
@@ -142,12 +142,12 @@ void LayeredUnit::clearDirty()
 
 void LayeredUnit::setPosition(const Point<sint32>& pos)
 {
-  if (pos == unit->position)
+  if (pos == status->position)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(*this, unit->position, pos);
-  unit->position = pos;
+  world->applyEntryExitEffects(*this, status->position, pos);
+  status->position = pos;
 }
 
 void LayeredUnit::setPhysics(
@@ -158,16 +158,16 @@ void LayeredUnit::setPhysics(
 {
   setPosition(newPosition);
   if (orientationIsRelative) {
-    unit->orientation = newOrientation * unit->orientation;
+    status->orientation = newOrientation * status->orientation;
     if (zeroVelocity) {
-      unit->velocity.zero();
+      status->velocity.zero();
     } else {
-      unit->velocity = newOrientation * unit->velocity;
+      status->velocity = newOrientation * status->velocity;
     }
   } else {
-    unit->orientation = newOrientation;
+    status->orientation = newOrientation;
     if (zeroVelocity) {
-      unit->velocity.zero();
+      status->velocity.zero();
     }
   }
   setDirty();
@@ -187,7 +187,10 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   if (orders.getOrder(orderCondition_now).isRealOrder()) {
     acceptOrder(orderCondition_now);
   }
+
+  Point<sint16> expectedVelocity(status->velocity);
   
+  /* compute the expected velocity based on the unit's orders */
   switch (orders.getLinearTarget()) {
     case linearTargetType_none:
       break;
@@ -195,8 +198,11 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
       if (topLayer->getPossibleVelocities().contains(
             orders.getTargetVelocity()
           )) {
-        unit->velocity = orders.getTargetVelocity();
-        setDirty();
+        Point<sint16> desiredVelocity = orders.getTargetVelocity();
+        Point<sint16> acceleration = desiredVelocity - status->velocity;
+        acceleration =
+          topLayer->getPossibleAccelerations().truncateToFit(acceleration);
+        expectedVelocity += acceleration;
       } else {
         acceptOrder(orderCondition_lastOrderFailure);
       }
@@ -204,32 +210,70 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case linearTargetType_position:
       {
         Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
-            orders.getTargetPosition(), unit->position);
-        Point<sint32> desiredVelocity;
-        desiredVelocity =
+            orders.getTargetPosition(), status->position);
+        Point<sint32> desiredVelocity =
           topLayer->getPossibleVelocities().truncateToFit(desiredDirection);
-        if (unit->velocity == desiredVelocity) {
-          break;
-        }
-        unit->velocity = desiredVelocity;
-        setDirty();
+        Point<sint16> acceleration = desiredVelocity - status->velocity;
+        acceleration =
+          topLayer->getPossibleAccelerations().truncateToFit(acceleration);
+        
+        /*if (owner == 1 && unitId == 0) {
+          Debug("[1] desiredVel=" << desiredVelocity <<
+              ", acc=" << acceleration);
+        }*/
+        
+        expectedVelocity += acceleration;
       }
       break;
     default:
       Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
       break;
   }
+
+  /* Update the expected velocity to take account of gravity and the ground. */
+  /** \todo Replace this extremely crude collision detection with the ground
+   * with something more sane */
+  Box<sint32> boundingBox(getBoundingBox());
+  sint32 groundHeight = world->getCompleteMap()->getHeightfield().
+    getMaxHeightIn(boundingBox.rectangle());
+  sint32 heightAboveGround = boundingBox.getMin().z - groundHeight;
+  if (heightAboveGround + expectedVelocity.z < 0) {
+    /* The unit will end up below the ground, so we need to raise it.
+     * \bug The
+     * way this is done at pesent is quite silly and could easily result in
+     * exceptionally high velocities. */
+    expectedVelocity.z = -heightAboveGround;
+  } else if (heightAboveGround > 0 && status->getTypePtr()->getGravity()) {
+    /* The unit is in the air above the ground, so we need to apply gravity
+     * */
+    expectedVelocity.z -= world->getMap()->getGravity();
+    /* But at the same time ensure that we don't push the unit underground */
+    if (expectedVelocity.z < -heightAboveGround) {
+      expectedVelocity.z = -heightAboveGround;
+    }
+  }
+
+  /*if (owner == 1 && unitId == 0) {
+    Debug("[2] heightAboveGround=" << heightAboveGround <<
+        ", expectedVelocity=" << expectedVelocity);
+  }*/
+
+  /* Now set the velocity to this newly computed value */
+  if (expectedVelocity != status->velocity) {
+    status->velocity = expectedVelocity;
+    setDirty();
+  }
   
   /* TODO: do collision detection */
   Orientation mapOrientationChange;
   setPosition(world->getMap()->addToPosition(
-        unit->position, unit->velocity, &mapOrientationChange
+        status->position, status->velocity, &mapOrientationChange
       ));
   /* If the movement caused us to rotate/reflect (due to moving over a map
    * edge) then update orientation and velocity appropriately */
   if (mapOrientationChange != Orientation()) {
-    unit->velocity = mapOrientationChange * unit->velocity;
-    unit->orientation = mapOrientationChange * unit->orientation;
+    status->velocity = mapOrientationChange * status->velocity;
+    status->orientation = mapOrientationChange * status->orientation;
   }
   
   /* determine if the currentOrder has succeeded or failed, and if so
@@ -238,13 +282,13 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case orderType_none:
       break;
     case orderType_setVelocity:
-      if (unit->velocity ==
+      if (status->velocity ==
           orders.getCurrentOrder().getSetVelocityData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
     case orderType_move:
-      if (unit->position ==
+      if (status->position ==
           orders.getCurrentOrder().getMoveData().getTarget()) {
         acceptOrder(orderCondition_lastOrderSuccess);
       }
@@ -272,7 +316,7 @@ void LayeredUnit::enqueueOrder(
 
 bool LayeredUnit::setRadar(bool active) {
   if (topLayer->getVision().radarActive.capable) {
-    unit->radarIsActive = active;
+    status->radarIsActive = active;
     setDirty();
     return active;
   } else return false;
@@ -280,7 +324,7 @@ bool LayeredUnit::setRadar(bool active) {
 
 bool LayeredUnit::setSonar(bool active) {
   if (topLayer->getVision().sonarActive.capable) {
-    unit->sonarIsActive = active;
+    status->sonarIsActive = active;
     setDirty();
     return active;
   } else return false;

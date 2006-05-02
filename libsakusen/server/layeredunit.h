@@ -68,7 +68,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
      * Not owned by this (except insofar as it may be equal to topLayer) */
-    UnitStatus* unit;
+    UnitStatus* status;
 
     UnitOrders orders;
     
@@ -89,7 +89,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
     inline void setId(uint32 id) { unitId = id; }
-    inline const IUnitStatus* getIStatus(void) const { return unit; }
+    inline const IUnitStatus* getIStatus(void) const { return status; }
     inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
     inline __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
       getSensorReturns(void) { return sensorReturns; }

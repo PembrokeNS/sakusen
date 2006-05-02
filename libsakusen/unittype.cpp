@@ -11,9 +11,9 @@ UnitType::UnitType(
     uint32 eC,
     uint32 mC,
     bool f,
-    bool g,
+    bool gro,
     bool su,
-    bool a,
+    bool gra,
     bool se,
     const std::list<WeaponTypeID>& w,
     const UnitTypeID& cUT) :
@@ -22,9 +22,9 @@ UnitType::UnitType(
   energyCost(eC),
   metalCost(mC),
   fixed(f),
-  ground(g),
+  ground(gro),
   surface(su),
-  air(a),
+  gravity(gra),
   seabed(se),
   weapons(w),
   corpseUnitType(cUT)
@@ -37,9 +37,9 @@ UnitType::UnitType(
     uint32 eC,
     uint32 mC,
     bool f,
-    bool g,
+    bool gro,
     bool su,
-    bool a,
+    bool gra,
     bool se,
     const std::list<String>& w,
     const String& cUT) :
@@ -48,9 +48,9 @@ UnitType::UnitType(
   energyCost(eC),
   metalCost(mC),
   fixed(f),
-  ground(g),
+  ground(gro),
   surface(su),
-  air(a),
+  gravity(gra),
   seabed(se),
   weaponNames(w),
   corpseUnitTypeName(cUT),
@@ -91,7 +91,7 @@ void UnitType::store(OArchive& archive) const
   archive << internalName;
   dynamicData.store(archive);
   archive << energyCost << metalCost;
-  archive << fixed << ground << surface << air << seabed << weapons <<
+  archive << fixed << ground << surface << gravity << seabed << weapons <<
     (corpseUnitType == NULL ? String("") : corpseUnitType->getInternalName());
     /* FIXME: assumes UnitTypeID is UnitType* */
 }
@@ -107,16 +107,16 @@ UnitType UnitType::load(IArchive& archive)
   bool fixed;
   bool ground;
   bool surface;
-  bool air;
+  bool gravity;
   bool seabed;
   std::list<String> weapons;
   String corpseUnitType;
-  archive >> fixed >> ground >> surface >> air >> seabed >> weapons >>
+  archive >> fixed >> ground >> surface >> gravity >> seabed >> weapons >>
     corpseUnitType;
 
   return UnitType(
       internalName, dynamicData, energyCost, metalCost, fixed,
-      ground, surface, air, seabed, weapons, corpseUnitType
+      ground, surface, gravity, seabed, weapons, corpseUnitType
     );
 }
 

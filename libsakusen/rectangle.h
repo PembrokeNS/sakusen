@@ -56,6 +56,14 @@ struct LIBSAKUSEN_API Rectangle {
   }
   bool fastIntersects(const ICompleteUnit*) const;
   bool fastIntersects(const ISensorReturns*) const;
+  inline Rectangle<T> intersect(const Rectangle<T>& right) const {
+    return Rectangle<T>(
+        std::max(minx, right.minx),
+        std::max(miny, right.miny),
+        std::min(maxx, right.maxx),
+        std::min(maxy, right.maxy)
+      );
+  }
 
   void store(OArchive& out) const {
     out << minx << miny << maxx << maxy;

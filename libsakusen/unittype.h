@@ -27,7 +27,7 @@ class LIBSAKUSEN_API UnitType {
       bool fixed,
       bool ground,
       bool surface,
-      bool air,
+      bool gravity,
       bool seabed,
       const std::list<WeaponTypeID>& weapons,
       const UnitTypeID& corpseUnitType
@@ -50,7 +50,7 @@ class LIBSAKUSEN_API UnitType {
       bool fixed,
       bool ground,
       bool surface,
-      bool air,
+      bool gravity,
       bool seabed,
       const std::list<String>& weapons,
       const String& corpseUnitType
@@ -65,7 +65,8 @@ class LIBSAKUSEN_API UnitType {
     bool ground:1; /* true for buildings, ground units, planes that can land
                       without a runway, hovercraft */
     bool surface:1; /* true for ships and floating buildings */
-    bool air:1; /* true for planes, missiles */
+    bool gravity:1; /* false for planes, missiles, and such things which are
+                       not affected by gravity */
     bool seabed:1; /* true for underwater metal mines, tanks that can drive on
                       the seabed */
     std::list<String> weaponNames;
@@ -80,6 +81,7 @@ class LIBSAKUSEN_API UnitType {
     inline const UnitTypeData& getDynamicData() const { return dynamicData; }
     inline const uint32& getEnergyCost() const { return energyCost; }
     inline const uint32& getMetalCost() const { return metalCost; }
+    inline bool getGravity() const { return gravity; }
     inline const std::list<WeaponTypeID> getWeapons() const { return weapons; }
     inline UnitTypeID getCorpseUnitType() const { return corpseUnitType; }
     
