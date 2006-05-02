@@ -20,7 +20,7 @@ class LIBSAKUSEN_API Box {
     Point<T> min;
     Point<T> max;
   public:
-    /** Uses the default Point twice to create an empty ::Box. */
+    /** Uses the default Point twice to create an empty Box. */
     Box(): min(), max() {}
     /** Creates a Box with the given corners. The caller is
      * responsible for ensuring that \p x1 \<= \p x2.
@@ -31,7 +31,7 @@ class LIBSAKUSEN_API Box {
     /** For a Box \c b, \c b[0] is the lower-left corner, and \c b[1]
      * is the upper-right corner.
      */
-    inline T& operator[](const int i) const {
+    inline const Point<T>& operator[](const int i) const {
       switch (i) {
         case 0:
           return min;
@@ -85,6 +85,8 @@ class LIBSAKUSEN_API Box {
     }
 };
 
+#ifdef LIBSAKUSEN_METHOD_DEFINITIONS
+
 /** \brief Tests whether \p p is inside this ::Box.
  *
  * The lower-left boundary of the ::Box is inside but the upper-right
@@ -128,7 +130,7 @@ bool Box<T>::intersects(const Box<T>& b) const {
  */
 template<typename T>
 Box<T> Box<T>::intersection(const Box<T>& b) const {
-  Box i(this);
+  Box i(*this);
   if (intersects(b)) {
     if (min.x < b.min.x) i.min.x = b.min.x;
     if (min.y < b.min.y) i.min.y = b.min.y;
@@ -157,7 +159,7 @@ Box<T> Box<T>::intersection(const Box<T>& b) const {
  */
 template<typename T>
 Box<T> Box<T>::enclosure(const Box<T>& b) const {
-  Box u(this);
+  Box u(*this);
   if (min.x > b.min.x) u.min.x = b.min.x;
   if (min.y > b.min.y) u.min.y = b.min.y;
   if (min.z > b.min.z) u.min.z = b.min.z;
@@ -168,6 +170,12 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 
   return u;
 }
+
+#endif // LIBSAKUSEN_METHOD_DEFINITIONS
+
+#ifdef _MSC_VER
+template class LIBSAKUSEN_API Box<sint32>;
+#endif
 
 }
 #endif

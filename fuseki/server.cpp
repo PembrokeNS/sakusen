@@ -1096,6 +1096,7 @@ void Server::settingAlteredCallback(Leaf* altered)
           changeInClientBranch(client, "ready", "false");
         }
       } catch (SocketExn* e) {
+        delete e;
         deadClients.push_back(client);
       }
     }

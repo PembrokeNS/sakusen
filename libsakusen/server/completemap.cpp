@@ -15,6 +15,21 @@ CompleteMap::CompleteMap(const MapTemplate& t) :
 CompleteMap::CompleteMap(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
+    uint16 gravity
+    ) :
+  Map(topRight, bottomLeft, gravity),
+  heightfield(1, 1, 1, 1)
+{
+  /* This method only exists for complicated reasons
+   * related to the way Map types inherit from one
+   * another and the Window DLL-import/-export stuff.
+   * It may well go away in the future. */
+  Fatal("this method should not be called");
+}
+
+CompleteMap::CompleteMap(
+    const Point<sint32>& topRight,
+    const Point<sint32>& bottomLeft,
     uint16 gravity,
     const Heightfield& h
   ) :

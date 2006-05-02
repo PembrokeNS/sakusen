@@ -100,7 +100,8 @@ void* FileResourceInterface::internalSearch(
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
   try {
     length = file.getLength(true);
-  } catch (FileIOExn& e) {
+  } catch (FileIOExn* e) {
+    delete e;
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
     error = String("error getting length of file '") + fileName + "': " +

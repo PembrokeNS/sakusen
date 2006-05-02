@@ -42,6 +42,10 @@
   /* Define file seperator */
   #define FILE_SEP "\\"
   #define FILE_SEPC '\\'
+
+  /* Try to prevent min and max macros being defined.  They cause name
+   * clashes, and the inline function versions are better anyway */
+  #define NOMINMAX
   
   #include <cassert>
   /*Define types the MSVC way */

@@ -18,6 +18,11 @@ class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
     CompleteMap(
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
+        uint16 gravity
+      );
+    CompleteMap(
+        const Point<sint32>& topRight,
+        const Point<sint32>& bottomLeft,
         uint16 gravity,
         const Heightfield& heightfield
       );
