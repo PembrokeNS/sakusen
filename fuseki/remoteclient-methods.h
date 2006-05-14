@@ -29,7 +29,11 @@ String RemoteClient::performIntMagic(
       return "cannot assign to a player whilst an observer";
     }
 
-    setPlayerId(newValue);
+    try {
+      setPlayerId(newValue);
+    } catch (sakusen::InvalidPlayerID& e) {
+      return "the given player ID does not exist in this map";
+    }
     return "";
   } else {
     Fatal("unexpected child of client branch: " << name.front());

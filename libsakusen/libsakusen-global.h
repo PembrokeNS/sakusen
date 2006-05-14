@@ -167,6 +167,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 
 /* Finally, we declare some types for general usage */
 
+#include <stdexcept>
 #include <string>
 typedef std::string String;
 

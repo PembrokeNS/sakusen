@@ -379,12 +379,13 @@ void Server::changeInClientBranch(
  * \param id PlayerID to convert.
  * \return Pointer to Player with given id.
  *
- * Behaviour is undefined if the id is invalid.
- * \todo Proper error handling */
+ * Throws InvalidPlayerID if the ID is invalid.
+ */
 Player* Server::getPlayerPtr(PlayerID id)
 {
   if (sakusen::server::world == NULL) {
-    assert (id<players.size());
+    if (id >= players.size())
+      throw InvalidPlayerID(id);
     return &players[id];
   } else {
     return sakusen::server::world->getPlayerPtr(id);
@@ -394,12 +395,12 @@ Player* Server::getPlayerPtr(PlayerID id)
 bool interrupted = false; /* Use of static data to monitor interrupt of
                              server instance (c.f. interruptHandler below) */
 
-/* Handler for interrupt signals from the keyboard, so that the server can
+/** Handler for interrupt signals from the keyboard, so that the server can
  * shutdown gracefully.  Because signals are an inherently C thing, there seems
  * to be no nice way to handle them in an OO way, and thus I am reduced to
  * using static data here (c.f. definition of interrupted above).  This means
  * that if two servers are running on the same process, then interrupting
- * wither will stop both.  Of course, since the signal is sent to the process
+ * either will stop both.  Of course, since the signal is sent to the process
  * as a whole, there's no other sane action anyway, and thus it's not the end
  * of the world. */
 void interruptHandler(int /*signal*/)

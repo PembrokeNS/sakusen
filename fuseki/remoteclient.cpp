@@ -70,20 +70,32 @@ RemoteClient::~RemoteClient()
 void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)
 {
   if (playerId != 0) {
-    server->getPlayerPtr(playerId)->detachClient(this);
-    if (removeGroup) {
-      /* This condition is necessary because when this method is called from
-       * the destructor, this->groups may already have been cleared when the
-       * game started */
-      this->removeGroup(String("player")+playerID_toString(playerId));
+    try {
+      server->getPlayerPtr(playerId)->detachClient(this);
+      if (removeGroup) {
+        /* This condition is necessary because when this method is called from
+         * the destructor, this->groups may already have been cleared when the
+         * game started */
+        this->removeGroup(String("player")+playerID_toString(playerId));
+      }
+    } catch (InvalidPlayerID& e) {
+      /* The last player ID was invalid. Continue anyway, o/w we can never
+       * recover.
+       */
+      Debug("RemoteClient::setPlayerId found the old ID was invalid");
     }
   }
-  playerId = id;
-  if (playerId != 0) {
-    server->getPlayerPtr(playerId)->attachClient(this);
-    addGroup(String("player")+playerID_toString(playerId));
-    server->checkForGameStart();
+  if (id != 0) {
+    try {
+      server->getPlayerPtr(id)->attachClient(this);
+      addGroup(String("player")+playerID_toString(id));
+    } catch (InvalidPlayerID& e) {
+      Debug("RemoteClient::setPlayerId was given an invalid ID");
+      throw;
+    }
   }
+  playerId = id; /* do this last in case we exn'd out */
+  server->checkForGameStart();
 }
 
 void RemoteClient::flushIncoming()
