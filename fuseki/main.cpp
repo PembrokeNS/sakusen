@@ -181,8 +181,14 @@ int startServer(const String& homePath, const Options& options)
 
   /* Create the resource interface */
   /** \todo make the directories searched configurable */
-  ResourceInterface* resourceInterface =
-    new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  vector<String> dataDirs;
+  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  dataDirs.push_back("data");
+  dataDirs.push_back(".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  
+  ResourceInterface* resourceInterface = new FileResourceInterface(dataDirs);
   
   /* Initialize sockets */
   Socket::socketsInit();

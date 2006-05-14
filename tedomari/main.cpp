@@ -295,8 +295,14 @@ void runClient(
     
     /** \todo The ResourceInterface actually needs to be able to access
      * resources over the network from the server as well as from disk */
-    ResourceInterface* resourceInterface =
-      new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+    vector<String> dataDirs;
+    dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+    dataDirs.push_back("data");
+    dataDirs.push_back(".."FILE_SEP"data");
+    dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
+    dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+    
+    ResourceInterface* resourceInterface = new FileResourceInterface(dataDirs);
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
         socket, options.joinAddress,

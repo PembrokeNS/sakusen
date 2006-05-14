@@ -44,6 +44,8 @@ LIBSAKUSEN_RESOURCES_API std::list<String> fileUtils_findMatches(
 
 LIBSAKUSEN_RESOURCES_API String fileUtils_getHome();
 
+LIBSAKUSEN_RESOURCES_API String fileUtils_notDirPart(const String& path);
+
 }}
 
 #endif // FILEUTILS_H

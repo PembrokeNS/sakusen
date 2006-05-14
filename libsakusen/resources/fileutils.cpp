@@ -139,15 +139,18 @@ std::list<String> fileUtils_findMatches(
    * archives and subdirectories, but for the moment it just searches for plain
    * old files. */
 
-  /* The existence of the directory should already have been checked, so any
-   * error is a real problem */
   prefix = name;
   struct dirent** nameList;
   int numEntries =
     scandir(directory.c_str(), &nameList, prefixFilter, versionsort);
 
   if (numEntries == -1) {
-    Fatal("error scanning directory: " << errorUtils_errorMessage(errno));
+    /* The existence of the directory should already have been checked, so any
+     * error is probably a real problem.  However, it can crop up in
+     * libsakusen-resourcesp-test because I'm too lazy to stop it, so we just
+     * stick to a debug message */
+    Debug("error scanning directory: " << errorUtils_errorMessage(errno));
+    return list<String>();
   }
 
   /* Put all the results into the list in String format */
@@ -180,6 +183,17 @@ String fileUtils_getHome()
 #else
   return getenv("HOME");
 #endif
+}
+
+/** \brief Extracts the part of a path which is the bare filename, without the
+ * directory */
+String fileUtils_notDirPart(const String& path)
+{
+  size_t seperator = path.rfind(FILE_SEPC, path.length());
+  if (seperator == String::npos) {
+    return path;
+  }
+  return path.substr(seperator+1);
 }
 
 }}

@@ -15,6 +15,7 @@
 #include <pcrecpp.h>
 
 using namespace std;
+using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::comms;
@@ -27,7 +28,7 @@ FileResourceInterface::FileResourceInterface(const String& d) :
   directories.push_back(d);
 }
 
-FileResourceInterface::FileResourceInterface(const std::list<String>& d) :
+FileResourceInterface::FileResourceInterface(const std::vector<String>& d) :
   saveDirectory(d.front()),
   directories(d)
 {
@@ -58,10 +59,14 @@ void* FileResourceInterface::internalSearch(
   String subdir = getSubdir(type);
   /*QDebug("Searching for " << name << " in subdir " << subdir);*/
 
-  /* Search through all our directories to find all matching files */
-  list<String> matchingFiles;
+  /* This hash map will contain as keys the filenames, and as values the paths
+   * to those files.  We store the names also so that we don't consider it an
+   * ambiguous result if there are two files of the same name in different
+   * places; we rather assume that they are identical. */
+  hash_map<String, String, StringHash> matchingFiles(10);
 
-  for (list<String>::const_iterator directory = directories.begin();
+  /* Search through all our directories to find all matching files */
+  for (vector<String>::const_iterator directory = directories.begin();
       directory != directories.end(); directory++) {
     String resourceDir = *directory + subdir;
 #ifndef WIN32
@@ -78,7 +83,15 @@ void* FileResourceInterface::internalSearch(
     }
 #endif
     list<String> newMatches = fileUtils_findMatches(resourceDir, name);
-    matchingFiles.splice(matchingFiles.end(), newMatches);
+    while (!newMatches.empty()) {
+      String path = newMatches.front();
+      newMatches.pop_front();
+      String fileName = fileUtils_notDirPart(path);
+      if (0 == matchingFiles.count(fileName)) {
+        QDebug("Adding " << fileName << " at " << path);
+        matchingFiles[fileName] = path;
+      }
+    }
   }
 
   /* Check how many results we found */
@@ -94,9 +107,9 @@ void* FileResourceInterface::internalSearch(
   }
 
   /* We have found exactly one matching file, so we try to open it */
-  String fileName = matchingFiles.front();
+  String path = matchingFiles.begin()->second;
 
-  LockingFileReader file(fileName);
+  LockingFileReader file(path);
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
   try {
     length = file.getLength(true);
@@ -104,7 +117,7 @@ void* FileResourceInterface::internalSearch(
     delete e;
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
-    error = String("error getting length of file '") + fileName + "': " +
+    error = String("error getting length of file '") + path + "': " +
       errorUtils_errorMessage(errno);
     return NULL;
   }

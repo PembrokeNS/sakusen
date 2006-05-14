@@ -3,7 +3,7 @@
 
 #include "libsakusen-resources-global.h"
 
-#include <list>
+#include <vector>
 
 #include "resourceinterface.h"
 
@@ -15,11 +15,11 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface 
     FileResourceInterface();
   public:
     FileResourceInterface(const String& directory);
-    FileResourceInterface(const std::list<String>& directories);
+    FileResourceInterface(const std::vector<String>& directories);
     virtual ~FileResourceInterface() {}
   private:
     String saveDirectory;
-    std::list<String> directories;
+    std::vector<String> directories;
 
     String getSubdir(ResourceType type);
     
