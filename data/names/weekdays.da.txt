@@ -1,0 +1,7 @@
+sondag
+mandag
+tirsdag
+onsdag
+torsdag
+fredag
+lørdag

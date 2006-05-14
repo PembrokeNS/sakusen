@@ -1,6 +1,9 @@
 Centaur
 Cerberus
 Chimera
+Cyclops
+Minotaur
 Pegasus
 Phoenix
+Siren
 Sphinx

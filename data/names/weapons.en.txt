@@ -1,7 +1,9 @@
 Anvil
 Archer
+Arbalest
 Arrow
 Arrowhead
+Assegai
 Bagshot
 Bat
 Battleaxe
@@ -10,8 +12,8 @@ Boomerang
 Broadside
 Broadsword
 Caltrop
-Carbine
 Cannon
+Carbine
 Chainshot
 Claymore
 Crossbow
@@ -40,6 +42,7 @@ Kusarigama
 Lance
 Longbow
 Mace
+Machete
 Mangonel
 Manrikigusari
 Morning Star

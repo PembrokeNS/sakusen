@@ -5,6 +5,7 @@ Adelaide
 Africa
 Ajax
 Albany
+Alexandria
 Algiers
 Americas
 Amsterdam
@@ -16,6 +17,7 @@ Atlantis
 Auckland
 Australia
 Ayr
+Babylon
 Badminton
 Bahama
 Bangor
@@ -162,7 +164,6 @@ Wye
 Yamato
 Yeovil
 York
-Ypres
 Zanzibar
 Zealand
 Zürich
