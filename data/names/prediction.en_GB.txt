@@ -8,3 +8,4 @@ Omen
 Praesagus
 Precursor
 Precognitor
+Vanguard
