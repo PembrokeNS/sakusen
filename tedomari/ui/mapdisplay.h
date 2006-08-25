@@ -57,6 +57,8 @@ class MapDisplay : public Control {
       ) const;
 
     void drawUnit(const sakusen::ICompleteUnit* unit, const Colour&);
+    void drawUnitOrders(const sakusen::client::UpdatedUnit* unit, const Colour&);
+
   protected:
     void paint();
   public:

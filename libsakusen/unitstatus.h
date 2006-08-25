@@ -38,29 +38,29 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
-    ); /* This is a simpler version of the above constructor for when you don't
-          need to specify the extra data */
+    ); /**< This is a simpler version of the above constructor for when you
+         don't need to specify the extra data */
     UnitStatus(
       const Universe* universe,
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
-    ); /* This is a variant of the above constructor for when the world does
+    ); /**< This is a variant of the above constructor for when the world does
           not exist yet, so the universe must be provided directly */
   public:
     UnitTypeID type;
-    Point<sint32> position; /* this maybe needs a 'magic value' for when the
-                               unit is a subunit of another unit */
+    Point<sint32> position; /**< this maybe needs a 'magic value' for when
+                              the unit is a subunit of another unit */
     Orientation orientation;
-    Point<sint16> velocity; /* velocity is in distance-units per frame */
+    Point<sint16> velocity; /**< velocity is in distance-units per frame */
     
     /* status stuff */
     HitPoints hitPoints;
     bool radarIsActive;
     bool sonarIsActive;
-    std::list<uint32> subunits; /* ids of subunits which must belong to the
-                                   same player as this unit */
+    std::list<uint32> subunits; /**< ids of subunits which must belong to
+                                  the same player as this unit */
     std::list<Weapon> weapons;
 
     void initializeWeapons(const UnitType* typePtr, const Universe* universe);

@@ -101,6 +101,7 @@ Kendal
 Kent
 Kenya
 Kew
+Kyoto
 Kyushu
 Lancaster
 Leicester
@@ -142,6 +143,7 @@ Tasmania
 Tibet
 Tipperary
 Tobago
+Tokyo
 Tomsk
 Trinidad
 Tripoli

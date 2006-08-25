@@ -20,7 +20,7 @@ class LIBSAKUSEN_API Box {
     Point<T> min;
     Point<T> max;
   public:
-    /** Uses the default Point twice to create an empty Box. */
+    /** Uses the default ::Point twice to create an empty Box. */
     Box(): min(), max() {}
     /** Creates a Box with the given corners. The caller is
      * responsible for ensuring that \p x1 \<= \p x2.
@@ -42,18 +42,22 @@ class LIBSAKUSEN_API Box {
       }
     }
 
+    /** Get the back-bottom-left corner of a Box. */
     inline const Point<T>& getMin() const {
       return min;
     }
 
+    /** Get the front-top-right corner of a Box. */
     inline const Point<T>& getMax() const {
       return max;
     }
 
+    /** Two Boxes are equal iff both of their points are equal. */
     inline bool operator==(const Box b) const {
       return min == b.min && max == b.max;
     }
 
+    /** Prints the co-ordinates of a box, for debugging purposes. */
     inline std::ostream& operator<<(std::ostream& out) {
       out << "box <" << min << "," << max << ">";
       return out;

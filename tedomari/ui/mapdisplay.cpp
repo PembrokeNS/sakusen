@@ -9,6 +9,10 @@ using namespace sakusen::client;
 
 using namespace tedomari::ui;
 
+/** \brief Draw a unit.
+ * \param[in] unit The unit to draw. Must not be NULL.
+ * \param[in] colour The colour of the player who owns this unit.
+ */
 void MapDisplay::drawUnit(const ICompleteUnit* unit, const Colour& colour)
 {
   list< Point<double> > corners;
@@ -23,6 +27,25 @@ void MapDisplay::drawUnit(const ICompleteUnit* unit, const Colour& colour)
   corner.x *= -1;
   corners.push_back(dexToPixel(status.localToGlobal(corner)));
   getRegion()->fillPolygon(corners, colour);
+}
+
+/** \brief Draw a graphical representation of a unit's orders.
+ * \param[in] unit The unit to draw. Must not be NULL.
+ * \param[in] colour The colour of the player who owns this unit.
+ */
+void MapDisplay::drawUnitOrders(const UpdatedUnit* unit, const Colour& colour)
+{
+  Point<double> targetPosition;
+  Point<double> currentPosition;
+  UnitOrders uo = unit->getUnitOrders();
+
+  if (uo.getLinearTarget() == linearTargetType_position) {
+    targetPosition = dexToPixel(uo.getTargetPosition());
+    currentPosition = dexToPixel(unit->getIStatus()->getPosition());
+    QDebug("current: " << currentPosition << ";" << "target: " << targetPosition);
+    getRegion()->stroke(currentPosition.x, currentPosition.y,
+        targetPosition.x, targetPosition.y, colour);
+  }
 }
 
 void MapDisplay::paint()
@@ -53,6 +76,7 @@ void MapDisplay::paint()
       bool selected = ((ui->getSelection().count((*unit)->getId()))!=0);
       Colour colour = ( selected ? Colour::magenta : Colour::blue );
       drawUnit(*unit, colour);
+      drawUnitOrders(*unit, colour);
     }
     
     list<UpdatedSensorReturns*> returnsToDraw =

@@ -109,7 +109,7 @@ class UI : protected Control {
     }
     /** \brief Determine whether the user has asked to quit */
     inline bool isQuit() const { return quit; }
-    /** \breif Repaint whole UI */
+    /** \brief Repaint whole UI */
     inline void paint() { Control::paint(); }
     /** \brief Set the window title to the given String */
     virtual void setTitle(const String& title) = 0;

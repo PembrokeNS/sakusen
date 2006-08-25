@@ -18,12 +18,14 @@ class LIBSAKUSEN_API Order {
     ~Order();
     Order& operator=(const Order& copy);
   private:
+    /** What is this an order to do? */
     OrderType type;
-    const OrderData* data; /* Pointer to abstract class OrderData, which has
+    const OrderData* data; /**< Pointer to abstract class OrderData, which has
                               subclasses for the diffferent types of data
                               necessary */
   public:
-    /* acccessors */
+    /** \name acccessors */
+    /*@{*/
     inline bool isRealOrder(void) const {
       return getOrderType() != orderType_none;
     }
@@ -34,6 +36,7 @@ class LIBSAKUSEN_API Order {
     inline const SetVelocityOrderData getSetVelocityData(void) const {
       return *dynamic_cast<const SetVelocityOrderData*>(data);
     }
+    /*@}*/
 
     void store(OArchive&) const;
     static Order load(IArchive&);

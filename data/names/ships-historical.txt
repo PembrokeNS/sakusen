@@ -3,6 +3,7 @@ Beagle
 Bismarck
 Bounty
 Curacoa
+Cutty Sark
 Endeavour
 Endurance
 Foudroyant

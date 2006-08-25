@@ -35,6 +35,9 @@ UnitOrders::UnitOrders() :
 {
 }
 
+/** Makes the queued order with condition \p condition the current order, and
+ * updates the state to follow the order.
+ */
 void UnitOrders::acceptOrder(OrderCondition condition)
 {
   assert(condition < orderCondition_max);
@@ -58,6 +61,7 @@ void UnitOrders::acceptOrder(OrderCondition condition)
   }
 }
 
+/** Clears all queued orders. */
 void UnitOrders::clearQueue()
 {
   /* Clear all orders from the queue */

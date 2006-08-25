@@ -96,6 +96,7 @@
   #define FILE_SEP "/"
   #define FILE_SEPC '/'
 
+  #include <assert.h>
   /* Define types the gcc way. */
   #define __STDC_LIMIT_MACROS /* defined so that UINT32_MAX gets defined */
   #include <stdint.h>

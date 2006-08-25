@@ -33,6 +33,8 @@ Quadrant
 Quasar
 Radical
 Rainbow
+Redshift
+Regolith
 Relativity
 Satellite
 Southbridge

@@ -10,6 +10,11 @@
 
 namespace sakusen {
 
+/** \brief Holds the orders for a ::Unit.
+ *
+ * A unit's current order, and its queued (conditional) orders, are stored in
+ * this structure.
+ */
 class LIBSAKUSEN_API UnitOrders {
   private:
     UnitOrders(
@@ -27,30 +32,35 @@ class LIBSAKUSEN_API UnitOrders {
   public:
     UnitOrders();
   private:
-    /* conditioned orders */
+    /** One order per condition. The order may be the nop order. */
     Order orders[orderCondition_max];
-    /* The last order given - the one which awaits its success or failure */
+    /** The last order given - the one which awaits its success or
+     * failure */
     Order currentOrder;
-    /* current goals which have been set by orders */
-    LinearTargetType linearTarget; /* Whether we're currently trying to
+    /** current goals which have been set by orders */
+    LinearTargetType linearTarget; /**< Whether we're currently trying to
                                       achieve a position or a velocity */
-    Point<sint32> targetPosition; /* The position we're trying to reach */
-    Point<sint16> targetVelocity; /* The velocity we're trying to achieve */
-    RotationalTargetType rotationalTarget;
-    Orientation targetOrientation; /* The orientation we're trying to reach */
-    AngularVelocity targetAngularVelocity; /* The angular velocity we're trying
-					      to achieve */
+    Point<sint32> targetPosition; /**< The position we're trying to reach */
+    Point<sint16> targetVelocity; /**< The velocity we're trying to
+                                    achieve */
+    RotationalTargetType rotationalTarget; /**< Whether we're currently
+                                             trying to achieve an
+                                             orientation or an angular
+                                             velocity. */
+    Orientation targetOrientation; /**< The orientation we're trying to
+                                     reach */
+    AngularVelocity targetAngularVelocity; /**< The angular velocity we're
+                                             trying to achieve */
   public:
+    /** \name accessors */
+    /*@{*/
+    /** Gets the order with order condition \p c */
     inline const Order& getOrder(OrderCondition c) const {
       assert(c>=0);
       assert(c<orderCondition_max);
       return orders[c];
     }
-    inline void enqueueOrder(OrderCondition c, const Order& order) {
-      assert(c>=0);
-      assert(c<orderCondition_max);
-      orders[c] = order;
-    }
+    /** Gets the order currently being followed. */
     inline const Order& getCurrentOrder(void) const { return currentOrder; }
     inline LinearTargetType getLinearTarget(void) const { return linearTarget; }
     inline const Point<sint32>& getTargetPosition(void) const {
@@ -67,6 +77,14 @@ class LIBSAKUSEN_API UnitOrders {
     }
     inline const AngularVelocity& getTargetAngularVelocity(void) const {
       return targetAngularVelocity;
+    }
+    /*@}*/
+
+    /** Queues the order \p order, on condition \p c */
+    inline void enqueueOrder(OrderCondition c, const Order& order) {
+      assert(c>=0);
+      assert(c<orderCondition_max);
+      orders[c] = order;
     }
 
     void acceptOrder(OrderCondition condition);
