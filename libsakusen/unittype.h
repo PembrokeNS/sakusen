@@ -2,7 +2,7 @@
 #define UNITTYPE_H
 
 #include "libsakusen-global.h"
-#include "weapon.h"
+#include "weapontype.h"
 #include "unittypedata.h"
 
 #include <list>

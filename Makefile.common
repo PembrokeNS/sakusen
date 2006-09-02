@@ -1,9 +1,9 @@
 # This Makefile section is intended to compile a collection of C++ sources and
-# headers (all in one directory), properly keeping track of all header
-# dependencies.  You should define a few variables and then include this file -
-# you need define no targets at all to get compilation working.  If you do
-# define any targets, then you can define them after includeing this file if
-# you wish the default action to be a recursive build.
+# headers, properly keeping track of all header dependencies.  You should
+# define a few variables and then include this file - you need define no
+# targets at all to get compilation working.  If you do define any targets,
+# then you can define them after includeing this file if you wish the default
+# action to be a recursive build.
 #
 # The variables you can define are as follows.  Omit irrelevant ones.
 # SUBDIRS - a list of subdirectories to visit recursively when dealing with the
@@ -25,6 +25,9 @@
 #   "../libsakusen.la", rather than this Makefile searching for you.
 # THIS_CXXFLAGS - other args to gcc at compile stage, e.g. "-Werror".
 # THIS_LDFLAGS - other args to libtool at link stage, e.g. "-no-install".
+# PREFIX - the installation prefix, e.g. "/usr/local" (to which it defaults).
+#   Expected to be set by the user in the environment, not by the including
+#   Makefile
 
 # Determine the name of this makefile
 
@@ -63,6 +66,8 @@ E_INCLUDE := -I. $(foreach lib,$(E_LIB_DEP),-I$(dir $(lib))) $(INCLUDE)
 CXX ?= g++
 CC ?= gcc
 
+PREFIX ?= /usr/local
+
 # Default target is to build the binary (and recurse)
 
 all: $(BIN)
@@ -94,7 +99,8 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
-	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
+	libtool --mode=link gcc $(THIS_LDFLAGS) -rpath $(PREFIX)/lib -g3 -o $@ \
+		$(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
 
 # Libtool objects are made when normal objects are
 

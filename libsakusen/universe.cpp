@@ -9,10 +9,12 @@ using namespace sakusen;
 Universe::Universe(
     const String& in,
     const String& h,
+    const std::vector<WeaponType>& w,
     const std::vector<UnitType>& u
   ) :
   internalName(in),
   hash(h),
+  weaponTypes(w),
   unitTypes(u)
 {
   constructHashMaps();
@@ -20,6 +22,15 @@ Universe::Universe(
 
 void Universe::constructHashMaps()
 {
+  for (vector<WeaponType>::iterator weaponType = weaponTypes.begin();
+      weaponType != weaponTypes.end(); weaponType++) {
+    if (weaponIDLookup.count(weaponType->getInternalName())) {
+      throw new
+        DuplicateNameDeserializationExn(weaponType->getInternalName());
+    }
+    weaponIDLookup[weaponType->getInternalName()] = &*weaponType;
+  }
+  
   for (vector<UnitType>::iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {
     if (unitIDLookup.count(unitType->getInternalName())) {
@@ -43,22 +54,29 @@ String Universe::resolveNames()
   return "";
 }
 
-WeaponTypeID Universe::getWeaponTypeID(String /*weaponTypeName*/) const
+WeaponTypeID Universe::getWeaponTypeID(String weaponTypeName) const
 {
-  /* TODO: fill this in when Universe actually has a store of WeaponTypes */
-  return NULL;
+  __gnu_cxx::hash_map<String, WeaponTypeID, StringHash>::const_iterator
+    weaponType = weaponIDLookup.find(weaponTypeName);
+  if (weaponType == weaponIDLookup.end()) {
+    return NULL;
+  }
+  return weaponType->second;
 }
 
 UnitTypeID Universe::getUnitTypeID(String unitTypeName) const
 {
-  if (0 == unitIDLookup.count(unitTypeName)) {
+  __gnu_cxx::hash_map<String, UnitTypeID, StringHash>::const_iterator
+    unitType = unitIDLookup.find(unitTypeName);
+  if (unitType == unitIDLookup.end()) {
     return NULL;
   }
-  return unitIDLookup.find(unitTypeName)->second;
+  return unitType->second;
 }
 
 bool Universe::containsUnitType(const UnitTypeID id) const
 {
+  /** \todo Rewrite using unitIDLookup so that it takes only O(1) time */
   const UnitType* typePtr = getUnitTypePtr(id);
   for (std::vector<UnitType>::const_iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {
@@ -71,16 +89,22 @@ bool Universe::containsUnitType(const UnitTypeID id) const
 
 void Universe::store(OArchive& archive) const
 {
-  archive << internalName << unitTypes;
+  archive << internalName << weaponTypes << unitTypes;
 }
 
-Universe* Universe::loadNew(IArchive& archive)
+Universe* Universe::loadNew(
+    IArchive& archive,
+    ResourceInterface* resourceInterface
+  )
 {
   String internalName;
+  vector<WeaponType> weaponTypes;
   vector<UnitType> unitTypes;
-  archive >> internalName >> unitTypes;
-  Universe* u =
-    new Universe(internalName, archive.getSecureHashAsString(), unitTypes);
+  (archive >> internalName).extract(weaponTypes, resourceInterface) >>
+    unitTypes;
+  Universe* u = new Universe(
+      internalName, archive.getSecureHashAsString(), weaponTypes, unitTypes
+    );
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {
     delete u;

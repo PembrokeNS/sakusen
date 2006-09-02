@@ -11,6 +11,8 @@
 #include "fileresourceinterface.h"
 #include "fileutils.h"
 
+#include <ltdl.h>
+
 #include <iostream>
 
 using namespace std;
@@ -31,12 +33,24 @@ using namespace sakusen::resources;
 /** \brief main function for test */
 int main(/*int argc, char** argv*/)
 {
+  /* ltdl initialization */
+  if (lt_dlinit()) {
+    Fatal("lt_dlinit() failed");
+  }
+  
   String homePath = fileUtils_getHome();
   String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
   
-  cout << "Creating ResourceInterface with data root " << dataDir << endl;
+  cout << "Creating ResourceInterface" << endl;
+  vector<String> dataDirs;
+  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  dataDirs.push_back("data");
+  dataDirs.push_back(".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  
   ResourceInterface* resourceInterface =
-    new FileResourceInterface(dataDir);
+    new FileResourceInterface(dataDirs, false);
 
   cout << "Cleaning out existing test files" << endl;
   list<String> universes =
@@ -58,7 +72,28 @@ int main(/*int argc, char** argv*/)
   }
   
   cout << "Creating Universe" << endl;
+  vector<WeaponType> weaponTypes;
+  try {
+    WeaponType cannonType =
+      WeaponType(
+          "cannon",
+          "testsrc",
+          0,
+          0,
+          0,
+          0,
+          resourceInterface
+        );
+    weaponTypes.push_back(cannonType);
+  } catch (DeserializationExn* e) {
+    cout << "Exception: " << e->message << endl;
+    delete e;
+    return EXIT_FAILURE;
+  }
+
   vector<UnitType> unitTypes;
+  list<String> commanderWeapons;
+  commanderWeapons.push_back("cannon");
   UnitType commanderType =
     UnitType(
         "commander" /* name */,
@@ -82,12 +117,17 @@ int main(/*int argc, char** argv*/)
         false /* surface */,
         true /* gravity */,
         true /* seabed */,
-        std::list<WeaponTypeID>(),
-        NULL /* corpseUnitType */
+        commanderWeapons /* weapons */,
+        "" /* corpseUnitType name */
       );
   unitTypes.push_back(commanderType);
   
-  Universe universe("universe", "", unitTypes);
+  Universe universe("universe", "", weaponTypes, unitTypes);
+  String name = universe.resolveNames();
+  if (name != "") {
+    cout << "Error resolving name '" << name << "'" << endl;
+    return EXIT_FAILURE;
+  }
 
   cout << "Saving Universe" << endl;
   if(resourceInterface->save(&universe))
@@ -141,10 +181,10 @@ int main(/*int argc, char** argv*/)
         )
       )
     );
-  vector<PlayerTemplate> players;
-  players.push_back(PlayerTemplate(true, true, neutralPlayersUnits));
-  players.push_back(PlayerTemplate(false, false, realPlayersUnits));
-  MapPlayMode playMode = MapPlayMode(2, 2, players);
+  vector<PlayerTemplate> playerTemplates;
+  playerTemplates.push_back(PlayerTemplate(true, true, neutralPlayersUnits));
+  playerTemplates.push_back(PlayerTemplate(false, false, realPlayersUnits));
+  MapPlayMode playMode = MapPlayMode(2, 2, playerTemplates);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
   MapTemplate* t = new MapTemplate(
@@ -189,8 +229,8 @@ int main(/*int argc, char** argv*/)
         )
       )
     );
-  players.push_back(PlayerTemplate(false, false, realPlayer2sUnits));
-  playMode = MapPlayMode(3, 3, players);
+  playerTemplates.push_back(PlayerTemplate(false, false, realPlayer2sUnits));
+  playMode = MapPlayMode(3, 3, playerTemplates);
   playModes.clear();
   playModes.push_back(playMode);
   delete t;
@@ -210,6 +250,11 @@ int main(/*int argc, char** argv*/)
   delete reloadedUniverse;
   delete t;
   delete resourceInterface;
+
+  /* ltdl finalization */
+  if (lt_dlexit()) {
+    Fatal("lt_dlexit() failed");
+  }
 
   return EXIT_SUCCESS;
 }

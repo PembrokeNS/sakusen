@@ -17,8 +17,10 @@ enum ResourceSearchResult {
   resourceSearchResult_ambiguous, /**< The name specified applied to more than
                                     one resource */
   resourceSearchResult_notFound, /**< No resource of that name could be found */
-  resourceSearchResult_error /**< The resource was found, but an error occured
-                               while reading it */
+  resourceSearchResult_error, /**< The resource was found, but an error occured
+                                while reading it */
+  resourceSearchResult_notSupported /**< The interface does not support
+                                      retrieval of this resource */
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceSearchResult resource);

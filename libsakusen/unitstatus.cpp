@@ -2,6 +2,7 @@
 
 #include "oarchive-methods.h"
 
+using namespace std;
 using namespace sakusen;
 
 UnitStatus::UnitStatus(
@@ -14,7 +15,7 @@ UnitStatus::UnitStatus(
     bool rIA,
     bool sIA,
     const std::list<uint32>& su,
-    const std::list<Weapon>& w
+    const std::vector<WeaponStatus>& w
   ) :
   type(t),
   position(p),
@@ -24,8 +25,9 @@ UnitStatus::UnitStatus(
   radarIsActive(rIA),
   sonarIsActive(sIA),
   subunits(su),
-  weapons(w)
+  weaponsStatus(w)
 {
+  assert(t->getWeapons().size() == weaponsStatus.size());
 }
 
 UnitStatus::UnitStatus(const IUnitStatus* copy) :
@@ -35,9 +37,11 @@ UnitStatus::UnitStatus(const IUnitStatus* copy) :
   velocity(copy->getVelocity()),
   hitPoints(copy->getHitPoints()),
   radarIsActive(copy->isRadarActive()),
-  sonarIsActive(copy->isSonarActive())
+  sonarIsActive(copy->isSonarActive()),
+  weaponsStatus(copy->getWeaponsStatus())
 {
-  /* TODO: subunits, weapons */
+  assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
+  /* TODO: subunits */
 }
 
 UnitStatus::UnitStatus(
@@ -47,7 +51,8 @@ UnitStatus::UnitStatus(
     const Point<sint16>& startVelocity,
     HitPoints startHitPoints,
     bool startRadarActive,
-    bool startSonarActive
+    bool startSonarActive,
+    vector<WeaponStatus> startWeaponsStatus
   ) :
   type(startType),
   position(startPosition),
@@ -57,11 +62,9 @@ UnitStatus::UnitStatus(
   radarIsActive(startRadarActive),
   sonarIsActive(startSonarActive),
   subunits(),
-  weapons()
+  weaponsStatus(startWeaponsStatus)
 {
-  initializeWeapons(
-      getTypePtr(), world->getUniverse()
-    );
+  assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
 }
 
 UnitStatus::UnitStatus(
@@ -77,12 +80,10 @@ UnitStatus::UnitStatus(
   radarIsActive(false),
   sonarIsActive(false),
   subunits(),
-  weapons()
+  weaponsStatus()
 {
   assert(world != NULL);
-  initializeWeapons(
-      getTypePtr(), world->getUniverse()
-    );
+  initializeWeapons(getTypePtr());
   hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
 }
 
@@ -100,26 +101,18 @@ UnitStatus::UnitStatus(
   radarIsActive(false),
   sonarIsActive(false),
   subunits(),
-  weapons()
+  weaponsStatus()
 {
-  initializeWeapons(
-      universe->getUnitTypePtr(type), universe
-    );
+  initializeWeapons(universe->getUnitTypePtr(type));
   hitPoints =
     universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints();
 }
 
-void UnitStatus::initializeWeapons(
-    const UnitType* typePtr,
-    const Universe* universe
-  )
+void UnitStatus::initializeWeapons(const UnitType* typePtr)
 {
-  /* add weapons */
-  const std::list<WeaponTypeID>& weaponTypes = typePtr->getWeapons();
-  for (std::list<WeaponTypeID>::const_iterator weaponType = weaponTypes.begin();
-      weaponType != weaponTypes.end(); weaponType++) {
-    weapons.push_back(Weapon(universe->getWeaponTypePtr(*weaponType)));
-  }
+  /* Create default statuses for each of the weapons */
+  while (weaponsStatus.size() < typePtr->getWeapons().size())
+    weaponsStatus.push_back(WeaponStatus());
 }
 
 void UnitStatus::store(OArchive& out, const Universe* universe) const
@@ -127,8 +120,8 @@ void UnitStatus::store(OArchive& out, const Universe* universe) const
   out << universe->getUnitTypePtr(type)->getInternalName();
   out << position;
   orientation.store(out);
-  out << velocity << hitPoints << radarIsActive << sonarIsActive << subunits;
-  /* TODO: weapons */
+  out << velocity << hitPoints << radarIsActive << sonarIsActive << subunits <<
+    weaponsStatus;
 }
 
 UnitStatus UnitStatus::load(IArchive& in, const Universe* universe)
@@ -144,19 +137,19 @@ UnitStatus UnitStatus::load(IArchive& in, const Universe* universe)
   bool radarIsActive;
   bool sonarIsActive;
   std::list<uint32> subunits;
-  std::list<Weapon> weapons;
+  std::vector<WeaponStatus> weaponsStatus;
   
   in >> typeName;
   type = universe->getUnitTypeID(typeName);
   in >> position;
   orientation = Orientation::load(in);
-  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits;
-  /* TODO: weapons */
+  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits >>
+    weaponsStatus;
 
   return UnitStatus(
       type, position, orientation, velocity,
       hitPoints, radarIsActive, sonarIsActive, subunits,
-      weapons
+      weaponsStatus
     );
 }
 

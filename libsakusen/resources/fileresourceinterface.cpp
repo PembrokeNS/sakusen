@@ -11,6 +11,7 @@
 #include "fileioexn.h"
 
 #include <sys/stat.h>
+#include <ltdl.h>
 
 #include <pcrecpp.h>
 
@@ -21,16 +22,21 @@ using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::resources;
 
-FileResourceInterface::FileResourceInterface(const String& d) :
+FileResourceInterface::FileResourceInterface(const String& d, bool lM) :
   saveDirectory(d),
-  directories()
+  directories(),
+  loadModules(lM)
 {
   directories.push_back(d);
 }
 
-FileResourceInterface::FileResourceInterface(const std::vector<String>& d) :
+FileResourceInterface::FileResourceInterface(
+    const std::vector<String>& d,
+    bool lM
+  ) :
   saveDirectory(d.front()),
-  directories(d)
+  directories(d),
+  loadModules(lM)
 {
 }
 
@@ -38,25 +44,44 @@ String FileResourceInterface::getSubdir(ResourceType type)
 {
   switch (type) {
     case resourceType_universe:
+    case resourceType_source:
       return String(FILE_SEP "universe" FILE_SEP);
     case resourceType_mapTemplate:
       return String(FILE_SEP "maptemplate" FILE_SEP);
+    case resourceType_module:
+      return String(FILE_SEP "module" FILE_SEP);
     default:
       Fatal("Unexpected ResourceType: " << type);
   }
 }
 
-void* FileResourceInterface::internalSearch(
-    String name,
+String FileResourceInterface::getExtension(ResourceType type)
+{
+  switch (type) {
+    case resourceType_universe:
+      return ".sakusenuniverse";
+    case resourceType_source:
+      return ".sakusensource";
+    case resourceType_mapTemplate:
+      return ".sakusenmaptemplate";
+    case resourceType_module:
+      /* Can't know the extension here because it might end in ".la" or ".dll"
+       * or ".so" */
+      return "";
+    default:
+      Fatal("Unexpected ResourceType: " << type);
+  }
+}
+
+String FileResourceInterface::fileSearch(
+    const String& name,
     ResourceType type,
-    const void* arg,
     ResourceSearchResult* result
   )
 {
-  uint64 length;
-  size_t lengthAsSizeT;
-  /* Find the appropriate subdirectory name */
+  /* Find the appropriate subdirectory and extension */
   String subdir = getSubdir(type);
+  String extension = getExtension(type);
   /*QDebug("Searching for " << name << " in subdir " << subdir);*/
 
   /* This hash map will contain as keys the filenames, and as values the paths
@@ -87,8 +112,15 @@ void* FileResourceInterface::internalSearch(
       String path = newMatches.front();
       newMatches.pop_front();
       String fileName = fileUtils_notDirPart(path);
+      /* check that the file has the correct extension */
+      if (fileName.size() < extension.size() ||
+          0 != fileName.compare(
+            fileName.size() - extension.size(), extension.size(), extension
+          )) {
+        continue;
+      }
       if (0 == matchingFiles.count(fileName)) {
-        QDebug("Adding " << fileName << " at " << path);
+        /*QDebug("Adding " << fileName << " at " << path);*/
         matchingFiles[fileName] = path;
       }
     }
@@ -98,16 +130,32 @@ void* FileResourceInterface::internalSearch(
   switch (matchingFiles.size()) {
     case 0:
       *result = resourceSearchResult_notFound;
-      return NULL;
+      return "";
     case 1:
       break;
     default:
       *result = resourceSearchResult_ambiguous;
-      return NULL;
+      return "";
   }
 
   /* We have found exactly one matching file, so we try to open it */
-  String path = matchingFiles.begin()->second;
+  assert(matchingFiles.begin()->second != "");
+  return matchingFiles.begin()->second;
+}
+
+void* FileResourceInterface::internalSearch(
+    const String& name,
+    ResourceType type,
+    const void* arg,
+    ResourceSearchResult* result
+  )
+{
+  uint64 length;
+  size_t lengthAsSizeT;
+  String path = fileSearch(name, type, result);
+
+  if (path == "")
+    return NULL;
 
   LockingFileReader file(path);
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
@@ -157,7 +205,7 @@ void* FileResourceInterface::internalSearch(
   try {
     switch (type) {
       case resourceType_universe:
-        resource = Universe::loadNew(fileAsArchive);
+        resource = Universe::loadNew(fileAsArchive, this);
         break;
       case resourceType_mapTemplate:
         resource = new MapTemplate(
@@ -195,6 +243,67 @@ void* FileResourceInterface::internalSearch(
   
   *result = resourceSearchResult_success;
   return resource;
+}
+    
+void* FileResourceInterface::internalSymbolSearch(
+    const String& moduleName,
+    const String& symbolName,
+    ResourceSearchResult* result
+  )
+{
+  if (!loadModules) {
+    *result = resourceSearchResult_notSupported;
+    return NULL;
+  }
+  
+  String sourcePath = fileSearch(moduleName, resourceType_source, result);
+  if (sourcePath == "") {
+    return NULL;
+  }
+  
+  /*Debug("sourcePath='" << sourcePath << "'");*/
+
+  String sourceFile = fileUtils_notDirPart(sourcePath);
+
+  /* replace the extension of the filename to get the module name */
+  size_t dot = sourceFile.rfind('.', sourceFile.length());
+  String moduleFile = sourceFile.substr(0, dot) + ".sakusenmodule";
+  String modulePath = fileSearch(moduleFile, resourceType_module, result);
+  if (modulePath == "") {
+    if (*result == resourceSearchResult_notFound) {
+      *result = resourceSearchResult_error;
+      /** \todo runtime compilation of modules */
+      error = "source found but module not found; runtime compiling not yet "
+        "implemented";
+    }
+    return NULL;
+  }
+  /*Debug("modulePath='" << modulePath << "'");*/
+
+  /** \todo Maybe we should keep a record and not open the same module over and
+   * over. ltdl does keep track, so it works, but it's a little inelegant */
+  lt_dlhandle moduleHandle = lt_dlopen(modulePath.c_str());
+  if (moduleHandle == NULL) {
+    *result = resourceSearchResult_error;
+    error = String("lt_dlopen() failed: ") + lt_dlerror();
+    return NULL;
+  }
+  /* Make the module resident (it cannot be closed) so as to avoid segfault
+   * madness */
+  if (lt_dlmakeresident(moduleHandle)) {
+    Fatal("lt_dlmakeresident() failed");
+  }
+
+  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
+
+  if (symbol == NULL) {
+    *result = resourceSearchResult_error;
+    error = "lt_dlsym(..., \"" + symbolName + "\") failed: " + lt_dlerror();
+    return NULL;
+  }
+
+  *result = resourceSearchResult_success;
+  return symbol;
 }
 
 bool FileResourceInterface::internalSave(

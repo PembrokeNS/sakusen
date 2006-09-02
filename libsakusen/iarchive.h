@@ -9,6 +9,7 @@
 #include "point.h"
 #include "exceptions.h"
 #include "stringutils.h"
+#include "resourceinterface.h"
 
 namespace sakusen {
 
@@ -54,6 +55,12 @@ class LIBSAKUSEN_API IArchive {
     inline T load(const typename T::loadArgument* arg)
     {
       return T::load(*this, arg);
+    }
+
+    template<typename T>
+    inline T load(ResourceInterface* resourceInterface)
+    {
+      return T::load(*this, resourceInterface);
     }
   public:
     inline String getSecureHashAsString() const {
@@ -140,6 +147,23 @@ class LIBSAKUSEN_API IArchive {
 
       while (size--) {
         result.push_back(load<T>());
+      }
+
+      return *this;
+    }
+    
+    template<typename T>
+    IArchive& extract(
+        std::vector<T>& result,
+        ResourceInterface* resourceInterface
+      )
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>(resourceInterface));
       }
 
       return *this;

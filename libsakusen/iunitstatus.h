@@ -8,6 +8,7 @@
 #include "unittype.h"
 #include "visibility.h"
 #include "orientation.h"
+#include "weaponstatus.h"
 
 namespace sakusen {
 
@@ -22,6 +23,7 @@ class LIBSAKUSEN_API IUnitStatus {
     virtual HitPoints getHitPoints(void) const = 0;
     virtual bool isRadarActive(void) const = 0;
     virtual bool isSonarActive(void) const = 0;
+    virtual const std::vector<WeaponStatus>& getWeaponsStatus(void) const = 0;
     
     inline Point<sint32> localToGlobal(const Point<sint32>& p) const {
       return getOrientation()*p+getPosition();

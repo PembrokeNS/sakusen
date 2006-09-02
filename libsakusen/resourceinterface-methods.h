@@ -21,7 +21,7 @@ inline ResourceType ResourceInterface::typenameToResourceType<MapTemplate>()
 
 template<typename T>
 inline T* ResourceInterface::search(
-    String name,
+    const String& name,
     const typename T::loadArgument* arg,
     ResourceSearchResult* result
   ) {

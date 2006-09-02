@@ -3,6 +3,7 @@
 
 #include "unitstatus.h"
 #include "unitlayer.h"
+#include "weapon.h"
 
 namespace sakusen {
 namespace server {
@@ -27,9 +28,13 @@ class UnitCore : public UnitLayer, private UnitStatus {
         const Point<sint16>& startVelocity
       );
     UnitCore(LayeredUnit* outerUnit, const UnitStatus& status);
+    ~UnitCore();
   private:
     LayeredUnit* outerUnit;
     PlayerID owner;
+    std::vector<Weapon*> weapons;
+
+    void initializeWeapons();
   public:
     inline UnitLayer* newCopy(LayeredUnit* outer) const {
       return new UnitCore(*this, outer);
@@ -73,8 +78,8 @@ class UnitCore : public UnitLayer, private UnitStatus {
     //@}
     
     /* callbacks */
-    virtual void onCreate(void) {}
-    virtual void onDestruct(void) { /* TODO: what should the default be? */ }
+    void onCreate(void) {}
+    void onDestruct(void) { /* TODO: what should the default be? */ }
 };
 
 }}

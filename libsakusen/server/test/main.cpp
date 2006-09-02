@@ -1,25 +1,30 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-#include <iostream>
-#include <time.h>
-#include <cerrno>
-
 #include "libsakusen-global.h"
-#include "completeworld.h"
-#include "planemap.h"
 #include "point.h"
 #include "sphereregiondata.h"
 #include "region.h"
+#include "resourceinterface-methods.h"
+#include "fileutils.h"
+#include "fileresourceinterface.h"
+#include "completeworld.h"
+#include "planemap.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
 
+#include <time.h>
+#include <ltdl.h>
+
+#include <iostream>
+#include <cerrno>
 
 #define NANO 1000000000 /* Nanoseconds in a second */
 
 using namespace std;
 
 using namespace sakusen;
+using namespace sakusen::resources;
 using namespace sakusen::server;
 using namespace sakusen::server::test;
 
@@ -77,125 +82,78 @@ void doLoadTest(ostream& output)
 
 int main(/* int argc, char** argv */)
 {
-  /* First test is with an empty map of size zero */
+  /* ltdl initialization */
+  if (lt_dlinit()) {
+    Fatal("lt_dlinit() failed");
+  }
   
-  cout << "Performing test with blank map..." << endl;
+  String homePath = fileUtils_getHome();
+  String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
+  
+  cout << "Creating ResourceInterface with data root " << dataDir << endl;
+  vector<String> dataDirs;
+  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  dataDirs.push_back("data");
+  dataDirs.push_back(".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  
+  ResourceInterface* resourceInterface =
+    new FileResourceInterface(dataDirs, true);
+  
   /* Create a debugging client */
   DebuggingClient client(cout);
   vector<Client*> clients;
   clients.push_back(&client);
 
-  /* Create the universe */
-  vector<UnitType> unitTypes;
-  UnitType commanderType =
-    UnitType(
-        "commander" /* name */,
-        UnitTypeData(
-          100 /* maxHitPoints */,
-          10 /* mass */,
-          Point<uint32>(10,10,10) /* size */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 4))
-            /* possibleAccelerations */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
-            /* possibleVelocities */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
-            /* possibleAngularVelocities */,
-          Visibility(),
-          Sensors()
-        ),
-        100 /* energyCost */,
-        100 /* metalCost */,
-        false /* fixed */,
-        true /* ground */,
-        false /* surface */,
-        true /* gravity */,
-        true /* seabed */,
-        std::list<WeaponTypeID>(),
-        NULL /* corpseUnitType */
-      );
-  unitTypes.push_back(commanderType);
+  /* Load the universe */
+  cout << "Loading Universe" << endl;
+  ResourceSearchResult result;
+  Universe* universe =
+    resourceInterface->search<Universe>("universe", NULL, &result);
+  cout << "Result of reload was " << result << endl;
   
-  Universe universe("universe", "", unitTypes);
+  switch(result) {
+    case resourceSearchResult_error:
+      cout << "Error was: " << resourceInterface->getError() << endl;
+    case resourceSearchResult_notFound:
+    case resourceSearchResult_ambiguous:
+      return EXIT_FAILURE;
+    default:
+      break;
+  }
 
-  /* Create the map */
-  Heightfield heightfield(1, 2, 1, 1);
-  vector<UnitTemplate> neutralPlayersUnits;
-  vector<UnitTemplate> realPlayersUnits;
-  PlayerTemplate neutralPlayerTemplate =
-    PlayerTemplate(true, true, realPlayersUnits);
-  PlayerTemplate realPlayerTemplate =
-    PlayerTemplate(false, false, neutralPlayersUnits);
-  vector<PlayerTemplate> playerTemplates;
-  playerTemplates.push_back(neutralPlayerTemplate);
-  playerTemplates.push_back(realPlayerTemplate);
-  MapPlayMode playMode = MapPlayMode(2, 2, playerTemplates);
-  vector<MapPlayMode> playModes;
-  playModes.push_back(playMode);
-  MapTemplate t = MapTemplate(
-      &universe, "Toy map", Point<uint32>(), Point<uint32>(), topology_plane,
-      heightfield, 10 /* gravity */, playModes
-    );
+  /* Load the map */
+  cout << "Loading Map" << endl;
+  MapTemplate* mapTemplate =
+    resourceInterface->search<MapTemplate>("map", universe, &result);
+  cout << "Result of reload was " << result << endl;
+  
+  switch(result) {
+    case resourceSearchResult_error:
+      cout << "Error was: " << resourceInterface->getError() << endl;
+    case resourceSearchResult_notFound:
+    case resourceSearchResult_ambiguous:
+      return EXIT_FAILURE;
+    default:
+      break;
+  }
 
   /* For our toy example we create two players: the neutral player with no
    * client, and a "real" player with a debugging client */
-  Player neutralPlayer = Player(neutralPlayerTemplate);
-  Player realPlayer = Player(realPlayerTemplate);
+  const MapPlayMode& mode = mapTemplate->getPlayModes()[0];
+  Player neutralPlayer = Player(mode.getPlayer(0));
+  Player realPlayer = Player(mode.getPlayer(1));
   realPlayer.attachClient(&client);
   vector<Player> players;
   players.push_back(neutralPlayer);
   players.push_back(realPlayer);
 
-  /* Create the world */
-  World* w = new CompleteWorld(t, 0 /* mode */, players);
-    
-  doLoadTest(cout);
-  delete w;
-  w = NULL;
-
   /* Now another test, this time with a unit */
   cout << "Performing test with one unit each..." << endl;
   
-  /* Create the map */
-#define MAP_WIDTH 5000
-  heightfield = Heightfield(2*MAP_WIDTH, 2, 2, 2);
-  neutralPlayersUnits.push_back(
-      UnitTemplate(
-        &universe,
-        UnitStatus(
-          &universe,
-          universe.getUnitTypeId(0),
-          Point<sint32>(20,20,10),
-          Orientation(),
-          Point<sint16>()
-        )
-      )
-    );
-  realPlayersUnits.push_back(
-      UnitTemplate(
-        &universe,
-        UnitStatus(
-          &universe,
-          universe.getUnitTypeId(0),
-          Point<sint32>(0,0,10),
-          Orientation(),
-          Point<sint16>()
-        )
-      )
-    );
-  playerTemplates.clear();
-  playerTemplates.push_back(PlayerTemplate(true, true, neutralPlayersUnits));
-  playerTemplates.push_back(PlayerTemplate(false, false, realPlayersUnits));
-  playMode = MapPlayMode(2, 2, playerTemplates);
-  playModes.clear();
-  playModes.push_back(playMode);
-  t = MapTemplate(
-      &universe, "Toy map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
-      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-      heightfield, 10 /* gravity */, playModes
-    );
-
   /* Create the world */
-  w = new CompleteWorld(t, 0 /* mode */, players);
+  World* w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);
   
   doLoadTest(cout);
   delete w;
@@ -204,10 +162,10 @@ int main(/* int argc, char** argv */)
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
   
-  PatrollerClient patrollerClient(Point<sint32>(MAP_WIDTH/2, 0, 10));
+  PatrollerClient patrollerClient(Point<sint32>(500, 0, 10));
   players.back().attachClient(&patrollerClient);
   
-  w = new CompleteWorld(t, 0 /* mode */, players);
+  w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);
   doLoadTest(cout);
   delete w;
   w = NULL;
@@ -218,6 +176,15 @@ int main(/* int argc, char** argv */)
 #ifdef _MSC_VER
   cout<<"Total time taken: "<<clock()<<"ms"<<endl;
 #endif
+  
+  delete mapTemplate;
+  delete universe;
+  delete resourceInterface;
+
+  /* ltdl finalization */
+  if (lt_dlexit()) {
+    Fatal("lt_dlexit() failed");
+  }
 
   return 0;
 }

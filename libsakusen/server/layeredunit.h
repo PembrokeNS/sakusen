@@ -17,7 +17,7 @@ namespace server {
 
 /** \brief A Unit together with all layers currently attached to it.
  *
- * This is a servers representation of a Unit, with all the additional data
+ * This is a server's representation of a Unit, with all the additional data
  * that only the server gets to see, such as the layers which have been added
  * to it, SensorReturns from it to various Players, etc.
  *
@@ -53,7 +53,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
     ); /* constructor intended to be used when spawning a Unit on the map -
-          this is called only by Unit::spawn, and is thus private.
+          this is called only by LayeredUnit::spawn, and is thus private.
           owner is expected to be set after construction since it should not
           be set until *after* the Unit has been added to the World */
   public:

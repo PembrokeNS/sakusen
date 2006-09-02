@@ -12,8 +12,13 @@ namespace server{
 UnitCore::UnitCore(const UnitCore& copy, LayeredUnit* o) :
   UnitStatus(copy),
   outerUnit(o),
-  owner(copy.owner)
+  owner(copy.owner),
+  weapons()
 {
+  for (vector<Weapon*>::const_iterator weapon = copy.weapons.begin();
+      weapon != copy.weapons.end(); ++weapon) {
+    weapons.push_back((*weapon)->newCopy());
+  }
 }
 
 UnitCore::UnitCore(
@@ -27,6 +32,7 @@ UnitCore::UnitCore(
   outerUnit(o),
   owner(0)
 {
+  initializeWeapons();
 }
 
 UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
@@ -34,6 +40,27 @@ UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
   outerUnit(o),
   owner(0)
 {
+  initializeWeapons();
+}
+
+UnitCore::~UnitCore()
+{
+  while (!weapons.empty()) {
+    delete weapons.back();
+    weapons.pop_back();
+  }
+}
+
+void UnitCore::initializeWeapons()
+{
+  const Universe* universe = world->getUniverse();
+  const UnitType* typePtr = universe->getUnitTypePtr(type);
+  /* add weapons */
+  const std::list<WeaponTypeID>& weaponTypes = typePtr->getWeapons();
+  for (std::list<WeaponTypeID>::const_iterator weaponType = weaponTypes.begin();
+      weaponType != weaponTypes.end(); ++weaponType) {
+    weapons.push_back(universe->getWeaponTypePtr(*weaponType)->spawn());
+  }
 }
 
 /** \brief Kill the unit.

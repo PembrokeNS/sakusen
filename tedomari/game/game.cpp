@@ -47,8 +47,11 @@ void Game::setUniverse(const String& name, const String& hash)
     case resourceSearchResult_notFound:
     case resourceSearchResult_ambiguous:
     case resourceSearchResult_error:
+    case resourceSearchResult_notSupported:
       /** \todo Better error handling */
       Fatal("problem loading universe");
+    default:
+      Fatal("unexpected enum value: " << result);
   }
 }
 

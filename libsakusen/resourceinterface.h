@@ -23,9 +23,15 @@ class LIBSAKUSEN_API ResourceInterface {
     String error;
     
     virtual void* internalSearch(
-        String name,
+        const String& name,
         ResourceType type,
         const void* arg,
+        ResourceSearchResult* result
+      ) = 0;
+    
+    virtual void* internalSymbolSearch(
+        const String& moduleName,
+        const String& symbolName,
         ResourceSearchResult* result
       ) = 0;
 
@@ -47,11 +53,22 @@ class LIBSAKUSEN_API ResourceInterface {
      */
     template<typename T>
     inline T* search(
-        String name,
+        const String& name,
         const typename T::loadArgument* arg,
         ResourceSearchResult* result
       );
 
+    template<typename T>
+    T symbolSearch(
+        const String& moduleName,
+        const String& symbolName,
+        ResourceSearchResult* result
+      ) {
+      return reinterpret_cast<T>(
+          internalSymbolSearch(moduleName, symbolName, result)
+        );
+    }
+    
     template<typename T>
     inline bool save(const T* resource);
 

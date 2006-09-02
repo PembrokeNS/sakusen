@@ -11,7 +11,9 @@ namespace sakusen {
  */
 enum ResourceType {
   resourceType_universe,
-  resourceType_mapTemplate
+  resourceType_mapTemplate,
+  resourceType_source,
+  resourceType_module
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceType resource);

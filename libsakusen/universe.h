@@ -34,12 +34,15 @@ class LIBSAKUSEN_API Universe {
     Universe(
         const String& internalName,
         const String& hash,
+        const std::vector<WeaponType>& weaponTypes,
         const std::vector<UnitType>& unitTypes
       );
     ~Universe() {}
   private:
     String internalName;
     String hash;
+    std::vector<WeaponType> weaponTypes;
+    __gnu_cxx::hash_map<String, WeaponTypeID, StringHash> weaponIDLookup;
     std::vector<UnitType> unitTypes;
     __gnu_cxx::hash_map<String, UnitTypeID, StringHash> unitIDLookup;
 
@@ -96,7 +99,7 @@ class LIBSAKUSEN_API Universe {
      * It returns a newly allocated Universe, which must be deleted by the
      * caller.
      */
-    static Universe* loadNew(IArchive&);
+    static Universe* loadNew(IArchive&, ResourceInterface* resourceInterface);
 };
 
 }

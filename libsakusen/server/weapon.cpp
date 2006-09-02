@@ -1,6 +1,16 @@
 #include "weapon.h"
 
-using namespace sakusen;
+#include <ltdl.h>
+
+using namespace sakusen::server;
+
+Weapon::Weapon(const Weapon& copy) :
+  type(copy.type),
+  energyCharge(copy.energyCharge),
+  metalCharge(copy.metalCharge),
+  active(copy.active)
+{
+}
 
 Weapon::Weapon(const WeaponType* t) :
   type(t->getId()),

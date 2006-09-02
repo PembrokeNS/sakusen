@@ -2,32 +2,47 @@
 #define WEAPONTYPE_H
 
 #include "libsakusen-global.h"
+#include "iarchive.h"
+#include "oarchive.h"
+#include "resourceinterface.h"
 
 namespace sakusen {
 
+namespace server {
+/* Sticking a declaration of sakusen::server::Weapon in here is a bit cheap,
+ * but it allows us to use that type as the return type of the spawn
+ * member.  The alternative would be to have it return a void* and scatter
+ * reinterpret_casts everywhere.  The member in question should never be used
+ * on client-side. */
 class Weapon;
+}
+
 class WeaponType;
 
 typedef const WeaponType* WeaponTypeID;
 
 class WeaponType {
-  friend class Weapon;
+  private:
+    WeaponType();
+  public:
+    WeaponType(
+        String internalName,
+        String moduleName,
+        uint16 energyCost,
+        uint16 metalCost,
+        uint16 energyRate,
+        uint16 metalRate,
+        ResourceInterface* resourceInterface
+      );
   private:
     String internalName;
+    String moduleName;
+    server::Weapon* (*spawnFunction)(const WeaponType*);
     uint16 energyCost;
     uint16 metalCost;
     uint16 energyRate;
     uint16 metalRate;
-
-  protected:
-    WeaponType();
-    WeaponType(const WeaponType&);
-    public:
-    virtual ~WeaponType();
-
-    /* factory method */
-    /* this creates a new weapon which must be deleted */
-    virtual Weapon& spawnWeapon(void);
+  public:
     /* accessors */
     inline const String& getInternalName(void) const { return internalName; }
     inline WeaponTypeID getId(void) const {return this;}
@@ -38,8 +53,13 @@ class WeaponType {
     inline uint16 getMetalRate(void) const {return metalRate;}
     inline uint32 getRate(void) const {return (energyRate<<16)|metalRate;}
 
+    server::Weapon* spawn() const;
+
+    void store(OArchive&) const;
+    static WeaponType load(IArchive&, ResourceInterface*);
 };
 
 }
 
 #endif
+

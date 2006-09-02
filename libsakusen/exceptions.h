@@ -2,11 +2,11 @@
 #define LIBSAKUSEN__EXCEPTIONS_H
 
 #include "libsakusen-global.h"
+#include "stringutils.h"
+#include "resourcesearchresult.h"
 
 #include <cerrno>
 #include <stdexcept>
-
-#include "stringutils.h"
 
 namespace sakusen {
 
@@ -20,6 +20,8 @@ class Exn {
 };
 
 class DeserializationExn : public Exn {
+  private:
+    DeserializationExn();
   public:
     DeserializationExn(const String& message) :
       Exn(message) { }
@@ -88,6 +90,25 @@ class EnumDeserializationExn :
           numToString(value) + ")"
         ) {}
     virtual ~EnumDeserializationExn() throw() {}
+};
+
+class ResourceDeserializationExn :
+    public DeserializationExn {
+  public:
+    ResourceDeserializationExn(
+        const String& resource,
+        ResourceSearchResult result,
+        String error
+      ) :
+      DeserializationExn(
+          "resource '"+resource+"' "+
+          ( result == resourceSearchResult_error ?
+            "caused error: " + error : "" ) +
+          ( result == resourceSearchResult_notFound ? "not found" : "" ) +
+          ( result == resourceSearchResult_ambiguous ? "ambiguous" : "" ) +
+          ( result == resourceSearchResult_notSupported ? "not supported" : "" )
+        ) {}
+    virtual ~ResourceDeserializationExn() throw() {}
 };
 
 }

@@ -17,6 +17,7 @@ std::ostream& sakusen::operator<<(
     CASE(resourceSearchResult_ambiguous)
     CASE(resourceSearchResult_notFound)
     CASE(resourceSearchResult_error)
+    CASE(resourceSearchResult_notSupported)
     #undef CASE
     default:
       output << "resourceType_" << uint32(resource);

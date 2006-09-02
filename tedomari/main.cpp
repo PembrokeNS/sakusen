@@ -211,7 +211,7 @@ void runTest(
   ) {
   String uiConfFilename = configPath + FILE_SEP "ui.conf";
   ResourceInterface* resourceInterface =
-    new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+    new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR, false);
   Game* game = new Game(resourceInterface);
   UI* ui = newUI(options, uiConfFilename, game);
 
@@ -302,7 +302,8 @@ void runClient(
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
     
-    ResourceInterface* resourceInterface = new FileResourceInterface(dataDirs);
+    ResourceInterface* resourceInterface =
+      new FileResourceInterface(dataDirs, false);
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
         socket, options.joinAddress,

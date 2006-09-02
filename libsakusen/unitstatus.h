@@ -20,7 +20,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
         bool rIA,
         bool sIA,
         const std::list<uint32>& su,
-        const std::list<Weapon>& w
+        const std::vector<WeaponStatus>& w
       );
   public:
     UnitStatus(const IUnitStatus* copy);
@@ -31,7 +31,8 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       const Point<sint16>& startVelocity,
       HitPoints startHitPoints,
       bool startRadarActive,
-      bool startSonarActive
+      bool startSonarActive,
+      std::vector<WeaponStatus> startWeaponsStatus
     );
     UnitStatus(
       const UnitTypeID& startType,
@@ -61,9 +62,9 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     bool sonarIsActive;
     std::list<uint32> subunits; /**< ids of subunits which must belong to
                                   the same player as this unit */
-    std::list<Weapon> weapons;
+    std::vector<WeaponStatus> weaponsStatus;
 
-    void initializeWeapons(const UnitType* typePtr, const Universe* universe);
+    void initializeWeapons(const UnitType* typePtr);
   public:
     /* accessors */
     inline UnitTypeID getType(void) const {return type;}
@@ -74,6 +75,9 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     inline HitPoints getHitPoints(void) const {return hitPoints;}
     inline bool isRadarActive(void) const {return radarIsActive;}
     inline bool isSonarActive(void) const {return sonarIsActive;}
+    inline const std::vector<WeaponStatus>& getWeaponsStatus(void) const {
+      return weaponsStatus;
+    }
 
     typedef Universe loadArgument;
     void store(OArchive&, const Universe*) const;

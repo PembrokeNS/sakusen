@@ -8,6 +8,7 @@
 #include "server.h"
 
 #include <sys/stat.h>
+#include <ltdl.h>
 
 #include <cerrno>
 #include <iostream>
@@ -178,6 +179,11 @@ int startServer(const String& homePath, const Options& options)
           "* fuseki (a Sakusen server) *\n"
           "* Similus est circo mortis! *\n"
           "*****************************" << endl;
+  
+  /* ltdl initialization */
+  if (lt_dlinit()) {
+    Fatal("lt_dlinit() failed");
+  }
 
   /* Create the resource interface */
   /** \todo make the directories searched configurable */
@@ -188,7 +194,8 @@ int startServer(const String& homePath, const Options& options)
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
-  ResourceInterface* resourceInterface = new FileResourceInterface(dataDirs);
+  ResourceInterface* resourceInterface =
+    new FileResourceInterface(dataDirs, true);
   
   /* Initialize sockets */
   Socket::socketsInit();
@@ -331,6 +338,12 @@ int startServer(const String& homePath, const Options& options)
   delete tcpSocket;
   delete udpSocket;
   delete resourceInterface;
+
+  /* ltdl finalization */
+  if (lt_dlexit()) {
+    Fatal("lt_dlexit() failed");
+  }
+
   return EXIT_SUCCESS;
 }
 
