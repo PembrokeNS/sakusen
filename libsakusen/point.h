@@ -15,7 +15,7 @@ class LIBSAKUSEN_API Point {
     Point(): x(0), y(0), z(0) {}
     Point(T a, T b, T c): x(a), y(b), z(c) {}
     template <typename U>
-    Point(const Point<U>& p) : x(p.x), y(p.y), z(p.z) {}
+    Point(const Point<U>& p) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
     ~Point() {}
 
     inline T& operator[](const int index) {
