@@ -16,7 +16,9 @@ class UpdatedUnit : public CompleteUnit {
     UpdatedUnit();
   public:
     UpdatedUnit(const CompleteUnit& copy) :
-      CompleteUnit(copy), orders(), altered(false)
+      CompleteUnit(copy),
+      orders(copy.getStatus().getWeaponsStatus().size()),
+      altered(false)
     {}
     virtual ~UpdatedUnit() {}
   private:

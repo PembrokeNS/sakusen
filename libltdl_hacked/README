@@ -1,0 +1,4 @@
+A slightly hacked version of libltdl.  It should have the same interface and
+functionality, but slightly better error reporting.  The ideal long-term plan
+would be to get the official version to have the same error reporting.
+

@@ -78,6 +78,9 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     inline const std::vector<WeaponStatus>& getWeaponsStatus(void) const {
       return weaponsStatus;
     }
+    inline std::vector<WeaponStatus>& getWeaponsStatus(void) {
+      return weaponsStatus;
+    }
 
     typedef Universe loadArgument;
     void store(OArchive&, const Universe*) const;

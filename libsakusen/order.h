@@ -3,8 +3,6 @@
 
 #include "ordertype.h"
 #include "orderdata.h"
-#include "moveorderdata.h"
-#include "setvelocityorderdata.h"
 #include "oarchive.h"
 #include "iarchive.h"
 
@@ -27,14 +25,18 @@ class LIBSAKUSEN_API Order {
     /** \name acccessors */
     /*@{*/
     inline bool isRealOrder(void) const {
-      return getOrderType() != orderType_none;
+      return getType() != orderType_none;
     }
-    inline OrderType getOrderType(void) const { return type; }
-    inline const MoveOrderData getMoveData(void) const {
+    inline OrderType getType(void) const { return type; }
+    inline const MoveOrderData& getMoveData(void) const {
       return *dynamic_cast<const MoveOrderData*>(data);
     }
-    inline const SetVelocityOrderData getSetVelocityData(void) const {
+    inline const SetVelocityOrderData& getSetVelocityData(void) const {
       return *dynamic_cast<const SetVelocityOrderData*>(data);
+    }
+    inline const TargetSensorReturnsOrderData& getTargetSensorReturnsData(void) 
+      const {
+      return *dynamic_cast<const TargetSensorReturnsOrderData*>(data);
     }
     /*@}*/
 

@@ -12,7 +12,8 @@ namespace sakusen {
 enum OrderType {
   orderType_none,
   orderType_setVelocity, /* Set the Unit's velocity to this value */
-  orderType_move /* Move the unit to this position */
+  orderType_move, /* Move the unit to this position */
+  orderType_targetSensorReturns /* Target a weapon at a SensorReturns */
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, OrderType);

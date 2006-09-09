@@ -7,6 +7,7 @@
 #include "ordercondition.h"
 #include "targettype.h"
 #include "orientation.h"
+#include "weaponorders.h"
 
 namespace sakusen {
 
@@ -27,10 +28,11 @@ class LIBSAKUSEN_API UnitOrders {
         const Point<sint16>& tV,
         const RotationalTargetType& rT,
         const Orientation& tO,
-        const AngularVelocity& tAV
+        const AngularVelocity& tAV,
+        const std::vector<WeaponOrders>& weaponOrders
       );
   public:
-    UnitOrders();
+    UnitOrders(uint16 numWeapons);
   private:
     /** One order per condition. The order may be the nop order. */
     Order orders[orderCondition_max];
@@ -51,6 +53,8 @@ class LIBSAKUSEN_API UnitOrders {
                                      reach */
     AngularVelocity targetAngularVelocity; /**< The angular velocity we're
                                              trying to achieve */
+    /** The order status of the Unit's weapons */
+    std::vector<WeaponOrders> weaponOrders;
   public:
     /** \name accessors */
     /*@{*/

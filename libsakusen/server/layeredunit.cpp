@@ -36,7 +36,7 @@ LayeredUnit::LayeredUnit(
   owner(0),
   topLayer(new UnitCore(this, t.getStatus())),
   status(topLayer->getCore()),
-  orders(),
+  orders(t.getStatus()->getWeaponsStatus().size()),
   sensorReturns(10),
   dirty(false)
 {
@@ -53,7 +53,7 @@ LayeredUnit::LayeredUnit(
         this, startType, startPosition, startOrientation, startVelocity
       )),
   status(topLayer->getCore()),
-  orders(),
+  orders(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size()),
   sensorReturns(10),
   dirty(false)
 {
@@ -278,7 +278,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   
   /* determine if the currentOrder has succeeded or failed, and if so
    * then update the currentOrder appropriately and inform clients */
-  switch (orders.getCurrentOrder().getOrderType()) {
+  switch (orders.getCurrentOrder().getType()) {
     case orderType_none:
       break;
     case orderType_setVelocity:
@@ -293,11 +293,18 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
         acceptOrder(orderCondition_lastOrderSuccess);
       }
       break;
+    case orderType_targetSensorReturns:
+      /** \todo Check whether the SensorReturns still exists.  If not, then we
+       * imagine that we have succeeded */
+      break;
     default:
       Fatal("Unknown orderType '" <<
-          orders.getCurrentOrder().getOrderType() << "'");
+          orders.getCurrentOrder().getType() << "'");
       break;
   }
+
+  /* Process the weapons */
+  topLayer->incrementWeaponsState();
 }
 
 void LayeredUnit::enqueueOrder(
@@ -312,6 +319,9 @@ void LayeredUnit::enqueueOrder(
   world->getPlayerPtr(owner)->informClients(
       Update(OrderQueuedUpdateData(unitId, order, condition))
     );
+  if (condition == orderCondition_incidental) {
+    acceptOrder(orderCondition_incidental);
+  }
 }
 
 bool LayeredUnit::setRadar(bool active) {

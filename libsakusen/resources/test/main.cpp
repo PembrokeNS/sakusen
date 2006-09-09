@@ -11,8 +11,6 @@
 #include "fileresourceinterface.h"
 #include "fileutils.h"
 
-#include <ltdl.h>
-
 #include <iostream>
 
 using namespace std;
@@ -33,11 +31,6 @@ using namespace sakusen::resources;
 /** \brief main function for test */
 int main(/*int argc, char** argv*/)
 {
-  /* ltdl initialization */
-  if (lt_dlinit()) {
-    Fatal("lt_dlinit() failed");
-  }
-  
   String homePath = fileUtils_getHome();
   String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
   
@@ -250,11 +243,6 @@ int main(/*int argc, char** argv*/)
   delete reloadedUniverse;
   delete t;
   delete resourceInterface;
-
-  /* ltdl finalization */
-  if (lt_dlexit()) {
-    Fatal("lt_dlexit() failed");
-  }
 
   return EXIT_SUCCESS;
 }

@@ -7,8 +7,6 @@ using namespace sakusen;
 
 World::World(const Universe* u) :
   universe(u),
-  ballistics(),
-  beams(),
   timeNow(0)
 {
   /* sanity check */

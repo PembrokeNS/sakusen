@@ -15,7 +15,7 @@ Order::Order(const Order& copy) :
 }
 
 Order::Order(const OrderData& d) :
-  type(orderType_move),
+  type(d.getType()),
   data(d.newCopy())
 {
 }

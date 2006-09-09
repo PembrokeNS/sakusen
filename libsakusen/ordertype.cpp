@@ -16,6 +16,7 @@ LIBSAKUSEN_API std::ostream& operator<<(
     CASE(orderType_none)
     CASE(orderType_setVelocity)
     CASE(orderType_move)
+    CASE(orderType_targetSensorReturns)
     #undef CASE
     default:
       output << "orderType_" << uint32(orderType);

@@ -70,6 +70,7 @@ class UnitCore : public UnitLayer, private UnitStatus {
 
     /** \name Game mechanics */
     //@{
+    void incrementWeaponsState();
     void kill(HitPoints excessDamage);
     void damage(HitPoints amount);
     void repair(HitPoints amount, bool superhealth);

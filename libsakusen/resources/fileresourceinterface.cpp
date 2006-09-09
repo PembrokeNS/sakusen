@@ -11,7 +11,7 @@
 #include "fileioexn.h"
 
 #include <sys/stat.h>
-#include <ltdl.h>
+#include <ltdl_hacked.h>
 
 #include <pcrecpp.h>
 
@@ -266,7 +266,7 @@ void* FileResourceInterface::internalSymbolSearch(
   String sourceFile = fileUtils_notDirPart(sourcePath);
 
   /* replace the extension of the filename to get the module name */
-  size_t dot = sourceFile.rfind('.', sourceFile.length());
+  size_t dot = sourceFile.rfind('.');
   String moduleFile = sourceFile.substr(0, dot) + ".sakusenmodule";
   String modulePath = fileSearch(moduleFile, resourceType_module, result);
   if (modulePath == "") {
@@ -282,7 +282,7 @@ void* FileResourceInterface::internalSymbolSearch(
 
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
-  lt_dlhandle moduleHandle = lt_dlopen(modulePath.c_str());
+  lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
   if (moduleHandle == NULL) {
     *result = resourceSearchResult_error;
     error = String("lt_dlopen() failed: ") + lt_dlerror();

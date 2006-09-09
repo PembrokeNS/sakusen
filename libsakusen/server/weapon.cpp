@@ -1,25 +1,34 @@
 #include "weapon.h"
 
-#include <ltdl.h>
+#include "layeredunit.h"
 
 using namespace sakusen::server;
 
 Weapon::Weapon(const Weapon& copy) :
-  type(copy.type),
-  energyCharge(copy.energyCharge),
-  metalCharge(copy.metalCharge),
-  active(copy.active)
+  type(copy.type)
 {
 }
 
 Weapon::Weapon(const WeaponType* t) :
-  type(t->getId()),
-  energyCharge(0),
-  metalCharge(0),
-  active(false)
+  type(t->getId())
 {
 }
 
-void Weapon::activate(void) {active = true;}
-void Weapon::deactivate(void) {active = false;}
+void Weapon::incrementState(LayeredUnit* firer, uint16 weaponIndex)
+{
+  UnitStatus* unitStatus = firer->getStatus();
+  assert(weaponIndex < unitStatus->getWeaponsStatus().size());
+  WeaponStatus* status = &unitStatus->getWeaponsStatus()[weaponIndex];
+
+  /** \todo Worry about what state weapons can be left in when inactive.  Can
+   * they be charged, for example? */
+  if (!status->isActive()) {
+    return;
+  }
+  
+  if (status->incrementState(type)) {
+    /* Return value of true means that there were enough resources to fire */
+    onFire(firer, weaponIndex);
+  }
+}
 

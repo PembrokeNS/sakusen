@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 #include "point.h"
 #include "weapontype.h"
+#include "layeredunit.h"
 
 namespace sakusen {
 namespace server {
@@ -18,26 +19,15 @@ class LIBSAKUSEN_API Weapon {
     virtual ~Weapon() {}
   private:
     WeaponTypeID type;
-    uint16 energyCharge;
-    uint16 metalCharge;
-    bool active; /* true for currently firing or charging, false for inactive */
   
   public:
     /* accessors */
     WeaponTypeID getType(void) const {return type;}
-    uint16 getEnergy(void) const {return energyCharge;}
-    uint16 getMetal(void) const {return metalCharge;}
-    uint32 getCharge(void) const {return (energyCharge<<16)|metalCharge;}
-    bool isActive(void) const {return active;}
-
-    /* some functions to fire it go here */
-    virtual void activate(void);
-    virtual void deactivate(void);
 
     /* callbacks */
     
-    /* provisional - probably should take some arguments */
-    virtual void onFire(void) {}
+    virtual void incrementState(LayeredUnit* firer, uint16 weaponIndex);
+    virtual void onFire(LayeredUnit* firer, uint16 weaponIndex) = 0;
     
     /* for when the unit is destroyed, if we want to have ammo exploding or
      * anything like that */

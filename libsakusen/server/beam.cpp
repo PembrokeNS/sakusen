@@ -1,16 +1,7 @@
 #include "beam.h"
 #include "world.h"
 
-using namespace sakusen;
-
-void Beam::spawn(
-    BeamTypeID type,
-    Time creationTime,
-    Point<sint32> position,
-    Point<sint32> direction)
-{
-  world->addBeam(Beam(type, creationTime, position, direction));
-}
+using namespace sakusen::server;
 
 void Beam::resolveIntersections(void) {
   /** This is going to be a busy function. We need to check the flags on type,

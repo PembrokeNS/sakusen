@@ -10,7 +10,6 @@
 #include "unittype.h"
 #include "iarchive.h"
 #include "oarchive.h"
-#include "beamtype.h"
 
 namespace sakusen {
 
@@ -64,9 +63,6 @@ class LIBSAKUSEN_API Universe {
     inline const String& getHash() const { return hash; }
     
     /* index/pointer/ID/Name conversions */
-    inline const BeamType* getBeamTypePtr(BeamTypeID id) const {
-      return id;
-    }
     inline const WeaponType* getWeaponTypePtr(WeaponTypeID id) const
     {
       return id;

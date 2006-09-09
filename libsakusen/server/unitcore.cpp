@@ -63,6 +63,15 @@ void UnitCore::initializeWeapons()
   }
 }
 
+void UnitCore::incrementWeaponsState()
+{
+  size_t numWeapons = weapons.size();
+
+  for (size_t i=0; i<numWeapons; ++i) {
+    weapons[i]->incrementState(outerUnit, i);
+  }
+}
+
 /** \brief Kill the unit.
  *
  * \param excessDamage Amount of 'spillover' damage to apply to whatever corpse

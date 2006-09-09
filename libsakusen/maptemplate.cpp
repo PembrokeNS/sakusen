@@ -58,11 +58,11 @@ void MapTemplate::store(OArchive& archive) const
 
 MapTemplate MapTemplate::load(IArchive& archive, const Universe* universe)
 {
-  uint8 topology;
+  Topology topology;
   String internalName;
   Point<sint32> topRight;
   Point<sint32> bottomLeft;
-  archive >> topology >> internalName >> topRight >> bottomLeft;
+  archive.extractEnum(topology) >> internalName >> topRight >> bottomLeft;
   Heightfield heightfield = Heightfield::load(archive);
   uint16 gravity;
   vector<MapPlayMode> playModes;
@@ -71,7 +71,7 @@ MapTemplate MapTemplate::load(IArchive& archive, const Universe* universe)
   
   return MapTemplate(
       universe, internalName, topRight, bottomLeft,
-      static_cast<Topology>(topology), heightfield, gravity, playModes
+      topology, heightfield, gravity, playModes
     );
 }
 

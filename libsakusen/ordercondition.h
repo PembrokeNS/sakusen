@@ -2,12 +2,13 @@
 #define ORDERCONDITION_H
 
 /* Note that current serialization implementation limits us to 256 enumeration
- * values (see updatedata.cpp) */
+ * values (see [io]archive.cpp) */
 
 namespace sakusen {
 
 enum OrderCondition {
   orderCondition_now,
+  orderCondition_incidental,
   orderCondition_lastOrderSuccess,
   orderCondition_lastOrderFailure,
   orderCondition_enemyUnitSighted,

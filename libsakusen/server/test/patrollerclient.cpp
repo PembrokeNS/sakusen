@@ -30,6 +30,20 @@ void PatrollerClient::queueUpdate(const Update& update)
         }
       }
       break;
+    case updateType_sensorReturnsAdded:
+      {
+        const SensorReturnsAddedUpdateData& data =
+          update.getSensorReturnsAddedData();
+        /* throw in a weapon targeting order */
+        orderMessageQueue.push(
+            OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
+                TargetSensorReturnsOrderData(
+                  0 /* weapon index */, data.getSensorReturns().getId()
+                )
+              ))
+          );
+      }
+      break;
     case updateType_orderCompleted:
       {
         const OrderCompletedUpdateData& data = update.getOrderCompletedData();

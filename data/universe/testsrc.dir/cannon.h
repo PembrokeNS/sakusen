@@ -2,27 +2,43 @@
 #define CANNON_H
 
 #include "weapon.h"
+#include "ballistic.h"
+#include "layeredunit.h"
 
-namespace testload {
+using namespace sakusen;
+using namespace sakusen::server;
 
-class Cannon : public sakusen::server::Weapon {
+namespace testsrc {
+
+class Cannon : public Weapon {
   private:
     Cannon();
   public:
-    Cannon(const sakusen::WeaponType* type) :
+    Cannon(const WeaponType* type) :
       Weapon(type)
     {}
+
+    void onFire(LayeredUnit* firer, uint16 weaponIndex);
 
     Weapon* newCopy() const {
       return new Cannon(*this);
     }
 };
 
+class Shell : public Ballistic {
+  private:
+    Shell();
+  public:
+    Shell(LayeredUnit* source);
+
+    void onCollision(const Point<sint32>& pos);
+};
+
 }
 
 extern "C" {
 
-sakusen::server::Weapon* spawn_cannon(const sakusen::WeaponType* type);
+Weapon* spawn_cannon(const WeaponType* type);
 
 }
 

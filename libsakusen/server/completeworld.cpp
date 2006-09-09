@@ -68,6 +68,18 @@ CompleteWorld::CompleteWorld(
 
 CompleteWorld::~CompleteWorld()
 {
+  /* Free memory for ballistics */
+  while (!ballistics.empty()) {
+    delete ballistics.front();
+    ballistics.pop_front();
+  }
+  
+  /* Free memory for beams */
+  while (!beams.empty()) {
+    delete beams.front();
+    beams.pop_front();
+  }
+  
   /* Free memory for effects */
   while (!effects.empty()) {
     delete effects.front();
@@ -132,7 +144,7 @@ void CompleteWorld::incrementGameState(void)
   }
 
   /* process ballistics */
-  for (std::list<Ballistic>::iterator k=ballistics.begin();
+  for (std::list<Ballistic*>::iterator k=ballistics.begin();
       k!=ballistics.end(); k++) {
     /* TODO: collision detection. */
   }

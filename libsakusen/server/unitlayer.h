@@ -31,6 +31,7 @@ class UnitLayer : public IUnitTypeData {
     virtual PlayerID getOwner() const = 0;
 
     /* game mechanics */
+    virtual void incrementWeaponsState() = 0;
     virtual void kill(HitPoints excessDamage) = 0;
     virtual void damage(HitPoints amount) = 0;
     virtual void repair(HitPoints amount, bool superhealth) = 0;

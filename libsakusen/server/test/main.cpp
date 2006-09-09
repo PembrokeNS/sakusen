@@ -14,7 +14,7 @@
 #include "patrollerclient.h"
 
 #include <time.h>
-#include <ltdl.h>
+#include <ltdl_hacked.h>
 
 #include <iostream>
 #include <cerrno>

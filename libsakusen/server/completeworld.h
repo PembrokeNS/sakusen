@@ -6,6 +6,8 @@
 #include "completemap.h"
 #include "layeredunit.h"
 #include "fuse.h"
+#include "ballistic.h"
+#include "beam.h"
 #include "effect.h"
 
 namespace sakusen {
@@ -27,6 +29,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   private:
     CompleteMap* map; /* owned by this */
     std::list<LayeredUnit> units; /* this list includes subunits */
+    std::list<Ballistic*> ballistics;
+    std::list<Beam*> beams;
     std::list<Effect*> effects;
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
     std::vector<Player> players;
@@ -41,6 +45,14 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     }
     inline std::list<LayeredUnit>& getUnits(void) { return units; }
     
+    inline void addBallistic(Ballistic* ballistic)
+    {
+      ballistics.push_back(ballistic);
+    }
+    inline void addBeam(Beam* beam)
+    {
+      beams.push_back(beam);
+    }
     /* By calling this function, you transfer ownership of the pointer to the
      * World.  The effect shall be deleted by the World when it is removed or
      * when the World is destructed */
