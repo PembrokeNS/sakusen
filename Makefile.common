@@ -99,7 +99,7 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
-	libtool --mode=link gcc $(THIS_LDFLAGS) -rpath $(PREFIX)/lib -g3 -o $@ \
+	libtool --mode=link $(CC) $(THIS_LDFLAGS) -rpath $(PREFIX)/lib -g3 -o $@ \
 		$(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
 
 # Libtool objects are made when normal objects are

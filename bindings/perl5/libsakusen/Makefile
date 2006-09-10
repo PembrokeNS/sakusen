@@ -1,21 +1,29 @@
 PERL5 ?= perl
 SWIG ?= swig
+PREFIX ?= /usr/local
 PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
 INCLUDE := -I$(PERL5ARCH)/CORE -I../../../libsakusen
-include ../../../Makefile.common
+
 all: sakusen.so
 
-sakusen.so: sakusen.o
-	g++ -shared sakusen.o \
-	-Xlinker -rpath ../../../libsakusen/.libs/libsakusen.so \
-	-o sakusen.so
-	#libtool --mode=link --tag=CXX $(CXX) sakusen.o ../../../libsakusen/libsakusen.la -o sakusen.la -rpath $(PREFIX)/lib/libsakusen.so
+test: all
+	$(MAKE) -C t test
 
+clean:
+	-rm -rf *.o *.so *.pm *.cpp
+
+# This command will compile a .so file that works, and is probably suitable
+# for testing, but it MUST NOT be installed.  To compile one suitable for
+# installation the --rpath here specified should be changed to $(PREFIX)/lib
+sakusen.so: Makefile sakusen.o
+	$(CXX) -shared -o sakusen.so sakusen.o ../../../libsakusen/.libs/libsakusen.so -Wl,--rpath -Wl,/home/john/progs/sakusen/libsakusen/.libs
+
+# -DHAS_BOOL was suggested as an alternative to -Dbool=char, and it seems a
+# less silly option.  It also seems to work.
 sakusen.o: sakusen.cpp
-	g++ -c sakusen.cpp $(INCLUDE) -o sakusen.o -Dbool=char -Wall -fPIC
-	#libtool --mode=compile --tag=CXX $(CXX) -c sakusen.cpp $(INCLUDE) -o sakusen.o -Dbool=char -Wall -fPIC
+	$(CXX) -c sakusen.cpp $(INCLUDE) -o sakusen.o -DHAS_BOOL -Wall -fPIC
 
 sakusen.cpp: ../../libsakusen.i
-	swig -perl5 -c++ -o sakusen.cpp -I../../../libsakusen ../../libsakusen.i
+	$(SWIG) -perl5 -c++ -o sakusen.cpp -I../../../libsakusen ../../libsakusen.i
 
-.PHONY: all
+.PHONY: all test clean
