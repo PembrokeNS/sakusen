@@ -1,8 +1,0 @@
-MANIFEST
-sakusen.cpp
-sakusen.pm
-t/1point.t
-t/box.t
-t/quadratic.t
-t/ray.t
-t/rectangle.t

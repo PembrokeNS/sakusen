@@ -1,0 +1,17 @@
+\B\.svn\b
+\B\.libs\b
+
+# Makemaker generated files and dirs.
+^MANIFEST\.
+^Makefile$
+^blib/
+^pm_to_blib$
+^MakeMaker-\d
+
+# Temp, old, emacs backup, and Vim swap files.
+~$
+\.old$
+^#.*#$
+^\.#
+.swp$
+.swo$
