@@ -13,18 +13,25 @@
 
 namespace sakusen {
 
-/* This class represents an archive from which we extract objects after
+/** \brief Source from which objects can be read.
+ *
+ * This class represents an archive from which we extract objects after
  * receiving it across the network or reading it from disk.  c.f. OArchive.
  * Thus it can be constructed from a buffer of uint8s and has lots of overloads
  * of operator>>.
+ *
  * It's worth noting that the libstdc++ docs say that doing precisely this is a
  * Bad Thing, because the << and >> operators should only be used for formatted
  * input and output.  The correct solution is make these classes ([IO]Archive)
  * subclasses of streambuf, but I don't know how to do that.
  * Besides that, we have the problem of differnt floating point formats (solved
  * at present by storing such numbers as text).
- * TODO: deal with all of the above.
- * The name IArchive follows the istream/ostream convention */
+ *
+ * \see OArchive
+ * \todo deal with all of the above
+ *
+ * \note The name IArchive follows the istream/ostream convention.
+ */
 class LIBSAKUSEN_API IArchive {
   private:
     IArchive();
