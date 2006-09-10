@@ -33,15 +33,15 @@ class Ray {
     double length; /**< length of \c d */
 
   public:
-    Ray();
+    Ray() {}
     Ray(Point<sint32> start, Point<sint32> direction): s(start), d(direction), length(direction.length()) {}
     virtual ~Ray() {}
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
-    double intersectUnit(ICompleteUnit* u);
-    double intersectUnits();
-    double intersectLand();
-    double intersectWater();
+    double intersectUnit(ICompleteUnit* u) const;
+    double intersectUnits() const;
+    double intersectLand() const;
+    double intersectWater() const;
 };
 
 }

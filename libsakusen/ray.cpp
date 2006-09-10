@@ -1,4 +1,5 @@
 #include "ray.h"
+#include "icompleteunit.h"
 namespace sakusen {
 
 /** \brief Get a point the Ray passes through.
@@ -32,4 +33,16 @@ Point<sint32> Ray::evaluate(double t) const {
 double Ray::distance(double t) const {
   return t * length;
 }
+
+/** These functions are not written yet. */
+/*@{*/
+double Ray::intersectUnit(ICompleteUnit* u) const {
+  static_cast<void>(u);
+  Fatal("not implemented");
+  return 0.0;
+}
+double Ray::intersectUnits() const {Fatal("not implemented"); return 0.0;}
+double Ray::intersectLand() const {Fatal("not implemented"); return 0.0;}
+double Ray::intersectWater() const {Fatal("not implemented"); return 0.0;}
+/*@}*/
 }
