@@ -4,7 +4,7 @@ PREFIX ?= /usr/local
 PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
 INCLUDE := -I$(PERL5ARCH)/CORE -I../../../libsakusen
 
-all: sakusen.la
+all: sakusen.cpp
 
 test: all
 	$(MAKE) -C t test

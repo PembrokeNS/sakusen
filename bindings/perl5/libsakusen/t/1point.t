@@ -1,6 +1,6 @@
 #!/usr/bin/perl -Tw
 
-use lib '..';
+use lib '.';
 use Test::More;
 BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
 
@@ -11,7 +11,7 @@ plan tests => 30 * scalar @types;
 
 for $type (@types) {
   $p = eval "new sakusen::$type(1, 2, 3)";
-  isa_ok ($p, "sakusen::$type");
+  isa_ok ($p, "sakusen::$type") or diag $@;
   is ($p->{x}, 1, "x co-ord is set correctly by the ctr");
   is ($p->{y}, 2, "y co-ord is set correctly by the ctr");
   is ($p->{z}, 3, "z co-ord is set correctly by the ctr");
