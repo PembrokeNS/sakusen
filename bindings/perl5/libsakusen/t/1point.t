@@ -1,6 +1,6 @@
 #!/usr/bin/perl -Tw
 
-use lib '.', '../../../libsakusen/.libs';
+use lib '..';
 use Test::More;
 BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
 
