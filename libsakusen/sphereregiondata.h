@@ -44,6 +44,11 @@ inline bool SphereRegionData<T>::contains(const Point<T>& point) const {
     squareLength() < squareRadius();
 }
 
+/** \bug This won't work if the sphere is not centred on the origin. I'm not
+ * sure what to do about this. It looks like we would only ever want to use
+ * this on the origin, and code to make it work anywhere would be just enough
+ * of a speed penalty to make me unhappy.
+ */
 template<typename T>
 inline Point<T> SphereRegionData<T>::truncateToFit(
     const Point<T>& p
@@ -58,11 +63,12 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
 template<typename T>
 inline Rectangle<T> SphereRegionData<T>::getBoundingRectangle() const
 {
+  /* add one because the upper-left corner is not inside the rectangle */
   return Rectangle<T>(
       centre.x-radius,
       centre.y-radius,
-      centre.x+radius,
-      centre.y+radius
+      centre.x+radius+1,
+      centre.y+radius+1
     );
 }
 

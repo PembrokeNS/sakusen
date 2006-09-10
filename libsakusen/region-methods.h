@@ -14,6 +14,12 @@ inline bool Region<T>::contains(const Point<T>& point) const
 {
   return data->contains(point);
 }
+template<typename T>
+inline bool Region<T>::contains(const IUnitStatus *unit) const
+{
+  return data->contains(unit->getPosition());
+}
+
 
 template<typename T>
 inline Point<T> Region<T>::truncateToFit(const Point<T>& p) const
