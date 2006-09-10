@@ -9,9 +9,11 @@
 %include "angle.h"
 %include "revision.h"
 
+#ifdef SWIGPERL
 %perlcode %{
 $VERSION = $sakusen::REVISION;
 %}
+#endif
 
 %include "point.h"
 %{
