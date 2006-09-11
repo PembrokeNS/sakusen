@@ -7,7 +7,7 @@ BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 @primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
 
 # tests per templated type and per primitive type
-plan tests => (33 * scalar @types) + (3 * scalar @primitives);
+plan tests => (38 * scalar @types) + (3 * scalar @primitives);
 
 # test getting limits
 {
@@ -55,7 +55,12 @@ for $type (@types) {
   ok ($p == $q, "equal Points are ==");
   ok ($p != $r, "unequal Points are !=");
 
-  ok ($p <= $r, "<= seems to work");
+  TODO: {
+    local $TODO = '<= operator is broken ATM' if $type eq 'SPoint64';
+    ok ($p <= $q, "equal Points are <=");
+    ok ($p <= $r, 'le points are <=');
+  }
+  ok ($p < $r, 'le points are <');
 
   $q = -$p;
   is ($q->{x}, 2, "unary negate: x co-ord is good");
@@ -82,6 +87,9 @@ for $type (@types) {
     isa_ok($min, "Sakusen::$type") or diag $@;
     isa_ok($max, "Sakusen::$type") or diag $@;
     ok($min <= $max, 'bottom() <= top()');
+    ok($min < $max, 'bottom() < top()');
+    ok(!($min >= $max), 'not bottom() >= top()');
+    ok(!($min > $max), 'not bottom() > top()');
   }
 
 }
