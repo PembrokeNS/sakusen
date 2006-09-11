@@ -12,15 +12,15 @@ $libtool = 'libtool';
 #$CC = "$libtool --mode=compile --tag=CXX $CC";
 
 WriteMakefile(
-  NAME => 'sakusen',
-  VERSION_FROM => 'sakusen.pm',
+  NAME => 'Sakusen',
+  VERSION_FROM => 'Sakusen.pm',
   AUTHOR => 'Vapourware Marketing Board <futur@istic.org>',
-  C => ['sakusen.cpp'],
+  C => ['Sakusen.cpp'],
   CC => $CC,
   LD => $LD,
   DEFINE => '-Dbool=char',
   INC => '-I../../../libsakusen',
-  OBJECT => 'sakusen.o ../../../libsakusen/.libs/libsakusen.so',
+  OBJECT => 'Sakusen.o ../../../libsakusen/.libs/libsakusen.so',
   #LDLOADLIBS => '../../../libsakusen/libsakusen.la',
   #LIBS => '../../../libsakusen/.libs/libsakusen.so',
   LDDLFLAGS => $LDDLFLAGS . '-shared -Wl,--rpath -Wl,'.`cd ../../../libsakusen/.libs/ && pwd`,

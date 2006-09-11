@@ -1,7 +1,7 @@
 #!/usr/bin/perl -Tw
 
 use Test::More;
-BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
+BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
 @types = qw(SPoint64 SPoint32 SPoint16);
 @primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
@@ -12,8 +12,8 @@ plan tests => (33 * scalar @types) + (3 * scalar @primitives);
 # test getting limits
 {
   for $prim (@primitives) {
-    my $min = eval "sakusen::bottom$prim()";
-    my $max = eval "sakusen::top$prim()";
+    my $min = eval "Sakusen::bottom$prim()";
+    my $max = eval "Sakusen::top$prim()";
     ok(defined $min, "result of bottomNumber<$prim> is defined");
     ok(defined $max, "result of topNumber<$prim> is defined");
     ok($min < $max, "bottomNumber is less than topNumber of $prim");
@@ -21,8 +21,8 @@ plan tests => (33 * scalar @types) + (3 * scalar @primitives);
 }
 
 for $type (@types) {
-  $p = eval "new sakusen::$type(1, 2, 3)";
-  isa_ok ($p, "sakusen::$type") or diag $@;
+  $p = eval "new Sakusen::$type(1, 2, 3)";
+  isa_ok ($p, "Sakusen::$type") or diag $@;
   is ($p->{x}, 1, "x co-ord is set correctly by the ctr");
   is ($p->{y}, 2, "y co-ord is set correctly by the ctr");
   is ($p->{z}, 3, "z co-ord is set correctly by the ctr");
@@ -32,7 +32,7 @@ for $type (@types) {
   is ($p->{y}, 2, "y co-ord is unchanged");
   is ($p->{z}, 3, "z co-ord is unchanged");
 
-  $q = eval "new sakusen::$type(5, 6, 7)";
+  $q = eval "new Sakusen::$type(5, 6, 7)";
   is ($q->{x}, 5, "x co-ord is set correctly by the ctr");
   is ($q->{y}, 6, "y co-ord is set correctly by the ctr");
   is ($q->{z}, 7, "z co-ord is set correctly by the ctr");
@@ -77,10 +77,10 @@ for $type (@types) {
 
   # test getting top and bottom points
   {
-    my $min = eval "sakusen::${type}::bottom()";
-    my $max = eval "sakusen::${type}::top()";
-    isa_ok($min, "sakusen::$type") or diag $@;
-    isa_ok($max, "sakusen::$type") or diag $@;
+    my $min = eval "Sakusen::${type}::bottom()";
+    my $max = eval "Sakusen::${type}::top()";
+    isa_ok($min, "Sakusen::$type") or diag $@;
+    isa_ok($max, "Sakusen::$type") or diag $@;
     ok($min <= $max, 'bottom() <= top()');
   }
 

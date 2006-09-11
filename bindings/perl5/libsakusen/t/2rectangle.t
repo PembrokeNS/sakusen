@@ -1,16 +1,16 @@
 #!/usr/bin/perl -Tw
 
 use Test::More;
-BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
+BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
 plan tests => 25;
 
-$r1 = sakusen::SRectangle32->new();
-isa_ok($r1, 'sakusen::SRectangle32');
+$r1 = Sakusen::SRectangle32->new();
+isa_ok($r1, 'Sakusen::SRectangle32');
 ok($r1->isEmpty(), 'default Rectangle is empty');
 
-$r2 = sakusen::SRectangle32->new(2, 3, 10, 12);
-isa_ok($r2, 'sakusen::SRectangle32');
+$r2 = Sakusen::SRectangle32->new(2, 3, 10, 12);
+isa_ok($r2, 'Sakusen::SRectangle32');
 is($r2->getMinX(), 2, 'getMinX()');
 is($r2->getMinY(), 3, 'getMinY()');
 is($r2->getMaxX(), 10, 'getMaxX()');
@@ -19,7 +19,7 @@ is($r2->getMaxY(), 12, 'getMaxY()');
 is($r2->getWidth(), 9, 'getWidth()');
 is($r2->getHeight(), 10, 'getHeight()');
 
-$p = sakusen::SPoint32->new(5, 5, -1);
+$p = Sakusen::SPoint32->new(5, 5, -1);
 ok($r2->contains($p), 'contains() is true in an easy case');
 %$p = (x => 2, y => 3, z => -1);
 ok($r2->contains($p), 'rect contains() its lower-left corner');

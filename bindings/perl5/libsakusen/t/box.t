@@ -1,26 +1,26 @@
 #!/usr/bin/perl -Tw
 
 use Test::More;
-BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
+BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
 plan tests => 36;
 
-$empty = sakusen::SBox32->new;
-isa_ok($empty, 'sakusen::SBox32');
+$empty = Sakusen::SBox32->new;
+isa_ok($empty, 'Sakusen::SBox32');
 ok($empty->isEmpty(), 'default Box->isEmpty()');
 
-$p1 = sakusen::SPoint32->new(-70, 4, 18);
-$p2 = sakusen::SPoint32->new(20, 103, 27);
-$b2 = sakusen::SBox32->new($p1, $p2);
-isa_ok($b2, 'sakusen::SBox32');
+$p1 = Sakusen::SPoint32->new(-70, 4, 18);
+$p2 = Sakusen::SPoint32->new(20, 103, 27);
+$b2 = Sakusen::SBox32->new($p1, $p2);
+isa_ok($b2, 'Sakusen::SBox32');
 
-$p3 = sakusen::SPoint32->new(0, 20, 10);
-$b3 = sakusen::SBox32->new($p1, $p3);
+$p3 = Sakusen::SPoint32->new(0, 20, 10);
+$b3 = Sakusen::SBox32->new($p1, $p3);
 
 ok($p1 == $b2->getMin(), 'getMin()');
 ok($p2 == $b2->getMax(), 'getMax()');
 
-$b4 = sakusen::SBox32->new($p1, $p2);
+$b4 = Sakusen::SBox32->new($p1, $p2);
 ok($b2 == $b4, 'equal Boxes are ==');
 ok($b2 != $b3, 'unequal Boxes are !=');
 ok($b2 != $empty, 'non-empty Box != empty Box');
@@ -38,9 +38,9 @@ is($r->{maxx}, 20, 'rectangle() maxx');
 is($r->{maxy}, 103, 'rectangle() maxy');
 
 # intersection 
-$p4 = sakusen::SPoint32->new(-50, -4, 18);
-$p5 = sakusen::SPoint32->new(90, 50, 20);
-$b5 = sakusen::SBox32->new($p4, $p5);
+$p4 = Sakusen::SPoint32->new(-50, -4, 18);
+$p5 = Sakusen::SPoint32->new(90, 50, 20);
+$b5 = Sakusen::SBox32->new($p4, $p5);
 
 ok($b2->intersects($b5), 'intersecting Boxes intersect');
 ok(!$b5->intersects($empty), "empty Box doesn't intersect");

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -Tw
 
 use Test::More;
-BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
+BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
 my @coords = ([5, 5, -30], [-6, 5, 0], [9, 12, 5]);
 
@@ -9,8 +9,8 @@ plan tests => 15 + 9 * scalar @coords;
 
 my @points = ();
 for (@coords) {
-  push @points, sakusen::SPoint32->new(@$_);
-  isa_ok($points[$#points-1], 'sakusen::SPoint32');
+  push @points, Sakusen::SPoint32->new(@$_);
+  isa_ok($points[$#points-1], 'Sakusen::SPoint32');
 }
 
 
@@ -18,13 +18,13 @@ for (@coords) {
 # rectangular region
 #
 
-$rect = sakusen::SRectangle32->new(0,0, 15, 10);
-$rrd = sakusen::SRectangleRegionData32->new($rect);
-isa_ok($rrd, 'sakusen::SRectangleRegionData32');
-isa_ok($rrd, 'sakusen::SRegionData32');
+$rect = Sakusen::SRectangle32->new(0,0, 15, 10);
+$rrd = Sakusen::SRectangleRegionData32->new($rect);
+isa_ok($rrd, 'Sakusen::SRectangleRegionData32');
+isa_ok($rrd, 'Sakusen::SRegionData32');
 
-$region = sakusen::SRegion32->new($rrd);
-isa_ok($region, 'sakusen::SRegion32');
+$region = Sakusen::SRegion32->new($rrd);
+isa_ok($region, 'Sakusen::SRegion32');
 
 ok($region->contains($points[0]), "contains() point inside");
 ok(!$region->contains($points[1]), "!contains() point to the left");
@@ -39,7 +39,7 @@ for (@points) {
 }
 
 for (@rtrunc) {
-  isa_ok($_, 'sakusen::SPoint32');
+  isa_ok($_, 'Sakusen::SPoint32');
   ok($region->contains($_), 'truncateToFit()ed point is inside the rectangular Region');
 }
 
@@ -64,11 +64,11 @@ diag('TODO: Test store() when OArchive is bound');
 # spherical region
 #
 
-$srd = sakusen::SSphereRegionData32->new($points[0], 6);
-isa_ok($srd, 'sakusen::SSphereRegionData32');
-isa_ok($srd, 'sakusen::SRegionData32');
-$sregion = sakusen::SRegion32->new($srd);
-isa_ok($sregion, 'sakusen::SRegion32');
+$srd = Sakusen::SSphereRegionData32->new($points[0], 6);
+isa_ok($srd, 'Sakusen::SSphereRegionData32');
+isa_ok($srd, 'Sakusen::SRegionData32');
+$sregion = Sakusen::SRegion32->new($srd);
+isa_ok($sregion, 'Sakusen::SRegion32');
 
 SKIP: {
   skip 'need to arrange for a World to be initted', 4 * scalar @points;
@@ -83,7 +83,7 @@ SKIP: {
   }
 
   for (@strunc) {
-    isa_ok($_, 'sakusen::SPoint32');
+    isa_ok($_, 'Sakusen::SPoint32');
     ok($sregion->contains($_), 'truncateToFit()ed point is inside the spherical Region');
   }
 
