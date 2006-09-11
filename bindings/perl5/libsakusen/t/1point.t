@@ -4,9 +4,21 @@ use Test::More;
 BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
 
 @types = qw(SPoint64 SPoint32 SPoint16);
+@primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
 
-# tests per templated type
-plan tests => 33 * scalar @types;
+# tests per templated type and per primitive type
+plan tests => (33 * scalar @types) + (3 * scalar @primitives);
+
+# test getting limits
+{
+  for $prim (@primitives) {
+    my $min = eval "sakusen::bottom$prim()";
+    my $max = eval "sakusen::top$prim()";
+    ok(defined $min, "result of bottomNumber<$prim> is defined");
+    ok(defined $max, "result of topNumber<$prim> is defined");
+    ok($min < $max, "bottomNumber is less than topNumber of $prim");
+  }
+}
 
 for $type (@types) {
   $p = eval "new sakusen::$type(1, 2, 3)";

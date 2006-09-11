@@ -140,7 +140,7 @@ class LIBSAKUSEN_API Point {
 
     template <typename U>
     inline bool operator<(const Point<U>& right) const {
-      return x<right.x && y<right.y && z<right.z;
+      return (*this <= right) && (*this != right);
     }
     
     template <typename U>
@@ -150,7 +150,7 @@ class LIBSAKUSEN_API Point {
 
     template <typename U>
     inline bool operator>(const Point<U>& right) const {
-      return x>right.x && y>right.y && z>right.z;
+      return (*this >= right) && (*this != right);
     }
     
     inline Point<T> operator-() const {
