@@ -3,36 +3,33 @@
 use Test::More;
 BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
 
-plan tests => 38;
+plan tests => 36;
 
-$b1 = sakusen::SBox32->new;
-isa_ok($b1, 'sakusen::SBox32');
-ok($b1->isValid(), 'default Box->isValid()');
-ok($b1->isEmpty(), 'default Box->isEmpty()');
+$empty = sakusen::SBox32->new;
+isa_ok($empty, 'sakusen::SBox32');
+ok($empty->isEmpty(), 'default Box->isEmpty()');
 
 $p1 = sakusen::SPoint32->new(-70, 4, 18);
 $p2 = sakusen::SPoint32->new(20, 103, 27);
 $b2 = sakusen::SBox32->new($p1, $p2);
 isa_ok($b2, 'sakusen::SBox32');
-ok($b2->isValid(), 'valid Box->isValid()');
 
 $p3 = sakusen::SPoint32->new(0, 20, 10);
 $b3 = sakusen::SBox32->new($p1, $p3);
-ok(!$b3->isValid(), 'invalid Box->isValid() returns false');
 
 ok($p1 == $b2->getMin(), 'getMin()');
 ok($p2 == $b2->getMax(), 'getMax()');
 
 $b4 = sakusen::SBox32->new($p1, $p2);
 ok($b2 == $b4, 'equal Boxes are ==');
-ok($b2 != $b1, 'unequal Boxes are !=');
+ok($b2 != $b3, 'unequal Boxes are !=');
+ok($b2 != $empty, 'non-empty Box != empty Box');
 
-$empty = sakusen::SBox32->new($p2, $p2);
-ok($empty->isEmpty(), 'empty Box->isEmpty()');
 ok(!$b2->isEmpty(), 'non-empty Box->isEmpty() returns false');
 
 ok($b2->contains($p1), 'lower-left corner is inside the Box');
-ok(!$b2->contains($p2), 'upper-right corner is outside the Box');
+ok($b2->contains($p2), 'upper-right corner is inside the Box');
+ok(!$b2->contains($p3), 'outsider point is outside the Box');
 
 $r = $b2->rectangle();
 is($r->{minx}, -70, 'rectangle() minx');
@@ -77,11 +74,10 @@ is($umax->{x}, 90, 'union max x');
 is($umax->{y}, 103, 'union max y');
 is($umax->{z}, 27, 'union max z');
 
-TODO: {
-  $TODO = "enclosure() doesn't handle empty Boxes correctly";
-  $u1 = $b2->enclosure($b1);
+{
+  $u1 = $b2->enclosure($empty);
   ok($u1 == $b2, 'enclosure() with an empty Box is the same');
 
-  $uempty = $b1->enclosure($empty);
+  $uempty = $empty->enclosure($empty);
   ok($uempty->isEmpty(), 'enclosure() of two empty Boxes isEmpty()');
 }

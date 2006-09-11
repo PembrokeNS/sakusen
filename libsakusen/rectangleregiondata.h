@@ -39,10 +39,8 @@ inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
     return p;
   }
   Point<T> t(p);
-  /* Do extra subtraction here because the top-right point is *not* inside the
-   * Rectangle. This will need to be done differently if T = double. */
-  t.x = static_cast<T>(std::min(std::max(t.x, rectangle.getMinX()), static_cast<T>(rectangle.getMaxX()-1)));
-  t.y = static_cast<T>(std::min(std::max(t.y, rectangle.getMinY()), static_cast<T>(rectangle.getMaxY()-1)));
+  t.x = static_cast<T>(std::min(std::max(t.x, rectangle.getMinX()), static_cast<T>(rectangle.getMaxX())));
+  t.y = static_cast<T>(std::min(std::max(t.y, rectangle.getMinY()), static_cast<T>(rectangle.getMaxY())));
   return t;
 }
 

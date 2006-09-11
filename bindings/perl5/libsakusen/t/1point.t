@@ -6,7 +6,7 @@ BEGIN {use_ok('sakusen') or BAIL_OUT("module won't load");}
 @types = qw(SPoint64 SPoint32 SPoint16);
 
 # tests per templated type
-plan tests => 30 * scalar @types;
+plan tests => 33 * scalar @types;
 
 for $type (@types) {
   $p = eval "new sakusen::$type(1, 2, 3)";
@@ -45,19 +45,31 @@ for $type (@types) {
 
   ok ($p <= $r, "<= seems to work");
 
+  $q = -$p;
+  is ($q->{x}, 2, "unary negate: x co-ord is good");
+  is ($q->{y}, 0, "unary negate: y co-ord is good");
+  is ($q->{z}, -2, "unary negate: z co-ord is good");
+
+  # zero
   $p->zero();
   %$q = (x => 0, y => 0, z => 0);
   ok ($p == $q, "zero()");
   ok ($q->isZero, "isZero() is true for (0,0,0)");
   %$q = (x => 0, y => 0, z => 1);
-  ok (!$r->isZero, "isZero() is false for (0,0,1)");
+  ok (!$q->isZero, "isZero() is false for (0,0,1)");
 
+  # length
   %$p = (x => 3, y => 4, z => 0);
   is ($p->squareLength(), 25, "squareLength()");
   is ($p->length, 5, "length()");
 
-  $q = -$p;
-  is ($q->{x}, -3, "unary negate: x co-ord is good");
-  is ($q->{y}, -4, "unary negate: y co-ord is good");
-  is ($q->{z}, 0, "unary negate: z co-ord is good");
+  # test getting top and bottom points
+  {
+    my $min = eval "sakusen::${type}::bottom()";
+    my $max = eval "sakusen::${type}::top()";
+    isa_ok($min, "sakusen::$type") or diag $@;
+    isa_ok($max, "sakusen::$type") or diag $@;
+    ok($min <= $max, 'bottom() <= top()');
+  }
+
 }

@@ -68,7 +68,7 @@ class LIBSAKUSEN_API Heightfield {
     /** \brief Array of heights.
      *
      * The height at position (x*horizontalResolution, y*horizontalResolution)
-     * is stored at heightfield[y*width+h] (where x and y are distnaces from
+     * is stored at heightfield[y*width+h] (where x and y are distances from
      * the map edges). */
     sint16* heightfield;
 

@@ -59,6 +59,7 @@ $r = $region->getBoundingRectangle();
 ok($r == $rect, 'getBoundingRectangle() for a rectangular Region returns the original Rectangle');
 
 diag('TODO: Test store() when OArchive is bound');
+
 #
 # spherical region
 #

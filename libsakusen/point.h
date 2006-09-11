@@ -2,9 +2,63 @@
 #define POINT_H
 
 #include "libsakusen-global.h"
+#include <limits>
 
 namespace sakusen {
 
+/** \brief Get the most negative number.
+ * \return The minimal number of type T
+ *
+ * \see topNumber()
+ * \note This is an inline function whose result can always be computed at
+ * compile-time, so if your compiler is at all on the ball it should reduce to
+ * including a constant.
+ *
+ * \bug This fails to handle the case where a floating-point format for the
+ * template T doesn't have infinity, is signed, and has the most -ve
+ * representable number not equal to the negation of the most +ve
+ * representable number. So sue me.
+ */
+template<typename T>
+inline T bottomNumber() {
+  std::numeric_limits<T> limits;
+  
+  if (limits.is_integer)
+    return limits.min();
+  if (limits.is_signed) {
+    if (limits.has_infinity)
+      return -(limits.infinity());
+    else
+      return -(limits.max());
+  } else
+    return static_cast<T>(0);
+}
+
+/** \brief Get the most positive number.
+ * \return The maximal number of type T
+ *
+ * \see bottomNumber()
+ * \note This is an inline function whose result can always be computed at
+ * compile-time, so if your compiler is at all on the ball it should reduce to
+ * including a constant.
+ */
+template<typename T>
+inline T topNumber() {
+  std::numeric_limits<T> limits;
+
+  if (limits.has_infinity)
+    return limits.infinity();
+  else
+    return limits.max();
+}
+
+/** \brief point in 3-space
+ *
+ * Point represents a vector in some three-dimensional space. This vector could
+ * represent a position, a direction, an acceleration, or something else.
+ *
+ * Positions and directions in game-space are of type Point<sint32>.
+ */
 template<typename T>
 class LIBSAKUSEN_API Point {
   public:
@@ -17,6 +71,28 @@ class LIBSAKUSEN_API Point {
     template <typename U>
     Point(const Point<U>& p) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
     ~Point() {}
+
+    /** \brief Construct the bottom-left-most Point.
+     *
+     * Returns an instance of the Point in the bottom-left corner of space.
+     * This point is minimal in the partial ordering on Points, and all three
+     * co-ordinates are the minimum representable number.
+     */
+    inline static Point<T> bottom() {
+      T coord = bottomNumber<T>();
+      return Point(coord, coord, coord);
+    }
+
+    /** \brief Construct the top-right-most Point.
+     *
+     * Returns an instance of the Point in the top-right corner of space.
+     * This point is maximal in the partial ordering on Points, and all three
+     * co-ordinates are the maximum representable number.
+     */
+    inline static Point<T> top() {
+      T coord = topNumber<T>();
+      return Point(coord, coord, coord);
+    }
 
     inline T& operator[](const int index) {
       switch (index) {
@@ -54,7 +130,7 @@ class LIBSAKUSEN_API Point {
       return x!=right.x || y!=right.y || z!=right.z;
     }
 
-    /* Order operators use the product order.  Note that this is a partial
+    /** Order operators use the product order.  Note that this is a partial
      * order only, not a total order (so don't use Point<T>s in an
      * ordered container) */
     template <typename U>

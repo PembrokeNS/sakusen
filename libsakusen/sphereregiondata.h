@@ -63,12 +63,11 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
 template<typename T>
 inline Rectangle<T> SphereRegionData<T>::getBoundingRectangle() const
 {
-  /* add one because the upper-left corner is not inside the rectangle */
   return Rectangle<T>(
       centre.x-radius,
       centre.y-radius,
-      centre.x+radius+1,
-      centre.y+radius+1
+      centre.x+radius,
+      centre.y+radius
     );
 }
 
