@@ -2,6 +2,21 @@
 
 using namespace sakusen;
 
+WeaponOrders::WeaponOrders() :
+  targetType(weaponTargetType_none),
+  targetSensorReturns()
+{
+}
+
+WeaponOrders::WeaponOrders(
+    WeaponTargetType tT,
+    const Ref<ISensorReturns>& tSR
+  ) :
+  targetType(tT),
+  targetSensorReturns(tSR)
+{
+}
+
 void WeaponOrders::update(const Order& order)
 {
   switch (order.getType()) {
@@ -9,19 +24,28 @@ void WeaponOrders::update(const Order& order)
     case orderType_setVelocity:
       Fatal("Order type not appropriate for a Weapon");
     case orderType_targetSensorReturns:
-      /** \todo This bit */
+      targetType = weaponTargetType_sensorReturns;
+      targetSensorReturns = order.getTargetSensorReturnsData().getTarget();
       break;
     default:
       Fatal("unknown OrderType " << order.getType());
   }
 }
 
-void WeaponOrders::store(OArchive& /*archive*/) const
+void WeaponOrders::store(OArchive& archive) const
 {
+  archive.insertEnum(targetType);
+  targetSensorReturns.store(archive);
 }
 
-WeaponOrders WeaponOrders::load(IArchive& /*archive*/)
+WeaponOrders WeaponOrders::load(IArchive& archive, const PlayerID* player)
 {
-  return WeaponOrders();
+  WeaponTargetType targetType;
+  Ref<ISensorReturns> targetSensorReturns;
+
+  archive.extractEnum(targetType);
+  targetSensorReturns = Ref<ISensorReturns>::load(archive, *player);
+  
+  return WeaponOrders(targetType, targetSensorReturns);
 }
 

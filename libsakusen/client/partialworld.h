@@ -28,8 +28,12 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   private:
     PartialMap* map;
     __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
-    __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*> sensorReturns;
+    __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*> sensorReturns;
       /* sensor returns owned by this */
+    __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>
+      sensorReturnRefs; /* These pointers not owned by this */
+
+    void invalidateRefs(SensorReturnsID id);
   public:
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
@@ -38,9 +42,21 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     std::list<UpdatedSensorReturns*> getSensorReturnsIntersecting(
         const Rectangle<sint32>&
       );
+    ISensorReturns* getISensorReturns(PlayerID /*player*/, SensorReturnsID id) {
+      /** \todo assert(correct player) */
+      __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
+        sensorReturns.find(id);
+      if (it == sensorReturns.end()) {
+        return NULL;
+      }
+      return it->second;
+    }
 
     void applyUpdate(const Update&);
     void endTick();
+    
+    void registerRef(Ref<ISensorReturns>* ref);
+    void unregisterRef(Ref<ISensorReturns>* ref);
 };
 
 extern LIBSAKUSEN_CLIENT_API PartialWorld* world;

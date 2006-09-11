@@ -8,9 +8,9 @@ using namespace sakusen;
 
 void SensorReturns::store(OArchive& out) const
 {
-  (out << id).insertEnum(perception);
+  (out << id).insertEnum(perception) << senserOwner;
   if (0 != (perception & perception_owner)) {
-    out << owner;
+    out << senseeOwner;
   }
   if (0 != (perception & perception_region)) {
     region->store(out);
@@ -25,21 +25,22 @@ SensorReturns SensorReturns::load(IArchive& in, const Universe* universe)
 {
   SensorReturnsID id;
   Perception perception;
-  PlayerID owner;
+  PlayerID senserOwner;
+  PlayerID senseeOwner;
   Region<sint32>* region;
   CompleteUnit* unit;
-  SensorReturnMap returns;
+  SensorReturnMap returns(10);
 
-  (in >> id).extractEnum(perception);
+  (in >> id).extractEnum(perception) >> senserOwner;
 
   if (0 != (perception & ~perception_full)) {
     throw new EnumDeserializationExn("perception", perception);
   }
   
   if (0 != (perception & perception_owner)) {
-    in >> owner;
+    in >> senseeOwner;
   } else {
-    owner = 0;
+    senseeOwner = 0;
   }
   /** \todo Less copying of the Region and UnitStatus would be good here, but
    * entails some messiness of one kind or another */
@@ -55,6 +56,8 @@ SensorReturns SensorReturns::load(IArchive& in, const Universe* universe)
   }
   in >> returns;
 
-  return SensorReturns(id, perception, owner, region, unit, returns);
+  return SensorReturns(
+      id, perception, senserOwner, senseeOwner, region, unit, returns
+    );
 }
 

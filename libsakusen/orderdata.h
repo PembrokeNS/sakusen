@@ -8,6 +8,7 @@
 #include "iarchive.h"
 #include "sensorreturns.h"
 #include "ordertype.h"
+#include "ref.h"
 
 namespace sakusen {
 
@@ -16,6 +17,7 @@ class LIBSAKUSEN_API OrderData {
   protected:
     OrderData();
     OrderData(const OrderData& copy);
+    OrderData& operator=(const OrderData&) { return *this; }
   public:
     virtual ~OrderData() {};
     virtual OrderType getType(void) const = 0;
@@ -61,21 +63,22 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
   private:
     TargetSensorReturnsOrderData();
   public:
-    TargetSensorReturnsOrderData(uint16 wI, SensorReturnsID t) :
+    TargetSensorReturnsOrderData(uint16 wI, ISensorReturns* t) :
       OrderData(),
       weaponIndex(wI),
       target(t)
     {}
-    TargetSensorReturnsOrderData(IArchive& in) : OrderData() {
-      in >> weaponIndex >> target;
+    TargetSensorReturnsOrderData(IArchive& in, PlayerID player) : OrderData() {
+      in >> weaponIndex;
+      target = Ref<ISensorReturns>::load(in, player);
     }
     ~TargetSensorReturnsOrderData() {};
   private:
     uint16 weaponIndex;
-    SensorReturnsID target;
+    Ref<ISensorReturns> target;
   public:
     uint16 getWeaponIndex(void) const { return weaponIndex; }
-    SensorReturnsID getTarget(void) const { return target; }
+    const Ref<ISensorReturns>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetSensorReturns; }
     OrderData* newCopy(void) const;
     void store(OArchive&) const;

@@ -39,7 +39,6 @@ TOP_DIR := $(dir $(MY_NAME))
 
 # Determine whether we're compiling a library or an executable
 
-
 IS_LIB := $(filter %.la,$(BIN))
 
 CXX_SOURCES := $(wildcard *.cpp) \
@@ -99,8 +98,8 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
-	libtool --mode=link $(CC) $(THIS_LDFLAGS) -rpath $(PREFIX)/lib -g3 -o $@ \
-		$(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
+	libtool --mode=link --tag=CXX $(CXX) $(THIS_LDFLAGS) -rpath $(PREFIX)/lib \
+		-g3 -o $@ $(LIBS) $(LIBTOOL_OBJS) $(E_LIB_DEP)
 
 # Libtool objects are made when normal objects are
 
@@ -124,7 +123,7 @@ else
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
-	libtool --mode=link gcc -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $^
+	libtool --mode=link --tag=CXX $(CXX) -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $^
 
 # The actual compile commands (source dependencies will come from the makefrag
 # file).  Unlike the above, we *don't* use libtool, so as to speed up the

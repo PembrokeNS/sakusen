@@ -4,8 +4,12 @@
 #include "libsakusen-global.h"
 #include "universe.h"
 #include "map.h"
+#include "sensorreturnsid.h"
+#include "ref.h"
 
 namespace sakusen {
+
+class ISensorReturns;
 
 class LIBSAKUSEN_API World {
   private:
@@ -25,6 +29,12 @@ class LIBSAKUSEN_API World {
     virtual Map* getMap(void) = 0;
     virtual const Map* getMap(void) const = 0;
     inline const Time& getTimeNow(void) { return timeNow; }
+    virtual ISensorReturns* getISensorReturns(
+        PlayerID player, SensorReturnsID id
+      ) = 0;
+
+    virtual void registerRef(Ref<ISensorReturns>* ref) = 0;
+    virtual void unregisterRef(Ref<ISensorReturns>* ref) = 0;
 };
 
 extern LIBSAKUSEN_API World* world;

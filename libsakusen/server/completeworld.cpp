@@ -214,6 +214,16 @@ void CompleteWorld::applyEntryExitEffects(
   }
 }
 
+void CompleteWorld::registerRef(Ref<ISensorReturns>* ref)
+{
+  players[(*ref)->getSenserOwner()].registerRef(ref);
+}
+
+void CompleteWorld::unregisterRef(Ref<ISensorReturns>* ref)
+{
+  players[(*ref)->getSenserOwner()].unregisterRef(ref);
+}
+
 LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;
 
 }

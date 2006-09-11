@@ -7,10 +7,11 @@
 #include "playerid.h"
 #include "region.h"
 #include "rectangle.h"
+#include "sensorreturnsid.h"
+#include "ref.h"
+#include "world.h"
 
 namespace sakusen {
-
-typedef uint32 SensorReturnsID;
 
 typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
 
@@ -25,13 +26,34 @@ class LIBSAKUSEN_API ISensorReturns {
 
     virtual SensorReturnsID getId() const = 0;
     virtual Perception getPerception() const = 0;
-    virtual PlayerID getOwner() const = 0;
+    virtual PlayerID getSenserOwner() const = 0;
+    virtual PlayerID getSenseeOwner() const = 0;
     virtual const Region<sint32>* getRegion() const = 0;
     virtual const ICompleteUnit* getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
 
     virtual Point<sint32> getBestPosition() const;
     virtual Rectangle<sint32> getBoundingRectangle() const;
+};
+
+template<>
+class RefHandler<ISensorReturns> {
+  public:
+    void registerRef(Ref<ISensorReturns>* ref) const {
+      world->registerRef(ref);
+    }
+    void unregisterRef(Ref<ISensorReturns>* ref) const {
+      world->unregisterRef(ref);
+    }
+    ISensorReturns* extract(IArchive& archive, PlayerID player) const {
+      SensorReturnsID id;
+      archive >> id;
+      return world->getISensorReturns(player, id);
+    }
+    void insert(OArchive& archive, ISensorReturns* ret) const {
+      archive << ret->getId();
+    }
+    typedef PlayerID loadArgument;
 };
 
 }

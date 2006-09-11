@@ -38,6 +38,26 @@ Player::Player(const Player& copy) :
 
 Player::~Player()
 {
+  /* dump all the sensor returns so as to invalidate all the Refs */
+  while (!sensorReturns.empty()) {
+    invalidateRefs(sensorReturns.begin()->first);
+    sensorReturns.erase(sensorReturns.begin());
+  }
+  assert(sensorReturnRefs.empty());
+}
+
+void Player::invalidateRefs(SensorReturnsID id)
+{
+  pair<
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
+    > refRange = sensorReturnRefs.equal_range(id);
+  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
+      iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    refIt->second->invalidate();
+  }
+  sensorReturnRefs.erase(refRange.first, refRange.second);
 }
 
 void Player::setPlayerId(const PlayerID& id)
@@ -114,6 +134,7 @@ void Player::checkSensorReturns()
       /* If it's gone, then remove it */
       if (returns.empty()) {
         informClients(Update(SensorReturnsRemovedUpdateData(returns.getId())));
+        invalidateRefs(it->first);
         sensorReturns.erase(it->second);
         unit->getSensorReturns().erase(it);
       } else if (returns.isDirty()) {
@@ -178,6 +199,35 @@ void Player::informClients(const Update& update)
     /* Debug("informing client"); */
     (*client)->queueUpdate(update);
   }
+}
+
+void Player::registerRef(Ref<ISensorReturns>* ref)
+{
+  SensorReturnsID id = (*ref)->getId();
+  assert(sensorReturns.count(id));
+  pair<SensorReturnsID, Ref<ISensorReturns>*> item(id, ref);
+  sensorReturnRefs.insert(item);
+}
+
+void Player::unregisterRef(Ref<ISensorReturns>* ref)
+{
+  pair<
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
+    > refRange = sensorReturnRefs.equal_range((*ref)->getId());
+  
+  /* This becomes slow if there are many Refs to the same SensorReturns object.
+   * If that is a problem we could ID the refs too and have O(1) lookups for
+   * them, but it's unlikely to be of help overall */
+  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
+      iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    if (refIt->second == ref) {
+      sensorReturnRefs.erase(refIt);
+      return;
+    }
+  }
+  Fatal("tried to unregister a not-registered Ref");
 }
 
 }

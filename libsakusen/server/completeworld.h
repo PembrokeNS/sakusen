@@ -39,6 +39,12 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline Map* getMap(void) { return map; }
     inline const Map* getMap(void) const { return map; }
     inline const CompleteMap* getCompleteMap(void) const { return map; }
+    inline ISensorReturns* getISensorReturns(
+        PlayerID player, SensorReturnsID id
+      ) {
+      assert(player < players.size());
+      return players[player].getSensorReturns(id);
+    }
     inline void addUnit(const LayeredUnit& unit, PlayerID owner) {
       units.push_back(unit);
       units.back().changeOwner(owner, changeOwnerReason_created);
@@ -76,6 +82,10 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
         const Point<sint32> oldPosition,
         const Point<sint32> newPosition
       );
+
+    /* methods for reference management */
+    void registerRef(Ref<ISensorReturns>* ref);
+    void unregisterRef(Ref<ISensorReturns>* ref);
 };
 
 extern LIBSAKUSEN_SERVER_API CompleteWorld* world;

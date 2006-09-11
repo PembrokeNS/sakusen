@@ -95,8 +95,9 @@ class LIBSAKUSEN_API UnitOrders {
     void clearQueue();
     inline void clearCurrent() { currentOrder = Order(); }
 
+    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static UnitOrders load(IArchive&);
+    static UnitOrders load(IArchive&, const loadArgument*);
 };
 
 }

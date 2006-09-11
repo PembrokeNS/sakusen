@@ -26,7 +26,12 @@ DynamicSensorReturns::DynamicSensorReturns(
   update();
 }
 
-PlayerID DynamicSensorReturns::getOwner() const
+PlayerID DynamicSensorReturns::getSenserOwner() const
+{
+  return senserOwner->getId();
+}
+
+PlayerID DynamicSensorReturns::getSenseeOwner() const
 {
   if (0 != (perception & (perception_owner | perception_unit))) {
     return sensee->getOwner();

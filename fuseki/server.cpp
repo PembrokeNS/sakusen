@@ -1,6 +1,6 @@
 #include "server.h"
 
-#include <libsakusen-global.h>
+#include "libsakusen-global.h"
 #include "completeworld.h"
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"

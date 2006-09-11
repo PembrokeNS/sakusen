@@ -33,7 +33,8 @@ class DynamicSensorReturns : public ISensorReturns {
   public:
     inline SensorReturnsID getId() const { return id; }
     inline Perception getPerception() const { return perception; }
-    PlayerID getOwner() const;
+    PlayerID getSenserOwner() const;
+    PlayerID getSenseeOwner() const;
     const Region<sint32>* getRegion() const;
     const ICompleteUnit* getUnit() const;
     inline const SensorReturnMap& getSensorReturns() const { return sensers; }

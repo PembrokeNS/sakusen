@@ -13,14 +13,16 @@ class SensorReturns : public ISensorReturns {
     SensorReturns(
         SensorReturnsID i,
         Perception p,
-        PlayerID o,
+        PlayerID srO,
+        PlayerID seO,
         Region<sint32>* reg,
         CompleteUnit* s,
         SensorReturnMap ret
       ) :
       id(i),
       perception(p),
-      owner(o),
+      senserOwner(srO),
+      senseeOwner(seO),
       region(reg),
       unit(s),
       returns(ret)
@@ -30,7 +32,8 @@ class SensorReturns : public ISensorReturns {
       ISensorReturns(*copy),
       id(copy->getId()),
       perception(copy->getPerception()),
-      owner(copy->getOwner()),
+      senserOwner(copy->getSenserOwner()),
+      senseeOwner(copy->getSenseeOwner()),
       region(NULL == copy->getRegion() ?
           NULL : new Region<sint32>(*copy->getRegion())),
       unit(NULL == copy->getUnit() ?
@@ -43,7 +46,8 @@ class SensorReturns : public ISensorReturns {
       ISensorReturns(copy),
       id(copy.getId()),
       perception(copy.getPerception()),
-      owner(copy.getOwner()),
+      senserOwner(copy.getSenserOwner()),
+      senseeOwner(copy.getSenseeOwner()),
       region(NULL == copy.getRegion() ?
           NULL : new Region<sint32>(*copy.getRegion())),
       unit(NULL == copy.getUnit() ?
@@ -58,7 +62,8 @@ class SensorReturns : public ISensorReturns {
       id = copy.getId();
       perception = copy.getPerception();
       assert(0 == (perception & ~perception_full));
-      owner = copy.getOwner();
+      senserOwner = copy.getSenserOwner();
+      senseeOwner = copy.getSenseeOwner();
       delete region;
       region = ( NULL == copy.getRegion() ?
           NULL : new Region<sint32>(*copy.getRegion()) );
@@ -78,14 +83,16 @@ class SensorReturns : public ISensorReturns {
   private:
     SensorReturnsID id;
     Perception perception;
-    PlayerID owner;
+    PlayerID senserOwner;
+    PlayerID senseeOwner;
     const Region<sint32>* region; /* owned by this */
     const CompleteUnit* unit; /* owned by this */
     SensorReturnMap returns;
   public:
     inline SensorReturnsID getId() const { return id; }
     inline Perception getPerception() const { return perception; }
-    inline PlayerID getOwner() const { return owner; }
+    inline PlayerID getSenserOwner() const { return senserOwner; }
+    inline PlayerID getSenseeOwner() const { return senseeOwner; }
     inline const Region<sint32>* getRegion() const { return region; }
     inline const ICompleteUnit* getUnit() const { return unit; }
     inline const SensorReturnMap& getSensorReturns() const { return returns; }

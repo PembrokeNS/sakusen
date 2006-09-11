@@ -30,9 +30,31 @@ PartialWorld::~PartialWorld()
     units.erase(b);
   }
 
+  while (!sensorReturns.empty()) {
+    hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
+      sensorReturns.begin();
+    invalidateRefs(it->first);
+    delete it->second;
+    sensorReturns.erase(it);
+  }
+
   delete map;
 
   world = NULL;
+}
+
+void PartialWorld::invalidateRefs(SensorReturnsID id)
+{
+  pair<
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
+    > refRange = sensorReturnRefs.equal_range(id);
+  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
+      iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    refIt->second->invalidate();
+  }
+  sensorReturnRefs.erase(refRange.first, refRange.second);
 }
 
 /** \brief Return a list of units intersecting the given rectangle
@@ -68,7 +90,7 @@ list<UpdatedSensorReturns*> PartialWorld::getSensorReturnsIntersecting(
   /** \todo make this fast by storing data sensibly */
   list<UpdatedSensorReturns*> result;
 
-  for (hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
+  for (hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator returns =
       sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
     if (rect.fastIntersects(returns->second)) {
       result.push_back(returns->second);
@@ -155,11 +177,13 @@ void PartialWorld::applyUpdate(const Update& update)
     case updateType_sensorReturnsAdded:
       {
         SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
-        if (sensorReturns.count(data.getSensorReturns().getId())) {
+        SensorReturnsID id = data.getSensorReturns().getId();
+        if (sensorReturns.count(id)) {
           Debug("adding sensor returns of existing id");
-          delete sensorReturns[data.getSensorReturns().getId()];
+          invalidateRefs(id);
+          delete sensorReturns[id];
         }
-        sensorReturns[data.getSensorReturns().getId()] =
+        sensorReturns[id] =
           new UpdatedSensorReturns(data.getSensorReturns());
       }
       break;
@@ -170,9 +194,10 @@ void PartialWorld::applyUpdate(const Update& update)
         __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
           sensorReturns.find(data.getId());
         if (returns == sensorReturns.end()) {
-          Debug("tried to remove non-existant unit");
+          Debug("tried to remove non-existant SensorReturns");
           break;
         }
+        invalidateRefs(returns->first);
         delete returns->second;
         sensorReturns.erase(returns);
       }
@@ -184,7 +209,7 @@ void PartialWorld::applyUpdate(const Update& update)
         __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
           sensorReturns.find(data.getSensorReturns().getId());
         if (returns == sensorReturns.end()) {
-          Debug("tried to alter non-existant unit");
+          Debug("tried to alter non-existant SensorReturns");
           break;
         }
         returns->second->alter(data.getSensorReturns());
@@ -202,6 +227,33 @@ void PartialWorld::endTick()
     unit->second->incrementState();
   }
   ++timeNow;
+}
+
+void PartialWorld::registerRef(Ref<ISensorReturns>* ref)
+{
+  pair<SensorReturnsID, Ref<ISensorReturns>*> item((*ref)->getId(), ref);
+  sensorReturnRefs.insert(item);
+}
+
+void PartialWorld::unregisterRef(Ref<ISensorReturns>* ref)
+{
+  pair<
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
+      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
+    > refRange = sensorReturnRefs.equal_range((*ref)->getId());
+  
+  /* This becomes slow if there are many Refs to the same SensorReturns object.
+   * If that is a problem we could ID the refs too and have O(1) lookups for
+   * them, but it's unlikely to be of help overall */
+  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
+      iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    if (refIt->second == ref) {
+      sensorReturnRefs.erase(refIt);
+      return;
+    }
+  }
+  Fatal("tried to unregister a not-registered Ref");
 }
 
 PartialWorld* sakusen::client::world = NULL;

@@ -7,7 +7,8 @@ using namespace sakusen::server::test;
 PatrollerClient::PatrollerClient(Point<sint32> p) :
   patrolTo(p),
   patrolFrom(),
-  headedOutward(false)
+  headedOutward(false),
+  otherUnit(NULL)
 {
 }
 
@@ -34,11 +35,12 @@ void PatrollerClient::queueUpdate(const Update& update)
       {
         const SensorReturnsAddedUpdateData& data =
           update.getSensorReturnsAddedData();
+        otherUnit = new SensorReturns(data.getSensorReturns());
         /* throw in a weapon targeting order */
         orderMessageQueue.push(
             OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
                 TargetSensorReturnsOrderData(
-                  0 /* weapon index */, data.getSensorReturns().getId()
+                  0 /* weapon index */, otherUnit
                 )
               ))
           );

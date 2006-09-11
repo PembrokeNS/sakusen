@@ -38,6 +38,7 @@ OrderData* TargetSensorReturnsOrderData::newCopy(void) const
 
 void TargetSensorReturnsOrderData::store(OArchive& out) const
 {
-  out << weaponIndex << target;
+  out << weaponIndex;
+  target.store(out);
 }
 

@@ -103,7 +103,7 @@ void UnitOrders::store(OArchive& out) const
   out << targetAngularVelocity << weaponOrders;
 }
 
-UnitOrders UnitOrders::load(IArchive& in)
+UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
 {
   /* conditioned orders */
   Order orders[orderCondition_max];
@@ -123,7 +123,8 @@ UnitOrders UnitOrders::load(IArchive& in)
   in >> targetPosition >> targetVelocity;
   in.extractEnum(rotationalTarget);
   targetOrientation = Orientation::load(in);
-  in >> targetAngularVelocity >> weaponOrders;
+  in >> targetAngularVelocity;
+  in.extract(weaponOrders, player);
 
   return UnitOrders(
       orders, currentOrder, linearTarget,

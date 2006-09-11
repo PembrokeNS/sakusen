@@ -8,7 +8,7 @@
 #include "server.h"
 
 #include <sys/stat.h>
-#include <ltdl.h>
+#include <ltdl_hacked.h>
 
 #include <cerrno>
 #include <iostream>
