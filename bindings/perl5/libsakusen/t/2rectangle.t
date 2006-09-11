@@ -3,13 +3,14 @@
 use Test::More;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
-plan tests => 25;
+plan tests => 35;
 
-$r1 = Sakusen::SRectangle32->new();
-isa_ok($r1, 'Sakusen::SRectangle32');
-ok($r1->isEmpty(), 'default Rectangle is empty');
+my $empty = Sakusen::SRectangle32->new();
+isa_ok($empty, 'Sakusen::SRectangle32');
+ok($empty->isEmpty(), 'default Rectangle is empty');
+my $empty2 = Sakusen::SRectangle32->new();
 
-$r2 = Sakusen::SRectangle32->new(2, 3, 10, 12);
+$r2 = Sakusen::SRectangle32->new(2,3, 10,12);
 isa_ok($r2, 'Sakusen::SRectangle32');
 is($r2->getMinX(), 2, 'getMinX()');
 is($r2->getMinY(), 3, 'getMinY()');
@@ -30,7 +31,7 @@ ok($r2->contains($p), ' and its upper edge');
 $p->{x} = 50;
 ok(!$r2->contains($p), ' but not a point outside');
 
-%$r1 = (minx => -5, miny => 2, maxx => 8, maxy => 15);
+$r1 = Sakusen::SRectangle32->new(-5,2, 8,15);
 
 # intersection
 {
@@ -42,20 +43,48 @@ ok(!$r2->contains($p), ' but not a point outside');
   is($i1->{miny}, 3, 'isxn miny');
   is($i1->{maxx}, 8, 'isxn maxx');
   is($i1->{maxy}, 12, 'isxn maxy');
+
+  $i1 = $r1->intersect($r1);
+  ok($i1 == $r1, 'intersect() on the same Rectangle has no effect');
 }
 
-diag('TODO: Test some more cases for intersection.');
+# intersect empty rectangles
+{
+  ok(!$r1->intersects($empty), 'intersects() is false for empty Rectangle');
+  ok(!$empty->intersects($r1), ' and vice-versa');
+  ok(!$empty->intersects($empty2), ' and for two empty Rectangles');
+  my $emptyi = $r1->intersect($empty);
+  ok($emptyi->isEmpty(), 'intersection of non-intersecting Rectangles isEmpty()');
+  my $emptyi2 = $emptyi->intersect($empty2);
+  ok($emptyi2->isEmpty(), 'intersection of empty Rectangles isEmpty()');
+}
 
 #union
 {
-  $u1 = $r1->enclosure($r2);
-  $u2 = $r2->enclosure($r1);
+  my $u1 = $r1->enclosure($r2);
+  my $u2 = $r2->enclosure($r1);
   ok($u1 == $u2, 'enclosure() commutes');
   is($u1->{minx}, -5, 'union minx');
   is($u1->{miny}, 2, 'union miny');
   is($u1->{maxx}, 10, 'union maxx');
   is($u1->{maxy}, 15, 'union maxy');
+
+  $u1 = $r1->enclosure($r1);
+  ok($u1 == $r1, 'enclosure() on the same Rectangle has no effect');
 }
 
+# union empty rectangles
+{
+  my $uempty = $r1->enclosure($empty);
+  ok($uempty == $r1, 'enclosure() with empty Rectangle has no effect');
+  $uempty = $empty->enclosure($r1);
+  ok($uempty == $r1, ' and vice-versa');
+  $uempty = $empty->enclosure($empty);
+
+  $uempty = $empty->enclosure($uempty);
+  ok($uempty->isEmpty(), 'enclosure() of two empty Rectangles is empty');
+}
+  
+# access like a hash
 diag('TODO: Test load and store once IArchive and OArchive are up and running.');
 diag('TODO: Test intersecting with ICompleteUnit and ISensorReturns once bindings exist.');

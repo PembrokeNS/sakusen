@@ -3,7 +3,7 @@
 use Test::More;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
-plan tests => 36;
+plan tests => 40;
 
 $empty = Sakusen::SBox32->new;
 isa_ok($empty, 'Sakusen::SBox32');
@@ -37,47 +37,66 @@ is($r->{miny}, 4, 'rectangle() miny');
 is($r->{maxx}, 20, 'rectangle() maxx');
 is($r->{maxy}, 103, 'rectangle() maxy');
 
-# intersection 
 $p4 = Sakusen::SPoint32->new(-50, -4, 18);
 $p5 = Sakusen::SPoint32->new(90, 50, 20);
 $b5 = Sakusen::SBox32->new($p4, $p5);
 
-ok($b2->intersects($b5), 'intersecting Boxes intersect');
-ok(!$b5->intersects($empty), "empty Box doesn't intersect");
-ok(!$empty->intersects($empty), ' not even with itself');
-$i1 = $b2->intersection($b5);
-$i2 = $b5->intersection($b2);
-ok($i1 == $i2, 'intersection() commutes');
-$imin = $i1->getMin();
-$imax = $i1->getMax();
-is($imin->{x}, -50, 'isxn min x');
-is($imin->{y}, 4, 'isxn min y');
-is($imin->{z}, 18, 'isxn min z');
-is($imax->{x}, 20, 'isxn max x');
-is($imax->{y}, 50, 'isxn max y');
-is($imax->{z}, 20, 'isxn max z');
+# intersection 
+{
+  ok($b2->intersects($b5), 'intersecting Boxes intersect');
+  my $i1 = $b2->intersection($b5);
+  my $i2 = $b5->intersection($b2);
+  ok($i1 == $i2, 'intersection() commutes');
+  $imin = $i1->getMin();
+  $imax = $i1->getMax();
+  is($imin->{x}, -50, 'isxn min x');
+  is($imin->{y}, 4, 'isxn min y');
+  is($imin->{z}, 18, 'isxn min z');
+  is($imax->{x}, 20, 'isxn max x');
+  is($imax->{y}, 50, 'isxn max y');
+  is($imax->{z}, 20, 'isxn max z');
 
-$iempty = $b5->intersection($empty);
-ok($iempty->isEmpty(), 'intersection with empty Box isEmpty()');
+  my $i3 = $b2->intersection($b2);
+  ok($i3 == $b2, 'intersection() with self has no effect');
+}
+
+# intersecting empty boxes
+{
+  ok(!$b5->intersects($empty), "empty Box doesn't intersect");
+  ok(!$empty->intersects($empty), ' not even with itself');
+
+  my $iempty = $b5->intersection($empty);
+  ok($iempty->isEmpty(), 'intersection() with empty Box isEmpty()');
+  $iempty = $empty->intersection($b5);
+  ok($iempty->isEmpty(), ' and vice-versa');
+  $iempty = $empty->intersection($iempty);
+  ok($iempty->isEmpty(), 'intersection() of two empty boxes isEmpty()');
+}
 
 # union
-$u1 = $b2->enclosure($b5);
-$u2 = $b5->enclosure($b2);
-
-ok($u1 == $u2, 'enclosure() commutes');
-$umin = $u1->getMin();
-$umax = $u1->getMax();
-is($umin->{x}, -70, 'union min x');
-is($umin->{y}, -4, 'union min y');
-is($umin->{z}, 18, 'union min z');
-is($umax->{x}, 90, 'union max x');
-is($umax->{y}, 103, 'union max y');
-is($umax->{z}, 27, 'union max z');
-
 {
-  $u1 = $b2->enclosure($empty);
+  my $u1 = $b2->enclosure($b5);
+  my $u2 = $b5->enclosure($b2);
+
+  ok($u1 == $u2, 'enclosure() commutes');
+  $umin = $u1->getMin();
+  $umax = $u1->getMax();
+  is($umin->{x}, -70, 'union min x');
+  is($umin->{y}, -4, 'union min y');
+  is($umin->{z}, 18, 'union min z');
+  is($umax->{x}, 90, 'union max x');
+  is($umax->{y}, 103, 'union max y');
+  is($umax->{z}, 27, 'union max z');
+
+  my $u3 = $b2->enclosure($empty);
+  ok ($u3 == $b2, 'enclosure() with empty box has no effect');
+}
+
+# union empty boxes
+{
+  my $u1 = $b2->enclosure($empty);
   ok($u1 == $b2, 'enclosure() with an empty Box is the same');
 
-  $uempty = $empty->enclosure($empty);
+  my $uempty = $empty->enclosure($empty);
   ok($uempty->isEmpty(), 'enclosure() of two empty Boxes isEmpty()');
 }
