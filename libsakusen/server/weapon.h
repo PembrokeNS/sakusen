@@ -19,15 +19,26 @@ class LIBSAKUSEN_API Weapon {
     virtual ~Weapon() {}
   private:
     WeaponTypeID type;
-  
+  protected:
+    /* callbacks */
+    virtual void onFire(LayeredUnit* firer, uint16 weaponIndex) = 0;
+    virtual bool aimAt(
+        const LayeredUnit* firer,
+        WeaponStatus* status,
+        const Point<sint32>& pos,
+        const Point<sint16>& vel
+      );
+    /** \brief Allow subclasses to tell this class the speed of the fired
+     * projectile.
+     *
+     * If you override aimAt, then this method is irrelevant.
+     */
+    virtual uint32 getProjectileSpeed() = 0;
   public:
     /* accessors */
     WeaponTypeID getType(void) const {return type;}
 
-    /* callbacks */
-    
     virtual void incrementState(LayeredUnit* firer, uint16 weaponIndex);
-    virtual void onFire(LayeredUnit* firer, uint16 weaponIndex) = 0;
     
     /* for when the unit is destroyed, if we want to have ammo exploding or
      * anything like that */

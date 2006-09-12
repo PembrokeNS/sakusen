@@ -23,6 +23,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
 {
   modes["normal"] = Mode::getNormal(this);
   modes["unit"] =   Mode::getUnit(this);
+  modes["target"] = Mode::getTarget(this);
   mode = &modes["normal"];
 
   list<String> tokens;
@@ -72,7 +73,7 @@ list<String> UI::tokenise(const String& s)
     tokens.push_back(token);
   }
 
-  pcrecpp::RE("\\s+").Consume(&piece);
+  pcrecpp::RE("\\s*(?:\\#[^\\n]*)?").Consume(&piece);
 
   if (!piece.empty()) {
     alert(Alert(String("Unexpected character '") + piece[0] + "' in command"));
@@ -431,8 +432,27 @@ void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
 {
   Order order = Order(MoveOrderData(target));
   
-  for (hash_set<uint32>::const_iterator unit = units.begin(); unit != units.end();
-      ++unit) {
+  for (hash_set<uint32>::const_iterator unit = units.begin();
+      unit != units.end(); ++unit) {
+    game->order(OrderMessage(*unit, orderCondition_now, order));
+  }
+}
+
+/** \todo Replace this method with the order-queue related things */
+void UI::attack(const hash_set<uint32>& units, const String& target)
+{
+  if (target == "cursor") {
+    attack(units, activeMapDisplay->getMousePos());
+  }
+}
+
+void UI::attack(const hash_set<uint32>& units, const Point<sint32>& target)
+{
+  /** \bug Only targeting weapon 0 */
+  Order order = Order(TargetPointOrderData(0, target));
+  
+  for (hash_set<uint32>::const_iterator unit = units.begin();
+      unit != units.end(); ++unit) {
     game->order(OrderMessage(*unit, orderCondition_now, order));
   }
 }

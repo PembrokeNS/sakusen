@@ -89,9 +89,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
     inline void setId(uint32 id) { unitId = id; }
+    inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
     inline UnitStatus* getStatus(void) const { return status; }
     inline const IUnitStatus* getIStatus(void) const { return status; }
-    inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
+    inline const UnitOrders& getOrders(void) const { return orders; }
     inline __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
       getSensorReturns(void) { return sensorReturns; }
     inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&

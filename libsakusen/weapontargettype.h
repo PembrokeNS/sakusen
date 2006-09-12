@@ -5,6 +5,7 @@ namespace sakusen {
 
 enum WeaponTargetType {
   weaponTargetType_none,
+  weaponTargetType_point,
   weaponTargetType_sensorReturns
 };
 

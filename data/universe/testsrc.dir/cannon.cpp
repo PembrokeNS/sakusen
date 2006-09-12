@@ -4,18 +4,23 @@
 #include <iostream>
 
 using namespace std;
+using namespace sakusen;
+using namespace sakusen::server;
 using namespace testsrc;
 
-void Cannon::onFire(LayeredUnit* firer, uint16 /*weaponIndex*/)
+void Cannon::onFire(LayeredUnit* firer, uint16 weaponIndex)
 {
-  server::world->addBallistic(new Shell(firer));
+  /*cout << "Firing at " << server::world->getTimeNow() << endl;*/
+  const WeaponStatus& status =
+    firer->getStatus()->getWeaponsStatus()[weaponIndex];
+  server::world->addBallistic(new Shell(firer, status));
 }
 
-Shell::Shell(LayeredUnit* source) :
+Shell::Shell(LayeredUnit* source, const WeaponStatus& status) :
   Ballistic(
       server::world->getTimeNow(),
       source->getIStatus()->getPosition() /* start position */,
-      Point<sint32>() /* start velocity */
+      status.getDirection() /* start velocity */
     )
 {
 }

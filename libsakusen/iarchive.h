@@ -65,6 +65,15 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
+    inline T load(
+        const typename T::loadArgument* arg,
+        const typename T::loadArgument2* arg2
+      )
+    {
+      return T::load(*this, arg, arg2);
+    }
+
+    template<typename T>
     inline T load(ResourceInterface* resourceInterface)
     {
       return T::load(*this, resourceInterface);
@@ -130,6 +139,16 @@ class LIBSAKUSEN_API IArchive {
     {
       for (int i=0; i<size; ++i) {
         result[i]=load<T>();
+      }
+
+      return *this;
+    }
+    
+    template<typename T, int size>
+    IArchive& extract(T result[size], const typename T::loadArgument* arg)
+    {
+      for (int i=0; i<size; ++i) {
+        result[i]=load<T>(arg);
       }
 
       return *this;
@@ -235,6 +254,24 @@ class LIBSAKUSEN_API IArchive {
 
       while (size--) {
         result.push_back(load<T>(arg));
+      }
+
+      return *this;
+    }
+
+    template<typename T>
+    IArchive& extract(
+        std::list<T>& result,
+        const typename T::loadArgument* arg,
+        const typename T::loadArgument2* arg2
+      )
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        result.push_back(load<T>(arg, arg2));
       }
 
       return *this;

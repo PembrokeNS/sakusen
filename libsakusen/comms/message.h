@@ -12,7 +12,11 @@ class LIBSAKUSEN_COMMS_API Message {
     Message();
     Message(const Message& copy);
     Message(const MessageData& data);
-    Message(const uint8* buffer, size_t bufferLength);
+    Message(
+        const uint8* buffer,
+        size_t bufferLength,
+        PlayerID player = static_cast<PlayerID>(-1)
+      );
     ~Message();
     Message& operator=(const Message& copy);
   private:

@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 #include "point.h"
+#include "oarchive.h"
+#include "iarchive.h"
 
 namespace sakusen {
 
@@ -28,14 +30,18 @@ namespace sakusen {
  */
 class Quadratic {
   private:
-  Point<sint32> s; /**< origin */
-  Point<sint32> d; /**< direction */
-  Time t; /**< time origin */
+    Point<sint32> s; /**< origin */
+    Point<sint32> d; /**< direction */
+    Time t; /**< time origin */
   public:
-  Quadratic(): s(0,0,0), d(0,0,0), t(0) {}
-  Quadratic(Point<sint32> start, Point<sint32> velocity, Time startTime): s(start), d(velocity), t(startTime) {}
-  ~Quadratic() {}
-  Point<sint32> evaluate(Time tt);
+    Quadratic(): s(0,0,0), d(0,0,0), t(0) {}
+    Quadratic(Point<sint32> start, Point<sint32> velocity, Time startTime) :
+      s(start), d(velocity), t(startTime) {}
+    ~Quadratic() {}
+    Point<sint32> evaluate(Time tt);
+
+    void store(OArchive&) const;
+    static Quadratic load(IArchive&);
 };
 
 }

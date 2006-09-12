@@ -134,7 +134,7 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
     switch (errno) {
       case EAGAIN:
       /*case EWOULDBLOCK:*/
-        /* FIXME: what do we so here?? */
+        /** \bug What do we so here?? */
         Fatal("message send must be repeated");
         break;
       case ENOTCONN:

@@ -191,6 +191,15 @@ void executeBuiltinCommand(
         ui->move(ui->getSelection(), args.front());
       }
       break;
+    case builtinCommand_attack:
+      {
+        if (args.size() != 1) {
+          wrongNumberArgs(name, args, 1, ui);
+          break;
+        }
+        ui->attack(ui->getSelection(), args.front());
+      }
+      break;
     default:
       Fatal("Unknown builtin command: " << cmd);
   }

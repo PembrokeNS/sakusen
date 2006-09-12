@@ -11,7 +11,7 @@
 
 namespace sakusen {
 
-/** \brief Holds the orders for a ::Unit.
+/** \brief Holds the orders for a Unit.
  *
  * A unit's current order, and its queued (conditional) orders, are stored in
  * this structure.
@@ -81,6 +81,9 @@ class LIBSAKUSEN_API UnitOrders {
     }
     inline const AngularVelocity& getTargetAngularVelocity(void) const {
       return targetAngularVelocity;
+    }
+    inline const std::vector<WeaponOrders>& getWeaponsOrders(void) const {
+      return weaponOrders;
     }
     /*@}*/
 

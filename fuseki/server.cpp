@@ -1,13 +1,14 @@
 #include "server.h"
 
 #include "libsakusen-global.h"
-#include "completeworld.h"
 #include "resourcesearchresult.h"
 #include "libsakusen-comms-global.h"
 #include "message.h"
 #include "remoteclient.h"
 #include "socketexn.h"
 #include "resourceinterface-methods.h"
+#include "completeworld.h"
+#include "ballistic-methods.h"
 #include "fuseki-global.h"
 #include "settingstree/stringlistleaf.h"
 #include "settingstree/intleaf.h"
@@ -704,7 +705,8 @@ void Server::serve()
         clients.begin(); clientIt != clients.end(); ++clientIt) {
       RemoteClient* client = clientIt->second;
       client->send(GameStartMessageData(
-            map->getTopology(), map->getTopRight(), map->getBottomLeft(),
+            client->getPlayerId(), map->getTopology(),
+            map->getTopRight(), map->getBottomLeft(),
             map->getGravity()
           ));
       bool wasAdmin = client->hasGroup("admin");

@@ -128,5 +128,15 @@ Mode Mode::getUnit(UI* ui)
   return m;
 }
 
+Mode Mode::getTarget(UI* ui)
+{
+  Mode m(getCommon(ui));
+
+  ADD_COMMAND(move);
+  ADD_COMMAND(attack);
+
+  return m;
+}
+
 #undef ADD_COMMAND
 

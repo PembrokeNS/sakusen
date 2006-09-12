@@ -6,10 +6,11 @@
 #include "sphereregiondata.h"
 #include "region.h"
 #include "resourceinterface-methods.h"
+#include "planemap.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 #include "completeworld.h"
-#include "planemap.h"
+#include "ballistic-methods.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
 

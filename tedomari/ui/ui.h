@@ -160,6 +160,12 @@ class UI : protected Control {
         const __gnu_cxx::hash_set<uint32>& units,
         const sakusen::Point<sint32>& target
       );
+
+    void attack(const __gnu_cxx::hash_set<uint32>& units, const String& target);
+    void attack(
+        const __gnu_cxx::hash_set<uint32>& units,
+        const sakusen::Point<sint32>& target
+      );
 };
 
 }}

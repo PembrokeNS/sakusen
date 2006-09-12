@@ -17,3 +17,18 @@ Point<sint32> Quadratic::evaluate(Time tt)
   return resolved;
 }
 
+void Quadratic::store(OArchive& archive) const
+{
+  archive << s << d << t;
+}
+
+Quadratic Quadratic::load(IArchive& archive)
+{
+  Point<sint32> s;
+  Point<sint32> d;
+  Time t;
+  
+  archive >> s >> d >> t;
+  return Quadratic(s, d, t);
+}
+

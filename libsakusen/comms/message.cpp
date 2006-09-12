@@ -16,7 +16,11 @@ Message::Message(const MessageData& data) :
 {
 }
 
-Message::Message(const uint8* buffer, size_t bufferLength) :
+Message::Message(
+    const uint8* buffer,
+    size_t bufferLength,
+    PlayerID player /*= static_cast<PlayerID>(-1) (default in header)*/
+  ) :
   data(NULL)
 {
   /* We try to initialize this message by reading in from the given buffer.
@@ -78,13 +82,18 @@ Message::Message(const uint8* buffer, size_t bufferLength) :
       data = new GameStartMessageData(in);
       break;
     case messageType_order:
-      data = new OrderMessageData(in);
-      break;
-    case messageType_update:
-      if (world == NULL) {
+      if (player == static_cast<PlayerID>(-1)) {
+        /* NoWorld is perhaps not entirely descriptive, but it should be
+         * accurate */
         throw new NoWorldDeserializationExn();
       }
-      data = new UpdateMessageData(in);
+      data = new OrderMessageData(in, &player);
+      break;
+    case messageType_update:
+      if (world == NULL || player == static_cast<PlayerID>(-1)) {
+        throw new NoWorldDeserializationExn();
+      }
+      data = new UpdateMessageData(in, &player);
       break;
     default:
       Debug("Unknown message type " << type);

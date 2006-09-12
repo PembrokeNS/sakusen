@@ -10,12 +10,14 @@ using namespace sakusen::client;
 
 PartialWorld::PartialWorld(
     const Universe* universe,
+    PlayerID pI,
     Topology topology,
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
     uint16 gravity
   ) :
   World(universe),
+  playerId(pI),
   map(Map::newMap<PartialMap>(topology, topRight, bottomLeft, gravity)),
   units()
 {
@@ -33,7 +35,7 @@ PartialWorld::~PartialWorld()
   while (!sensorReturns.empty()) {
     hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
       sensorReturns.begin();
-    invalidateRefs(it->first);
+    invalidateSensorReturnsRefs(it->first);
     delete it->second;
     sensorReturns.erase(it);
   }
@@ -43,7 +45,7 @@ PartialWorld::~PartialWorld()
   world = NULL;
 }
 
-void PartialWorld::invalidateRefs(SensorReturnsID id)
+void PartialWorld::invalidateSensorReturnsRefs(SensorReturnsID id)
 {
   pair<
       __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
@@ -180,7 +182,7 @@ void PartialWorld::applyUpdate(const Update& update)
         SensorReturnsID id = data.getSensorReturns().getId();
         if (sensorReturns.count(id)) {
           Debug("adding sensor returns of existing id");
-          invalidateRefs(id);
+          invalidateSensorReturnsRefs(id);
           delete sensorReturns[id];
         }
         sensorReturns[id] =
@@ -191,13 +193,13 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         SensorReturnsRemovedUpdateData data =
           update.getSensorReturnsRemovedData();
-        __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
-          sensorReturns.find(data.getId());
+        __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator
+          returns = sensorReturns.find(data.getId());
         if (returns == sensorReturns.end()) {
           Debug("tried to remove non-existant SensorReturns");
           break;
         }
-        invalidateRefs(returns->first);
+        invalidateSensorReturnsRefs(returns->first);
         delete returns->second;
         sensorReturns.erase(returns);
       }
@@ -213,6 +215,29 @@ void PartialWorld::applyUpdate(const Update& update)
           break;
         }
         returns->second->alter(data.getSensorReturns());
+      }
+      break;
+    case updateType_ballisticAdded:
+      {
+        BallisticAddedUpdateData data = update.getBallisticAddedData();
+        uint32 id = data.getId();
+        if (ballistics.count(id)) {
+          Debug("adding Ballistic of existing id");
+        }
+        ballistics[id] = data.getPath();
+      }
+      break;
+    case updateType_ballisticRemoved:
+      {
+        BallisticRemovedUpdateData data =
+          update.getBallisticRemovedData();
+        __gnu_cxx::hash_map<uint32, Quadratic>::iterator ballistic =
+          ballistics.find(data.getId());
+        if (ballistic == ballistics.end()) {
+          Debug("tried to remove non-existant Ballistic");
+          break;
+        }
+        ballistics.erase(ballistic);
       }
       break;
     default:

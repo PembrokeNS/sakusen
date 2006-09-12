@@ -29,11 +29,19 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   private:
     CompleteMap* map; /* owned by this */
     std::list<LayeredUnit> units; /* this list includes subunits */
-    std::list<Ballistic*> ballistics;
-    std::list<Beam*> beams;
-    std::list<Effect*> effects;
+    std::list<Ballistic*> ballistics; /* owned by this */
+    __gnu_cxx::hash_multimap<
+        MaskedPtr<Ballistic>,
+        Ref<Ballistic>*,
+        MaskedPtrHash<Ballistic>
+      > ballisticRefs; /* not owned by this */
+    
+    std::list<Beam*> beams; /* owned by this */
+    std::list<Effect*> effects; /* owned by this */
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
     std::vector<Player> players;
+
+    void invalidateRefs(const MaskedPtr<Ballistic>& id);
   public:
     /* accessors */
     inline Map* getMap(void) { return map; }
@@ -55,6 +63,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     {
       ballistics.push_back(ballistic);
     }
+    inline std::list<Ballistic*>& getBallistics(void) { return ballistics; }
+    
     inline void addBeam(Beam* beam)
     {
       beams.push_back(beam);
@@ -86,9 +96,12 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     /* methods for reference management */
     void registerRef(Ref<ISensorReturns>* ref);
     void unregisterRef(Ref<ISensorReturns>* ref);
+    void registerRef(Ref<Ballistic>* ref);
+    void unregisterRef(Ref<Ballistic>* ref);
 };
 
 extern LIBSAKUSEN_SERVER_API CompleteWorld* world;
+
 }
 }
 

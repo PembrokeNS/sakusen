@@ -28,20 +28,20 @@ class LIBSAKUSEN_API Order {
       return getType() != orderType_none;
     }
     inline OrderType getType(void) const { return type; }
-    inline const MoveOrderData& getMoveData(void) const {
-      return *dynamic_cast<const MoveOrderData*>(data);
+    #define GET_DATA(type) \
+    inline const type##OrderData& get##type##Data(void) const { \
+      return *dynamic_cast<const type##OrderData*>(data); \
     }
-    inline const SetVelocityOrderData& getSetVelocityData(void) const {
-      return *dynamic_cast<const SetVelocityOrderData*>(data);
-    }
-    inline const TargetSensorReturnsOrderData& getTargetSensorReturnsData(void) 
-      const {
-      return *dynamic_cast<const TargetSensorReturnsOrderData*>(data);
-    }
+    GET_DATA(Move)
+    GET_DATA(SetVelocity)
+    GET_DATA(TargetPoint)
+    GET_DATA(TargetSensorReturns)
+    #undef GET_DATA
     /*@}*/
 
+    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static Order load(IArchive&);
+    static Order load(IArchive&, const loadArgument*);
 };
 
 }

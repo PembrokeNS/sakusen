@@ -26,10 +26,15 @@ enum UpdateType {
     /* Order accepted from specified queue entry */
   updateType_sensorReturnsRemoved, /* SensorReturnsID */
   updateType_sensorReturnsAdded, /* SensorReturns */
-  updateType_sensorReturnsAltered /* SensorReturns */
+  updateType_sensorReturnsAltered, /* SensorReturns */
+  updateType_ballisticRemoved, /* id */
+  updateType_ballisticAdded /* id, Quadratic */
 };
 
-LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, UpdateType update);
+LIBSAKUSEN_API std::ostream& operator<<(
+    std::ostream& output,
+    UpdateType update
+  );
 
 }
 

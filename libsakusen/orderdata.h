@@ -68,7 +68,9 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
       weaponIndex(wI),
       target(t)
     {}
-    TargetSensorReturnsOrderData(IArchive& in, PlayerID player) : OrderData() {
+    TargetSensorReturnsOrderData(IArchive& in, const PlayerID* player) :
+      OrderData()
+    {
       in >> weaponIndex;
       target = Ref<ISensorReturns>::load(in, player);
     }
@@ -80,6 +82,30 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
     uint16 getWeaponIndex(void) const { return weaponIndex; }
     const Ref<ISensorReturns>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetSensorReturns; }
+    OrderData* newCopy(void) const;
+    void store(OArchive&) const;
+};
+
+class LIBSAKUSEN_API TargetPointOrderData : public OrderData {
+  private:
+    TargetPointOrderData();
+  public:
+    TargetPointOrderData(uint16 wI, const Point<sint32>& t) :
+      OrderData(),
+      weaponIndex(wI),
+      target(t)
+    {}
+    TargetPointOrderData(IArchive& in) : OrderData() {
+      in >> weaponIndex >> target;
+    }
+    ~TargetPointOrderData() {};
+  private:
+    uint16 weaponIndex;
+    Point<sint32> target;
+  public:
+    uint16 getWeaponIndex(void) const { return weaponIndex; }
+    const Point<sint32>& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_targetPoint; }
     OrderData* newCopy(void) const;
     void store(OArchive&) const;
 };

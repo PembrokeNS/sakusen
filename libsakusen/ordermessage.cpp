@@ -18,14 +18,14 @@ void OrderMessage::store(OArchive& out) const
   order.store(out);
 }
 
-OrderMessage OrderMessage::load(IArchive& in)
+OrderMessage OrderMessage::load(IArchive& in, const PlayerID* player)
 {
   uint32 orderee;
   OrderCondition orderCondition;
   
   in >> orderee;
   in.extractEnum(orderCondition);
-  Order order(Order::load(in));
+  Order order(Order::load(in, player));
 
   return OrderMessage(orderee, orderCondition, order);
 }

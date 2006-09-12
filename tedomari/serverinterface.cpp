@@ -171,7 +171,10 @@ String ServerInterface::flushIncoming()
   while (joined &&
       0 != (messageLength = incomingSocket->receive(buf, BUFFER_LEN))) {
     try {
-      Message message(buf, messageLength);
+      PlayerID playerId =
+        ( NULL == client::world ?
+          static_cast<PlayerID>(-1) : client::world->getPlayerId() );
+      Message message(buf, messageLength, playerId);
       switch (message.getType()) {
         case messageType_kick:
           {

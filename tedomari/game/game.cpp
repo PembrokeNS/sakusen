@@ -64,6 +64,7 @@ void Game::start(
   serverInterface = sI;
   new PartialWorld(
       universe,
+      data.getPlayerId(),
       data.getTopology(),
       data.getTopRight(),
       data.getBottomLeft(),

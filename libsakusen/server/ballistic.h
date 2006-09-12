@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 #include "quadratic.h"
 #include "point.h"
+#include "ref.h"
 
 namespace sakusen {
 namespace server {
@@ -50,6 +51,8 @@ class Ballistic {
     /** The destructor currently does nothing. */
     virtual ~Ballistic() {}
 
+    inline const Quadratic& getPath() const { return path; }
+
     /** \name mechanics
      * Functions to deal with game mechanics */
     //@{
@@ -66,10 +69,24 @@ class Ballistic {
      *
      * Callback used when the Ballistic hits something */
     virtual void onCollision(const Point<sint32>& pos) = 0;
+
+    bool resolveIntersections();
     //@}
 };
 
-}}
+} /* Back into namespace sakusen */
+
+template<>
+class RefHandler<server::Ballistic> {
+  public:
+    inline void registerRef(Ref<server::Ballistic>* ref) const;
+    inline void unregisterRef(Ref<server::Ballistic>* ref) const;
+    inline server::Ballistic* extract(IArchive& archive) const;
+    inline void insert(OArchive& archive, const server::Ballistic* ret) const;
+    typedef void loadArgument;
+};
+
+}
 
 #endif
 

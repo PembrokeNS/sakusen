@@ -238,10 +238,11 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     getMaxHeightIn(boundingBox.rectangle());
   sint32 heightAboveGround = boundingBox.getMin().z - groundHeight;
   if (heightAboveGround + expectedVelocity.z < 0) {
-    /* The unit will end up below the ground, so we need to raise it.
-     * \bug The
+    /* The unit will end up below the ground, so we need to raise it. */
+    /** \bug The
      * way this is done at pesent is quite silly and could easily result in
-     * exceptionally high velocities. */
+     * exceptionally high velocities. (This is the same bug that lots of
+     * speedruns exploit in other games to achieve high speeds) */
     expectedVelocity.z = -heightAboveGround;
   } else if (heightAboveGround > 0 && status->getTypePtr()->getGravity()) {
     /* The unit is in the air above the ground, so we need to apply gravity
@@ -275,6 +276,9 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     status->velocity = mapOrientationChange * status->velocity;
     status->orientation = mapOrientationChange * status->orientation;
   }
+
+  /* Process the weapons */
+  topLayer->incrementWeaponsState();
   
   /* determine if the currentOrder has succeeded or failed, and if so
    * then update the currentOrder appropriately and inform clients */
@@ -297,14 +301,14 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
       /** \todo Check whether the SensorReturns still exists.  If not, then we
        * imagine that we have succeeded */
       break;
+    case orderType_targetPoint:
+      /* There's not really any sense in which this can succeed */
+      break;
     default:
       Fatal("Unknown orderType '" <<
           orders.getCurrentOrder().getType() << "'");
       break;
   }
-
-  /* Process the weapons */
-  topLayer->incrementWeaponsState();
 }
 
 void LayeredUnit::enqueueOrder(

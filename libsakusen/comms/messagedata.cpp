@@ -328,12 +328,14 @@ MessageData* NotifySettingMessageData::newCopy() const
 }
 
 GameStartMessageData::GameStartMessageData(
+    PlayerID pI,
     Topology t,
     const Point<sint32>& tR,
     const Point<sint32>& bL,
     uint16 g
   ) :
   MessageData(),
+  playerId(pI),
   topology(t),
   topRight(tR),
   bottomLeft(bL),
@@ -344,12 +346,13 @@ GameStartMessageData::GameStartMessageData(
 GameStartMessageData::GameStartMessageData(IArchive& in) :
   MessageData()
 {
-  in.extractEnum(topology) >> topRight >> bottomLeft >> gravity;
+  (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >> gravity;
 }
 
 void GameStartMessageData::fillArchive()
 {
-  archive.insertEnum(topology) << topRight << bottomLeft << gravity;
+  (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
+    gravity;
 }
 
 MessageType GameStartMessageData::getType() const
@@ -368,9 +371,9 @@ OrderMessageData::OrderMessageData(const OrderMessage& oM) :
 {
 }
 
-OrderMessageData::OrderMessageData(IArchive& in) :
+OrderMessageData::OrderMessageData(IArchive& in, const PlayerID* player) :
   MessageData(),
-  orderMessage(OrderMessage::load(in))
+  orderMessage(OrderMessage::load(in, player))
 {
 }
 
@@ -400,12 +403,12 @@ UpdateMessageData::UpdateMessageData(Time t, list<Update>& u) :
   updates.swap(u);
 }
 
-UpdateMessageData::UpdateMessageData(IArchive& in) :
+UpdateMessageData::UpdateMessageData(IArchive& in, const PlayerID* player) :
   MessageData(),
   updates()
 {
   in >> time;
-  in.extract(updates, world->getUniverse());
+  in.extract(updates, world->getUniverse(), player);
 }
 
 void UpdateMessageData::fillArchive()

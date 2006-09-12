@@ -10,6 +10,8 @@
 #include "changeownerreason.h"
 #include "playertemplate.h"
 #include "dynamicsensorreturns.h"
+#include "ballistic.h"
+#include "maskedptr.h"
 
 namespace sakusen {
 namespace server {
@@ -29,16 +31,29 @@ class LIBSAKUSEN_SERVER_API Player {
     PlayerID playerId; /**< ID of player is assigned by the World constructor */
     String name;
     std::list<Client*> clients;
+    
+    /* This is a hashtable of the units belonging to the player, keyed by
+       their id */
     __gnu_cxx::hash_map<uint32, LayeredUnit*> units;
-      /* This is a hashtable of the units belonging to the player, keyed by
-         their id */
-    uint32 lastUnitId; /* The id of the last unit that was added for this
-                          player */
+    /* The id of the last unit that was added for this player */
+    uint32 lastUnitId;
+    
     __gnu_cxx::hash_map<SensorReturnsID, DynamicSensorReturns> sensorReturns;
     SensorReturnsID lastSensorReturnsId;
 
     __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>
       sensorReturnRefs; /* These pointers not owned by this */
+
+    /* A container of Refs to the Ballistics visible to this player.  The key
+     * is a pointer which we use as a UID for the Ballistic, but it shouldn't
+     * be dereferenced - use the Ref instead to avoid danglingness.  The first
+     * pair entry is the client-side ID */
+    __gnu_cxx::hash_map<
+        MaskedPtr<Ballistic>,
+        std::pair<uint32, Ref<Ballistic> >,
+        MaskedPtrHash<Ballistic>
+      > visibleBallistics;
+    uint32 lastClientBallisticId;
 
     void invalidateRefs(SensorReturnsID id);
   public:

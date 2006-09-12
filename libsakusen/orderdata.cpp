@@ -42,3 +42,13 @@ void TargetSensorReturnsOrderData::store(OArchive& out) const
   target.store(out);
 }
 
+OrderData* TargetPointOrderData::newCopy(void) const
+{
+  return new TargetPointOrderData(*this);
+}
+
+void TargetPointOrderData::store(OArchive& out) const
+{
+  out << weaponIndex << target;
+}
+

@@ -21,6 +21,7 @@ void PatrollerClient::queueUpdate(const Update& update)
         if (data.getUnit().getId() == 0 &&
             data.getReason() == changeOwnerReason_created) {
           patrolFrom = data.getUnit().getStatus().getPosition();
+          patrolFrom.z = patrolTo.z;
           /*Debug("sending move order");*/
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,
@@ -36,6 +37,8 @@ void PatrollerClient::queueUpdate(const Update& update)
         const SensorReturnsAddedUpdateData& data =
           update.getSensorReturnsAddedData();
         otherUnit = new SensorReturns(data.getSensorReturns());
+        QDebug("otherUnit at " <<
+            otherUnit->getUnit()->getIStatus()->getPosition());
         /* throw in a weapon targeting order */
         orderMessageQueue.push(
             OrderMessage(0 /* unit id */, orderCondition_incidental, Order(

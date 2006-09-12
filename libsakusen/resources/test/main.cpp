@@ -71,10 +71,10 @@ int main(/*int argc, char** argv*/)
       WeaponType(
           "cannon",
           "testsrc",
-          0,
-          0,
-          0,
-          0,
+          10 /* energyCost */,
+          10 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
           resourceInterface
         );
     weaponTypes.push_back(cannonType);
@@ -183,7 +183,7 @@ int main(/*int argc, char** argv*/)
   MapTemplate* t = new MapTemplate(
       &universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
       Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-      heightfield, 10 /* gravity */, playModes
+      heightfield, 2 /* gravity */, playModes
     );
 
   cout << "Saving map" << endl;

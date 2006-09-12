@@ -187,6 +187,17 @@ namespace sakusen {
 typedef uint32 Time;
 typedef uint32 TimeSpan; /* We might want to allow negative TimeSpans too. */
 
+/* Sign function */
+inline int sgn(double x) {
+  if (x>0) {
+    return -1;
+  } else if (x<0) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
 }
 
 #endif // LIBSAKUSEN_GLOBAL_H

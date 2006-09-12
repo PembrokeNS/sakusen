@@ -47,7 +47,7 @@ CompleteWorld::CompleteWorld(
   if (!playMode->acceptableNumberOfPlayers(numPlayers)) {
     Fatal("Number of players not acceptable for this map and mode");
   }
-  /* TODO: more sanity checks */
+  /** \todo More sanity checks */
   
   /* assign player ids */
   
@@ -70,6 +70,7 @@ CompleteWorld::~CompleteWorld()
 {
   /* Free memory for ballistics */
   while (!ballistics.empty()) {
+    invalidateRefs(ballistics.front());
     delete ballistics.front();
     ballistics.pop_front();
   }
@@ -86,12 +87,32 @@ CompleteWorld::~CompleteWorld()
     effects.pop_front();
   }
   
-  /* TODO: something about freeing Fuse memory. */
+  /** \todo Something about freeing Fuse memory. */
 
   delete map;
   map = NULL;
 
   world = NULL;
+}
+
+void CompleteWorld::invalidateRefs(const MaskedPtr<Ballistic>& id)
+{
+  pair<
+      __gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator,
+      __gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator
+    > refRange = ballisticRefs.equal_range(id);
+  
+  for (__gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    refIt->second->invalidate();
+  }
+  ballisticRefs.erase(refRange.first, refRange.second);
 }
 
 /** \brief Advances the game state to the specified time
@@ -144,12 +165,19 @@ void CompleteWorld::incrementGameState(void)
   }
 
   /* process ballistics */
-  for (std::list<Ballistic*>::iterator k=ballistics.begin();
-      k!=ballistics.end(); k++) {
-    /* TODO: collision detection. */
+  for (std::list<Ballistic*>::iterator k = ballistics.begin();
+      k != ballistics.end(); ) {
+    /* Check the ballistic for collisions */
+    if ((*k)->resolveIntersections()) {
+      invalidateRefs(*k);
+      delete *k;
+      k = ballistics.erase(k);
+    } else {
+      ++k;
+    }
   }
 
-  /* TODO: something to deal with beams */
+  /** \todo something to deal with beams */
   
   do {
     /* check fuses */
@@ -169,7 +197,7 @@ void CompleteWorld::incrementGameState(void)
 
     effectHappened = false;
     
-    /* TODO: Do something with effects that calls the Effect::unitPresent
+    /** \todo Do something with effects that calls the Effect::unitPresent
      * method.  Also provide for effects coming to an end (and delete them when
      * that happens!) */
   } while (effectHappened);
@@ -185,7 +213,7 @@ void CompleteWorld::incrementGameState(void)
     player->checkSensorReturns();
   }
   
-  /* TODO: send to clients:
+  /** \todo send to clients:
    * - newly explored/altered portions of the map */
 
   /* Once everything has happened that can happen, we induce all units to send
@@ -201,7 +229,7 @@ void CompleteWorld::applyEntryExitEffects(
     const Point<sint32> newPosition
   )
 {
-  /* TODO: make this more efficient by storing the data differently */
+  /** \todo make this more efficient by storing the data differently */
   for (std::list<Effect*>::iterator i=effects.begin(); i!=effects.end(); i++) {
     if ((*i)->getRegion().contains(oldPosition) &&
         !(*i)->getRegion().contains(newPosition)) {
@@ -222,6 +250,39 @@ void CompleteWorld::registerRef(Ref<ISensorReturns>* ref)
 void CompleteWorld::unregisterRef(Ref<ISensorReturns>* ref)
 {
   players[(*ref)->getSenserOwner()].unregisterRef(ref);
+}
+
+void CompleteWorld::registerRef(Ref<Ballistic>* ref)
+{
+  MaskedPtr<Ballistic> id(**ref);
+  pair<MaskedPtr<Ballistic>, Ref<Ballistic>*> item(id, ref);
+  ballisticRefs.insert(item);
+}
+
+void CompleteWorld::unregisterRef(Ref<Ballistic>* ref)
+{
+  pair<
+      __gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator,
+      __gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator
+    > refRange = ballisticRefs.equal_range(**ref);
+  
+  /* This becomes slow if there are many Refs to the same Ballistic object.
+   * If that is a problem we could ID the refs too and have O(1) lookups for
+   * them, but it's unlikely to be of help overall */
+  for (__gnu_cxx::hash_multimap<
+          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
+        >::iterator refIt = refRange.first; refIt != refRange.second;
+      ++refIt) {
+    if (refIt->second == ref) {
+      ballisticRefs.erase(refIt);
+      return;
+    }
+  }
+  Fatal("tried to unregister a not-registered Ref");
 }
 
 LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;

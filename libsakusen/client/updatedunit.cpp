@@ -32,7 +32,7 @@ void UpdatedUnit::orderCompleted(const OrderCompletedUpdateData& /*data*/)
 /** Updates the current status of the unit to \p to. */
 void UpdatedUnit::alter(const CompleteUnit& to)
 {
-  *this = to;
+  CompleteUnit::operator=(to);
   altered = true;
 }
 

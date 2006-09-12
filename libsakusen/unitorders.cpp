@@ -68,6 +68,17 @@ void UnitOrders::acceptOrder(OrderCondition condition)
       linearTarget = linearTargetType_position;
       targetPosition = thisOrder.getMoveData().getTarget();
       break;
+    case orderType_targetPoint:
+      {
+        uint16 weaponIndex =
+          thisOrder.getTargetPointData().getWeaponIndex();
+        if (weaponIndex >= weaponOrders.size()) {
+          Debug("Weapon index out of range");
+          break;
+        }
+        weaponOrders[weaponIndex].update(thisOrder);
+      }
+      break;
     case orderType_targetSensorReturns:
       {
         uint16 weaponIndex =
@@ -117,8 +128,8 @@ UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
   AngularVelocity targetAngularVelocity;
   vector<WeaponOrders> weaponOrders;
 
-  in.extract<Order, orderCondition_max>(orders);
-  currentOrder = Order::load(in);
+  in.extract<Order, orderCondition_max>(orders, player);
+  currentOrder = Order::load(in, player);
   in.extractEnum(linearTarget);
   in >> targetPosition >> targetVelocity;
   in.extractEnum(rotationalTarget);

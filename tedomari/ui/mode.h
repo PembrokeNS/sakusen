@@ -42,6 +42,7 @@ class Mode {
   public:
     static Mode getNormal(UI* ui);
     static Mode getUnit(UI* ui);
+    static Mode getTarget(UI* ui);
 };
 
 }}

@@ -2,6 +2,7 @@
 #include "updatedata.h"
 #include "layeredunit.h"
 #include "completeworld.h"
+#include "ballistic-methods.h"
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -18,7 +19,9 @@ Player::Player(const PlayerTemplate& t) :
   units(),
   lastUnitId(static_cast<uint32>(-1)),
   sensorReturns(),
-  lastSensorReturnsId(static_cast<SensorReturnsID>(-1))
+  lastSensorReturnsId(static_cast<SensorReturnsID>(-1)),
+  visibleBallistics(),
+  lastClientBallisticId(static_cast<uint32>(-1))
 {
   assert(raceFixed || !noClients);
 }
@@ -32,7 +35,10 @@ Player::Player(const Player& copy) :
   units(copy.units),
   lastUnitId(copy.lastUnitId),
   sensorReturns(copy.sensorReturns),
-  lastSensorReturnsId(copy.lastSensorReturnsId)
+  lastSensorReturnsId(copy.lastSensorReturnsId),
+  sensorReturnRefs(copy.sensorReturnRefs),
+  visibleBallistics(copy.visibleBallistics),
+  lastClientBallisticId(copy.lastClientBallisticId)
 {
 }
 
@@ -122,6 +128,7 @@ void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
 
 void Player::checkSensorReturns()
 {
+  /* First we deal with other players' units */
   for (list<LayeredUnit>::iterator unit = world->getUnits().begin();
       unit != world->getUnits().end(); ++unit) {
     /* check whether this unit already has a return to this player */
@@ -164,6 +171,46 @@ void Player::checkSensorReturns()
           );
         lastSensorReturnsId = newId;
       }
+    }
+  }
+
+  /* First we check over the existing visible Ballistics to remove the ones
+   * that have invalidated */
+  vector<MaskedPtr<Ballistic> > invalidatedIds;
+  for (__gnu_cxx::hash_map<
+        MaskedPtr<Ballistic>, pair<uint32, Ref<Ballistic> >,
+        MaskedPtrHash<Ballistic>
+      >::iterator
+      vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
+    if (!vb->second.second.isValid()) {
+      invalidatedIds.push_back(vb->first);
+      informClients(Update(BallisticRemovedUpdateData(vb->second.first)));
+    }
+  }
+
+  /* Now we actually erase the invalidated entries (we couldn't do this before
+   * because erasure in a hash_map invalidates iterators) */
+  for (vector<MaskedPtr<Ballistic> >::iterator id = invalidatedIds.begin();
+      id != invalidatedIds.end(); ++id) {
+    visibleBallistics.erase(*id);
+  }
+
+  /* Now we check for newly visible Ballistics (of all players) */
+  for (list<Ballistic*>::iterator ballistic = world->getBallistics().begin();
+      ballistic != world->getBallistics().end(); ++ballistic) {
+    if (visibleBallistics.count(*ballistic)) {
+      /* we have it already */
+      /** \todo See whether it's still visible */
+    } else {
+      /* It's a new one */
+      /** \todo Make an actual visibilty check */
+      uint32 clientId = ++lastClientBallisticId;
+      /** \bug There's no wraparound check for this ID */
+      visibleBallistics[*ballistic] =
+        pair<uint32, Ref<Ballistic> >(clientId, Ref<Ballistic>(*ballistic));
+      informClients(Update(
+            BallisticAddedUpdateData(clientId, (*ballistic)->getPath())
+          ));
     }
   }
 }

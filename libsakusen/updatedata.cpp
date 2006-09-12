@@ -2,15 +2,6 @@
 
 using namespace sakusen;
 
-UnitRemovedUpdateData::UnitRemovedUpdateData(
-    uint32 i,
-    changeOwnerReason r) :
-  UpdateData(),
-  id(i),
-  reason(r)
-{
-}
-
 UnitRemovedUpdateData::UnitRemovedUpdateData(IArchive& in) :
   UpdateData()
 {
@@ -21,16 +12,6 @@ UnitRemovedUpdateData::UnitRemovedUpdateData(IArchive& in) :
 void UnitRemovedUpdateData::store(OArchive& out) const
 {
   (out << id).insertEnum(reason);
-}
-
-UnitAddedUpdateData::UnitAddedUpdateData(
-    changeOwnerReason r,
-    const ICompleteUnit* u
-  ) :
-  UpdateData(),
-  reason(r),
-  unit(u)
-{
 }
 
 UnitAddedUpdateData::UnitAddedUpdateData(
@@ -48,12 +29,6 @@ void UnitAddedUpdateData::store(OArchive& out) const
   out.insertEnum(reason);
 }
 
-UnitAlteredUpdateData::UnitAlteredUpdateData(const ICompleteUnit* u) :
-  UpdateData(),
-  unit(u)
-{
-}
-
 UnitAlteredUpdateData::UnitAlteredUpdateData(
     IArchive& in,
     const Universe* universe
@@ -67,15 +42,6 @@ void UnitAlteredUpdateData::store(OArchive& out) const
   unit.store(out);
 }
 
-OrderAcceptedUpdateData::OrderAcceptedUpdateData(
-    uint32 u,
-    OrderCondition c) :
-  UpdateData(),
-  unitId(u),
-  condition(c)
-{
-}
-
 OrderAcceptedUpdateData::OrderAcceptedUpdateData(IArchive& in)
 {
   in >> unitId;
@@ -85,15 +51,6 @@ OrderAcceptedUpdateData::OrderAcceptedUpdateData(IArchive& in)
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
   (out << unitId).insertEnum(condition);
-}
-
-OrderCompletedUpdateData::OrderCompletedUpdateData(
-    uint32 u,
-    OrderCondition c) :
-  UpdateData(),
-  unitId(u),
-  condition(c)
-{
 }
 
 OrderCompletedUpdateData::OrderCompletedUpdateData(IArchive& in)
@@ -108,20 +65,13 @@ void OrderCompletedUpdateData::store(OArchive& out) const
 }
 
 OrderQueuedUpdateData::OrderQueuedUpdateData(
-    uint32 u,
-    const Order& o,
-    OrderCondition c) :
-  UpdateData(),
-  unitId(u),
-  order(o),
-  condition(c)
-{
-}
-
-OrderQueuedUpdateData::OrderQueuedUpdateData(IArchive& in)
+    IArchive& in,
+    const PlayerID* player
+  ) :
+  UpdateData()
 {
   in >> unitId;
-  order = Order::load(in);
+  order = Order::load(in, player);
   in.extractEnum(condition);
 }
 
@@ -130,14 +80,6 @@ void OrderQueuedUpdateData::store(OArchive& out) const
   out << unitId;
   order.store(out);
   out.insertEnum(condition);
-}
-
-SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(
-    SensorReturnsID i
-  ) :
-  UpdateData(),
-  id(i)
-{
 }
 
 SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(IArchive& in) :
@@ -149,14 +91,6 @@ SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(IArchive& in) :
 void SensorReturnsRemovedUpdateData::store(OArchive& out) const
 {
   out << id;
-}
-
-SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
-    const ISensorReturns* r
-  ) :
-  UpdateData(),
-  returns(r)
-{
 }
 
 SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
@@ -174,14 +108,6 @@ void SensorReturnsAddedUpdateData::store(OArchive& out) const
 }
 
 SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
-    const ISensorReturns* r
-  ) :
-  UpdateData(),
-  returns(r)
-{
-}
-
-SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
     IArchive& in,
     const Universe* universe
   ) :
@@ -193,5 +119,29 @@ SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
 void SensorReturnsAlteredUpdateData::store(OArchive& out) const
 {
   returns.store(out);
+}
+
+BallisticRemovedUpdateData::BallisticRemovedUpdateData(IArchive& in) :
+  UpdateData()
+{
+  in >> id;
+}
+
+void BallisticRemovedUpdateData::store(OArchive& out) const
+{
+  out << id;
+}
+
+BallisticAddedUpdateData::BallisticAddedUpdateData(IArchive& in) :
+  UpdateData()
+{
+  in >> id;
+  path  = Quadratic::load(in);
+}
+
+void BallisticAddedUpdateData::store(OArchive& out) const
+{
+  out << id;
+  path.store(out);
 }
 

@@ -45,12 +45,12 @@ class RefHandler<ISensorReturns> {
     void unregisterRef(Ref<ISensorReturns>* ref) const {
       world->unregisterRef(ref);
     }
-    ISensorReturns* extract(IArchive& archive, PlayerID player) const {
+    ISensorReturns* extract(IArchive& archive, const PlayerID* player) const {
       SensorReturnsID id;
       archive >> id;
-      return world->getISensorReturns(player, id);
+      return world->getISensorReturns(*player, id);
     }
-    void insert(OArchive& archive, ISensorReturns* ret) const {
+    void insert(OArchive& archive, const ISensorReturns* ret) const {
       archive << ret->getId();
     }
     typedef PlayerID loadArgument;

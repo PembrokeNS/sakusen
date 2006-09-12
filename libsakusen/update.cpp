@@ -42,7 +42,11 @@ LIBSAKUSEN_API std::ostream& sakusen::operator<<(std::ostream& output, const Upd
   return output;
 }
 
-Update Update::load(IArchive& in, const Universe* universe)
+Update Update::load(
+    IArchive& in,
+    const Universe* universe,
+    const PlayerID* player
+  )
 {
   /* If the archive is empty then it's broken.  Return a dud update */
   if (in.isFinished()) {
@@ -62,7 +66,7 @@ Update Update::load(IArchive& in, const Universe* universe)
     case updateType_unitAltered:
       return Update(new UnitAlteredUpdateData(in, universe));
     case updateType_orderQueued:
-      return Update(new OrderQueuedUpdateData(in));
+      return Update(new OrderQueuedUpdateData(in, player));
     case updateType_orderCompleted:
       return Update(new OrderCompletedUpdateData(in));
     case updateType_orderAccepted:
@@ -73,6 +77,10 @@ Update Update::load(IArchive& in, const Universe* universe)
       return Update(new SensorReturnsAddedUpdateData(in, universe));
     case updateType_sensorReturnsAltered:
       return Update(new SensorReturnsAlteredUpdateData(in, universe));
+    case updateType_ballisticRemoved:
+      return Update(new BallisticRemovedUpdateData(in));
+    case updateType_ballisticAdded:
+      return Update(new BallisticAddedUpdateData(in));
     default:
       Debug("Unknown UpdateType " << type);
       return Update();

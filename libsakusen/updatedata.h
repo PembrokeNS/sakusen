@@ -9,6 +9,7 @@
 #include "oarchive.h"
 #include "completeunit.h"
 #include "sensorreturns.h"
+#include "quadratic.h"
 
 namespace sakusen {
 
@@ -30,7 +31,8 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
   private:
     UnitRemovedUpdateData();
   public:
-    UnitRemovedUpdateData(uint32 id, changeOwnerReason reason);
+    UnitRemovedUpdateData(uint32 i, changeOwnerReason r) :
+      UpdateData(), id(i), reason(r) {}
     UnitRemovedUpdateData(IArchive&);
     ~UnitRemovedUpdateData() {}
   private:
@@ -48,7 +50,8 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
   private:
     UnitAddedUpdateData();
   public:
-    UnitAddedUpdateData(changeOwnerReason reason, const ICompleteUnit* unit);
+    UnitAddedUpdateData(changeOwnerReason r, const ICompleteUnit* u) :
+      UpdateData(), reason(r), unit(u) {}
     UnitAddedUpdateData(IArchive&, const Universe*);
     ~UnitAddedUpdateData() {}
   private:
@@ -66,7 +69,7 @@ class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
   private:
     UnitAlteredUpdateData();
   public:
-    UnitAlteredUpdateData(const ICompleteUnit* unit);
+    UnitAlteredUpdateData(const ICompleteUnit* u) : UpdateData(), unit(u) {}
     UnitAlteredUpdateData(IArchive&, const Universe*);
     ~UnitAlteredUpdateData() {}
   private:
@@ -82,7 +85,8 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   private:
     OrderAcceptedUpdateData();
   public:
-    OrderAcceptedUpdateData(uint32 unitId, OrderCondition condition);
+    OrderAcceptedUpdateData(uint32 uI, OrderCondition c) :
+      UpdateData(), unitId(uI), condition(c) {}
     OrderAcceptedUpdateData(IArchive&);
     ~OrderAcceptedUpdateData() {}
   private:
@@ -100,7 +104,8 @@ class LIBSAKUSEN_API OrderCompletedUpdateData : public UpdateData {
   private:
     OrderCompletedUpdateData();
   public:
-    OrderCompletedUpdateData(uint32 unitId, OrderCondition condition);
+    OrderCompletedUpdateData(uint32 uI, OrderCondition c) :
+      UpdateData(), unitId(uI), condition(c) {}
     OrderCompletedUpdateData(IArchive&);
     ~OrderCompletedUpdateData() {}
   private:
@@ -118,12 +123,9 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
   private:
     OrderQueuedUpdateData();
   public:
-    OrderQueuedUpdateData(
-        uint32 unitId,
-        const Order& order,
-        OrderCondition condition
-      );
-    OrderQueuedUpdateData(IArchive&);
+    OrderQueuedUpdateData(uint32 uI, const Order& o, OrderCondition c) :
+      UpdateData(), unitId(uI), order(o), condition(c) {}
+    OrderQueuedUpdateData(IArchive&, const PlayerID*);
     ~OrderQueuedUpdateData() {}
   private:
     uint32 unitId;
@@ -142,7 +144,8 @@ class LIBSAKUSEN_API SensorReturnsRemovedUpdateData : public UpdateData {
   private:
     SensorReturnsRemovedUpdateData();
   public:
-    SensorReturnsRemovedUpdateData(SensorReturnsID id);
+    SensorReturnsRemovedUpdateData(SensorReturnsID i) :
+      UpdateData(), id(i) {}
     SensorReturnsRemovedUpdateData(IArchive&);
     ~SensorReturnsRemovedUpdateData() {}
   private:
@@ -160,7 +163,8 @@ class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
   private:
     SensorReturnsAddedUpdateData();
   public:
-    SensorReturnsAddedUpdateData(const ISensorReturns* returns);
+    SensorReturnsAddedUpdateData(const ISensorReturns* r) :
+      UpdateData(), returns(r) {}
     SensorReturnsAddedUpdateData(IArchive&, const Universe*);
     ~SensorReturnsAddedUpdateData() {}
   private:
@@ -178,7 +182,8 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
   private:
     SensorReturnsAlteredUpdateData();
   public:
-    SensorReturnsAlteredUpdateData(const ISensorReturns* returns);
+    SensorReturnsAlteredUpdateData(const ISensorReturns* r) :
+      UpdateData(), returns(r) {}
     SensorReturnsAlteredUpdateData(IArchive&, const Universe*);
     ~SensorReturnsAlteredUpdateData() {}
   private:
@@ -190,6 +195,46 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
     UpdateType getType() const { return updateType_sensorReturnsAltered; }
     void store(OArchive& out) const;
     inline const SensorReturns& getSensorReturns() const { return returns; }
+};
+
+class LIBSAKUSEN_API BallisticRemovedUpdateData : public UpdateData {
+  private:
+    BallisticRemovedUpdateData();
+  public:
+    BallisticRemovedUpdateData(uint32 i) :
+      UpdateData(), id(i) {}
+    BallisticRemovedUpdateData(IArchive&);
+    ~BallisticRemovedUpdateData() {}
+  private:
+    uint32 id;
+  public:
+    UpdateData* newCopy() const {
+      return new BallisticRemovedUpdateData(*this);
+    }
+    UpdateType getType() const { return updateType_ballisticRemoved; }
+    void store(OArchive& out) const;
+    uint32 getId() const { return id; }
+};
+
+class LIBSAKUSEN_API BallisticAddedUpdateData : public UpdateData {
+  private:
+    BallisticAddedUpdateData();
+  public:
+    BallisticAddedUpdateData(uint32 i, const Quadratic& p) :
+      UpdateData(), id(i), path(p) {}
+    BallisticAddedUpdateData(IArchive&);
+    ~BallisticAddedUpdateData() {}
+  private:
+    uint32 id;
+    Quadratic path;
+  public:
+    UpdateData* newCopy() const {
+      return new BallisticAddedUpdateData(*this);
+    }
+    UpdateType getType() const { return updateType_ballisticAdded; }
+    void store(OArchive& out) const;
+    uint32 getId() const { return id; }
+    inline const Quadratic& getPath() const { return path; }
 };
 
 }

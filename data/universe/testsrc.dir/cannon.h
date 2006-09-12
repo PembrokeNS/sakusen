@@ -17,7 +17,9 @@ class Cannon : public Weapon {
     Cannon(const WeaponType* type) :
       Weapon(type)
     {}
-
+  protected:
+    uint32 getProjectileSpeed() { return 20; }
+  public:
     void onFire(LayeredUnit* firer, uint16 weaponIndex);
 
     Weapon* newCopy() const {
@@ -29,7 +31,7 @@ class Shell : public Ballistic {
   private:
     Shell();
   public:
-    Shell(LayeredUnit* source);
+    Shell(LayeredUnit* source, const WeaponStatus& status);
 
     void onCollision(const Point<sint32>& pos);
 };

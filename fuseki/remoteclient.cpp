@@ -33,18 +33,24 @@ RemoteClient::RemoteClient(
   ready(false),
   autoUnready(false)
 {
+  outSocket->setNonBlocking(true);
   if (createInSocket) {
 #ifdef DISABLE_UNIX_SOCKETS
-    Fatal("Seperate inSocket not supported on this platform");
+    Fatal("Separate inSocket not supported on this platform");
 #else
     inSocket = new UnixDatagramListeningSocket(abstract);
+    inSocket->setNonBlocking(true);
+    /** \bug The following line should not be here, because it can make the
+     * server hang.  However, without it, we can suffer from the bug caused by
+     * our poor handling of EAGAIN in *Socket::send.  Once that is somehow
+     * fixed, this can also be fixed */
+    outSocket->setNonBlocking(false);
     outSocket->send(Message(AcceptMessageData(inSocket->getAddress(), id)));
 #endif
   } else {
     inSocket = outSocket;
     outSocket->send(Message(AcceptMessageData("", id)));
   }
-  inSocket->setNonBlocking(true);
 }
 
 /** \brief Destructor
@@ -103,7 +109,7 @@ void RemoteClient::flushIncoming()
   uint8 buf[BUFFER_LEN];
   size_t messageLength;
   while (0 != (messageLength = inSocket->receive(buf, BUFFER_LEN))) {
-    Message message(buf, messageLength);
+    Message message(buf, messageLength, getPlayerId());
     if (message.isRealMessage()) {
       incomingMessageQueue.push(message);
     } else {

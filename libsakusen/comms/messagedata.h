@@ -227,6 +227,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     GameStartMessageData();
   public:
     GameStartMessageData(
+        PlayerID playerId,
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
@@ -235,6 +236,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     GameStartMessageData(IArchive& in);
     ~GameStartMessageData() {}
   private:
+    PlayerID playerId;
     Topology topology;
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
@@ -244,6 +246,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
+    inline PlayerID getPlayerId() const { return playerId; }
     inline Topology getTopology() const { return topology; }
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
@@ -255,7 +258,7 @@ class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
     OrderMessageData();
   public:
     OrderMessageData(const OrderMessage&);
-    OrderMessageData(IArchive& in);
+    OrderMessageData(IArchive& in, const PlayerID*);
     ~OrderMessageData() {}
   private:
     OrderMessage orderMessage; /**< The order message */
@@ -272,7 +275,7 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     UpdateMessageData();
   public:
     UpdateMessageData(Time time, std::list<Update>& update);
-    UpdateMessageData(IArchive& in);
+    UpdateMessageData(IArchive& in, const PlayerID*);
     ~UpdateMessageData() {}
   private:
     Time time; /**< The game time at which these updates apply */

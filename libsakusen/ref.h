@@ -1,6 +1,9 @@
 #ifndef LIBSAKUSEN__REF_H
 #define LIBSAKUSEN__REF_H
 
+#include "iarchive.h"
+#include "oarchive.h"
+
 namespace sakusen {
 
 template<typename T>
@@ -31,7 +34,7 @@ class Ref {
       }
       return *this;
     }
-   Ref(T* r) : referee(r)
+    Ref(T* r) : referee(r)
     {
       handler.registerRef(this);
     }
@@ -45,9 +48,25 @@ class Ref {
     T* referee;
   public:
     inline bool isValid() const { return referee != NULL; }
-    inline T* operator->() const {
+    
+    inline T* operator->() {
       assert(isValid());
       return referee;
+    }
+    
+    inline const T* operator->() const {
+      assert(isValid());
+      return referee;
+    }
+
+    inline T& operator*() {
+      assert(isValid());
+      return *referee;
+    }
+
+    inline const T& operator*() const {
+      assert(isValid());
+      return *referee;
     }
 
     inline void invalidate() {
@@ -62,7 +81,7 @@ class Ref {
     }
     
     static Ref<T> load(
-        IArchive& archive, typename RefHandler<T>::loadArgument arg
+        IArchive& archive, const typename RefHandler<T>::loadArgument* arg
       ) {
       bool valid;
       T* referee = NULL;

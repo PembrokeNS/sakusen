@@ -28,7 +28,8 @@ enum BuiltinCommand {
   builtinCommand_stopdragregion,
   /* unit-related commands */
   builtinCommand_select,
-  builtinCommand_move
+  builtinCommand_move,
+  builtinCommand_attack
 };
 
 void executeBuiltinCommand(

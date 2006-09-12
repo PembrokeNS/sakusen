@@ -43,7 +43,7 @@ void Order::store(OArchive& out) const
   }
 }
 
-Order Order::load(IArchive& in)
+Order Order::load(IArchive& in, const PlayerID* player)
 {
   OrderType type;
   in.extractEnum(type);
@@ -55,6 +55,10 @@ Order Order::load(IArchive& in)
       return Order(MoveOrderData(in));
     case orderType_setVelocity:
       return Order(SetVelocityOrderData(in));
+    case orderType_targetPoint:
+      return Order(TargetPointOrderData(in));
+    case orderType_targetSensorReturns:
+      return Order(TargetSensorReturnsOrderData(in, player));
     default:
       Debug("Unknown OrderType: " << type);
       return Order();

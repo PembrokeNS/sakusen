@@ -19,6 +19,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   public:
     PartialWorld(
         const Universe* universe,
+        PlayerID playerId,
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
@@ -26,15 +27,18 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       );
     ~PartialWorld();
   private:
+    PlayerID playerId;
     PartialMap* map;
     __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
     __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*> sensorReturns;
       /* sensor returns owned by this */
     __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>
       sensorReturnRefs; /* These pointers not owned by this */
+    __gnu_cxx::hash_map<uint32, Quadratic> ballistics;
 
-    void invalidateRefs(SensorReturnsID id);
+    void invalidateSensorReturnsRefs(SensorReturnsID id);
   public:
+    inline PlayerID getPlayerId() const { return playerId; }
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
 
@@ -42,8 +46,8 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     std::list<UpdatedSensorReturns*> getSensorReturnsIntersecting(
         const Rectangle<sint32>&
       );
-    ISensorReturns* getISensorReturns(PlayerID /*player*/, SensorReturnsID id) {
-      /** \todo assert(correct player) */
+    ISensorReturns* getISensorReturns(PlayerID player, SensorReturnsID id) {
+      assert(player == playerId);
       __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
         sensorReturns.find(id);
       if (it == sensorReturns.end()) {

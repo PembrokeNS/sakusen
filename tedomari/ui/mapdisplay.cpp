@@ -42,7 +42,6 @@ void MapDisplay::drawUnitOrders(const UpdatedUnit* unit, const Colour& colour)
   if (uo.getLinearTarget() == linearTargetType_position) {
     targetPosition = dexToPixel(uo.getTargetPosition());
     currentPosition = dexToPixel(unit->getIStatus()->getPosition());
-    QDebug("current: " << currentPosition << ";" << "target: " << targetPosition);
     getRegion()->stroke(currentPosition.x, currentPosition.y,
         targetPosition.x, targetPosition.y, colour);
   }
