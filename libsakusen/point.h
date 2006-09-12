@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include "libsakusen-global.h"
+#include "typemunger.h"
 #include <limits>
 
 namespace sakusen {
@@ -152,7 +153,7 @@ class LIBSAKUSEN_API Point {
     inline bool operator>(const Point<U>& right) const {
       return (*this >= right) && (*this != right);
     }
-    
+
     /* arithmetic operators */
     inline Point<T> operator-() const {
       Point <T> result(-x,-y,-z);
@@ -200,9 +201,19 @@ class LIBSAKUSEN_API Point {
       return Point<T>(x/scale, y/scale, z/scale);
     }
 
+#if 0
     inline uint64 squareLength(void) const {
       /* Ugly casting here because of paranoia. */
-      return uint64(sint64(x)*x) + sint64(y)*y + sint64(z)*z;
+      return uint64(sint64(x)*x) + uint64(sint64(y)*y) + uint64(sint64(z)*z);
+    }
+#endif
+
+    typedef typename TypeMunger<T>::widest Wide;
+    typedef typename TypeMunger<Wide>::unsign UWide;
+
+    inline UWide squareLength(void) const {
+      /* Ugly casting here because of paranoia. */
+      return UWide(Wide(x)*x) + Wide(y)*y + Wide(z)*z;
     }
 
     inline double length(void) const {
@@ -219,10 +230,13 @@ class LIBSAKUSEN_API Point {
       z=T(0);
     }
 
+#ifndef SWIG
     inline Point<T> truncate(void) const;
     inline Point<T> round(void) const;
+#endif
 };
 
+#ifndef SWIG
 /** \brief Truncate a Point towards zero.
  *
  * This function is only defined for Point<double> and truncates each
@@ -256,6 +270,7 @@ inline Point<double> Point<double>::round(void) const {
       trunc(z)
   );
 }
+#endif
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {
