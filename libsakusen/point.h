@@ -153,6 +153,7 @@ class LIBSAKUSEN_API Point {
       return (*this >= right) && (*this != right);
     }
     
+    /* arithmetic operators */
     inline Point<T> operator-() const {
       Point <T> result(-x,-y,-z);
       return result;
@@ -184,7 +185,9 @@ class LIBSAKUSEN_API Point {
       z -= right.z;
     }
 
-    inline Point<double> operator*(const double scale) const;
+    inline Point<T> operator*(const T scale) const {
+      return Point<T>(x*scale, y*scale, z*scale);
+    }
 
     template <typename U>
     inline void operator*=(const U right) {
@@ -193,11 +196,8 @@ class LIBSAKUSEN_API Point {
       z *= right;
     }
 
-    inline Point<double> operator/(double scale) const;
-
-    inline Point<T> operator/(uint32 scale) const {
-      Point<T> result(x/scale,y/scale,z/scale);
-			return result;
+    inline Point<T> operator/(const T scale) const {
+      return Point<T>(x/scale, y/scale, z/scale);
     }
 
     inline uint64 squareLength(void) const {
@@ -210,154 +210,51 @@ class LIBSAKUSEN_API Point {
     }
 
     inline bool isZero(void) const {
-      return x==0 && y==0 && z==0;
+      return x==T(0) && y==T(0) && z==T(0);
     }
 
     inline void zero(void) {
-      x=0;
-      y=0;
-      z=0;
+      x=T(0);
+      y=T(0);
+      z=T(0);
     }
+
+    inline Point<T> truncate(void) const;
+    inline Point<T> round(void) const;
 };
 
+/** \brief Truncate a Point towards zero.
+ *
+ * This function is only defined for Point<double> and truncates each
+ * co-ordinate towards zero, so you can cast it to a Point of integer type
+ * knowing it is at least as close to the origin as the original.
+ *
+ * Don't forget that not all integral doubles have integer representations.
+ */
 template<>
-class LIBSAKUSEN_API Point<double> {
-  public:
-    double x;
-    double y;
-    double z;
-
-    Point(): x(0), y(0), z(0) {}
-    Point(double a, double b, double c): x(a), y(b), z(c) {}
-    template <typename U>
-    Point(const Point<U>& p) : x(p.x), y(p.y), z(p.z) {}
-    ~Point() {}
-
-    inline double& operator[](const int index) {
-      switch (index) {
-        case 0:
-          return x;
-        case 1:
-          return y;
-        case 2:
-          return z;
-        default:
-          Fatal("index " << index << " out of bounds");
-      }
-    }
-
-    inline const double& operator[](const int index) const {
-      switch (index) {
-        case 0:
-          return x;
-        case 1:
-          return y;
-        case 2:
-          return z;
-        default:
-          Fatal("index " << index << " out of bounds");
-      }
-    }
-
-    template <typename U>
-    inline bool operator==(const Point<U>& right) const {
-      return x==right.x && y==right.y && z==right.z;
-    }
-
-    /* Order operators use the product order.  Note that this is a partial
-     * order only, not a total order (so don't use Point<T>s in an
-     * ordered container) */
-    template <typename U>
-    inline bool operator<=(const Point<U>& right) const {
-      return x<=right.x && y<=right.y && z<=right.z;
-    }
-
-    template <typename U>
-    inline bool operator<(const Point<U>& right) const {
-      return x<right.x && y<right.y && z<right.z;
-    }
-    
-    template <typename U>
-    inline bool operator>=(const Point<U>& right) const {
-      return x>=right.x && y>=right.y && z>=right.z;
-    }
-
-    template <typename U>
-    inline bool operator>(const Point<U>& right) const {
-      return x>right.x && y>right.y && z>right.z;
-    }
-    
-    inline Point<double> operator-() const {
-      Point <double> result(-x,-y,-z);
-      return result;
-    }
-
-    template <typename U>
-    inline Point<double> operator+(const Point<U>& right) const {
-      Point<double> result(x+right.x,y+right.y,z+right.z);
-      return result;
-    }
-
-    template <typename U>
-    inline void operator+=(const Point<U>& right) {
-      x += right.x;
-      y += right.y;
-      z += right.z;
-    }
-
-    template <typename U>
-    inline Point<double> operator-(const Point<U>& right) const {
-      Point<double> result(x-right.x,y-right.y,z-right.z);
-      return result;
-    }
-
-    template <typename U>
-    inline void operator-=(const Point<U>& right) {
-      x -= right.x;
-      y -= right.y;
-      z -= right.z;
-    }
-
-    template<typename U>
-    inline Point<double> operator*(U scale) const {
-      Point<double> result(x*scale,y*scale,z*scale);
-			return result;
-    }
-
-    template<typename U>
-    inline Point<double> operator/(U scale) const {
-      Point<double> result(x/scale,y/scale,z/scale);
-			return result;
-    }
-
-    template<typename U>
-    inline Point<U> truncate(void) const {
-      return Point<U>(
-          static_cast<U>(trunc(x)),
-          static_cast<U>(trunc(y)),
-          static_cast<U>(trunc(z))
-        );
-    }
-
-    template<typename U>
-    inline Point<U> round(void) const {
-      return Point<U>(
-          static_cast<U>(::round(x)),
-          static_cast<U>(::round(y)),
-          static_cast<U>(::round(z))
-        );
-    }
-};
-
-template<typename T>
-inline Point<double> Point<T>::operator/(double scale) const {
-  Point<double> result(x/scale,y/scale,z/scale);
-	return result;
+inline Point<double> Point<double>::truncate(void) const {
+  return Point<double>(
+      trunc(x),
+      trunc(y),
+      trunc(z)
+  );
 }
 
-template<typename T>
-inline Point<double> Point<T>::operator*(double scale) const {
-  return Point<double>(x*scale,y*scale,z*scale);
+/** \brief Round a Point to the nearest integer co-ordinates.
+ *
+ * This function is only defined for Point<double> and rounds each co-ordinate
+ * to the nearest integer, so you can cast it to a Point of integer type
+ * knowing it is as close as you can get to the original.
+ *
+ * Don't forget that not all integral doubles have integer representations.
+ */
+template<>
+inline Point<double> Point<double>::round(void) const {
+  return Point<double>(
+      trunc(x),
+      trunc(y),
+      trunc(z)
+  );
 }
 
 template<typename T>
@@ -368,6 +265,7 @@ inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {
 
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;
+template class LIBSAKUSEN_API Point<sint32>;
 #endif
 
 }

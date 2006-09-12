@@ -14,7 +14,7 @@ namespace sakusen {
  * \return A Point<sint32> in game-space.
  */
 Point<sint32> Ray::evaluate(double t) const {
-  return s + Point<sint32>(d * t);
+  return s + Point<sint32>(Point<double>(d) * t);
 }
 
 /** \brief How far along the Ray am I?

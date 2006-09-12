@@ -14,8 +14,8 @@ namespace sakusen {
  * same file because it is expected that you will probably not want to use only
  * one of them in any given place -- they all interdepend quite heavily.
  *
- * A visibility of 255 (the largest uint8) for any sensor means the object is
- * always visible to that sensor (but see the todo below). A Visibility of 0
+ * A visibility of 127 (the largest sint8) for any sensor means the object is
+ * always visible to that sensor (but see the todo below). A Visibility of -127
  * means the object is never visible to that sensor. Similarly, for
  * SensorCapability, a range of 0 means the object can detect only objects of
  * Visibility 255.  If you wish the object not to be able to detect even Visibility
@@ -30,7 +30,7 @@ namespace sakusen {
  * environment. Does an object with max. seismar visibility only appear if it is
  * on the ground, and only to other ground-based objects? Does an object with
  * max. sonar visibility only appear if it is in the water, and only to other
- * water-borne objects? If not, we may need to reserve 254 to mean almost-always
+ * water-borne objects? If not, we may need to reserve 126 to mean almost-always
  * visible.
  *
  * \warning Just because you do not expect an object to ever be underwater does

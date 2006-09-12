@@ -57,7 +57,7 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
   if (contains(p)) {
     return p;
   }
-  return (p * radius / p.length()).Point<double>::truncate<T>();
+  return Point<T>((Point<double>(p * radius) / p.length()).truncate());
 }
 
 template<typename T>
