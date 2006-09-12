@@ -17,6 +17,7 @@
 %}
 
 #ifdef SWIGPERL
+#define BINDING_NOOVERLOAD
 %perlcode %{
 $VERSION = 0.01;
 %}
@@ -27,6 +28,22 @@ $VERSION = 0.01;
 #include "point.h"
 %}
 namespace sakusen {
+#ifdef BINDING_NOOVERLOAD
+%template(bottomsint16) bottomNumber<sint16>;
+%template(bottomsint32) bottomNumber<sint32>;
+%template(bottomsint64) bottomNumber<sint64>;
+%template(topsint16) topNumber<sint16>;
+%template(topsint32) topNumber<sint32>;
+%template(topsint64) topNumber<sint64>;
+%template(bottomuint16) bottomNumber<uint16>;
+%template(bottomuint32) bottomNumber<uint32>;
+%template(bottomuint64) bottomNumber<uint64>;
+%template(topuint16) topNumber<uint16>;
+%template(topuint32) topNumber<uint32>;
+%template(topuint64) topNumber<uint64>;
+%template(bottomdouble) bottomNumber<double>;
+%template(topdouble) topNumber<double>;
+#endif
   %extend Point {
     %template(Point) Point<T>;
     %template("operator+") operator+<T>;
@@ -35,6 +52,8 @@ namespace sakusen {
     %template("operator!=") operator!=<T>;
     %template("operator<=") operator<=<T>;
     %template("operator>=") operator>=<T>;
+    %template("operator<") operator<<T>;
+    %template("operator>") operator><T>;
   }
   %template(SPoint16) Point<sint16>;
   %template(SPoint32) Point<sint32>;
@@ -87,14 +106,17 @@ typedef uint8 PlayerID;
 %template(SSphereRegionData32) sakusen::SphereRegionData<sint32>;
 %template(SRegion32) sakusen::Region<sint32>;
 
-/*
+/* we shouldn't need to call any of the functions herein */
+%import "perception.h"
+%import "sensorreturn.h"
+%import "eachsensorreturn.h"
+
 %include "visibility.h"
 #{
+#include "perception.h"
 #include "visibility.h"
 #}
-*/
 
 /* we shouldn't need to call any of the functions herein */
 %import "playertemplate.h"
-%import "perception.h"
 %import "ordertype.h"
