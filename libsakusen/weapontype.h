@@ -17,11 +17,11 @@ namespace server {
 class Weapon;
 }
 
-class LIBSAKUSEN_API WeaponType;
+class WeaponType;
 
 typedef const WeaponType* WeaponTypeID;
 
-class WeaponType {
+class LIBSAKUSEN_API WeaponType {
   private:
     WeaponType();
   public:
