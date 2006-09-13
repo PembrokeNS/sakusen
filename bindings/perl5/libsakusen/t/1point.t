@@ -55,8 +55,7 @@ for $type (@types) {
   ok ($p == $q, "equal Points are ==");
   ok ($p != $r, "unequal Points are !=");
 
-  TODO: {
-    local $TODO = '<= operator is broken ATM' if $type eq 'SPoint64';
+  {
     ok ($p <= $q, "equal Points are <=");
     ok ($p <= $r, 'le points are <=');
   }
