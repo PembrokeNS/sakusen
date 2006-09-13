@@ -65,13 +65,14 @@ namespace sakusen {
 #include "ray.h"
 %}
 
+/* temporary */
+%import "iarchive.h"
+%import "oarchive.h"
+
 %include "quadratic.h"
 %{
 #include "quadratic.h"
 %}
-/* temporary */
-%import "iarchive.h"
-%import "oarchive.h"
 
 %include "rectangle.h"
 %{
