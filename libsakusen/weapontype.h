@@ -17,7 +17,7 @@ namespace server {
 class Weapon;
 }
 
-class WeaponType;
+class LIBSAKUSEN_API WeaponType;
 
 typedef const WeaponType* WeaponTypeID;
 

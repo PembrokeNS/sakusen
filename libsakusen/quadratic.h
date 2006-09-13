@@ -28,7 +28,7 @@ namespace sakusen {
  * \c t is the time of firing (the time at which the curve passes through the
  * origin), and \em g is the acceleration due to gravity (depends on map).
  */
-class Quadratic {
+class LIBSAKUSEN_API Quadratic {
   private:
     Point<sint32> s; /**< origin */
     Point<sint32> d; /**< direction */

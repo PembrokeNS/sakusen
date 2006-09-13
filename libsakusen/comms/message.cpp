@@ -4,7 +4,9 @@
 #include "libsakusen-comms-global.h"
 #include "world.h"
 
-using namespace sakusen::comms;
+namespace sakusen {
+
+  namespace comms{
 
 Message::Message(const Message& copy) :
   data( copy.isRealMessage() ? copy.data->newCopy() : NULL )
@@ -120,3 +122,4 @@ Message::~Message()
   data = NULL;
 }
 
+}}//close namespaces

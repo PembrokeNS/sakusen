@@ -224,6 +224,26 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\ballistic-methods.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ballistic.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ballistic.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\beam.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\beam.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\client.cpp"
 			>
 		</File>
@@ -284,6 +304,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\maskedptr.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\player.cpp"
 			>
 		</File>
@@ -301,6 +325,14 @@
 		</File>
 		<File
 			RelativePath="..\..\unitlayer.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weapon.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weapon.h"
 			>
 		</File>
 	</Files>

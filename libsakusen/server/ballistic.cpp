@@ -1,7 +1,8 @@
 #include "ballistic.h"
 #include "completeworld.h"
 
-using namespace sakusen::server;
+namespace sakusen {
+  namespace server {
 
 Ballistic::Ballistic(
       Time startTime,
@@ -38,3 +39,4 @@ bool Ballistic::resolveIntersections()
   return false;
 }
 
+  }}//close namespace

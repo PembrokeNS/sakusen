@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="libsakusen"
 	ProjectGUID="{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
+	RootNamespace="libsakusen"
 	>
 	<Platforms>
 		<Platform
@@ -229,34 +230,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\ballistic.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\ballistic.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\ballistictype.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\ballistictypeid.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\beam.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\beam.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\beamtype.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\box.h"
 			>
 		</File>
@@ -290,6 +263,10 @@
 		</File>
 		<File
 			RelativePath="..\..\gnu_extensions.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\heightfield-methods.h"
 			>
 		</File>
 		<File
@@ -374,14 +351,6 @@
 		</File>
 		<File
 			RelativePath="..\..\maptemplate.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\moveorderdata.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\moveorderdata.h"
 			>
 		</File>
 		<File
@@ -477,6 +446,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\ray.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\ray.h"
 			>
 		</File>
@@ -490,6 +463,10 @@
 		</File>
 		<File
 			RelativePath="..\..\rectangleregiondata.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ref.h"
 			>
 		</File>
 		<File
@@ -557,11 +534,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\setvelocityorderdata.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\setvelocityorderdata.h"
+			RelativePath="..\..\sensorreturnsid.h"
 			>
 		</File>
 		<File
@@ -590,6 +563,10 @@
 		</File>
 		<File
 			RelativePath="..\..\topology.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\typemunger.h"
 			>
 		</File>
 		<File
@@ -685,11 +662,27 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\weapon.cpp"
+			RelativePath="..\..\weaponorders.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\weapon.h"
+			RelativePath="..\..\weaponorders.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weaponstatus.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weaponstatus.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weapontargettype.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\weapontype.cpp"
 			>
 		</File>
 		<File

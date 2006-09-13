@@ -9,7 +9,7 @@
 namespace sakusen {
 namespace server {
 
-class LIBSAKUSEN_API Weapon {
+class LIBSAKUSEN_SERVER_API Weapon {
   private:
     Weapon();
   protected:

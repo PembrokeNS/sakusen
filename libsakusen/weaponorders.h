@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-class WeaponOrders {
+class LIBSAKUSEN_API WeaponOrders {
   public:
     WeaponOrders();
   private:

@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-class WeaponStatus {
+class LIBSAKUSEN_API WeaponStatus {
   public:
     WeaponStatus();
     WeaponStatus(
