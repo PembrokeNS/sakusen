@@ -2,7 +2,7 @@ SWIG ?= swig
 PREFIX ?= /usr/local
 INCLUDE := -I../../../libsakusen
 
-all: sakusen.la
+all: sakusen.la sakusen.dll
 
 test: all
 	$(MAKE) -C t test

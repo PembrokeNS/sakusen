@@ -23,6 +23,41 @@ $VERSION = 0.01;
 %}
 #endif
 
+#ifdef SWIGCSHARP
+/* Ignore load & store methods until Archive classes bound */
+%ignore *::load;
+%ignore *::loadNew;
+%ignore *::store;
+/* And some more ignores due to other unbound classes.  Hope to be gone in due
+ * course */
+%ignore sakusen::SensorCapability::SensorCapability(IArchive&);
+%ignore sakusen::SensorCapability::updateReturn;
+%ignore sakusen::Sensors::Sensors(IArchive&);
+%ignore sakusen::Sensors::updateReturns;
+%ignore sakusen::Visibility::Visibility(IArchive&);
+
+/* Renames for wrapped operators.  Although C# does support operator
+ * overloading, it doesn't work in the same way as C++'s, so for now we don't
+ * try to make use of it */
+%rename(Item) *::operator[];
+%rename(Minus) *::operator-;
+%rename(Times) *::operator*;
+%rename(Over) *::operator/;
+%rename(Plus) *::operator+;
+%rename(Equals) *::operator==;
+%ignore *::operator!=;
+%rename(Leq) *::operator<=;
+%rename(Geq) *::operator>=;
+%rename(Less) *::operator<;
+%rename(Greater) *::operator>;
+%ignore *::operator=;
+#endif
+
+/* General ignores to resolve ambiguities caused by SWIG's collapsing of types
+ * */
+
+%ignore sakusen::Point::operator[](int const) const;
+
 %include "point.h"
 %{
 #include "point.h"
