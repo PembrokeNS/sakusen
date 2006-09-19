@@ -18,10 +18,10 @@ WriteMakefile(
   C => ['Sakusen.cpp'],
   CC => $CC,
   LD => $LD,
-  DEFINE => '-Dbool=char',
+  DEFINE => '-DHAVE_BOOL',
   INC => '-I../../../libsakusen',
-  OBJECT => 'Sakusen.o ../../../libsakusen/.libs/libsakusen.so',
-  #LDLOADLIBS => '../../../libsakusen/libsakusen.la',
+  OBJECT => 'Sakusen.o',
+  LDLOADLIBS => '../../../libsakusen/.libs/libsakusen.so',
   #LIBS => '../../../libsakusen/.libs/libsakusen.so',
   LDDLFLAGS => $LDDLFLAGS . '-shared -Wl,--rpath -Wl,'.`cd ../../../libsakusen/.libs/ && pwd`,
 );

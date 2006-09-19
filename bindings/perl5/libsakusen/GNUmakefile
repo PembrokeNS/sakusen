@@ -8,8 +8,8 @@ all config static dynamic test linkext manifest blibdirs realclean disttest dist
 	$(MAKE) -f $< $@
 
 clean: Makefile
-	$(MAKE) -f $< $@
-	rm -rf *.lo *.la *.cpp *.pm Makefile Makefile.old
+	$(MAKE) -f $< realclean
+	rm -rf *.lo *.so *.la *.cpp *.pm
 
 Makefile: Makefile.PL Sakusen.cpp
 	./$<
