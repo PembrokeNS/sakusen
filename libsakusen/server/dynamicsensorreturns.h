@@ -42,6 +42,7 @@ class DynamicSensorReturns : public ISensorReturns {
     inline bool isDirty() const { return dirty; }
     inline void setDirty() { dirty = true; }
     inline void clearDirty() { dirty = false; }
+    void senseeDestroyed();
     void update();
 };
 

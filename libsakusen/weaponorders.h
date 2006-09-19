@@ -24,6 +24,7 @@ class LIBSAKUSEN_API WeaponOrders {
     /** \name accessors */
     /*@{*/
     WeaponTargetType getTargetType() const { return targetType; }
+    bool isTargetValid() const;
     Point<sint32> getTargetPosition() const;
     Point<sint16> getTargetVelocity() const;
     /*@}*/

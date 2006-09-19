@@ -31,6 +31,8 @@ class Effect {
   protected:
     Effect(const Effect& copy) :
       owner(copy.owner), region(copy.region), visibility(copy.visibility) {}
+    Effect(PlayerID o, const Region<sint32>& r, Visibility v) :
+      owner(o), region(r), visibility(v) {}
     
   public:
     virtual ~Effect() {}
@@ -39,10 +41,19 @@ class Effect {
     inline const Region<sint32>& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
     /* callbacks */
-    virtual void onUnitPresent(LayeredUnit&) {}
-    virtual void onUnitEnter(LayeredUnit&) {}
-    virtual void onUnitLeave(LayeredUnit&) {}
-    virtual void onDestruct(void) {}
+    virtual void onUnitPresent(Ref<LayeredUnit>&) {}
+    virtual void onUnitEnter(Ref<LayeredUnit>&) {}
+    virtual void onUnitLeave(Ref<LayeredUnit>&) {}
+    /** \brief Test the effect for removal
+     *
+     * \return true iff the Effect should be removed from the World
+     * 
+     * Called every tick by CompleteWorld to allow the Effect to remove itself,
+     * after the onUnitPresent calls.
+     *
+     * The default implementation returns true, so, unless overridden, the
+     * Effect will last for but a single tick. */
+    virtual bool onRemovalTest(void) { return true; }
 };
 
 }}

@@ -87,8 +87,15 @@ LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
 
 LayeredUnit::~LayeredUnit()
 {
+  /* Inform all returns from this unit that it is being removed */
+  while (!sensorReturns.empty()) {
+    sensorReturns.begin()->second->second.senseeDestroyed();
+    sensorReturns.erase(sensorReturns.begin());
+  }
+
   delete topLayer;
   topLayer = NULL;
+  status = NULL;
 }
 
 void LayeredUnit::acceptOrder(OrderCondition condition)
@@ -146,7 +153,7 @@ void LayeredUnit::setPosition(const Point<sint32>& pos)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(*this, status->position, pos);
+  world->applyEntryExitEffects(this, status->position, pos);
   status->position = pos;
 }
 
@@ -344,6 +351,5 @@ bool LayeredUnit::setSonar(bool active) {
   } else return false;
 }
 
-}
-}//End Namespaces
+}}//End Namespaces
 

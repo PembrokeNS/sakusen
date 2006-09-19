@@ -39,14 +39,16 @@ void PatrollerClient::queueUpdate(const Update& update)
         otherUnit = new SensorReturns(data.getSensorReturns());
         QDebug("otherUnit at " <<
             otherUnit->getUnit()->getIStatus()->getPosition());
-        /* throw in a weapon targeting order */
-        orderMessageQueue.push(
-            OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
-                TargetSensorReturnsOrderData(
-                  0 /* weapon index */, otherUnit
-                )
-              ))
-          );
+        /* throw in a weapon targeting orders */
+        for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {
+          orderMessageQueue.push(
+              OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
+                  TargetSensorReturnsOrderData(
+                    weaponIndex, otherUnit
+                  )
+                ))
+            );
+        }
       }
       break;
     case updateType_orderCompleted:

@@ -5,6 +5,7 @@
 #include "quadratic.h"
 #include "point.h"
 #include "ref.h"
+#include "playerid.h"
 
 namespace sakusen {
 namespace server {
@@ -24,6 +25,7 @@ namespace server {
  */
 class Ballistic {
   private:
+    PlayerID owner;
     Quadratic path;
   private:
     /** Default constructor, private so you are forced to construct with
@@ -36,6 +38,7 @@ class Ballistic {
      *
      * All the parameters should be pretty obvious. */
     Ballistic(
+        PlayerID owner,
         Time startTime,
         Point<sint32> startPosition,
         Point<sint32> startVelocity
@@ -46,11 +49,17 @@ class Ballistic {
      * arguments wrapped up in an existing Quadratic, of which a private copy
      * is taken.
      */
-    Ballistic(Quadratic p);
+    Ballistic(PlayerID owner, Quadratic p);
+
+    /** \brief Collision callback
+     *
+     * Callback used when the Ballistic hits something */
+    virtual void onCollision(const Point<sint32>& pos) = 0;
   public:
     /** The destructor currently does nothing. */
     virtual ~Ballistic() {}
 
+    inline PlayerID getOwner() const { return owner; }
     inline const Quadratic& getPath() const { return path; }
 
     /** \name mechanics
@@ -64,11 +73,6 @@ class Ballistic {
      * at this time.
      */
     inline Point<sint32> getPosition(Time t) {return path.evaluate(t);}
-
-    /** \brief Collision callback
-     *
-     * Callback used when the Ballistic hits something */
-    virtual void onCollision(const Point<sint32>& pos) = 0;
 
     bool resolveIntersections();
     //@}

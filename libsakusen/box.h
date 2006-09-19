@@ -65,12 +65,6 @@ class LIBSAKUSEN_API Box {
       return min == b.min && max == b.max;
     }
 
-    /** Prints the co-ordinates of a box, for debugging purposes. */
-    inline std::ostream& operator<<(std::ostream& out) {
-      out << "box <" << min << "," << max << ">";
-      return out;
-    }
-
     /** \brief Tests whether this Box is empty (i.e. there does not exist
      * a Point inside it).
      */
@@ -92,6 +86,13 @@ class LIBSAKUSEN_API Box {
       return Rectangle<T>(min.x, min.y, max.x, max.y);
     }
 };
+
+/** Prints the co-ordinates of a box, for debugging purposes. */
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const Box<T>& box) {
+  out << "box <" << box.getMin() << "," << box.getMax() << ">";
+  return out;
+}
 
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS
 

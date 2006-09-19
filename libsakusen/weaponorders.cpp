@@ -22,6 +22,20 @@ WeaponOrders::WeaponOrders(
 {
 }
 
+bool WeaponOrders::isTargetValid() const
+{
+  switch (targetType) {
+    case weaponTargetType_none:
+      return false;
+    case weaponTargetType_point:
+      return true;
+    case weaponTargetType_sensorReturns:
+      return targetSensorReturns.isValid();
+    default:
+      Fatal("unexpected WeaponTargetType: " << targetType);
+  }
+}
+
 Point<sint32> WeaponOrders::getTargetPosition() const
 {
   switch (targetType) {

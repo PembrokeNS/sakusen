@@ -117,8 +117,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
 			   velocity, position, applying all actions for the given time) */
     void enqueueOrder(const OrderCondition& condition, const Order& order);
     
-    inline void kill(HitPoints excessDamage) { topLayer->kill(excessDamage); }
-      /**< kills the unit unconditionally */
+    /** kills the unit unconditionally */
+    inline bool kill(HitPoints excessDamage) {
+      return topLayer->kill(excessDamage);
+    }
     inline void damage(HitPoints amount) { topLayer->damage(amount); }
       /**< damages the unit and kills if HP <= 0 */
     inline void repair(HitPoints amount, bool superhealth) {
@@ -138,7 +140,19 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline void onDestruct(void) { topLayer->onDestruct(); }
 };
 
-}}
+} /* Back into namespace sakusen */
+
+template<>
+class RefHandler<server::LayeredUnit> {
+  public:
+    inline void registerRef(Ref<server::LayeredUnit>* ref) const;
+    inline void unregisterRef(Ref<server::LayeredUnit>* ref) const;
+    inline server::LayeredUnit* extract(IArchive& archive) const;
+    inline void insert(OArchive& archive, const server::LayeredUnit* ret) const;
+    typedef void loadArgument;
+};
+
+}
 
 #endif // LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 

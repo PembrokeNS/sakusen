@@ -128,6 +128,28 @@ void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
 
 void Player::checkSensorReturns()
 {
+  /* check over our sensor returns for ones where the units have beed destroyed
+   * */
+  queue<SensorReturnsID> invalidatedSensorReturnsIds;
+  for (hash_map<SensorReturnsID, DynamicSensorReturns>::iterator returns =
+      sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
+    /* The fact that the SensorReturns has become empty without our calling
+     * update should be enough to prove that the unit is gone */
+    if (returns->second.empty()) {
+      assert(returns->second.getPerception() == perception_none);
+      informClients(Update(SensorReturnsRemovedUpdateData(returns->first)));
+      invalidateRefs(returns->first);
+      invalidatedSensorReturnsIds.push(returns->first);
+    }
+  }
+
+  /* Now we actually erase the invalidated entries (we couldn't do this before
+   * because erasure in a hash_map invalidates iterators) */
+  while (!invalidatedSensorReturnsIds.empty()) {
+    sensorReturns.erase(invalidatedSensorReturnsIds.front());
+    invalidatedSensorReturnsIds.pop();
+  }
+
   /* First we deal with other players' units */
   for (list<LayeredUnit>::iterator unit = world->getUnits().begin();
       unit != world->getUnits().end(); ++unit) {
@@ -176,23 +198,23 @@ void Player::checkSensorReturns()
 
   /* First we check over the existing visible Ballistics to remove the ones
    * that have invalidated */
-  vector<MaskedPtr<Ballistic> > invalidatedIds;
+  queue<MaskedPtr<Ballistic> > invalidatedBallisticIds;
   for (__gnu_cxx::hash_map<
         MaskedPtr<Ballistic>, pair<uint32, Ref<Ballistic> >,
         MaskedPtrHash<Ballistic>
       >::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second.isValid()) {
-      invalidatedIds.push_back(vb->first);
+      invalidatedBallisticIds.push(vb->first);
       informClients(Update(BallisticRemovedUpdateData(vb->second.first)));
     }
   }
 
   /* Now we actually erase the invalidated entries (we couldn't do this before
    * because erasure in a hash_map invalidates iterators) */
-  for (vector<MaskedPtr<Ballistic> >::iterator id = invalidatedIds.begin();
-      id != invalidatedIds.end(); ++id) {
-    visibleBallistics.erase(*id);
+  while (!invalidatedBallisticIds.empty()) {
+    visibleBallistics.erase(invalidatedBallisticIds.front());
+    invalidatedBallisticIds.pop();
   }
 
   /* Now we check for newly visible Ballistics (of all players) */

@@ -1,6 +1,6 @@
 #include "weapon.h"
 
-#include "layeredunit.h"
+#include "layeredunit-methods.h"
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -27,7 +27,7 @@ Weapon::Weapon(const WeaponType* t) :
  * The default implementation targets as if the weapon fired a Ballistic
  * with speed the return value of projectileSpeed */
 bool Weapon::aimAt(
-    const LayeredUnit* firer,
+    const Ref<LayeredUnit>& firer,
     WeaponStatus* status,
     const Point<sint32>& pos,
     const Point<sint16>& /*vel*/
@@ -88,7 +88,7 @@ void Weapon::incrementState(LayeredUnit* firer, uint16 weaponIndex)
   const WeaponOrders& orders =
     firer->getOrders().getWeaponsOrders()[weaponIndex];
 
-  if (orders.getTargetType() == weaponTargetType_none) {
+  if (!orders.isTargetValid()) {
     status->deactivate();
   } else {
     /** \todo Account for the possibility that the weapon was targeted
@@ -104,7 +104,8 @@ void Weapon::incrementState(LayeredUnit* firer, uint16 weaponIndex)
 
   if (status->incrementState(type)) {
     /* Return value of true means that there were enough resources to fire */
-    onFire(firer, weaponIndex);
+    Ref<LayeredUnit> firerRef(firer);
+    onFire(firerRef, weaponIndex);
   }
 }
 

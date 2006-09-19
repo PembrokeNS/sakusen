@@ -32,7 +32,7 @@ class UnitLayer : public IUnitTypeData {
 
     /* game mechanics */
     virtual void incrementWeaponsState() = 0;
-    virtual void kill(HitPoints excessDamage) = 0;
+    virtual bool kill(HitPoints excessDamage) = 0;
     virtual void damage(HitPoints amount) = 0;
     virtual void repair(HitPoints amount, bool superhealth) = 0;
     virtual void changeType(

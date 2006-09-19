@@ -71,13 +71,24 @@ int main(/*int argc, char** argv*/)
       WeaponType(
           "cannon",
           "testsrc",
+          17 /* energyCost */,
+          17 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
+          resourceInterface
+        );
+    weaponTypes.push_back(cannonType);
+    WeaponType paralyzerType =
+      WeaponType(
+          "paralyzer",
+          "testsrc",
           10 /* energyCost */,
           10 /* metalCost */,
           1 /* energyRate */,
           1 /* metalRate */,
           resourceInterface
         );
-    weaponTypes.push_back(cannonType);
+    weaponTypes.push_back(paralyzerType);
   } catch (DeserializationExn* e) {
     cout << "Exception: " << e->message << endl;
     delete e;
@@ -87,6 +98,7 @@ int main(/*int argc, char** argv*/)
   vector<UnitType> unitTypes;
   list<String> commanderWeapons;
   commanderWeapons.push_back("cannon");
+  commanderWeapons.push_back("paralyzer");
   UnitType commanderType =
     UnitType(
         "commander" /* name */,

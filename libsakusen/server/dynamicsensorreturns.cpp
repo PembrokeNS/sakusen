@@ -58,9 +58,32 @@ const ICompleteUnit* DynamicSensorReturns::getUnit() const
   }
 }
 
+void DynamicSensorReturns::senseeDestroyed() {
+  if (perception == perception_none) {
+    Fatal(
+        "Tried to indicate destruction when SensorReturns shouldn't have "
+        "existed"
+      );
+  }
+
+  perception = perception_none;
+  delete region;
+  region = NULL;
+  sensers.clear();
+  sensee = NULL;
+  setDirty();
+}
+
 /** \brief Update the sensor return for a new game state */
 void DynamicSensorReturns::update()
 {
+  /* If the sensee has been destroyed, then we see nothing, and give up now */
+  if (NULL == sensee) {
+    assert(perception == perception_none);
+    assert(sensers.empty());
+    return;
+  }
+  
   /* If the player is player 0 then they get to see everything (so that
    * observers can see everything) */
   if (senserOwner->getId() == 0) {

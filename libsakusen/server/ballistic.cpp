@@ -5,14 +5,16 @@ namespace sakusen {
   namespace server {
 
 Ballistic::Ballistic(
-      Time startTime,
-      Point<sint32> startPosition,
-      Point<sint32> startVelocity) :
-  path(startPosition, startVelocity, startTime)
+    PlayerID o,
+    Time startTime,
+    Point<sint32> startPosition,
+    Point<sint32> startVelocity) :
+  owner(o), path(startPosition, startVelocity, startTime)
 {
 }
 
-Ballistic::Ballistic(Quadratic p) :
+Ballistic::Ballistic(PlayerID o, Quadratic p) :
+  owner(o),
   path(p)
 {
 }

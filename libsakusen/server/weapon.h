@@ -21,9 +21,8 @@ class LIBSAKUSEN_SERVER_API Weapon {
     WeaponTypeID type;
   protected:
     /* callbacks */
-    virtual void onFire(LayeredUnit* firer, uint16 weaponIndex) = 0;
     virtual bool aimAt(
-        const LayeredUnit* firer,
+        const Ref<LayeredUnit>& firer,
         WeaponStatus* status,
         const Point<sint32>& pos,
         const Point<sint16>& vel
@@ -33,7 +32,8 @@ class LIBSAKUSEN_SERVER_API Weapon {
      *
      * If you override aimAt, then this method is irrelevant.
      */
-    virtual uint32 getProjectileSpeed() = 0;
+    virtual uint32 getProjectileSpeed() const = 0;
+    virtual void onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex) = 0;
   public:
     /* accessors */
     WeaponTypeID getType(void) const {return type;}
@@ -50,4 +50,5 @@ class LIBSAKUSEN_SERVER_API Weapon {
 
 }}
 
-#endif
+#endif // WEAPON_H
+

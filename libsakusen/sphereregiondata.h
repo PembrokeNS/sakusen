@@ -10,14 +10,17 @@ namespace sakusen {
 /** \brief Describes a region which is spherical */
 template<typename T>
 class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
+    typedef typename TypeMunger<T>::unsign UT;
+    typedef typename TypeMunger<UT>::widest UWideT;
   public:
     SphereRegionData() : centre(), radius(0) {}
-    SphereRegionData(const Point<T>& c, uint32 r) : centre(c), radius(r) {}
+    SphereRegionData(const Point<T>& c, UT r) :
+      centre(c), radius(r) {}
   private:
     Point<T> centre;
-    uint32 radius;
+    UT radius;
   public:
-    inline uint64 squareRadius() const { return uint64(radius) * radius; }
+    inline UWideT squareRadius() const { return UWideT(radius) * radius; }
     inline bool contains(const Point<T>& point) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
     inline Point<T> getBestPosition() const { return centre; }
@@ -32,7 +35,7 @@ class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
     static SphereRegionData<T>* loadNew(IArchive& archive)
    {
        Point<T> centre;
-       uint32 radius;
+       UT radius;
        archive >> centre >> radius;
        return new SphereRegionData<T>(centre, radius);
    }

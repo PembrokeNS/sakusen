@@ -75,15 +75,30 @@ void UnitCore::incrementWeaponsState()
 /** \brief Kill the unit.
  *
  * \param excessDamage Amount of 'spillover' damage to apply to whatever corpse
- * replaces the unit, if any. */
-void UnitCore::kill(HitPoints excessDamage) {
+ * replaces the unit, if any.
+ *
+ * \return true iff the unit was entirely removed, rather than being replaced
+ * by a corpse.  In this case, the Unit pointer used to make the call should be
+ * considered invalidated - don't do anything else with it! */
+bool UnitCore::kill(HitPoints excessDamage) {
   /* do the destruct action */
   outerUnit->onDestruct();
-  /* Change to corpse */
-  outerUnit->changeType(getTypePtr()->getCorpseUnitType(), fullHitPoints);
-  /* Apply excess damage to corpse */
-  outerUnit->damage(excessDamage);
-  /** \todo deal with subunits */
+  /* Find corpse type */
+  const UnitType* corpseType =
+    world->getUniverse()->getUnitTypePtr(getTypePtr()->getCorpseUnitType());
+  if (NULL == corpseType) {
+    /* No corpse, remove me */
+    /** \todo deal with subunits */
+    world->removeUnit(outerUnit);
+    return true;
+  } else {
+    /* Change to corpse */
+    outerUnit->changeType(corpseType, fullHitPoints);
+    /* Apply excess damage to corpse */
+    outerUnit->damage(excessDamage);
+    /** \todo deal with subunits */
+    return false;
+  }
 }
 
 void UnitCore::damage(HitPoints amount) {
@@ -92,7 +107,9 @@ void UnitCore::damage(HitPoints amount) {
   }
   
   if (hitPoints <= amount) {
-    outerUnit->kill(amount-hitPoints);
+    if (outerUnit->kill(amount-hitPoints)) {
+      return;
+    }
   } else {
     hitPoints -= amount;
   }
@@ -125,7 +142,7 @@ void UnitCore::changeType(
   ) {
   const UnitType* newType;
   if ((newType = world->getUniverse()->getUnitTypePtr(to)) == NULL) {
-    Debug("Invalid UnitTypeID");
+    
   } else {
     switch (hpAlteration)
     {
@@ -170,15 +187,18 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
     fromPtr->removeUnit(outerUnit->getId(), why);
   }
   owner = to;
-  toPtr->addUnit(outerUnit, why);
-  /* We also need to ensure that sensor returns from this unit are flagged so
-   * that the change of ownership is transmitted. */
-  for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
-      outerUnit->getSensorReturns().begin();
-      returns != outerUnit->getSensorReturns().end(); ++returns) {
-    DynamicSensorReturns& r = returns->second->second;
-    if (0 != (r.getPerception() & (perception_unit | perception_owner))) {
-      r.setDirty();
+  if (why != changeOwnerReason_destroyed) {
+    toPtr->addUnit(outerUnit, why);
+    
+    /* We also need to ensure that sensor returns from this unit are flagged so
+     * that the change of ownership is transmitted. */
+    for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
+        outerUnit->getSensorReturns().begin();
+        returns != outerUnit->getSensorReturns().end(); ++returns) {
+      DynamicSensorReturns& r = returns->second->second;
+      if (0 != (r.getPerception() & (perception_unit | perception_owner))) {
+        r.setDirty();
+      }
     }
   }
   

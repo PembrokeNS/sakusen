@@ -8,6 +8,7 @@ namespace sakusen {
  */
 enum changeOwnerReason {
   changeOwnerReason_created, /**< newly created unit */
+  changeOwnerReason_destroyed, /**< finally destroyed unit */
   changeOwnerReason_given, /**< voluntarily, the owner already knows it is going
                               to happen */
   changeOwnerReason_captured, /**< permamently */
