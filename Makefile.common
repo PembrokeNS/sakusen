@@ -233,11 +233,16 @@ $(MAKEFRAGS): .makefrags/%.makefrag: %
 # then we don't define anything.
 
 revision.h: $(wildcard .svn/entries)
-	if [ -f .svn/entries ]; \
+	if test -f .svn/entries ; \
 	then \
-		echo '#define REVISION '`grep '^   revision=' .svn/entries | \
-			sed 's/^   revision="//' | sed 's/"\/>//' | sort -rn | head -n 1` \
-      > $@; \
+		REVISION=`grep '^   revision=' .svn/entries | \
+			sed 's/^   revision="//' | sed 's/"\/>//' | sort -rn | head -n 1`; \
+		if test "x$$REVISION" != "x"; \
+		then \
+			echo '#define REVISION ' "$$REVISION" > $@; \
+		else \
+		echo '' > $@; \
+		fi; \
 	else \
 		echo '' > $@; \
 	fi
