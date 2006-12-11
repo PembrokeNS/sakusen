@@ -4,6 +4,7 @@
 #include "point.h"
 #include "iarchive.h"
 #include "oarchive.h"
+#include "ref.h"
 
 /** \file
  * A Rectangle is the region enclosed by two points in the plane. Both corners
@@ -62,7 +63,7 @@ struct LIBSAKUSEN_API Rectangle {
    */
   inline T getWidth() const {
     if (isEmpty()) return 0;
-    return maxx - minx + static_cast<T>(1);
+    return maxx - minx;
   }
 
   /** \brief Height of the Rectangle.
@@ -72,7 +73,7 @@ struct LIBSAKUSEN_API Rectangle {
    */
   inline T getHeight() const {
     if (isEmpty()) return 0;
-    return maxy - miny + static_cast<T>(1);
+    return maxy - miny;
   }
 
   /** Get the corners of the Rectangle. The result is undefined for the empty
@@ -100,7 +101,7 @@ struct LIBSAKUSEN_API Rectangle {
       r.getMinY() <= getMaxY() && r.getMaxY() >= getMinY() && !isEmpty();
   }
   bool fastIntersects(const ICompleteUnit*) const;
-  bool fastIntersects(const ISensorReturns*) const;
+  bool fastIntersects(const Ref<const ISensorReturns>&) const;
   /** \brief Computes the intersection of intersecting Rectangles.
    *
    * If the rectangles have a non-empty intersection, returns the Rectangle of

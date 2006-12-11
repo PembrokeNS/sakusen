@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include <boost/utility.hpp>
+
 #ifndef DISABLE_CONVERSION
 #include <unicode.h>
 #endif
@@ -19,10 +21,7 @@ namespace tedomari {
  *
  * Otherwise, the unicode library is used to convert strings between the native
  * encoding (as determined by locale settings) and UTF-8. */
-class Converter {
-  private:
-    /** Copying not possible, due to unicode_iconv_t members */
-    Converter(const Converter&);
+class Converter : boost::noncopyable {
   public:
     Converter();
     ~Converter();

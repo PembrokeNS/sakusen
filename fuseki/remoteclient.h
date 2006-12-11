@@ -36,7 +36,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     RemoteClient(
         sakusen::comms::ClientID id,
         Server* server,
-        sakusen::comms::Socket* socket,
+        const sakusen::comms::Socket::Ptr& socket,
         bool createInSocket
 #ifndef DISABLE_UNIX_SOCKETS
         ,
@@ -47,8 +47,8 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
   private:
     sakusen::comms::ClientID id;
     Server* server;
-    sakusen::comms::Socket* inSocket;
-    sakusen::comms::Socket* outSocket;
+    sakusen::comms::Socket::Ptr inSocket;
+    sakusen::comms::Socket::Ptr outSocket;
     std::queue<sakusen::comms::Message, std::list<sakusen::comms::Message> > incomingMessageQueue;
     std::list<sakusen::Update> outgoingUpdateQueue;
     bool admin; /* Whether I am an admin */

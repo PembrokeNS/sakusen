@@ -10,7 +10,7 @@ Heightfield::Heightfield(
     uint32 vR,
     uint32 w,
     uint32 h,
-    sint16* hf
+    const hf_type& hf
   ) :
   horizontalResolution(hR),
   verticalResolution(vR),
@@ -31,40 +31,9 @@ Heightfield::Heightfield(
   verticalResolution(vR),
   width(w),
   height(h),
-  heightfield(new sint16[width*height])
+  heightfield(boost::extents[width][height])
 {
   sanityCheck();
-  /* Zero all the heightfield data for an entirely flat map */
-  for (uint32 i = 0; i < width*height; ++i) {
-    heightfield[i] = 0;
-  }
-}
-
-Heightfield::Heightfield(const Heightfield& copy) :
-  horizontalResolution(copy.horizontalResolution),
-  verticalResolution(copy.verticalResolution),
-  width(copy.width),
-  height(copy.height),
-  heightfield(new sint16[width*height])
-{
-  memcpy(heightfield, copy.heightfield, width*height*sizeof(sint16));
-}
-
-Heightfield& Heightfield::operator=(const Heightfield& copy)
-{
-  delete[] heightfield;
-  horizontalResolution = copy.horizontalResolution;
-  verticalResolution = copy.verticalResolution;
-  width = copy.width;
-  height = copy.height;
-  heightfield = new sint16[width*height];
-  memcpy(heightfield, copy.heightfield, width*height*sizeof(sint16));
-  return *this;
-}
-
-Heightfield::~Heightfield()
-{
-  delete[] heightfield;
 }
 
 void Heightfield::sanityCheck() const
@@ -83,7 +52,10 @@ void Heightfield::sanityCheck() const
     Fatal("heightfield resolution 0");
   }
   if (INT32_MAX / verticalResolution < INT16_MAX) {
-    Fatal("heights could overflow");
+    Fatal(
+        "heights could overflow (vertical res is " << verticalResolution <<
+        ")"
+      );
   }
 }
 
@@ -181,7 +153,8 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
 void Heightfield::store(OArchive& out) const
 {
   out << horizontalResolution << verticalResolution << width << height;
-  out.insert(heightfield, width*height);
+  /** \todo Make neater */
+  out.insert<sint16, 2>(heightfield);
 }
 
 Heightfield Heightfield::load(IArchive& in)
@@ -190,12 +163,11 @@ Heightfield Heightfield::load(IArchive& in)
   uint32 verticalResolution;
   uint32 width;
   uint32 height;
+  boost::multi_array<sint16,2> heightfield;
   
   in >> horizontalResolution >> verticalResolution >> width >> height;
-
-  sint16* heightfield = new sint16[width*height];
+  in.extract<sint16,2>(heightfield);
   
-  in.extract(heightfield, width*height);
   return Heightfield(
       horizontalResolution, verticalResolution, width, height, heightfield
     );

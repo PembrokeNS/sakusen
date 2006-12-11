@@ -36,7 +36,7 @@ WeaponType::WeaponType(
       return;
     default:
       /* There is a problem */
-      throw new ResourceDeserializationExn(
+      throw ResourceDeserializationExn(
           moduleName, result, resourceInterface->getError()
         );
   }

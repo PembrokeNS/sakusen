@@ -1,5 +1,8 @@
 #ifndef WINDOWS_AS_BERKELEY
 #define WINDOWS_AS_BERKELEY
+
+#ifdef _MSC_VER
+
 //Redefines the windows socket error numbers as standard BSD error numbers. 
 //Actually in winsock.h, but commented out in a rather bizarre manner.
 
@@ -39,5 +42,7 @@
 #define ESTALE                  WSAESTALE
 #define EREMOTE                 WSAEREMOTE
 #define EBADMSG                 11032 //Not defined by Windows. This error code should be unused.
+
+#endif // _MSC_VER
 
 #endif

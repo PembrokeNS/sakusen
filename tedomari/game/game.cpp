@@ -12,7 +12,7 @@ using namespace sakusen::client;
 using namespace tedomari;
 using namespace tedomari::game;
 
-Game::Game(ResourceInterface* rI) :
+Game::Game(const ResourceInterface::Ptr& rI) :
   resourceInterface(rI),
   serverInterface(NULL),
   universe(NULL)
@@ -68,7 +68,9 @@ void Game::start(
       data.getTopology(),
       data.getTopRight(),
       data.getBottomLeft(),
-      data.getGravity()
+      data.getGravity(),
+      data.getHorizontalHeightfieldResolution(),
+      data.getVerticalHeightfieldResolution()
     );
 }
 

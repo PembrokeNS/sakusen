@@ -29,10 +29,10 @@ class Game {
      *
      * \param resourceInterface The ResourceInterface that the Game should use
      * to load required game data. */
-    Game(sakusen::ResourceInterface* resourceInterface);
+    Game(const sakusen::ResourceInterface::Ptr& resourceInterface);
     ~Game();
   private:
-    sakusen::ResourceInterface* resourceInterface; /* not owned by this */
+    sakusen::ResourceInterface::Ptr resourceInterface; /* not owned by this */
     ServerInterface* serverInterface; /* not owned by this */
     sakusen::Universe* universe; /* owned by this */
     

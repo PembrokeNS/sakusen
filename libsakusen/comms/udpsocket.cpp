@@ -15,7 +15,7 @@
 using namespace sakusen;
 using namespace sakusen::comms;
 
-Socket* UDPSocket::newConnectionToAddress(std::list<String>& address)
+Socket::Ptr UDPSocket::newConnectionToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -23,13 +23,13 @@ Socket* UDPSocket::newConnectionToAddress(std::list<String>& address)
   interpretAddress(address, &hostname, &port);
 
   if (hostname.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
-  return new UDPConnectingSocket(hostname, port);
+  return Socket::Ptr(new UDPConnectingSocket(hostname, port));
 }
 
-Socket* UDPSocket::newBindingToAddress(std::list<String>& address)
+Socket::Ptr UDPSocket::newBindingToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -37,11 +37,11 @@ Socket* UDPSocket::newBindingToAddress(std::list<String>& address)
   interpretAddress(address, &hostname, &port);
 
   if (hostname.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
   /* hostname is just ignored except for checking the error condition */
-  return new UDPListeningSocket(port);
+  return Socket::Ptr(new UDPListeningSocket(port));
 }
 
 UDPSocket::UDPSocket()
@@ -64,7 +64,7 @@ void UDPSocket::send(const void* buf, size_t len)
     switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
-        throw new SocketClosedExn();
+        throw SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
@@ -108,7 +108,7 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
     switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
-        throw new SocketClosedExn();
+        throw SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");

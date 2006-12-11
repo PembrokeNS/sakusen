@@ -62,7 +62,7 @@ Map* CompleteMap::newMap(const MapTemplate& t)
       return new PlaneMap<CompleteMap>(t);
     /* TODO: All the other topologies */
     default:
-      throw new DeserializationExn("Invalid topology");
+      throw DeserializationExn("Invalid topology");
   }
 }
 

@@ -21,16 +21,10 @@ class UnixDatagramSocket : public Socket {
         bool* abstract
       );
   public:
-    static Socket* newConnectionToAddress(std::list<String>& address);
-    static Socket* newBindingToAddress(std::list<String>& address);
+    static Socket::Ptr newConnectionToAddress(std::list<String>& address);
+    static Socket::Ptr newBindingToAddress(std::list<String>& address);
   
   /* Abstract class - all constructors must be protected */
-  private:
-    UnixDatagramSocket();
-    /** Copying this would be a bad idea, since the socket would be closed
-     * twice, and other such problems.
-     */
-    UnixDatagramSocket(const UnixDatagramSocket& copy);
   protected:
     UnixDatagramSocket(const char* path, bool abstract);
     UnixDatagramSocket(const String& path, bool abstract);
@@ -56,7 +50,7 @@ class UnixDatagramSocket : public Socket {
     size_t receiveTimeout(void* buf, size_t len, const struct timeval& timeout);
     size_t receiveFrom(void* buf, size_t len, String& from);
     bool isConnectionBased() { return false; }
-    Socket* accept() { Fatal("Not connection-based socket"); }
+    Socket::Ptr accept() { Fatal("Not connection-based socket"); }
     void close();
     void setNonBlocking(bool val);
     String getAddress() const;

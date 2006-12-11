@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <list>
+#include <boost/multi_array.hpp>
 
 #include "point.h"
 #include "exceptions.h"
@@ -12,6 +13,29 @@
 #include "resourceinterface.h"
 
 namespace sakusen {
+
+/** \brief Class used inside IArchive for working with booast::multi_array */  
+template<size_t pos>
+class extent_generator {
+  public:
+    template<typename Collection>
+    inline boost::detail::multi_array::extent_gen<pos> operator()(
+        const Collection& c
+      ) const {
+      return extent_generator<pos-1>()(c)[c[pos-1]];
+    }
+};
+
+template<>
+class extent_generator<0> {
+  public:
+    template<typename Collection>
+    inline boost::detail::multi_array::extent_gen<0> operator()(
+        const Collection&
+      ) const {
+      return boost::extents;
+    }
+};
 
 /** \brief Source from which objects can be read.
  *
@@ -47,7 +71,7 @@ class LIBSAKUSEN_API IArchive {
       /* We ensure that enough length remains.
        * If not, we throw an exception */
       if (remainingLength < length) {
-        throw new EndOfArchiveDeserializationExn();
+        throw EndOfArchiveDeserializationExn();
       }
     }
     inline void advance(size_t length) {
@@ -119,22 +143,8 @@ class LIBSAKUSEN_API IArchive {
       result = static_cast<T>(valAsInt);
       return *this;
     }
-
-    template<typename T>
-    IArchive& operator>>(Point<T>& result)
-    {
-      T x;
-      *this >> x;
-      T y;
-      *this >> y;
-      T z;
-      *this >> z;
-
-      result = Point<T>(x,y,z);
-      return *this;
-    }
     
-    template<typename T, int size>
+    template<typename T, size_t size>
     IArchive& extract(T result[size])
     {
       for (int i=0; i<size; ++i) {
@@ -144,10 +154,10 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
     
-    template<typename T, int size>
+    template<typename T, size_t size>
     IArchive& extract(T result[size], const typename T::loadArgument* arg)
     {
-      for (int i=0; i<size; ++i) {
+      for (size_t i=0; i<size; ++i) {
         result[i]=load<T>(arg);
       }
 
@@ -164,6 +174,46 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
     
+    template<typename T, size_t size>
+    IArchive& extract(boost::array<T, size>& result)
+    {
+      for (size_t i=0; i<size; ++i) {
+        result[i]=load<T>();
+      }
+
+      return *this;
+    }
+
+  public:
+
+    template<typename T, size_t rank>
+	  IArchive& extract(boost::multi_array<T, rank>& result)
+    {
+      assert(rank == result.num_dimensions());
+      boost::array<uint32, rank> shape;
+      extract<uint32, rank>(shape);
+      
+      result.resize(extent_generator<rank>()(shape));
+
+      boost::array<uint32, rank> i;
+      std::fill(i.begin(), i.end(), 0);
+      uint32 j;
+
+      do {
+        result(i) = load<T>();
+        for (j=0; j<rank; ++j) {
+          if (i[j] == shape[j]) {
+            i[j] = 0;
+          } else {
+            ++i[j];
+            break;
+          }
+        }
+      } while (j < rank);
+
+      return *this;
+    }
+    
     template<typename T>
     IArchive& operator>>(std::vector<T>& result)
     {
@@ -173,6 +223,22 @@ class LIBSAKUSEN_API IArchive {
 
       while (size--) {
         result.push_back(load<T>());
+      }
+
+      return *this;
+    }
+    
+    template<typename T>
+    IArchive& operator>>(std::vector<std::vector<T> >& result)
+    {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+
+      while (size--) {
+        std::vector<T> tmp;
+        *this >> tmp;
+        result.push_back(tmp);
       }
 
       return *this;
@@ -218,7 +284,7 @@ class LIBSAKUSEN_API IArchive {
 
       while (size--) {
         if (!result.insert(std::pair<T, U>(load<T>(), load<U>())).second) {
-          throw new DeserializationExn("Duplicate key in hash_map");
+          throw DeserializationExn("Duplicate key in hash_map");
         }
       }
 
@@ -277,13 +343,27 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
+    template<typename T>
+    IArchive& operator>>(Point<T>& result)
+    {
+      T x;
+      *this >> x;
+      T y;
+      *this >> y;
+      T z;
+      *this >> z;
+
+      result = Point<T>(x,y,z);
+      return *this;
+    }
+
     template<int size>
     inline void magicValue(const char val[size+1]) {
       /* The '+1' in the array length is to allow for the trailing null char */
       assertLength(size);
       if (0 != memcmp(val, buffer, size)) {
         Debug("Wrong magic");
-        throw new WrongMagicDeserializationExn(val, size, buffer);
+        throw WrongMagicDeserializationExn(val, size, buffer);
       }
       advance(size);
     }

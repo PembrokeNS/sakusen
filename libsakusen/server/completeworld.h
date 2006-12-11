@@ -2,6 +2,7 @@
 #define LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 
 #include "world.h"
+#include "hash_list.h"
 #include "player.h"
 #include "completemap.h"
 #include "layeredunit.h"
@@ -28,31 +29,9 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     ~CompleteWorld();
   private:
     CompleteMap* map; /* owned by this */
-    std::list<LayeredUnit> units; /* this list includes subunits */
-    __gnu_cxx::hash_map<
-        MaskedPtr<LayeredUnit>,
-        std::list<LayeredUnit>::iterator,
-        MaskedPtrHash<LayeredUnit>
-      > unitIts;
-    __gnu_cxx::hash_multimap<
-        MaskedPtr<LayeredUnit>,
-        Ref<LayeredUnit>*,
-        MaskedPtrHash<LayeredUnit>
-      > unitRefs; /* not owned by this */
-    
-    std::list<Ballistic*> ballistics; /* owned by this */
-    __gnu_cxx::hash_multimap<
-        MaskedPtr<Ballistic>,
-        Ref<Ballistic>*,
-        MaskedPtrHash<Ballistic>
-      > ballisticRefs; /* not owned by this */
-    
-    std::list<Beam*> beams; /* owned by this */
-    __gnu_cxx::hash_multimap<
-        MaskedPtr<Beam>,
-        Ref<Beam>*,
-        MaskedPtrHash<Beam>
-      > beamRefs; /* not owned by this */
+    hash_list<LayeredUnit> units; /* this list includes subunits */
+    hash_list<Ballistic> ballistics;
+    hash_list<Beam> beams; /* owned by this */
     
     std::list<Effect*> effects; /* owned by this */
     /** New effects which have been added this tick and still have to have
@@ -64,32 +43,35 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
     std::vector<Player> players;
 
-    void invalidateRefs(const MaskedPtr<LayeredUnit>& id);
-    void invalidateRefs(const MaskedPtr<Ballistic>& id);
-    void invalidateRefs(const MaskedPtr<Beam>& id);
-    void applyEffect(Effect*, void (Effect::*)(Ref<LayeredUnit>&));
+    void applyEffect(Effect*, void (Effect::*)(const Ref<LayeredUnit>&));
     std::list<Effect*>::iterator processEffect(std::list<Effect*>::iterator);
   public:
     /* accessors */
     inline Map* getMap(void) { return map; }
     inline const Map* getMap(void) const { return map; }
     inline const CompleteMap* getCompleteMap(void) const { return map; }
-    inline ISensorReturns* getISensorReturns(
+    inline Ref<ISensorReturns> getISensorReturns(
         PlayerID player, SensorReturnsID id
       ) {
       assert(player < players.size());
-      return players[player].getSensorReturns(id);
+      return players[player].getSensorReturns(id).cast<ISensorReturns>();
     }
     
     void addUnit(const LayeredUnit& unit, PlayerID owner);
     void removeUnit(LayeredUnit*);
-    inline std::list<LayeredUnit>& getUnits(void) { return units; }
+    
+    /** \warning This has to be a non-const return for stuff that happens in
+     * Player::checkSensorReturns to work, but don't abuse it.  In particular,
+     * don't add or remove elements */
+    inline hash_list<LayeredUnit>& getUnits(void) { return units; }
     
     inline void addBallistic(Ballistic* ballistic)
     {
       ballistics.push_back(ballistic);
     }
-    inline std::list<Ballistic*>& getBallistics(void) { return ballistics; }
+    inline const hash_list<Ballistic>& getBallistics(void) const {
+      return ballistics;
+    }
     
     inline void addBeam(Beam* beam)
     {
@@ -113,24 +95,15 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     void advanceGameState(Time timeToReach);
     void incrementGameState(void);
     void applyEntryExitEffects(
-        LayeredUnit* unit,
+        const Ref<LayeredUnit>& unit,
         const Point<sint32>& oldPosition,
         const Point<sint32>& newPosition
       );
-
-    /* methods for reference management */
-    void registerRef(Ref<ISensorReturns>* ref);
-    void unregisterRef(Ref<ISensorReturns>* ref);
-    void registerRef(Ref<LayeredUnit>* ref);
-    void unregisterRef(Ref<LayeredUnit>* ref);
-    void registerRef(Ref<Ballistic>* ref);
-    void unregisterRef(Ref<Ballistic>* ref);
 };
 
 extern LIBSAKUSEN_SERVER_API CompleteWorld* world;
 
-}
-}
+}}
 
 #endif // LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 

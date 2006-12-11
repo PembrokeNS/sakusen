@@ -52,7 +52,7 @@ void UnixDatagramSocket::interpretAddress(
   *path = p;
 }
 
-Socket* UnixDatagramSocket::newConnectionToAddress(list<String>& address)
+Socket::Ptr UnixDatagramSocket::newConnectionToAddress(list<String>& address)
 {
   bool abstract;
   String path;
@@ -60,13 +60,13 @@ Socket* UnixDatagramSocket::newConnectionToAddress(list<String>& address)
   interpretAddress(address, &path, &abstract);
 
   if (path.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
-  return new UnixDatagramConnectingSocket(path, abstract);
+  return Socket::Ptr(new UnixDatagramConnectingSocket(path, abstract));
 }
 
-Socket* UnixDatagramSocket::newBindingToAddress(list<String>& address)
+Socket::Ptr UnixDatagramSocket::newBindingToAddress(list<String>& address)
 {
   bool abstract;
   String path;
@@ -74,10 +74,10 @@ Socket* UnixDatagramSocket::newBindingToAddress(list<String>& address)
   interpretAddress(address, &path, &abstract);
 
   if (path.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
-  return new UnixDatagramListeningSocket(path, abstract);
+  return Socket::Ptr(new UnixDatagramListeningSocket(path, abstract));
 }
 
 UnixDatagramSocket::UnixDatagramSocket(const char* p, bool a) :
@@ -139,7 +139,7 @@ void UnixDatagramSocket::send(const void* buf, size_t len)
         break;
       case ENOTCONN:
       case ECONNREFUSED:
-        throw new SocketClosedExn();
+        throw SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(errno) << " sending message");

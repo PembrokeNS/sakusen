@@ -1,8 +1,9 @@
 #ifndef MASKEDPTR_H
 #define MASKEDPTR_H
 
-template<typename T>
-class MaskedPtrHash;
+#include "gnu_extensions.h"
+
+namespace sakusen {
 
 /** \brief Hides a pointer so that it cannot be dereferenced, but can still be
  * used as a UID.
@@ -12,22 +13,30 @@ class MaskedPtrHash;
  */
 template<typename T>
 class MaskedPtr {
-  friend class MaskedPtrHash<T>;
+  friend class __gnu_cxx::hash<MaskedPtr<T> >;
   public:
-    MaskedPtr(const T& t) : ptr(&t) {}
     MaskedPtr(const T* p) : ptr(p) {}
+    template<typename U>
+    explicit MaskedPtr(MaskedPtr<U> p) : ptr(p.ptr) {}
     bool operator==(const MaskedPtr& right) const { return ptr == right.ptr; }
   private:
     const T* ptr;
+  public:
 };
 
+}
+
+namespace __gnu_cxx {
+
 template<typename T>
-class MaskedPtrHash {
+class hash<sakusen::MaskedPtr<T> > {
   public:
-    inline size_t operator()(const MaskedPtr<T>& p) const {
+    inline size_t operator()(const sakusen::MaskedPtr<T>& p) const {
       return reinterpret_cast<size_t>(p.ptr);
     }
 };
+
+}
 
 #endif // MASKEDPTR_H
 

@@ -15,7 +15,7 @@ class TCPListeningSocket : public TCPSocket {
     ~TCPListeningSocket() {}
     
     bool isConnectionBased() { return true; }
-    Socket* accept();
+    Socket::Ptr accept();
 };
 
 }}

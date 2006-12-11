@@ -10,7 +10,6 @@
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 #include "completeworld.h"
-#include "ballistic-methods.h"
 #include "debuggingclient.h"
 #include "patrollerclient.h"
 

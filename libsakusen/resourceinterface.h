@@ -2,6 +2,9 @@
 #define RESOURCE_INTERFACE_H
 
 #include "libsakusen-global.h"
+
+#include <boost/shared_ptr.hpp>
+
 #include "resourcesearchresult.h"
 #include "resourcetype.h"
 
@@ -14,6 +17,8 @@ namespace sakusen {
  * is not needed.
  */
 class LIBSAKUSEN_API ResourceInterface {
+  public:
+    typedef boost::shared_ptr<ResourceInterface> Ptr;
   protected:
     ResourceInterface() {}
     ResourceInterface(const ResourceInterface&) {}

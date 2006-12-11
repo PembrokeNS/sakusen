@@ -161,8 +161,7 @@ void* FileResourceInterface::internalSearch(
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
   try {
     length = file.getLength(true);
-  } catch (FileIOExn* e) {
-    delete e;
+  } catch (FileIOExn& e) {
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
     error = String("error getting length of file '") + path + "': " +
@@ -215,10 +214,9 @@ void* FileResourceInterface::internalSearch(
       default:
         Fatal("unexpected ResourceType: " << type);
     }
-  } catch (DeserializationExn* e) {
+  } catch (DeserializationExn& e) {
     *result = resourceSearchResult_error;
-    delete e;
-    error = String("exception: ") + e->message;
+    error = String("exception: ") + e.message;
     return NULL;
   }
   

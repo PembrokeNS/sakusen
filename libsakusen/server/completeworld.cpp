@@ -3,7 +3,6 @@
 #include "mapplaymode.h"
 #include "region-methods.h"
 #include "map-methods.h"
-#include "layeredunit-methods.h"
 
 #include <list>
 #include <vector>
@@ -69,27 +68,14 @@ CompleteWorld::CompleteWorld(
 
 CompleteWorld::~CompleteWorld()
 {
-  /* Free memory for ballistics */
-  while (!ballistics.empty()) {
-    invalidateRefs(ballistics.front());
-    delete ballistics.front();
-    ballistics.pop_front();
-  }
-  assert(ballisticRefs.empty());
-  
-  /* Free memory for beams */
-  while (!beams.empty()) {
-    invalidateRefs(beams.front());
-    delete beams.front();
-    beams.pop_front();
-  }
-  assert(beamRefs.empty());
-  
   /* Free memory for effects */
   while (!effects.empty()) {
     delete effects.front();
     effects.pop_front();
   }
+
+  /* Clear units lest they outlive the sensor returns from them */
+  units.clear();
   
   /** \todo Something about freeing Fuse memory. */
 
@@ -99,71 +85,9 @@ CompleteWorld::~CompleteWorld()
   world = NULL;
 }
 
-/** \todo Use cunningness to reduce the code duplication in the following
- * methods */
-void CompleteWorld::invalidateRefs(const MaskedPtr<LayeredUnit>& id)
-{
-  pair<
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator,
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator
-    > refRange = unitRefs.equal_range(id);
-  
-  for (__gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    refIt->second->invalidate();
-  }
-  unitRefs.erase(refRange.first, refRange.second);
-}
-
-void CompleteWorld::invalidateRefs(const MaskedPtr<Ballistic>& id)
-{
-  pair<
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator,
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator
-    > refRange = ballisticRefs.equal_range(id);
-  
-  for (__gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    refIt->second->invalidate();
-  }
-  ballisticRefs.erase(refRange.first, refRange.second);
-}
-
-void CompleteWorld::invalidateRefs(const MaskedPtr<Beam>& id)
-{
-  pair<
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Beam>, Ref<Beam>*, MaskedPtrHash<Beam>
-        >::iterator,
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Beam>, Ref<Beam>*, MaskedPtrHash<Beam>
-        >::iterator
-    > refRange = beamRefs.equal_range(id);
-  
-  for (__gnu_cxx::hash_multimap<
-          MaskedPtr<Beam>, Ref<Beam>*, MaskedPtrHash<Beam>
-        >::iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    refIt->second->invalidate();
-  }
-  beamRefs.erase(refRange.first, refRange.second);
-}
-
 void CompleteWorld::applyEffect(
     Effect* effect,
-    void (Effect::*method)(Ref<LayeredUnit>&)
+    void (Effect::*method)(const Ref<LayeredUnit>&)
   )
 {
   /** \bug Using point-to-member-function here because it has the minimal code
@@ -177,10 +101,10 @@ void CompleteWorld::applyEffect(
    * segfaults ensue.  Instead, we first collect Refs to all the affected
    * units, and then process them all. */
   queue<Ref<LayeredUnit> > affectedUnits;
-  for (list<LayeredUnit>::iterator unit = units.begin();
+  for (hash_list<LayeredUnit>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
-    if (effect->getRegion().contains(unit->getStatus())) {
-      affectedUnits.push(&*unit);
+    if (effect->getRegion().contains((*unit)->getStatus())) {
+      affectedUnits.push(*unit);
     }
   }
   
@@ -220,12 +144,11 @@ list<Effect*>::iterator CompleteWorld::processEffect(
 }
 
 void CompleteWorld::addUnit(const LayeredUnit& unit, PlayerID owner) {
-  units.push_back(unit);
-  std::list<LayeredUnit>::iterator newIt = units.end();
-  --newIt;
-  assert(0 == unitIts.count(&*newIt));
-  unitIts[&*newIt] = newIt;
-  units.back().changeOwner(owner, changeOwnerReason_created);
+  /** \todo Maybe we want this method to be passed a pointer, not a value?  It
+   * would save a (non-trivial) copy constructor but it would make the memory
+   * management a modicum more risky */
+  units.push_back(new LayeredUnit(unit));
+  units.back()->changeOwner(owner, changeOwnerReason_created);
 }
 
 /** Removes \p unit from the World.
@@ -235,17 +158,11 @@ void CompleteWorld::addUnit(const LayeredUnit& unit, PlayerID owner) {
 void CompleteWorld::removeUnit(LayeredUnit* unit)
 {
   unit->changeOwner(0, changeOwnerReason_destroyed);
-  __gnu_cxx::hash_map<
-        MaskedPtr<LayeredUnit>,
-        std::list<LayeredUnit>::iterator,
-        MaskedPtrHash<LayeredUnit>
-      >::iterator unitItIt = unitIts.find(unit);
-  if (unitItIt == unitIts.end()) {
+  hash_list<LayeredUnit>::iterator it = units.find(unit);
+  if (it == units.end()) {
     Fatal("removing unit not present");
   }
-  invalidateRefs(unit);
-  units.erase(unitItIt->second);
-  unitIts.erase(unitItIt);
+  units.erase(it);
 }
 
 /** \brief Advances the game state to the specified time
@@ -289,21 +206,19 @@ void CompleteWorld::incrementGameState(void)
   timeNow++;
   
   /* process units */
-  for (std::list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
+  for (hash_list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
     /* this moves the unit according to its
      * current speed.  This method also responsible for
      * ensuring that all appropriate client messages caused by the things
      * that happen in it are sent */
-    j->incrementState(timeNow);
+    (*j)->incrementState(timeNow);
   }
 
   /* process Ballistics */
-  for (std::list<Ballistic*>::iterator k = ballistics.begin();
+  for (hash_list<Ballistic>::iterator k = ballistics.begin();
       k != ballistics.end(); ) {
     /* Check the Ballistic for collisions */
     if ((*k)->resolveIntersections()) {
-      invalidateRefs(*k);
-      delete *k;
       k = ballistics.erase(k);
     } else {
       ++k;
@@ -311,12 +226,9 @@ void CompleteWorld::incrementGameState(void)
   }
 
   /* process Beams */
-  for (std::list<Beam*>::iterator beam = beams.begin();
-      beam != beams.end(); ) {
+  for (hash_list<Beam>::iterator beam = beams.begin(); beam != beams.end(); ) {
     /* Check for Beam for removal */
     if ((*beam)->onRemovalTest()) {
-      invalidateRefs(*beam);
-      delete *beam;
       beam = beams.erase(beam);
     } else {
       /* Check the Beam for intersections */
@@ -385,106 +297,28 @@ void CompleteWorld::incrementGameState(void)
 
   /* Once everything has happened that can happen, we induce all units to send
    * to clients any information about their changedness */
-  for (std::list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
-    j->clearDirty();
+  for (hash_list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
+    (*j)->clearDirty();
   }
 }
 
 void CompleteWorld::applyEntryExitEffects(
-    LayeredUnit* unit,
+    const Ref<LayeredUnit>& unit,
     const Point<sint32>& oldPosition,
     const Point<sint32>& newPosition
   )
 {
-  Ref<LayeredUnit> unitRef(unit);
-
   /** \todo make this more efficient by storing the data differently */
   for (std::list<Effect*>::iterator i=effects.begin(); i!=effects.end(); i++) {
     if ((*i)->getRegion().contains(oldPosition) &&
         !(*i)->getRegion().contains(newPosition)) {
-      (*i)->onUnitLeave(unitRef);
+      (*i)->onUnitLeave(unit);
     }
     if (!(*i)->getRegion().contains(oldPosition) &&
         (*i)->getRegion().contains(newPosition)) {
-      (*i)->onUnitEnter(unitRef);
+      (*i)->onUnitEnter(unit);
     }
   }
-}
-
-void CompleteWorld::registerRef(Ref<ISensorReturns>* ref)
-{
-  players[(*ref)->getSenserOwner()].registerRef(ref);
-}
-
-void CompleteWorld::unregisterRef(Ref<ISensorReturns>* ref)
-{
-  players[(*ref)->getSenserOwner()].unregisterRef(ref);
-}
-
-void CompleteWorld::registerRef(Ref<LayeredUnit>* ref)
-{
-  MaskedPtr<LayeredUnit> id(**ref);
-  pair<MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*> item(id, ref);
-  unitRefs.insert(item);
-}
-
-void CompleteWorld::unregisterRef(Ref<LayeredUnit>* ref)
-{
-  pair<
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator,
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator
-    > refRange = unitRefs.equal_range(**ref);
-  
-  /* This becomes slow if there are many Refs to the same LayeredUnit object.
-   * If that is a problem we could ID the refs too and have O(1) lookups for
-   * them, but it's unlikely to be of help overall */
-  for (__gnu_cxx::hash_multimap<
-          MaskedPtr<LayeredUnit>, Ref<LayeredUnit>*, MaskedPtrHash<LayeredUnit>
-        >::iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    if (refIt->second == ref) {
-      unitRefs.erase(refIt);
-      return;
-    }
-  }
-  Fatal("tried to unregister a not-registered Ref");
-}
-
-void CompleteWorld::registerRef(Ref<Ballistic>* ref)
-{
-  MaskedPtr<Ballistic> id(**ref);
-  pair<MaskedPtr<Ballistic>, Ref<Ballistic>*> item(id, ref);
-  ballisticRefs.insert(item);
-}
-
-void CompleteWorld::unregisterRef(Ref<Ballistic>* ref)
-{
-  pair<
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator,
-      __gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator
-    > refRange = ballisticRefs.equal_range(**ref);
-  
-  /* This becomes slow if there are many Refs to the same Ballistic object.
-   * If that is a problem we could ID the refs too and have O(1) lookups for
-   * them, but it's unlikely to be of help overall */
-  for (__gnu_cxx::hash_multimap<
-          MaskedPtr<Ballistic>, Ref<Ballistic>*, MaskedPtrHash<Ballistic>
-        >::iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    if (refIt->second == ref) {
-      ballisticRefs.erase(refIt);
-      return;
-    }
-  }
-  Fatal("tried to unregister a not-registered Ref");
 }
 
 LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;

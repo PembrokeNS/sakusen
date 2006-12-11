@@ -23,8 +23,7 @@ class DeserializationExn : public Exn {
   private:
     DeserializationExn();
   public:
-    DeserializationExn(const String& message) :
-      Exn(message) { }
+    DeserializationExn(const String& m) : Exn(m) { }
     virtual ~DeserializationExn() throw() { }
 };
 

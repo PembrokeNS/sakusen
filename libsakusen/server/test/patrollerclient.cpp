@@ -43,8 +43,9 @@ void PatrollerClient::queueUpdate(const Update& update)
         for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
-                  TargetSensorReturnsOrderData(
-                    weaponIndex, otherUnit
+                  TargetPointOrderData(
+                    weaponIndex,
+                    otherUnit->getUnit()->getIStatus()->getPosition()
                   )
                 ))
             );

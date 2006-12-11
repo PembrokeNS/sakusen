@@ -42,13 +42,13 @@ class Server : public SettingsUser {
      * transferred to the Server. */
     Server(
         std::ostream& output,
-        sakusen::ResourceInterface* resourceInterface,
+        const sakusen::ResourceInterface::Ptr& resourceInterface,
 #ifndef DISABLE_UNIX_SOCKETS
         bool abstract,
-        sakusen::comms::Socket* unixSocket,
+        const sakusen::comms::Socket::Ptr& unixSocket,
 #endif
-        sakusen::comms::Socket* udpSocket,
-        sakusen::comms::Socket* tcpSocket,
+        const sakusen::comms::Socket::Ptr& udpSocket,
+        const sakusen::comms::Socket::Ptr& tcpSocket,
         bool dots
       );
     /** \brief Destructor */
@@ -59,12 +59,12 @@ class Server : public SettingsUser {
 #ifndef DISABLE_UNIX_SOCKETS
      /** Whether to use abstract sockets for RemoteClients to listen */
     bool abstract;
-    sakusen::comms::Socket* unixSocket;
+    sakusen::comms::Socket::Ptr unixSocket;
 #endif
-    sakusen::comms::Socket* udpSocket; /* Not owned by this */
-    sakusen::comms::Socket* tcpSocket; /* Not owned by this */
+    sakusen::comms::Socket::Ptr udpSocket; /* Not owned by this */
+    sakusen::comms::Socket::Ptr tcpSocket; /* Not owned by this */
     std::ostream& out;
-    sakusen::ResourceInterface* resourceInterface; /* Not owned by this */
+    sakusen::ResourceInterface::Ptr resourceInterface; /* Not owned by this */
     __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
       /* Client interfaces (owned by this) */
     sakusen::Universe* universe;
@@ -96,7 +96,7 @@ class Server : public SettingsUser {
     void advertise(
         const sakusen::comms::SolicitMessageData& data,
         const String& receivedFrom,
-        sakusen::comms::Socket* receivedOn,
+        const sakusen::comms::Socket::Ptr& receivedOn,
         const sakusen::comms::Message& advertisement
       );
     sakusen::comms::ClientID getFreeClientID();
@@ -105,7 +105,7 @@ class Server : public SettingsUser {
     void addClient(
         const String& requestedAddress,
         const String& fromAddress,
-        sakusen::comms::Socket* existingSocket
+        const sakusen::comms::Socket::Ptr& existingSocket
       );
     void removeClient(RemoteClient* client);
     void handleClientMessages();

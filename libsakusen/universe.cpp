@@ -25,8 +25,7 @@ void Universe::constructHashMaps()
   for (vector<WeaponType>::iterator weaponType = weaponTypes.begin();
       weaponType != weaponTypes.end(); weaponType++) {
     if (weaponIDLookup.count(weaponType->getInternalName())) {
-      throw new
-        DuplicateNameDeserializationExn(weaponType->getInternalName());
+      throw DuplicateNameDeserializationExn(weaponType->getInternalName());
     }
     weaponIDLookup[weaponType->getInternalName()] = &*weaponType;
   }
@@ -34,8 +33,7 @@ void Universe::constructHashMaps()
   for (vector<UnitType>::iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {
     if (unitIDLookup.count(unitType->getInternalName())) {
-      throw new
-        DuplicateNameDeserializationExn(unitType->getInternalName());
+      throw DuplicateNameDeserializationExn(unitType->getInternalName());
     }
     unitIDLookup[unitType->getInternalName()] = &*unitType;
   }
@@ -108,7 +106,7 @@ Universe* Universe::loadNew(
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {
     delete u;
-    throw new UnresolvedNameDeserializationExn(unresolvedName);
+    throw UnresolvedNameDeserializationExn(unresolvedName);
   }
   return u;
 }

@@ -3,7 +3,11 @@
 
 #include "libsakusen-global.h"
 
+#include <set>
+
 #include "point.h"
+#include "gameobject.h"
+#include "intersection.h"
 
 namespace sakusen {
 
@@ -28,20 +32,30 @@ class ICompleteUnit;
  */
 class Ray {
   private:
-    Point<sint32> s; /**< origin (start) */
+    Point<sint32> origin; /**< origin (start) */
     Point<sint32> d; /**< direction */
     double length; /**< length of \c d */
 
   public:
     Ray() {}
-    Ray(Point<sint32> start, Point<sint32> direction): s(start), d(direction), length(direction.length()) {}
+    Ray(Point<sint32> start, Point<sint32> direction) :
+      origin(start), d(direction), length(direction.length()) {}
     virtual ~Ray() {}
+    virtual GameObject interactsWith() const = 0;
+    virtual GameObject stoppedBy() const = 0;
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
     double intersectUnit(ICompleteUnit* u) const;
     double intersectUnits() const;
     double intersectLand() const;
     double intersectWater() const;
+
+    typedef std::set<Intersection, LessThanIntersectionPosition>
+      IntersectionSet;
+    void getAllInteractionsTo(
+        double extent,
+        IntersectionSet& interactions
+      ) const;
 };
 
 }

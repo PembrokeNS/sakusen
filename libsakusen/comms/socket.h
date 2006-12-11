@@ -2,6 +2,7 @@
 #define SOCKET_H
 
 #include <sys/types.h>
+#include <boost/shared_ptr.hpp>
 
 #include "message.h"
 #include "timeutils.h"
@@ -13,18 +14,19 @@ namespace comms {
  * 
  * Socket::newConnectionToAddress() and Socket::newBindingToAddress() can be
  * used to create Sockets */
-class LIBSAKUSEN_COMMS_API Socket {
+class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
   public:
+    typedef boost::shared_ptr<Socket> Ptr;
     /** \brief Creates a new Socket object connected to the given address.
      * \param address Sakusen-format address to connect to.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
-    static Socket* newConnectionToAddress(const String& address);
+    static Ptr newConnectionToAddress(const String& address);
     /** \brief Creates a new Socket object bound to the given address.
      * \param address Sakusen-format address to bind socket at.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
-    static Socket* newBindingToAddress(const String& address);
+    static Ptr newBindingToAddress(const String& address);
     /** \brief Initialize sockets
      *
      * This function should be called before attempting to instantiate a
@@ -39,7 +41,6 @@ class LIBSAKUSEN_COMMS_API Socket {
   /* Abstract class - all constructors must be protected */
   protected:
     Socket();
-    Socket(const Socket&);
   public:
     virtual ~Socket() {}
     /** \brief Reads \p len bytes of binary from \p buf and sends it.
@@ -99,7 +100,7 @@ class LIBSAKUSEN_COMMS_API Socket {
      * For a connection-based socket, this will return a new Socket
      * corresponding to the next pending connection, or NULL if there is no
      * such.  For a non-connection-based socket, this will Fatal() */
-    virtual Socket* accept() = 0;
+    virtual Ptr accept() = 0;
     /** \brief Close a socket, unless it is already closed. */
     virtual void close() = 0;
     /** \brief Set the async flag on this socket. */

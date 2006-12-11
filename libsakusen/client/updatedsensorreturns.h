@@ -18,7 +18,15 @@ class UpdatedSensorReturns : public SensorReturns {
     }
 };
 
-}}
+} /* back into namespace sakusen */
+
+template<>
+class SerializationHandler<client::UpdatedSensorReturns> {
+  public:
+    typedef void loadArgument;
+};
+
+}
 
 #endif // UPDATEDSENSORRETURNS_H
 

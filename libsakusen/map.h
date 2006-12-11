@@ -32,6 +32,7 @@ class LIBSAKUSEN_API Map {
   public:
     /* accessors */
     virtual Topology getTopology(void) const = 0;
+    virtual const IHeightfield& getHeightfield() const = 0;
     inline sint32 left(void) const { return bottomLeft.x; }
     inline sint32 right(void) const { return topRight.x; }
     inline sint32 bottom(void) const { return bottomLeft.y; }
@@ -142,7 +143,9 @@ class LIBSAKUSEN_API Map {
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-        uint16 gravity
+        uint16 gravity,
+        uint32 horizontalHeightfieldRes,
+        uint32 verticalHeightfieldRes
       );
 };
 

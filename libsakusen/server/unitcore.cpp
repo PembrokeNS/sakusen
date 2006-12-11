@@ -68,7 +68,7 @@ void UnitCore::incrementWeaponsState()
   size_t numWeapons = weapons.size();
 
   for (size_t i=0; i<numWeapons; ++i) {
-    weapons[i]->incrementState(outerUnit, i);
+    weapons[i]->incrementState(outerUnit->getRefToThis(), i);
   }
 }
 
@@ -188,16 +188,16 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
   }
   owner = to;
   if (why != changeOwnerReason_destroyed) {
-    toPtr->addUnit(outerUnit, why);
+    toPtr->addUnit(outerUnit->getRefToThis(), why);
     
     /* We also need to ensure that sensor returns from this unit are flagged so
      * that the change of ownership is transmitted. */
     for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
         outerUnit->getSensorReturns().begin();
         returns != outerUnit->getSensorReturns().end(); ++returns) {
-      DynamicSensorReturns& r = returns->second->second;
-      if (0 != (r.getPerception() & (perception_unit | perception_owner))) {
-        r.setDirty();
+      Ref<DynamicSensorReturns> r = returns->second->second;
+      if (0 != (r->getPerception() & (perception_unit | perception_owner))) {
+        r->setDirty();
       }
     }
   }

@@ -12,7 +12,7 @@ using namespace sakusen::server;
 
 DynamicSensorReturns::DynamicSensorReturns(
     SensorReturnsID i,
-    const LayeredUnit* s,
+    const Ref<const LayeredUnit>& s,
     Player* sO
   ) :
   id(i),
@@ -49,12 +49,12 @@ const Region<sint32>* DynamicSensorReturns::getRegion() const
   }
 }
 
-const ICompleteUnit* DynamicSensorReturns::getUnit() const
+Ref<const ICompleteUnit> DynamicSensorReturns::getUnit() const
 {
   if (0 != (perception & perception_unit)) {
     return sensee;
   } else {
-    return NULL;
+    return Ref<const ICompleteUnit>();
   }
 }
 
@@ -70,7 +70,7 @@ void DynamicSensorReturns::senseeDestroyed() {
   delete region;
   region = NULL;
   sensers.clear();
-  sensee = NULL;
+  sensee = Ref<const LayeredUnit>();
   setDirty();
 }
 
@@ -78,7 +78,7 @@ void DynamicSensorReturns::senseeDestroyed() {
 void DynamicSensorReturns::update()
 {
   /* If the sensee has been destroyed, then we see nothing, and give up now */
-  if (NULL == sensee) {
+  if (!sensee.isValid()) {
     assert(perception == perception_none);
     assert(sensers.empty());
     return;
@@ -109,7 +109,7 @@ void DynamicSensorReturns::update()
    * information. */
   EachSensorReturn workingCopy;
   
-  for (hash_map<uint32, LayeredUnit*>::const_iterator unitIt =
+  for (hash_map<uint32, Ref<LayeredUnit> >::const_iterator unitIt =
       senserOwner->getUnits().begin(); unitIt != senserOwner->getUnits().end();
       ++unitIt) {
     /* seek out local unit/sensors corresponding to this unit */

@@ -21,6 +21,8 @@ namespace tedomari {
 namespace ui {
 
 class UI : protected Control {
+  public:
+    typedef boost::shared_ptr<UI> Ptr;
   private:
     UI();
     UI(const UI&);

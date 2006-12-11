@@ -194,8 +194,9 @@ int startServer(const String& homePath, const Options& options)
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
-  ResourceInterface* resourceInterface =
-    new FileResourceInterface(dataDirs, true);
+  ResourceInterface::Ptr resourceInterface(
+      new FileResourceInterface(dataDirs, true)
+    );
   
   /* Initialize sockets */
   Socket::socketsInit();
@@ -268,7 +269,7 @@ int startServer(const String& homePath, const Options& options)
   }
 
   cout << "Creating unix socket " << unixSocketAddress << endl;
-  Socket* unixSocket =
+  Socket::Ptr unixSocket =
     Socket::newBindingToAddress("unix"ADDR_DELIM+unixSocketAddress);
 
   if (unixSocket == NULL) {
@@ -279,7 +280,7 @@ int startServer(const String& homePath, const Options& options)
   #endif // DISABLE_UNIX_SOCKETS
   
   String bindAddress = options.udpAddress;
-  Socket* udpSocket = NULL;
+  Socket::Ptr udpSocket;
   
   if (!bindAddress.empty()) {
     cout << "Starting UDP (solicitation) socket at " << bindAddress << endl;
@@ -294,7 +295,7 @@ int startServer(const String& homePath, const Options& options)
   }
 
   bindAddress = options.tcpAddress;
-  Socket* tcpSocket = NULL;
+  Socket::Ptr tcpSocket;
   
   if (!bindAddress.empty()) {
     cout << "Starting TCP (joining) socket at " << bindAddress << endl;
@@ -332,12 +333,6 @@ int startServer(const String& homePath, const Options& options)
     );
   server.serve();
  
-#ifndef DISABLE_UNIX_SOCKETS
-  delete unixSocket;
-#endif
-  delete tcpSocket;
-  delete udpSocket;
-  delete resourceInterface;
 
   /* ltdl finalization */
   if (lt_dlexit()) {

@@ -9,13 +9,8 @@ namespace comms {
 
 class UDPSocket : public IPSocket {
   public:
-    static Socket* newConnectionToAddress(std::list<String>& address);
-    static Socket* newBindingToAddress(std::list<String>& address);
-  private:
-    /** Copying this would be a bad idea, since the socket would be closed
-     * twice, and other such problems.
-     */
-    UDPSocket(const UDPSocket& copy);
+    static Socket::Ptr newConnectionToAddress(std::list<String>& address);
+    static Socket::Ptr newBindingToAddress(std::list<String>& address);
   protected:
     /** create the socket without binding or connecting */
     UDPSocket();
@@ -29,7 +24,10 @@ class UDPSocket : public IPSocket {
     size_t receive(void* buf, size_t len);
     size_t receiveFrom(void* buf, size_t len, String& from);
     bool isConnectionBased() { return false; }
-    Socket* accept() { Fatal("Not connection-based socket"); return NULL; /* Return statement for the benefit of MSVC */ }
+    Socket::Ptr accept() {
+      Fatal("Not connection-based socket");
+      return Socket::Ptr(); /* Return statement for the benefit of MSVC */
+    }
     String getType() const { return "udp"; }
 };
 

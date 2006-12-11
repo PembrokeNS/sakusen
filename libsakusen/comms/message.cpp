@@ -87,13 +87,13 @@ Message::Message(
       if (player == static_cast<PlayerID>(-1)) {
         /* NoWorld is perhaps not entirely descriptive, but it should be
          * accurate */
-        throw new NoWorldDeserializationExn();
+        throw NoWorldDeserializationExn();
       }
       data = new OrderMessageData(in, &player);
       break;
     case messageType_update:
       if (world == NULL || player == static_cast<PlayerID>(-1)) {
-        throw new NoWorldDeserializationExn();
+        throw NoWorldDeserializationExn();
       }
       data = new UpdateMessageData(in, &player);
       break;

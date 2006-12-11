@@ -13,7 +13,7 @@ using namespace fuseki;
 RemoteClient::RemoteClient(
     ClientID i,
     Server* s,
-    Socket* socket,
+    const Socket::Ptr& socket,
     bool createInSocket
 #ifndef DISABLE_UNIX_SOCKETS
     ,
@@ -24,7 +24,7 @@ RemoteClient::RemoteClient(
   SettingsUser(String("client")+clientID_toString(i)),
   id(i),
   server(s),
-  inSocket(NULL),
+  inSocket(),
   outSocket(socket),
   incomingMessageQueue(),
   outgoingUpdateQueue(),
@@ -38,7 +38,7 @@ RemoteClient::RemoteClient(
 #ifdef DISABLE_UNIX_SOCKETS
     Fatal("Separate inSocket not supported on this platform");
 #else
-    inSocket = new UnixDatagramListeningSocket(abstract);
+    inSocket = Socket::Ptr(new UnixDatagramListeningSocket(abstract));
     inSocket->setNonBlocking(true);
     /** \bug The following line should not be here, because it can make the
      * server hang.  However, without it, we can suffer from the bug caused by
@@ -64,13 +64,6 @@ RemoteClient::~RemoteClient()
    * might be attached, and thus avoid the Player having a dangling
    * pointer */
   setPlayerId(0, false);
-  
-  delete inSocket;
-  if (outSocket != inSocket) {
-    delete outSocket;
-  }
-  inSocket = NULL;
-  outSocket = NULL;
 }
 
 void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)

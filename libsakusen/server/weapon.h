@@ -33,12 +33,15 @@ class LIBSAKUSEN_SERVER_API Weapon {
      * If you override aimAt, then this method is irrelevant.
      */
     virtual uint32 getProjectileSpeed() const = 0;
-    virtual void onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex) = 0;
+    virtual void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex) = 0;
   public:
     /* accessors */
     WeaponTypeID getType(void) const {return type;}
 
-    virtual void incrementState(LayeredUnit* firer, uint16 weaponIndex);
+    virtual void incrementState(
+        const Ref<LayeredUnit>& firer,
+        uint16 weaponIndex
+      );
     
     /* for when the unit is destroyed, if we want to have ammo exploding or
      * anything like that */

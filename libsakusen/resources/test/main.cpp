@@ -89,9 +89,8 @@ int main(/*int argc, char** argv*/)
           resourceInterface
         );
     weaponTypes.push_back(paralyzerType);
-  } catch (DeserializationExn* e) {
-    cout << "Exception: " << e->message << endl;
-    delete e;
+  } catch (DeserializationExn& e) {
+    cout << "Exception: " << e.message << endl;
     return EXIT_FAILURE;
   }
 

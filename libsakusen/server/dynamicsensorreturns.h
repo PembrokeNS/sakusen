@@ -5,6 +5,7 @@
 #include <list>
 #include "visibility.h"
 #include "isensorreturns.h"
+#include "serializationhandler.h"
 
 namespace sakusen {
 namespace server {
@@ -18,7 +19,7 @@ class DynamicSensorReturns : public ISensorReturns {
   public:
     DynamicSensorReturns(
         SensorReturnsID id,
-        const LayeredUnit* sensee,
+        const Ref<const LayeredUnit>& sensee,
         Player* senserOwner
       );
     ~DynamicSensorReturns() {}
@@ -28,7 +29,7 @@ class DynamicSensorReturns : public ISensorReturns {
     Region<sint32>* region;
     Player* senserOwner;
     SensorReturnMap sensers;
-    const LayeredUnit* sensee;
+    Ref<const LayeredUnit> sensee;
     bool dirty;
   public:
     inline SensorReturnsID getId() const { return id; }
@@ -36,7 +37,7 @@ class DynamicSensorReturns : public ISensorReturns {
     PlayerID getSenserOwner() const;
     PlayerID getSenseeOwner() const;
     const Region<sint32>* getRegion() const;
-    const ICompleteUnit* getUnit() const;
+    Ref<const ICompleteUnit> getUnit() const;
     inline const SensorReturnMap& getSensorReturns() const { return sensers; }
     inline bool empty() const { return sensers.empty(); }
     inline bool isDirty() const { return dirty; }
@@ -46,8 +47,10 @@ class DynamicSensorReturns : public ISensorReturns {
     void update();
 };
 
-typedef __gnu_cxx::hash_map<SensorReturnsID, DynamicSensorReturns>::iterator
-  DynamicSensorReturnsRef;
+typedef __gnu_cxx::hash_map<
+    SensorReturnsID,
+    Ref<DynamicSensorReturns>
+  >::iterator DynamicSensorReturnsRef;
 
 }}
 

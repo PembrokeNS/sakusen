@@ -14,11 +14,16 @@ PartialWorld::PartialWorld(
     Topology topology,
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
-    uint16 gravity
+    uint16 gravity,
+    uint32 horizontalHeightfieldRes,
+    uint32 verticalHeightfieldRes
   ) :
   World(universe),
   playerId(pI),
-  map(Map::newMap<PartialMap>(topology, topRight, bottomLeft, gravity)),
+  map(Map::newMap<PartialMap>(
+        topology, topRight, bottomLeft, gravity,
+        horizontalHeightfieldRes, verticalHeightfieldRes
+      )),
   units()
 {
   world = this;
@@ -32,31 +37,11 @@ PartialWorld::~PartialWorld()
     units.erase(b);
   }
 
-  while (!sensorReturns.empty()) {
-    hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
-      sensorReturns.begin();
-    invalidateSensorReturnsRefs(it->first);
-    delete it->second;
-    sensorReturns.erase(it);
-  }
+  sensorReturnsById.clear();
 
   delete map;
 
   world = NULL;
-}
-
-void PartialWorld::invalidateSensorReturnsRefs(SensorReturnsID id)
-{
-  pair<
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
-    > refRange = sensorReturnRefs.equal_range(id);
-  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
-      iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    refIt->second->invalidate();
-  }
-  sensorReturnRefs.erase(refRange.first, refRange.second);
 }
 
 /** \brief Return a list of units intersecting the given rectangle
@@ -85,17 +70,17 @@ list<UpdatedUnit*> PartialWorld::getUnitsIntersecting(
  *
  * \warning For speed, this may return a few extra sensor returns that do not
  * in fact intersect the rectangle */
-list<UpdatedSensorReturns*> PartialWorld::getSensorReturnsIntersecting(
+list<Ref<UpdatedSensorReturns> > PartialWorld::getSensorReturnsIntersecting(
     const Rectangle<sint32>& rect
   )
 {
   /** \todo make this fast by storing data sensibly */
-  list<UpdatedSensorReturns*> result;
+  list<Ref<UpdatedSensorReturns> > result;
 
-  for (hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator returns =
+  for (hash_list<UpdatedSensorReturns>::iterator returns =
       sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
-    if (rect.fastIntersects(returns->second)) {
-      result.push_back(returns->second);
+    if (rect.fastIntersects(*returns)) {
+      result.push_back(*returns);
     }
   }
 
@@ -180,41 +165,43 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
         SensorReturnsID id = data.getSensorReturns().getId();
-        if (sensorReturns.count(id)) {
+        if (sensorReturnsById.count(id)) {
           Debug("adding sensor returns of existing id");
-          invalidateSensorReturnsRefs(id);
-          delete sensorReturns[id];
+          sensorReturns.erase(sensorReturnsById[id]);
+          sensorReturnsById.erase(id);
         }
-        sensorReturns[id] =
-          new UpdatedSensorReturns(data.getSensorReturns());
+        sensorReturns.push_back(
+            new UpdatedSensorReturns(data.getSensorReturns())
+          );
+        hash_list<UpdatedSensorReturns>::iterator newIt = sensorReturns.end();
+        --newIt;
+        sensorReturnsById[id] = newIt;
       }
       break;
     case updateType_sensorReturnsRemoved:
       {
         SensorReturnsRemovedUpdateData data =
           update.getSensorReturnsRemovedData();
-        __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator
-          returns = sensorReturns.find(data.getId());
-        if (returns == sensorReturns.end()) {
+        UpdatedSensorReturnsIt returns = sensorReturnsById.find(data.getId());
+        if (returns == sensorReturnsById.end()) {
           Debug("tried to remove non-existant SensorReturns");
           break;
         }
-        invalidateSensorReturnsRefs(returns->first);
-        delete returns->second;
-        sensorReturns.erase(returns);
+        sensorReturns.erase(returns->second);
+        sensorReturnsById.erase(returns);
       }
       break;
     case updateType_sensorReturnsAltered:
       {
         SensorReturnsAlteredUpdateData data =
           update.getSensorReturnsAlteredData();
-        __gnu_cxx::hash_map<uint32, UpdatedSensorReturns*>::iterator returns =
-          sensorReturns.find(data.getSensorReturns().getId());
-        if (returns == sensorReturns.end()) {
+        UpdatedSensorReturnsIt returns =
+          sensorReturnsById.find(data.getSensorReturns().getId());
+        if (returns == sensorReturnsById.end()) {
           Debug("tried to alter non-existant SensorReturns");
           break;
         }
-        returns->second->alter(data.getSensorReturns());
+        (*returns->second)->alter(data.getSensorReturns());
       }
       break;
     case updateType_ballisticAdded:
@@ -252,33 +239,6 @@ void PartialWorld::endTick()
     unit->second->incrementState();
   }
   ++timeNow;
-}
-
-void PartialWorld::registerRef(Ref<ISensorReturns>* ref)
-{
-  pair<SensorReturnsID, Ref<ISensorReturns>*> item((*ref)->getId(), ref);
-  sensorReturnRefs.insert(item);
-}
-
-void PartialWorld::unregisterRef(Ref<ISensorReturns>* ref)
-{
-  pair<
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
-    > refRange = sensorReturnRefs.equal_range((*ref)->getId());
-  
-  /* This becomes slow if there are many Refs to the same SensorReturns object.
-   * If that is a problem we could ID the refs too and have O(1) lookups for
-   * them, but it's unlikely to be of help overall */
-  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
-      iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    if (refIt->second == ref) {
-      sensorReturnRefs.erase(refIt);
-      return;
-    }
-  }
-  Fatal("tried to unregister a not-registered Ref");
 }
 
 PartialWorld* sakusen::client::world = NULL;

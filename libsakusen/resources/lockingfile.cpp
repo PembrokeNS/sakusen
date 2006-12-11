@@ -79,10 +79,10 @@ uint64 LockingFile::getLength(bool block)
     return length;
   }
   if (getLock(block)) {
-    throw new FileIOExn("getLock");
+    throw FileIOExn("getLock");
   }
   if (NativeFstat(fd, &statResult) == -1) {
-    throw new FileIOExn("fstat");
+    throw FileIOExn("fstat");
   }
   length = static_cast<uint64>(statResult.st_size);
   lengthIsKnown = true;
@@ -104,12 +104,12 @@ size_t LockingFile::getWholeFile(
   }
   
   if (-1 == fseek(stream, 0, SEEK_SET)) {
-    throw new FileIOExn("fseek");
+    throw FileIOExn("fseek");
   }
 
   /* It's totally bizarre that this fflush should be necessary, but it is */
   if (EOF == fflush(stream)) {
-    throw new FileIOExn("fflush");
+    throw FileIOExn("fflush");
   }
 
   return fileUtils_read(fd, buffer, length);

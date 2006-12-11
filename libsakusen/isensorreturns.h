@@ -20,7 +20,7 @@ typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
  *
  * \todo As well as an approximate location (the region), we need an
  * approximate size for the sensed unit. */
-class LIBSAKUSEN_API ISensorReturns {
+class LIBSAKUSEN_API ISensorReturns : virtual public IReferee {
   public:
     virtual ~ISensorReturns() {}
 
@@ -29,7 +29,7 @@ class LIBSAKUSEN_API ISensorReturns {
     virtual PlayerID getSenserOwner() const = 0;
     virtual PlayerID getSenseeOwner() const = 0;
     virtual const Region<sint32>* getRegion() const = 0;
-    virtual const ICompleteUnit* getUnit() const = 0;
+    virtual Ref<const ICompleteUnit> getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
 
     virtual Point<sint32> getBestPosition() const;
@@ -37,20 +37,17 @@ class LIBSAKUSEN_API ISensorReturns {
 };
 
 template<>
-class RefHandler<ISensorReturns> {
+class SerializationHandler<ISensorReturns> {
   public:
-    void registerRef(Ref<ISensorReturns>* ref) const {
-      world->registerRef(ref);
-    }
-    void unregisterRef(Ref<ISensorReturns>* ref) const {
-      world->unregisterRef(ref);
-    }
-    ISensorReturns* extract(IArchive& archive, const PlayerID* player) const {
+    Ref<ISensorReturns> extract(
+        IArchive& archive,
+        const PlayerID* player
+      ) const {
       SensorReturnsID id;
       archive >> id;
       return world->getISensorReturns(*player, id);
     }
-    void insert(OArchive& archive, const ISensorReturns* ret) const {
+    void insert(OArchive& archive, const Ref<const ISensorReturns>& ret) const {
       archive << ret->getId();
     }
     typedef PlayerID loadArgument;

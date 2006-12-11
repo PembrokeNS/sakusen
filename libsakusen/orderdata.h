@@ -63,7 +63,7 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
   private:
     TargetSensorReturnsOrderData();
   public:
-    TargetSensorReturnsOrderData(uint16 wI, ISensorReturns* t) :
+    TargetSensorReturnsOrderData(uint16 wI, const Ref<ISensorReturns>& t) :
       OrderData(),
       weaponIndex(wI),
       target(t)

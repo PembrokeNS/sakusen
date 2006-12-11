@@ -1,15 +1,15 @@
-#ifndef TYPEMUNGER_H
-#define TYPEMUNGER_H
+#ifndef INTMUNGER_H
+#define INTMUNGER_H
 
 #include "libsakusen-global.h"
 
 namespace sakusen {
 
 template<typename T>
-struct TypeMunger { };
+struct IntMunger { };
 
 template<>
-struct TypeMunger<uint8> {
+struct IntMunger<uint8> {
   typedef uint8 unsign;
   typedef sint8 sign;
   typedef uint16 wider;
@@ -18,7 +18,7 @@ struct TypeMunger<uint8> {
 };
 
 template<>
-struct TypeMunger<sint8> {
+struct IntMunger<sint8> {
   typedef uint8 unsign;
   typedef sint8 sign;
   typedef sint16 wider;
@@ -27,7 +27,7 @@ struct TypeMunger<sint8> {
 };
 
 template<>
-struct TypeMunger<uint16> {
+struct IntMunger<uint16> {
   typedef uint16 unsign;
   typedef sint16 sign;
   typedef uint32 wider;
@@ -37,7 +37,7 @@ struct TypeMunger<uint16> {
 };
 
 template<>
-struct TypeMunger<sint16> {
+struct IntMunger<sint16> {
   typedef uint16 unsign;
   typedef sint16 sign;
   typedef sint32 wider;
@@ -47,7 +47,7 @@ struct TypeMunger<sint16> {
 };
 
 template<>
-struct TypeMunger<uint32> {
+struct IntMunger<uint32> {
   typedef uint32 unsign;
   typedef sint32 sign;
   typedef uint64 wider;
@@ -57,7 +57,7 @@ struct TypeMunger<uint32> {
 };
 
 template<>
-struct TypeMunger<sint32> {
+struct IntMunger<sint32> {
   typedef uint32 unsign;
   typedef sint32 sign;
   typedef sint64 wider;
@@ -67,7 +67,7 @@ struct TypeMunger<sint32> {
 };
 
 template<>
-struct TypeMunger<uint64> {
+struct IntMunger<uint64> {
   typedef uint64 unsign;
   typedef sint64 sign;
   typedef uint64 widest;
@@ -76,7 +76,7 @@ struct TypeMunger<uint64> {
 };
 
 template<>
-struct TypeMunger<sint64> {
+struct IntMunger<sint64> {
   typedef uint32 unsign;
   typedef sint32 sign;
   typedef sint64 widest;
@@ -85,7 +85,7 @@ struct TypeMunger<sint64> {
 };
 
 template<>
-struct TypeMunger<double>
+struct IntMunger<double>
 {
   typedef double unsign;
   typedef double sign;
@@ -93,4 +93,6 @@ struct TypeMunger<double>
 };
 
 }
+
 #endif
+

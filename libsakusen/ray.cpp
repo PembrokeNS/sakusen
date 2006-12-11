@@ -1,5 +1,8 @@
 #include "ray.h"
 #include "icompleteunit.h"
+#include "heightfield.h"
+#include "world.h"
+
 namespace sakusen {
 
 /** \brief Get a point the Ray passes through.
@@ -14,7 +17,7 @@ namespace sakusen {
  * \return A Point<sint32> in game-space.
  */
 Point<sint32> Ray::evaluate(double t) const {
-  return s + Point<sint32>(Point<double>(d) * t);
+  return origin + Point<sint32>(Point<double>(d) * t);
 }
 
 /** \brief How far along the Ray am I?
@@ -42,7 +45,60 @@ double Ray::intersectUnit(ICompleteUnit* u) const {
   return 0.0;
 }
 double Ray::intersectUnits() const {Fatal("not implemented"); return 0.0;}
-double Ray::intersectLand() const {Fatal("not implemented"); return 0.0;}
+double Ray::intersectLand() const {
+  /* First we check to see whether we're already underground, in which case we
+   * return 0 to indicate an instant hit */
+  const IHeightfield& hf = world->getMap()->getHeightfield();
+  if (hf.getHeightAt(origin) > origin.z) {
+    return 0.0;
+  }
+
+  /** \todo */
+  Fatal("not implemented");
+  return 0.0;
+}
 double Ray::intersectWater() const {Fatal("not implemented"); return 0.0;}
 /*@}*/
+
+/** \brief Find and return all interactions of this ray to a given extent.
+ *
+ * \param      extent      The length (in units of d) to scan along the ray.
+ * \param[out] interations The interactions found.
+ */
+void Ray::getAllInteractionsTo(
+    double extent,
+    IntersectionSet& interactions
+  ) const
+{
+  GameObject interact = interactsWith();
+  GameObject stop = stoppedBy();
+  GameObject interesting = interact | stop;
+
+  assert(interactions.empty());
+
+  /* Test for intersection with the ground */
+  if (0 != (interesting & gameObject_land)) {
+    double landIntersect = intersectLand();
+    if (!isnan(landIntersect) && landIntersect <= extent) {
+      if (0 != (stop & gameObject_land)) {
+        extent = landIntersect;
+        interactions.insert(Intersection(gameObject_land, landIntersect));
+      }
+    }
+  }
+
+  /* Test for intersection with the water */
+  if (0 != (interesting & gameObject_water)) {
+    double waterIntersect = intersectWater();
+    if (!isnan(waterIntersect) && waterIntersect <= extent) {
+      if (0 != (stop & gameObject_water)) {
+        extent = waterIntersect;
+        interactions.insert(Intersection(gameObject_water, waterIntersect));
+      }
+    }
+  }
+  
+  /** \todo Intersections with units and Effects */
+}
+
 }

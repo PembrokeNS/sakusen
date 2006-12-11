@@ -8,7 +8,7 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace testsrc;
 
-void Cannon::onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Cannon::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
   /*cout << "Firing at " << server::world->getTimeNow() << endl;*/
   const WeaponStatus& status =
@@ -16,7 +16,7 @@ void Cannon::onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex)
   server::world->addBallistic(new Shell(firer, status));
 }
 
-Shell::Shell(Ref<LayeredUnit>& source, const WeaponStatus& status) :
+Shell::Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status) :
   Ballistic(
       source->getOwner(),
       server::world->getTimeNow(),
@@ -32,7 +32,7 @@ void Shell::onCollision(const Point<sint32>& pos)
   server::world->addEffect(new Explosion(getOwner(), pos, 20));
 }
 
-void Explosion::onUnitPresent(Ref<LayeredUnit>& victim)
+void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
 {
   cout << "Explosion engulfed someone" << endl;
   victim->damage(100);
@@ -55,7 +55,7 @@ bool Paralyzer::aimAt(
   }
 }
 
-void Paralyzer::onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Paralyzer::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
   cout << "Firing paralyzer at " << server::world->getTimeNow() << endl;
   const WeaponStatus& status =
@@ -64,11 +64,12 @@ void Paralyzer::onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex)
 }
 
 ParalyzationBeam::ParalyzationBeam(
-    Ref<LayeredUnit>& source,
+    const Ref<LayeredUnit>& source,
     const WeaponStatus& status
   ) :
   Beam(
-      source->getStatus()->getPosition(), status.getDirection(), source,
+      source->getStatus()->getPosition(),
+      status.getDirection(), source,
       server::world->getTimeNow(), 3 /* duration */
     )
 {

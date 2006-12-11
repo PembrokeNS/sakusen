@@ -32,7 +32,7 @@ size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
   ssize_t retVal = read(fd, buffer, bufferLen);
 #endif
   if (retVal == -1)
-    throw new FileIOExn("read");
+    throw FileIOExn("read");
   return retVal;
 }
 
@@ -52,7 +52,7 @@ size_t fileUtils_write(int fd, const void* buffer, size_t length)
   ssize_t retVal = write(fd, buffer, length);
 #endif
   if (retVal == -1)
-    throw new FileIOExn("write");
+    throw FileIOExn("write");
   return retVal;
 }
 

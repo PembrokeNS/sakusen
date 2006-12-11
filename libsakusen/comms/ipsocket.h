@@ -32,11 +32,6 @@ class IPSocket : public Socket {
         String* hostname,
         uint16* port
       );
-  private:
-    /** Copying this would be a bad idea, since the socket would be closed
-     * twice, and other such problems.
-     */
-    IPSocket(const IPSocket& copy);
   protected:
     IPSocket() : closed(false) {}
     IPSocket(uint16 myPort) : closed(false), port(myPort) {}

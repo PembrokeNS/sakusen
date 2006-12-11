@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN__WORLD_H
 #define LIBSAKUSEN__WORLD_H
 
+#include <boost/utility.hpp>
+
 #include "libsakusen-global.h"
 #include "universe.h"
 #include "map.h"
@@ -11,11 +13,7 @@ namespace sakusen {
 
 class ISensorReturns;
 
-class LIBSAKUSEN_API World {
-  private:
-    World(const World& copy); /* Shouldn't use the copy constructor - mayhem
-                                 will ensue because it will invalidate all
-                                 pointers to game objects stored here */
+class LIBSAKUSEN_API World : boost::noncopyable {
   protected:
     World(const Universe* universe);
   public:
@@ -29,12 +27,9 @@ class LIBSAKUSEN_API World {
     virtual Map* getMap(void) = 0;
     virtual const Map* getMap(void) const = 0;
     inline const Time& getTimeNow(void) { return timeNow; }
-    virtual ISensorReturns* getISensorReturns(
+    virtual Ref<ISensorReturns> getISensorReturns(
         PlayerID player, SensorReturnsID id
       ) = 0;
-
-    virtual void registerRef(Ref<ISensorReturns>* ref) = 0;
-    virtual void unregisterRef(Ref<ISensorReturns>* ref) = 0;
 };
 
 extern LIBSAKUSEN_API World* world;

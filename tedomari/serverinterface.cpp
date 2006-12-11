@@ -20,7 +20,7 @@ using namespace tedomari;
 using namespace tedomari::game;
 
 ServerInterface::ServerInterface(
-    Socket* s,
+    const Socket::Ptr& s,
     const String& ja,
 #ifndef DISABLE_UNIX_SOCKETS
     bool us,
@@ -37,8 +37,8 @@ ServerInterface::ServerInterface(
 #endif
   joined(false),
   id(0),
-  incomingSocket(NULL),
-  outgoingSocket(NULL),
+  incomingSocket(),
+  outgoingSocket(),
   universeName()
 {
   /*Debug("unixSockets = " << unixSockets);*/
@@ -57,12 +57,6 @@ ServerInterface::~ServerInterface()
     leave(true);
   }
   joined = false; /* Excessive paranoia */
-  delete incomingSocket;
-  if (outgoingSocket != incomingSocket) {
-    delete outgoingSocket;
-  }
-  incomingSocket = NULL;
-  outgoingSocket = NULL;
 }
 
 /** Do initial setup of settings for us on the server (e.g. tell our
@@ -112,11 +106,11 @@ void ServerInterface::settingAlteration(
  * \return true iff an error occurs */
 bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
 {
-  Socket* tempSocket;
+  Socket::Ptr tempSocket;
 
 #ifndef DISABLE_UNIX_SOCKETS
   if (unixSockets) {
-    tempSocket = new UnixDatagramListeningSocket(abstract);
+    tempSocket.reset(new UnixDatagramListeningSocket(abstract));
     String address = tempSocket->getAddress();
     solicitationSocket->send(SolicitMessageData(address));
   } else {
@@ -143,12 +137,6 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
     return true;
   }
   *advertisement=message.getAdvertiseData();
-
-#ifndef DISABLE_UNIX_SOCKETS
-  if (unixSockets) {
-    delete tempSocket;
-  }
-#endif
   
   return false;
 }
@@ -213,9 +201,8 @@ String ServerInterface::flushIncoming()
           out << "Unexpected MessageType " << message.getType() << "\n";
           break;
       }
-    } catch (DeserializationExn* e) {
-      out << "Deserialization exception: " << e->message << "\n";
-      delete e;
+    } catch (DeserializationExn& e) {
+      out << "Deserialization exception: " << e.message << "\n";
     }
   }
 
@@ -236,7 +223,7 @@ String ServerInterface::join()
   try {
 #ifndef DISABLE_UNIX_SOCKETS
     if (unixSockets) {
-      incomingSocket = new UnixDatagramListeningSocket(abstract);
+      incomingSocket.reset(new UnixDatagramListeningSocket(abstract));
       /** \bug We're assuming equal solicitation and join addresses */
       solicitationSocket->send(JoinMessageData(incomingSocket->getAddress()));
     } else {
@@ -255,12 +242,9 @@ String ServerInterface::join()
     }
 #endif
     incomingSocket->setNonBlocking(true);
-  } catch (SocketExn* e) {
-    delete incomingSocket;
-    incomingSocket = NULL;
+  } catch (SocketExn& e) {
     String ret = String("Error while sending join message to server: '") +
-      e->message + "'.\n";
-    delete e;
+      e.message + "'.\n";
     return ret;
   }
   
@@ -269,8 +253,6 @@ String ServerInterface::join()
 
   if (0 == (messageLength =
         incomingSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
-    delete incomingSocket;
-    incomingSocket = NULL;
     return "Timed out while waiting for response to join request.\n";
   }
 
@@ -292,15 +274,11 @@ String ServerInterface::join()
       }
     case messageType_reject:
       {
-        delete incomingSocket;
-        incomingSocket = NULL;
         RejectMessageData data = message.getRejectData();
         return String("Join request rejected for reason: '") + data.getReason()
           + "'.";
       }
     default:
-      delete incomingSocket;
-      incomingSocket = NULL;
       ostringstream ret;
       ret << "Unexpected response from server (message type was" <<
         message.getType() << ").";
@@ -323,19 +301,12 @@ bool ServerInterface::leave(bool sendMessage)
   if (sendMessage) {
     try {
       outgoingSocket->send(LeaveMessageData());
-    } catch (SocketExn* e) {
-      Debug("Error sending leave message:" << e->message);
-      delete e;
+    } catch (SocketExn& e) {
+      Debug("Error sending leave message:" << e.message);
     }
   }
   game->stop();
   joined = false;
-  delete incomingSocket;
-  if (outgoingSocket != incomingSocket) {
-    delete outgoingSocket;
-  }
-  incomingSocket = NULL;
-  outgoingSocket = NULL;
   return false;
 }
 

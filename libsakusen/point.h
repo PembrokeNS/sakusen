@@ -2,7 +2,7 @@
 #define POINT_H
 
 #include "libsakusen-global.h"
-#include "typemunger.h"
+#include "intmunger.h"
 #include <limits>
 
 namespace sakusen {
@@ -208,8 +208,8 @@ class LIBSAKUSEN_API Point {
     }
 #endif
 
-    typedef typename TypeMunger<T>::widest Wide;
-    typedef typename TypeMunger<Wide>::unsign UWide;
+    typedef typename IntMunger<T>::widest Wide;
+    typedef typename IntMunger<Wide>::unsign UWide;
 
     inline UWide squareLength(void) const {
       /* Ugly casting here because of paranoia. */
@@ -277,6 +277,10 @@ inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {
   out << "(" << p.x << ", " << p.y << ", " << p.z << ")";
   return out;
 }
+
+typedef Point<sint16> Acceleration;
+typedef Point<sint16> Velocity;
+typedef Point<sint32> Position;
 
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;

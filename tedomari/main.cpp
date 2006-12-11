@@ -135,7 +135,7 @@ void runClient(
 
 Options getOptions(String optionsFile, int argc, char const* const* argv);
 
-UI* newUI(const Options& o, const String& uiConfFilename, Game* game);
+UI::Ptr newUI(const Options& o, const String& uiConfFilename, Game* game);
 
 void usage();
 
@@ -210,10 +210,11 @@ void runTest(
     const String& configPath
   ) {
   String uiConfFilename = configPath + FILE_SEP "ui.conf";
-  ResourceInterface* resourceInterface =
-    new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR, false);
+  ResourceInterface::Ptr resourceInterface(
+      new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR, false)
+    );
   Game* game = new Game(resourceInterface);
-  UI* ui = newUI(options, uiConfFilename, game);
+  UI::Ptr ui = newUI(options, uiConfFilename, game);
 
   struct timeval sleepTime = {0, MICRO/25};
   if (options.evil) {
@@ -228,12 +229,8 @@ void runTest(
     timeUtils_sleep(sleepTime);
   }
 
-  delete ui;
-  ui = NULL;
   delete game;
   game = NULL;
-  delete resourceInterface;
-  resourceInterface = NULL;
 }
 
 void runClient(
@@ -275,13 +272,12 @@ void runClient(
     
     /* Connect to the socket */
     cout << "Trying to connect to socket at " << socketAddress << endl;
-    Socket* socket = NULL;
+    Socket::Ptr socket;
     
     try {
       socket = Socket::newConnectionToAddress(socketAddress);
-    } catch (SocketExn* e) {
-      cout << "Failed to connect: " << e->message;
-      delete e;
+    } catch (SocketExn& e) {
+      cout << "Failed to connect: " << e.message;
       exit(EXIT_FAILURE);
     }
 
@@ -302,8 +298,9 @@ void runClient(
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
     
-    ResourceInterface* resourceInterface =
-      new FileResourceInterface(dataDirs, false);
+    ResourceInterface::Ptr resourceInterface(
+        new FileResourceInterface(dataDirs, false)
+      );
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
         socket, options.joinAddress,
@@ -333,7 +330,7 @@ void runClient(
     AsynchronousIOHandler ioHandler(
         stdin, cout, historyPath, options.historyLength
       );
-    UI* ui = NULL;
+    UI::Ptr ui;
 
     bool finished = false;
     String whitespace = " \t\r\n"; /** \todo obtain whitespace in some more
@@ -444,7 +441,6 @@ void runClient(
                 break;
               case command_resetUI:
                 if (ui != NULL) {
-                  delete ui;
                   ui = newUI(options, uiConfFilename, game);
                 }
                 break;
@@ -475,8 +471,7 @@ void runClient(
         ui = newUI(options, uiConfFilename, game);
       }
       if (!game->isStarted() && ui != NULL) {
-        delete ui;
-        ui = NULL;
+        ui.reset();
       }
       /* Allow the UI some processor time */
       if (ui != NULL) {
@@ -489,14 +484,8 @@ void runClient(
     }
     
     cout << endl;
-    delete ui;
-    ui = NULL;
     delete game;
     game = NULL;
-    delete resourceInterface;
-    resourceInterface = NULL;
-    delete socket;
-    socket = NULL;
   } while (reconnect);
 }
 
@@ -559,15 +548,15 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   return results;
 }
 
-UI* newUI(const Options& o, const String& uiConfFilename, Game* game)
+UI::Ptr newUI(const Options& o, const String& uiConfFilename, Game* game)
 {
-  UI* ui = NULL;
   /** \todo Support alternate UIs (OpenGL, DirectX) */
   ifstream uiConf(uiConfFilename.c_str());
 #ifndef DISABLE_CAIRO
-  ui = new CairoUI(o.sdlOptions, uiConf, game);
+  UI::Ptr ui(new CairoUI(o.sdlOptions, uiConf, game));
 #else
   Fatal("No UI enabled at compile time");
+  UI::Ptr ui;
 #endif
   ui->setTitle("tedomari");
   return ui;

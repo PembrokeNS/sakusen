@@ -2,7 +2,8 @@
 #include "updatedata.h"
 #include "layeredunit.h"
 #include "completeworld.h"
-#include "ballistic-methods.h"
+
+#include <stack>
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -19,6 +20,7 @@ Player::Player(const PlayerTemplate& t) :
   units(),
   lastUnitId(static_cast<uint32>(-1)),
   sensorReturns(),
+  sensorReturnsById(),
   lastSensorReturnsId(static_cast<SensorReturnsID>(-1)),
   visibleBallistics(),
   lastClientBallisticId(static_cast<uint32>(-1))
@@ -34,36 +36,46 @@ Player::Player(const Player& copy) :
   clients(copy.clients),
   units(copy.units),
   lastUnitId(copy.lastUnitId),
-  sensorReturns(copy.sensorReturns),
+  sensorReturns(),
+  sensorReturnsById(),
   lastSensorReturnsId(copy.lastSensorReturnsId),
-  sensorReturnRefs(copy.sensorReturnRefs),
   visibleBallistics(copy.visibleBallistics),
   lastClientBallisticId(copy.lastClientBallisticId)
 {
+  if (!copy.sensorReturns.empty()) {
+    /* To perform this copy we'd need to set up sensorReturnsById, which would
+     * be non-trivial */
+    Fatal("Don't support copying a player with SensorReturns in place");
+  }
+}
+
+Player& Player::operator=(const Player& copy)
+{
+  if (!copy.sensorReturns.empty()) {
+    /* To perform this copy we'd need to set up sensorReturnsById, which would
+     * be non-trivial */
+    Fatal("Don't support copying a player with SensorReturns in place");
+  }
+
+  noClients = copy.noClients;
+  raceFixed = copy.raceFixed;
+  playerId = copy.playerId;
+  name = copy.name;
+  clients = copy.clients;
+  units = copy.units;
+  lastUnitId = copy.lastUnitId;
+  sensorReturnsById.clear();
+  sensorReturns.clear();
+  lastSensorReturnsId = copy.lastSensorReturnsId;
+  visibleBallistics = copy.visibleBallistics;
+  lastClientBallisticId = copy.lastClientBallisticId;
+
+  return *this;
 }
 
 Player::~Player()
 {
-  /* dump all the sensor returns so as to invalidate all the Refs */
-  while (!sensorReturns.empty()) {
-    invalidateRefs(sensorReturns.begin()->first);
-    sensorReturns.erase(sensorReturns.begin());
-  }
-  assert(sensorReturnRefs.empty());
-}
-
-void Player::invalidateRefs(SensorReturnsID id)
-{
-  pair<
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
-    > refRange = sensorReturnRefs.equal_range(id);
-  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
-      iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    refIt->second->invalidate();
-  }
-  sensorReturnRefs.erase(refRange.first, refRange.second);
+  sensorReturnsById.clear();
 }
 
 void Player::setPlayerId(const PlayerID& id)
@@ -104,7 +116,8 @@ void Player::detachClient(Client* client)
 
 void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
 {
-  __gnu_cxx::hash_map<uint32, LayeredUnit*>::iterator unit = units.find(id);
+  __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator unit =
+    units.find(id);
   if (unit == units.end()) {
     Fatal("tried to remove a unit which wasn't there");
   }
@@ -113,7 +126,7 @@ void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
   informClients(Update(UnitRemovedUpdateData(id, why)));
 }
 
-void Player::addUnit(LayeredUnit* unit, enum changeOwnerReason why)
+void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
 {
   /*QDebug("[Player::addUnit]");*/
   ++lastUnitId;
@@ -130,66 +143,69 @@ void Player::checkSensorReturns()
 {
   /* check over our sensor returns for ones where the units have beed destroyed
    * */
-  queue<SensorReturnsID> invalidatedSensorReturnsIds;
-  for (hash_map<SensorReturnsID, DynamicSensorReturns>::iterator returns =
-      sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
+  stack<DynamicSensorReturnsRef> invalidatedSensorReturnsIds;
+  for (DynamicSensorReturnsRef returns = sensorReturnsById.begin();
+      returns != sensorReturnsById.end(); ++returns) {
     /* The fact that the SensorReturns has become empty without our calling
      * update should be enough to prove that the unit is gone */
-    if (returns->second.empty()) {
-      assert(returns->second.getPerception() == perception_none);
+    if (returns->second->empty()) {
+      assert(returns->second->getPerception() == perception_none);
       informClients(Update(SensorReturnsRemovedUpdateData(returns->first)));
-      invalidateRefs(returns->first);
-      invalidatedSensorReturnsIds.push(returns->first);
+      invalidatedSensorReturnsIds.push(returns);
     }
   }
 
   /* Now we actually erase the invalidated entries (we couldn't do this before
    * because erasure in a hash_map invalidates iterators) */
   while (!invalidatedSensorReturnsIds.empty()) {
-    sensorReturns.erase(invalidatedSensorReturnsIds.front());
+    sensorReturns.erase(invalidatedSensorReturnsIds.top()->second);
+    sensorReturnsById.erase(invalidatedSensorReturnsIds.top());
     invalidatedSensorReturnsIds.pop();
   }
 
   /* First we deal with other players' units */
-  for (list<LayeredUnit>::iterator unit = world->getUnits().begin();
+  for (hash_list<LayeredUnit>::iterator unit = world->getUnits().begin();
       unit != world->getUnits().end(); ++unit) {
     /* check whether this unit already has a return to this player */
     hash_map<PlayerID, DynamicSensorReturnsRef>::iterator it =
-      unit->getSensorReturns().find(playerId);
-    if (it != unit->getSensorReturns().end()) {
+      (*unit)->getSensorReturns().find(playerId);
+    if (it != (*unit)->getSensorReturns().end()) {
       /* we have a sensor return, so we update it */
-      DynamicSensorReturns& returns = it->second->second;
-      returns.update();
+      Ref<DynamicSensorReturns> returns = it->second->second;
+      returns->update();
       /* If it's gone, then remove it */
-      if (returns.empty()) {
-        informClients(Update(SensorReturnsRemovedUpdateData(returns.getId())));
-        invalidateRefs(it->first);
-        sensorReturns.erase(it->second);
-        unit->getSensorReturns().erase(it);
-      } else if (returns.isDirty()) {
+      if (returns->empty()) {
+        informClients(Update(SensorReturnsRemovedUpdateData(returns->getId())));
+        sensorReturns.erase(it->second->second);
+        sensorReturnsById.erase(it->second);
+        (*unit)->getSensorReturns().erase(it);
+      } else if (returns->isDirty()) {
         /* It's changed, so inform clients */
-        informClients(Update(SensorReturnsAlteredUpdateData(&returns)));
-        returns.clearDirty();
+        informClients(Update(SensorReturnsAlteredUpdateData(returns)));
+        returns->clearDirty();
       }
-    } else if (unit->getOwner() != playerId) {
+    } else if ((*unit)->getOwner() != playerId) {
       /* we have no sensor return, so we determine whether one should exist
        * */
       SensorReturnsID newId = lastSensorReturnsId + 1;
-      DynamicSensorReturns newReturns(newId, &*unit, this);
+      DynamicSensorReturns newReturns(newId, *unit, this);
       if (!newReturns.empty()) {
         /* Clear the dirty flag that will certainly have been set */
         newReturns.clearDirty();
-        pair<DynamicSensorReturnsRef, bool> inserted = sensorReturns.insert(
-            pair<SensorReturnsID, DynamicSensorReturns>(newId, newReturns)
+        sensorReturns.push_back(new DynamicSensorReturns(newReturns));
+        pair<DynamicSensorReturnsRef, bool> inserted = sensorReturnsById.insert(
+            pair<SensorReturnsID, Ref<DynamicSensorReturns> >(
+              newId, sensorReturns.back()
+            )
           );
         if (!inserted.second) {
           Fatal("SensorReturnsID wrapped around");
         }
-        unit->getSensorReturns().insert(
+        (*unit)->getSensorReturns().insert(
               pair<PlayerID, DynamicSensorReturnsRef>(playerId, inserted.first)
             );
         informClients(
-            Update(SensorReturnsAddedUpdateData(&inserted.first->second))
+            Update(SensorReturnsAddedUpdateData(inserted.first->second))
           );
         lastSensorReturnsId = newId;
       }
@@ -200,8 +216,7 @@ void Player::checkSensorReturns()
    * that have invalidated */
   queue<MaskedPtr<Ballistic> > invalidatedBallisticIds;
   for (__gnu_cxx::hash_map<
-        MaskedPtr<Ballistic>, pair<uint32, Ref<Ballistic> >,
-        MaskedPtrHash<Ballistic>
+        MaskedPtr<Ballistic>, pair<uint32, Ref<const Ballistic> >
       >::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second.isValid()) {
@@ -218,7 +233,8 @@ void Player::checkSensorReturns()
   }
 
   /* Now we check for newly visible Ballistics (of all players) */
-  for (list<Ballistic*>::iterator ballistic = world->getBallistics().begin();
+  for (hash_list<Ballistic>::const_iterator ballistic =
+        world->getBallistics().begin();
       ballistic != world->getBallistics().end(); ++ballistic) {
     if (visibleBallistics.count(*ballistic)) {
       /* we have it already */
@@ -229,7 +245,9 @@ void Player::checkSensorReturns()
       uint32 clientId = ++lastClientBallisticId;
       /** \bug There's no wraparound check for this ID */
       visibleBallistics[*ballistic] =
-        pair<uint32, Ref<Ballistic> >(clientId, Ref<Ballistic>(*ballistic));
+        pair<uint32, Ref<const Ballistic> >(
+            clientId, *ballistic
+          );
       informClients(Update(
             BallisticAddedUpdateData(clientId, (*ballistic)->getPath())
           ));
@@ -243,7 +261,7 @@ void Player::applyIncomingOrders(void)
       client != clients.end(); client++) {
     while (!(*client)->orderMessageQueueEmpty()) {
       const OrderMessage message = (*client)->orderMessageQueuePopFront();
-      __gnu_cxx::hash_map<uint32, LayeredUnit*>::iterator orderee =
+      __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
         /* FIXME: This should not be a fatal error, but is for debugging */
@@ -270,35 +288,5 @@ void Player::informClients(const Update& update)
   }
 }
 
-void Player::registerRef(Ref<ISensorReturns>* ref)
-{
-  SensorReturnsID id = (*ref)->getId();
-  assert(sensorReturns.count(id));
-  pair<SensorReturnsID, Ref<ISensorReturns>*> item(id, ref);
-  sensorReturnRefs.insert(item);
-}
-
-void Player::unregisterRef(Ref<ISensorReturns>* ref)
-{
-  pair<
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator,
-      __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::iterator
-    > refRange = sensorReturnRefs.equal_range((*ref)->getId());
-  
-  /* This becomes slow if there are many Refs to the same SensorReturns object.
-   * If that is a problem we could ID the refs too and have O(1) lookups for
-   * them, but it's unlikely to be of help overall */
-  for (__gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>::
-      iterator refIt = refRange.first; refIt != refRange.second;
-      ++refIt) {
-    if (refIt->second == ref) {
-      sensorReturnRefs.erase(refIt);
-      return;
-    }
-  }
-  Fatal("tried to unregister a not-registered Ref");
-}
-
-}
-}
+}}
 

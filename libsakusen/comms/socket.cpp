@@ -26,17 +26,17 @@ void Socket::socketsInit(void)
 #endif
 }
 
-Socket* Socket::newConnectionToAddress(const String& address)
+Socket::Ptr Socket::newConnectionToAddress(const String& address)
 {
   list<String> addressComponents = stringUtils_split(address, ADDR_DELIM);
   if (addressComponents.empty()) {
-    return NULL;
+    return Ptr();
   }
   String type = addressComponents.front();
   addressComponents.pop_front();
   if (type == "unix") {
 #ifdef DISABLE_UNIX_SOCKETS
-    return NULL; /* Unix sockets not supported */
+    return Ptr(); /* Unix sockets not supported */
 #else
     return UnixDatagramSocket::newConnectionToAddress(addressComponents);
 #endif
@@ -46,21 +46,21 @@ Socket* Socket::newConnectionToAddress(const String& address)
     return TCPSocket::newConnectionToAddress(addressComponents);
   } else {
     Debug("Unexpected type: " << type);
-    return NULL;
+    return Ptr();
   }
 }
 
-Socket* Socket::newBindingToAddress(const String& address)
+Socket::Ptr Socket::newBindingToAddress(const String& address)
 {
   list<String> addressComponents = stringUtils_split(address, ADDR_DELIM);
   if (addressComponents.empty()) {
-    return NULL;
+    return Ptr();
   }
   String type = addressComponents.front();
   addressComponents.pop_front();
   if (type == "unix") {
 #ifdef DISABLE_UNIX_SOCKETS
-    return NULL; /* Unix sockets not supported on Windows */
+    return Ptr(); /* Unix sockets not supported on Windows */
 #else
     return UnixDatagramSocket::newBindingToAddress(addressComponents);
 #endif
@@ -70,15 +70,11 @@ Socket* Socket::newBindingToAddress(const String& address)
     return TCPSocket::newBindingToAddress(addressComponents);
   } else {
     Debug("Unexpected type: " << type);
-    return NULL;
+    return Ptr();
   }
 }
 
 Socket::Socket()
-{
-}
-
-Socket::Socket(const Socket&)
 {
 }
 

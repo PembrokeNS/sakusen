@@ -1,7 +1,5 @@
 #include "weapon.h"
 
-#include "layeredunit-methods.h"
-
 using namespace sakusen;
 using namespace sakusen::server;
 
@@ -77,7 +75,7 @@ bool Weapon::aimAt(
   return true;
 }
 
-void Weapon::incrementState(LayeredUnit* firer, uint16 weaponIndex)
+void Weapon::incrementState(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
   /* Obtain the status */
   UnitStatus* unitStatus = firer->getStatus();
@@ -104,8 +102,7 @@ void Weapon::incrementState(LayeredUnit* firer, uint16 weaponIndex)
 
   if (status->incrementState(type)) {
     /* Return value of true means that there were enough resources to fire */
-    Ref<LayeredUnit> firerRef(firer);
-    onFire(firerRef, weaponIndex);
+    onFire(firer, weaponIndex);
   }
 }
 

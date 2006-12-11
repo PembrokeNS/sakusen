@@ -14,7 +14,7 @@ MapType* Map::newMap(const MapTemplate& t)
       return new PlaneMap<MapType>(t);
     /* TODO: All the other topologies */
     default:
-      throw new DeserializationExn("Invalid topology");
+      throw DeserializationExn("Invalid topology");
   }
 }
 
@@ -23,15 +23,20 @@ MapType* Map::newMap(
     Topology topology,
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
-    uint16 gravity
+    uint16 gravity,
+    uint32 horizontalHeightfieldRes,
+    uint32 verticalHeightfieldRes
   )
 {
   switch (topology) {
     case topology_plane:
-      return new PlaneMap<MapType>(topRight, bottomLeft, gravity);
+      return new PlaneMap<MapType>(
+          topRight, bottomLeft, gravity,
+          horizontalHeightfieldRes, verticalHeightfieldRes
+        );
     /* TODO: All the other topologies */
     default:
-      throw new DeserializationExn("Invalid topology");
+      throw DeserializationExn("Invalid topology");
   }
 }
 

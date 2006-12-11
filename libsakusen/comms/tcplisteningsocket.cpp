@@ -28,7 +28,7 @@ TCPListeningSocket::TCPListeningSocket(uint16 port) :
   }
 }
 
-Socket* TCPListeningSocket::accept()
+Socket::Ptr TCPListeningSocket::accept()
 {
   sockaddr_in peerAddress;
   socklen_t addrlen = sizeof(peerAddress);
@@ -54,7 +54,7 @@ Socket* TCPListeningSocket::accept()
       case EOPNOTSUPP:
       case ENETUNREACH:
 #endif // WIN32
-        return NULL;
+        return Socket::Ptr();
       default:
         Fatal(
             "Error accepting new connection: " <<
@@ -63,6 +63,6 @@ Socket* TCPListeningSocket::accept()
     }
   }
 
-  return new TCPConnectingSocket(newSocket, peerAddress);
+  return Socket::Ptr(new TCPConnectingSocket(newSocket, peerAddress));
 }
 

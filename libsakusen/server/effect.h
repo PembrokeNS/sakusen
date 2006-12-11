@@ -41,9 +41,9 @@ class Effect {
     inline const Region<sint32>& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
     /* callbacks */
-    virtual void onUnitPresent(Ref<LayeredUnit>&) {}
-    virtual void onUnitEnter(Ref<LayeredUnit>&) {}
-    virtual void onUnitLeave(Ref<LayeredUnit>&) {}
+    virtual void onUnitPresent(const Ref<LayeredUnit>&) {}
+    virtual void onUnitEnter(const Ref<LayeredUnit>&) {}
+    virtual void onUnitLeave(const Ref<LayeredUnit>&) {}
     /** \brief Test the effect for removal
      *
      * \return true iff the Effect should be removed from the World

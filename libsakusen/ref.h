@@ -3,11 +3,17 @@
 
 #include "iarchive.h"
 #include "oarchive.h"
+#include "maskedptr.h"
+#include "typemunger.h"
+#include "irefcontainer.h"
 
 namespace sakusen {
 
 template<typename T>
-class RefHandler;
+class SerializationHandler;
+
+template<typename T>
+class hash_list;
 
 /** \brief A reference to a game object managed by the world.
  *
@@ -15,90 +21,101 @@ class RefHandler;
  * dangling after that object is removed, code can request from world a
  * reference to an object of this form.  This reference will automatically keep
  * track of the objects removal, and invalidate itself when that happens */
-template<typename T>
-class Ref {
+template<class T>
+class Ref : public IRef {
+  friend class hash_list<T>;
+  private:
+    typedef SerializationHandler<typename TypeMunger<T>::unconsted> SHandler;
   public:
-    Ref() : referee(NULL) {}
-    Ref(const Ref<T>& copy) : referee(copy.referee) {
+    Ref() : container(NULL), referee(NULL) {}
+    Ref(T* r, const IRefContainer* c) : container(c), referee(r)
+    {
+      assert(referee != NULL);
+      container->registerRef(this);
+    }
+    Ref(const Ref<T>& copy) :
+      IRef(copy),
+      container(copy.container),
+      referee(copy.referee)
+    {
       if (isValid()) {
-        handler.registerRef(this);
+        container->registerRef(this);
       }
     }
     Ref<T>& operator=(const Ref<T>& copy) {
       if (isValid()) {
-        handler.unregisterRef(this);
+        container->unregisterRef(this);
       }
+      container = copy.container;
       referee = copy.referee;
       if (isValid()) {
-        handler.registerRef(this);
+        container->registerRef(this);
       }
       return *this;
     }
-    Ref(T* r) : referee(r)
-    {
-      handler.registerRef(this);
-    }
     ~Ref() {
       if (isValid()) {
-        handler.unregisterRef(this);
+        container->unregisterRef(this);
       }
+      container = NULL;
+      referee = NULL;
+    }
+    operator MaskedPtr<typename TypeMunger<T>::unconsted>() const {
+      return MaskedPtr<typename TypeMunger<T>::unconsted>(referee);
+    }
+    template<typename U>
+    operator Ref<U>() const {
+      return Ref<U>(referee, container);
     }
   private:
-    RefHandler<T> handler;
+    const IRefContainer* container;
     T* referee;
+
+    inline void invalidate() {
+      container = NULL;
+      referee = NULL;
+    }
+
+    operator MaskedPtr<IReferee>() const {
+      return MaskedPtr<IReferee>(referee);
+    }
+
+    IRef* newCopy() const {
+      return new Ref<T>(*this);
+    }
   public:
     inline bool isValid() const { return referee != NULL; }
     
-    inline T* operator->() {
-      assert(isValid());
-      return referee;
-    }
+    inline bool isRefTo(const T* t) const { return referee == t; }
     
-    inline const T* operator->() const {
+    inline T* operator->() const {
       assert(isValid());
       return referee;
     }
 
-    inline T& operator*() {
-      assert(isValid());
-      return *referee;
-    }
-
-    inline const T& operator*() const {
-      assert(isValid());
-      return *referee;
-    }
-
-    inline void invalidate() {
-      referee = NULL;
+    template<typename U>
+    inline Ref<U> cast() const {
+      return Ref<U>(referee, container);
     }
 
     void store(OArchive& archive) const {
       archive << isValid();
       if (isValid()) {
-        handler.insert(archive, referee);
+        SHandler().insert(archive, cast<typename TypeMunger<T>::consted>());
       }
     }
     
     static Ref<T> load(
-        IArchive& archive, const typename RefHandler<T>::loadArgument* arg
+        IArchive& archive,
+        const typename SHandler::loadArgument* arg
       ) {
       bool valid;
-      T* referee = NULL;
-      
       archive >> valid;
       if (!valid) {
         return Ref<T>();
       }
       
-      referee = RefHandler<T>().extract(archive, arg);
-      /* Even though the reference was valid when serialized, the thing it
-       * refers to might have vanished */
-      if (NULL == referee) {
-        return Ref<T>();
-      }
-
-      return Ref<T>(referee);
+      return SHandler().extract(archive, arg);
     }
 };
 

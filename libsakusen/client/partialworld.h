@@ -2,6 +2,7 @@
 #define PARTIALWORLD_H
 
 #include "gnu_extensions.h"
+#include "hash_list.h"
 #include "world.h"
 #include "partialmap.h"
 #include "updatedunit.h"
@@ -23,44 +24,47 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-        uint16 gravity
+        uint16 gravity,
+        uint32 horizontalHeightfieldRes,
+        uint32 verticalHeightfieldRes
       );
     ~PartialWorld();
   private:
     PlayerID playerId;
     PartialMap* map;
     __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
-    __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*> sensorReturns;
-      /* sensor returns owned by this */
-    __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>
-      sensorReturnRefs; /* These pointers not owned by this */
-    __gnu_cxx::hash_map<uint32, Quadratic> ballistics;
+    
+    hash_list<UpdatedSensorReturns> sensorReturns;
+    __gnu_cxx::hash_map<
+        SensorReturnsID,
+        hash_list<UpdatedSensorReturns>::iterator
+      > sensorReturnsById;
+    typedef __gnu_cxx::hash_map<
+        SensorReturnsID,
+        hash_list<UpdatedSensorReturns>::iterator
+      >::iterator UpdatedSensorReturnsIt;
 
-    void invalidateSensorReturnsRefs(SensorReturnsID id);
+    __gnu_cxx::hash_map<uint32, Quadratic> ballistics;
   public:
     inline PlayerID getPlayerId() const { return playerId; }
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
 
     std::list<UpdatedUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
-    std::list<UpdatedSensorReturns*> getSensorReturnsIntersecting(
+    std::list<Ref<UpdatedSensorReturns> > getSensorReturnsIntersecting(
         const Rectangle<sint32>&
       );
-    ISensorReturns* getISensorReturns(PlayerID player, SensorReturnsID id) {
+    Ref<ISensorReturns> getISensorReturns(PlayerID player, SensorReturnsID id) {
       assert(player == playerId);
-      __gnu_cxx::hash_map<SensorReturnsID, UpdatedSensorReturns*>::iterator it =
-        sensorReturns.find(id);
-      if (it == sensorReturns.end()) {
-        return NULL;
+      UpdatedSensorReturnsIt it = sensorReturnsById.find(id);
+      if (it == sensorReturnsById.end()) {
+        return Ref<ISensorReturns>();
       }
-      return it->second;
+      return *it->second;
     }
 
     void applyUpdate(const Update&);
     void endTick();
-    
-    void registerRef(Ref<ISensorReturns>* ref);
-    void unregisterRef(Ref<ISensorReturns>* ref);
 };
 
 extern LIBSAKUSEN_CLIENT_API PartialWorld* world;

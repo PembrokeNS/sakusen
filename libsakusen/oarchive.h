@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include <boost/multi_array.hpp>
+
 #include "stringutils.h"
 #include "point.h"
 
@@ -70,10 +72,10 @@ class LIBSAKUSEN_API OArchive {
       return *this << static_cast<uint8>(value);
     }
     
-    template<typename T, int size>
+    template<typename T, size_t size>
     OArchive& insert(const T toStore[size])
     {
-      for (int i=0; i<size; ++i) {
+      for (size_t i=0; i<size; ++i) {
         store<T>(toStore[i]);
       }
 
@@ -89,6 +91,44 @@ class LIBSAKUSEN_API OArchive {
 
       return *this;
     }
+    
+    template<typename T, size_t size>
+    OArchive& insert(const boost::array<T, size>& toStore)
+    {
+      for (size_t i=0; i<size; ++i) {
+        store<T>(toStore[i]);
+      }
+
+      return *this;
+    }
+
+    template<typename T, size_t rank>
+	  OArchive& insert(const boost::multi_array<T, rank>& toStore)
+    {
+      /** \bug Handles only zero-based-indexed multi_arrays */
+      assert(rank == toStore.num_dimensions());
+      boost::array<uint32, rank> shape;
+      std::copy(toStore.shape(), toStore.shape()+rank, shape.begin());
+      insert<uint32, rank>(shape);
+
+      boost::array<uint32, rank> i;
+      std::fill(i.begin(), i.end(), 0);
+      uint32 j;
+
+      do {
+        store(toStore(i));
+        for (j=0; j<rank; ++j) {
+          if (i[j] == shape[j]) {
+            i[j] = 0;
+          } else {
+            ++i[j];
+            break;
+          }
+        }
+      } while (j < rank);
+
+      return *this;
+    }
 
     template<typename T>
 	  OArchive& operator<<(const std::vector<T>& toStore)
@@ -98,6 +138,19 @@ class LIBSAKUSEN_API OArchive {
       for(typename std::vector<T>::const_iterator i = toStore.begin();
           i != toStore.end(); ++i) {
         store(*i);
+      }
+
+      return *this;
+    }
+
+    template<typename T>
+	  OArchive& operator<<(const std::vector<std::vector<T> >& toStore)
+    {
+      *this << uint32(toStore.size());
+  
+      for(typename std::vector<std::vector<T> >::const_iterator i =
+          toStore.begin(); i != toStore.end(); ++i) {
+        *this << *i;
       }
 
       return *this;

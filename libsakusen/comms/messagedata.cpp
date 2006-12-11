@@ -35,7 +35,7 @@ SolicitMessageData::SolicitMessageData(IArchive& in) :
   in >> address;
 }
 
-void SolicitMessageData::fillArchive()
+void SolicitMessageData::fillArchive() const
 {
   archive << address;
 }
@@ -71,7 +71,7 @@ AdvertiseMessageData::AdvertiseMessageData(IArchive& in) :
   in >> gameName;
 }
 
-void AdvertiseMessageData::fillArchive()
+void AdvertiseMessageData::fillArchive() const
 {
   archive << serverName;
   archive << gameName;
@@ -109,7 +109,7 @@ JoinMessageData::JoinMessageData(IArchive& in) :
   in >> address;
 }
 
-void JoinMessageData::fillArchive()
+void JoinMessageData::fillArchive() const
 {
   archive << address;
 }
@@ -138,7 +138,7 @@ AcceptMessageData::AcceptMessageData(IArchive& in) :
   in >> id;
 }
 
-void AcceptMessageData::fillArchive()
+void AcceptMessageData::fillArchive() const
 {
   archive << address;
   archive << id;
@@ -166,7 +166,7 @@ RejectMessageData::RejectMessageData(IArchive& in) :
   in >> reason;
 }
 
-void RejectMessageData::fillArchive()
+void RejectMessageData::fillArchive() const
 {
   archive << reason;
 }
@@ -193,7 +193,7 @@ KickMessageData::KickMessageData(IArchive& in) :
   in >> reason;
 }
 
-void KickMessageData::fillArchive()
+void KickMessageData::fillArchive() const
 {
   archive << reason;
 }
@@ -218,7 +218,7 @@ LeaveMessageData::LeaveMessageData(IArchive&) :
 {
 }
 
-void LeaveMessageData::fillArchive()
+void LeaveMessageData::fillArchive() const
 {
 }
 
@@ -246,7 +246,7 @@ GetSettingMessageData::GetSettingMessageData(IArchive& in) :
   in >> setting;
 }
 
-void GetSettingMessageData::fillArchive()
+void GetSettingMessageData::fillArchive() const
 {
   archive << setting;
 }
@@ -278,7 +278,7 @@ ChangeSettingMessageData::ChangeSettingMessageData(IArchive& in) :
   in >> value;
 }
 
-void ChangeSettingMessageData::fillArchive()
+void ChangeSettingMessageData::fillArchive() const
 {
   archive << setting;
   archive << value;
@@ -311,7 +311,7 @@ NotifySettingMessageData::NotifySettingMessageData(IArchive& in) :
   in >> value;
 }
 
-void NotifySettingMessageData::fillArchive()
+void NotifySettingMessageData::fillArchive() const
 {
   archive << setting;
   archive << value;
@@ -332,27 +332,32 @@ GameStartMessageData::GameStartMessageData(
     Topology t,
     const Point<sint32>& tR,
     const Point<sint32>& bL,
-    uint16 g
+    uint16 g,
+    uint32 hHR,
+    uint32 vHR
   ) :
   MessageData(),
   playerId(pI),
   topology(t),
   topRight(tR),
   bottomLeft(bL),
-  gravity(g)
+  gravity(g),
+  horizontalHeightfieldRes(hHR),
+  verticalHeightfieldRes(vHR)
 {
 }
 
 GameStartMessageData::GameStartMessageData(IArchive& in) :
   MessageData()
 {
-  (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >> gravity;
+  (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >>
+    gravity >> horizontalHeightfieldRes >> verticalHeightfieldRes;
 }
 
-void GameStartMessageData::fillArchive()
+void GameStartMessageData::fillArchive() const
 {
   (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
-    gravity;
+    gravity << horizontalHeightfieldRes << verticalHeightfieldRes;
 }
 
 MessageType GameStartMessageData::getType() const
@@ -377,7 +382,7 @@ OrderMessageData::OrderMessageData(IArchive& in, const PlayerID* player) :
 {
 }
 
-void OrderMessageData::fillArchive()
+void OrderMessageData::fillArchive() const
 {
   orderMessage.store(archive);
 }
@@ -411,7 +416,7 @@ UpdateMessageData::UpdateMessageData(IArchive& in, const PlayerID* player) :
   in.extract(updates, world->getUniverse(), player);
 }
 
-void UpdateMessageData::fillArchive()
+void UpdateMessageData::fillArchive() const
 {
   archive << time << updates;
 }

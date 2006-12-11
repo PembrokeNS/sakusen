@@ -18,4 +18,6 @@ fast as possible.
 or
 \code uint16 getEnergyCost(void) const { return energyCost; } \endcode
 
+\bug Many classes' assignment operators do not cope with self-assignment
+
 */

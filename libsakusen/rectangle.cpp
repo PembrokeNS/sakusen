@@ -20,7 +20,9 @@ bool Rectangle<sint32>::fastIntersects(const ICompleteUnit* unit) const
 }
 
 template<>
-bool Rectangle<sint32>::fastIntersects(const ISensorReturns* returns) const
+bool Rectangle<sint32>::fastIntersects(
+    const Ref<const ISensorReturns>& returns
+  ) const
 {
   if (contains(returns->getBestPosition())) {
     return true;
@@ -37,7 +39,8 @@ bool Rectangle<uint16>::fastIntersects(const ICompleteUnit*) const
 }
 
 template<>
-bool Rectangle<uint16>::fastIntersects(const ISensorReturns*) const
+bool Rectangle<uint16>::fastIntersects(
+    const Ref<const ISensorReturns>&) const
 {
   Fatal("this method should not be called");
   return true;
@@ -51,7 +54,8 @@ bool Rectangle<double>::fastIntersects(const ICompleteUnit*) const
 }
 
 template<>
-bool Rectangle<double>::fastIntersects(const ISensorReturns*) const
+bool Rectangle<double>::fastIntersects(
+    const Ref<const ISensorReturns>&) const
 {
   Fatal("this method should not be called");
   return true;

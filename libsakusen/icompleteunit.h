@@ -9,6 +9,7 @@
 #include "box.h"
 #include "unittype.h"
 #include "iunitstatus.h"
+#include "ref.h"
 
 namespace sakusen {
 
@@ -18,7 +19,7 @@ namespace sakusen {
  * that goes with a Unit.  It is used to provide a common ground between client
  * and server as to what a Unit is for communication between them.
  */
-class LIBSAKUSEN_API ICompleteUnit {
+class LIBSAKUSEN_API ICompleteUnit : virtual public IReferee {
   public:
     virtual ~ICompleteUnit() {}
   public:
@@ -29,6 +30,13 @@ class LIBSAKUSEN_API ICompleteUnit {
     
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
     virtual Box<sint32> getBoundingBox(void) const;
+};
+
+/** This may or may not need content */
+template<>
+class SerializationHandler<ICompleteUnit> {
+  public:
+    typedef void loadArgument;
 };
 
 }

@@ -27,7 +27,7 @@ class ServerInterface {
      * \param game Game object to which updates about the game state should be
      * sent. */
     ServerInterface(
-        sakusen::comms::Socket* solicitationSocket,
+        const sakusen::comms::Socket::Ptr& solicitationSocket,
         const String& joinAddress,
 #ifndef DISABLE_UNIX_SOCKETS
         bool unixSockets,
@@ -39,7 +39,7 @@ class ServerInterface {
   private:
     /** Socket for solicitation/advertising (owned by code that constructs
      * this object) */
-    sakusen::comms::Socket* solicitationSocket;
+    sakusen::comms::Socket::Ptr solicitationSocket;
     /** Address to which join requests should be sent, if different from the
      * solicitationSocket */
     String joinAddress;
@@ -53,11 +53,11 @@ class ServerInterface {
     /** ID assigned to us by the server (valid only when joined) */
     sakusen::comms::ClientID id;
     /** Socket used by the server to talk to us (owned by this) */
-    sakusen::comms::Socket* incomingSocket;
+    sakusen::comms::Socket::Ptr incomingSocket;
     /** Socket the server has reserved for us to talk to it (owned by this,
      * but might be the same as incomingSocket, so don't delete both before
      * checking that) */
-    sakusen::comms::Socket* outgoingSocket;
+    sakusen::comms::Socket::Ptr outgoingSocket;
 
     String universeName;
 

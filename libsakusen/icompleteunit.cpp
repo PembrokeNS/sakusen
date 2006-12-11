@@ -13,7 +13,7 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
   for (int i=0; i<2; i++) {
     dExtents[i] = 0;
     for (int j=0; j<3; j++) {
-      dExtents[i] += fabs(orientation[i][j])*size[j];
+      dExtents[i] += fabs(orientation(i, j))*size[j];
     }
     iExtents[i] = uint32(ceil(dExtents[i]));
   }
@@ -34,7 +34,7 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
   for (int i=0; i<3; i++) {
     dExtents[i] = 0;
     for (int j=0; j<3; j++) {
-      dExtents[i] += fabs(orientation[i][j])*size[j];
+      dExtents[i] += fabs(orientation(i, j))*size[j];
     }
     pExtents[i] = sint32(ceil(dExtents[i]));
   }

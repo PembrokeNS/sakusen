@@ -13,7 +13,11 @@ using namespace tedomari::ui;
  * \param[in] unit The unit to draw. Must not be NULL.
  * \param[in] colour The colour of the player who owns this unit.
  */
-void MapDisplay::drawUnit(const ICompleteUnit* unit, const Colour& colour)
+template<typename UnitRef>
+void MapDisplay::drawUnit(
+    const UnitRef& unit,
+    const Colour& colour
+  )
 {
   list< Point<double> > corners;
 
@@ -78,11 +82,11 @@ void MapDisplay::paint()
       drawUnitOrders(*unit, colour);
     }
     
-    list<UpdatedSensorReturns*> returnsToDraw =
+    list<Ref<UpdatedSensorReturns> > returnsToDraw =
       sakusen::client::world->getSensorReturnsIntersecting(displayRect);
     /*QDebug("drawing " << unitsToDraw.size() << " sensor returns");*/
-    for (list<UpdatedSensorReturns*>::iterator retrn = returnsToDraw.begin();
-        retrn != returnsToDraw.end(); ++retrn) {
+    for (list<Ref<UpdatedSensorReturns> >::iterator retrn =
+        returnsToDraw.begin(); retrn != returnsToDraw.end(); ++retrn) {
       if ((*retrn)->getPerception() & perception_unit) {
         drawUnit((*retrn)->getUnit(), Colour::yellow);
       } else {

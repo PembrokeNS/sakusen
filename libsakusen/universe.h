@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 
 #include <vector>
+#include <boost/utility.hpp>
 
 #include "gnu_extensions.h"
 #include "stringutils.h"
@@ -19,16 +20,7 @@ namespace sakusen {
  * This class contains the information you need before making a Map - things
  * such as what UnitTypes, WeaponTypes, etc exist.
  */
-class LIBSAKUSEN_API Universe {
-  private:
-    Universe();
-    /** \brief Explicitly private copy constructor to prevent copying
-     *
-     * Because UnitTypeIDs, etc. are actually pointers to objects stored in
-     * Universe, a Universe cannot be copied (it would invalidate those
-     * pointers).
-     */
-    Universe(const Universe&);
+class LIBSAKUSEN_API Universe : boost::noncopyable {
   public:
     Universe(
         const String& internalName,

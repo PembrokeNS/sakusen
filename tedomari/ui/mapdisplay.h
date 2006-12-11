@@ -56,7 +56,8 @@ class MapDisplay : public Control {
         const sakusen::Point<double>&
       ) const;
 
-    void drawUnit(const sakusen::ICompleteUnit* unit, const Colour&);
+    template<typename UnitRef>
+    void drawUnit(const UnitRef& unit, const Colour&);
     void drawUnitOrders(const sakusen::client::UpdatedUnit* unit, const Colour&);
 
   protected:

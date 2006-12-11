@@ -2,10 +2,14 @@
 #define HEIGHTFIELD_H
 
 #include "libsakusen-global.h"
+
+#include <boost/multi_array.hpp>
+
 #include "point.h"
 #include "rectangle.h"
 #include "iarchive.h"
 #include "oarchive.h"
+#include "iheightfield.h"
 
 namespace sakusen {
 
@@ -33,14 +37,15 @@ namespace sakusen {
  *
  * \todo It might be worthwhile storing the map left and bottom values here
  * rather than looking them up whenever needed. */
-class LIBSAKUSEN_API Heightfield {
-  private:
+class LIBSAKUSEN_API Heightfield : public IHeightfield {
+  protected:
+    typedef boost::multi_array<sint16, 2> hf_type;
     Heightfield(
         uint32 horizontalResolution,
         uint32 verticalResolution,
         uint32 width,
         uint32 height,
-        sint16* heightfield
+        const hf_type& heightfield
       );
   public:
     Heightfield(
@@ -49,9 +54,6 @@ class LIBSAKUSEN_API Heightfield {
         uint32 width,
         uint32 height
       );
-    Heightfield(const Heightfield&);
-    Heightfield& operator=(const Heightfield&);
-    ~Heightfield();
   private:
     /** Dex between adjacent height samples in the heightfield */
     uint32 horizontalResolution;
@@ -68,9 +70,8 @@ class LIBSAKUSEN_API Heightfield {
     /** \brief Array of heights.
      *
      * The height at position (x*horizontalResolution, y*horizontalResolution)
-     * is stored at heightfield[y*width+h] (where x and y are distances from
-     * the map edges). */
-    sint16* heightfield;
+     * is stored at heightfield[x][y]. */
+    hf_type heightfield;
 
     void sanityCheck() const;
     inline uint32 dexToSampleFloorX(sint32 x) const;
@@ -83,7 +84,7 @@ class LIBSAKUSEN_API Heightfield {
     inline sint32 getHeightAtSample(uint32 x, uint32 y) const {
       assert(x < width);
       assert(y < height);
-      return heightfield[y*width + x];
+      return heightfield[x][y];
     }
   public:
     /** \name accessors */
@@ -95,7 +96,7 @@ class LIBSAKUSEN_API Heightfield {
     //@}
 
     sint32 getHeightAt(sint32 x, sint32 y) const;
-    inline sint32 getHeightAt(const Point<sint32>& p) const {
+    inline sint32 getHeightAt(const Position& p) const {
       return getHeightAt(p.x, p.y);
     }
     sint32 getMaxHeightIn(const Rectangle<sint32>&) const;

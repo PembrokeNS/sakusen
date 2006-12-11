@@ -15,7 +15,7 @@
 using namespace sakusen;
 using namespace sakusen::comms;
 
-Socket* TCPSocket::newConnectionToAddress(std::list<String>& address)
+Socket::Ptr TCPSocket::newConnectionToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -23,13 +23,13 @@ Socket* TCPSocket::newConnectionToAddress(std::list<String>& address)
   interpretAddress(address, &hostname, &port);
 
   if (hostname.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
-  return new TCPConnectingSocket(hostname, port);
+  return Socket::Ptr(new TCPConnectingSocket(hostname, port));
 }
 
-Socket* TCPSocket::newBindingToAddress(std::list<String>& address)
+Socket::Ptr TCPSocket::newBindingToAddress(std::list<String>& address)
 {
   String hostname;
   uint16 port;
@@ -37,11 +37,11 @@ Socket* TCPSocket::newBindingToAddress(std::list<String>& address)
   interpretAddress(address, &hostname, &port);
 
   if (hostname.empty()) {
-    return NULL;
+    return Socket::Ptr();
   }
 
   /* hostname is just ignored except for checking the error condition */
-  return new TCPListeningSocket(port);
+  return Socket::Ptr(new TCPListeningSocket(port));
 }
 
 TCPSocket::TCPSocket() :
@@ -82,7 +82,7 @@ void TCPSocket::send(const void* buf, size_t len)
       case ENOTCONN:
       case ECONNREFUSED:
       case ECONNABORTED:
-        throw new SocketClosedExn();
+        throw SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
@@ -134,7 +134,7 @@ void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*addr
     switch (socket_errno) {
       case ENOTCONN:
       case ECONNREFUSED:
-        throw new SocketClosedExn();
+        throw SocketClosedExn();
         break;
       default:
         Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
@@ -157,7 +157,7 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
           break;
         }
         if (socket_errno == ECONNABORTED) {
-          throw new SocketClosedExn();
+          throw SocketClosedExn();
         }
         Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
       }

@@ -9,13 +9,8 @@ namespace comms {
 
 class TCPSocket : public IPSocket {
   public:
-    static Socket* newConnectionToAddress(std::list<String>& address);
-    static Socket* newBindingToAddress(std::list<String>& address);
-  private:
-    /** Copying this would be a bad idea, since the socket would be closed
-     * twice, and other such problems.
-     */
-    TCPSocket(const TCPSocket& copy);
+    static Socket::Ptr newConnectionToAddress(std::list<String>& address);
+    static Socket::Ptr newBindingToAddress(std::list<String>& address);
   protected:
     /** create the socket without binding or connecting */
     TCPSocket();

@@ -18,7 +18,7 @@ CompleteUnit::CompleteUnit(
 {
 }
 
-CompleteUnit::CompleteUnit(const ICompleteUnit* copy) :
+CompleteUnit::CompleteUnit(const Ref<const ICompleteUnit>& copy) :
   unitId(copy->getId()),
   status(copy->getIStatus()),
   typeData(copy->getITypeData())

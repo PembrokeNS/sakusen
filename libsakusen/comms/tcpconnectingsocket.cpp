@@ -19,7 +19,7 @@ TCPConnectingSocket::TCPConnectingSocket(
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    throw new HostNotFoundExn(hostname);
+    throw HostNotFoundExn(hostname);
   }
 
   memset(&addr, 0, sizeof(addr));

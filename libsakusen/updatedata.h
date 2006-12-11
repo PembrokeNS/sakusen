@@ -50,7 +50,10 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
   private:
     UnitAddedUpdateData();
   public:
-    UnitAddedUpdateData(changeOwnerReason r, const ICompleteUnit* u) :
+    UnitAddedUpdateData(
+        changeOwnerReason r,
+        const Ref<const ICompleteUnit>& u
+      ) :
       UpdateData(), reason(r), unit(u) {}
     UnitAddedUpdateData(IArchive&, const Universe*);
     ~UnitAddedUpdateData() {}
@@ -69,7 +72,8 @@ class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
   private:
     UnitAlteredUpdateData();
   public:
-    UnitAlteredUpdateData(const ICompleteUnit* u) : UpdateData(), unit(u) {}
+    UnitAlteredUpdateData(const Ref<const ICompleteUnit>& u) :
+      UpdateData(), unit(u) {}
     UnitAlteredUpdateData(IArchive&, const Universe*);
     ~UnitAlteredUpdateData() {}
   private:
@@ -163,7 +167,7 @@ class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
   private:
     SensorReturnsAddedUpdateData();
   public:
-    SensorReturnsAddedUpdateData(const ISensorReturns* r) :
+    SensorReturnsAddedUpdateData(const Ref<const ISensorReturns> r) :
       UpdateData(), returns(r) {}
     SensorReturnsAddedUpdateData(IArchive&, const Universe*);
     ~SensorReturnsAddedUpdateData() {}
@@ -182,7 +186,7 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
   private:
     SensorReturnsAlteredUpdateData();
   public:
-    SensorReturnsAlteredUpdateData(const ISensorReturns* r) :
+    SensorReturnsAlteredUpdateData(const Ref<const ISensorReturns>& r) :
       UpdateData(), returns(r) {}
     SensorReturnsAlteredUpdateData(IArchive&, const Universe*);
     ~SensorReturnsAlteredUpdateData() {}

@@ -8,7 +8,6 @@
 #include "socketexn.h"
 #include "resourceinterface-methods.h"
 #include "completeworld.h"
-#include "ballistic-methods.h"
 #include "fuseki-global.h"
 #include "settingstree/stringlistleaf.h"
 #include "settingstree/intleaf.h"
@@ -33,13 +32,13 @@ using namespace fuseki::settingsTree;
 
 Server::Server(
     std::ostream& o,
-    ResourceInterface* r,
+    const ResourceInterface::Ptr& r,
 #ifndef DISABLE_UNIX_SOCKETS
     bool a,
-    Socket* unS,
+    const Socket::Ptr& unS,
 #endif
-    Socket* udS,
-    Socket* tS,
+    const Socket::Ptr& udS,
+    const Socket::Ptr& tS,
     bool d
   ) :
   SettingsUser("server"),
@@ -116,7 +115,7 @@ Server::~Server()
 void Server::advertise(
     const SolicitMessageData& data,
     const String& receivedFrom,
-    Socket* receivedOn,
+    const Socket::Ptr& receivedOn,
     const Message& advertisement
   )
 {
@@ -128,7 +127,7 @@ void Server::advertise(
     address = receivedFrom;
     respondOnExisting = true;
   }
-  Socket* responseSocket = NULL;
+  Socket::Ptr responseSocket;
   if (respondOnExisting) {
     responseSocket = receivedOn;
   } else {
@@ -140,7 +139,6 @@ void Server::advertise(
       responseSocket->sendTo(advertisement, address);
     } else {
       responseSocket->send(advertisement);
-      delete responseSocket;
     }
   } else {
     out << "Unsupported socket type requested by client "
@@ -168,7 +166,7 @@ ClientID Server::getFreeClientID()
 void Server::addClient(
     const String& requestedAddress,
     const String& fromAddress,
-    Socket* existingSocket
+    const Socket::Ptr& existingSocket
   )
 {
   /* Check whether this address is blocked */
@@ -187,12 +185,11 @@ void Server::addClient(
       /* We matched a blocked address, so return without even bothering to
        * reject them. */
       out << "Ignoring join request because address is blocked.\n";
-      delete existingSocket;
       return;
     }
   }
 
-  Socket* socket = NULL;
+  Socket::Ptr socket;
   
   if (requestedAddress != "") {
     socket = Socket::newConnectionToAddress(requestedAddress);
@@ -207,7 +204,6 @@ void Server::addClient(
     /* No free IDs */
     out << "Rejecting join request due to lack of space for more clients.\n";
     socket->send(RejectMessageData("No space for more clients"));
-    delete socket;
     return;
   }
   /* Add the client's branch of the settings tree */
@@ -302,12 +298,11 @@ void Server::handleClientMessages()
           break;
         }
       }
-    } catch (SocketExn* e) {
+    } catch (SocketExn& e) {
       out << "Removing client " << clientID_toString(client->getId()) <<
-        " due to causing SocketExn: " << e->message;
+        " due to causing SocketExn: " << e.message;
       removeClient(client);
       clientRemoved = true;
-      delete e;
     }
     
     if (clientRemoved) {
@@ -435,7 +430,7 @@ void Server::serve()
 
   /* A list of incoming (probably TCP) connections where we expect to get join
    * messages from prospective clients */
-  list<pair<Socket*, timeval> > newConnections;
+  list<pair<Socket::Ptr, timeval> > newConnections;
   
   /* A bool to get us out of the loop when it is time to start the game */
   bool startGame = false;
@@ -467,7 +462,7 @@ void Server::serve()
               out << "Considering adding new client at " <<
                 data.getAddress() << " based on message through unix "
                 "socket\n";
-              addClient(data.getAddress(), receivedFrom, NULL);
+              addClient(data.getAddress(), receivedFrom, Socket::Ptr());
             }
             break;
           default:
@@ -509,7 +504,7 @@ void Server::serve()
     /* If we have a seperate tcp socket then check for messages there too */
     if (tcpSocket != NULL) {
       while (true) {
-        Socket* newConnection = tcpSocket->accept();
+        Socket::Ptr newConnection = tcpSocket->accept();
         if (newConnection == NULL) {
           break;
         }
@@ -521,7 +516,7 @@ void Server::serve()
          * user-specifiable */
         timeout += MICRO;
         newConnections.push_back(
-            pair<Socket*, timeval>(newConnection, timeout)
+            pair<Socket::Ptr, timeval>(newConnection, timeout)
           );
       }
     }
@@ -531,7 +526,7 @@ void Server::serve()
     if (!newConnections.empty()) {
       timeval timeNow;
       timeUtils_getTime(&timeNow);
-      for (list<pair<Socket*, timeval> >::iterator conn =
+      for (list<pair<Socket::Ptr, timeval> >::iterator conn =
           newConnections.begin(); conn != newConnections.end(); ) {
         if ((bytesReceived =
             conn->first->receive(buf, BUFFER_LEN))) {
@@ -560,7 +555,6 @@ void Server::serve()
           /* If we've reached the timeout for this connection, then delete it
            * */
           if (conn->second > timeNow) {
-            delete conn->first;
             conn = newConnections.erase(conn);
           } else {
             ++conn;
@@ -707,7 +701,8 @@ void Server::serve()
       client->send(GameStartMessageData(
             client->getPlayerId(), map->getTopology(),
             map->getTopRight(), map->getBottomLeft(),
-            map->getGravity()
+            map->getGravity(), map->getHeightfield().getHorizontalResolution(),
+            map->getHeightfield().getVerticalResolution()
           ));
       bool wasAdmin = client->hasGroup("admin");
       client->clearGroups();
@@ -751,12 +746,11 @@ void Server::serve()
         
         try {
           client->flushOutgoing(sakusen::server::world->getTimeNow());
-        } catch (SocketExn* e) {
+        } catch (SocketExn& e) {
           out << "Removing client " << clientID_toString(client->getId()) <<
-            " due to causing SocketExn: " << e->message;
+            " due to causing SocketExn: " << e.message;
           removeClient(client);
           clientRemoved = true;
-          delete e;
         }
         
         if (clientRemoved) {
@@ -792,9 +786,8 @@ void Server::serve()
     while (!clients.empty()) {
       try {
         clients.begin()->second->send(KickMessageData("Server shutting down."));
-      } catch (SocketExn* e) {
-        out << "Socket exception while kicking client: " << e->message << "\n";
-        delete e;
+      } catch (SocketExn& e) {
+        out << "Socket exception while kicking client: " << e.message << "\n";
       }
       removeClient(clients.begin()->second);
     }
@@ -1098,8 +1091,7 @@ void Server::settingAlteredCallback(Leaf* altered)
         if (client->isAutoUnready() && !isReadinessChange) {
           changeInClientBranch(client, "ready", "false");
         }
-      } catch (SocketExn* e) {
-        delete e;
+      } catch (SocketExn& e) {
         deadClients.push_back(client);
       }
     }

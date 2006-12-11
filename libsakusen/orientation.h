@@ -23,36 +23,6 @@ enum Rotation {
 
 class LIBSAKUSEN_API Orientation {
   public:
-    /* a class to facilitate accessing elements of the orientation matrix */
-    /* There is some risk of misaccessing of memory if someone should be
-     * foolish enough to hold onto an OrientationMatrixRow object until after
-     * its corresponding Orientation object is destroyed, but we hope that
-     * won't happen, and make all constructors private to make it a little more
-     * difficult */
-    class OrientationMatrixRow {
-      friend class Orientation;
-      private:
-        OrientationMatrixRow() : row(NULL) {}
-        OrientationMatrixRow(const OrientationMatrixRow& copy) :
-          row(copy.row) {}
-        OrientationMatrixRow(const double* r) : row(r) {}
-        inline OrientationMatrixRow& operator=(
-            const OrientationMatrixRow& copy)
-        {
-          row = copy.row;
-          return *this;
-        }
-      public:
-        ~OrientationMatrixRow() {}
-      private:
-        const double* row;
-      public:
-        inline double operator[](const int i) const {
-          assert(i>=0);
-          assert(i<3);
-          return row[i];
-        }
-    };
     Orientation();
     Orientation(Rotation rotation, Angle amount);
       /* Constructs an orientation corresponding to specified rotation */
@@ -65,10 +35,10 @@ class LIBSAKUSEN_API Orientation {
     double matrix[3][3]; /* indexed by rows then columns,
                             matrix acts on the left */
   public:
-    inline const OrientationMatrixRow operator[](const int i) const {
-      assert(i>=0);
+    inline double operator()(unsigned int i, unsigned int j) const {
       assert(i<3);
-      return OrientationMatrixRow(&(matrix[i][0]));
+      assert(j<3);
+      return matrix[i][j];
     }
     Orientation operator*(const Orientation& right) const;
       /* multiplication is non-commutative! */

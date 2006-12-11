@@ -55,7 +55,7 @@ Orientation Orientation::operator*(const Orientation& right) const
   for (int i=0; i<3; i++) {
     for (int j=0; j<3; j++) {
       for (int k=0;k<3; k++) {
-        retMatrix[i][k] += matrix[i][j] * right[j][k];
+        retMatrix[i][k] += matrix[i][j] * right(j, k);
       }
     }
   }

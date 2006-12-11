@@ -10,8 +10,8 @@ namespace sakusen {
 /** \brief Describes a region which is spherical */
 template<typename T>
 class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
-    typedef typename TypeMunger<T>::unsign UT;
-    typedef typename TypeMunger<UT>::widest UWideT;
+    typedef typename IntMunger<T>::unsign UT;
+    typedef typename IntMunger<UT>::widest UWideT;
   public:
     SphereRegionData() : centre(), radius(0) {}
     SphereRegionData(const Point<T>& c, UT r) :

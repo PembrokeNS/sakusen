@@ -27,8 +27,15 @@ class PlaneMap : public MapType {
     PlaneMap(
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-        uint16 gravity
-      ) : MapType(topRight, bottomLeft, gravity) {}
+        uint16 gravity,
+        uint32 horizontalHeightfieldRes,
+        uint32 verticalHeightfieldRes
+      ) :
+      MapType(
+          topRight, bottomLeft, gravity,
+          horizontalHeightfieldRes, verticalHeightfieldRes
+        )
+    {}
 
     Topology getTopology(void) const { return topology_plane; }
     bool resolvePosition(

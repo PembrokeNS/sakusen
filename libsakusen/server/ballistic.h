@@ -23,7 +23,7 @@ namespace server {
  * not affect each other (e.g. by colliding), and they do not get destroyed
  * until they collide with something.
  */
-class Ballistic {
+class Ballistic : public virtual IReferee {
   private:
     PlayerID owner;
     Quadratic path;
@@ -78,19 +78,7 @@ class Ballistic {
     //@}
 };
 
-} /* Back into namespace sakusen */
-
-template<>
-class RefHandler<server::Ballistic> {
-  public:
-    inline void registerRef(Ref<server::Ballistic>* ref) const;
-    inline void unregisterRef(Ref<server::Ballistic>* ref) const;
-    inline server::Ballistic* extract(IArchive& archive) const;
-    inline void insert(OArchive& archive, const server::Ballistic* ret) const;
-    typedef void loadArgument;
-};
-
-}
+}}
 
 #endif
 

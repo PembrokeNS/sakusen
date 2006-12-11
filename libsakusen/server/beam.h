@@ -2,13 +2,12 @@
 #define BEAM_H
 
 #include "ray.h"
+#include "ref.h"
 #include "layeredunit.h"
+#include "effect.h"
 
 namespace sakusen {
 namespace server {
-
-/** \file
- * This defines the Beam class. */
 
 /** \brief a beam that physically exists, like a laser
  *
@@ -20,7 +19,7 @@ namespace server {
  * the world, probably gets drawn on the user's display, and affects objects
  * when it hits them.
  */
-class Beam : private Ray {
+class Beam : private Ray, public virtual IReferee {
   private:
     /** \brief The Unit producing the Beam */
     Ref<LayeredUnit> source;
@@ -39,14 +38,19 @@ class Beam : private Ray {
   protected:
     Beam(
         const Point<sint32>& start,
-        const Point<sint32>& direction,
-        Ref<LayeredUnit>& s,
+        const Point<sint16>& direction,
+        const Ref<LayeredUnit>& s,
         Time creation,
         TimeSpan duration
       );
 
   public:
     virtual ~Beam();
+    virtual void onInteract(const Intersection&);
+    virtual void onInteractLand(double /*position*/) {}
+    virtual void onInteractWater(double /*position*/) {}
+    virtual void onInteractUnit(double /*position*/, const Ref<LayeredUnit>&) {}
+    virtual void onInteractEffect(double /*position*/, const Ref<Effect>&) {}
     virtual bool onRemovalTest();
     /** \name mechanics
      * These functions deal with game mechanics. */
@@ -55,19 +59,7 @@ class Beam : private Ray {
     //@}
 };
 
-} /* Back into namespace sakusen */
-
-template<>
-class RefHandler<server::Beam> {
-  public:
-    inline void registerRef(Ref<server::Beam>* ref) const;
-    inline void unregisterRef(Ref<server::Beam>* ref) const;
-    inline server::Beam* extract(IArchive& archive) const;
-    inline void insert(OArchive& archive, const server::Beam* ret) const;
-    typedef void loadArgument;
-};
-
-}
+}}
 
 #endif
 

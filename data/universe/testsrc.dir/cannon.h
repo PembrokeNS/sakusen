@@ -20,7 +20,7 @@ class Cannon : public Weapon {
     {}
   protected:
     uint32 getProjectileSpeed() const { return 20; }
-    void onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
   public:
     Weapon* newCopy() const {
       return new Cannon(*this);
@@ -29,7 +29,7 @@ class Cannon : public Weapon {
 
 class Shell : public Ballistic {
   public:
-    Shell(Ref<LayeredUnit>& source, const WeaponStatus& status);
+    Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status);
 
     void onCollision(const Point<sint32>& pos);
 };
@@ -41,7 +41,7 @@ class Explosion : public Effect {
           owner, Region<sint32>(SphereRegionData<sint32>(centre, radius)),
           Visibility()
         ) {}
-    void onUnitPresent(Ref<LayeredUnit>&);
+    void onUnitPresent(const Ref<LayeredUnit>&);
 };
 
 class Paralyzer : public Weapon {
@@ -55,14 +55,23 @@ class Paralyzer : public Weapon {
         const Point<sint16>& vel
       );
     uint32 getProjectileSpeed() const { return 0; }
-    void onFire(Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
   public:
     Weapon* newCopy() const { return new Paralyzer(*this); }
 };
 
 class ParalyzationBeam : public Beam {
   public:
-    ParalyzationBeam(Ref<LayeredUnit>& source, const WeaponStatus& status);
+    ParalyzationBeam(
+        const Ref<LayeredUnit>& source,
+        const WeaponStatus& status
+      );
+    GameObject interactsWith() const {
+      return gameObject_unit;
+    }
+    GameObject stoppedBy() const {
+      return gameObject_unit | gameObject_land;
+    }
 };
 
 }

@@ -20,7 +20,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
         const UnitTypeData& tD
       );
   public:
-    CompleteUnit(const ICompleteUnit* copy);
+    CompleteUnit(const Ref<const ICompleteUnit>& copy);
     virtual ~CompleteUnit() {}
   protected:
     uint32 unitId;

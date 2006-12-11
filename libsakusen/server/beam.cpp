@@ -1,13 +1,15 @@
 #include "beam.h"
-#include "layeredunit-methods.h"
 #include "world.h"
+#include "serializationhandler.h"
+
+using namespace std;
 
 using namespace sakusen::server;
 
 Beam::Beam(
     const Point<sint32>& start,
-    const Point<sint32>& direction,
-    Ref<LayeredUnit>& s,
+    const Point<sint16>& direction,
+    const Ref<LayeredUnit>& s,
     Time creation,
     TimeSpan duration
   ) :
@@ -21,6 +23,29 @@ Beam::Beam(
 /** The destructor currently does nothing. */
 Beam::~Beam()
 {
+}
+
+/** \brief Callback for a general interaction of the Beam.  Should not
+ * typically need to be overridden by subclasses */
+void Beam::onInteract(const Intersection& in)
+{
+  switch (in.getType())
+  {
+    case gameObject_land:
+      onInteractLand(in.getPosition());
+      break;
+    case gameObject_water:
+      onInteractWater(in.getPosition());
+      break;
+    case gameObject_unit:
+      onInteractUnit(in.getPosition(), in.getRef<LayeredUnit>());
+      break;
+    case gameObject_effect:
+      onInteractEffect(in.getPosition(), in.getRef<Effect>());
+      break;
+    default:
+      Fatal("unexpected interaction type: "<<in.getType());
+  }
 }
 
 /** \brief Tests whether the Beam should be removed
@@ -55,5 +80,15 @@ void Beam::resolveIntersections(void) {
    * for) intersections behind those things. Then we call the appropriate hit
    * action on each object we hit.
    */
+
+  /* Call the Ray method to find all pertinent intersections */
+  IntersectionSet interactions;
+  getAllInteractionsTo(1.0, interactions);
+
+  /* iterate over all these intersections, calling the callbacks as we go */
+  for (IntersectionSet::iterator in = interactions.begin();
+      in != interactions.end(); ++in) {
+    onInteract(*in);
+  }
 }
 

@@ -18,9 +18,9 @@ class LIBSAKUSEN_COMMS_API MessageData {
   protected:
     MessageData();
     MessageData(const MessageData& copy);
-    OArchive archive;
+    mutable OArchive archive;
     
-    virtual void fillArchive() = 0;
+    virtual void fillArchive() const = 0;
   public:
     virtual ~MessageData();
     const OArchive& getArchive() const {
@@ -29,9 +29,8 @@ class LIBSAKUSEN_COMMS_API MessageData {
          * because what we're really doing here is lazy evaluation, rather than
          * *real* alteration.  At least, that's what I tell myself.  It makes me
          * feel better. - JJB */
-        (const_cast<OArchive&>(archive) << uint8(NETWORK_PROTOCOL_VERSION)).
-          insertEnum(getType());
-        const_cast<MessageData*>(this)->fillArchive();
+        (archive << uint8(NETWORK_PROTOCOL_VERSION)).insertEnum(getType());
+        fillArchive();
       }
       return archive;
     }
@@ -50,7 +49,7 @@ class LIBSAKUSEN_COMMS_API SolicitMessageData : public MessageData {
     String address; /* The address where the client expects the advertisement
                        to be sent */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -68,7 +67,7 @@ class LIBSAKUSEN_COMMS_API AdvertiseMessageData : public MessageData {
     String serverName;
     String gameName;
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -87,7 +86,7 @@ class LIBSAKUSEN_COMMS_API JoinMessageData : public MessageData {
     String address; /* The address where the client want all future
                        communication to be sent */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -106,7 +105,7 @@ class LIBSAKUSEN_COMMS_API AcceptMessageData : public MessageData {
                        communication from this client to be sent */
     ClientID id; /* The id assigned to this client */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -124,7 +123,7 @@ class LIBSAKUSEN_COMMS_API RejectMessageData : public MessageData {
   private:
     String reason; /* The reason for rejection */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -141,7 +140,7 @@ class LIBSAKUSEN_COMMS_API KickMessageData : public MessageData {
   private:
     String reason; /* The reason for kicking */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -156,7 +155,7 @@ class LIBSAKUSEN_COMMS_API LeaveMessageData : public MessageData {
     ~LeaveMessageData() {}
   private:
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -172,7 +171,7 @@ class LIBSAKUSEN_COMMS_API GetSettingMessageData : public MessageData {
   private:
     String setting; /* The full path of the setting to get */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -190,7 +189,7 @@ class LIBSAKUSEN_COMMS_API ChangeSettingMessageData : public MessageData {
     String setting; /* The full path of the setting to change */
     String value; /* The value to give to the setting */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -209,7 +208,7 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
     String setting; /* The full path of the setting being sent */
     String value; /* The value of the setting */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -231,7 +230,9 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-        uint16 gravity
+        uint16 gravity,
+        uint32 horizontalHeightfieldRes,
+        uint32 verticalHeightfieldRes
       );
     GameStartMessageData(IArchive& in);
     ~GameStartMessageData() {}
@@ -241,8 +242,10 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
     uint16 gravity;
+    uint32 horizontalHeightfieldRes;
+    uint32 verticalHeightfieldRes;
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -251,6 +254,12 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
     inline uint16 getGravity() const { return gravity; }
+    inline uint32 getHorizontalHeightfieldResolution() const {
+      return horizontalHeightfieldRes;
+    }
+    inline uint32 getVerticalHeightfieldResolution() const {
+      return verticalHeightfieldRes;
+    }
 };
 
 class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
@@ -263,7 +272,7 @@ class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
   private:
     OrderMessage orderMessage; /**< The order message */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;
@@ -281,7 +290,7 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     Time time; /**< The game time at which these updates apply */
     std::list<Update> updates; /**< The updates */
   protected:
-    void fillArchive();
+    void fillArchive() const;
   public:
     MessageType getType() const;
     MessageData* newCopy() const;

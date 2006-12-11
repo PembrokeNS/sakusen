@@ -64,7 +64,7 @@ Region<T> Region<T>::load(IArchive& archive)
       data = RectangleRegionData<T>::loadNew(archive);
       break;
     default:
-      throw new DeserializationExn(
+      throw DeserializationExn(
           "unexpected RegionType: " + numToString(type)
         );
   }

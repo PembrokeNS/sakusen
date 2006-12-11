@@ -3,6 +3,7 @@
 
 #include "libsakusen-global.h"
 #include "point.h"
+#include "rectangle.h"
 
 namespace sakusen {
 

@@ -17,7 +17,7 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    throw new SocketExn(
+    throw SocketExn(
         "Error connecting socket: " + errorUtils_errorMessage(errno)
       );
   }
@@ -31,7 +31,7 @@ UnixDatagramConnectingSocket::UnixDatagramConnectingSocket(
   if (-1 ==
       connect(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    throw new SocketExn(
+    throw SocketExn(
         "Error connecting socket: " + errorUtils_errorMessage(errno)
       );
   }

@@ -34,7 +34,7 @@ SensorReturns SensorReturns::load(IArchive& in, const Universe* universe)
   (in >> id).extractEnum(perception) >> senserOwner;
 
   if (0 != (perception & ~perception_full)) {
-    throw new EnumDeserializationExn("perception", perception);
+    throw EnumDeserializationExn("perception", perception);
   }
   
   if (0 != (perception & perception_owner)) {

@@ -2,7 +2,7 @@
 #define LIBSAKUSEN_SERVER__PLAYER_H
 
 #include "libsakusen-global.h"
-#include <list>
+#include "hash_list.h"
 #include "gnu_extensions.h"
 #include "playerid.h"
 #include "client.h"
@@ -24,6 +24,7 @@ class LIBSAKUSEN_SERVER_API Player {
   public:
     Player(const PlayerTemplate& t);
     Player(const Player& copy);
+    Player& operator=(const Player&);
     ~Player();
   private:
     bool noClients;
@@ -34,15 +35,15 @@ class LIBSAKUSEN_SERVER_API Player {
     
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
-    __gnu_cxx::hash_map<uint32, LayeredUnit*> units;
+    __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> > units;
     /* The id of the last unit that was added for this player */
     uint32 lastUnitId;
     
-    __gnu_cxx::hash_map<SensorReturnsID, DynamicSensorReturns> sensorReturns;
+    hash_list<DynamicSensorReturns> sensorReturns;
+    
+    __gnu_cxx::hash_map<SensorReturnsID, Ref<DynamicSensorReturns> >
+      sensorReturnsById;
     SensorReturnsID lastSensorReturnsId;
-
-    __gnu_cxx::hash_multimap<SensorReturnsID, Ref<ISensorReturns>*>
-      sensorReturnRefs; /* These pointers not owned by this */
 
     /* A container of Refs to the Ballistics visible to this player.  The key
      * is a pointer which we use as a UID for the Ballistic, but it shouldn't
@@ -50,12 +51,9 @@ class LIBSAKUSEN_SERVER_API Player {
      * pair entry is the client-side ID */
     __gnu_cxx::hash_map<
         MaskedPtr<Ballistic>,
-        std::pair<uint32, Ref<Ballistic> >,
-        MaskedPtrHash<Ballistic>
+        std::pair<uint32, Ref<const Ballistic> >
       > visibleBallistics;
     uint32 lastClientBallisticId;
-
-    void invalidateRefs(SensorReturnsID id);
   public:
     /* accessors */
     PlayerID getId() const { return playerId; }
@@ -67,16 +65,15 @@ class LIBSAKUSEN_SERVER_API Player {
     }
     void attachClient(Client* client);
     void detachClient(Client* client);
-    const __gnu_cxx::hash_map<uint32, LayeredUnit*>& getUnits(void) const {
+    const __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >& getUnits(void) const {
       return units;
     }
-    DynamicSensorReturns* getSensorReturns(SensorReturnsID id) {
-      __gnu_cxx::hash_map<SensorReturnsID, DynamicSensorReturns>::iterator it =
-        sensorReturns.find(id);
-      if (it == sensorReturns.end()) {
-        return NULL;
+    Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsID id) {
+      DynamicSensorReturnsRef it = sensorReturnsById.find(id);
+      if (it == sensorReturnsById.end()) {
+        return Ref<DynamicSensorReturns>();
       }
-      return &it->second;
+      return it->second;
     }
 
     inline bool isReadyForGameStart(void) const {
@@ -88,8 +85,7 @@ class LIBSAKUSEN_SERVER_API Player {
     void removeUnit(const uint32 id, enum changeOwnerReason why);
       /* any call to removeUnit must be followed by a call to addUnit for
        * another player, otherwise the unit will end up in limbo */
-    void addUnit(LayeredUnit* unit, enum changeOwnerReason why);
-      /* returns the new unit id */
+    void addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why);
     void checkSensorReturns();
     
     void applyIncomingOrders(void);
@@ -98,13 +94,11 @@ class LIBSAKUSEN_SERVER_API Player {
     
     /* Methods to send a update message to all this player's clients */
     void informClients(const Update& update);
-
-    /* reference management */
-    void registerRef(Ref<ISensorReturns>* ref);
-    void unregisterRef(Ref<ISensorReturns>* ref);
 };
 
 }}
+
+#include "layeredunit.h"
 
 #endif // LIBSAKUSEN_SERVER__PLAYER_H
 

@@ -31,7 +31,8 @@ namespace server {
  * be handled directly.  It would be bad (and slow) for layers to mess with the
  * physics too much.
  */
-class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
+class LIBSAKUSEN_SERVER_API LayeredUnit :
+  public ICompleteUnit, boost::noncopyable {
   public:
     static void spawn(
       const PlayerID owner,
@@ -82,6 +83,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
      * be transmitted to the clients */
     bool dirty;
 
+    /** \brief A Ref to this unit, for it to pass out instead of this when
+     * appropriate */
+    Ref<LayeredUnit> refToThis;
+
     /** Accept a new order from the queue */
     void acceptOrder(OrderCondition condition);
   public:
@@ -100,6 +105,24 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
 
     void setDirty(void);
     void clearDirty(void);
+
+    const Ref<LayeredUnit>& getRefToThis()
+    {
+      assert(refToThis.isRefTo(this));
+      return refToThis;
+    }
+
+    void setRefToThis(const Ref<LayeredUnit>& ref)
+    {
+      assert(!refToThis.isValid());
+      assert(ref.isRefTo(this));
+      refToThis = ref;
+    }
+
+    void supplyRef(const IRef& ref)
+    {
+      setRefToThis(dynamic_cast<const Ref<LayeredUnit>&>(ref));
+    }
     
     void setPosition(const Point<sint32>& pos);
     bool setRadar(bool active);
@@ -140,19 +163,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit : public ICompleteUnit {
     inline void onDestruct(void) { topLayer->onDestruct(); }
 };
 
-} /* Back into namespace sakusen */
-
-template<>
-class RefHandler<server::LayeredUnit> {
-  public:
-    inline void registerRef(Ref<server::LayeredUnit>* ref) const;
-    inline void unregisterRef(Ref<server::LayeredUnit>* ref) const;
-    inline server::LayeredUnit* extract(IArchive& archive) const;
-    inline void insert(OArchive& archive, const server::LayeredUnit* ret) const;
-    typedef void loadArgument;
-};
-
-}
+}}
 
 #endif // LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 

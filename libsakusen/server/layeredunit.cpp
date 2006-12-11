@@ -60,7 +60,9 @@ LayeredUnit::LayeredUnit(
 }
 
 LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
+  IReferee(copy),
   ICompleteUnit(copy),
+  noncopyable(),
   owner(copy.owner),
   topLayer(copy.topLayer->newCopy(this)),
   status(topLayer->getCore()),
@@ -89,7 +91,7 @@ LayeredUnit::~LayeredUnit()
 {
   /* Inform all returns from this unit that it is being removed */
   while (!sensorReturns.empty()) {
-    sensorReturns.begin()->second->second.senseeDestroyed();
+    sensorReturns.begin()->second->second->senseeDestroyed();
     sensorReturns.erase(sensorReturns.begin());
   }
 
@@ -129,9 +131,9 @@ void LayeredUnit::setDirty()
     dirty = true;
     for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
         sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
-      DynamicSensorReturns& r = returns->second->second;
-      if (0 != (r.getPerception() & perception_unit)) {
-        r.setDirty();
+      const Ref<DynamicSensorReturns>& r = returns->second->second;
+      if (0 != (r->getPerception() & perception_unit)) {
+        r->setDirty();
       }
     }
   }
@@ -142,7 +144,7 @@ void LayeredUnit::clearDirty()
   if (dirty) {
     dirty = false;
     world->getPlayerPtr(owner)->informClients(
-        Update(UnitAlteredUpdateData(this))
+        Update(UnitAlteredUpdateData(getRefToThis()))
       );
   }
 }
@@ -153,7 +155,7 @@ void LayeredUnit::setPosition(const Point<sint32>& pos)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(this, status->position, pos);
+  world->applyEntryExitEffects(getRefToThis(), status->position, pos);
   status->position = pos;
 }
 
