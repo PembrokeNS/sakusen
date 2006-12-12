@@ -7,10 +7,18 @@
 #define LIBSAKUSEN_API
 
 %import "libsakusen-global.h"
+%include "typemunger.h"
+%include "intmunger.h"
+%{
+#include "intmunger.h"
+#include "typemunger.h"
+%}
 /* tiny files */
 %include "angle.h"
 %include "revision.h"
 %include "hitpoints.h"
+%include "ireferee.h"
+%include "gameobject.h"
 %include "topology.h"
 %{
 #include "topology.h"
@@ -103,6 +111,11 @@ namespace sakusen {
 /* temporary */
 %import "iarchive.h"
 %import "oarchive.h"
+%import "ref.h"
+%{
+#include "isensorreturns.h"
+%}
+%import "isensorreturns.h"
 
 %include "quadratic.h"
 %{
