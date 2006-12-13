@@ -92,6 +92,18 @@ struct IntMunger<double>
   typedef double widest;
 };
 
+#ifdef SWIG
+%template(UIntMunger8) IntMunger<uint8>;
+%template(SIntMunger8) IntMunger<sint8>;
+%template(UIntMunger16) IntMunger<uint16>;
+%template(SIntMunger16) IntMunger<sint16>;
+%template(UIntMunger32) IntMunger<uint32>;
+%template(SIntMunger32) IntMunger<sint32>;
+%template(UIntMunger64) IntMunger<uint64>;
+%template(SIntMunger64) IntMunger<sint64>;
+
+%template(IntMungerDouble) IntMunger<double>;
+#endif /*SWIG*/
 }
 
 #endif

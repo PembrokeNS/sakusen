@@ -208,8 +208,18 @@ class LIBSAKUSEN_API Point {
     }
 #endif
 
+    /* Typedefs to stop squareLength() becoming horrible, with accompanying
+     * #defines because the typedefs are far too complex for SWIG's tiny mind.
+     */
+#ifdef SWIG
+#define Wide IntMunger<T>::widest
+#define UWide IntMunger<IntMunger<T>::widest>::unsign
+#else
+  private:
     typedef typename IntMunger<T>::widest Wide;
     typedef typename IntMunger<Wide>::unsign UWide;
+  public:
+#endif
 
     inline UWide squareLength(void) const {
       /* Ugly casting here because of paranoia. */
