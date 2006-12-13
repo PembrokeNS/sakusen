@@ -7,12 +7,8 @@
 #define LIBSAKUSEN_API
 
 %import "libsakusen-global.h"
-%include "typemunger.h"
 %include "intmunger.h"
-%{
-#include "intmunger.h"
-#include "typemunger.h"
-%}
+%include "typemunger.h"
 /* tiny files */
 %include "angle.h"
 %include "revision.h"
