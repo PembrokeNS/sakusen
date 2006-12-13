@@ -15,7 +15,7 @@ class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
    */
 #ifdef SWIG
 #define UT IntMunger<T>::unsign
-#define UWideT IntMunger<IntMunger<T>::unsign>
+#define UWideT IntMunger<IntMunger<T>::unsign>::widest
 #else
     typedef typename IntMunger<T>::unsign UT;
     typedef typename IntMunger<UT>::widest UWideT;
