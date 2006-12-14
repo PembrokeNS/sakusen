@@ -3,7 +3,7 @@
 
 #include <list>
 #include "maskedptr.h"
-#include "ireferee.h"
+#include "ireferent.h"
 #include "iref.h"
 #include "ref.h"
 
@@ -30,7 +30,7 @@ class hash_list : private IRefContainer, boost::noncopyable {
     typedef std::list<T*> List;
     typedef __gnu_cxx::hash_map<MaskedPtr<T>, typename List::iterator>
       ListIteratorHash;
-    typedef __gnu_cxx::hash_multimap<MaskedPtr<IReferee>, IRef*> RefHash;
+    typedef __gnu_cxx::hash_multimap<MaskedPtr<IReferent>, IRef*> RefHash;
     
     List list;
     /** \brief A hash_map of iterators from the above list
@@ -43,7 +43,7 @@ class hash_list : private IRefContainer, boost::noncopyable {
     ListIteratorHash listIts;
     mutable RefHash refs;
     
-    void invalidateRefs(const MaskedPtr<IReferee>& id);
+    void invalidateRefs(const MaskedPtr<IReferent>& id);
     void registerRef(IRef*) const;
     void unregisterRef(IRef*) const;
   public:
@@ -154,7 +154,7 @@ inline hash_list<T>::~hash_list<T>()
 }
 
 template<typename T>
-void hash_list<T>::invalidateRefs(const MaskedPtr<IReferee>& id)
+void hash_list<T>::invalidateRefs(const MaskedPtr<IReferent>& id)
 {
   std::pair<typename RefHash::iterator, typename RefHash::iterator> refRange =
     refs.equal_range(id);
@@ -169,8 +169,8 @@ void hash_list<T>::invalidateRefs(const MaskedPtr<IReferee>& id)
 template<typename T>
 void hash_list<T>::registerRef(IRef* ref) const
 {
-  MaskedPtr<IReferee> id(*ref);
-  std::pair<MaskedPtr<IReferee>, IRef*> item(id, ref);
+  MaskedPtr<IReferent> id(*ref);
+  std::pair<MaskedPtr<IReferent>, IRef*> item(id, ref);
   refs.insert(item);
 }
 

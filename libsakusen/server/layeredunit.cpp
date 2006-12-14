@@ -60,7 +60,7 @@ LayeredUnit::LayeredUnit(
 }
 
 LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
-  IReferee(copy),
+  IReferent(copy),
   ICompleteUnit(copy),
   noncopyable(),
   owner(copy.owner),
@@ -107,7 +107,7 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
 
     /* Inform clients */
     world->getPlayerPtr(owner)->informClients(
-        Update(OrderAcceptedUpdateData(unitId, condition))
+        Update(new OrderAcceptedUpdateData(unitId, condition))
       );
   } else {
     /* This part of the function only meant for accepting new orders from
@@ -117,7 +117,7 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
     orders.clearQueue();
     orders.clearCurrent();
     world->getPlayerPtr(owner)->informClients(
-        Update(OrderCompletedUpdateData(unitId, condition))
+        Update(new OrderCompletedUpdateData(unitId, condition))
       );
   }
 }
@@ -144,7 +144,7 @@ void LayeredUnit::clearDirty()
   if (dirty) {
     dirty = false;
     world->getPlayerPtr(owner)->informClients(
-        Update(UnitAlteredUpdateData(getRefToThis()))
+        Update(new UnitAlteredUpdateData(getRefToThis()))
       );
   }
 }
@@ -330,7 +330,7 @@ void LayeredUnit::enqueueOrder(
   }
   orders.enqueueOrder(condition, order);
   world->getPlayerPtr(owner)->informClients(
-      Update(OrderQueuedUpdateData(unitId, order, condition))
+      Update(new OrderQueuedUpdateData(unitId, order, condition))
     );
   if (condition == orderCondition_incidental) {
     acceptOrder(orderCondition_incidental);

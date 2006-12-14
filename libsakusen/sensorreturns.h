@@ -59,7 +59,7 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
       assert(0 == (perception & ~perception_full));
     }
     SensorReturns(const SensorReturns& copy) :
-      IReferee(copy),
+      IReferent(copy),
       ISensorReturns(copy),
       IRefContainer(copy),
       id(copy.getId()),

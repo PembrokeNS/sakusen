@@ -7,12 +7,10 @@ namespace fuseki {
 namespace settingsTree {
 
 class ClientsBranch : public Branch {
-  private:
-    ClientsBranch();
-    ClientsBranch(const ClientsBranch&);
   public:
-    ClientsBranch(const Branch* parent, Server* server);
-    ~ClientsBranch();
+    typedef boost::shared_ptr<ClientsBranch> Ptr;
+
+    ClientsBranch(Branch* parent, Server* server);
   public:
     void addClient(sakusen::comms::ClientID id);
     void removeClient(sakusen::comms::ClientID id);

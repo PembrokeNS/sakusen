@@ -11,31 +11,24 @@ Branch::Branch(
     const String& name,
     const String& readers,
     const String& writers,
-    const Node* parent,
+    Branch* parent,
     Server* server
   ) :
   Node(name, readers, writers, parent, server)
 {
 }
 
-Branch::~Branch()
-{
-  while (!children.empty()) {
-    delete children.begin()->second;
-    children.erase(children.begin());
-  }
-}
-
-Node* Branch::getNodeByListRef(
-    list<String>& nodeAddress)
+Node::Ptr Branch::getNodeByListRef(
+    list<String>& nodeAddress
+  )
 {
   if (nodeAddress.empty()) {
-    return this;
+    return ptrToThis();
   }
+
+  Node::Ptr child = getChild(nodeAddress.front());
   
-  Node* child = getChild(nodeAddress.front());
-  
-  if (child == NULL) {
+  if (!child) {
     Fatal("node '" << nodeAddress.front() << "' not found in '" <<
         getFullName() << "'");
   }
@@ -59,7 +52,7 @@ String Branch::changeRequestListRef(
     return "requested node '" + getFullName() + "' not a leaf";
   }
 
-  Node* child = getChild(setting.front());
+  Node::Ptr child = getChild(setting.front());
 
   if (child == NULL) {
     return String("node '") + setting.front() + "' not found in '" +
@@ -74,7 +67,7 @@ String Branch::changeRequestListRef(
 String Branch::getRequestListRef(
     list<String>& setting,
     String& value,
-    const Node*& node,
+    Node::ConstPtr& node,
     const SettingsUser* user) const
 {
   if (!user->hasReadPermissionFor(this)) {
@@ -85,18 +78,18 @@ String Branch::getRequestListRef(
   if (setting.empty()) {
     ostringstream out;
     out << static_cast<uint32>(children.size()) << " items";
-    for (__gnu_cxx::hash_map<String, Node*, StringHash>::const_iterator
+    for (__gnu_cxx::hash_map<String, Node::Ptr, StringHash>::const_iterator
         child = children.begin(); child != children.end(); child++) {
       out << "\n" << child->second->getName();
     }
     value = out.str();
-    node = this;
+    node = ptrToThis();
     return "";
   }
 
-  const Node* child = getChild(setting.front());
+  Node::ConstPtr child = getChild(setting.front());
 
-  if (child == NULL) {
+  if (!child) {
     return String("node '") + setting.front() + "' not found in '" +
       getFullName() + "'";
   }
@@ -106,25 +99,25 @@ String Branch::getRequestListRef(
   return child->getRequestListRef(setting, value, node, user);
 }
 
-Node* Branch::getChild(String name)
+Node::Ptr Branch::getChild(String name)
 {
-  hash_map<String, Node*, StringHash>::iterator child =
+  hash_map<String, Node::Ptr, StringHash>::iterator child =
     children.find(name);
 
   if (child == children.end()) {
-    return NULL;
+    return Node::Ptr();
   }
 
   return child->second;
 }
 
-const Node* Branch::getChild(String name) const
+Node::ConstPtr Branch::getChild(String name) const
 {
-  hash_map<String, Node*, StringHash>::const_iterator child =
+  hash_map<String, Node::Ptr, StringHash>::const_iterator child =
     children.find(name);
 
   if (child == children.end()) {
-    return NULL;
+    return Node::ConstPtr();
   }
 
   return child->second;

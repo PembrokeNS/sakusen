@@ -8,23 +8,21 @@
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-ServerBranch::ServerBranch(const Branch* parent, Server* server) :
+ServerBranch::ServerBranch(Branch* parent, Server* server) :
   Branch("server", "world", "", parent, server)
 {
-  addChild(new ApplicationBranch("world", "", "", this, server));
-  addChild(
-      new StringListLeaf("blockedaddresses", "world", "admin", this, server)
-    );
-  addChild(new IntLeaf<uint8>("countdown", 5, "world", "admin", this, server));
-  addChild(new IntLeaf<uint8>(
-        "deadclienttimeout", 5, "world", "admin", this, server
+  addChild(Node::Ptr(new ApplicationBranch("world", "", "", this, server)));
+  addChild(Node::Ptr(
+        new StringListLeaf("blockedaddresses", "world", "admin", this, server)
       ));
-  addChild(
-      new BoolLeaf("allowobservers", false, "world", "admin", this, server)
-    );
-}
-
-ServerBranch::~ServerBranch()
-{
+  addChild(Node::Ptr(
+        new IntLeaf<uint8>("countdown", 5, "world", "admin", this, server)
+      ));
+  addChild(Node::Ptr(new IntLeaf<uint8>(
+          "deadclienttimeout", 5, "world", "admin", this, server
+        )));
+  addChild(Node::Ptr(
+        new BoolLeaf("allowobservers", false, "world", "admin", this, server)
+      ));
 }
 

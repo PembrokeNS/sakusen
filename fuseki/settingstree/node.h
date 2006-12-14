@@ -4,6 +4,9 @@
 #include <list>
 #include <iosfwd>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/utility.hpp>
+
 #include "libsakusen-global.h"
 #include "clientid.h"
 #include "settingsuser.h"
@@ -14,30 +17,35 @@ class Server;
 
 namespace settingsTree {
 
-class Node {
-  private:
-    Node();
-    Node(const Node&);
+class Branch;
+
+class Node : boost::noncopyable {
+  public:
+    typedef boost::shared_ptr<Node> Ptr;
+    typedef boost::shared_ptr<const Node> ConstPtr;
   protected:
     Node(
         const String& name,
         const String& readers,
         const String& writers,
-        const Node* parent,
+        Branch* parent,
         fuseki::Server* server
       ); /* both readers and writers are interpreted as a comma-seperated list
             of group names.  'server' is added automatically to both lists */
   public:
-    virtual ~Node();
+    virtual ~Node() {}
   private:
     String name;
-    const Node* parent;
+    Branch* parent;
       /* node above this in the tree (NULL if this is the root node).
        * Not owned by this. */
     std::set<String> readingGroups; /* Groups with read permission */
     std::set<String> writingGroups; /* Groups with write permission */
   protected:
     fuseki::Server* server; /* The server whose tree this is */
+
+    virtual Node::Ptr ptrToThis();
+    virtual Node::ConstPtr ptrToThis() const;
   public:
     inline const String& getName() const { return name; }
     inline const std::set<String>& getReadingGroups() const {
@@ -46,10 +54,10 @@ class Node {
     inline const std::set<String>& getWritingGroups() const {
       return writingGroups;
     }
-    virtual Node* getNodeByListRef(
+    virtual Node::Ptr getNodeByListRef(
         std::list<String>& nodeAddress
       ) = 0; /* Note: alters its argument nodeAddress */
-    inline Node* getNodeByList(
+    inline Node::Ptr getNodeByList(
         std::list<String> nodeAddress
       ) { return getNodeByListRef(nodeAddress); }
     virtual void streamFullName(std::ostream& nameStream) const;
@@ -69,13 +77,13 @@ class Node {
     virtual String getRequestListRef(
         std::list<String>& nodeAddress,
         String& value,
-        const Node*& node,
+        Node::ConstPtr& node,
         const SettingsUser* user
       ) const = 0; /* Note: alters its arguments nodeAddress, value */
     inline String getRequestList(
         std::list<String> nodeAddress,
         String& value,
-        const Node*& node,
+        Node::ConstPtr& node,
         const SettingsUser* user
       ) const { return getRequestListRef(nodeAddress, value, node, user); }
 };

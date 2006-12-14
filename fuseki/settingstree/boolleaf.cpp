@@ -10,7 +10,7 @@ BoolLeaf::BoolLeaf(
     bool v,
     const String& readers,
     const String& writers,
-    const Branch* parent,
+    Branch* parent,
     Server* server
   ) :
   Leaf(name, readers, writers, parent, server),

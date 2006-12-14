@@ -9,17 +9,19 @@ ApplicationBranch::ApplicationBranch(
     const String& readers,
     const String& writers,
     const String& subWriters,
-    const Branch* parent,
+    Branch* parent,
     Server* server
   ) :
   Branch("application", readers, writers, parent, server)
 {
-  addChild(new StringLeaf("name", readers, subWriters, this, server));
-  addChild(new StringLeaf("version", readers, subWriters, this, server));
-  addChild(new StringLeaf("revision", readers, subWriters, this, server));
-}
-
-ApplicationBranch::~ApplicationBranch()
-{
+  addChild(
+      Node::Ptr(new StringLeaf("name", readers, subWriters, this, server))
+    );
+  addChild(
+      Node::Ptr(new StringLeaf("version", readers, subWriters, this, server))
+    );
+  addChild(
+      Node::Ptr(new StringLeaf("revision", readers, subWriters, this, server))
+    );
 }
 

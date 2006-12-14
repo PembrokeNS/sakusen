@@ -76,8 +76,8 @@ class Ref : public IRef {
       referee = NULL;
     }
 
-    operator MaskedPtr<IReferee>() const {
-      return MaskedPtr<IReferee>(referee);
+    operator MaskedPtr<IReferent>() const {
+      return MaskedPtr<IReferent>(referee);
     }
 
     IRef* newCopy() const {

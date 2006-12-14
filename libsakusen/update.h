@@ -9,21 +9,16 @@
 namespace sakusen {
 
 class LIBSAKUSEN_API Update {
-  private:
-    Update();
   public:
-    Update(const Update& copy);
-    Update(const UpdateData& data);
-    Update(UpdateData* data);
-    ~Update();
-    Update& operator=(const Update& copy);
+    /* Calling this transfers ownership of the pointer to this */
+    explicit Update(const UpdateData* data);
   private:
-    const UpdateData* data;
+    UpdateData::ConstPtr data;
   public:
     inline UpdateType getType(void) const { return data->getType(); }
 #define GET(type) \
     inline type##UpdateData get##type##Data(void) const { \
-      return *dynamic_cast<const type##UpdateData*>(data); \
+      return dynamic_cast<const type##UpdateData&>(*data); \
     }
     GET(UnitRemoved)
     GET(UnitAdded)

@@ -7,12 +7,8 @@ namespace fuseki {
 namespace settingsTree {
 
 class ServerBranch : public Branch {
-  private:
-    ServerBranch();
-    ServerBranch(const ServerBranch&);
   public:
-    ServerBranch(const Branch* parent, Server* server);
-    ~ServerBranch();
+    ServerBranch(Branch* parent, Server* server);
 };
 
 }}

@@ -10,16 +10,13 @@ namespace settingsTree {
  * integer type */
 template <typename T>
 class IntLeaf : public Leaf {
-  private:
-    IntLeaf();
-    IntLeaf(const IntLeaf&);
   public:
     IntLeaf(
         const String& name,
         T value,
         const String& readers,
         const String& writers,
-        const Branch* parent,
+        Branch* parent,
         Server* server
       );
     virtual ~IntLeaf() {}

@@ -7,16 +7,13 @@ namespace fuseki {
 namespace settingsTree {
 
 class BoolLeaf : public Leaf {
-  private:
-    BoolLeaf();
-    BoolLeaf(const BoolLeaf&);
   public:
     BoolLeaf(
         const String& name,
         bool value,
         const String& readers,
         const String& writers,
-        const Branch* parent,
+        Branch* parent,
         Server* server
       );
     virtual ~BoolLeaf() {}

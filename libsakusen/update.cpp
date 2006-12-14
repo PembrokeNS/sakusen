@@ -4,36 +4,9 @@
 
 using namespace sakusen;
 
-Update::Update() :
-  data(NULL)
-{
-}
-
-Update::Update(const Update& copy) :
-  data( copy.data ? copy.data->newCopy() : NULL )
-{
-}
-
-Update::Update(const UpdateData& d) :
-  data( d.newCopy() )
-{
-}
-
-Update::Update(UpdateData* d) :
+Update::Update(const UpdateData* d) :
   data(d)
 {
-}
-
-Update::~Update()
-{
-  delete data;
-  data = NULL;
-}
-
-Update& Update::operator=(const Update& copy)
-{
-  data = ( copy.data ? copy.data->newCopy() : NULL );
-  return *this;
 }
 
 LIBSAKUSEN_API std::ostream& sakusen::operator<<(std::ostream& output, const Update& update)
@@ -50,7 +23,7 @@ Update Update::load(
 {
   /* If the archive is empty then it's broken.  Return a dud update */
   if (in.isFinished()) {
-    return Update();
+    throw EndOfArchiveDeserializationExn();
   }
 
   /* Get the type */
@@ -83,7 +56,7 @@ Update Update::load(
       return Update(new BallisticAddedUpdateData(in));
     default:
       Debug("Unknown UpdateType " << type);
-      return Update();
+      throw EnumDeserializationExn("type", type);
   }
 }
 

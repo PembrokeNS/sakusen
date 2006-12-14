@@ -9,12 +9,10 @@ namespace fuseki {
 namespace settingsTree {
 
 class PlayersBranch : public Branch {
-  private:
-    PlayersBranch();
-    PlayersBranch(const PlayersBranch&);
   public:
-    PlayersBranch(const Branch* parent, Server* server);
-    ~PlayersBranch();
+    typedef boost::shared_ptr<PlayersBranch> Ptr;
+  public:
+    PlayersBranch(Branch* parent, Server* server);
 
     void addPlayer(sakusen::PlayerID id, const sakusen::PlayerTemplate& t);
     void removePlayer(sakusen::PlayerID id);

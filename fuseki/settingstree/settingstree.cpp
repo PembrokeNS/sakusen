@@ -15,14 +15,10 @@ using namespace fuseki::settingsTree;
 SettingsTree::SettingsTree(Server* server) :
   Branch("", "world", "", NULL, server)
 {
-  addChild(new ServerBranch(this, server));
-  addChild(new GameBranch(this, server));
-  addChild(new ClientsBranch(this, server));
-  addChild(new PlayersBranch(this, server));
-}
-
-SettingsTree::~SettingsTree()
-{
+  addChild(Node::Ptr(new ServerBranch(this, server)));
+  addChild(Node::Ptr(new GameBranch(this, server)));
+  addChild(Node::Ptr(new ClientsBranch(this, server)));
+  addChild(Node::Ptr(new PlayersBranch(this, server)));
 }
 
 list<String> SettingsTree::stringNodeAddressToList(
@@ -43,7 +39,7 @@ list<String> SettingsTree::stringNodeAddressToList(
   return addressAsList;
 }
 
-Node* SettingsTree::getNode(const String& nodeAddress)
+Node::Ptr SettingsTree::getNode(const String& nodeAddress)
 {
   return getNodeByList(stringNodeAddressToList(nodeAddress));
 }
@@ -61,7 +57,7 @@ String SettingsTree::changeRequest(
 String SettingsTree::getRequest(
     const String& nodeAddress,
     String& value,
-    const Node*& node,
+    Node::ConstPtr& node,
     const SettingsUser* user) const
 {
   return getRequestList(

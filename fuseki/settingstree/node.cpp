@@ -2,6 +2,8 @@
 
 #include "libsakusen-comms-global.h"
 #include "stringutils.h"
+#include "settingstree/branch.h"
+#include "server.h"
 
 #include <sstream>
 
@@ -15,7 +17,7 @@ Node::Node(
     const String& n,
     const String& readers,
     const String& writers,
-    const Node* p,
+    Branch* p,
     Server* s
   ) :
   name(n),
@@ -45,8 +47,18 @@ Node::Node(
   }
 }
 
-Node::~Node()
+Node::Ptr Node::ptrToThis()
 {
+  if (NULL == parent)
+    return server->getSettings();
+  return parent->getChild(name);
+}
+
+Node::ConstPtr Node::ptrToThis() const
+{
+  if (NULL == parent)
+    return server->getSettings();
+  return parent->getChild(name);
 }
 
 String Node::getFullName() const

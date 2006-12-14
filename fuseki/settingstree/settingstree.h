@@ -14,12 +14,10 @@ namespace fuseki {
 namespace settingsTree {
 
 class SettingsTree : public Branch {
-  private:
-    SettingsTree();
-    SettingsTree(const SettingsTree&);
   public:
+    typedef boost::shared_ptr<SettingsTree> Ptr;
+
     SettingsTree(Server* server);
-    ~SettingsTree();
   private:
     std::list<String> stringNodeAddressToList(const String& nodeAddress) const;
   public:
@@ -31,15 +29,19 @@ class SettingsTree : public Branch {
     String getRequest(
         const String& nodeAddress,
         String& value,
-        const Node*& node,
+        Node::ConstPtr& node,
         const SettingsUser* user
       ) const;
-    Node* getNode(const String& nodeAddress);
-    inline ClientsBranch* getClientsBranch() {
-      return dynamic_cast<ClientsBranch*>(getNode("clients"));
+    Node::Ptr getNode(const String& nodeAddress);
+    inline ClientsBranch::Ptr getClientsBranch() {
+      return boost::dynamic_pointer_cast<ClientsBranch, Node>(
+          getNode("clients")
+        );
     }
-    inline PlayersBranch* getPlayersBranch() {
-      return dynamic_cast<PlayersBranch*>(getNode("players"));
+    inline PlayersBranch::Ptr getPlayersBranch() {
+      return boost::dynamic_pointer_cast<PlayersBranch, Node>(
+          getNode("players")
+        );
     }
 };
 

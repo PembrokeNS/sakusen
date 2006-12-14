@@ -11,7 +11,7 @@ Leaf::Leaf(
     const String& name,
     const String& readers,
     const String& writers,
-    const Branch* parent,
+    Branch* parent,
     Server* server
   ) :
   Node(name, readers, writers, parent, server)
@@ -22,13 +22,13 @@ Leaf::~Leaf()
 {
 }
 
-Node* Leaf::getNodeByListRef(list<String>& nodeAddress)
+Node::Ptr Leaf::getNodeByListRef(list<String>& nodeAddress)
 {
   if (!nodeAddress.empty()) {
     Fatal("sought child of leaf '" << getFullName() << "'");
   }
 
-  return this;
+  return ptrToThis();
 }
 
 String Leaf::changeRequestListRef(
@@ -64,7 +64,7 @@ String Leaf::changeRequestListRef(
 String Leaf::getRequestListRef(
     list<String>& nodeAddress,
     String& value,
-    const Node*& node,
+    Node::ConstPtr& node,
     const SettingsUser* user) const
 {
   if (!user->hasReadPermissionFor(this)) {
@@ -77,7 +77,7 @@ String Leaf::getRequestListRef(
   }
 
   value = getValue();
-  node = this;
+  node = ptrToThis();
   return "";
 }
 

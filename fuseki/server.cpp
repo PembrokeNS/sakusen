@@ -56,7 +56,7 @@ Server::Server(
   map(NULL),
   mapPlayMode(0),
   players(),
-  settings(this),
+  settings(new SettingsTree(this)),
   allowObservers(false),
   checkForGameStartNextTime(false),
   ensureAdminExistsNextTime(false),
@@ -66,21 +66,21 @@ Server::Server(
   gameSpeed(DEFAULT_GAME_SPEED)
 {
   String reason;
-  reason = settings.changeRequest(
+  reason = settings->changeRequest(
       "server:application:name",
       APPLICATION_NAME,
       this
     );
   assert(reason == "");
-  reason = settings.changeRequest(
+  reason = settings->changeRequest(
       "server:application:version",
       APPLICATION_VERSION,
       this
     );
   assert(reason == "");
-  reason = settings.changeRequest(
+  reason = settings->changeRequest(
       "server:application:revision",
-#ifdef REVISION
+#if defined(REVISION)
       numToString(REVISION),
 #else
       "unknown",
@@ -171,8 +171,8 @@ void Server::addClient(
 {
   /* Check whether this address is blocked */
   hash_set<String, StringHash> blockedAddresses =
-    dynamic_cast<StringListLeaf*>(
-        settings.getNode("server:blockedaddresses")
+    boost::dynamic_pointer_cast<StringListLeaf, Node>(
+        settings->getNode("server:blockedaddresses")
       )->getValueAsList();
   for (hash_set<String, StringHash>::iterator i=blockedAddresses.begin();
       i!=blockedAddresses.end(); i++) {
@@ -207,7 +207,7 @@ void Server::addClient(
     return;
   }
   /* Add the client's branch of the settings tree */
-  settings.getClientsBranch()->addClient(id);
+  settings->getClientsBranch()->addClient(id);
   clients[id] =
     new RemoteClient(id, this, socket, requestedAddress!=""
 #ifndef DISABLE_UNIX_SOCKETS
@@ -218,7 +218,7 @@ void Server::addClient(
 
 void Server::removeClient(RemoteClient* client)
 {
-  settings.getClientsBranch()->removeClient(client->getId());
+  settings->getClientsBranch()->removeClient(client->getId());
   clients.erase(clients.find(client->getId()));
   delete client;
   ensureAdminExists();
@@ -249,8 +249,8 @@ void Server::handleClientMessages()
               out << "Client requested setting " << setting << "\n";
               String reason;
               String value;
-              const Node* node = NULL;
-              reason = settings.getRequest(setting, value, node, client);
+              Node::ConstPtr node;
+              reason = settings->getRequest(setting, value, node, client);
               if (reason != "") {
                 out << "Request rejected (" << reason << ")\n";
                 client->send(RejectMessageData(reason));
@@ -269,7 +269,7 @@ void Server::handleClientMessages()
               out << "Client asked to change setting " << data.getSetting() <<
                 "\n";
               String reason;
-              if (!(reason = settings.changeRequest(
+              if (!(reason = settings->changeRequest(
                     data.getSetting(), data.getValue(), client
                   )).empty()) {
                 /* That a non-empty string was returned implies that a problem
@@ -326,7 +326,7 @@ void Server::clearPlayers()
   while (!players.empty()) {
     PlayerID id = static_cast<PlayerID>(players.size()-1);
     players.pop_back();
-    settings.getPlayersBranch()->removePlayer(id);
+    settings->getPlayersBranch()->removePlayer(id);
   }
 }
 
@@ -336,7 +336,7 @@ void Server::createPlayersFor(const MapPlayMode& mode)
   for (uint32 i=0; i<mode.getMaxPlayers(); i++) {
     const PlayerTemplate& player = mode.getPlayer(i);
     players.push_back(Player(player));
-    settings.getPlayersBranch()->addPlayer(i, player);
+    settings->getPlayersBranch()->addPlayer(i, player);
   }
 }
 
@@ -362,7 +362,7 @@ void Server::changeInClientBranch(
     const String& value
   )
 {
-  if ("" != settings.changeRequest(
+  if ("" != settings->changeRequest(
       String("clients:") + clientID_toString(client->getId()) +
         ":" + node, value, this
     )) {
@@ -594,11 +594,11 @@ void Server::serve()
       delete universe;
       universe = requestedUniverse;
       requestedUniverse = NULL;
-      String reason = settings.changeRequest(
+      String reason = settings->changeRequest(
           "game:universe:name", universe->getInternalName(), this
         );
       assert(reason == "");
-      reason = settings.changeRequest(
+      reason = settings->changeRequest(
           "game:universe:hash", universe->getHash(), this
         );
       assert(reason == "");
@@ -608,7 +608,7 @@ void Server::serve()
       delete map;
       map = requestedMap;
       requestedMap = NULL;
-      String reason = settings.changeRequest(
+      String reason = settings->changeRequest(
           "game:map", map->getInternalName(), this
         );
       assert(reason == "");

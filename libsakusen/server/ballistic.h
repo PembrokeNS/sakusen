@@ -23,7 +23,7 @@ namespace server {
  * not affect each other (e.g. by colliding), and they do not get destroyed
  * until they collide with something.
  */
-class Ballistic : public virtual IReferee {
+class Ballistic : public virtual IReferent {
   private:
     PlayerID owner;
     Quadratic path;

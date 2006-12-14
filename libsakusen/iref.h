@@ -1,7 +1,7 @@
 #ifndef IREF_H
 #define IREF_H
 
-#include "ireferee.h"
+#include "ireferent.h"
 #include "maskedptr.h"
 
 namespace sakusen {
@@ -13,7 +13,7 @@ class IRef {
   public:
     virtual ~IRef() {}
     virtual void invalidate() = 0;
-    virtual operator MaskedPtr<IReferee>() const = 0;
+    virtual operator MaskedPtr<IReferent>() const = 0;
     virtual IRef* newCopy() const = 0;
 };
 

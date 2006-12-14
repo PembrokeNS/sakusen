@@ -16,13 +16,15 @@ namespace sakusen {
 class Order;
 
 class LIBSAKUSEN_API UpdateData {
-  /* Abstract class - all constructors must be protected */
+  public:
+    typedef boost::shared_ptr<UpdateData> Ptr;
+    typedef boost::shared_ptr<const UpdateData> ConstPtr;
   protected:
+    /* Abstract class - all constructors must be protected */
     UpdateData() {}
     UpdateData(const UpdateData&) {}
   public:
     virtual ~UpdateData() {}
-    virtual UpdateData* newCopy() const = 0;
     virtual UpdateType getType() const = 0;
     virtual void store(OArchive& out) const = 0;
 };
@@ -39,7 +41,6 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
     uint32 id;
     changeOwnerReason reason;
   public:
-    UpdateData* newCopy() const { return new UnitRemovedUpdateData(*this); }
     UpdateType getType() const { return updateType_unitRemoved; }
     void store(OArchive& out) const;
     uint32 getId() const { return id; }
@@ -61,7 +62,6 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
     changeOwnerReason reason;
     CompleteUnit unit;
   public:
-    UpdateData* newCopy() const { return new UnitAddedUpdateData(*this); }
     UpdateType getType() const { return updateType_unitAdded; }
     void store(OArchive& out) const;
     inline changeOwnerReason getReason() const { return reason; }
@@ -79,7 +79,6 @@ class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
   private:
     CompleteUnit unit;
   public:
-    UpdateData* newCopy() const { return new UnitAlteredUpdateData(*this); }
     UpdateType getType() const { return updateType_unitAltered; }
     void store(OArchive& out) const;
     inline const CompleteUnit& getUnit() const { return unit; }
@@ -99,7 +98,6 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   public:
     inline uint32 getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
-    UpdateData* newCopy() const { return new OrderAcceptedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderAccepted; }
     void store(OArchive& out) const;
 };
@@ -118,7 +116,6 @@ class LIBSAKUSEN_API OrderCompletedUpdateData : public UpdateData {
   public:
     inline uint32 getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
-    UpdateData* newCopy() const { return new OrderCompletedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderCompleted; }
     void store(OArchive& out) const;
 };
@@ -139,7 +136,6 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
     inline uint32 getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
     inline const Order& getOrder() const { return order; }
-    UpdateData* newCopy() const { return new OrderQueuedUpdateData(*this); }
     UpdateType getType() const { return updateType_orderQueued; }
     void store(OArchive& out) const;
 };
@@ -155,9 +151,6 @@ class LIBSAKUSEN_API SensorReturnsRemovedUpdateData : public UpdateData {
   private:
     SensorReturnsID id;
   public:
-    UpdateData* newCopy() const {
-      return new SensorReturnsRemovedUpdateData(*this);
-    }
     UpdateType getType() const { return updateType_sensorReturnsRemoved; }
     void store(OArchive& out) const;
     SensorReturnsID getId() const { return id; }
@@ -174,9 +167,6 @@ class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
   private:
     SensorReturns returns;
   public:
-    UpdateData* newCopy() const {
-      return new SensorReturnsAddedUpdateData(*this);
-    }
     UpdateType getType() const { return updateType_sensorReturnsAdded; }
     void store(OArchive& out) const;
     inline const SensorReturns& getSensorReturns() const { return returns; }
@@ -193,9 +183,6 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
   private:
     SensorReturns returns;
   public:
-    UpdateData* newCopy() const {
-      return new SensorReturnsAlteredUpdateData(*this);
-    }
     UpdateType getType() const { return updateType_sensorReturnsAltered; }
     void store(OArchive& out) const;
     inline const SensorReturns& getSensorReturns() const { return returns; }
@@ -212,9 +199,6 @@ class LIBSAKUSEN_API BallisticRemovedUpdateData : public UpdateData {
   private:
     uint32 id;
   public:
-    UpdateData* newCopy() const {
-      return new BallisticRemovedUpdateData(*this);
-    }
     UpdateType getType() const { return updateType_ballisticRemoved; }
     void store(OArchive& out) const;
     uint32 getId() const { return id; }
@@ -232,9 +216,6 @@ class LIBSAKUSEN_API BallisticAddedUpdateData : public UpdateData {
     uint32 id;
     Quadratic path;
   public:
-    UpdateData* newCopy() const {
-      return new BallisticAddedUpdateData(*this);
-    }
     UpdateType getType() const { return updateType_ballisticAdded; }
     void store(OArchive& out) const;
     uint32 getId() const { return id; }

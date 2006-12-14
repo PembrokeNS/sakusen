@@ -9,15 +9,12 @@ namespace fuseki {
 namespace settingsTree {
 
 class StringListLeaf : public Leaf {
-  private:
-    StringListLeaf();
-    StringListLeaf(const StringListLeaf&);
   public:
     StringListLeaf(
         const String& name,
         const String& readers,
         const String& writers,
-        const Branch* parent,
+        Branch* parent,
         Server* server
       );
     virtual ~StringListLeaf() { }

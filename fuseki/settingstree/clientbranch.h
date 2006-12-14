@@ -7,16 +7,12 @@ namespace fuseki {
 namespace settingsTree {
 
 class ClientBranch : public Branch {
-  private:
-    ClientBranch();
-    ClientBranch(const ClientBranch&);
   public:
     ClientBranch(
         sakusen::comms::ClientID id,
-        const Branch* parent,
+        Branch* parent,
         Server* server
       );
-    ~ClientBranch() {}
 };
 
 }}

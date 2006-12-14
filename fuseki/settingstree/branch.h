@@ -13,33 +13,26 @@ namespace fuseki {
 namespace settingsTree {
 
 class Branch : public Node {
-  private:
-    Branch();
-    Branch(const Branch&);
   protected:
     Branch(
         const String& name,
         const String& readers,
         const String& writers,
-        const Node* parent,
+        Branch* parent,
         Server* server
       );
-  public:
-    virtual ~Branch();
   private:
-    __gnu_cxx::hash_map<String, Node*, sakusen::StringHash> children;
+    __gnu_cxx::hash_map<String, Node::Ptr, sakusen::StringHash> children;
 
   protected:
-    /* Calling this method transfers ownership of child to this */
-    inline void addChild(Node* child) {
+    inline void addChild(Node::Ptr child) {
       children[child->getName()] = child;
     }
     inline void removeChild(String name) {
       assert(children.count(name));
-      delete children[name];
       children.erase(name);
     }
-    virtual Node* getNodeByListRef(std::list<String>& nodeAddress);
+    virtual Node::Ptr getNodeByListRef(std::list<String>& nodeAddress);
     virtual String changeRequestListRef(
         std::list<String>& setting,
         const String& value,
@@ -48,14 +41,14 @@ class Branch : public Node {
     virtual String getRequestListRef(
         std::list<String>& setting,
         String& value,
-        const Node*& node,
+        Node::ConstPtr& node,
         const SettingsUser* user
       ) const;
   public:
-    Node* getChild(String name);
-      /* Returns NULL if no such child */
-    const Node* getChild(String name) const;
-      /* Returns NULL if no such child */
+    Node::Ptr getChild(String name);
+      /* Returns Node::Ptr() if no such child */
+    Node::ConstPtr getChild(String name) const;
+      /* Returns Node::Ptr() if no such child */
 };
 
 }}

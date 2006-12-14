@@ -7,10 +7,8 @@ namespace fuseki {
 namespace settingsTree {
 
 class UniverseBranch : public Branch {
-  private:
-    UniverseBranch();
   public:
-    UniverseBranch(const Branch* parent, Server* server);
+    UniverseBranch(Branch* parent, Server* server);
 };
 
 }}

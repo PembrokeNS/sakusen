@@ -10,17 +10,13 @@ namespace fuseki {
 namespace settingsTree {
 
 class PlayerBranch : public Branch {
-  private:
-    PlayerBranch();
-    PlayerBranch(const PlayerBranch&);
   public:
     PlayerBranch(
         sakusen::PlayerID id,
-        const Branch* parent,
+        Branch* parent,
         Server* server,
         const sakusen::PlayerTemplate& t
       );
-    ~PlayerBranch() {}
 };
 
 }}

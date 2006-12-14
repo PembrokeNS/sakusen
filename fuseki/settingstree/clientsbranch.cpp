@@ -6,12 +6,8 @@ using namespace sakusen::comms;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-ClientsBranch::ClientsBranch(const Branch* parent, Server* server) :
+ClientsBranch::ClientsBranch(Branch* parent, Server* server) :
   Branch("clients", "world", "", parent, server)
-{
-}
-
-ClientsBranch::~ClientsBranch()
 {
 }
 
@@ -21,7 +17,7 @@ void ClientsBranch::addClient(ClientID id)
   if (getChild(name) != NULL) {
     Fatal("tried to add client branch of existing name " << name);
   }
-  addChild(new ClientBranch(id, this, server));
+  addChild(Node::Ptr(new ClientBranch(id, this, server)));
 }
 
 void ClientsBranch::removeClient(ClientID id)

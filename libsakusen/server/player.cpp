@@ -123,7 +123,7 @@ void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
   }
   /*Debug("removing unit " << id << " for player " << playerId);*/
   units.erase(id);
-  informClients(Update(UnitRemovedUpdateData(id, why)));
+  informClients(Update(new UnitRemovedUpdateData(id, why)));
 }
 
 void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
@@ -136,7 +136,7 @@ void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
   units[lastUnitId] = unit;
   assert(units.find(lastUnitId) != units.end());
   unit->setId(lastUnitId);
-  informClients(Update(UnitAddedUpdateData(why, unit)));
+  informClients(Update(new UnitAddedUpdateData(why, unit)));
 }
 
 void Player::checkSensorReturns()
@@ -150,7 +150,7 @@ void Player::checkSensorReturns()
      * update should be enough to prove that the unit is gone */
     if (returns->second->empty()) {
       assert(returns->second->getPerception() == perception_none);
-      informClients(Update(SensorReturnsRemovedUpdateData(returns->first)));
+      informClients(Update(new SensorReturnsRemovedUpdateData(returns->first)));
       invalidatedSensorReturnsIds.push(returns);
     }
   }
@@ -175,13 +175,15 @@ void Player::checkSensorReturns()
       returns->update();
       /* If it's gone, then remove it */
       if (returns->empty()) {
-        informClients(Update(SensorReturnsRemovedUpdateData(returns->getId())));
+        informClients(
+            Update(new SensorReturnsRemovedUpdateData(returns->getId()))
+          );
         sensorReturns.erase(it->second->second);
         sensorReturnsById.erase(it->second);
         (*unit)->getSensorReturns().erase(it);
       } else if (returns->isDirty()) {
         /* It's changed, so inform clients */
-        informClients(Update(SensorReturnsAlteredUpdateData(returns)));
+        informClients(Update(new SensorReturnsAlteredUpdateData(returns)));
         returns->clearDirty();
       }
     } else if ((*unit)->getOwner() != playerId) {
@@ -205,7 +207,7 @@ void Player::checkSensorReturns()
               pair<PlayerID, DynamicSensorReturnsRef>(playerId, inserted.first)
             );
         informClients(
-            Update(SensorReturnsAddedUpdateData(inserted.first->second))
+            Update(new SensorReturnsAddedUpdateData(inserted.first->second))
           );
         lastSensorReturnsId = newId;
       }
@@ -221,7 +223,7 @@ void Player::checkSensorReturns()
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second.isValid()) {
       invalidatedBallisticIds.push(vb->first);
-      informClients(Update(BallisticRemovedUpdateData(vb->second.first)));
+      informClients(Update(new BallisticRemovedUpdateData(vb->second.first)));
     }
   }
 
@@ -249,7 +251,7 @@ void Player::checkSensorReturns()
             clientId, *ballistic
           );
       informClients(Update(
-            BallisticAddedUpdateData(clientId, (*ballistic)->getPath())
+            new BallisticAddedUpdateData(clientId, (*ballistic)->getPath())
           ));
     }
   }

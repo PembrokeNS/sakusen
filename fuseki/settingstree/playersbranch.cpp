@@ -6,12 +6,8 @@ using namespace sakusen;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-PlayersBranch::PlayersBranch(const Branch* parent, Server* server) :
+PlayersBranch::PlayersBranch(Branch* parent, Server* server) :
   Branch("players", "world", "", parent, server)
-{
-}
-
-PlayersBranch::~PlayersBranch()
 {
 }
 
@@ -21,7 +17,7 @@ void PlayersBranch::addPlayer(PlayerID id, const PlayerTemplate& t)
   if (getChild(name) != NULL) {
     Fatal("tried to add player branch of existing name");
   }
-  addChild(new PlayerBranch(id, this, server, t));
+  addChild(Node::Ptr(new PlayerBranch(id, this, server, t)));
 }
 
 void PlayersBranch::removePlayer(PlayerID id)

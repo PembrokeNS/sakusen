@@ -180,7 +180,7 @@ int main(int argc, char const* const* argv)
 
   if (options.version) {
     cout << APPLICATION_NAME " " APPLICATION_VERSION;
-#ifdef REVISION
+#if defined(REVISION)
     cout << " (revision " << REVISION << ")";
 #endif
     cout << endl;

@@ -11,7 +11,7 @@ using namespace fuseki::settingsTree;
 
 PlayerBranch::PlayerBranch(
     PlayerID id,
-    const Branch* parent,
+    Branch* parent,
     Server* server,
     const PlayerTemplate& t
   ) :
@@ -20,18 +20,18 @@ PlayerBranch::PlayerBranch(
   String playerGroup = String("player") + playerID_toString(id);
   String playerAdminGroup = playerGroup+",admin";
   
-  addChild(new StringLeaf(
-        "race", "world", ( t.isRaceFixed() ? "" : playerAdminGroup ), this,
-        server
-      ));
-  addChild(new IntLeaf<uint8>(
-        "maxclients", 255, "world", playerAdminGroup, this, server
-      ));
-  addChild(new BoolLeaf(
-        "noclients", t.isNoClients(), "world", "", this, server
-      ));
-  addChild(new BoolLeaf(
-        "racefixed", t.isRaceFixed(), "world", "", this, server
-      ));
+  addChild(Node::Ptr(new StringLeaf(
+          "race", "world", ( t.isRaceFixed() ? "" : playerAdminGroup ), this,
+          server
+        )));
+  addChild(Node::Ptr(new IntLeaf<uint8>(
+          "maxclients", 255, "world", playerAdminGroup, this, server
+        )));
+  addChild(Node::Ptr(new BoolLeaf(
+          "noclients", t.isNoClients(), "world", "", this, server
+        )));
+  addChild(Node::Ptr(new BoolLeaf(
+          "racefixed", t.isRaceFixed(), "world", "", this, server
+        )));
 }
   

@@ -8,20 +8,17 @@ namespace fuseki {
 namespace settingsTree {
 
 class Leaf : public Node {
-  private:
-    Leaf();
-    Leaf(const Leaf&);
   public:
     Leaf(
         const String& name,
         const String& readers,
         const String& writers,
-        const Branch* parent,
+        Branch* parent,
         Server* server
       );
     virtual ~Leaf();
   protected:
-    virtual Node* getNodeByListRef(
+    virtual Node::Ptr getNodeByListRef(
         std::list<String>& nodeAddress
       );
     virtual String changeRequestListRef(
@@ -32,7 +29,7 @@ class Leaf : public Node {
     virtual String getRequestListRef(
         std::list<String>& nodeAddress,
         String& value,
-        const Node*& node,
+        Node::ConstPtr& node,
         const SettingsUser* client
       ) const;
     virtual String setValue(const String& v) = 0;

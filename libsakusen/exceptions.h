@@ -83,6 +83,11 @@ class WrongMagicDeserializationExn :
 class EnumDeserializationExn :
     public DeserializationExn {
   public:
+    /** \brief Constructs a new exception
+     * 
+     * \param name  Name of variable whose value was out of range
+     * \param value Actual value taken by variable
+     */
     EnumDeserializationExn(const String& name, int value) :
       DeserializationExn(
           "enumeration value '"+name+"' out of range (value was "+

@@ -77,7 +77,7 @@ class Server : public SettingsUser {
     std::vector<sakusen::server::Player> players;
       /* Players.  Note that this vector *becomes obsolete* as soon as the game
        * is started, because World makes a copy of it and works with that */
-    settingsTree::SettingsTree settings; /* The tree of all the settings */
+    settingsTree::SettingsTree::Ptr settings; /* The tree of all the settings */
     bool allowObservers; /* Whether we allow observer clients */
     
     bool checkForGameStartNextTime; /* Indicate that a check for whether the
@@ -123,6 +123,7 @@ class Server : public SettingsUser {
       );
   public:
     sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
+    const settingsTree::SettingsTree::Ptr& getSettings() { return settings; }
     /** \return true iff the server is currently allowing observers */
     inline bool getAllowObservers() { return allowObservers; }
     
