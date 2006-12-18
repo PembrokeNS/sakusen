@@ -25,7 +25,7 @@ void PatrollerClient::queueUpdate(const Update& update)
           /*Debug("sending move order");*/
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,
-                Order(MoveOrderData(patrolTo))
+                Order(new MoveOrderData(patrolTo))
               )
             );
           headedOutward = true;
@@ -43,7 +43,7 @@ void PatrollerClient::queueUpdate(const Update& update)
         for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
-                  TargetPointOrderData(
+                  new TargetPointOrderData(
                     weaponIndex,
                     otherUnit->getUnit()->getIStatus()->getPosition()
                   )
@@ -61,14 +61,14 @@ void PatrollerClient::queueUpdate(const Update& update)
               if (headedOutward) {
                 orderMessageQueue.push(
                     OrderMessage(0 /* unit id */, orderCondition_now,
-                      Order(MoveOrderData(patrolFrom))
+                      Order(new MoveOrderData(patrolFrom))
                     )
                   );
                 headedOutward = false;
               } else {
                 orderMessageQueue.push(
                     OrderMessage(0 /* unit id */, orderCondition_now,
-                      Order(MoveOrderData(patrolTo))
+                      Order(new MoveOrderData(patrolTo))
                     )
                   );
                 headedOutward = true;

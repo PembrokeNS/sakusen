@@ -92,7 +92,7 @@ void Universe::store(OArchive& archive) const
 
 Universe* Universe::loadNew(
     IArchive& archive,
-    ResourceInterface* resourceInterface
+    ResourceInterface::Ptr resourceInterface
   )
 {
   String internalName;

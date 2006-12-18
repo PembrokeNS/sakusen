@@ -17,7 +17,7 @@ DynamicSensorReturns::DynamicSensorReturns(
   ) :
   id(i),
   perception(perception_none),
-  region(NULL),
+  region(),
   senserOwner(sO),
   sensers(1),
   sensee(s),
@@ -40,12 +40,13 @@ PlayerID DynamicSensorReturns::getSenseeOwner() const
   }
 }
 
-const Region<sint32>* DynamicSensorReturns::getRegion() const
+Region<sint32>::ConstPtr DynamicSensorReturns::getRegion() const
 {
+  /** \todo Is this if really needed? */
   if (0 != (perception & perception_region)) {
     return region;
   } else {
-    return NULL;
+    return Region<sint32>::ConstPtr();
   }
 }
 
@@ -67,8 +68,7 @@ void DynamicSensorReturns::senseeDestroyed() {
   }
 
   perception = perception_none;
-  delete region;
-  region = NULL;
+  region.reset();
   sensers.clear();
   sensee = Ref<const LayeredUnit>();
   setDirty();
@@ -139,15 +139,13 @@ void DynamicSensorReturns::update()
      * could change every tick, and also we aren't informed by the unit
      * whenever its position changes, so that could have altered too. */
     dirty = true;
-    delete region;
     /* \todo Add some randomness to the position of the centre of the region,
      * otherwise it might as well just be a point */
-    region = new Region<sint32>(new SphereRegionData<sint32>(
-          sensee->getIStatus()->getPosition(), bestRadius
-        ));
+    region.reset(new Region<sint32>(new SphereRegionData<sint32>(
+            sensee->getIStatus()->getPosition(), bestRadius
+          )));
   } else {
-    delete region;
-    region = NULL;
+    region.reset();
   }
 }
 

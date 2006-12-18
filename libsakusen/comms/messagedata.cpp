@@ -45,11 +45,6 @@ MessageType SolicitMessageData::getType() const
   return messageType_solicit;
 }
 
-MessageData* SolicitMessageData::newCopy() const
-{
-  return new SolicitMessageData(*this);
-}
-
 AdvertiseMessageData::AdvertiseMessageData() :
   MessageData(),
   serverName(""),
@@ -80,11 +75,6 @@ void AdvertiseMessageData::fillArchive() const
 MessageType AdvertiseMessageData::getType() const
 {
   return messageType_advertise;
-}
-
-MessageData* AdvertiseMessageData::newCopy() const
-{
-  return new AdvertiseMessageData(*this);
 }
 
 String AdvertiseMessageData::getServerName() const
@@ -119,11 +109,6 @@ MessageType JoinMessageData::getType() const
   return messageType_join;
 }
 
-MessageData* JoinMessageData::newCopy() const
-{
-  return new JoinMessageData(*this);
-}
-
 AcceptMessageData::AcceptMessageData(const String& a, const ClientID& i) :
   MessageData(),
   address(a),
@@ -149,11 +134,6 @@ MessageType AcceptMessageData::getType() const
   return messageType_accept;
 }
 
-MessageData* AcceptMessageData::newCopy() const
-{
-  return new AcceptMessageData(*this);
-}
-
 RejectMessageData::RejectMessageData(const String& r) :
   MessageData(),
   reason(r)
@@ -174,11 +154,6 @@ void RejectMessageData::fillArchive() const
 MessageType RejectMessageData::getType() const
 {
   return messageType_reject;
-}
-
-MessageData* RejectMessageData::newCopy() const
-{
-  return new RejectMessageData(*this);
 }
 
 KickMessageData::KickMessageData(const String& r) :
@@ -203,11 +178,6 @@ MessageType KickMessageData::getType() const
   return messageType_kick;
 }
 
-MessageData* KickMessageData::newCopy() const
-{
-  return new KickMessageData(*this);
-}
-
 LeaveMessageData::LeaveMessageData() :
   MessageData()
 {
@@ -225,11 +195,6 @@ void LeaveMessageData::fillArchive() const
 MessageType LeaveMessageData::getType() const
 {
   return messageType_leave;
-}
-
-MessageData* LeaveMessageData::newCopy() const
-{
-  return new LeaveMessageData(*this);
 }
 
 GetSettingMessageData::GetSettingMessageData(
@@ -254,11 +219,6 @@ void GetSettingMessageData::fillArchive() const
 MessageType GetSettingMessageData::getType() const
 {
   return messageType_getSetting;
-}
-
-MessageData* GetSettingMessageData::newCopy() const
-{
-  return new GetSettingMessageData(*this);
 }
 
 ChangeSettingMessageData::ChangeSettingMessageData(
@@ -289,11 +249,6 @@ MessageType ChangeSettingMessageData::getType() const
   return messageType_changeSetting;
 }
 
-MessageData* ChangeSettingMessageData::newCopy() const
-{
-  return new ChangeSettingMessageData(*this);
-}
-
 NotifySettingMessageData::NotifySettingMessageData(
     const String& s,
     const String& v
@@ -320,11 +275,6 @@ void NotifySettingMessageData::fillArchive() const
 MessageType NotifySettingMessageData::getType() const
 {
   return messageType_notifySetting;
-}
-
-MessageData* NotifySettingMessageData::newCopy() const
-{
-  return new NotifySettingMessageData(*this);
 }
 
 GameStartMessageData::GameStartMessageData(
@@ -365,11 +315,6 @@ MessageType GameStartMessageData::getType() const
   return messageType_gameStart;
 }
 
-MessageData* GameStartMessageData::newCopy() const
-{
-  return new GameStartMessageData(*this);
-}
-
 OrderMessageData::OrderMessageData(const OrderMessage& oM) :
   MessageData(),
   orderMessage(oM)
@@ -390,11 +335,6 @@ void OrderMessageData::fillArchive() const
 MessageType OrderMessageData::getType() const
 {
   return messageType_order;
-}
-
-MessageData* OrderMessageData::newCopy() const
-{
-  return new OrderMessageData(*this);
 }
 
 /** \brief Constructs from given time and list of updates
@@ -424,11 +364,6 @@ void UpdateMessageData::fillArchive() const
 MessageType UpdateMessageData::getType() const
 {
   return messageType_update;
-}
-
-MessageData* UpdateMessageData::newCopy() const
-{
-  return new UpdateMessageData(*this);
 }
 
 }}

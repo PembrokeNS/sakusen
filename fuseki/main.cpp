@@ -194,9 +194,8 @@ int startServer(const String& homePath, const Options& options)
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
-  ResourceInterface::Ptr resourceInterface(
-      new FileResourceInterface(dataDirs, true)
-    );
+  ResourceInterface::Ptr resourceInterface =
+      FileResourceInterface::create(dataDirs, true);
   
   /* Initialize sockets */
   Socket::socketsInit();

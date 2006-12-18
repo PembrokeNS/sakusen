@@ -99,7 +99,7 @@ void Game::pushUpdates(const UpdateMessageData& data) {
  * \param o The order to send */
 void Game::order(const OrderMessage& o)
 {
-  serverInterface->send(OrderMessageData(o));
+  serverInterface->send(new OrderMessageData(o));
 }
 
 /** \brief Stops the game and destroys the world */

@@ -13,7 +13,7 @@
 %include "angle.h"
 %include "revision.h"
 %include "hitpoints.h"
-%include "ireferee.h"
+%include "ireferent.h"
 %include "gameobject.h"
 %include "topology.h"
 %{

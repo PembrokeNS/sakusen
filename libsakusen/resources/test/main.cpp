@@ -42,8 +42,8 @@ int main(/*int argc, char** argv*/)
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
-  ResourceInterface* resourceInterface =
-    new FileResourceInterface(dataDirs, false);
+  ResourceInterface::Ptr resourceInterface =
+    FileResourceInterface::create(dataDirs, false);
 
   cout << "Cleaning out existing test files" << endl;
   list<String> universes =
@@ -105,11 +105,11 @@ int main(/*int argc, char** argv*/)
           100 /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(10,10,10) /* size */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 4))
+          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 4))
             /* possibleAccelerations */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 10))
             /* possibleVelocities */,
-          Region<sint16>(SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 10))
             /* possibleAngularVelocities */,
           Visibility(),
           Sensors()
@@ -253,7 +253,6 @@ int main(/*int argc, char** argv*/)
   delete reloadedTemplate;
   delete reloadedUniverse;
   delete t;
-  delete resourceInterface;
 
   return EXIT_SUCCESS;
 }

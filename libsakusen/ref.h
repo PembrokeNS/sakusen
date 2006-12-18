@@ -98,6 +98,18 @@ class Ref : public IRef {
       return Ref<U>(referee, container);
     }
 
+    /* Note that the names dynamic_cast, static_cast cannot be used for methods
+     * */
+    template<typename U>
+    inline Ref<U> dynamicCast() const {
+      return Ref<U>(dynamic_cast<U*>(referee), container);
+    }
+
+    template<typename U>
+    inline Ref<U> staticCast() const {
+      return Ref<U>(static_cast<U*>(referee), container);
+    }
+
     void store(OArchive& archive) const {
       archive << isValid();
       if (isValid()) {

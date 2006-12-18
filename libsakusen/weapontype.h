@@ -32,7 +32,7 @@ class LIBSAKUSEN_API WeaponType {
         uint16 metalCost,
         uint16 energyRate,
         uint16 metalRate,
-        ResourceInterface* resourceInterface
+        ResourceInterface::Ptr resourceInterface
       );
   private:
     String internalName;
@@ -56,7 +56,7 @@ class LIBSAKUSEN_API WeaponType {
     server::Weapon* spawn() const;
 
     void store(OArchive&) const;
-    static WeaponType load(IArchive&, ResourceInterface*);
+    static WeaponType load(IArchive&, ResourceInterface::Ptr);
 };
 
 }

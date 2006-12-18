@@ -112,11 +112,11 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
   if (unixSockets) {
     tempSocket.reset(new UnixDatagramListeningSocket(abstract));
     String address = tempSocket->getAddress();
-    solicitationSocket->send(SolicitMessageData(address));
+    solicitationSocket->send(Message(new SolicitMessageData(address)));
   } else {
 #endif
     tempSocket = solicitationSocket;
-    solicitationSocket->send(SolicitMessageData(""));
+    solicitationSocket->send(Message(new SolicitMessageData("")));
 #ifndef DISABLE_UNIX_SOCKETS
   }
 #endif
@@ -225,7 +225,9 @@ String ServerInterface::join()
     if (unixSockets) {
       incomingSocket.reset(new UnixDatagramListeningSocket(abstract));
       /** \bug We're assuming equal solicitation and join addresses */
-      solicitationSocket->send(JoinMessageData(incomingSocket->getAddress()));
+      solicitationSocket->send(
+          Message(new JoinMessageData(incomingSocket->getAddress()))
+        );
     } else {
 #endif
       /*Debug(
@@ -237,7 +239,7 @@ String ServerInterface::join()
           "'.  Perhaps you need to specify a join address,  or you have "
           "specified an invalid one?";
       }
-      incomingSocket->send(JoinMessageData(""));
+      incomingSocket->send(Message(new JoinMessageData("")));
 #ifndef DISABLE_UNIX_SOCKETS
     }
 #endif
@@ -300,7 +302,7 @@ bool ServerInterface::leave(bool sendMessage)
   assert(outgoingSocket != NULL);
   if (sendMessage) {
     try {
-      outgoingSocket->send(LeaveMessageData());
+      outgoingSocket->send(Message(new LeaveMessageData()));
     } catch (SocketExn& e) {
       Debug("Error sending leave message:" << e.message);
     }
@@ -314,9 +316,9 @@ bool ServerInterface::leave(bool sendMessage)
  *
  * \param message Message to send
  * \return true iff an error occurs */
-bool ServerInterface::send(const MessageData& message)
+bool ServerInterface::send(const MessageData* message)
 {
-  outgoingSocket->send(message);
+  outgoingSocket->send(Message(message));
   return false;
 }
 
@@ -326,7 +328,7 @@ bool ServerInterface::send(const MessageData& message)
  * \return true iff an error occurs */
 bool ServerInterface::getSetting(const String& setting)
 {
-  outgoingSocket->send(GetSettingMessageData(setting));
+  outgoingSocket->send(Message(new GetSettingMessageData(setting)));
   return false;
 }
 
@@ -337,7 +339,7 @@ bool ServerInterface::getSetting(const String& setting)
  * \return true iff an error occurs */
 bool ServerInterface::setSetting(const String& setting, const String& value)
 {
-  outgoingSocket->send(ChangeSettingMessageData(setting, value));
+  outgoingSocket->send(Message(new ChangeSettingMessageData(setting, value)));
   return false;
 }
 

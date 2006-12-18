@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <list>
+#include <boost/shared_array.hpp>
 #include <boost/multi_array.hpp>
 
 #include "point.h"
@@ -62,6 +63,8 @@ class LIBSAKUSEN_API IArchive {
     IArchive(const IArchive&);
   public:
     IArchive(const uint8* buffer, size_t length);
+    IArchive(const boost::shared_array<uint8>& buffer, size_t length);
+    IArchive(const boost::shared_array<const uint8>& buffer, size_t length);
     ~IArchive();
   private:
     uint8* originalBuffer; /* owned by this */
@@ -98,7 +101,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
-    inline T load(ResourceInterface* resourceInterface)
+    inline T load(ResourceInterface::Ptr resourceInterface)
     {
       return T::load(*this, resourceInterface);
     }
@@ -195,6 +198,11 @@ class LIBSAKUSEN_API IArchive {
       
       result.resize(extent_generator<rank>()(shape));
 
+      // If any dimension is zero, there are no entries, and we quit now
+      if (shape.end() != find(shape.begin(), shape.end(), 0U)) {
+        return *this;
+      }
+
       boost::array<uint32, rank> i;
       std::fill(i.begin(), i.end(), 0);
       uint32 j;
@@ -202,10 +210,9 @@ class LIBSAKUSEN_API IArchive {
       do {
         result(i) = load<T>();
         for (j=0; j<rank; ++j) {
-          if (i[j] == shape[j]) {
+          if (++(i[j]) == shape[j]) {
             i[j] = 0;
           } else {
-            ++i[j];
             break;
           }
         }
@@ -247,7 +254,7 @@ class LIBSAKUSEN_API IArchive {
     template<typename T>
     IArchive& extract(
         std::vector<T>& result,
-        ResourceInterface* resourceInterface
+        ResourceInterface::Ptr resourceInterface
       )
     {
       assert(result.empty());

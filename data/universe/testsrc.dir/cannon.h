@@ -38,7 +38,7 @@ class Explosion : public Effect {
   public:
     Explosion(PlayerID owner, const Point<sint32>& centre, uint32 radius) :
       Effect(
-          owner, Region<sint32>(SphereRegionData<sint32>(centre, radius)),
+          owner, Region<sint32>(new SphereRegionData<sint32>(centre, radius)),
           Visibility()
         ) {}
     void onUnitPresent(const Ref<LayeredUnit>&);

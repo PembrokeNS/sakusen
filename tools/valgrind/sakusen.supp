@@ -1,0 +1,57 @@
+{
+   lt_dlopen
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+}
+{
+   lt_dlopen
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+   fun:tryall_dlopen_module
+}
+{
+   lt_dlsym
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   fun:_dl_sym
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlsym
+   fun:sys_dl_sym
+   fun:lt_dlsym
+}
+{
+   lt_dlsym
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   fun:_dl_sym
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlsym
+   fun:sys_dl_sym
+   fun:lt_dlsym
+}
+

@@ -27,12 +27,30 @@ class DeserializationExn : public Exn {
     virtual ~DeserializationExn() throw() { }
 };
 
+class WrongVersionDeserializationExn :
+    public DeserializationExn {
+  public:
+    WrongVersionDeserializationExn(uint8 expected, uint8 found) :
+      DeserializationExn(
+          "found version "+numToString(found)+
+          ", expected version "+numToString(expected)) { }
+    virtual ~WrongVersionDeserializationExn() throw() { }
+};
+
 class EndOfArchiveDeserializationExn :
     public DeserializationExn {
   public:
     EndOfArchiveDeserializationExn() :
       DeserializationExn("tried to read past end of archive") { }
     virtual ~EndOfArchiveDeserializationExn() throw() { }
+};
+
+class TooMuchArchiveDeserializationExn :
+    public DeserializationExn {
+  public:
+    TooMuchArchiveDeserializationExn() :
+      DeserializationExn("some archive remains unused") { }
+    virtual ~TooMuchArchiveDeserializationExn() throw() { }
 };
 
 class UnresolvedNameDeserializationExn :

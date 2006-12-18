@@ -11,16 +11,13 @@ namespace sakusen {
 class LIBSAKUSEN_API Order {
   public:
     Order();
-    Order(const Order& copy);
-    Order(const OrderData& d);
-    ~Order();
-    Order& operator=(const Order& copy);
+    Order(const OrderData* data);
   private:
     /** What is this an order to do? */
     OrderType type;
-    const OrderData* data; /**< Pointer to abstract class OrderData, which has
-                              subclasses for the diffferent types of data
-                              necessary */
+    /** Pointer to abstract class OrderData, which has subclasses for the
+     * diffferent types of data which can occur */
+    OrderData::ConstPtr data; 
   public:
     /** \name acccessors */
     /*@{*/
@@ -30,7 +27,7 @@ class LIBSAKUSEN_API Order {
     inline OrderType getType(void) const { return type; }
     #define GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
-      return *dynamic_cast<const type##OrderData*>(data); \
+      return dynamic_cast<const type##OrderData&>(*data); \
     }
     GET_DATA(Move)
     GET_DATA(SetVelocity)

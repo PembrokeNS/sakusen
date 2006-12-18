@@ -45,11 +45,11 @@ RemoteClient::RemoteClient(
      * our poor handling of EAGAIN in *Socket::send.  Once that is somehow
      * fixed, this can also be fixed */
     outSocket->setNonBlocking(false);
-    outSocket->send(Message(AcceptMessageData(inSocket->getAddress(), id)));
+    outSocket->send(Message(new AcceptMessageData(inSocket->getAddress(), id)));
 #endif
   } else {
     inSocket = outSocket;
-    outSocket->send(Message(AcceptMessageData("", id)));
+    outSocket->send(Message(new AcceptMessageData("", id)));
   }
 }
 
@@ -113,7 +113,7 @@ void RemoteClient::flushIncoming()
 
 void RemoteClient::flushOutgoing(Time time)
 {
-  send(UpdateMessageData(time, outgoingUpdateQueue));
+  send(new UpdateMessageData(time, outgoingUpdateQueue));
 }
 
 String RemoteClient::performBoolMagic(

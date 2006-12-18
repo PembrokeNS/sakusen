@@ -1,7 +1,6 @@
 SUBDIRS = comms resources server client
 BIN = libsakusen.la
 LIBS = -lstdc++ -lm -lmhash
-THIS_CXXFLAGS = -Wall -Wextra -Wold-style-cast -Wno-format -Woverloaded-virtual -Werror -O0 -g3
 INCLUDE =
 
 include ../Makefile.common

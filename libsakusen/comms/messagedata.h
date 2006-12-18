@@ -14,8 +14,11 @@ namespace sakusen {
 namespace comms {
 
 class LIBSAKUSEN_COMMS_API MessageData {
-  /* Abstract class - all constructors must be protected */
+  public:
+    typedef boost::shared_ptr<MessageData> Ptr;
+    typedef boost::shared_ptr<const MessageData> ConstPtr;
   protected:
+    /* Abstract class - all constructors must be protected */
     MessageData();
     MessageData(const MessageData& copy);
     mutable OArchive archive;
@@ -25,17 +28,12 @@ class LIBSAKUSEN_COMMS_API MessageData {
     virtual ~MessageData();
     const OArchive& getArchive() const {
       if (archive.getLength() == 0) {
-        /* Much as it pains me to use it, the const_cast here is warranted,
-         * because what we're really doing here is lazy evaluation, rather than
-         * *real* alteration.  At least, that's what I tell myself.  It makes me
-         * feel better. - JJB */
         (archive << uint8(NETWORK_PROTOCOL_VERSION)).insertEnum(getType());
         fillArchive();
       }
       return archive;
     }
     virtual MessageType getType() const = 0;
-    virtual MessageData* newCopy() const = 0;
 };
 
 class LIBSAKUSEN_COMMS_API SolicitMessageData : public MessageData {
@@ -52,7 +50,6 @@ class LIBSAKUSEN_COMMS_API SolicitMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getAddress() const { return address; }
 };
 
@@ -70,7 +67,6 @@ class LIBSAKUSEN_COMMS_API AdvertiseMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     String getServerName() const;
     String getGameName() const;
 };
@@ -89,7 +85,6 @@ class LIBSAKUSEN_COMMS_API JoinMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getAddress() const { return address; }
 };
 
@@ -108,7 +103,6 @@ class LIBSAKUSEN_COMMS_API AcceptMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getAddress() const { return address; }
     inline const ClientID& getID() const { return id; }
 };
@@ -126,7 +120,6 @@ class LIBSAKUSEN_COMMS_API RejectMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getReason() const { return reason; }
 };
 
@@ -143,7 +136,6 @@ class LIBSAKUSEN_COMMS_API KickMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getReason() const { return reason; }
 };
 
@@ -158,7 +150,6 @@ class LIBSAKUSEN_COMMS_API LeaveMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
 };
 
 class LIBSAKUSEN_COMMS_API GetSettingMessageData : public MessageData {
@@ -174,7 +165,6 @@ class LIBSAKUSEN_COMMS_API GetSettingMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getSetting() const { return setting; }
 };
 
@@ -192,7 +182,6 @@ class LIBSAKUSEN_COMMS_API ChangeSettingMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getSetting() const { return setting; }
     inline const String& getValue() const { return value; }
 };
@@ -211,7 +200,6 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const String& getSetting() const { return setting; }
     inline const String& getValue() const { return value; }
 };
@@ -248,7 +236,6 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline PlayerID getPlayerId() const { return playerId; }
     inline Topology getTopology() const { return topology; }
     inline const Point<sint32>& getTopRight() const { return topRight; }
@@ -275,7 +262,6 @@ class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline const OrderMessage& getOrderMessage() const { return orderMessage; }
 };
 
@@ -293,7 +279,6 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    MessageData* newCopy() const;
     inline Time getTime() const { return time; }
     inline const std::list<Update>& getUpdates() const { return updates; }
 };

@@ -9,7 +9,7 @@ WeaponType::WeaponType(
     uint16 mC,
     uint16 eR,
     uint16 mR,
-    ResourceInterface* resourceInterface
+    ResourceInterface::Ptr resourceInterface
   ) :
   internalName(iN),
   moduleName(mN),
@@ -60,7 +60,7 @@ void WeaponType::store(OArchive& archive) const
 
 WeaponType WeaponType::load(
     IArchive& archive,
-    ResourceInterface* resourceInterface
+    ResourceInterface::Ptr resourceInterface
   )
 {
   String internalName;

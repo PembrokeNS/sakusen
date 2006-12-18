@@ -9,27 +9,23 @@
 
 namespace sakusen {
 
+/** \brief Wrapper for abstract RegionData to save memory management for Region
+ * users
+ *
+ * \note This class should be immutable.  That is, all methods should be
+ * const, and there should be no way to alter the region once constructed. */
 template<typename T>
 class LIBSAKUSEN_API Region {
   public:
-    /** \brief Constructs region with given data.
-     *
-     * \param d data to use. */
-    Region(const RegionData<T>& d) : data(d.newCopy()) {}
+    typedef boost::shared_ptr<Region> Ptr;
+    typedef boost::shared_ptr<const Region> ConstPtr;
     /** \brief Constructs region with given data.
      *
      * \param d data to use.  Ownership of the pointer is transferred to the
      * newly constructed Region.  Must not be NULL */
-    Region(RegionData<T>* d) : data(d) { assert(data != NULL); }
-    Region(const Region<T>& copy) : data(copy.data->newCopy()) {}
-    Region& operator=(const Region<T>& copy) {
-      delete data;
-      data = copy.data->newCopy();
-      return *this;
-    }
-    ~Region() { delete data; }
+    Region(RegionData<T>* d) : data(d) { assert(data); }
   private:
-    RegionData<T>* data; /* owned by this */
+    typename RegionData<T>::ConstPtr data; /* owned by this */
   public:
     /** \brief Is the Point inside the Region?
      * \return true iff \p point is inside this Region.

@@ -13,17 +13,17 @@
 namespace sakusen {
 
 class LIBSAKUSEN_API OrderData {
-  /* abstract class - all constructors must be protected */
+  public:
+    typedef boost::shared_ptr<OrderData> Ptr;
+    typedef boost::shared_ptr<const OrderData> ConstPtr;
   protected:
+    /* abstract class - all constructors must be protected */
     OrderData();
     OrderData(const OrderData& copy);
     OrderData& operator=(const OrderData&) { return *this; }
   public:
     virtual ~OrderData() {};
     virtual OrderType getType(void) const = 0;
-    virtual OrderData* newCopy(void) const = 0;
-      /* Allocates a new copy of this object - caller responsible for freeing
-       * memory */
     virtual void store(OArchive&) const = 0;
 };
 
@@ -39,7 +39,6 @@ class LIBSAKUSEN_API MoveOrderData : public OrderData {
   public:
     const Point<sint32>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_move; }
-    OrderData* newCopy(void) const;
     void store(OArchive&) const;
 };
 
@@ -55,7 +54,6 @@ class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
   public:
     Point<sint32> getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_setVelocity; }
-    OrderData* newCopy(void) const;
     void store(OArchive&) const;
 };
 
@@ -82,7 +80,6 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
     uint16 getWeaponIndex(void) const { return weaponIndex; }
     const Ref<ISensorReturns>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetSensorReturns; }
-    OrderData* newCopy(void) const;
     void store(OArchive&) const;
 };
 
@@ -106,7 +103,6 @@ class LIBSAKUSEN_API TargetPointOrderData : public OrderData {
     uint16 getWeaponIndex(void) const { return weaponIndex; }
     const Point<sint32>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetPoint; }
-    OrderData* newCopy(void) const;
     void store(OArchive&) const;
 };
 

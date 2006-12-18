@@ -4,26 +4,41 @@
 #include "libsakusen-resources-global.h"
 
 #include <vector>
+#include <boost/weak_ptr.hpp>
 
 #include "resourceinterface.h"
 
 namespace sakusen {
 namespace resources {
 
-class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface {
-  private:
-    FileResourceInterface();
+/** \brief File-based ResourceInterface
+ *
+ * This ResourceInterface loads resources from disk.
+ *
+ * All constructors are private.  To get one, call a create method.  This aids
+ * in establishing certain internal properties.
+ */
+class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
+{
   public:
+    static Ptr create(const String& directory, bool loadModules);
+    static Ptr create(
+        const std::vector<String>& directories,
+        bool loadModules
+      );
+  private:
     FileResourceInterface(const String& directory, bool loadModules);
     FileResourceInterface(
         const std::vector<String>& directories,
         bool loadModules
       );
+  public:
     virtual ~FileResourceInterface() {}
   private:
     String saveDirectory;
     std::vector<String> directories;
     bool loadModules;
+    boost::weak_ptr<ResourceInterface> ptrToThis;
 
     String getSubdir(ResourceType type);
     String getExtension(ResourceType type);

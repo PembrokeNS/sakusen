@@ -74,7 +74,7 @@ class ServerInterface {
     String flushIncoming();
     String join();
     bool leave(bool sendMessage);
-    bool send(const sakusen::comms::MessageData& message);
+    bool send(const sakusen::comms::MessageData* message);
     bool getSetting(const String& setting);
     bool setSetting(const String& setting, const String& value);
     bool setClientSetting(const String& setting, const String& value);

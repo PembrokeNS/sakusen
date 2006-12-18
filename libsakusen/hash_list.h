@@ -15,6 +15,23 @@ class hash_list_iterator;
 template<typename T>
 class hash_list_const_iterator;
 
+/** \brief A container which is much like a list, but with some hash-like
+ * properties
+ *
+ * The primary hash-like property is that elements can be
+ * looked up in O(1) (amortized) time from their pointer alone (Or,
+ * equivalently, a Ref to the object).
+ *
+ * This is also an IRefContainer, so it provides its elements not by pointer or
+ * by value but wrapped in a Ref<T>.  Note that such can be cast to Ref<U> for
+ * other U using the members of Ref.
+ *
+ * Iterator invalidation semantics should be the same as those for a list (i.e.
+ * all iterators remain valid until and unless the thing they point to is
+ * erased).
+ *
+ * The ability to splice (as can be done with lists) is absent from hash_lists.
+ */
 template<typename T>
 class hash_list : private IRefContainer, boost::noncopyable {
   friend class hash_list_iterator<T>;
@@ -61,9 +78,9 @@ class hash_list : private IRefContainer, boost::noncopyable {
     iterator push_back(T* item);
     void pop_front();
     void pop_back();
-    void insert(const_iterator pos, T* item);
+    iterator insert(iterator pos, T* item);
     template<typename InputIterator>
-    void insert(const_iterator pos, InputIterator first, InputIterator last);
+    void insert(iterator pos, InputIterator first, InputIterator last);
     iterator erase(iterator pos);
     iterator erase(MaskedPtr<T>);
     iterator erase(iterator first, iterator last);
@@ -87,6 +104,7 @@ bool operator!=(
 template<typename T>
 class hash_list_iterator {
   friend class hash_list<T>;
+  friend class hash_list_const_iterator<T>;
   public:
     hash_list_iterator() :
       container(NULL),
@@ -217,6 +235,10 @@ inline typename hash_list<T>::const_iterator hash_list<T>::end() const
   return const_iterator(list.end(), this);
 }
 
+/** \brief Get the size of the hash_list
+ *
+ * \note Unlike std::list::size, this method is O(1)
+ */
 template<typename T>
 inline typename hash_list<T>::size_type hash_list<T>::size() const
 {
@@ -230,18 +252,75 @@ inline bool hash_list<T>::empty() const
 }
 
 template<typename T>
+inline Ref<T> hash_list<T>::front()
+{
+  return Ref<T>(list.front(), this);
+}
+
+template<typename T>
+inline Ref<const T> hash_list<T>::front() const
+{
+  return Ref<const T>(list.front(), this);
+}
+
+template<typename T>
 inline Ref<T> hash_list<T>::back()
 {
   return Ref<T>(list.back(), this);
 }
 
 template<typename T>
-typename hash_list<T>::iterator hash_list<T>::push_back(T* item)
+inline Ref<const T> hash_list<T>::back() const
 {
-  item->supplyRef(Ref<T>(item, this));
-  list.push_back(item);
-  typename List::iterator it = list.end();
+  return Ref<const T>(list.back(), this);
+}
+
+template<typename T>
+inline void hash_list<T>::push_front(T* item)
+{
+  insert(begin(), item);
+}
+
+template<typename T>
+inline typename hash_list<T>::iterator hash_list<T>::push_back(T* item)
+{
+  return insert(end(), item);
+}
+
+template<typename T>
+inline void hash_list<T>::pop_front()
+{
+  assert(!empty());
+  erase(begin());
+}
+
+template<typename T>
+inline void hash_list<T>::pop_back()
+{
+  assert(!empty());
+  iterator it = end();
   --it;
+  erase(it);
+}
+
+/** \brief insert a new item into the container at a position specified by an
+ * iterator
+ *
+ * \param pos  Insert item immediately before this iterator
+ * \param item Item to insert (Ownership of pointer transferred to this)
+ * \returns iterator pointing to the inserted item
+ */
+template<typename T>
+typename hash_list<T>::iterator hash_list<T>::insert(
+    iterator pos,
+    T* item
+  )
+{
+  assert(pos.container == this);
+  item->supplyRef(Ref<T>(item, this));
+  typename List::iterator it = pos.listIt;
+  list.insert(it, item);
+  --it; // Now it should point at the just-inserted item
 
   std::pair<typename ListIteratorHash::iterator, bool> result =
     listIts.insert(std::pair<MaskedPtr<T>, typename List::iterator>(item, it));
@@ -253,9 +332,23 @@ typename hash_list<T>::iterator hash_list<T>::push_back(T* item)
   return iterator(it, this);
 }
 
+template<typename T> template<typename InputIterator>
+inline void hash_list<T>::insert(
+    iterator pos,
+    InputIterator first,
+    InputIterator last
+  )
+{
+  while (first != last) {
+    insert(pos, *first);
+    ++first;
+  }
+}
+
 template<typename T>
 typename hash_list<T>::iterator hash_list<T>::erase(iterator pos)
 {
+  assert(pos.container == this);
   iterator next = pos;
   ++next;
   T* ptr = *pos.listIt;
@@ -276,7 +369,7 @@ inline typename hash_list<T>::iterator hash_list<T>::erase(MaskedPtr<T> item)
 }
 
 template<typename T>
-typename hash_list<T>::iterator hash_list<T>::erase(
+inline typename hash_list<T>::iterator hash_list<T>::erase(
     iterator first,
     iterator last
   )
@@ -307,23 +400,48 @@ inline typename hash_list<T>::iterator hash_list<T>::find(MaskedPtr<T> tp)
 }
 
 template<typename T>
+inline typename hash_list<T>::const_iterator hash_list<T>::find(
+    MaskedPtr<T> tp
+  ) const
+{
+  typename ListIteratorHash::const_iterator it = listIts.find(tp);
+  if (it == listIts.end()) {
+    return end();
+  }
+  return const_iterator(it->second, this);
+}
+
+template<typename T>
+inline bool operator==(
+    const hash_list_const_iterator<T>& left,
+    const hash_list_const_iterator<T>& right
+  )
+{
+  assert(left.container == right.container);
+  return (left.listIt == right.listIt);
+}
+
+template<typename T>
 inline bool operator!=(
     const hash_list_const_iterator<T>& left,
     const hash_list_const_iterator<T>& right
   )
 {
+  assert(left.container == right.container);
   return (left.listIt != right.listIt);
 }
 
 template<typename T>
 inline bool hash_list_iterator<T>::operator==(const hash_list_iterator& right)
 {
+  assert(container == right.container);
   return (listIt == right.listIt);
 }
 
 template<typename T>
 inline bool hash_list_iterator<T>::operator!=(const hash_list_iterator& right)
 {
+  assert(container == right.container);
   return (listIt != right.listIt);
 }
 
@@ -364,6 +482,15 @@ inline hash_list_iterator<T> hash_list_iterator<T>::operator--(int)
 }
 
 template<typename T>
+inline hash_list_const_iterator<T>::hash_list_const_iterator(
+    const hash_list_iterator<T>& copy
+  ) :
+  container(copy.container),
+  listIt(copy.listIt)
+{
+}
+
+template<typename T>
 inline Ref<const T> hash_list_const_iterator<T>::operator*() const
 {
   return Ref<const T>(*listIt, container);
@@ -374,6 +501,29 @@ inline hash_list_const_iterator<T>& hash_list_const_iterator<T>::operator++()
 {
   ++listIt;
   return *this;
+}
+
+template<typename T>
+inline hash_list_const_iterator<T> hash_list_const_iterator<T>::operator++(int)
+{
+  hash_list_const_iterator copy(*this);
+  ++*this;
+  return copy;
+}
+
+template<typename T>
+inline hash_list_const_iterator<T>& hash_list_const_iterator<T>::operator--()
+{
+  --listIt;
+  return *this;
+}
+
+template<typename T>
+inline hash_list_const_iterator<T> hash_list_const_iterator<T>::operator--(int)
+{
+  hash_list_const_iterator copy(*this);
+  --*this;
+  return copy;
 }
 
 }

@@ -23,7 +23,9 @@
 #   building (by making in the directory of the library).
 # LIB_DEP - Like LIB_DEP_NAMES, but you provide the full path and name, e.g.
 #   "../libsakusen.la", rather than this Makefile searching for you.
-# THIS_CXXFLAGS - other args to gcc at compile stage, e.g. "-Werror".
+# THIS_CXXFLAGS - other args to gcc at compile stage, e.g. "-Wno-format".
+#   Note that most warnings are on by default, but you can turn them off in
+#   this variable.
 # THIS_LDFLAGS - other args to libtool at link stage, e.g. "-no-install".
 # PREFIX - the installation prefix, e.g. "/usr/local" (to which it defaults).
 #   Expected to be set by the user in the environment, not by the including
@@ -63,6 +65,10 @@ CXX_OBJS := $(foreach base,$(CXX_BASES),.obj/$(base).o)
 C_OBJS := $(foreach base,$(C_BASES),.obj/$(base).o)
 MAKEFRAGS := \
 	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),.makefrags/$(source).makefrag)
+
+# Add warnings and debugging, and turn off optimizations.  In the long run
+# we'll want a way to have debug and release builds in parallel
+BUILD_CXXFLAGS := -Werror -Wall -Wextra -Woverloaded-virtual -Wold-style-cast -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
 
 ifneq ($(BIN),)
 
@@ -124,24 +130,26 @@ PCH_CXXFLAGS := -Winvalid-pch -include $(ALL_HEADER)
 # How to make the precompiled headers
 # In theory both will be checked and the appropriate one will be picked
 # (we need them both because of libtool compiling everything twice)
-# In practice, when gcc finds that the first one doesn't work it gives up.  You
-# can make it go ahead anyway by removing -Winvalid-pch above, but then it's
-# impossible to tell whether it's using them properly.  There are also linking
-# problems in the shared library.
-# I feel taht the '-c' option here is wrong, but it's required to make it work.
+# 
+# In old versions of gcc, when it finds that the first one doesn't work it
+# gives up.  You can make it go ahead anyway by removing -Winvalid-pch above,
+# but then it's impossible to tell whether it's using them properly.
+#
+# There are also linking problems in the shared library.
+# I feel that the '-c' option here is wrong, but it's required to make it work.
 # Possibly this is a bug, and causes the linking problems
 $(ALL_HEADER_GCH_PIC): $(ALL_HEADER)
 	@mkdir -p $(dir $@)
-	$(CXX) -x c++-header $(CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -fPIC -DPIC -c -o $@ $<
+	$(CXX) -x c++-header $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -fPIC -DPIC -c -o $@ $<
 
 $(ALL_HEADER_GCH_PDC): $(ALL_HEADER)
 	@mkdir -p $(dir $@)
-	$(CXX) -x c++-header $(CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -c -o $@ $<
+	$(CXX) -x c++-header $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(THIS_CXXFLAGS) -c -o $@ $<
 
 # How to make the "all" header
 $(ALL_HEADER): $(LIB_ALL_HEADERS) $(HEADERS)
 	@-rm -f $@
-	for header in $(notdir $^); \
+	for header in $^; \
 	do \
 		echo '#include "'$${header}'"' >> $@ ; \
 	done
@@ -177,7 +185,7 @@ $(LIBTOOL_OBJS): %.lo: %.o
 
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	libtool --tag=CXX --mode=compile $(CXX) $(CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
+	libtool --tag=CXX --mode=compile $(CXX) $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
 		-o $@ $*.cpp
 
 $(C_OBJS): .obj/%.o:
@@ -198,7 +206,7 @@ $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
 
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
+	$(CXX) $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
 		-o $@ $*.cpp
 
 $(C_OBJS): .obj/%.o:

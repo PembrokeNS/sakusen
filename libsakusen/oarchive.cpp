@@ -52,17 +52,15 @@ OArchive& OArchive::operator=(const OArchive& copy)
 
 void OArchive::expand()
 {
-  size_t newCapacity;
   if (capacity == 0) {
-    newCapacity = 1;
+    capacity = 1;
   } else {
-    newCapacity = capacity * 2;
+    capacity *= 2;
   }
-  uint8* newBuffer = new uint8[newCapacity];
+  uint8* newBuffer = new uint8[capacity];
   memcpy(newBuffer, buffer, length*sizeof(uint8));
   delete[] buffer;
   buffer = newBuffer;
-  capacity = newCapacity;
 }
 
 OArchive& OArchive::operator<<(const uint16& i)

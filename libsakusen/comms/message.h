@@ -10,17 +10,14 @@ namespace comms {
 class LIBSAKUSEN_COMMS_API Message {
   public:
     Message();
-    Message(const Message& copy);
-    Message(const MessageData& data);
+    explicit Message(const MessageData* data);
     Message(
         const uint8* buffer,
         size_t bufferLength,
         PlayerID player = static_cast<PlayerID>(-1)
       );
-    ~Message();
-    Message& operator=(const Message& copy);
   private:
-    const MessageData* data;
+    MessageData::ConstPtr data;
   public:
     inline MessageType getType(void) const {
       return ( data == NULL ? messageType_none : data->getType() );
@@ -36,7 +33,7 @@ class LIBSAKUSEN_COMMS_API Message {
     }
 #define GETDATA(type) \
     inline type##MessageData get##type##Data(void) const { \
-      return *dynamic_cast<const type##MessageData*>(data); \
+      return dynamic_cast<const type##MessageData&>(*data); \
     }
     GETDATA(Advertise)
     GETDATA(Solicit)

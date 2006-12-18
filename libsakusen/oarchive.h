@@ -111,6 +111,11 @@ class LIBSAKUSEN_API OArchive {
       std::copy(toStore.shape(), toStore.shape()+rank, shape.begin());
       insert<uint32, rank>(shape);
 
+      // If any dimension is zero, there are no entries, and we quit now
+      if (shape.end() != find(shape.begin(), shape.end(), 0U)) {
+        return *this;
+      }
+
       boost::array<uint32, rank> i;
       std::fill(i.begin(), i.end(), 0);
       uint32 j;
@@ -118,10 +123,9 @@ class LIBSAKUSEN_API OArchive {
       do {
         store(toStore(i));
         for (j=0; j<rank; ++j) {
-          if (i[j] == shape[j]) {
+          if (++(i[j]) == shape[j]) {
             i[j] = 0;
           } else {
-            ++i[j];
             break;
           }
         }

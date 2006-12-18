@@ -9,12 +9,30 @@
 
 using namespace sakusen;
 
+using boost::shared_array;
+
 IArchive::IArchive(const uint8* b, size_t l) :
   originalBuffer(new uint8[l]),
   buffer(originalBuffer),
   remainingLength(l)
 {
   memcpy(originalBuffer, b, l*sizeof(uint8));
+}
+
+IArchive::IArchive(const shared_array<uint8>& b, size_t l) :
+  originalBuffer(new uint8[l]),
+  buffer(originalBuffer),
+  remainingLength(l)
+{
+  memcpy(originalBuffer, b.get(), l*sizeof(uint8));
+}
+
+IArchive::IArchive(const shared_array<const uint8>& b, size_t l) :
+  originalBuffer(new uint8[l]),
+  buffer(originalBuffer),
+  remainingLength(l)
+{
+  memcpy(originalBuffer, b.get(), l*sizeof(uint8));
 }
 
 IArchive::~IArchive()

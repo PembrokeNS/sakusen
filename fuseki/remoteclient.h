@@ -101,8 +101,8 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     /** \brief Send the given message at once
      *
      * \param data MessageData to use to construct the message to be sent */
-    inline void send(const sakusen::comms::MessageData& data) {
-      outSocket->send(data);
+    inline void send(const sakusen::comms::MessageData* data) {
+      outSocket->send(sakusen::comms::Message(data));
     }
     inline void queueUpdate(const sakusen::Update& update) {
       outgoingUpdateQueue.push_back(update);

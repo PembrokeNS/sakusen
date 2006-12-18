@@ -28,7 +28,7 @@ class LIBSAKUSEN_API ISensorReturns : virtual public IReferent {
     virtual Perception getPerception() const = 0;
     virtual PlayerID getSenserOwner() const = 0;
     virtual PlayerID getSenseeOwner() const = 0;
-    virtual const Region<sint32>* getRegion() const = 0;
+    virtual Region<sint32>::ConstPtr getRegion() const = 0;
     virtual Ref<const ICompleteUnit> getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
 

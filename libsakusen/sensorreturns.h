@@ -36,8 +36,7 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
       perception(copy->getPerception()),
       senserOwner(copy->getSenserOwner()),
       senseeOwner(copy->getSenseeOwner()),
-      region(NULL == copy->getRegion() ?
-          NULL : new Region<sint32>(*copy->getRegion())),
+      region(copy->getRegion()),
       unit(copy->getUnit().isValid() ?
           new CompleteUnit(copy->getUnit()) : NULL),
       returns(copy->getSensorReturns())
@@ -76,26 +75,28 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
     }
     SensorReturns& operator=(const SensorReturns& copy)
     {
-      /** \bug Doesn't handle self-assignment */
+      if (this == &copy)
+        return *this;
       ISensorReturns::operator=(copy);
-      id = copy.getId();
-      perception = copy.getPerception();
+      id = copy.id;
+      perception = copy.perception;
       assert(0 == (perception & ~perception_full));
-      senserOwner = copy.getSenserOwner();
-      senseeOwner = copy.getSenseeOwner();
-      delete region;
-      region = ( NULL == copy.getRegion() ?
-          NULL : new Region<sint32>(*copy.getRegion()) );
+      senserOwner = copy.senserOwner;
+      senseeOwner = copy.senseeOwner;
+      region = copy.region;
+      while (!refs.empty()) {
+        refs.back()->invalidate();
+        refs.pop_back();
+      }
       delete unit;
       unit = ( NULL == copy.unit ?
           NULL : new CompleteUnit(copy.getUnit()) );
+      /* refs deliberately remains empty */
       returns = copy.getSensorReturns();
       return *this;
     }
     ~SensorReturns()
     {
-      delete region;
-      region = NULL;
       while (!refs.empty()) {
         refs.back()->invalidate();
         refs.pop_back();
@@ -108,7 +109,7 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
     Perception perception;
     PlayerID senserOwner;
     PlayerID senseeOwner;
-    const Region<sint32>* region; /* owned by this */
+    Region<sint32>::ConstPtr region; /* owned by this */
     const CompleteUnit* unit; /* owned by this */
     mutable std::list<IRef*> refs;
 
@@ -129,7 +130,7 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
     inline Perception getPerception() const { return perception; }
     inline PlayerID getSenserOwner() const { return senserOwner; }
     inline PlayerID getSenseeOwner() const { return senseeOwner; }
-    inline const Region<sint32>* getRegion() const { return region; }
+    inline Region<sint32>::ConstPtr getRegion() const { return region; }
     inline Ref<const ICompleteUnit> getUnit() const {
       return Ref<const ICompleteUnit>(unit, this);
     }

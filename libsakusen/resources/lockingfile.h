@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include <boost/shared_array.hpp>
+
 namespace sakusen {
 namespace resources {
 
@@ -48,6 +50,11 @@ class LockingFile {
      * nothing and returns 0.
      */
     size_t getWholeFile(uint8* buffer, size_t length, bool block);
+    inline size_t getWholeFile(
+        const boost::shared_array<uint8>& buffer, size_t length, bool block
+      ) {
+      return getWholeFile(buffer.get(), length, block);
+    }
 };
 
 }}

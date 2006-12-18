@@ -8,3 +8,10 @@ in the repository.
 Also the following libraries:
 
 PCRE libpcre-dev
+
+
+The following valgring command may be of use to others as it was to me whilst
+debugging fuseki:
+
+valgrind --track-fds=yes --leak-check=full --gen-suppressions=yes --show-reachable=yes --suppressions=../tools/valgrind/sakusen.supp --log-fd=1 --db-attach=yes ./fuseki -fd-
+

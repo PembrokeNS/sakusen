@@ -210,8 +210,8 @@ void runTest(
     const String& configPath
   ) {
   String uiConfFilename = configPath + FILE_SEP "ui.conf";
-  ResourceInterface::Ptr resourceInterface(
-      new FileResourceInterface(homePath + CONFIG_SUBDIR DATA_SUBDIR, false)
+  ResourceInterface::Ptr resourceInterface = FileResourceInterface::create(
+      homePath + CONFIG_SUBDIR DATA_SUBDIR, false
     );
   Game* game = new Game(resourceInterface);
   UI::Ptr ui = newUI(options, uiConfFilename, game);
@@ -298,9 +298,8 @@ void runClient(
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
     dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
     
-    ResourceInterface::Ptr resourceInterface(
-        new FileResourceInterface(dataDirs, false)
-      );
+    ResourceInterface::Ptr resourceInterface =
+        FileResourceInterface::create(dataDirs, false);
     Game* game = new Game(resourceInterface);
     ServerInterface serverInterface(
         socket, options.joinAddress,

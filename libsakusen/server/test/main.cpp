@@ -98,8 +98,8 @@ int main(/* int argc, char** argv */)
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
-  ResourceInterface* resourceInterface =
-    new FileResourceInterface(dataDirs, true);
+  ResourceInterface::Ptr resourceInterface =
+    FileResourceInterface::create(dataDirs, true);
   
   /* Create a debugging client */
   DebuggingClient client(cout);
@@ -179,8 +179,7 @@ int main(/* int argc, char** argv */)
   
   delete mapTemplate;
   delete universe;
-  delete resourceInterface;
-
+  
   /* ltdl finalization */
   if (lt_dlexit()) {
     Fatal("lt_dlexit() failed");

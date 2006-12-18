@@ -18,9 +18,34 @@
 using namespace std;
 using namespace __gnu_cxx;
 
+using boost::shared_ptr;
+using boost::shared_array;
+
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::resources;
+
+ResourceInterface::Ptr FileResourceInterface::create(
+    const String& directory,
+    bool loadModules
+  )
+{
+  shared_ptr<FileResourceInterface>
+    result(new FileResourceInterface(directory, loadModules));
+  result->ptrToThis = result;
+  return result;
+}
+
+ResourceInterface::Ptr FileResourceInterface::create(
+    const std::vector<String>& directories,
+    bool loadModules
+  )
+{
+  shared_ptr<FileResourceInterface>
+    result(new FileResourceInterface(directories, loadModules));
+  result->ptrToThis = result;
+  return result;
+}
 
 FileResourceInterface::FileResourceInterface(const String& d, bool lM) :
   saveDirectory(d),
@@ -177,20 +202,22 @@ void* FileResourceInterface::internalSearch(
   if (length > (1 << 20)) {
     Fatal("file size exceeded arbitrary limit");
   }
-  uint8* fileAsArray = new uint8[lengthAsSizeT];
+  shared_array<uint8> fileAsArray(new uint8[lengthAsSizeT]);
   size_t bytesRead;
-  if (lengthAsSizeT != (bytesRead = file.getWholeFile(fileAsArray, lengthAsSizeT, true))) {
+  if (lengthAsSizeT !=
+      (bytesRead = file.getWholeFile(fileAsArray, lengthAsSizeT, true))
+    ) {
     switch (bytesRead) {
       case -1:
-        error = String("error reading file: ") + errorUtils_errorMessage(errno);
+        error =
+          String("error reading file: ") + errorUtils_errorMessage(errno);
         *result = resourceSearchResult_error;
-        delete[] fileAsArray;
         return NULL;
       default:
-        error = String("read only ") + numToString(static_cast<sint32>(bytesRead)) +
+        error =
+          String("read only ") + numToString(static_cast<sint32>(bytesRead)) +
           " of " + numToString(length) + " bytes";
         *result = resourceSearchResult_error;
-        delete[] fileAsArray;
         return NULL;
     }
   }
@@ -198,13 +225,12 @@ void* FileResourceInterface::internalSearch(
   /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
   IArchive fileAsArchive(fileAsArray, lengthAsSizeT);
-  delete[] fileAsArray;
   void* resource = NULL;
 
   try {
     switch (type) {
       case resourceType_universe:
-        resource = Universe::loadNew(fileAsArchive, this);
+        resource = Universe::loadNew(fileAsArchive, ptrToThis.lock());
         break;
       case resourceType_mapTemplate:
         resource = new MapTemplate(
@@ -286,11 +312,15 @@ void* FileResourceInterface::internalSymbolSearch(
     error = String("lt_dlopen() failed: ") + lt_dlerror();
     return NULL;
   }
-  /* Make the module resident (it cannot be closed) so as to avoid segfault
-   * madness */
+  /* We could make the module resident (it cannot be closed) so as to avoid
+   * segfault madness that would ensue if it was closed, as follows:
   if (lt_dlmakeresident(moduleHandle)) {
     Fatal("lt_dlmakeresident() failed");
   }
+   * However, that this causes libltdl to leak the memory used to store the
+   * module name and such data, which bugs me, so I'm not doing that now. I
+   * will say instead: Never Close Any Modules.  Let lt_dlexit close them for
+   * us when it is called aty shutdown */
 
   lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
 

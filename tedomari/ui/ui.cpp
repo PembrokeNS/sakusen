@@ -430,7 +430,7 @@ void UI::move(const hash_set<uint32>& units, const String& target)
 
 void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
 {
-  Order order = Order(MoveOrderData(target));
+  Order order = Order(new MoveOrderData(target));
   
   for (hash_set<uint32>::const_iterator unit = units.begin();
       unit != units.end(); ++unit) {
@@ -449,7 +449,7 @@ void UI::attack(const hash_set<uint32>& units, const String& target)
 void UI::attack(const hash_set<uint32>& units, const Point<sint32>& target)
 {
   /** \bug Only targeting weapon 0 */
-  Order order = Order(TargetPointOrderData(0, target));
+  Order order = Order(new TargetPointOrderData(0, target));
   
   for (hash_set<uint32>::const_iterator unit = units.begin();
       unit != units.end(); ++unit) {

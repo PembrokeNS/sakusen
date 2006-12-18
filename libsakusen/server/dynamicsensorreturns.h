@@ -26,7 +26,7 @@ class DynamicSensorReturns : public ISensorReturns {
   private:
     SensorReturnsID id;
     Perception perception;
-    Region<sint32>* region;
+    Region<sint32>::ConstPtr region;
     Player* senserOwner;
     SensorReturnMap sensers;
     Ref<const LayeredUnit> sensee;
@@ -36,7 +36,7 @@ class DynamicSensorReturns : public ISensorReturns {
     inline Perception getPerception() const { return perception; }
     PlayerID getSenserOwner() const;
     PlayerID getSenseeOwner() const;
-    const Region<sint32>* getRegion() const;
+    Region<sint32>::ConstPtr getRegion() const;
     Ref<const ICompleteUnit> getUnit() const;
     inline const SensorReturnMap& getSensorReturns() const { return sensers; }
     inline bool empty() const { return sensers.empty(); }

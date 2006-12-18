@@ -87,7 +87,7 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
      * It returns a newly allocated Universe, which must be deleted by the
      * caller.
      */
-    static Universe* loadNew(IArchive&, ResourceInterface* resourceInterface);
+    static Universe* loadNew(IArchive&, ResourceInterface::Ptr);
 };
 
 }

@@ -203,7 +203,7 @@ void Server::addClient(
   if (id == static_cast<ClientID>(-1)) {
     /* No free IDs */
     out << "Rejecting join request due to lack of space for more clients.\n";
-    socket->send(RejectMessageData("No space for more clients"));
+    socket->send(Message(new RejectMessageData("No space for more clients")));
     return;
   }
   /* Add the client's branch of the settings tree */
@@ -253,12 +253,12 @@ void Server::handleClientMessages()
               reason = settings->getRequest(setting, value, node, client);
               if (reason != "") {
                 out << "Request rejected (" << reason << ")\n";
-                client->send(RejectMessageData(reason));
+                client->send(new RejectMessageData(reason));
               } else {
                 /* We send back node->getFullName() rather than just setting to
                  * ensure that it is in canonical form */
                 client->send(
-                    NotifySettingMessageData(node->getFullName(), value)
+                    new NotifySettingMessageData(node->getFullName(), value)
                   );
               }
             }
@@ -275,7 +275,7 @@ void Server::handleClientMessages()
                 /* That a non-empty string was returned implies that a problem
                  * occured.  We tell the client as much */
                 out << "Request rejected (" << reason << ")\n";
-                client->send(RejectMessageData(reason));
+                client->send(new RejectMessageData(reason));
               }
             }
             break;
@@ -426,7 +426,8 @@ void Server::serve()
   if (tcpSocket != NULL) {
     tcpSocket->setNonBlocking(true);
   }
-  Message advertisement = Message(AdvertiseMessageData("fuseki", "Game name"));
+  Message advertisement =
+    Message(new AdvertiseMessageData("fuseki", "Game name"));
 
   /* A list of incoming (probably TCP) connections where we expect to get join
    * messages from prospective clients */
@@ -698,7 +699,7 @@ void Server::serve()
     for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
         clients.begin(); clientIt != clients.end(); ++clientIt) {
       RemoteClient* client = clientIt->second;
-      client->send(GameStartMessageData(
+      client->send(new GameStartMessageData(
             client->getPlayerId(), map->getTopology(),
             map->getTopRight(), map->getBottomLeft(),
             map->getGravity(), map->getHeightfield().getHorizontalResolution(),
@@ -785,7 +786,9 @@ void Server::serve()
     out << "Server interrupted.  Shutting down." << endl;
     while (!clients.empty()) {
       try {
-        clients.begin()->second->send(KickMessageData("Server shutting down."));
+        clients.begin()->second->send(
+            new KickMessageData("Server shutting down.")
+          );
       } catch (SocketExn& e) {
         out << "Socket exception while kicking client: " << e.message << "\n";
       }
@@ -1085,7 +1088,7 @@ void Server::settingAlteredCallback(Leaf* altered)
     RemoteClient* client = clientIt->second;
     if (client->hasReadPermissionFor(altered)) {
       try {
-        client->send(data);
+        client->send(new NotifySettingMessageData(data));
         
         /* clear readiness flag if desired */
         if (client->isAutoUnready() && !isReadinessChange) {

@@ -67,9 +67,8 @@ enum SensorType {
  * probably just construct it and set the non-zero ones however you like.
  *
  * \code
- * Visiblity *v;
- * v = new Visibility();
- * v->optical = 20;
+ * Visiblity v;
+ * v.optical = 20;
  * \endcode
  *
  */

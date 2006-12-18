@@ -5,16 +5,10 @@
 #include "world.h"
 
 namespace sakusen {
+namespace comms{
 
-  namespace comms{
-
-Message::Message(const Message& copy) :
-  data( copy.isRealMessage() ? copy.data->newCopy() : NULL )
-{
-}
-
-Message::Message(const MessageData& data) :
-  data(data.newCopy())
+Message::Message(const MessageData* d) :
+  data(d)
 {
 }
 
@@ -23,21 +17,19 @@ Message::Message(
     size_t bufferLength,
     PlayerID player /*= static_cast<PlayerID>(-1) (default in header)*/
   ) :
-  data(NULL)
+  data()
 {
   /* We try to initialize this message by reading in from the given buffer.
-   * If anything goes wrong, then we let data remain NULL and leave this as a
-   * non-message */
+   * If anything goes wrong, then we throw an exception */
   if (bufferLength < 2) {
-    return;
+    throw EndOfArchiveDeserializationExn();
   }
   
   /* Extract the first byte, which gives the protocol version */
   uint8 version = buffer[0];
 
   if (version != NETWORK_PROTOCOL_VERSION) {
-    Debug("unexpected protocol version " << version << " on message");
-    return;
+    throw WrongVersionDeserializationExn(NETWORK_PROTOCOL_VERSION, version);
   }
   
   /* Extract the second byte, which gives the message type */
@@ -51,37 +43,37 @@ Message::Message(
   
   switch (type) {
     case messageType_solicit:
-      data = new SolicitMessageData(in);
+      data.reset(new SolicitMessageData(in));
       break;
     case messageType_advertise:
-      data = new AdvertiseMessageData(in);
+      data.reset(new AdvertiseMessageData(in));
       break;
     case messageType_join:
-      data = new JoinMessageData(in);
+      data.reset(new JoinMessageData(in));
       break;
     case messageType_accept:
-      data = new AcceptMessageData(in);
+      data.reset(new AcceptMessageData(in));
       break;
     case messageType_reject:
-      data = new RejectMessageData(in);
+      data.reset(new RejectMessageData(in));
       break;
     case messageType_kick:
-      data = new KickMessageData(in);
+      data.reset(new KickMessageData(in));
       break;
     case messageType_leave:
-      data = new LeaveMessageData(in);
+      data.reset(new LeaveMessageData(in));
       break;
     case messageType_getSetting:
-      data = new GetSettingMessageData(in);
+      data.reset(new GetSettingMessageData(in));
       break;
     case messageType_changeSetting:
-      data = new ChangeSettingMessageData(in);
+      data.reset(new ChangeSettingMessageData(in));
       break;
     case messageType_notifySetting:
-      data = new NotifySettingMessageData(in);
+      data.reset(new NotifySettingMessageData(in));
       break;
     case messageType_gameStart:
-      data = new GameStartMessageData(in);
+      data.reset(new GameStartMessageData(in));
       break;
     case messageType_order:
       if (player == static_cast<PlayerID>(-1)) {
@@ -89,37 +81,24 @@ Message::Message(
          * accurate */
         throw NoWorldDeserializationExn();
       }
-      data = new OrderMessageData(in, &player);
+      data.reset(new OrderMessageData(in, &player));
       break;
     case messageType_update:
       if (world == NULL || player == static_cast<PlayerID>(-1)) {
         throw NoWorldDeserializationExn();
       }
-      data = new UpdateMessageData(in, &player);
+      data.reset(new UpdateMessageData(in, &player));
       break;
     default:
-      Debug("Unknown message type " << type);
+      throw EnumDeserializationExn("type", type);
       return;
   }
   
   /* Check that we exactly reached the end of the archive */
   if (!in.isFinished()) {
-    Debug("Archive didn't exactly match expected length");
-    delete data;
-    data = NULL;
+    throw TooMuchArchiveDeserializationExn();
+    data.reset();
   }
-}
-
-Message& Message::operator=(const Message& copy)
-{
-  data = copy.data->newCopy();
-  return *this;
-}
-
-Message::~Message()
-{
-  delete data;
-  data = NULL;
 }
 
 }}//close namespaces
