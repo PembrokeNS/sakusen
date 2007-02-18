@@ -5,7 +5,7 @@
 #include "heightfield.h"
 #include "mapplaymode.h"
 #include "planemap.h"
-#include "sphereregiondata.h"
+#include "sphereregion.h"
 #include "libsakusen-resources-global.h"
 #include "resourceinterface-methods.h"
 #include "fileresourceinterface.h"
@@ -98,6 +98,9 @@ int main(/*int argc, char** argv*/)
   list<String> commanderWeapons;
   commanderWeapons.push_back("cannon");
   commanderWeapons.push_back("paralyzer");
+  /* The following use of shared_ptr temporaries could lead to a memory leak in
+   * extreme circumstances, but since this is only a test I don't really care
+   * */
   UnitType commanderType =
     UnitType(
         "commander" /* name */,
@@ -105,11 +108,11 @@ int main(/*int argc, char** argv*/)
           100 /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(10,10,10) /* size */,
-          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 4))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 4))
             /* possibleAccelerations */,
-          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 10))
             /* possibleVelocities */,
-          Region<sint16>(new SphereRegionData<sint16>(Point<sint16>(), 10))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 10))
             /* possibleAngularVelocities */,
           Visibility(),
           Sensors()
@@ -126,15 +129,15 @@ int main(/*int argc, char** argv*/)
       );
   unitTypes.push_back(commanderType);
   
-  Universe universe("universe", "", weaponTypes, unitTypes);
-  String name = universe.resolveNames();
+  Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
+  String name = universe->resolveNames();
   if (name != "") {
     cout << "Error resolving name '" << name << "'" << endl;
     return EXIT_FAILURE;
   }
 
   cout << "Saving Universe" << endl;
-  if(resourceInterface->save(&universe))
+  if(resourceInterface->save(Universe::ConstPtr(universe)))
   {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
@@ -142,7 +145,7 @@ int main(/*int argc, char** argv*/)
 
   cout << "Loading Universe" << endl;
   ResourceSearchResult result;
-  Universe* reloadedUniverse =
+  Universe::ConstPtr reloadedUniverse =
     resourceInterface->search<Universe>("universe", NULL, &result);
   cout << "Result of reload was " << result << endl;
   
@@ -163,10 +166,10 @@ int main(/*int argc, char** argv*/)
   vector<UnitTemplate> realPlayersUnits;
   neutralPlayersUnits.push_back(
       UnitTemplate(
-        &universe,
+        universe,
         UnitStatus(
-          &universe,
-          universe.getUnitTypeId(0),
+          universe,
+          universe->getUnitTypeId(0),
           Point<sint32>(50,-50,0),
           Orientation(),
           Point<sint16>()
@@ -175,10 +178,10 @@ int main(/*int argc, char** argv*/)
     );
   realPlayersUnits.push_back(
       UnitTemplate(
-        &universe,
+        universe,
         UnitStatus(
-          &universe,
-          universe.getUnitTypeId(0),
+          universe,
+          universe->getUnitTypeId(0),
           Point<sint32>(0,0,0),
           Orientation(),
           Point<sint16>()
@@ -191,11 +194,11 @@ int main(/*int argc, char** argv*/)
   MapPlayMode playMode = MapPlayMode(2, 2, playerTemplates);
   vector<MapPlayMode> playModes;
   playModes.push_back(playMode);
-  MapTemplate* t = new MapTemplate(
-      &universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
-      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-      heightfield, 2 /* gravity */, playModes
-    );
+  MapTemplate::ConstPtr t(new MapTemplate(
+        universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+        Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
+        heightfield, 2 /* gravity */, playModes
+      ));
 
   cout << "Saving map" << endl;
   if(resourceInterface->save(t))
@@ -205,8 +208,10 @@ int main(/*int argc, char** argv*/)
   }
 
   cout << "Loading map" << endl;
-  MapTemplate* reloadedTemplate =
-    resourceInterface->search<MapTemplate>("map", reloadedUniverse, &result);
+  MapTemplate::Ptr reloadedTemplate =
+    resourceInterface->search<MapTemplate>(
+        "map", &reloadedUniverse, &result
+      );
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -223,10 +228,10 @@ int main(/*int argc, char** argv*/)
   vector<UnitTemplate> realPlayer2sUnits;
   realPlayer2sUnits.push_back(
       UnitTemplate(
-        &universe,
+        universe,
         UnitStatus(
-          &universe,
-          universe.getUnitTypeId(0),
+          universe,
+          universe->getUnitTypeId(0),
           Point<sint32>(100,-100,0),
           Orientation(),
           Point<sint16>()
@@ -237,12 +242,11 @@ int main(/*int argc, char** argv*/)
   playMode = MapPlayMode(3, 3, playerTemplates);
   playModes.clear();
   playModes.push_back(playMode);
-  delete t;
-  t = new MapTemplate(
-      &universe, "2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
-      Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-      heightfield, 10 /* gravity */, playModes
-    );
+  t.reset(new MapTemplate(
+        universe, "2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+        Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
+        heightfield, 10 /* gravity */, playModes
+      ));
 
   cout << "Saving two player map" << endl;
   if (resourceInterface->save(t)) {
@@ -250,10 +254,6 @@ int main(/*int argc, char** argv*/)
     return EXIT_FAILURE;
   }
   
-  delete reloadedTemplate;
-  delete reloadedUniverse;
-  delete t;
-
   return EXIT_SUCCESS;
 }
 

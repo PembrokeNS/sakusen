@@ -22,6 +22,9 @@ namespace sakusen {
  */
 class LIBSAKUSEN_API Universe : boost::noncopyable {
   public:
+    typedef boost::shared_ptr<Universe> Ptr;
+    typedef boost::shared_ptr<const Universe> ConstPtr;
+
     Universe(
         const String& internalName,
         const String& hash,

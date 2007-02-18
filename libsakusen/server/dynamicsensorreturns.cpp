@@ -2,7 +2,7 @@
 
 #include "player.h"
 #include "layeredunit.h"
-#include "sphereregiondata.h"
+#include "sphereregion.h"
 #include "limits.h"
 
 using namespace __gnu_cxx;
@@ -141,9 +141,9 @@ void DynamicSensorReturns::update()
     dirty = true;
     /* \todo Add some randomness to the position of the centre of the region,
      * otherwise it might as well just be a point */
-    region.reset(new Region<sint32>(new SphereRegionData<sint32>(
-            sensee->getIStatus()->getPosition(), bestRadius
-          )));
+    region.reset(new SphereRegion<sint32>(
+          sensee->getIStatus()->getPosition(), bestRadius
+        ));
   } else {
     region.reset();
   }

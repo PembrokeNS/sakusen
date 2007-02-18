@@ -33,7 +33,7 @@ class LIBSAKUSEN_API Update {
     GET(BallisticAdded)
 #undef GET
 
-    typedef Universe loadArgument;
+    typedef Universe::ConstPtr loadArgument;
     typedef PlayerID loadArgument2;
     inline void store(OArchive& out) const {
       out.insertEnum(getType());

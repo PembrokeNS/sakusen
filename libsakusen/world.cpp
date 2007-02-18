@@ -5,7 +5,7 @@
 
 using namespace sakusen;
 
-World::World(const Universe* u) :
+World::World(const Universe::ConstPtr& u) :
   universe(u),
   timeNow(0)
 {

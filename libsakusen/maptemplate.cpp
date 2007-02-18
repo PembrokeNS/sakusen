@@ -7,7 +7,7 @@ using namespace std;
 using namespace sakusen;
 
 MapTemplate::MapTemplate(
-    const Universe* u,
+    const Universe::ConstPtr& u,
     const String& in,
     const Point<sint32>& tr,
     const Point<sint32>& bl,
@@ -56,7 +56,10 @@ void MapTemplate::store(OArchive& archive) const
   archive << gravity << playModes;
 }
 
-MapTemplate MapTemplate::load(IArchive& archive, const Universe* universe)
+MapTemplate MapTemplate::load(
+    IArchive& archive,
+    const Universe::ConstPtr* universe
+  )
 {
   Topology topology;
   String internalName;
@@ -70,7 +73,7 @@ MapTemplate MapTemplate::load(IArchive& archive, const Universe* universe)
   archive.extract(playModes, universe);
   
   return MapTemplate(
-      universe, internalName, topRight, bottomLeft,
+      *universe, internalName, topRight, bottomLeft,
       topology, heightfield, gravity, playModes
     );
 }

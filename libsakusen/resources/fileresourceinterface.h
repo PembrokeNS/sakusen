@@ -49,7 +49,7 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
         ResourceSearchResult* result
       );
     
-    virtual void* internalSearch(
+    virtual boost::shared_ptr<void> internalSearch(
         const String& name,
         ResourceType type,
         const void* arg,
@@ -62,7 +62,10 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
         ResourceSearchResult* result
       );
     
-    virtual bool internalSave(const void* resource, ResourceType type);
+    virtual bool internalSave(
+        const boost::shared_ptr<const void>& resource,
+        ResourceType type
+      );
 };
 
 }}

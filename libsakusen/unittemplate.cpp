@@ -5,7 +5,7 @@
 using namespace sakusen;
 
 UnitTemplate::UnitTemplate(
-    const Universe* u,
+    const Universe::ConstPtr& u,
     const UnitStatus& s
   ) :
   universe(u),
@@ -27,9 +27,12 @@ void UnitTemplate::store(OArchive& out) const
   status.store(out, universe);
 }
 
-UnitTemplate UnitTemplate::load(IArchive& in, const Universe* universe)
+UnitTemplate UnitTemplate::load(
+    IArchive& in,
+    const Universe::ConstPtr* universe
+  )
 {
   in.magicValue<2>("UT");
-  return UnitTemplate(universe, UnitStatus::load(in, universe));
+  return UnitTemplate(*universe, UnitStatus::load(in, universe));
 }
 

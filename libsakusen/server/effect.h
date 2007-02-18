@@ -24,21 +24,21 @@ namespace server {
 class Effect {
   private:
     PlayerID owner;
-    Region<sint32> region;
+    Region<sint32>::Ptr region;
     Visibility visibility;
 
     Effect();
   protected:
     Effect(const Effect& copy) :
       owner(copy.owner), region(copy.region), visibility(copy.visibility) {}
-    Effect(PlayerID o, const Region<sint32>& r, Visibility v) :
+    Effect(PlayerID o, const Region<sint32>::Ptr& r, Visibility v) :
       owner(o), region(r), visibility(v) {}
     
   public:
     virtual ~Effect() {}
     /* accessors */
     inline const PlayerID getOwner(void) const { return owner; }
-    inline const Region<sint32>& getRegion(void) const { return region; }
+    inline const Region<sint32>::Ptr& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
     /* callbacks */
     virtual void onUnitPresent(const Ref<LayeredUnit>&) {}

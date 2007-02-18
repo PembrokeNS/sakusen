@@ -15,7 +15,7 @@ using namespace tedomari::game;
 Game::Game(const ResourceInterface::Ptr& rI) :
   resourceInterface(rI),
   serverInterface(NULL),
-  universe(NULL)
+  universe()
 {
 }
 
@@ -28,8 +28,6 @@ Game::~Game()
   if (sakusen::client::world != NULL) {
     stop();
   }
-  delete universe;
-  universe = NULL;
 }
 
 /** \brief Loads the specified Universe and stores it for later use

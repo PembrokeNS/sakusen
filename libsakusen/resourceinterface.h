@@ -27,7 +27,7 @@ class LIBSAKUSEN_API ResourceInterface {
   protected:
     String error;
     
-    virtual void* internalSearch(
+    virtual boost::shared_ptr<void> internalSearch(
         const String& name,
         ResourceType type,
         const void* arg,
@@ -40,7 +40,10 @@ class LIBSAKUSEN_API ResourceInterface {
         ResourceSearchResult* result
       ) = 0;
 
-    virtual bool internalSave(const void* resource, ResourceType type) = 0;
+    virtual bool internalSave(
+        const boost::shared_ptr<const void>& resource,
+        ResourceType type
+      ) = 0;
     
     template<typename T>
     inline ResourceType typenameToResourceType();
@@ -57,7 +60,7 @@ class LIBSAKUSEN_API ResourceInterface {
      * Universe).
      */
     template<typename T>
-    inline T* search(
+    inline boost::shared_ptr<T> search(
         const String& name,
         const typename T::loadArgument* arg,
         ResourceSearchResult* result
@@ -75,7 +78,7 @@ class LIBSAKUSEN_API ResourceInterface {
     }
     
     template<typename T>
-    inline bool save(const T* resource);
+    inline bool save(const boost::shared_ptr<const T>& resource);
 
     /** \brief Returns description of last error
      *

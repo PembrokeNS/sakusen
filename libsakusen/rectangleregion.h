@@ -1,7 +1,7 @@
-#ifndef RECTANGLEREGIONDATA_H
-#define RECTANGLEREGIONDATA_H
+#ifndef RECTANGLEREGION_H
+#define RECTANGLEREGION_H
 
-#include "regiondata.h"
+#include "region.h"
 #include "world.h"
 #include "rectangle.h"
 
@@ -10,11 +10,15 @@ namespace sakusen {
 /** \brief Describes a region which is a rectangle in x-y and infinite in the
  * z-direction. */
 template<typename T>
-class RectangleRegionData : public RegionData<T> {
+class RectangleRegion : public Region<T> {
+  friend class Region<T>;
   public:
-    RectangleRegionData(const Rectangle<T>& r) : rectangle(r) {}
+    RectangleRegion(const Rectangle<T>& r) : rectangle(r) {}
   private:
     Rectangle<T> rectangle;
+
+    void storeData(OArchive&) const;
+    static RectangleRegion<T>* loadNew(IArchive&);
   public:
     inline bool contains(const Point<T>& point) const;
     inline Point<T> truncateToFit(const Point<T>&) const;
@@ -22,18 +26,15 @@ class RectangleRegionData : public RegionData<T> {
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     
     RegionType getType() const { return regionType_rectangle; }
-    RegionData<T>* newCopy() const { return new RectangleRegionData<T>(*this); }
-    void store(OArchive&) const;
-    static RectangleRegionData<T>* loadNew(IArchive&);
 };
 
 template<typename T>
-inline bool RectangleRegionData<T>::contains(const Point<T>& point) const {
+inline bool RectangleRegion<T>::contains(const Point<T>& point) const {
   return rectangle.contains(point);
 }
 
 template<typename T>
-inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
+inline Point<T> RectangleRegion<T>::truncateToFit(const Point<T>& p) const
 {
   if (contains(p)) {
     return p;
@@ -45,7 +46,7 @@ inline Point<T> RectangleRegionData<T>::truncateToFit(const Point<T>& p) const
 }
 
 template<typename T>
-inline Point<T> RectangleRegionData<T>::getBestPosition() const
+inline Point<T> RectangleRegion<T>::getBestPosition() const
 {
   return Point<T>(
       (rectangle.getMinX() + rectangle.getMaxX()) / 2,
@@ -55,19 +56,19 @@ inline Point<T> RectangleRegionData<T>::getBestPosition() const
 }
 
 template<typename T>
-void RectangleRegionData<T>::store(OArchive& archive) const
+void RectangleRegion<T>::storeData(OArchive& archive) const
 {
   rectangle.store(archive);
 }
 
 template<typename T>
-RectangleRegionData<T>* RectangleRegionData<T>::loadNew(IArchive& archive)
+RectangleRegion<T>* RectangleRegion<T>::loadNew(IArchive& archive)
 {
   Rectangle<T> rectangle = Rectangle<T>::load(archive);
-  return new RectangleRegionData<T>(rectangle);
+  return new RectangleRegion<T>(rectangle);
 }
 
 }
 
-#endif // RECTANGLEREGIONDATA_H
+#endif // RECTANGLEREGION_H
 

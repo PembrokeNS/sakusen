@@ -88,7 +88,7 @@ UnitStatus::UnitStatus(
 }
 
 UnitStatus::UnitStatus(
-    const Universe* universe,
+    const Universe::ConstPtr& universe,
     const UnitTypeID& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
@@ -115,7 +115,7 @@ void UnitStatus::initializeWeapons(const UnitType* typePtr)
     weaponsStatus.push_back(WeaponStatus());
 }
 
-void UnitStatus::store(OArchive& out, const Universe* universe) const
+void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
 {
   out << universe->getUnitTypePtr(type)->getInternalName();
   out << position;
@@ -124,7 +124,7 @@ void UnitStatus::store(OArchive& out, const Universe* universe) const
     weaponsStatus;
 }
 
-UnitStatus UnitStatus::load(IArchive& in, const Universe* universe)
+UnitStatus UnitStatus::load(IArchive& in, const Universe::ConstPtr* universe)
 {
   String typeName;
   UnitTypeID type;
@@ -140,7 +140,7 @@ UnitStatus UnitStatus::load(IArchive& in, const Universe* universe)
   std::vector<WeaponStatus> weaponsStatus;
   
   in >> typeName;
-  type = universe->getUnitTypeID(typeName);
+  type = (*universe)->getUnitTypeID(typeName);
   in >> position;
   orientation = Orientation::load(in);
   in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits >>

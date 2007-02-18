@@ -34,6 +34,9 @@ namespace server {
 class LIBSAKUSEN_SERVER_API LayeredUnit :
   public ICompleteUnit, boost::noncopyable {
   public:
+    typedef boost::shared_ptr<LayeredUnit> Ptr;
+    typedef boost::shared_ptr<const LayeredUnit> ConstPtr;
+
     static void spawn(
       const PlayerID owner,
       const UnitTypeID type,
@@ -44,7 +47,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     static void spawn(const PlayerID owner, const UnitTemplate& t);
       /* factory class */
   private:
-    LayeredUnit(); /**< Default constructor should not be used */
     LayeredUnit(const UnitTemplate&);
       /**< Constructor used by LayeredUnit::spawn during initial construction
        * of the Map */
@@ -58,9 +60,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
           owner is expected to be set after construction since it should not
           be set until *after* the Unit has been added to the World */
   public:
-    LayeredUnit(const LayeredUnit&); /**< Copy constructor needs to be
-                                       different from the default */
-    LayeredUnit& operator=(const LayeredUnit&);
     ~LayeredUnit();
   private:
     PlayerID owner;
@@ -117,11 +116,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       assert(!refToThis.isValid());
       assert(ref.isRefTo(this));
       refToThis = ref;
-    }
-
-    void supplyRef(const IRef& ref)
-    {
-      setRefToThis(dynamic_cast<const Ref<LayeredUnit>&>(ref));
     }
     
     void setPosition(const Point<sint32>& pos);

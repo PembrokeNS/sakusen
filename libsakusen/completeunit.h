@@ -12,6 +12,9 @@
 namespace sakusen {
 
 class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
+  public:
+    typedef boost::shared_ptr<CompleteUnit> Ptr;
+    typedef boost::shared_ptr<const CompleteUnit> ConstPtr;
   private:
     CompleteUnit(); /**< Default constructor should not be used */
     CompleteUnit(
@@ -36,7 +39,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
     inline const UnitTypeData& getTypeData(void) const { return typeData; }
     inline const IUnitTypeData* getITypeData(void) const { return &typeData; }
 
-    typedef Universe loadArgument;
+    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&) const;
     static CompleteUnit load(IArchive&, const loadArgument*);
 };

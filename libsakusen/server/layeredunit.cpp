@@ -19,15 +19,18 @@ void LayeredUnit::spawn(
   )
 {
   Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
-  world->addUnit(
-      LayeredUnit(type, startPosition, startOrientation, startVelocity),
-      owner
+  Ptr unit(
+      new LayeredUnit(type, startPosition, startOrientation, startVelocity)
     );
+  unit->setRefToThis(Ref<LayeredUnit>(unit));
+  world->addUnit(unit, owner);
 }
 
 void LayeredUnit::spawn(const PlayerID owner, const UnitTemplate& t)
 {
-  world->addUnit(LayeredUnit(t), owner);
+  Ptr unit(new LayeredUnit(t));
+  unit->setRefToThis(Ref<LayeredUnit>(unit));
+  world->addUnit(unit, owner);
 }
 
 LayeredUnit::LayeredUnit(
@@ -57,34 +60,6 @@ LayeredUnit::LayeredUnit(
   sensorReturns(10),
   dirty(false)
 {
-}
-
-LayeredUnit::LayeredUnit(const LayeredUnit& copy) :
-  IReferent(copy),
-  ICompleteUnit(copy),
-  noncopyable(),
-  owner(copy.owner),
-  topLayer(copy.topLayer->newCopy(this)),
-  status(topLayer->getCore()),
-  orders(copy.orders),
-  sensorReturns(copy.sensorReturns),
-  dirty(false)
-{
-  assert(!copy.dirty);
-}
-
-LayeredUnit& LayeredUnit::operator=(const LayeredUnit& copy)
-{
-  delete topLayer;
-  ICompleteUnit::operator=(copy);
-  topLayer = copy.topLayer->newCopy(this);
-  status = topLayer->getCore();
-  orders = copy.orders;
-  sensorReturns = copy.sensorReturns;
-  dirty = false;
-  assert(!copy.dirty);
-
-  return *this;
 }
 
 LayeredUnit::~LayeredUnit()
@@ -204,13 +179,13 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     case linearTargetType_none:
       break;
     case linearTargetType_velocity:
-      if (topLayer->getPossibleVelocities().contains(
+      if (topLayer->getPossibleVelocities()->contains(
             orders.getTargetVelocity()
           )) {
         Point<sint16> desiredVelocity = orders.getTargetVelocity();
         Point<sint16> acceleration = desiredVelocity - status->velocity;
         acceleration =
-          topLayer->getPossibleAccelerations().truncateToFit(acceleration);
+          topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
         expectedVelocity += acceleration;
       } else {
         acceptOrder(orderCondition_lastOrderFailure);
@@ -221,10 +196,10 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
         Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
             orders.getTargetPosition(), status->position);
         Point<sint32> desiredVelocity =
-          topLayer->getPossibleVelocities().truncateToFit(desiredDirection);
+          topLayer->getPossibleVelocities()->truncateToFit(desiredDirection);
         Point<sint16> acceleration = desiredVelocity - status->velocity;
         acceleration =
-          topLayer->getPossibleAccelerations().truncateToFit(acceleration);
+          topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
         
         /*if (owner == 1 && unitId == 0) {
           Debug("[1] desiredVel=" << desiredVelocity <<

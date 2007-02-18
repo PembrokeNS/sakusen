@@ -10,11 +10,12 @@
 namespace sakusen {
 
 class LIBSAKUSEN_API MapTemplate {
-  private:
-    MapTemplate();
   public:
+    typedef boost::shared_ptr<MapTemplate> Ptr;
+    typedef boost::shared_ptr<const MapTemplate> ConstPtr;
+
     MapTemplate(
-        const Universe* universe,
+        const Universe::ConstPtr& universe,
         const String& internalName,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
@@ -24,7 +25,7 @@ class LIBSAKUSEN_API MapTemplate {
         const std::vector<MapPlayMode>& playModes
       );
   private:
-    const Universe* universe; /* Not owned by this */
+    Universe::ConstPtr universe;
     String internalName;
     Point<sint32> topRight; /* Excludes top right */
     Point<sint32> bottomLeft; /* Includes bottom left */
@@ -35,7 +36,7 @@ class LIBSAKUSEN_API MapTemplate {
     std::vector<MapPlayMode> playModes;
   public:
     /* accessors */
-    inline const Universe* getUniverse(void) const {
+    inline const Universe::ConstPtr& getUniverse(void) const {
       return universe;
     }
     inline const String& getInternalName(void) const { return internalName; }
@@ -52,7 +53,7 @@ class LIBSAKUSEN_API MapTemplate {
       return playModes;
     }
 
-    typedef Universe loadArgument;
+    typedef Universe::ConstPtr loadArgument;
     void store(OArchive& archive) const;
     static MapTemplate load(IArchive& archive, const loadArgument* universe);
 };

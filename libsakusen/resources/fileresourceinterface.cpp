@@ -168,7 +168,7 @@ String FileResourceInterface::fileSearch(
   return matchingFiles.begin()->second;
 }
 
-void* FileResourceInterface::internalSearch(
+shared_ptr<void> FileResourceInterface::internalSearch(
     const String& name,
     ResourceType type,
     const void* arg,
@@ -180,7 +180,7 @@ void* FileResourceInterface::internalSearch(
   String path = fileSearch(name, type, result);
 
   if (path == "")
-    return NULL;
+    return shared_ptr<void>();
 
   LockingFileReader file(path);
   /** \bug This blocks until a lock is achieved.  This could be a bad thing */
@@ -191,7 +191,7 @@ void* FileResourceInterface::internalSearch(
     *result = resourceSearchResult_error;
     error = String("error getting length of file '") + path + "': " +
       errorUtils_errorMessage(errno);
-    return NULL;
+    return shared_ptr<void>();
   }
   lengthAsSizeT = static_cast<size_t>(length);
 
@@ -212,30 +212,33 @@ void* FileResourceInterface::internalSearch(
         error =
           String("error reading file: ") + errorUtils_errorMessage(errno);
         *result = resourceSearchResult_error;
-        return NULL;
+        return shared_ptr<void>();
       default:
         error =
           String("read only ") + numToString(static_cast<sint32>(bytesRead)) +
           " of " + numToString(length) + " bytes";
         *result = resourceSearchResult_error;
-        return NULL;
+        return shared_ptr<void>();
     }
   }
   file.releaseLock();
   /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
   IArchive fileAsArchive(fileAsArray, lengthAsSizeT);
-  void* resource = NULL;
+  shared_ptr<void> resource;
 
   try {
     switch (type) {
       case resourceType_universe:
-        resource = Universe::loadNew(fileAsArchive, ptrToThis.lock());
+        resource.reset(Universe::loadNew(fileAsArchive, ptrToThis.lock()));
         break;
       case resourceType_mapTemplate:
-        resource = new MapTemplate(
-            MapTemplate::load(fileAsArchive, static_cast<const Universe*>(arg))
-          );
+        resource.reset(new MapTemplate(
+            MapTemplate::load(
+              fileAsArchive,
+              static_cast<const Universe::ConstPtr*>(arg)
+            )
+          ));
         break;
       default:
         Fatal("unexpected ResourceType: " << type);
@@ -243,26 +246,14 @@ void* FileResourceInterface::internalSearch(
   } catch (DeserializationExn& e) {
     *result = resourceSearchResult_error;
     error = String("exception: ") + e.message;
-    return NULL;
+    return shared_ptr<void>();
   }
   
   if (!fileAsArchive.isFinished()) {
     *result = resourceSearchResult_error;
-    switch(type) {
-      case resourceType_universe:
-        delete static_cast<Universe*>(resource);
-        break;
-      case resourceType_mapTemplate:
-        delete static_cast<MapTemplate*>(resource);
-        break;
-      default:
-        Fatal("unexpected ResourceType: " << type);
-    }
-    
-    resource = NULL;
     error = "archive was not exhausted by deserialization - could it be "
       "corrupted?";
-    return NULL;
+    return shared_ptr<void>();
   }
   
   *result = resourceSearchResult_success;
@@ -335,7 +326,7 @@ void* FileResourceInterface::internalSymbolSearch(
 }
 
 bool FileResourceInterface::internalSave(
-    const void* resource,
+    const boost::shared_ptr<const void>& resource,
     ResourceType type
   )
 {
@@ -348,7 +339,8 @@ bool FileResourceInterface::internalSave(
   switch(type) {
     case resourceType_universe:
       {
-        const Universe* u = static_cast<const Universe*>(resource);
+        Universe::ConstPtr u =
+          boost::static_pointer_cast<const Universe>(resource);
         shortName = u->getInternalName();
         extension = "sakusenuniverse";
         u->store(archive);
@@ -356,7 +348,8 @@ bool FileResourceInterface::internalSave(
       break;
     case resourceType_mapTemplate:
       {
-        const MapTemplate* m = static_cast<const MapTemplate*>(resource);
+        MapTemplate::ConstPtr m =
+          boost::static_pointer_cast<const MapTemplate>(resource);
         shortName = m->getInternalName();
         extension = "sakusenmaptemplate";
         m->store(archive);

@@ -16,11 +16,11 @@ class LIBSAKUSEN_API UnitTemplate {
     UnitTemplate();
   public:
     UnitTemplate(
-        const Universe* universe,
+        const Universe::ConstPtr& universe,
         const UnitStatus& status
       );
   private:
-    const Universe* universe;
+    Universe::ConstPtr universe;
       /* a 'private line' to the universe is needed because there's no world
        * when UnitTemplates are being used */
     UnitStatus status;
@@ -30,7 +30,7 @@ class LIBSAKUSEN_API UnitTemplate {
   public:
     const IUnitStatus* getStatus(void) const { return &status; }
     
-    typedef Universe loadArgument;
+    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&) const;
     static UnitTemplate load(IArchive&, const loadArgument*);
 };

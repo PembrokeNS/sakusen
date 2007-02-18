@@ -52,16 +52,16 @@ Server::Server(
   out(o),
   resourceInterface(r),
   clients(10),
-  universe(NULL),
-  map(NULL),
+  universe(),
+  map(),
   mapPlayMode(0),
   players(),
   settings(new SettingsTree(this)),
   allowObservers(false),
   checkForGameStartNextTime(false),
   ensureAdminExistsNextTime(false),
-  requestedUniverse(NULL),
-  requestedMap(NULL),
+  requestedUniverse(),
+  requestedMap(),
   mapPlayModeChanged(false),
   gameSpeed(DEFAULT_GAME_SPEED)
 {
@@ -99,17 +99,6 @@ Server::~Server()
     delete clients.begin()->second;
     clients.erase(clients.begin());
   }
-
-  /* The following, on the other hand, really need to be here */
-  delete map;
-  delete universe;
-  delete requestedMap;
-  delete requestedUniverse;
-  
-  universe = NULL;
-  map = NULL;
-  requestedUniverse = NULL;
-  requestedMap = NULL;
 }
 
 void Server::advertise(
@@ -592,9 +581,8 @@ void Server::serve()
     }
 
     if (requestedUniverse != NULL) {
-      delete universe;
       universe = requestedUniverse;
-      requestedUniverse = NULL;
+      requestedUniverse.reset();
       String reason = settings->changeRequest(
           "game:universe:name", universe->getInternalName(), this
         );
@@ -606,9 +594,8 @@ void Server::serve()
     }
     
     if (requestedMap != NULL) {
-      delete map;
       map = requestedMap;
-      requestedMap = NULL;
+      requestedMap.reset();
       String reason = settings->changeRequest(
           "game:map", map->getInternalName(), this
         );
@@ -948,13 +935,12 @@ String Server::stringSettingAlteringCallback(
           return "";
         }
         ResourceSearchResult result;
-        Universe* u = resourceInterface->search<Universe>(
+        Universe::Ptr u = resourceInterface->search<Universe>(
             newValue, NULL, &result
           );
         switch(result) {
           case resourceSearchResult_success:
-            assert(u != NULL);
-            delete requestedUniverse;
+            assert(u);
             requestedUniverse = u; /* File an asynchronous request to use the
                                       universe */
             return "";
@@ -981,13 +967,12 @@ String Server::stringSettingAlteringCallback(
         return "";
       }
       ResourceSearchResult result;
-      MapTemplate* m = resourceInterface->search<MapTemplate>(
-          newValue, universe, &result
+      MapTemplate::Ptr m = resourceInterface->search<MapTemplate>(
+          newValue, &universe, &result
         );
       switch(result) {
         case resourceSearchResult_success:
-          assert(m != NULL);
-          delete requestedMap;
+          assert(m);
           requestedMap = m; /* File an asynchronous request to use the map */
           return "";
         case resourceSearchResult_ambiguous:

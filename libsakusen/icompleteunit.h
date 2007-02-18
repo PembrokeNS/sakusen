@@ -19,7 +19,7 @@ namespace sakusen {
  * that goes with a Unit.  It is used to provide a common ground between client
  * and server as to what a Unit is for communication between them.
  */
-class LIBSAKUSEN_API ICompleteUnit : virtual public IReferent {
+class LIBSAKUSEN_API ICompleteUnit {
   public:
     virtual ~ICompleteUnit() {}
   public:

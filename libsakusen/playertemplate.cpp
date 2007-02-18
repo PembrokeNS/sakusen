@@ -18,7 +18,7 @@ PlayerTemplate::PlayerTemplate(
 }
 
 bool PlayerTemplate::sanityCheck(
-    const Universe* universe,
+    const Universe::ConstPtr& universe,
     const MapTemplate& map
   )
 {

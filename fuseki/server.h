@@ -19,10 +19,7 @@ namespace fuseki {
  * This class manages all communication with clients, adding and removing
  * clients, maintainance of the settings tree and game initialization and
  * shutdown. */
-class Server : public SettingsUser {
-  private:
-    Server();
-    Server(const Server&);
+class Server : public SettingsUser, private boost::noncopyable {
   public:
     /** \brief Standard constructor
      *
@@ -67,12 +64,12 @@ class Server : public SettingsUser {
     sakusen::ResourceInterface::Ptr resourceInterface; /* Not owned by this */
     __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
       /* Client interfaces (owned by this) */
-    sakusen::Universe* universe;
+    sakusen::Universe::ConstPtr universe;
       /* The universe we plan to use to build the map.  NULL
-                           if none selected yet.  Owned by this. */
-    sakusen::MapTemplate* map;
+                           if none selected yet. */
+    sakusen::MapTemplate::ConstPtr map;
       /* The map template which we plan to use to build the world.
-         NULL if none selected yet.  Owned by this. */
+         NULL if none selected yet. */
     uint32 mapPlayMode; /* Which mode we plan to play the map on */
     std::vector<sakusen::server::Player> players;
       /* Players.  Note that this vector *becomes obsolete* as soon as the game
@@ -84,11 +81,10 @@ class Server : public SettingsUser {
                                        game can start is in order */
     bool ensureAdminExistsNextTime; /* Indicate that a check for whether an
                                        admin exists is in order */
-    sakusen::Universe* requestedUniverse;
-      /* Put a universe here to be promoted to universe when possible (owned
-       * by this) */
-    sakusen::MapTemplate* requestedMap;
-      /* Put a map here to be promoted to map when possible (owned by this) */
+    sakusen::Universe::ConstPtr requestedUniverse;
+      /* Put a universe here to be promoted to universe when possible */
+    sakusen::MapTemplate::ConstPtr requestedMap;
+      /* Put a map here to be promoted to map when possible */
     bool mapPlayModeChanged;
 
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */

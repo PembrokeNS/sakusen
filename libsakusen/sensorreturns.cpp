@@ -21,13 +21,16 @@ void SensorReturns::store(OArchive& out) const
   out << returns;
 }
 
-SensorReturns SensorReturns::load(IArchive& in, const Universe* universe)
+SensorReturns SensorReturns::load(
+    IArchive& in,
+    const Universe::ConstPtr* universe
+  )
 {
   SensorReturnsID id;
   Perception perception;
   PlayerID senserOwner;
   PlayerID senseeOwner;
-  Region<sint32>* region;
+  Region<sint32>::Ptr region;
   CompleteUnit* unit;
   SensorReturnMap returns(10);
 
@@ -42,13 +45,13 @@ SensorReturns SensorReturns::load(IArchive& in, const Universe* universe)
   } else {
     senseeOwner = 0;
   }
-  /** \todo Less copying of the Region and UnitStatus would be good here, but
-   * entails some messiness of one kind or another */
   if (0 != (perception & perception_region)) {
-    region = new Region<sint32>(Region<sint32>::load(in));
+    region = Region<sint32>::loadNew(in);
   } else {
-    region = NULL;
+    region.reset();
   }
+  /** \todo Less copying of the UnitStatus would be good here, but
+   * entails some messiness of one kind or another */
   if (0 != (perception & perception_unit)) {
     unit = new CompleteUnit(CompleteUnit::load(in, universe));
   } else {

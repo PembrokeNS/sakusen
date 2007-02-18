@@ -19,7 +19,7 @@ namespace server {
  * the world, probably gets drawn on the user's display, and affects objects
  * when it hits them.
  */
-class Beam : private Ray, public virtual IReferent {
+class Beam : private Ray {
   private:
     /** \brief The Unit producing the Beam */
     Ref<LayeredUnit> source;

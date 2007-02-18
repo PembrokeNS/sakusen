@@ -53,7 +53,7 @@ UnitCore::~UnitCore()
 
 void UnitCore::initializeWeapons()
 {
-  const Universe* universe = world->getUniverse();
+  Universe::ConstPtr universe = world->getUniverse();
   const UnitType* typePtr = universe->getUnitTypePtr(type);
   /* add weapons */
   const std::list<WeaponTypeID>& weaponTypes = typePtr->getWeapons();

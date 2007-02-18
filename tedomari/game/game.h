@@ -34,7 +34,7 @@ class Game {
   private:
     sakusen::ResourceInterface::Ptr resourceInterface; /* not owned by this */
     ServerInterface* serverInterface; /* not owned by this */
-    sakusen::Universe* universe; /* owned by this */
+    sakusen::Universe::Ptr universe; /* owned by this */
     
     bool dirty;
   public:

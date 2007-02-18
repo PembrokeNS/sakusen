@@ -33,7 +33,10 @@ void CompleteUnit::store(OArchive& out) const
   typeData.store(out);
 }
 
-CompleteUnit CompleteUnit::load(IArchive& in, const Universe* universe)
+CompleteUnit CompleteUnit::load(
+    IArchive& in,
+    const Universe::ConstPtr* universe
+  )
 {
   uint32 unitId;
   

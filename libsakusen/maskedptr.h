@@ -1,6 +1,8 @@
 #ifndef MASKEDPTR_H
 #define MASKEDPTR_H
 
+#include <boost/shared_ptr.hpp>
+
 #include "gnu_extensions.h"
 
 namespace sakusen {
@@ -16,6 +18,8 @@ class MaskedPtr {
   friend class __gnu_cxx::hash<MaskedPtr<T> >;
   public:
     MaskedPtr(const T* p) : ptr(p) {}
+    MaskedPtr(const boost::shared_ptr<T>& p) : ptr(p.get()) {}
+    MaskedPtr(const boost::shared_ptr<const T>& p) : ptr(p.get()) {}
     template<typename U>
     explicit MaskedPtr(MaskedPtr<U> p) : ptr(p.ptr) {}
     bool operator==(const MaskedPtr& right) const { return ptr == right.ptr; }

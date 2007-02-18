@@ -52,13 +52,13 @@ class UnitCore : public UnitLayer, private UnitStatus {
     inline const Point<uint32>& getSize(void) const {
       return getTypePtr()->getDynamicData().getSize();
     }
-    inline const Region<sint16>& getPossibleAccelerations(void) const {
+    inline const Region<sint16>::Ptr& getPossibleAccelerations(void) const {
       return getTypePtr()->getDynamicData().getPossibleAccelerations();
     }
-    inline const Region<sint16>& getPossibleVelocities(void) const {
+    inline const Region<sint16>::Ptr& getPossibleVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleVelocities();
     }
-    inline const Region<sint16>& getPossibleAngularVelocities(void) const {
+    inline const Region<sint16>::Ptr& getPossibleAngularVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleAngularVelocities();
     }
     inline const Visibility& getVisibility(void) const {

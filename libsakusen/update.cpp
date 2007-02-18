@@ -17,7 +17,7 @@ LIBSAKUSEN_API std::ostream& sakusen::operator<<(std::ostream& output, const Upd
 
 Update Update::load(
     IArchive& in,
-    const Universe* universe,
+    const Universe::ConstPtr* universe,
     const PlayerID* player
   )
 {

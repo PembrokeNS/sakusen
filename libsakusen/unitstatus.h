@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 
 #include "iunitstatus.h"
+#include "universe.h"
 
 namespace sakusen {
 
@@ -42,7 +43,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     ); /**< This is a simpler version of the above constructor for when you
          don't need to specify the extra data */
     UnitStatus(
-      const Universe* universe,
+      const Universe::ConstPtr& universe,
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
@@ -82,8 +83,8 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       return weaponsStatus;
     }
 
-    typedef Universe loadArgument;
-    void store(OArchive&, const Universe*) const;
+    typedef Universe::ConstPtr loadArgument;
+    void store(OArchive&, Universe::ConstPtr const&) const;
     static UnitStatus load(IArchive&, const loadArgument*);
 };
 

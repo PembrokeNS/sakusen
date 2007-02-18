@@ -4,39 +4,15 @@
 #include "region.h"
 #include "world.h"
 #include "iunitstatus.h"
-#include "sphereregiondata.h"
-#include "rectangleregiondata.h"
+#include "sphereregion.h"
+#include "rectangleregion.h"
 
 namespace sakusen {
 
 template<typename T>
-inline bool Region<T>::contains(const Point<T>& point) const
-{
-  return data->contains(point);
-}
-template<typename T>
 inline bool Region<T>::contains(const IUnitStatus *unit) const
 {
-  return data->contains(unit->getPosition());
-}
-
-
-template<typename T>
-inline Point<T> Region<T>::truncateToFit(const Point<T>& p) const
-{
-  return data->truncateToFit(p);
-}
-
-template<typename T>
-inline Point<T> Region<T>::getBestPosition() const
-{
-  return data->getBestPosition();
-}
-
-template<typename T>
-inline Rectangle<T> Region<T>::getBoundingRectangle() const
-{
-  return data->getBoundingRectangle();
+  return contains(unit->getPosition());
 }
 
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS
@@ -45,30 +21,28 @@ template<typename T>
 void Region<T>::store(OArchive& archive) const
 {
   archive.magicValue<1>("R");
-  archive.insertEnum(data->getType());
-  data->store(archive);
+  archive.insertEnum(getType());
+  storeData(archive);
 }
 
 template<typename T>
-Region<T> Region<T>::load(IArchive& archive)
+typename Region<T>::Ptr Region<T>::loadNew(IArchive& archive)
 {
   archive.magicValue<1>("R");
   RegionType type;
-  RegionData<T>* data = NULL;
+  typename Region<T>::Ptr region;
   archive.extractEnum(type);
   switch(type) {
     case regionType_sphere:
-      data = SphereRegionData<T>::loadNew(archive);
+      region.reset(SphereRegion<T>::loadNew(archive));
       break;
     case regionType_rectangle:
-      data = RectangleRegionData<T>::loadNew(archive);
+      region.reset(RectangleRegion<T>::loadNew(archive));
       break;
     default:
-      throw DeserializationExn(
-          "unexpected RegionType: " + numToString(type)
-        );
+      throw EnumDeserializationExn("type", type);
   }
-  return Region(data);
+  return region;
 }
 
 #endif

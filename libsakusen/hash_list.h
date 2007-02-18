@@ -3,7 +3,6 @@
 
 #include <list>
 #include "maskedptr.h"
-#include "ireferent.h"
 #include "iref.h"
 #include "ref.h"
 
@@ -33,7 +32,7 @@ class hash_list_const_iterator;
  * The ability to splice (as can be done with lists) is absent from hash_lists.
  */
 template<typename T>
-class hash_list : private IRefContainer, boost::noncopyable {
+class hash_list : boost::noncopyable {
   friend class hash_list_iterator<T>;
   friend class hash_list_const_iterator<T>;
   public:
@@ -44,10 +43,9 @@ class hash_list : private IRefContainer, boost::noncopyable {
     hash_list();
     ~hash_list();
   private:
-    typedef std::list<T*> List;
+    typedef std::list<boost::shared_ptr<T> > List;
     typedef __gnu_cxx::hash_map<MaskedPtr<T>, typename List::iterator>
       ListIteratorHash;
-    typedef __gnu_cxx::hash_multimap<MaskedPtr<IReferent>, IRef*> RefHash;
     
     List list;
     /** \brief A hash_map of iterators from the above list
@@ -58,11 +56,6 @@ class hash_list : private IRefContainer, boost::noncopyable {
      * ordering - different implementations of hash_map might iterate their
      * members in different orders, thus yielding non-reproducibility */
     ListIteratorHash listIts;
-    mutable RefHash refs;
-    
-    void invalidateRefs(const MaskedPtr<IReferent>& id);
-    void registerRef(IRef*) const;
-    void unregisterRef(IRef*) const;
   public:
     iterator begin();
     iterator end();
@@ -75,10 +68,13 @@ class hash_list : private IRefContainer, boost::noncopyable {
     Ref<T> back();
     Ref<const T> back() const;
     void push_front(T* item);
+    void push_front(const boost::shared_ptr<T>& item);
     iterator push_back(T* item);
+    iterator push_back(const boost::shared_ptr<T>& item);
     void pop_front();
     void pop_back();
     iterator insert(iterator pos, T* item);
+    iterator insert(iterator pos, const boost::shared_ptr<T>& item);
     template<typename InputIterator>
     void insert(iterator pos, InputIterator first, InputIterator last);
     iterator erase(iterator pos);
@@ -172,46 +168,6 @@ inline hash_list<T>::~hash_list<T>()
 }
 
 template<typename T>
-void hash_list<T>::invalidateRefs(const MaskedPtr<IReferent>& id)
-{
-  std::pair<typename RefHash::iterator, typename RefHash::iterator> refRange =
-    refs.equal_range(id);
-  
-  for (typename RefHash::iterator refIt = refRange.first;
-      refIt != refRange.second; ++refIt) {
-    refIt->second->invalidate();
-  }
-  refs.erase(refRange.first, refRange.second);
-}
-
-template<typename T>
-void hash_list<T>::registerRef(IRef* ref) const
-{
-  MaskedPtr<IReferent> id(*ref);
-  std::pair<MaskedPtr<IReferent>, IRef*> item(id, ref);
-  refs.insert(item);
-}
-
-template<typename T>
-void hash_list<T>::unregisterRef(IRef* ref) const
-{
-  std::pair<typename RefHash::iterator, typename RefHash::iterator> refRange =
-    refs.equal_range(*ref);
-  
-  /* This becomes slow if there are many Refs to the same object.
-   * If that is a problem we could ID the refs too and have O(1) lookups for
-   * them, but it's unlikely to be of help overall */
-  for (typename RefHash::iterator refIt = refRange.first;
-      refIt != refRange.second; ++refIt) {
-    if (refIt->second == ref) {
-      refs.erase(refIt);
-      return;
-    }
-  }
-  Fatal("tried to unregister a not-registered Ref");
-}
-
-template<typename T>
 inline typename hash_list<T>::iterator hash_list<T>::begin()
 {
   return iterator(list.begin(), this);
@@ -254,25 +210,25 @@ inline bool hash_list<T>::empty() const
 template<typename T>
 inline Ref<T> hash_list<T>::front()
 {
-  return Ref<T>(list.front(), this);
+  return Ref<T>(list.front());
 }
 
 template<typename T>
 inline Ref<const T> hash_list<T>::front() const
 {
-  return Ref<const T>(list.front(), this);
+  return Ref<const T>(list.front());
 }
 
 template<typename T>
 inline Ref<T> hash_list<T>::back()
 {
-  return Ref<T>(list.back(), this);
+  return Ref<T>(list.back());
 }
 
 template<typename T>
 inline Ref<const T> hash_list<T>::back() const
 {
-  return Ref<const T>(list.back(), this);
+  return Ref<const T>(list.back());
 }
 
 template<typename T>
@@ -282,7 +238,21 @@ inline void hash_list<T>::push_front(T* item)
 }
 
 template<typename T>
+inline void hash_list<T>::push_front(const boost::shared_ptr<T>& item)
+{
+  insert(begin(), item);
+}
+
+template<typename T>
 inline typename hash_list<T>::iterator hash_list<T>::push_back(T* item)
+{
+  return insert(end(), item);
+}
+
+template<typename T>
+inline typename hash_list<T>::iterator hash_list<T>::push_back(
+    const boost::shared_ptr<T>& item
+  )
 {
   return insert(end(), item);
 }
@@ -313,11 +283,20 @@ inline void hash_list<T>::pop_back()
 template<typename T>
 typename hash_list<T>::iterator hash_list<T>::insert(
     iterator pos,
-    T* item
+    T* itemPtr
+  )
+{
+  boost::shared_ptr<T> item(itemPtr);
+  return insert(pos, item);
+}
+
+template<typename T>
+typename hash_list<T>::iterator hash_list<T>::insert(
+    iterator pos,
+    const boost::shared_ptr<T>& item
   )
 {
   assert(pos.container == this);
-  item->supplyRef(Ref<T>(item, this));
   typename List::iterator it = pos.listIt;
   list.insert(it, item);
   --it; // Now it should point at the just-inserted item
@@ -351,10 +330,8 @@ typename hash_list<T>::iterator hash_list<T>::erase(iterator pos)
   assert(pos.container == this);
   iterator next = pos;
   ++next;
-  T* ptr = *pos.listIt;
-  invalidateRefs(ptr);
+  boost::shared_ptr<T> ptr = *pos.listIt;
   listIts.erase(ptr);
-  delete ptr;
   list.erase(pos.listIt);
   return next;
 }
@@ -386,7 +363,6 @@ inline void hash_list<T>::clear()
   erase(begin(), end());
   assert(list.empty());
   assert(listIts.empty());
-  assert(refs.empty());
 }
 
 template<typename T>
@@ -448,7 +424,7 @@ inline bool hash_list_iterator<T>::operator!=(const hash_list_iterator& right)
 template<typename T>
 inline Ref<T> hash_list_iterator<T>::operator*() const
 {
-  return Ref<T>(*listIt, container);
+  return Ref<T>(*listIt);
 }
 
 template<typename T>
@@ -493,7 +469,7 @@ inline hash_list_const_iterator<T>::hash_list_const_iterator(
 template<typename T>
 inline Ref<const T> hash_list_const_iterator<T>::operator*() const
 {
-  return Ref<const T>(*listIt, container);
+  return Ref<const T>(*listIt);
 }
 
 template<typename T>

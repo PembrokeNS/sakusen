@@ -20,18 +20,18 @@ inline ResourceType ResourceInterface::typenameToResourceType<MapTemplate>()
 }
 
 template<typename T>
-inline T* ResourceInterface::search(
+inline boost::shared_ptr<T> ResourceInterface::search(
     const String& name,
     const typename T::loadArgument* arg,
     ResourceSearchResult* result
   ) {
-  return static_cast<T*>(
+  return boost::static_pointer_cast<T>(
       internalSearch(name, typenameToResourceType<T>(), arg, result)
     );
 }
 
 template<typename T>
-inline bool ResourceInterface::save(const T* resource)
+inline bool ResourceInterface::save(boost::shared_ptr<const T> const& resource)
 {
   return internalSave(resource, typenameToResourceType<T>());
 }

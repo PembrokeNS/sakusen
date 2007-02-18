@@ -103,7 +103,7 @@ void CompleteWorld::applyEffect(
   queue<Ref<LayeredUnit> > affectedUnits;
   for (hash_list<LayeredUnit>::iterator unit = units.begin();
       unit != units.end(); ++unit) {
-    if (effect->getRegion().contains((*unit)->getStatus())) {
+    if (effect->getRegion()->contains((*unit)->getStatus())) {
       affectedUnits.push(*unit);
     }
   }
@@ -143,11 +143,8 @@ list<Effect*>::iterator CompleteWorld::processEffect(
   }
 }
 
-void CompleteWorld::addUnit(const LayeredUnit& unit, PlayerID owner) {
-  /** \todo Maybe we want this method to be passed a pointer, not a value?  It
-   * would save a (non-trivial) copy constructor but it would make the memory
-   * management a modicum more risky */
-  units.push_back(new LayeredUnit(unit));
+void CompleteWorld::addUnit(const LayeredUnit::Ptr& unit, PlayerID owner) {
+  units.push_back(unit);
   units.back()->changeOwner(owner, changeOwnerReason_created);
 }
 
@@ -310,12 +307,12 @@ void CompleteWorld::applyEntryExitEffects(
 {
   /** \todo make this more efficient by storing the data differently */
   for (std::list<Effect*>::iterator i=effects.begin(); i!=effects.end(); i++) {
-    if ((*i)->getRegion().contains(oldPosition) &&
-        !(*i)->getRegion().contains(newPosition)) {
+    if ((*i)->getRegion()->contains(oldPosition) &&
+        !(*i)->getRegion()->contains(newPosition)) {
       (*i)->onUnitLeave(unit);
     }
-    if (!(*i)->getRegion().contains(oldPosition) &&
-        (*i)->getRegion().contains(newPosition)) {
+    if (!(*i)->getRegion()->contains(oldPosition) &&
+        (*i)->getRegion()->contains(newPosition)) {
       (*i)->onUnitEnter(unit);
     }
   }

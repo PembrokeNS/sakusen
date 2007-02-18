@@ -1,36 +1,39 @@
 #ifndef REGION_H
 #define REGION_H
 
+#include "regiontype.h"
 #include "point.h"
-#include "oarchive.h"
-#include "iarchive.h"
-#include "regiondata.h"
 #include "rectangle.h"
+#include "oarchive.h"
 
 namespace sakusen {
 
-/** \brief Wrapper for abstract RegionData to save memory management for Region
- * users
+class IUnitStatus;
+
+/** \brief Abstract class representing some sort of data describing a region
  *
- * \note This class should be immutable.  That is, all methods should be
- * const, and there should be no way to alter the region once constructed. */
+ * \note This class (and subclasses) should be immutable.  That is, all
+ * methods should be const, and there should be no way to alter the region
+ * once constructed.  With this, there should be no need to copy (the same
+ * instance can instead be shared).
+ */
 template<typename T>
 class LIBSAKUSEN_API Region {
   public:
     typedef boost::shared_ptr<Region> Ptr;
     typedef boost::shared_ptr<const Region> ConstPtr;
-    /** \brief Constructs region with given data.
-     *
-     * \param d data to use.  Ownership of the pointer is transferred to the
-     * newly constructed Region.  Must not be NULL */
-    Region(RegionData<T>* d) : data(d) { assert(data); }
-  private:
-    typename RegionData<T>::ConstPtr data; /* owned by this */
+  protected:
+    Region() {}
+    Region(const Region&) {}
+  public:
+    virtual ~Region() {}
+  protected:
+    virtual void storeData(OArchive&) const = 0;
   public:
     /** \brief Is the Point inside the Region?
      * \return true iff \p point is inside this Region.
      */
-    inline bool contains(const Point<T>& point) const;
+    virtual bool contains(const Point<T>& point) const = 0;
 
     /** \brief Is the unit inside the Region?
      * \return true iff \p unit is inside this Region.
@@ -55,8 +58,8 @@ class LIBSAKUSEN_API Region {
      * things to make this work, like scale the velocity rather than moving it
      * to a nearby vector, or plot a different route.
      */
-    inline Point<T> truncateToFit(const Point<T>&) const;
-
+    virtual Point<T> truncateToFit(const Point<T>&) const = 0;
+    
     /** \brief Get the centre of the Region.
      *
      * Will calculate and return a Point representing the 'best' part of the
@@ -64,7 +67,7 @@ class LIBSAKUSEN_API Region {
      * Region). It is guaranteed that the returned Point is inside the Region,
      * unless the Region is empty.
      */
-    inline Point<T> getBestPosition() const;
+    virtual Point<T> getBestPosition() const = 0;
 
     /** \brief Get the smallest Rectangle that completely encloses the Region.
      *
@@ -72,12 +75,15 @@ class LIBSAKUSEN_API Region {
      * bounding rectangle, but not vice-versa. If the region is empty, the
      * bounding rectangle will also be empty.
      */
-    inline Rectangle<T> getBoundingRectangle() const;
+    virtual Rectangle<T> getBoundingRectangle() const = 0;
     
+    virtual RegionType getType() const = 0;
+
     void store(OArchive&) const;
-    static Region<T> load(IArchive&);
+    static Ptr loadNew(IArchive&);
 };
 
 }
+
 #endif // REGION_H
 

@@ -39,12 +39,16 @@ class LIBSAKUSEN_API MapPlayMode {
       assert(player < players.size());
       return players[player];
     }
-    bool sanityCheck(const Universe* universe, const MapTemplate& map);
-      /* Confirms that all specified units exist in the given universe, and
-       * that they all fit onto the given map.  Returns true if a
-       * problem is found */
     
-    typedef Universe loadArgument;
+    /* Confirms that all specified units exist in the given universe, and
+     * that they all fit onto the given map.  Returns true if a
+     * problem is found */
+    bool sanityCheck(
+        const Universe::ConstPtr& universe,
+        const MapTemplate& map
+      );
+    
+    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&) const;
     static MapPlayMode load(IArchive&, const loadArgument*);
 };

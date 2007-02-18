@@ -3,7 +3,7 @@
 
 #include "libsakusen-global.h"
 #include "point.h"
-#include "sphereregiondata.h"
+#include "sphereregion.h"
 #include "region.h"
 #include "resourceinterface-methods.h"
 #include "planemap.h"
@@ -109,7 +109,7 @@ int main(/* int argc, char** argv */)
   /* Load the universe */
   cout << "Loading Universe" << endl;
   ResourceSearchResult result;
-  Universe* universe =
+  Universe::ConstPtr universe =
     resourceInterface->search<Universe>("universe", NULL, &result);
   cout << "Result of reload was " << result << endl;
   
@@ -125,8 +125,8 @@ int main(/* int argc, char** argv */)
 
   /* Load the map */
   cout << "Loading Map" << endl;
-  MapTemplate* mapTemplate =
-    resourceInterface->search<MapTemplate>("map", universe, &result);
+  MapTemplate::Ptr mapTemplate =
+    resourceInterface->search<MapTemplate>("map", &universe, &result);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -176,9 +176,6 @@ int main(/* int argc, char** argv */)
 #ifdef _MSC_VER
   cout<<"Total time taken: "<<clock()<<"ms"<<endl;
 #endif
-  
-  delete mapTemplate;
-  delete universe;
   
   /* ltdl finalization */
   if (lt_dlexit()) {

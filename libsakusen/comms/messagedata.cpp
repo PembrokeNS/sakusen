@@ -353,7 +353,7 @@ UpdateMessageData::UpdateMessageData(IArchive& in, const PlayerID* player) :
   updates()
 {
   in >> time;
-  in.extract(updates, world->getUniverse(), player);
+  in.extract(updates, &world->getUniverse(), player);
 }
 
 void UpdateMessageData::fillArchive() const

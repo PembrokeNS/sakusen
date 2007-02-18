@@ -20,7 +20,7 @@ typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
  *
  * \todo As well as an approximate location (the region), we need an
  * approximate size for the sensed unit. */
-class LIBSAKUSEN_API ISensorReturns : virtual public IReferent {
+class LIBSAKUSEN_API ISensorReturns {
   public:
     virtual ~ISensorReturns() {}
 

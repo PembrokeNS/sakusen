@@ -9,7 +9,7 @@ using namespace sakusen;
 using namespace sakusen::client;
 
 PartialWorld::PartialWorld(
-    const Universe* universe,
+    const Universe::ConstPtr& universe,
     PlayerID pI,
     Topology topology,
     const Point<sint32>& topRight,

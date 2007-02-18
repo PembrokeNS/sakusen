@@ -1,11 +1,14 @@
 #ifndef LIBSAKUSEN__REF_H
 #define LIBSAKUSEN__REF_H
 
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+
 #include "iarchive.h"
 #include "oarchive.h"
 #include "maskedptr.h"
 #include "typemunger.h"
-#include "irefcontainer.h"
+#include "iref.h"
 
 namespace sakusen {
 
@@ -27,87 +30,46 @@ class Ref : public IRef {
   private:
     typedef SerializationHandler<typename TypeMunger<T>::unconsted> SHandler;
   public:
-    Ref() : container(NULL), referee(NULL) {}
-    Ref(T* r, const IRefContainer* c) : container(c), referee(r)
-    {
-      assert(referee != NULL);
-      container->registerRef(this);
-    }
-    Ref(const Ref<T>& copy) :
-      IRef(copy),
-      container(copy.container),
-      referee(copy.referee)
-    {
-      if (isValid()) {
-        container->registerRef(this);
-      }
-    }
-    Ref<T>& operator=(const Ref<T>& copy) {
-      if (isValid()) {
-        container->unregisterRef(this);
-      }
-      container = copy.container;
-      referee = copy.referee;
-      if (isValid()) {
-        container->registerRef(this);
-      }
-      return *this;
-    }
-    ~Ref() {
-      if (isValid()) {
-        container->unregisterRef(this);
-      }
-      container = NULL;
-      referee = NULL;
-    }
+    Ref() : referee() {}
+    Ref(boost::weak_ptr<T> r) : referee(r) {}
     operator MaskedPtr<typename TypeMunger<T>::unconsted>() const {
-      return MaskedPtr<typename TypeMunger<T>::unconsted>(referee);
+      return MaskedPtr<typename TypeMunger<T>::unconsted>(referee.lock());
     }
     template<typename U>
     operator Ref<U>() const {
-      return Ref<U>(referee, container);
+      return Ref<U>(referee);
     }
   private:
-    const IRefContainer* container;
-    T* referee;
-
-    inline void invalidate() {
-      container = NULL;
-      referee = NULL;
-    }
-
-    operator MaskedPtr<IReferent>() const {
-      return MaskedPtr<IReferent>(referee);
-    }
+    boost::weak_ptr<T> referee;
 
     IRef* newCopy() const {
       return new Ref<T>(*this);
     }
   public:
-    inline bool isValid() const { return referee != NULL; }
+    inline bool isValid() const { return !referee.expired(); }
     
-    inline bool isRefTo(const T* t) const { return referee == t; }
+    inline bool isRefTo(const T* t) const { return referee.lock().get() == t; }
     
-    inline T* operator->() const {
+    inline boost::shared_ptr<T> operator->() const {
       assert(isValid());
-      return referee;
+      return referee.lock();
     }
 
     template<typename U>
     inline Ref<U> cast() const {
-      return Ref<U>(referee, container);
+      return Ref<U>(referee);
     }
 
     /* Note that the names dynamic_cast, static_cast cannot be used for methods
      * */
     template<typename U>
     inline Ref<U> dynamicCast() const {
-      return Ref<U>(dynamic_cast<U*>(referee), container);
+      return Ref<U>(boost::dynamic_pointer_cast<boost::weak_ptr<U> >(referee));
     }
 
     template<typename U>
     inline Ref<U> staticCast() const {
-      return Ref<U>(static_cast<U*>(referee), container);
+      return Ref<U>(boost::static_pointer_cast<boost::weak_ptr<U> >(referee));
     }
 
     void store(OArchive& archive) const {

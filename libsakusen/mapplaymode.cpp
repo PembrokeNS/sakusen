@@ -19,7 +19,7 @@ MapPlayMode::MapPlayMode(
 }
 
 bool MapPlayMode::sanityCheck(
-    const Universe* universe,
+    const Universe::ConstPtr& universe,
     const MapTemplate& map
   )
 {
@@ -37,7 +37,10 @@ void MapPlayMode::store(OArchive& archive) const
 	archive << minPlayers << maxPlayers << players;
 }
 
-MapPlayMode MapPlayMode::load(IArchive& archive, const Universe* universe)
+MapPlayMode MapPlayMode::load(
+    IArchive& archive,
+    const Universe::ConstPtr* universe
+  )
 {
   uint32 minPlayers;
   uint32 maxPlayers;

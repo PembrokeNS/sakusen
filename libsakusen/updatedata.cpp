@@ -16,7 +16,7 @@ void UnitRemovedUpdateData::store(OArchive& out) const
 
 UnitAddedUpdateData::UnitAddedUpdateData(
     IArchive& in,
-    const Universe* universe
+    const Universe::ConstPtr* universe
   ) :
   unit(CompleteUnit::load(in, universe))
 {
@@ -31,7 +31,7 @@ void UnitAddedUpdateData::store(OArchive& out) const
 
 UnitAlteredUpdateData::UnitAlteredUpdateData(
     IArchive& in,
-    const Universe* universe
+    const Universe::ConstPtr* universe
   ) :
   unit(CompleteUnit::load(in, universe))
 {
@@ -95,7 +95,7 @@ void SensorReturnsRemovedUpdateData::store(OArchive& out) const
 
 SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
     IArchive& in,
-    const Universe* universe
+    const Universe::ConstPtr* universe
   ) :
   UpdateData(),
   returns(SensorReturns::load(in, universe))
@@ -109,7 +109,7 @@ void SensorReturnsAddedUpdateData::store(OArchive& out) const
 
 SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
     IArchive& in,
-    const Universe* universe
+    const Universe::ConstPtr* universe
   ) :
   UpdateData(),
   returns(SensorReturns::load(in, universe))

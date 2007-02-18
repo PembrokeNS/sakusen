@@ -15,18 +15,18 @@ class ISensorReturns;
 
 class LIBSAKUSEN_API World : boost::noncopyable {
   protected:
-    World(const Universe* universe);
+    World(const Universe::ConstPtr& universe);
   public:
     virtual ~World();
   protected:
-    const Universe* universe; /* not owned by this */
+    Universe::ConstPtr universe;
     Time timeNow; /* Current game time */
   public:
     /* accessors */
-    inline const Universe* getUniverse(void) const { return universe; }
-    virtual Map* getMap(void) = 0;
-    virtual const Map* getMap(void) const = 0;
-    inline const Time& getTimeNow(void) { return timeNow; }
+    inline const Universe::ConstPtr& getUniverse() const { return universe; }
+    virtual Map* getMap() = 0;
+    virtual const Map* getMap() const = 0;
+    inline const Time& getTimeNow() { return timeNow; }
     virtual Ref<ISensorReturns> getISensorReturns(
         PlayerID player, SensorReturnsID id
       ) = 0;

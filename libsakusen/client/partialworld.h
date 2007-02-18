@@ -19,7 +19,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     PartialWorld(const PartialWorld&);
   public:
     PartialWorld(
-        const Universe* universe,
+        const Universe::ConstPtr& universe,
         PlayerID playerId,
         Topology topology,
         const Point<sint32>& topRight,

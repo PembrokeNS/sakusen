@@ -56,7 +56,7 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
         const Ref<const ICompleteUnit>& u
       ) :
       UpdateData(), reason(r), unit(u) {}
-    UnitAddedUpdateData(IArchive&, const Universe*);
+    UnitAddedUpdateData(IArchive&, const Universe::ConstPtr*);
     ~UnitAddedUpdateData() {}
   private:
     changeOwnerReason reason;
@@ -74,7 +74,7 @@ class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
   public:
     UnitAlteredUpdateData(const Ref<const ICompleteUnit>& u) :
       UpdateData(), unit(u) {}
-    UnitAlteredUpdateData(IArchive&, const Universe*);
+    UnitAlteredUpdateData(IArchive&, const Universe::ConstPtr*);
     ~UnitAlteredUpdateData() {}
   private:
     CompleteUnit unit;
@@ -162,7 +162,7 @@ class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
   public:
     SensorReturnsAddedUpdateData(const Ref<const ISensorReturns> r) :
       UpdateData(), returns(r) {}
-    SensorReturnsAddedUpdateData(IArchive&, const Universe*);
+    SensorReturnsAddedUpdateData(IArchive&, const Universe::ConstPtr*);
     ~SensorReturnsAddedUpdateData() {}
   private:
     SensorReturns returns;
@@ -178,7 +178,7 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
   public:
     SensorReturnsAlteredUpdateData(const Ref<const ISensorReturns>& r) :
       UpdateData(), returns(r) {}
-    SensorReturnsAlteredUpdateData(IArchive&, const Universe*);
+    SensorReturnsAlteredUpdateData(IArchive&, const Universe::ConstPtr*);
     ~SensorReturnsAlteredUpdateData() {}
   private:
     SensorReturns returns;

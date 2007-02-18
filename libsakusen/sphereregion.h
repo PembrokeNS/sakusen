@@ -1,7 +1,7 @@
-#ifndef SPHEREREGIONDATA_H
-#define SPHEREREGIONDATA_H
+#ifndef SPHEREREGION_H
+#define SPHEREREGION_H
 
-#include "regiondata.h"
+#include "region.h"
 #include "world.h"
 #include "libsakusen-global.h"
 
@@ -9,7 +9,8 @@ namespace sakusen {
 
 /** \brief Describes a region which is spherical */
 template<typename T>
-class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
+class LIBSAKUSEN_API SphereRegion : public Region<T> {
+  friend class Region<T>;
   /* Templatey typedefs with macros to spell them out in full for SWIG's
    * benefit
    */
@@ -21,12 +22,25 @@ class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
     typedef typename IntMunger<UT>::widest UWideT;
 #endif
   public:
-    SphereRegionData() : centre(), radius(0) {}
-    SphereRegionData(const Point<T>& c, UT r) :
+    SphereRegion() : centre(), radius(0) {}
+    SphereRegion(const Point<T>& c, UT r) :
       centre(c), radius(r) {}
   private:
     Point<T> centre;
     UT radius;
+
+    void storeData(OArchive& archive) const
+    {
+      archive << centre << radius;
+    }
+    
+    static SphereRegion<T>* loadNew(IArchive& archive)
+    {
+      Point<T> centre;
+      UT radius;
+      archive >> centre >> radius;
+      return new SphereRegion<T>(centre, radius);
+    }
   public:
     inline UWideT squareRadius() const { return UWideT(radius) * radius; }
     inline bool contains(const Point<T>& point) const;
@@ -35,22 +49,10 @@ class LIBSAKUSEN_API SphereRegionData : public RegionData<T> {
     inline Rectangle<T> getBoundingRectangle() const;
     
     RegionType getType() const { return regionType_sphere; }
-    RegionData<T>* newCopy() const { return new SphereRegionData<T>(*this); }
-    void store(OArchive& archive) const
-    {
-       archive << centre << radius;
-    }
-    static SphereRegionData<T>* loadNew(IArchive& archive)
-   {
-       Point<T> centre;
-       UT radius;
-       archive >> centre >> radius;
-       return new SphereRegionData<T>(centre, radius);
-   }
 };
 
 template<typename T>
-inline bool SphereRegionData<T>::contains(const Point<T>& point) const {
+inline bool SphereRegion<T>::contains(const Point<T>& point) const {
     return world->getMap()->getShortestDifference(point, centre).
     squareLength() < squareRadius();
 }
@@ -61,7 +63,7 @@ inline bool SphereRegionData<T>::contains(const Point<T>& point) const {
  * of a speed penalty to make me unhappy.
  */
 template<typename T>
-inline Point<T> SphereRegionData<T>::truncateToFit(
+inline Point<T> SphereRegion<T>::truncateToFit(
     const Point<T>& p
   ) const
 {
@@ -72,7 +74,7 @@ inline Point<T> SphereRegionData<T>::truncateToFit(
 }
 
 template<typename T>
-inline Rectangle<T> SphereRegionData<T>::getBoundingRectangle() const
+inline Rectangle<T> SphereRegion<T>::getBoundingRectangle() const
 {
   return Rectangle<T>(
       centre.x-radius,
@@ -83,10 +85,10 @@ inline Rectangle<T> SphereRegionData<T>::getBoundingRectangle() const
 }
 
 #ifdef _MSC_VER
-template LIBSAKUSEN_API SphereRegionData<sint16>;
+template LIBSAKUSEN_API SphereRegion<sint16>;
 #endif
 
 }
 
-#endif // SPHEREREGIONDATA_H
+#endif // SPHEREREGION_H
 

@@ -9,15 +9,14 @@
 
 namespace sakusen {
 
-class SensorReturns : public ISensorReturns, private IRefContainer {
+class SensorReturns : public ISensorReturns {
   private:
-    SensorReturns();
     SensorReturns(
         SensorReturnsID i,
         Perception p,
         PlayerID srO,
         PlayerID seO,
-        Region<sint32>* reg,
+        Region<sint32>::Ptr reg,
         CompleteUnit* s,
         SensorReturnMap ret
       ) :
@@ -49,82 +48,22 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
       perception(copy->getPerception()),
       senserOwner(copy->getSenserOwner()),
       senseeOwner(copy->getSenseeOwner()),
-      region(NULL == copy->getRegion() ?
-          NULL : new Region<sint32>(*copy->getRegion())),
+      region(copy->getRegion()),
       unit(copy->getUnit().isValid() ?
           new CompleteUnit(copy->getUnit()) : NULL),
       returns(copy->getSensorReturns())
     {
       assert(0 == (perception & ~perception_full));
     }
-    SensorReturns(const SensorReturns& copy) :
-      IReferent(copy),
-      ISensorReturns(copy),
-      IRefContainer(copy),
-      id(copy.getId()),
-      perception(copy.getPerception()),
-      senserOwner(copy.getSenserOwner()),
-      senseeOwner(copy.getSenseeOwner()),
-      region(NULL == copy.getRegion() ?
-          NULL : new Region<sint32>(*copy.getRegion())),
-      unit(NULL == copy.unit ?
-          NULL : new CompleteUnit(copy.getUnit())),
-      returns(copy.getSensorReturns())
-    {
-      assert(0 == (perception & ~perception_full));
-    }
-    SensorReturns& operator=(const SensorReturns& copy)
-    {
-      if (this == &copy)
-        return *this;
-      ISensorReturns::operator=(copy);
-      id = copy.id;
-      perception = copy.perception;
-      assert(0 == (perception & ~perception_full));
-      senserOwner = copy.senserOwner;
-      senseeOwner = copy.senseeOwner;
-      region = copy.region;
-      while (!refs.empty()) {
-        refs.back()->invalidate();
-        refs.pop_back();
-      }
-      delete unit;
-      unit = ( NULL == copy.unit ?
-          NULL : new CompleteUnit(copy.getUnit()) );
-      /* refs deliberately remains empty */
-      returns = copy.getSensorReturns();
-      return *this;
-    }
-    ~SensorReturns()
-    {
-      while (!refs.empty()) {
-        refs.back()->invalidate();
-        refs.pop_back();
-      }
-      delete unit;
-      unit = NULL;
-    }
   private:
     SensorReturnsID id;
     Perception perception;
     PlayerID senserOwner;
     PlayerID senseeOwner;
-    Region<sint32>::ConstPtr region; /* owned by this */
-    const CompleteUnit* unit; /* owned by this */
-    mutable std::list<IRef*> refs;
+    Region<sint32>::ConstPtr region;
+    CompleteUnit::ConstPtr unit;
 
     SensorReturnMap returns;
-
-    void registerRef(IRef* ref) const {
-      refs.push_back(ref);
-    }
-    void unregisterRef(IRef* ref) const {
-      std::list<IRef*>::iterator it = find(refs.begin(), refs.end(), ref);
-      if (it == refs.end()) {
-        Fatal("Tried to unregister not-registered Ref");
-      }
-      refs.erase(it);
-    }
   public:
     inline SensorReturnsID getId() const { return id; }
     inline Perception getPerception() const { return perception; }
@@ -132,12 +71,12 @@ class SensorReturns : public ISensorReturns, private IRefContainer {
     inline PlayerID getSenseeOwner() const { return senseeOwner; }
     inline Region<sint32>::ConstPtr getRegion() const { return region; }
     inline Ref<const ICompleteUnit> getUnit() const {
-      return Ref<const ICompleteUnit>(unit, this);
+      return Ref<const ICompleteUnit>(unit);
     }
     inline const SensorReturnMap& getSensorReturns() const { return returns; }
 
     void store(OArchive&) const;
-    static SensorReturns load(IArchive&, const Universe*);
+    static SensorReturns load(IArchive&, const Universe::ConstPtr*);
 };
 
 }
