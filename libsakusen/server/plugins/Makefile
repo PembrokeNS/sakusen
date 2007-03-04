@@ -1,0 +1,6 @@
+BIN = libsakusen-server-plugins.la
+LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-server
+INCLUDE =
+
+include ../../../Makefile.common
+

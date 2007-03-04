@@ -1,33 +1,35 @@
-#include "settingstree/stringlistleaf.h"
+#include "settingstree/stringsetleaf.h"
 
 #include "server.h"
 
+using namespace std;
 using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-StringListLeaf::StringListLeaf(
+StringSetLeaf::StringSetLeaf(
     const String& name,
     const String& readers,
     const String& writers,
     Branch* parent,
-    Server* server
+    Server* server,
+    const set<String>& initialValue
   ) :
   Leaf(name, readers, writers, parent, server),
-  value()
+  value(initialValue)
 {
 }
 
-String StringListLeaf::setValue(const String& v)
+String StringSetLeaf::setValue(const String& v)
 {
   if (v.empty()) {
     return "When setting the value of a list leaf, the first character must "
         "be '0', '+' or '-'";
   }
   
-  hash_set<String, StringHash> newValue = value;
+  set<String> newValue = value;
   
   switch (v[0]) {
     case '0':
@@ -70,10 +72,10 @@ String StringListLeaf::setValue(const String& v)
   return "";
 }
 
-String StringListLeaf::getValue() const
+String StringSetLeaf::getValue() const
 {
   String result = "";
-  for (__gnu_cxx::hash_set<String, StringHash>::const_iterator
+  for (set<String>::const_iterator
       v = value.begin(); v != value.end(); v++) {
     result += "\n";
     result += *v;

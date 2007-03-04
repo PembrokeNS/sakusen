@@ -13,7 +13,9 @@ enum ResourceType {
   resourceType_universe,
   resourceType_mapTemplate,
   resourceType_source,
-  resourceType_module
+  resourceType_module,
+  resourceType_replay,
+  resourceType_replayIndex
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceType resource);

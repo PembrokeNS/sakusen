@@ -1,6 +1,7 @@
-SUBDIRS = test
+SUBDIRS = test plugins
 BIN = libsakusen-server.la
-LIBS = -lstdc++ -lltdl
+SOURCE_DIRS = 
+LIBS = -lstdc++
 LIB_DEP_NAMES = libsakusen
 INCLUDE =
 

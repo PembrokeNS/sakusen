@@ -27,7 +27,7 @@ CompleteUnit::CompleteUnit(const Ref<const ICompleteUnit>& copy) :
 
 void CompleteUnit::store(OArchive& out) const
 {
-  out.magicValue<5>("CUNIT");
+  out.magicValue("CUNIT");
   out << unitId;
   status.store(out, world->getUniverse());
   typeData.store(out);
@@ -40,7 +40,7 @@ CompleteUnit CompleteUnit::load(
 {
   uint32 unitId;
   
-  in.magicValue<5>("CUNIT");
+  in.magicValue("CUNIT");
   in >> unitId;
   UnitStatus status = UnitStatus::load(in, universe);
   UnitTypeData typeData = UnitTypeData::load(in);

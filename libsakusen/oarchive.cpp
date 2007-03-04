@@ -1,5 +1,6 @@
 #include "oarchive.h"
 
+#include "iarchive.h"
 #include "stringutils.h"
 
 #if defined(_WIN32)
@@ -43,10 +44,26 @@ OArchive::~OArchive()
 
 OArchive& OArchive::operator=(const OArchive& copy)
 {
-  buffer = new uint8[copy.length];
-  length = copy.length;
-  capacity = length;
-  memcpy(buffer, copy.buffer, length*sizeof(uint8));
+  uint8* newBuffer = new uint8[copy.length];
+  capacity = length = copy.length;
+  memcpy(newBuffer, copy.buffer, length*sizeof(uint8));
+  assert(buffer != NULL);
+  delete[] buffer;
+  buffer = newBuffer;
+  return *this;
+}
+
+OArchive& OArchive::operator=(const IArchive& copy)
+{
+  // We should only be doing this with an IArchive which we haven't extracted
+  // anything from yet
+  assert(copy.buffer == copy.originalBuffer);
+  uint8* newBuffer = new uint8[copy.remainingLength];
+  capacity = length = copy.remainingLength;
+  memcpy(newBuffer, copy.originalBuffer, length*sizeof(uint8));
+  assert(buffer != NULL);
+  delete[] buffer;
+  buffer = newBuffer;
   return *this;
 }
 
@@ -61,6 +78,11 @@ void OArchive::expand()
   memcpy(newBuffer, buffer, length*sizeof(uint8));
   delete[] buffer;
   buffer = newBuffer;
+}
+
+void OArchive::dumpBuffer() const
+{
+  Debug(stringUtils_bufferToHex(buffer, length));
 }
 
 OArchive& OArchive::operator<<(const uint16& i)
@@ -110,6 +132,16 @@ OArchive& OArchive::operator<<(const String& s)
   *this << static_cast<uint32>(sLength);
   ensureSpace(sLength);
   memcpy(buffer+length, s.c_str(), sLength);
+  length += sLength;
+  return *this;
+}
+
+OArchive& OArchive::operator<<(const OArchive& archive)
+{
+  size_t sLength = archive.length;
+  *this << static_cast<uint32>(sLength);
+  ensureSpace(sLength);
+  memcpy(buffer+length, archive.getBytes(), sLength);
   length += sLength;
   return *this;
 }

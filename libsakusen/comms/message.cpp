@@ -8,39 +8,36 @@ namespace sakusen {
 namespace comms{
 
 Message::Message(const MessageData* d) :
+  player(-1),
   data(d)
 {
 }
 
 Message::Message(
-    const uint8* buffer,
-    size_t bufferLength,
-    PlayerID player /*= static_cast<PlayerID>(-1) (default in header)*/
+    /*const uint8* buffer,
+    size_t bufferLength,*/
+    IArchive& in,
+    PlayerID p /*= static_cast<PlayerID>(-1) (default in header)*/
   ) :
+  player(p),
   data()
 {
   /* We try to initialize this message by reading in from the given buffer.
    * If anything goes wrong, then we throw an exception */
-  if (bufferLength < 2) {
-    throw EndOfArchiveDeserializationExn();
-  }
   
-  /* Extract the first byte, which gives the protocol version */
-  uint8 version = buffer[0];
+  /* Extract the protocol version and message type */
+  uint8 version;
+  MessageType type;
+
+  (in >> version).extractEnum(type);
 
   if (version != NETWORK_PROTOCOL_VERSION) {
     throw WrongVersionDeserializationExn(NETWORK_PROTOCOL_VERSION, version);
   }
   
-  /* Extract the second byte, which gives the message type */
-  MessageType type = MessageType(buffer[1]);
-  
   /** \todo More stuff in the message header such as endianness, a magic value
    * to show that it *really* is a sakusen message */
 
-  /* Initialize an archive using the remainder of the buffer */
-  IArchive in(buffer+2, bufferLength-2);
-  
   switch (type) {
     case messageType_solicit:
       data.reset(new SolicitMessageData(in));
@@ -89,6 +86,9 @@ Message::Message(
       }
       data.reset(new UpdateMessageData(in, &player));
       break;
+    case messageType_extension:
+      data.reset(new ExtensionMessageData(in));
+      break;
     default:
       throw EnumDeserializationExn("type", type);
       return;
@@ -99,6 +99,27 @@ Message::Message(
     throw TooMuchArchiveDeserializationExn();
     data.reset();
   }
+}
+
+void Message::store(OArchive& archive) const
+{
+  archive << player;
+  if (data) {
+    archive << data->getArchive();
+  } else {
+    OArchive subArchive;
+    subArchive << uint8(NETWORK_PROTOCOL_VERSION);
+    subArchive.insertEnum(messageType_none);
+    archive << subArchive;
+  }
+}
+
+Message Message::load(IArchive& archive)
+{
+  PlayerID player;
+  IArchive subArchive;
+  archive >> player >> subArchive;
+  return Message(subArchive, player);
 }
 
 }}//close namespaces

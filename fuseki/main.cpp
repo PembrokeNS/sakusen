@@ -61,6 +61,8 @@ struct Options {
   String udpAddress;
   /** What address to use for TCP joining socket */
   String tcpAddress;
+  /** What paths to search for plugins */
+  list<String> pluginPaths;
   /** When set, fuseki will print dots all the time so that you know it is
    * alive */
   bool dots;
@@ -117,20 +119,21 @@ void usage()
           "\n"
           "Usage: fuseki [OPTIONS]\n"
           "\n"
-          " -d-, --no-dots         do not print dots while server running\n"
-          " -h,  --help            display help and exit\n"
-          " -V,  --version         display version information and exit\n"
+          " -d-, --no-dots          do not print dots while server running\n"
+          " -h,  --help             display help and exit\n"
+          " -V,  --version          display version information and exit\n"
 #ifndef DISABLE_UNIX_SOCKETS
-          " -a-, --no-abstract     do not use the abstract unix socket namespace\n" 
-          " -f,  --force-socket    overwrite any existing socket file\n"
-          " -x,  --unix ADDRESS    bind the unix solicitation socket at sakusen-style address \n"
-          "                        ADDRESS (e.g. concrete|/var/fuskeki/socket)\n"
-          "                        (default is a UNIX socket in ~/.sakusen/fuseki)\n"
+          " -a-, --no-abstract      do not use the abstract unix socket namespace\n" 
+          " -f,  --force-socket     overwrite any existing socket file\n"
+          " -x,  --unix ADDRESS     bind the unix solicitation socket at sakusen-style\n"
+          "                         address ADDRESS (e.g. concrete|/var/fuskeki/socket)\n"
+          "                         (default is a UNIX socket in ~/.sakusen/fuseki)\n"
 #endif
-          " -u,  --udp ADDRESS     Bind udp socket at ADDRESS.\n"
-          "                        Default: localhost, specify a null ADDRESS to disable\n."
-          " -t,  --tcp ADDRESS     Bind tcp socket at ADDRESS.\n"
-          "                        Default: localhost, specift a null ADDRESS to disable\n."
+          " -u,  --udp ADDRESS      Bind udp socket at ADDRESS.\n"
+          "                         Default: localhost, specify a null ADDRESS to disable\n"
+          " -t,  --tcp ADDRESS      Bind tcp socket at ADDRESS.\n"
+          "                         Default: localhost, specift a null ADDRESS to disable\n"
+          " -p,  --plugins PATH:... Search for plugins in each given PATH, in given order\n"
           "\n"
           "Port for UDP and TCP sockets defaults to "<<DEFAULT_PORT<<" if not specified.\n"
           "Some examples: \n"
@@ -154,6 +157,7 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
   #endif
   parser.addOption("udp",          'u', &results.udpAddress);
   parser.addOption("tcp",          't', &results.tcpAddress);
+  parser.addOption("plugins",      'p', &results.pluginPaths, ':');
   parser.addOption("dots",         'd', &results.dots);
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);
@@ -196,6 +200,15 @@ int startServer(const String& homePath, const Options& options)
   
   ResourceInterface::Ptr resourceInterface =
       FileResourceInterface::create(dataDirs, true);
+
+  cout << "Using the following directories for plugins:\n";
+  copy(
+      options.pluginPaths.begin(), options.pluginPaths.end(),
+      ostream_iterator<String>(cout, "\n")
+    );
+  if (options.pluginPaths.empty()) {
+    cout << "(None)\n";
+  }
   
   /* Initialize sockets */
   Socket::socketsInit();
@@ -221,20 +234,7 @@ int startServer(const String& homePath, const Options& options)
           /* Try to create the directory if it doesn't */
           cout << "Directory not found, trying to create it." <<
             endl;
-          if (-1 == fileUtils_mkdirRecursive(serverPath, 0777)) {
-            switch (errno) {
-              case EACCES:
-                Fatal("permission denied when creating directory");
-                break;
-              case ENOENT:
-                Fatal("no such file or directory when creating directory");
-                break;
-              default:
-                Fatal("error " << errorUtils_parseErrno(errno) <<
-                    " creating directory");
-                break;
-            }
-          }
+          fileUtils_mkdirRecursive(serverPath, 0777);
           break;
         default:
           Fatal("could not stat directory");
@@ -323,15 +323,17 @@ int startServer(const String& homePath, const Options& options)
   }
 #endif
   
-  Server server(
-      cout, resourceInterface,
+  { /* Braces to ensure that server is destructed before lt_dlexit called */
+    Server server(
+        cout, resourceInterface,
+        options.pluginPaths,
 #ifndef DISABLE_UNIX_SOCKETS
-      options.abstract, unixSocket,
+        options.abstract, unixSocket,
 #endif
-      udpSocket, tcpSocket, options.dots
-    );
-  server.serve();
- 
+        udpSocket, tcpSocket, options.dots
+      );
+    server.serve();
+  }
 
   /* ltdl finalization */
   if (lt_dlexit()) {

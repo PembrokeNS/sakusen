@@ -131,7 +131,8 @@ bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
     return true;
   }
 
-  Message message(buffer, messageLength);
+  IArchive messageArchive(buffer, messageLength);
+  Message message(messageArchive);
   if (message.getType() != messageType_advertise) {
     Debug("Non-advertisement received (type was " << message.getType() << ")");
     return true;
@@ -162,7 +163,8 @@ String ServerInterface::flushIncoming()
       PlayerID playerId =
         ( NULL == client::world ?
           static_cast<PlayerID>(-1) : client::world->getPlayerId() );
-      Message message(buf, messageLength, playerId);
+      IArchive messageArchive(buf, messageLength);
+      Message message(messageArchive, playerId);
       switch (message.getType()) {
         case messageType_kick:
           {
@@ -195,6 +197,24 @@ String ServerInterface::flushIncoming()
         case messageType_update:
           {
             game->pushUpdates(message.getUpdateData());
+          }
+          break;
+        case messageType_extension:
+          {
+            /** \todo Provision for other extensions, possibly through plugins
+             * */
+            ExtensionMessageData data = message.getExtensionData();
+            if (data.getExtension() == "talk" && data.getVersion() == 0) {
+              IArchive subData = data.getData();
+              String message;
+              try {
+                subData >> message;
+                out << "-- " << message << "\n";
+              } catch (DeserializationExn& e) {
+                out << "Warning: Malformed talk message (" << e.message <<
+                  ")\n";
+              }
+            }
           }
           break;
         default:
@@ -258,7 +278,8 @@ String ServerInterface::join()
     return "Timed out while waiting for response to join request.\n";
   }
 
-  Message message(buffer, messageLength);
+  IArchive messageArchive(buffer, messageLength);
+  Message message(messageArchive);
   
   switch (message.getType()) {
     case messageType_accept:
@@ -314,7 +335,7 @@ bool ServerInterface::leave(bool sendMessage)
 
 /** \brief Send the given message to the server at once
  *
- * \param message Message to send
+ * \param message Message to send (Ownership tranferred to this)
  * \return true iff an error occurs */
 bool ServerInterface::send(const MessageData* message)
 {

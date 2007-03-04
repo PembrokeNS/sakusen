@@ -106,7 +106,7 @@ void UnitOrders::clearQueue()
 
 void UnitOrders::store(OArchive& out) const
 {
-  out.insert<Order, orderCondition_max>(orders);
+  out << orders;
   currentOrder.store(out);
   (out.insertEnum(linearTarget) << targetPosition <<
     targetVelocity).insertEnum(rotationalTarget);

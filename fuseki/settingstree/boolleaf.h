@@ -10,11 +10,11 @@ class BoolLeaf : public Leaf {
   public:
     BoolLeaf(
         const String& name,
-        bool value,
         const String& readers,
         const String& writers,
         Branch* parent,
-        Server* server
+        Server* server,
+        bool value = false
       );
     virtual ~BoolLeaf() {}
   private:

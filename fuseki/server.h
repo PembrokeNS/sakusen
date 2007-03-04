@@ -9,6 +9,8 @@
 #include "resourceinterface.h"
 #include "socket.h"
 #include "remoteclient.h"
+#include "plugin.h"
+#include "plugininterface.h"
 #include "settingstree/settingstree.h"
 #include "settingstree/leaf.h"
 
@@ -25,6 +27,8 @@ class Server : public SettingsUser, private boost::noncopyable {
      *
      * \param output Stream to use for output.
      * \param resourceInterface ResourceInterface to use to load game data.
+     * \param pluginPaths List of paths to be searched (in that order) for
+     * plugins when such are requested.
      * \param abstract Whether to use abstract unix socket namespace where
      * possible.
      * \param unixSocket A Socket on which to listen for both
@@ -40,6 +44,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     Server(
         std::ostream& output,
         const sakusen::ResourceInterface::Ptr& resourceInterface,
+        const std::list<String>& pluginPaths,
 #ifndef DISABLE_UNIX_SOCKETS
         bool abstract,
         const sakusen::comms::Socket::Ptr& unixSocket,
@@ -58,11 +63,12 @@ class Server : public SettingsUser, private boost::noncopyable {
     bool abstract;
     sakusen::comms::Socket::Ptr unixSocket;
 #endif
-    sakusen::comms::Socket::Ptr udpSocket; /* Not owned by this */
-    sakusen::comms::Socket::Ptr tcpSocket; /* Not owned by this */
+    sakusen::comms::Socket::Ptr udpSocket;
+    sakusen::comms::Socket::Ptr tcpSocket;
     std::ostream& out;
-    sakusen::ResourceInterface::Ptr resourceInterface; /* Not owned by this */
-    __gnu_cxx::hash_map<sakusen::comms::ClientID, RemoteClient*> clients;
+    sakusen::ResourceInterface::Ptr resourceInterface;
+    PluginInterface pluginInterface;
+    __gnu_cxx::hash_map<sakusen::ClientID, RemoteClient*> clients;
       /* Client interfaces (owned by this) */
     sakusen::Universe::ConstPtr universe;
       /* The universe we plan to use to build the map.  NULL
@@ -76,6 +82,11 @@ class Server : public SettingsUser, private boost::noncopyable {
        * is started, because World makes a copy of it and works with that */
     settingsTree::SettingsTree::Ptr settings; /* The tree of all the settings */
     bool allowObservers; /* Whether we allow observer clients */
+    sakusen::hash_map_string<Plugin::Ptr>::type plugins;
+    __gnu_cxx::hash_map<
+        sakusen::MaskedPtr<sakusen::server::Listener>,
+        sakusen::server::Listener::VPtr
+      > listeners;
     
     bool checkForGameStartNextTime; /* Indicate that a check for whether the
                                        game can start is in order */
@@ -85,8 +96,11 @@ class Server : public SettingsUser, private boost::noncopyable {
       /* Put a universe here to be promoted to universe when possible */
     sakusen::MapTemplate::ConstPtr requestedMap;
       /* Put a map here to be promoted to map when possible */
+    std::queue<String> pluginsToAdd;
+    sakusen::hash_set_string pluginsToRemove;
     bool mapPlayModeChanged;
 
+    bool gameStarted;
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */
 
     void advertise(
@@ -95,7 +109,7 @@ class Server : public SettingsUser, private boost::noncopyable {
         const sakusen::comms::Socket::Ptr& receivedOn,
         const sakusen::comms::Message& advertisement
       );
-    sakusen::comms::ClientID getFreeClientID();
+    sakusen::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.
        * Returns (ClientID)-1 if there are no free IDs */
     void addClient(
@@ -117,15 +131,27 @@ class Server : public SettingsUser, private boost::noncopyable {
         const String& node,
         const String& value
       );
+    /** \brief Checks currently loaded plugins against the given list,
+     * and sets up addition and removal as appropriate */
+    void checkPlugins(const std::set<String>& newList);
   public:
+    sakusen::ResourceInterface::Ptr getResourceInterface() const {
+      return resourceInterface;
+    }
     sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
     const settingsTree::SettingsTree::Ptr& getSettings() { return settings; }
     /** \return true iff the server is currently allowing observers */
-    inline bool getAllowObservers() { return allowObservers; }
+    inline bool getAllowObservers() const { return allowObservers; }
+    inline bool getGameStarted() const { return gameStarted; }
     
     void serve();
     void checkForGameStart();
     void ensureAdminExists();
+
+    void registerListener(const sakusen::server::Listener::VPtr&);
+    void unregisterListener(
+        const sakusen::MaskedPtr<sakusen::server::Listener>&
+      );
 
     /** \name Settings tree callbacks
      *
@@ -155,7 +181,7 @@ class Server : public SettingsUser, private boost::noncopyable {
       );
     String stringSetSettingAlteringCallback(
         settingsTree::Leaf* altering,
-        const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
+        const std::set<String>& newValue
       );
     //@}
 

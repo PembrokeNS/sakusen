@@ -60,11 +60,16 @@ C_SOURCES := $(wildcard *.c) \
 	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
 CXX_BASES := $(basename $(CXX_SOURCES))
 C_BASES := $(basename $(C_SOURCES))
-LIBTOOL_OBJS := $(foreach base,$(CXX_BASES) $(C_BASES),.obj/$(base).lo)
-CXX_OBJS := $(foreach base,$(CXX_BASES),.obj/$(base).o)
-C_OBJS := $(foreach base,$(C_BASES),.obj/$(base).o)
+# When generating the object an makefrag file names, we need to be sure to
+# remove '..' from the path in order to prevent random directories being
+# created anywhere and everywhere
+CXX_OBJS := $(foreach base,$(CXX_BASES),.obj/$(subst ..,_dot_dot,$(base)).o)
+C_OBJS := $(foreach base,$(C_BASES),.obj/$(subst ..,_dot_dot,$(base)).o)
+LIBTOOL_OBJS := $(foreach obj,$(CXX_OBJS) $(C_OBJS),$(basename $(obj)).lo)
 MAKEFRAGS := \
-	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),.makefrags/$(source).makefrag)
+	$(foreach source,$(CXX_SOURCES) $(C_SOURCES),\
+		.makefrags/$(subst ..,_dot_dot,$(source)).makefrag\
+	)
 
 # Add warnings and debugging, and turn off optimizations.  In the long run
 # we'll want a way to have debug and release builds in parallel
@@ -148,7 +153,7 @@ $(ALL_HEADER_GCH_PDC): $(ALL_HEADER)
 
 # How to make the "all" header
 $(ALL_HEADER): $(LIB_ALL_HEADERS) $(HEADERS)
-	@-rm -f $@
+	-rm -f $@
 	for header in $^; \
 	do \
 		echo '#include "'$${header}'"' >> $@ ; \
@@ -186,12 +191,12 @@ $(LIBTOOL_OBJS): %.lo: %.o
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	libtool --tag=CXX --mode=compile $(CXX) $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
-		-o $@ $*.cpp
+		-o $@ $(subst _dot_dot,..,$*).cpp
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	libtool --tag=CC --mode=compile $(CC) $(CFLAGS) $(E_INCLUDE) $(THIS_CFLAGS) -c \
-		-o $@ $*.c
+		-o $@ $(subst _dot_dot,..,$*).c
 else
 # When it is an executable
 
@@ -207,12 +212,12 @@ $(BIN): $(CXX_OBJS) $(C_OBJS) $(E_LIB_DEP)
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(BUILD_CXXFLAGS) $(E_INCLUDE) $(PCH_CXXFLAGS) $(THIS_CXXFLAGS) -c \
-		-o $@ $*.cpp
+		-o $@ $(subst _dot_dot,..,$*).cpp
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(E_INCLUDE) $(THIS_CFLAGS) -c \
-		-o $@ $*.c
+		-o $@ $(subst _dot_dot,..,$*).c
 
 endif
 
@@ -229,10 +234,10 @@ $(lastword $(MAKEFRAGS)): revision.h
 
 endif
 
-$(MAKEFRAGS): .makefrags/%.makefrag: %
+$(MAKEFRAGS): .makefrags/%.makefrag:
 	@mkdir -p $(dir $@)
-	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $<
-	@echo "$@ .obj/$(filter-out ./,$(dir $<))`cat $@.tmp`" > $@
+	cpp $(E_INCLUDE) -MP -MM -MF $@.tmp $(subst _dot_dot,..,$*)
+	@echo "$@ .obj/$(filter-out ./,$(dir $*))`cat $@.tmp`" > $@
 	@rm $@.tmp
 
 # If we're in a working copy then we can make a revision.h containing the
@@ -243,8 +248,8 @@ $(MAKEFRAGS): .makefrags/%.makefrag: %
 revision.h: $(wildcard .svn/entries)
 	if test -f .svn/entries ; \
 	then \
-		REVISION=`grep '^   revision=' .svn/entries | \
-			sed 's/^   revision="//' | sed 's/"\/>//' | sort -rn | head -n 1`; \
+		REVISION=`svn info -R $(TOP_DIR) | grep "^Revision:" | \
+			awk '{print $$2}' | sort -nr | head -n 1`; \
 		if test "x$$REVISION" != "x"; \
 		then \
 			echo '#define REVISION ' "$$REVISION" > $@; \

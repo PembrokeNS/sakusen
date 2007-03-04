@@ -15,13 +15,13 @@ GameBranch::GameBranch(Branch* parent, Server* server) :
   addChild(Node::Ptr(new UniverseBranch(this, server)));
   addChild(Node::Ptr(new StringLeaf("map", "world", "admin", this, server)));
   addChild(Node::Ptr(
-        new IntLeaf<uint8>("mapplaymode", 0, "world", "admin", this, server)
+        new IntLeaf<uint8>("mapplaymode", "world", "admin", this, server)
       ));
   addChild(Node::Ptr(new IntLeaf<uint32>(
-          "speed", DEFAULT_GAME_SPEED, "world", "admin,playtime", this, server
+          "speed", "world", "admin,playtime", this, server, DEFAULT_GAME_SPEED
         )));
   addChild(Node::Ptr(
-        new BoolLeaf("paused", false, "world", "admin,playtime", this, server)
+        new BoolLeaf("paused", "world", "admin,playtime", this, server, false)
       ));
 }
 

@@ -54,7 +54,7 @@ String Universe::resolveNames()
 
 WeaponTypeID Universe::getWeaponTypeID(String weaponTypeName) const
 {
-  __gnu_cxx::hash_map<String, WeaponTypeID, StringHash>::const_iterator
+  hash_map_string<WeaponTypeID>::type::const_iterator
     weaponType = weaponIDLookup.find(weaponTypeName);
   if (weaponType == weaponIDLookup.end()) {
     return NULL;
@@ -64,7 +64,7 @@ WeaponTypeID Universe::getWeaponTypeID(String weaponTypeName) const
 
 UnitTypeID Universe::getUnitTypeID(String unitTypeName) const
 {
-  __gnu_cxx::hash_map<String, UnitTypeID, StringHash>::const_iterator
+  hash_map_string<UnitTypeID>::type::const_iterator
     unitType = unitIDLookup.find(unitTypeName);
   if (unitType == unitIDLookup.end()) {
     return NULL;

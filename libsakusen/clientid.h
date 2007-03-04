@@ -4,7 +4,6 @@
 #include "stringutils.h"
 
 namespace sakusen {
-namespace comms {
 
 typedef uint8 ClientID;
 
@@ -18,7 +17,7 @@ inline ClientID clientID_fromString(String str)
   return numFromString<ClientID>(str);
 }
 
-}}
+}
 
 #endif // CLIENTID_H
 

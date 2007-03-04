@@ -11,7 +11,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
 {
   assert(!name.empty());
 
-  hash_map<String, Command, StringHash>::iterator existing =
+  hash_map_string<Command>::type::iterator existing =
     commands.find(name);
   if (existing == commands.end()) {
     /* No command of that name already exists, so we can proceed */

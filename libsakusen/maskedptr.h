@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "gnu_extensions.h"
+#include "getptr.h"
 
 namespace sakusen {
 
@@ -19,6 +20,11 @@ class MaskedPtr {
   public:
     MaskedPtr(const T* p) : ptr(p) {}
     MaskedPtr(const boost::shared_ptr<T>& p) : ptr(p.get()) {}
+    MaskedPtr(const boost::variant<T*, boost::shared_ptr<T> >& p)
+    {
+      GetPtr<T> gp;
+      ptr = p.apply_visitor(gp);
+    }
     MaskedPtr(const boost::shared_ptr<const T>& p) : ptr(p.get()) {}
     template<typename U>
     explicit MaskedPtr(MaskedPtr<U> p) : ptr(p.ptr) {}

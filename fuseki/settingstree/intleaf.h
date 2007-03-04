@@ -13,11 +13,11 @@ class IntLeaf : public Leaf {
   public:
     IntLeaf(
         const String& name,
-        T value,
         const String& readers,
         const String& writers,
         Branch* parent,
-        Server* server
+        Server* server,
+        T value = 0
       );
     virtual ~IntLeaf() {}
   private:

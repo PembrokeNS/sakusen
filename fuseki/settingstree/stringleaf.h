@@ -13,7 +13,8 @@ class StringLeaf : public Leaf {
         const String& readers,
         const String& writers,
         Branch* parent,
-        Server* server
+        Server* server,
+        const String& initialValue = ""
       );
     virtual ~StringLeaf() { }
   protected:

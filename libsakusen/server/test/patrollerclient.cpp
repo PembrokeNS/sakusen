@@ -4,7 +4,8 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace sakusen::server::test;
 
-PatrollerClient::PatrollerClient(Point<sint32> p) :
+PatrollerClient::PatrollerClient(ClientID i, Point<sint32> p) :
+  Client(i),
   patrolTo(p),
   patrolFrom(),
   headedOutward(false),

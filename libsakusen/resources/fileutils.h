@@ -31,11 +31,20 @@
 namespace sakusen {
 namespace resources {
 
-LIBSAKUSEN_RESOURCES_API size_t fileUtils_read(int fd, void* buffer, size_t bufferLen);
+LIBSAKUSEN_RESOURCES_API size_t fileUtils_read(
+    int fd,
+    void* buffer, size_t bufferLen
+  );
 
-LIBSAKUSEN_RESOURCES_API size_t fileUtils_write(int fd, const void* buffer, size_t length);
+LIBSAKUSEN_RESOURCES_API size_t fileUtils_write(
+    int fd,
+    const void* buffer, size_t length
+  );
 
-LIBSAKUSEN_RESOURCES_API int fileUtils_mkdirRecursive(String path, mode_t mode);
+LIBSAKUSEN_RESOURCES_API void fileUtils_mkdirRecursive(
+    String path,
+    mode_t mode
+  );
 
 LIBSAKUSEN_RESOURCES_API std::list<String> fileUtils_findMatches(
     const String& directory,

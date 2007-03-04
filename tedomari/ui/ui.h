@@ -35,7 +35,7 @@ class UI : protected Control {
     MapDisplay* activeMapDisplay; /**< Currently active MapDisplay, or NULL */
     CommandEntryBox* commandEntryBox;
     AlertDisplay* alertDisplay;
-    __gnu_cxx::hash_map<String, Mode, sakusen::StringHash> modes;
+    sakusen::hash_map_string<Mode>::type modes;
     Mode* mode;
     /** \brief Modifiers like ctrl from keys currently held down */
     std::set<String> currentModifiers;

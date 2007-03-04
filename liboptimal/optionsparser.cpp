@@ -1,12 +1,25 @@
 #include "optionsparser.h"
 
-#include <string.h>
-#include <assert.h>
+#include <cassert>
 
 #include <fstream>
 #include <sstream>
+#include <boost/functional.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/split.hpp>
 
-using namespace std;
+using std::string;
+using std::istream;
+using std::ifstream;
+using std::istringstream;
+using std::pair;
+using std::make_pair;
+using std::list;
+using std::equal_to;
+using __gnu_cxx::hash_map;
+using boost::trim;
+using boost::split;
+using boost::bind1st;
 
 using namespace optimal;
 
@@ -20,9 +33,11 @@ OptionsParser::OptionsParser() :
   longBoolOptions(10),
   longIntOptions(10),
   longStringOptions(10),
+  longStringListOptions(10),
   shortBoolOptions(10),
   shortIntOptions(10),
-  shortStringOptions(10)
+  shortStringOptions(10),
+  shortStringListOptions(10)
 {
 }
 
@@ -36,9 +51,11 @@ OptionsParser::OptionsParser(char nl) :
   longBoolOptions(10),
   longIntOptions(10),
   longStringOptions(10),
+  longStringListOptions(10),
   shortBoolOptions(10),
   shortIntOptions(10),
-  shortStringOptions(10)
+  shortStringOptions(10),
+  shortStringListOptions(10)
 {
 }
 
@@ -105,6 +122,27 @@ void OptionsParser::addOption(
 void OptionsParser::addOption(
     const string& longName,
     char shortName,
+    list<string>* value,
+    char separator
+  )
+{
+  assert(0 == longOptionTypes.count(longName));
+  assert(0 == shortOptionTypes.count(shortName));
+
+  if (longName != "") {
+    longOptionTypes[longName] = optionType_stringList;
+    longStringListOptions[longName] = make_pair(separator, value);
+  }
+  
+  if (shortName != '\0') {
+    shortOptionTypes[shortName] = optionType_string;
+    shortStringListOptions[shortName] = make_pair(separator, value);
+  }
+}
+
+void OptionsParser::addOption(
+    const string& longName,
+    char shortName,
     OptionsParser* value
   )
 {
@@ -119,18 +157,6 @@ void OptionsParser::addOption(
   if (shortName != '\0') {
     shortOptionTypes[shortName] = optionType_subopts;
     shortSuboptsOptions[shortName] = value;
-  }
-}
-
-void trim(std::string& s)
-{
-  while (!s.empty() && string(" \n\t").find(s[0]) != string::npos) {
-    s.erase(s.begin());
-  }
-  while (!s.empty() && string(" \n\t").find(s[s.length()-1]) != string::npos) {
-    string::iterator end = s.end();
-    --end;
-    s.erase(end);
   }
 }
 
@@ -185,6 +211,21 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
             case optionType_string:
               assert(longStringOptions.count(optionName));
               *longStringOptions[optionName] = optionValue;
+              break;
+            case optionType_stringList:
+              {
+                /*printf("stringList option %s, value %s\n", optionName.c_str(),
+                    optionValue.c_str());*/
+                hash_map<string, pair<char, list<string>*>, StringHash>::
+                  const_iterator it = longStringListOptions.find(optionName);
+                assert(it != longStringListOptions.end());
+                split(
+                    *it->second.second,
+                    optionValue,
+                    boost::bind1st(equal_to<char>(), it->second.first)
+                  );
+                /*printf("got %zd values out\n", it->second.second->size());*/
+              }
               break;
             case optionType_subopts:
               {
@@ -270,6 +311,25 @@ bool OptionsParser::parse(
                     );
                 }
                 break;
+              case optionType_stringList:
+                {
+                  hash_map<string, pair<char, list<string>*>, StringHash>::
+                    iterator it = longStringListOptions.find(optionName);
+                  assert(it != longStringListOptions.end());
+                  if (++i < argc) {
+                    split(
+                        *it->second.second,
+                        argv[i],
+                        boost::bind1st(equal_to<char>(), it->second.first)
+                      );
+                  } else {
+                    errors.push_back(
+                      string("trailing long option '")+optionName+
+                      "' requires argument"
+                    );
+                  }
+                }
+                break;
               case optionType_subopts:
                 assert(longSuboptsOptions.count(optionName));
                 if (++i < argc) {
@@ -334,6 +394,24 @@ bool OptionsParser::parse(
                     );
                 }
                 break;
+              case optionType_stringList:
+                {
+                  hash_map<char, pair<char, list<string>*> >::
+                    iterator it = shortStringListOptions.find(*optionChar);
+                  assert(it != shortStringListOptions.end());
+                  if (optionChar[1] == '\0' && ++i < argc) {
+                    split(
+                        *it->second.second,
+                        argv[i],
+                        boost::bind1st(equal_to<char>(), it->second.first)
+                      );
+                  } else {
+                    errors.push_back(
+                      string("short option '")+*optionChar+
+                      "' requires argument"
+                    );
+                  }
+                }
               default:
                 assert(false);
             }

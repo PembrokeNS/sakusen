@@ -85,14 +85,13 @@ class WrongMagicDeserializationExn :
     public DeserializationExn {
   public:
     WrongMagicDeserializationExn(
-        const char* expected,
-        int size,
+        const String& expected,
         const uint8* found
       ) :
       DeserializationExn(
-          String("wrong magic: expected '") + String(expected, size) +
+          "wrong magic: expected '" + expected +
           "', found: '" + stringUtils_makePrintable(
-            String(reinterpret_cast<const char*>(found), size)
+            String(reinterpret_cast<const char*>(found), expected.size())
           ) + "'"
         ) {}
     virtual ~WrongMagicDeserializationExn() throw() {}

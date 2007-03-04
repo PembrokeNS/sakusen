@@ -6,22 +6,24 @@
 
 #include <queue>
 #include "playerid.h"
+#include "clientid.h"
 #include "ordermessage.h"
 #include "update.h"
 
 namespace sakusen {
 namespace server {
 
-class LIBSAKUSEN_SERVER_API Client {
+class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
   private:
     Client(const Client& copy);
   protected:
     /** Client is an abstract class.  All constructors must be protected. */
-    Client();
+    Client(ClientID id);
   public:
     /** The default destructor does nothing. */
     virtual ~Client() {}
   protected:
+    const ClientID clientId;
     PlayerID playerId; /**< ID of player for this client.  "Dummy" clients for
                           atmospherics, etc. will have id 0 - the neutral
                           player */
@@ -30,6 +32,7 @@ class LIBSAKUSEN_SERVER_API Client {
   public:
     /** \name Accessors */
     //@{
+    inline ClientID getClientId() const { return clientId; }
     inline PlayerID getPlayerId() const { return playerId; }
     inline void setPlayerId(const PlayerID& id) { playerId = id; }
     inline bool orderMessageQueueEmpty(void) const {

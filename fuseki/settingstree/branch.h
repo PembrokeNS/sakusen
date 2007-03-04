@@ -22,11 +22,11 @@ class Branch : public Node {
         Server* server
       );
   private:
-    __gnu_cxx::hash_map<String, Node::Ptr, sakusen::StringHash> children;
+    sakusen::hash_map_string<Node::Ptr>::type children;
 
   protected:
-    inline void addChild(Node::Ptr child) {
-      children[child->getName()] = child;
+    inline Node::Ptr addChild(Node::Ptr child) {
+      return children[child->getName()] = child;
     }
     inline void removeChild(String name) {
       assert(children.count(name));

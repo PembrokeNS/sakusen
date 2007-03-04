@@ -19,7 +19,7 @@
   #ifdef LIBOPTIMAL_EXPORTS
     #define LIBOPTIMAL_API _declspec(dllexport)
   #else
-    #define LIBOPTIMAL_API _declspec(dllexport)
+    #define LIBOPTIMAL_API _declspec(dllimport)
   #endif
 #endif
 
@@ -43,6 +43,7 @@ class LIBOPTIMAL_API OptionsParser {
       optionType_bool,
       optionType_int,
       optionType_string,
+      optionType_stringList,
       optionType_subopts
     };
     char newLine;
@@ -54,11 +55,13 @@ class LIBOPTIMAL_API OptionsParser {
     __gnu_cxx::hash_map<std::string, bool*, StringHash> longBoolOptions;
     __gnu_cxx::hash_map<std::string, int*, StringHash> longIntOptions;
     __gnu_cxx::hash_map<std::string, std::string*, StringHash> longStringOptions;
+    __gnu_cxx::hash_map<std::string, std::pair<char,std::list<std::string>*>, StringHash> longStringListOptions;
     __gnu_cxx::hash_map<std::string, OptionsParser*, StringHash> longSuboptsOptions;
     
     __gnu_cxx::hash_map<char, bool*> shortBoolOptions;
     __gnu_cxx::hash_map<char, int*> shortIntOptions;
     __gnu_cxx::hash_map<char, std::string*> shortStringOptions;
+    __gnu_cxx::hash_map<char, std::pair<char,std::list<std::string>*> > shortStringListOptions;
     __gnu_cxx::hash_map<char, OptionsParser*> shortSuboptsOptions;
     std::list<std::string> errors;
   public:
@@ -68,6 +71,7 @@ class LIBOPTIMAL_API OptionsParser {
     void addOption(const std::string& longName, char shortName, bool* value);
     void addOption(const std::string& longName, char shortName, int* value);
     void addOption(const std::string& longName, char shortName, std::string* value);
+    void addOption(const std::string& longName, char shortName, std::list<std::string>* value, char separator);
     void addOption(const std::string& longName, char shortName, OptionsParser* parser);
 
     bool parseStream(std::istream&, const std::string& errorPrefix);

@@ -114,6 +114,7 @@ enum Command {
   command_set,
   command_get,
   command_reconnect,
+  command_talk,
   command_resetUI,
   command_quit,
   command_help
@@ -161,10 +162,7 @@ int main(int argc, char const* const* argv)
     switch (errno) {
       case ENOENT:
         cout << "Directory not found, trying to create it" << endl;
-        if (-1 == fileUtils_mkdirRecursive(configPath, 0777)) {
-          Fatal("error " << errorUtils_parseErrno(errno) <<
-              " creating directory");
-        }
+        fileUtils_mkdirRecursive(configPath, 0777);
         break;
       default:
         Fatal("could not stat directory");
@@ -343,13 +341,14 @@ void runClient(
     struct timeval commandSleepTime = {0, 0};
 
     /* Construct our commands */
-    hash_map<String, ::Command, StringHash> commands;
+    hash_map_string< ::Command>::type commands;
     commands["j"] = commands["join"] = command_join;
     commands["l"] = commands["leave"] = command_leave;
     commands["g"] = commands["get"] = command_get;
     commands["s"] = commands["set"] = command_set;
     commands["q"] = commands["quit"] = command_quit;
     commands["r"] = commands["reconnect"] = command_reconnect;
+    commands["t"] = commands["talk"] = command_talk;
     commands["u"] = commands["resetui"] = command_resetUI;
     commands["h"] = commands["?"] = commands["help"] = command_help;
     
@@ -361,6 +360,7 @@ void runClient(
       "  set (s) SETTING VALUE Submit request to change SETTING to VALUE\n"
       "  reconnect (r)         Close this connection to the server and start "
         "over\n"
+      "  talk (t) MESSAGE      Send MESSAGE to other clients\n"
       "  resetui (u)           If there is a game UI open, then close it and "
         "reopen it\n"
       "                        from scratch\n"
@@ -435,6 +435,28 @@ void runClient(
                   words.pop_front();
                   if (serverInterface.setSetting(setting, value)) {
                     ioHandler.message("Error setting setting\n");
+                  }
+                }
+                break;
+              case command_talk:
+                if (!serverInterface.isJoined()) {
+                  ioHandler.message("Not joined.\n");
+                } else {
+                  // Locate the start of the actual message
+                  String::size_type p = command.find_first_not_of(whitespace);
+                  p = command.find_first_of(whitespace, p);
+                  p = command.find_first_not_of(whitespace, p);
+                  if (p == String::npos) {
+                    ioHandler.message(
+                        "Usage: talk MESSAGE\n"
+                      );
+                  } else {
+                    String message = command.substr(p);
+                    OArchive data;
+                    data << message;
+                    serverInterface.send(
+                        new ExtensionMessageData("talk", 0, data)
+                      );
                   }
                 }
                 break;

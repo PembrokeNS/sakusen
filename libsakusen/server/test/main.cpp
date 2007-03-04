@@ -102,7 +102,7 @@ int main(/* int argc, char** argv */)
     FileResourceInterface::create(dataDirs, true);
   
   /* Create a debugging client */
-  DebuggingClient client(cout);
+  DebuggingClient client(0, cout);
   vector<Client*> clients;
   clients.push_back(&client);
 
@@ -162,7 +162,7 @@ int main(/* int argc, char** argv */)
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
   
-  PatrollerClient patrollerClient(Point<sint32>(500, 0, 10));
+  PatrollerClient patrollerClient(1, Point<sint32>(500, 0, 10));
   players.back().attachClient(&patrollerClient);
   
   w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);

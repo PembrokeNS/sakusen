@@ -11,9 +11,9 @@ namespace ui {
 
 /** \brief Generates a hash table for looking up key values from their names.
  * */
-hash_map<String, Key, StringHash> initializeKeyLookup()
+hash_map_string<Key>::type initializeKeyLookup()
 {
-  hash_map<String, Key, StringHash> l;
+  hash_map_string<Key>::type l;
   for (int i=0; i<K_Unknown; ++i) {
     l[getName(static_cast<Key>(i))] = static_cast<Key>(i);
   }
@@ -26,11 +26,11 @@ hash_map<String, Key, StringHash> initializeKeyLookup()
 }
 
 /** \brief Hash table of keys indexed by name */
-hash_map<String, Key, StringHash> keyLookup = initializeKeyLookup();
+hash_map_string<Key>::type keyLookup = initializeKeyLookup();
 
 Key getKey(const String& name)
 {
-  hash_map<String, Key, StringHash>::iterator key = keyLookup.find(name);
+  hash_map_string<Key>::type::iterator key = keyLookup.find(name);
   if (key == keyLookup.end()) {
     return K_Unknown;
   } else {

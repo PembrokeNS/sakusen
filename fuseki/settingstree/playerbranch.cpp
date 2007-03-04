@@ -25,13 +25,13 @@ PlayerBranch::PlayerBranch(
           server
         )));
   addChild(Node::Ptr(new IntLeaf<uint8>(
-          "maxclients", 255, "world", playerAdminGroup, this, server
+          "maxclients", "world", playerAdminGroup, this, server, 255
         )));
   addChild(Node::Ptr(new BoolLeaf(
-          "noclients", t.isNoClients(), "world", "", this, server
+          "noclients", "world", "", this, server, t.isNoClients()
         )));
   addChild(Node::Ptr(new BoolLeaf(
-          "racefixed", t.isRaceFixed(), "world", "", this, server
+          "racefixed", "world", "", this, server, t.isRaceFixed()
         )));
 }
   

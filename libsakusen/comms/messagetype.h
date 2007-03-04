@@ -25,7 +25,8 @@ enum MessageType {
   messageType_notifySetting,
   messageType_gameStart,
   messageType_order,
-  messageType_update
+  messageType_update,
+  messageType_extension
 };
 
 LIBSAKUSEN_COMMS_API std::ostream& operator<<(std::ostream& output, MessageType type);

@@ -6,18 +6,17 @@
 #include <list>
 #include <sstream>
 
-#include "gnu_extensions.h" // Included only for __gnu_cxx::hash
+#include <boost/functional/hash/hash.hpp>
+
+#include "gnu_extensions.h"
 
 namespace sakusen {
 
-/* A hash function for Strings */
-class StringHash {
-  private:
-    __gnu_cxx::hash<const char*> hasher;
-  public:
-    inline size_t operator() (const String& s) const {
-      return hasher(s.c_str());
-    }
+typedef __gnu_cxx::hash_set<String, boost::hash<String> > hash_set_string;
+
+template<typename T>
+struct hash_map_string {
+  typedef __gnu_cxx::hash_map<String, T, boost::hash<String> > type;
 };
 
 /** \brief Split the string splitee at characters contained in spliton */
@@ -53,7 +52,7 @@ template<>
 inline uint8 numFromString<uint8>(String str)
 {
   std::istringstream s(str);
-  sint32 i; /* Has to be a uint32 because uint8 interpreted as a char */
+  sint32 i; /* Has to be an int32 because uint8 interpreted as a char */
   s >> i;
   assert(uint8(i) == i); /* Check for overflow */
   return i;
@@ -88,6 +87,8 @@ inline String numToString(T i)
   s << i;
   return s.str();
 }
+
+String stringUtils_bufferToHex(const uint8* buffer, size_t length);
 
 String LIBSAKUSEN_API stringUtils_getSecureHashAsString(const uint8* buffer, size_t length);
 

@@ -34,7 +34,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
      * determines whether the abstract socket namespace should be used for that
      * socket. */
     RemoteClient(
-        sakusen::comms::ClientID id,
+        sakusen::ClientID id,
         Server* server,
         const sakusen::comms::Socket::Ptr& socket,
         bool createInSocket
@@ -45,7 +45,6 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       );
     ~RemoteClient();
   private:
-    sakusen::comms::ClientID id;
     Server* server;
     sakusen::comms::Socket::Ptr inSocket;
     sakusen::comms::Socket::Ptr outSocket;
@@ -64,7 +63,6 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
   public:
     /** \name Accessors */
     //@{
-    inline sakusen::comms::ClientID getId() { return id; }
     inline bool isAdmin() { return admin; }
     inline void setAdmin(bool value);
     inline bool isNeverAdmin() { return neverAdmin; }
@@ -128,7 +126,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       );
     String performStringSetMagic(
         const std::list<String>& name,
-        const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
+        const std::set<String>& newValue
       );
     //@}
 };

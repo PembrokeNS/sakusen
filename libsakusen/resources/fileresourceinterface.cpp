@@ -5,8 +5,8 @@
 #include "resourcetype.h"
 #include "maptemplate.h"
 #include "errorutils.h"
-#include "lockingfilereader.h"
-#include "lockingfilewriter.h"
+#include "filereader.h"
+#include "filewriter.h"
 #include "fileutils.h"
 #include "fileioexn.h"
 
@@ -75,6 +75,9 @@ String FileResourceInterface::getSubdir(ResourceType type)
       return String(FILE_SEP "maptemplate" FILE_SEP);
     case resourceType_module:
       return String(FILE_SEP "module" FILE_SEP);
+    case resourceType_replay:
+    case resourceType_replayIndex:
+      return String(FILE_SEP "replay" FILE_SEP);
     default:
       Fatal("Unexpected ResourceType: " << type);
   }
@@ -93,6 +96,10 @@ String FileResourceInterface::getExtension(ResourceType type)
       /* Can't know the extension here because it might end in ".la" or ".dll"
        * or ".so" */
       return "";
+    case resourceType_replay:
+      return ".sakusenreplay";
+    case resourceType_replayIndex:
+      return ".sakusenreplayindex";
     default:
       Fatal("Unexpected ResourceType: " << type);
   }
@@ -113,7 +120,7 @@ String FileResourceInterface::fileSearch(
    * to those files.  We store the names also so that we don't consider it an
    * ambiguous result if there are two files of the same name in different
    * places; we rather assume that they are identical. */
-  hash_map<String, String, StringHash> matchingFiles(10);
+  hash_map_string<String>::type matchingFiles(10);
 
   /* Search through all our directories to find all matching files */
   for (vector<String>::const_iterator directory = directories.begin();
@@ -182,10 +189,9 @@ shared_ptr<void> FileResourceInterface::internalSearch(
   if (path == "")
     return shared_ptr<void>();
 
-  LockingFileReader file(path);
-  /** \bug This blocks until a lock is achieved.  This could be a bad thing */
+  FileReader file(path);
   try {
-    length = file.getLength(true);
+    length = file.getLength();
   } catch (FileIOExn& e) {
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
@@ -205,7 +211,7 @@ shared_ptr<void> FileResourceInterface::internalSearch(
   shared_array<uint8> fileAsArray(new uint8[lengthAsSizeT]);
   size_t bytesRead;
   if (lengthAsSizeT !=
-      (bytesRead = file.getWholeFile(fileAsArray, lengthAsSizeT, true))
+      (bytesRead = file.getWholeFile(fileAsArray, lengthAsSizeT))
     ) {
     switch (bytesRead) {
       case -1:
@@ -221,7 +227,6 @@ shared_ptr<void> FileResourceInterface::internalSearch(
         return shared_ptr<void>();
     }
   }
-  file.releaseLock();
   /** \todo Check the hash of the data to ensure that there's been no
    * corruption or foul play */
   IArchive fileAsArchive(fileAsArray, lengthAsSizeT);
@@ -311,7 +316,7 @@ void* FileResourceInterface::internalSymbolSearch(
    * However, that this causes libltdl to leak the memory used to store the
    * module name and such data, which bugs me, so I'm not doing that now. I
    * will say instead: Never Close Any Modules.  Let lt_dlexit close them for
-   * us when it is called aty shutdown */
+   * us when it is called at shutdown */
 
   lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
 
@@ -330,60 +335,63 @@ bool FileResourceInterface::internalSave(
     ResourceType type
   )
 {
-  /* Get the nice, short name and extension and generate the archive */
-  String shortName;
-  String extension;
-  OArchive archive;
+  try {
+    /* Get the nice, short name and generate the archive */
+    String shortName;
+    OArchive archive;
 
-  /** \todo The following switch could be neatly made into a template method */
-  switch(type) {
-    case resourceType_universe:
-      {
-        Universe::ConstPtr u =
-          boost::static_pointer_cast<const Universe>(resource);
-        shortName = u->getInternalName();
-        extension = "sakusenuniverse";
-        u->store(archive);
-      }
-      break;
-    case resourceType_mapTemplate:
-      {
-        MapTemplate::ConstPtr m =
-          boost::static_pointer_cast<const MapTemplate>(resource);
-        shortName = m->getInternalName();
-        extension = "sakusenmaptemplate";
-        m->store(archive);
-      }
-      break;
-    default:
-      Fatal("unexpected ResourceType: " << type);
-  }
+    /** \todo The following switch could be neatly made into a template method */
+    switch(type) {
+      case resourceType_universe:
+        {
+          Universe::ConstPtr u =
+            boost::static_pointer_cast<const Universe>(resource);
+          shortName = u->getInternalName();
+          u->store(archive);
+        }
+        break;
+      case resourceType_mapTemplate:
+        {
+          MapTemplate::ConstPtr m =
+            boost::static_pointer_cast<const MapTemplate>(resource);
+          shortName = m->getInternalName();
+          m->store(archive);
+        }
+        break;
+      default:
+        Fatal("unexpected ResourceType: " << type);
+    }
 
-  if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(shortName)) {
-    error = String("Name '") + shortName + "' contains invalid characters and "
-      "cannot be used as part of a filename.  The name must match " +
-      FILENAME_REGEX + ".";
+    if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(shortName)) {
+      error = String("Name '") + shortName + "' contains invalid characters and "
+        "cannot be used as part of a filename.  The name must match " +
+        FILENAME_REGEX + ".";
+      return true;
+    }
+
+    String hash = archive.getSecureHashAsString();
+
+    Writer::Ptr writer(openWriter(shortName + "." + hash, type));
+
+    writer->write(archive);
+    
+    return false;
+  } catch (FileIOExn& e) {
+    error = e.message;
     return true;
   }
+}
 
-  String hash = archive.getSecureHashAsString();
-  String fullName = shortName + "." + hash + "." + extension;
+Writer::Ptr FileResourceInterface::openWriter(
+    const String& name,
+    ResourceType type
+  )
+{
   String directory = saveDirectory+getSubdir(type);
+  fileUtils_mkdirRecursive(directory, 0777);
 
-  if(-1==fileUtils_mkdirRecursive(directory, 0777)) {
-    error = "error creating directory: " + errorUtils_errorMessage(errno);
-    return true;
-  }
-
-  LockingFileWriter writer(directory + fullName);
-
-  /** \bug Currently blocks until a lock can be obtained.  This might be bad */
-  if (writer.write(archive, true)) {
-    error = "error writing file: " + errorUtils_errorMessage(errno);
-    return true;
-  }
-  
-  writer.releaseLock();
-  return false;
+  return FileWriter::Ptr(new FileWriter(
+        directory+name+"."+getExtension(type)
+      ));
 }
 

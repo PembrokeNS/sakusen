@@ -99,6 +99,9 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
         const Point<sint32>& oldPosition,
         const Point<sint32>& newPosition
       );
+
+    void save(OArchive&) const;
+    static void loadNew(IArchive&, ResourceInterface::Ptr);
 };
 
 extern LIBSAKUSEN_SERVER_API CompleteWorld* world;

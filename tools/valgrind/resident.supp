@@ -1,0 +1,104 @@
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_malloc
+   fun:lt_emalloc
+   fun:try_dlopen
+   fun:lt_dlopen
+   fun:_ZN6fuseki15PluginInterface4loadERKSs
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_malloc
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_malloc
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_malloc
+   fun:rpl_strdup
+   fun:lt_estrdup
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+   fun:tryall_dlopen_module
+   fun:find_module
+   fun:try_dlopen
+   fun:lt_dlopen
+   fun:_ZN6fuseki15PluginInterface4loadERKSs
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_calloc
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_malloc
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+}
+{
+   Resident module memory
+   Memcheck:Leak
+   fun:_vgrZU_libcZdsoZa_calloc
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libdl-2.3.6.so
+   fun:dlopen
+   fun:sys_dl_open
+}
+

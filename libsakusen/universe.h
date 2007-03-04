@@ -36,9 +36,9 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     String internalName;
     String hash;
     std::vector<WeaponType> weaponTypes;
-    __gnu_cxx::hash_map<String, WeaponTypeID, StringHash> weaponIDLookup;
+    hash_map_string<WeaponTypeID>::type weaponIDLookup;
     std::vector<UnitType> unitTypes;
-    __gnu_cxx::hash_map<String, UnitTypeID, StringHash> unitIDLookup;
+    hash_map_string<UnitTypeID>::type unitIDLookup;
 
     void constructHashMaps();
   public:

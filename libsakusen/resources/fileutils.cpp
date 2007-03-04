@@ -56,16 +56,16 @@ size_t fileUtils_write(int fd, const void* buffer, size_t length)
   return retVal;
 }
 
-int fileUtils_mkdirRecursive(String path, mode_t mode)
+void fileUtils_mkdirRecursive(String path, mode_t mode)
 {
   if (path=="") {
-    return 0;
+    return;
   }
   
   list<String> pathElements = stringUtils_split(path, FILE_SEP);
 
   if (pathElements.empty()) {
-    return 0;
+    return;
   }
   
   String partialPath = ( path[0] == FILE_SEPC ? FILE_SEP : "" );
@@ -81,15 +81,15 @@ int fileUtils_mkdirRecursive(String path, mode_t mode)
       if (errno == ENOENT) {
         //Debug("trying to make " << partialPath);
         if (-1 == NativeMkdir(partialPath.c_str(), mode)) {
-          return -1;
+          throw FileIOExn("mkdir");
         }
       } else {
-        return -1;
+        throw FileIOExn("stat");
       }
     }
   }
 
-  return 0;
+  return;
 }
 
 /** \brief Returns all files in the directory whose name

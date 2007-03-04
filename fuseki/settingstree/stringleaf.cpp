@@ -10,9 +10,11 @@ StringLeaf::StringLeaf(
     const String& readers,
     const String& writers,
     Branch* parent,
-    Server* server
+    Server* server,
+    const String& initialValue
   ) :
-  Leaf(name, readers, writers, parent, server)
+  Leaf(name, readers, writers, parent, server),
+  value(initialValue)
 {
 }
 

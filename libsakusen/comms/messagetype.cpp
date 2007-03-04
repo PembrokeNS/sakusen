@@ -22,6 +22,7 @@ std::ostream& sakusen::comms::operator<<(std::ostream& out, MessageType type)
     CASE(notifySetting)
     CASE(order)
     CASE(update)
+    CASE(extension)
 #undef CASE
     default:
       out << "messageType_" << static_cast<uint32>(type);

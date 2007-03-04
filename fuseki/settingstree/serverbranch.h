@@ -8,6 +8,9 @@ namespace settingsTree {
 
 class ServerBranch : public Branch {
   public:
+    typedef boost::shared_ptr<ServerBranch> Ptr;
+    typedef boost::shared_ptr<const ServerBranch> ConstPtr;
+
     ServerBranch(Branch* parent, Server* server);
 };
 

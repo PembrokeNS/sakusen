@@ -8,8 +8,9 @@
 #include "socketexn.h"
 #include "resourceinterface-methods.h"
 #include "completeworld.h"
+#include "pluginexn.h"
 #include "fuseki-global.h"
-#include "settingstree/stringlistleaf.h"
+#include "settingstree/stringsetleaf.h"
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
 #include "timeutils.h"
@@ -19,13 +20,16 @@
 #include <signal.h>
 
 #include <ostream>
+#include <boost/bind.hpp>
 #include <pcrecpp.h>
 
 using namespace std;
 using namespace __gnu_cxx;
+using namespace boost;
 
 using namespace sakusen;
 using namespace sakusen::server;
+using namespace sakusen::server::plugins;
 using namespace sakusen::comms;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
@@ -33,6 +37,7 @@ using namespace fuseki::settingsTree;
 Server::Server(
     std::ostream& o,
     const ResourceInterface::Ptr& r,
+    const std::list<String>& pP,
 #ifndef DISABLE_UNIX_SOCKETS
     bool a,
     const Socket::Ptr& unS,
@@ -51,6 +56,7 @@ Server::Server(
   tcpSocket(tS),
   out(o),
   resourceInterface(r),
+  pluginInterface(pP, this),
   clients(10),
   universe(),
   map(),
@@ -63,6 +69,7 @@ Server::Server(
   requestedUniverse(),
   requestedMap(),
   mapPlayModeChanged(false),
+  gameStarted(false),
   gameSpeed(DEFAULT_GAME_SPEED)
 {
   String reason;
@@ -99,6 +106,10 @@ Server::~Server()
     delete clients.begin()->second;
     clients.erase(clients.begin());
   }
+
+  /* Must clear plugins before end of destructor because they retain a pointer
+   * to this, and use it during their destruction */
+  plugins.clear();
 }
 
 void Server::advertise(
@@ -159,11 +170,11 @@ void Server::addClient(
   )
 {
   /* Check whether this address is blocked */
-  hash_set<String, StringHash> blockedAddresses =
-    boost::dynamic_pointer_cast<StringListLeaf, Node>(
+  set<String> blockedAddresses =
+    boost::dynamic_pointer_cast<StringSetLeaf>(
         settings->getNode("server:blockedaddresses")
-      )->getValueAsList();
-  for (hash_set<String, StringHash>::iterator i=blockedAddresses.begin();
+      )->getValueAsSet();
+  for (set<String>::iterator i=blockedAddresses.begin();
       i!=blockedAddresses.end(); i++) {
     /* This could be done faster, by saving one regex and not recompiling many
      * all the time, but that requires more magic, and speed is not of the
@@ -207,14 +218,16 @@ void Server::addClient(
 
 void Server::removeClient(RemoteClient* client)
 {
-  settings->getClientsBranch()->removeClient(client->getId());
-  clients.erase(clients.find(client->getId()));
+  settings->getClientsBranch()->removeClient(client->getClientId());
+  clients.erase(clients.find(client->getClientId()));
   delete client;
   ensureAdminExists();
 }
 
 void Server::handleClientMessages()
 {
+  queue<ExtensionMessageData> extensionMessages;
+
   for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
       clientIt!=clients.end(); ) {
     RemoteClient* client = clientIt->second;
@@ -225,6 +238,20 @@ void Server::handleClientMessages()
       
       while (!client->messageQueueEmpty()) {
         const Message& message = client->messageQueuePopFront();
+
+        /* Forward all the messages to all registered listeners
+         * (this has to come before our own processing because our own
+         * processing might result in the client being removed) */
+        /** \todo Forward only to interested listeners */
+        GetPtr<Listener> gp;
+        for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+            listeners.begin(); listener != listeners.end(); ++listener) {
+          listener->second.apply_visitor(gp)->clientMessage(
+              client, message
+            );
+        }
+
+        /* Perform our own processing on the message */
         switch (message.getType()) {
           case messageType_leave:
             out << "Removing client (leaving)\n";
@@ -278,18 +305,29 @@ void Server::handleClientMessages()
               }
             }
             break;
+          case messageType_extension:
+            {
+              extensionMessages.push(message.getExtensionData());
+            }
+            break;
           default:
             out << "Unexpected MessageType " << message.getType() <<
               " from client\n";
             break;
         }
+
         if (clientRemoved) {
           break;
         }
       }
     } catch (SocketExn& e) {
-      out << "Removing client " << clientID_toString(client->getId()) <<
-        " due to causing SocketExn: " << e.message;
+      out << "Removing client " << clientID_toString(client->getClientId()) <<
+        " due to causing SocketExn: " << e.message << "\n";
+      removeClient(client);
+      clientRemoved = true;
+    } catch (DeserializationExn& e) {
+      out << "Removing client " << clientID_toString(client->getClientId()) <<
+        " due to causing DeserializationExn: " << e.message << "\n";
       removeClient(client);
       clientRemoved = true;
     }
@@ -300,6 +338,35 @@ void Server::handleClientMessages()
     } else {
       ++clientIt;
     }
+  }
+
+  while (!extensionMessages.empty()) {
+    ExtensionMessageData& data = extensionMessages.front();
+    out << "Got extension message for extension " <<
+      data.getExtension() << " version " << data.getVersion() << "\n";
+    /* Loop over clients, forawarding the message to all of them */
+    /** \todo Restrict to recipients that claim to support this
+     * extension at this version, and also take into account any
+     * restrictions attached to the message (e.g. chat message sent
+     * only to allies) */
+    /** \todo Send to other listeners who want it */
+    stack<ClientID> clientsToRemove;
+    for (hash_map<ClientID, RemoteClient*>::iterator dest =
+        clients.begin(); dest!=clients.end(); ++dest) {
+      try {
+        dest->second->send(new ExtensionMessageData(data));
+      } catch (SocketExn& e) {
+        out << "Removing client " << clientID_toString(dest->first) <<
+          " due to causing SocketExn: " << e.message << endl;
+        clientsToRemove.push(dest->first);
+      }
+    }
+
+    while (!clientsToRemove.empty()) {
+      removeClient(clients[clientsToRemove.top()]);
+      clientsToRemove.pop();
+    }
+    extensionMessages.pop();
   }
 }
 
@@ -352,10 +419,29 @@ void Server::changeInClientBranch(
   )
 {
   if ("" != settings->changeRequest(
-      String("clients:") + clientID_toString(client->getId()) +
+      String("clients:") + clientID_toString(client->getClientId()) +
         ":" + node, value, this
     )) {
       Fatal("something has gone wrong with the settings tree");
+  }
+}
+
+void Server::checkPlugins(const set<String>& newList)
+{
+  /* Check for plugins to load */
+  for (set<String>::const_iterator newPlugin = newList.begin();
+      newPlugin != newList.end(); ++newPlugin) {
+    if (!plugins.count(*newPlugin)) {
+      pluginsToAdd.push(*newPlugin);
+    }
+  }
+
+  /* Check for plugins to unload */
+  for (hash_map_string<Plugin::Ptr>::type::iterator oldPlugin =
+      plugins.begin(); oldPlugin != plugins.end(); ++oldPlugin) {
+    if (!newList.count(oldPlugin->first)) {
+      pluginsToRemove.insert(oldPlugin->first);
+    }
   }
 }
 
@@ -434,7 +520,8 @@ void Server::serve()
      * messages */
     if ((bytesReceived =
           unixSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
-      Message message = Message(buf, bytesReceived);
+      IArchive messageArchive(buf, bytesReceived);
+      Message message(messageArchive);
       if (message.isRealMessage()) {
         switch (message.getType()) {
           case messageType_solicit:
@@ -469,7 +556,8 @@ void Server::serve()
     if (udpSocket != NULL) {
       if ((bytesReceived =
             udpSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
-        Message message = Message(buf, bytesReceived);
+        IArchive messageArchive(buf, bytesReceived);
+        Message message(messageArchive);
         if (message.isRealMessage()) {
           switch (message.getType()) {
             case messageType_solicit:
@@ -520,7 +608,8 @@ void Server::serve()
           newConnections.begin(); conn != newConnections.end(); ) {
         if ((bytesReceived =
             conn->first->receive(buf, BUFFER_LEN))) {
-          Message message = Message(buf, bytesReceived);
+          IArchive messageArchive(buf, bytesReceived);
+          Message message(messageArchive);
           if (message.isRealMessage()) {
             switch (message.getType()) {
               case messageType_join:
@@ -573,7 +662,7 @@ void Server::serve()
       }
 
       if (needAdmin && adminCandidate != NULL) {
-        out << "Promoting a client to admin status";
+        out << "Promoting a client to admin status\n";
         changeInClientBranch(adminCandidate, "admin", "true");
       }
       
@@ -601,6 +690,51 @@ void Server::serve()
         );
       assert(reason == "");
       setMapPlayMode(0);
+    }
+
+    if (!pluginsToRemove.empty()) {
+      String pluginToRemove = *pluginsToRemove.begin();
+      pluginsToRemove.erase(pluginsToRemove.begin());
+      hash_map_string<Plugin::Ptr>::type::iterator p =
+        plugins.find(pluginToRemove);
+      if (p == plugins.end()) {
+        continue;
+      }
+      plugins.erase(p);
+    }
+
+    while (!pluginsToAdd.empty()) {
+      String pluginToAdd = pluginsToAdd.front();
+      pluginsToAdd.pop();
+      if (plugins.count(pluginToAdd)) {
+        continue;
+      }
+      try {
+        Plugin::Ptr plugin(pluginInterface.load(pluginToAdd));
+        plugins.insert(make_pair(plugin->getName(), plugin));
+        if (plugin->getName() != pluginToAdd) {
+          /* Correct the name as listed in the settings tree. */
+          String reason = settings->changeRequest(
+              "server:plugins", "-"+pluginToAdd, this
+            );
+          assert(reason == "");
+          /* At this point, the plugin we've just loaded will have been
+           * flagged for removel, so we must remove it, lest this recently
+           * loaded plugin be immediately unloaded again. */
+          pluginsToRemove.erase(plugin->getName());
+          /* And then add it in so the same thing doesn't happen again */
+          reason = settings->changeRequest(
+              "server:plugins", "+"+plugin->getName(), this
+            );
+          assert(reason == "");
+        }
+      } catch (PluginExn& e) {
+        Debug("plugin load failed: " + e.message);
+        String reason = settings->changeRequest(
+            "server:plugins", "-"+pluginToAdd, this
+          );
+        assert(reason == "");
+      }
     }
 
     if (mapPlayModeChanged) {
@@ -646,7 +780,7 @@ void Server::serve()
             if (!client->second->isReadyForGameStart()) {
               allClientsReady = false;
               out << "Not ready because client '" <<
-                clientID_toString(client->second->getId()) <<
+                clientID_toString(client->second->getClientId()) <<
                 "' not ready\n";
               break;
             }
@@ -703,10 +837,20 @@ void Server::serve()
     /** \todo The part where we wait for the clients to initialize themselves
      * */
     
+    gameStarted = true;
+
     /* Now we have the real game loop */
     new CompleteWorld(*map, mapPlayMode, players);
       /* constructor assigns itself to global variable, so no need for
        * assignment here */
+
+    /* Indicate game start to listeners (Don't need to pass any arguments
+     * because they can just use sakusen::server::world) */
+    GetPtr<Listener> gp;
+    for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+        listeners.begin(); listener != listeners.end(); ++listener) {
+      listener->second.apply_visitor(gp)->gameStart();
+    }
     
     /* Note: henceforth, do not use the local field 'players', because world has
      * a copy of it - that's the one that must be worked with */
@@ -722,6 +866,13 @@ void Server::serve()
       /* Handle client messages (including accepting incoming orders into
        * players' order queues) */
       handleClientMessages();
+
+      /* Tell listeners that this is all the messages we'll be receiving for
+       * this tick */
+      for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+          listeners.begin(); listener != listeners.end(); ++listener) {
+        listener->second.apply_visitor(gp)->ticksMessagesDone();
+      }
       
       /* Do the game's stuff */
       sakusen::server::world->incrementGameState();
@@ -735,7 +886,8 @@ void Server::serve()
         try {
           client->flushOutgoing(sakusen::server::world->getTimeNow());
         } catch (SocketExn& e) {
-          out << "Removing client " << clientID_toString(client->getId()) <<
+          out << "Removing client " <<
+            clientID_toString(client->getClientId()) <<
             " due to causing SocketExn: " << e.message;
           removeClient(client);
           clientRemoved = true;
@@ -747,6 +899,12 @@ void Server::serve()
         } else {
           ++clientIt;
         }
+      }
+
+      /* Tell listeners that this is the end of this tick */
+      for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+          listeners.begin(); listener != listeners.end(); ++listener) {
+        listener->second.apply_visitor(gp)->tickDone();
       }
       
       if (dots && sakusen::server::world->getTimeNow() % 16 == 0) {
@@ -814,6 +972,19 @@ void Server::ensureAdminExists()
   ensureAdminExistsNextTime = true;
 }
 
+/** \brief Add a listener that intercepts some fraction of server-client
+ * communications */
+void Server::registerListener(const sakusen::server::Listener::VPtr& listener)
+{
+  listeners.insert(make_pair(MaskedPtr<Listener>(listener), listener));
+}
+
+/** \brief Remove a previously registered listener */
+void Server::unregisterListener(const MaskedPtr<Listener>& listener)
+{
+  listeners.erase(listener);
+}
+
 /* The following functions suffer greatly from code duplication.
  * Unfortunately, the only alternative I could see involved simultaneously
  * abusing the template system and the preprocessor.  This seemed unwise. */
@@ -872,6 +1043,15 @@ String Server::boolSettingAlteringCallback(
     } else {
       Fatal("unexpected child of game branch: " << fullName.front());
     }
+  } else if (fullName.front() == "plugins") {
+    fullName.pop_front();
+    assert(!fullName.empty());
+    hash_map_string<Plugin::Ptr>::type::iterator plugin =
+      plugins.find(fullName.front());
+    assert(plugin != plugins.end());
+    fullName.pop_front();
+    assert(!fullName.empty());
+    return plugin->second->settingAlterationCallback<bool>(altering, newValue);
   } else {
     Fatal("unexpected child of root node: " << fullName.front());
   }
@@ -988,6 +1168,16 @@ String Server::stringSettingAlteringCallback(
     } else {
       Fatal("unexpected child of game branch: " << fullName.front());
     }
+  } else if (fullName.front() == "plugins") {
+    fullName.pop_front();
+    assert(!fullName.empty());
+    hash_map_string<Plugin::Ptr>::type::iterator plugin =
+      plugins.find(fullName.front());
+    assert(plugin != plugins.end());
+    fullName.pop_front();
+    assert(!fullName.empty());
+    return plugin->second->
+      settingAlterationCallback<String>(altering, newValue);
   } else {
     Fatal("unexpected child of root node: " << fullName.front());
   }
@@ -995,7 +1185,7 @@ String Server::stringSettingAlteringCallback(
 
 String Server::stringSetSettingAlteringCallback(
     fuseki::settingsTree::Leaf* altering,
-    const __gnu_cxx::hash_set<String, sakusen::StringHash>& newValue
+    const std::set<String>& newValue
   )
 {
   /* Perform magic associated with the setting */
@@ -1033,10 +1223,12 @@ String Server::stringSetSettingAlteringCallback(
     if (fullName.front() == "allowobservers") {
       Fatal("allowobserers not string set setting");
     } else if (fullName.front() == "application") {
-      /* Do nothing */
-      return "";
+      Fatal("application not string set setting");
     } else if (fullName.front() == "blockedaddresses") {
       /* Do nothing */
+      return "";
+    } else if (fullName.front() == "plugins") {
+      checkPlugins(newValue);
       return "";
     } else {
       Fatal("unexpected child of server branch: " << fullName.front());
@@ -1049,6 +1241,16 @@ String Server::stringSetSettingAlteringCallback(
     } else {
       Fatal("unexpected child of game branch: " << fullName.front());
     }
+  } else if (fullName.front() == "plugins") {
+    fullName.pop_front();
+    assert(!fullName.empty());
+    hash_map_string<Plugin::Ptr>::type::iterator plugin =
+      plugins.find(fullName.front());
+    assert(plugin != plugins.end());
+    fullName.pop_front();
+    assert(!fullName.empty());
+    return plugin->second->
+      settingAlterationCallback<set<String> >(altering, newValue);
   } else {
     Fatal("unexpected child of root node: " << fullName.front());
   }
@@ -1087,7 +1289,7 @@ void Server::settingAlteredCallback(Leaf* altered)
 
   while (!deadClients.empty()) {
     out << "Removing client " <<
-      clientID_toString(deadClients.front()->getId()) <<
+      clientID_toString(deadClients.front()->getClientId()) <<
       "due to causing a SocketExn\n";
     removeClient(deadClients.front());
     deadClients.pop_front();

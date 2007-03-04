@@ -1,4 +1,4 @@
-#include "lockingfile.h"
+#include "file.h"
 #include "fileutils.h"
 #include "errorutils.h"
 #include "fileioexn.h"
@@ -11,17 +11,16 @@
 using namespace sakusen::comms;
 using namespace sakusen::resources;
 
-LockingFile::LockingFile(const String& f) :
+File::File(const String& f) :
   fileName(f),
   stream(NULL),
   fd(-1),
-  haveLock(false),
   length(0),
   lengthIsKnown(false)
 {
 }
 
-LockingFile::~LockingFile()
+File::~File()
 {
   if (fd != -1) {
     if (-1 == close()) {
@@ -31,11 +30,8 @@ LockingFile::~LockingFile()
   }
 }
 
-int LockingFile::close()
+int File::close()
 {
-  releaseLock(); /* Closing the file descriptor should release the lock, so
-                    this is for paranoia's sake, (e.g. the close could fail)
-                    */
   if (EOF == fclose(stream)) {
     stream = NULL;
     fd = -1;
@@ -46,40 +42,14 @@ int LockingFile::close()
   return 0;
 }
 
-bool LockingFile::releaseLock()
+uint64 File::getLength()
 {
-#if 0
-  if (!haveLock) {
-    return false;
+  if (fd == -1) {
+    open();
   }
-  if (-1 == open()) {
-    return true;
-  }
-  int cmd = F_UNLCK;
-  struct flock lock;
-  lock.l_type = getLockType();
-  lock.l_whence = SEEK_SET;
-  lock.l_start = 0;
-  lock.l_len = 0; /* Means to the end of the file */
-  
-  if (-1 == fcntl(fd, cmd, &lock)) {
-    return true;
-  }
-  
-#endif
-  haveLock = false;
-  lengthIsKnown = false; /* We no longer know the length once we release the lock */
-  return false;
-}
-
-uint64 LockingFile::getLength(bool block)
-{
   NativeStructStat statResult;
   if (lengthIsKnown) {
     return length;
-  }
-  if (getLock(block)) {
-    throw FileIOExn("getLock");
   }
   if (NativeFstat(fd, &statResult) == -1) {
     throw FileIOExn("fstat");
@@ -89,13 +59,12 @@ uint64 LockingFile::getLength(bool block)
   return length;
 }
 
-size_t LockingFile::getWholeFile(
+size_t File::getWholeFile(
     uint8* buffer,
-    size_t bufferLen,
-    bool block
+    size_t bufferLen
   )
 {
-  getLength(block);
+  getLength();
   /* If the above fails, it will throw an exn to the caller. */
   if (bufferLen < length) {
     Debug("buffer of insufficient size");

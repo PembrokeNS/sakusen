@@ -6,8 +6,10 @@
 #include "libsakusen-global.h"
 #include "clientid.h"
 #include "settingstree/branch.h"
+#include "settingstree/serverbranch.h"
 #include "settingstree/clientsbranch.h"
 #include "settingstree/playersbranch.h"
+#include "settingstree/pluginsbranch.h"
 #include "settingsuser.h"
 
 namespace fuseki {
@@ -33,14 +35,24 @@ class SettingsTree : public Branch {
         const SettingsUser* user
       ) const;
     Node::Ptr getNode(const String& nodeAddress);
+    inline ServerBranch::Ptr getServerBranch() {
+      return boost::dynamic_pointer_cast<ServerBranch>(
+          getNode("server")
+        );
+    }
     inline ClientsBranch::Ptr getClientsBranch() {
-      return boost::dynamic_pointer_cast<ClientsBranch, Node>(
+      return boost::dynamic_pointer_cast<ClientsBranch>(
           getNode("clients")
         );
     }
     inline PlayersBranch::Ptr getPlayersBranch() {
-      return boost::dynamic_pointer_cast<PlayersBranch, Node>(
+      return boost::dynamic_pointer_cast<PlayersBranch>(
           getNode("players")
+        );
+    }
+    inline PluginsBranch::Ptr getPluginsBranch() {
+      return boost::dynamic_pointer_cast<PluginsBranch>(
+          getNode("plugins")
         );
     }
 };

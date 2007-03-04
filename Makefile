@@ -1,4 +1,8 @@
-SUBDIRS = libltdl_hacked libsakusen data liboptimal fuseki tedomari
+SUBDIRS = \
+	liboptimal libltdl_hacked \
+	libsakusen \
+	data server-plugins \
+	fuseki tedomari
 
 include Makefile.common
 

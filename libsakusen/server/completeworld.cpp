@@ -318,6 +318,23 @@ void CompleteWorld::applyEntryExitEffects(
   }
 }
 
+void CompleteWorld::save(OArchive& /*archive*/) const
+{
+  /** \bug This is not implemented with good reason, because it is likely to
+   * change dramatically as the game engine develops */
+  Fatal("not implemented");
+}
+
+void CompleteWorld::loadNew(
+    IArchive& /*archive*/,
+    ResourceInterface::Ptr /*resourceInterface*/
+  )
+{
+  /** \bug This is not implemented with good reason, because it is likely to
+   * change dramatically as the game engine develops */
+  Fatal("not implemented");
+}
+
 LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;
 
 }} //End Namespaces

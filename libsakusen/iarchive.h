@@ -7,7 +7,9 @@
 #include <list>
 #include <boost/shared_array.hpp>
 #include <boost/multi_array.hpp>
+#include <boost/utility.hpp>
 
+#include "gnu_extensions.h"
 #include "point.h"
 #include "exceptions.h"
 #include "stringutils.h"
@@ -15,7 +17,9 @@
 
 namespace sakusen {
 
-/** \brief Class used inside IArchive for working with booast::multi_array */  
+class OArchive;
+
+/** \brief Class used inside IArchive for working with boost::multi_array */  
 template<size_t pos>
 class extent_generator {
   public:
@@ -58,13 +62,15 @@ class extent_generator<0> {
  * \note The name IArchive follows the istream/ostream convention.
  */
 class LIBSAKUSEN_API IArchive {
-  private:
+  friend class OArchive;
+  public:
     IArchive();
     IArchive(const IArchive&);
-  public:
     IArchive(const uint8* buffer, size_t length);
     IArchive(const boost::shared_array<uint8>& buffer, size_t length);
     IArchive(const boost::shared_array<const uint8>& buffer, size_t length);
+    IArchive(const OArchive&);
+    IArchive& operator=(const IArchive&);
     ~IArchive();
   private:
     uint8* originalBuffer; /* owned by this */
@@ -112,6 +118,10 @@ class LIBSAKUSEN_API IArchive {
         );
     }
     inline bool isFinished() const { return remainingLength == 0; }
+    /* \brief Dump the buffer as hex to stdout
+     *
+     * \note For debugging purposes */
+    void dumpBuffer() const;
     inline IArchive& operator>>(bool& i) {
       assertLength(sizeof(uint8));
       assert(*buffer <= 1);
@@ -137,6 +147,7 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(sint32& i);
     IArchive& operator>>(double& d);
     IArchive& operator>>(String& s);
+    IArchive& operator>>(IArchive&);
 
     template<typename T>
     IArchive& extractEnum(T& result)
@@ -364,15 +375,13 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
-    template<int size>
-    inline void magicValue(const char val[size+1]) {
-      /* The '+1' in the array length is to allow for the trailing null char */
-      assertLength(size);
-      if (0 != memcmp(val, buffer, size)) {
+    inline void magicValue(const String& val) {
+      assertLength(val.size());
+      if (0 != memcmp(val.c_str(), buffer, val.size())) {
         Debug("Wrong magic");
-        throw WrongMagicDeserializationExn(val, size, buffer);
+        throw WrongMagicDeserializationExn(val, buffer);
       }
-      advance(size);
+      advance(val.size());
     }
 };
 

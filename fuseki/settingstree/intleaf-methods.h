@@ -11,11 +11,11 @@ namespace settingsTree {
 template<typename T>
 IntLeaf<T>::IntLeaf(
     const String& name,
-    T v,
     const String& readers,
     const String& writers,
     Branch* parent,
-    Server* server
+    Server* server,
+    T v
   ) :
   Leaf(name, readers, writers, parent, server),
   value(v)

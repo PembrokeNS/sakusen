@@ -98,6 +98,19 @@ String::iterator sakusen::stringUtils_findPreviousCharStart(
   return i;
 }
 
+/** \brief Returns hex string version of buffer */
+String LIBSAKUSEN_API sakusen::stringUtils_bufferToHex(
+    const uint8* buffer, size_t length
+  )
+{
+  ostringstream stream;
+  stream << hex << setfill('0');
+  for (size_t i=0; i<length; i++) {
+    stream << setw(2) << uint16(buffer[i]);
+  }
+  return stream.str();
+}
+
 String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length
@@ -118,11 +131,6 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   
   mhash_deinit(thread, hash);
   
-  ostringstream stream;
-  stream << hex << setfill('0');
-  for (int i=0; i<32; i++) {
-    stream << setw(2) << uint32(hash[i]);
-  }
-  return stream.str();
+  return stringUtils_bufferToHex(hash, 32);
 }
 

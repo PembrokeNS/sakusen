@@ -3,6 +3,7 @@
 
 #include <set>
 
+#include "gnu_extensions.h"
 #include "stringutils.h"
 #include "ui/key.h"
 
@@ -33,7 +34,7 @@ class ModifiedKey {
 class ModifiedKeyHash {
   private:
     KeyHash keyHasher;
-    sakusen::StringHash stringHasher;
+    boost::hash<String> stringHasher;
   public:
     inline size_t operator()(const ModifiedKey& k) const {
       size_t hash = keyHasher(k.getKey());

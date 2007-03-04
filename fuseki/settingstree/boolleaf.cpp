@@ -7,11 +7,11 @@ using namespace fuseki::settingsTree;
 
 BoolLeaf::BoolLeaf(
     const String& name,
-    bool v,
     const String& readers,
     const String& writers,
     Branch* parent,
-    Server* server
+    Server* server,
+    bool v
   ) :
   Leaf(name, readers, writers, parent, server),
   value(v)

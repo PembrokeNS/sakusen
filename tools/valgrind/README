@@ -2,4 +2,8 @@ sakusen.supp suppresses various valgrind errors I got whilst trying to debug
 fuseki.  They are:
 - Problems deep inside the system implementation of dlopen, so not really
   anything we can fix.
+Also provided is resident.supp:
+- Memory allocated by libltdl and the things it calls pertaining to modules
+  which are made resident and thus must exist until the end of execution and so
+  never have their memory properly freed.
 

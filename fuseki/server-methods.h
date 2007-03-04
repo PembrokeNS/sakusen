@@ -9,7 +9,7 @@ namespace fuseki {
 template<typename T>
 String Server::intSettingAlteringCallback(
     settingsTree::Leaf* altering,
-    T newValue
+    const T newValue
   )
 {
   /* Perform magic associated with the setting */
@@ -22,8 +22,8 @@ String Server::intSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    sakusen::comms::ClientID id =
-      sakusen::comms::clientID_fromString(fullName.front());
+    sakusen::ClientID id =
+      sakusen::clientID_fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performIntMagic(/*altering,*/ fullName, newValue);
@@ -69,6 +69,15 @@ String Server::intSettingAlteringCallback(
     } else {
       Fatal("unexpected child of game branch: " << fullName.front());
     }
+  } else if (fullName.front() == "plugins") {
+    fullName.pop_front();
+    assert(!fullName.empty());
+    sakusen::hash_map_string<Plugin::Ptr>::type::iterator plugin =
+      plugins.find(fullName.front());
+    assert(plugin != plugins.end());
+    fullName.pop_front();
+    assert(!fullName.empty());
+    return plugin->second->settingAlterationCallback<T>(altering, newValue);
   } else {
     Fatal("unexpected child of root node: " << fullName.front());
   }

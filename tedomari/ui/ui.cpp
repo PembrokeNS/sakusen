@@ -171,7 +171,7 @@ void UI::executeCommand(const String& cmdName, std::list<String>& args)
       "executing '" << cmdName << "' with args '" <<
       stringUtils_join(args, "' '") << "'"
     );
-  hash_map<String, Command, StringHash>::const_iterator cmd =
+  hash_map_string<Command>::type::const_iterator cmd =
     mode->getCommands().find(cmdName);
   
   if (cmd != mode->getCommands().end()) {
@@ -293,7 +293,7 @@ void UI::setCommandEntry(bool on)
 
 void UI::switchMode(const String& modeName)
 {
-  hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(modeName);
+  hash_map_string<Mode>::type::iterator modeIt = modes.find(modeName);
   if (modeIt == modes.end()) {
     alert(Alert("No such mode '" + modeName + "'"));
     return;
@@ -309,12 +309,12 @@ void UI::addAlias(
 {
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map<String, Mode, StringHash>::iterator modeIt = modes.begin();
+    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addCommand(newCmd, Command(oldCmd), this);
     }
   } else {
-    hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(mode);
+    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;
@@ -338,12 +338,12 @@ void UI::addBinding(
   
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map<String, Mode, StringHash>::iterator modeIt = modes.begin();
+    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addBinding(keyEvent, cmd);
     }
   } else {
-    hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(mode);
+    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;
@@ -356,12 +356,12 @@ void UI::addFunction(const String& mode, const Function& function)
 {
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map<String, Mode, StringHash>::iterator modeIt = modes.begin();
+    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addFunction(function, this);
     }
   } else {
-    hash_map<String, Mode, StringHash>::iterator modeIt = modes.find(mode);
+    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;

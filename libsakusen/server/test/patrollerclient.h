@@ -11,10 +11,8 @@ namespace test {
  * the first thing it sees */
 
 class PatrollerClient : public Client {
-  private:
-    PatrollerClient();
   public:
-    PatrollerClient(Point<sint32> patrolTo);
+    PatrollerClient(ClientID, Point<sint32> patrolTo);
     ~PatrollerClient() {};
   private:
     Point<sint32> patrolTo;

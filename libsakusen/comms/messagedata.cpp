@@ -366,4 +366,32 @@ MessageType UpdateMessageData::getType() const
   return messageType_update;
 }
 
+ExtensionMessageData::ExtensionMessageData(
+    const String& e,
+    uint16 v,
+    const OArchive& d
+  ) :
+  extension(e),
+  version(v),
+  oData(d),
+  iData(d)
+{
+}
+
+ExtensionMessageData::ExtensionMessageData(IArchive& in)
+{
+  in >> extension >> version >> iData;
+  oData = iData;
+}
+
+void ExtensionMessageData::fillArchive() const
+{
+  archive << extension << version << oData;
+}
+
+MessageType ExtensionMessageData::getType() const
+{
+  return messageType_extension;
+}
+
 }}

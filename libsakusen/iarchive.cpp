@@ -1,6 +1,8 @@
 #include "iarchive.h"
 
+#include "oarchive.h"
 #include "stringutils.h"
+
 #if defined(_WIN32)
 #include <winsock2.h>
 #else
@@ -10,6 +12,22 @@
 using namespace sakusen;
 
 using boost::shared_array;
+
+IArchive::IArchive() :
+  originalBuffer(NULL),
+  buffer(NULL),
+  remainingLength(0)
+{
+}
+
+IArchive::IArchive(const IArchive& copy) :
+  originalBuffer(new uint8[copy.remainingLength]),
+  buffer(originalBuffer),
+  remainingLength(copy.remainingLength)
+{
+  assert(copy.originalBuffer == copy.buffer);
+  memcpy(originalBuffer, copy.originalBuffer, remainingLength);
+}
 
 IArchive::IArchive(const uint8* b, size_t l) :
   originalBuffer(new uint8[l]),
@@ -35,9 +53,22 @@ IArchive::IArchive(const shared_array<const uint8>& b, size_t l) :
   memcpy(originalBuffer, b.get(), l*sizeof(uint8));
 }
 
+IArchive::IArchive(const OArchive& archive) :
+  originalBuffer(new uint8[archive.getLength()]),
+  buffer(originalBuffer),
+  remainingLength(archive.getLength())
+{
+  memcpy(originalBuffer, archive.getBytes(), remainingLength*sizeof(uint8));
+}
+
 IArchive::~IArchive()
 {
   delete[] originalBuffer;
+}
+
+void IArchive::dumpBuffer() const
+{
+  Debug(stringUtils_bufferToHex(buffer, remainingLength));
 }
 
 IArchive& IArchive::operator>>(uint16& i)
@@ -96,6 +127,19 @@ IArchive& IArchive::operator>>(String& s)
   advance(length);
   /* TODO: This would be a good time to check that the string is valid UTF-8
    * (perhaps as a compile-time option) */
+  return *this;
+}
+
+IArchive& IArchive::operator>>(IArchive& i)
+{
+  uint32 length;
+  *this >> length;
+  assertLength(length);
+  delete[] i.originalBuffer;
+  i.buffer = i.originalBuffer = new uint8[length];
+  i.remainingLength = length;
+  memcpy(i.originalBuffer, buffer, length);
+  advance(length);
   return *this;
 }
 

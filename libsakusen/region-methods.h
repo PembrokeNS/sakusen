@@ -20,7 +20,7 @@ inline bool Region<T>::contains(const IUnitStatus *unit) const
 template<typename T>
 void Region<T>::store(OArchive& archive) const
 {
-  archive.magicValue<1>("R");
+  archive.magicValue("R");
   archive.insertEnum(getType());
   storeData(archive);
 }
@@ -28,7 +28,7 @@ void Region<T>::store(OArchive& archive) const
 template<typename T>
 typename Region<T>::Ptr Region<T>::loadNew(IArchive& archive)
 {
-  archive.magicValue<1>("R");
+  archive.magicValue("R");
   RegionType type;
   typename Region<T>::Ptr region;
   archive.extractEnum(type);

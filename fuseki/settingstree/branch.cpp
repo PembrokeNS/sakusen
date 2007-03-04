@@ -78,7 +78,7 @@ String Branch::getRequestListRef(
   if (setting.empty()) {
     ostringstream out;
     out << static_cast<uint32>(children.size()) << " items";
-    for (__gnu_cxx::hash_map<String, Node::Ptr, StringHash>::const_iterator
+    for (hash_map_string<Node::Ptr>::type::const_iterator
         child = children.begin(); child != children.end(); child++) {
       out << "\n" << child->second->getName();
     }
@@ -101,7 +101,7 @@ String Branch::getRequestListRef(
 
 Node::Ptr Branch::getChild(String name)
 {
-  hash_map<String, Node::Ptr, StringHash>::iterator child =
+  hash_map_string<Node::Ptr>::type::iterator child =
     children.find(name);
 
   if (child == children.end()) {
@@ -113,7 +113,7 @@ Node::Ptr Branch::getChild(String name)
 
 Node::ConstPtr Branch::getChild(String name) const
 {
-  hash_map<String, Node::Ptr, StringHash>::const_iterator child =
+  hash_map_string<Node::Ptr>::type::const_iterator child =
     children.find(name);
 
   if (child == children.end()) {

@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_COMMS_GLOBAL_H
 #define LIBSAKUSEN_COMMS_GLOBAL_H
 
+#include "libsakusen-global.h"
+
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */

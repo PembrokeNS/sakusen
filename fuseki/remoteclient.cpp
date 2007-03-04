@@ -20,9 +20,8 @@ RemoteClient::RemoteClient(
     bool abstract
 #endif
   ) :
-  Client(),
+  Client(i),
   SettingsUser(String("client")+clientID_toString(i)),
-  id(i),
   server(s),
   inSocket(),
   outSocket(socket),
@@ -45,11 +44,13 @@ RemoteClient::RemoteClient(
      * our poor handling of EAGAIN in *Socket::send.  Once that is somehow
      * fixed, this can also be fixed */
     outSocket->setNonBlocking(false);
-    outSocket->send(Message(new AcceptMessageData(inSocket->getAddress(), id)));
+    outSocket->send(
+        Message(new AcceptMessageData(inSocket->getAddress(), clientId))
+      );
 #endif
   } else {
     inSocket = outSocket;
-    outSocket->send(Message(new AcceptMessageData("", id)));
+    outSocket->send(Message(new AcceptMessageData("", clientId)));
   }
 }
 
@@ -102,7 +103,8 @@ void RemoteClient::flushIncoming()
   uint8 buf[BUFFER_LEN];
   size_t messageLength;
   while (0 != (messageLength = inSocket->receive(buf, BUFFER_LEN))) {
-    Message message(buf, messageLength, getPlayerId());
+    IArchive archive(buf, messageLength);
+    Message message(archive, getPlayerId());
     if (message.isRealMessage()) {
       incomingMessageQueue.push(message);
     } else {
@@ -208,14 +210,14 @@ String RemoteClient::performStringMagic(
 String RemoteClient::performStringSetMagic(
     /*const settingsTree::Leaf* altering,*/
     const std::list<String>& name,
-    const __gnu_cxx::hash_set<String, sakusen::StringHash>& /*newValue*/
+    const std::set<String>& /*newValue*/
   )
 {
   assert(!name.empty());
   if (name.front() == "observer") {
     Fatal("observer not a string set setting");
   } else if (name.front() == "application") {
-    /* Do nothing */
+    Fatal("application not a string set setting");
   } else {
     Fatal("unexpected child of client branch: " << name.front());
   }

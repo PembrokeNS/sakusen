@@ -1,6 +1,8 @@
 #ifndef PARTIALHEIGHTFIELD_H
 #define PARTIALHEIGHTFIELD_H
 
+#include "heightfield.h"
+
 namespace sakusen {
 namespace client {
 

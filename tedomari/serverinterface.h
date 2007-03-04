@@ -51,7 +51,7 @@ class ServerInterface {
 #endif
     bool joined;
     /** ID assigned to us by the server (valid only when joined) */
-    sakusen::comms::ClientID id;
+    sakusen::ClientID id;
     /** Socket used by the server to talk to us (owned by this) */
     sakusen::comms::Socket::Ptr incomingSocket;
     /** Socket the server has reserved for us to talk to it (owned by this,
@@ -67,7 +67,7 @@ class ServerInterface {
     /** \name Accessors */
     //@{
     inline bool isJoined() const { return joined; }
-    inline sakusen::comms::ClientID getID() const { return id; }
+    inline sakusen::ClientID getID() const { return id; }
     //@}
     
     bool getAdvertisement(sakusen::comms::AdvertiseMessageData* advertisement);

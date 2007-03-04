@@ -23,7 +23,7 @@ UnitTemplate::UnitTemplate(
 
 void UnitTemplate::store(OArchive& out) const
 {
-  out.magicValue<2>("UT");
+  out.magicValue("UT");
   status.store(out, universe);
 }
 
@@ -32,7 +32,7 @@ UnitTemplate UnitTemplate::load(
     const Universe::ConstPtr* universe
   )
 {
-  in.magicValue<2>("UT");
+  in.magicValue("UT");
   return UnitTemplate(*universe, UnitStatus::load(in, universe));
 }
 

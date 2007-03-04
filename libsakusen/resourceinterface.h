@@ -7,6 +7,7 @@
 
 #include "resourcesearchresult.h"
 #include "resourcetype.h"
+#include "writer.h"
 
 namespace sakusen {
 
@@ -79,6 +80,11 @@ class LIBSAKUSEN_API ResourceInterface {
     
     template<typename T>
     inline bool save(const boost::shared_ptr<const T>& resource);
+
+    virtual Writer::Ptr openWriter(
+        const String& name,
+        ResourceType type
+      ) = 0;
 
     /** \brief Returns description of last error
      *

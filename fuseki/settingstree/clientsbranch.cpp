@@ -2,7 +2,7 @@
 
 #include "settingstree/clientbranch.h"
 
-using namespace sakusen::comms;
+using namespace sakusen;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
@@ -14,7 +14,7 @@ ClientsBranch::ClientsBranch(Branch* parent, Server* server) :
 void ClientsBranch::addClient(ClientID id)
 {
   String name = clientID_toString(id);
-  if (getChild(name) != NULL) {
+  if (getChild(name)) {
     Fatal("tried to add client branch of existing name " << name);
   }
   addChild(Node::Ptr(new ClientBranch(id, this, server)));
@@ -23,7 +23,7 @@ void ClientsBranch::addClient(ClientID id)
 void ClientsBranch::removeClient(ClientID id)
 {
   String name = clientID_toString(id);
-  if (getChild(name) == NULL) {
+  if (!getChild(name)) {
     Fatal("tried to remove non-existant client branch " << name);
   }
   removeChild(name);

@@ -66,6 +66,11 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
         const boost::shared_ptr<const void>& resource,
         ResourceType type
       );
+  public:
+    virtual Writer::Ptr openWriter(
+        const String& name,
+        ResourceType
+      );
 };
 
 }}

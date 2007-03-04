@@ -7,7 +7,6 @@
 #include "iarchive.h"
 #include "oarchive.h"
 #include "maskedptr.h"
-#include "typemunger.h"
 #include "iref.h"
 
 namespace sakusen {
@@ -28,12 +27,14 @@ template<class T>
 class Ref : public IRef {
   friend class hash_list<T>;
   private:
-    typedef SerializationHandler<typename TypeMunger<T>::unconsted> SHandler;
+    typedef
+      SerializationHandler<typename boost::remove_const<T>::type> SHandler;
+    typedef MaskedPtr<typename boost::remove_const<T>::type> MPtr;
   public:
     Ref() : referee() {}
     Ref(boost::weak_ptr<T> r) : referee(r) {}
-    operator MaskedPtr<typename TypeMunger<T>::unconsted>() const {
-      return MaskedPtr<typename TypeMunger<T>::unconsted>(referee.lock());
+    operator MPtr() const {
+      return MPtr(referee.lock());
     }
     template<typename U>
     operator Ref<U>() const {
@@ -75,7 +76,7 @@ class Ref : public IRef {
     void store(OArchive& archive) const {
       archive << isValid();
       if (isValid()) {
-        SHandler().insert(archive, cast<typename TypeMunger<T>::consted>());
+        SHandler().insert(archive, cast<typename boost::add_const<T>::type>());
       }
     }
     

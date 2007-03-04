@@ -9,7 +9,7 @@ namespace settingsTree {
 class ClientBranch : public Branch {
   public:
     ClientBranch(
-        sakusen::comms::ClientID id,
+        sakusen::ClientID id,
         Branch* parent,
         Server* server
       );

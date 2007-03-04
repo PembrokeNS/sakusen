@@ -9,21 +9,27 @@ namespace comms {
 
 class LIBSAKUSEN_COMMS_API Message {
   public:
-    Message();
     explicit Message(const MessageData* data);
-    Message(
+    /*Message(
         const uint8* buffer,
         size_t bufferLength,
         PlayerID player = static_cast<PlayerID>(-1)
+      );*/
+    Message(
+        IArchive& archive,
+        PlayerID player = static_cast<PlayerID>(-1)
       );
   private:
+    /* player will be meaningful only if it was passed to the constructor,
+     * otherwise it will be -1 */
+    PlayerID player;
     MessageData::ConstPtr data;
   public:
     inline MessageType getType(void) const {
-      return ( data == NULL ? messageType_none : data->getType() );
+      return ( data ? data->getType() : messageType_none );
     }
     inline bool isRealMessage(void) const {
-      return data != NULL;
+      return data;
     }
     inline const uint8* getBytes(void) const {
       return data->getArchive().getBytes();
@@ -48,7 +54,11 @@ class LIBSAKUSEN_COMMS_API Message {
     GETDATA(GameStart)
     GETDATA(Order)
     GETDATA(Update)
+    GETDATA(Extension)
 #undef GETDATA
+
+    void store(OArchive&) const;
+    static Message load(IArchive&);
 };
 
 }}

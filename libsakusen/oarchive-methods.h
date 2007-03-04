@@ -8,64 +8,68 @@
 
 namespace sakusen {
 
-template<>
-inline void OArchive::store<uint8>(const uint8& toStore)
-{
-  *this << toStore;
-}
+#define SIMPLE_STORER(type) \
+template<>                  \
+struct Storer<type> {       \
+  void operator()(          \
+      OArchive& archive,    \
+      boost::call_traits<type>::param_type toStore \
+    )                       \
+  {                         \
+    archive << toStore;     \
+  }                         \
+};
+
+SIMPLE_STORER(uint8)
+SIMPLE_STORER(sint8)
+SIMPLE_STORER(uint16)
+SIMPLE_STORER(sint16)
+SIMPLE_STORER(uint32)
+SIMPLE_STORER(sint32)
+SIMPLE_STORER(String)
+
+#undef SIMPLE_STORER
 
 template<>
-inline void OArchive::store<sint8>(const sint8& toStore)
-{
-  *this << toStore;
-}
+struct Storer<WeaponTypeID> {
+  void operator()(OArchive& archive, const WeaponTypeID toStore)
+  {
+    archive << toStore->getInternalName();
+  }
+};
 
 template<>
-inline void OArchive::store<uint16>(const uint16& toStore)
-{
-  *this << toStore;
-}
+struct Storer<UnitTypeID> {
+  void operator()(OArchive& archive, const UnitTypeID toStore)
+  {
+    archive << toStore->getInternalName();
+  }
+};
 
-template<>
-inline void OArchive::store<sint16>(const sint16& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<uint32>(const uint32& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<sint32>(const sint32& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<String>(const String& toStore)
-{
-  *this << toStore;
-}
-
-template<>
-inline void OArchive::store<WeaponTypeID>(const WeaponTypeID& toStore)
-{
-  *this << toStore->getInternalName();
-}
-
-template<>
-inline void OArchive::store<UnitTypeID>(const UnitTypeID& toStore)
-{
-  *this << toStore->getInternalName();
-}
+template<typename T, typename U>
+struct Storer<std::pair<T,U> > {
+  void operator()(OArchive& archive, const std::pair<T,U>& toStore)
+  {
+    Storer<T>()(archive, toStore.first);
+    Storer<U>()(archive, toStore.second);
+  }
+};
 
 template<typename T>
-inline void OArchive::store(const T& toStore)
+struct Storer<std::vector<T> > {
+  void operator()(OArchive& archive, const std::vector<T>& toStore)
+  {
+    archive << toStore;
+  }
+};
+
+template<typename T>
+inline void Storer<T>::operator()(
+    OArchive& archive,
+    typename boost::call_traits<T>::param_type toStore
+  )
 {
-  toStore.store(*this);
+  toStore.store(archive);
 }
 
 }

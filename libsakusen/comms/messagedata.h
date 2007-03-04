@@ -283,6 +283,38 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     inline const std::list<Update>& getUpdates() const { return updates; }
 };
 
+/** \brief Data for a message for some network protocol extension
+ *
+ * This is a generic MessageData for use by extensions to the network protocol.
+ * The server will forward it to those clients who claim to support the
+ * extension.
+ *
+ * \todo Allow the mesasge to specify a subset of the clients for forwarding
+ * to, and whether it should be stored in the replay
+ */
+class LIBSAKUSEN_COMMS_API ExtensionMessageData : public MessageData {
+  public:
+    ExtensionMessageData(
+        const String& extension,
+        uint16 version,
+        const OArchive& data
+      );
+    ExtensionMessageData(IArchive& in);
+    ~ExtensionMessageData() {}
+  private:
+    String extension; /**< The name of the extension */
+    uint16 version; /**< The version number of the extension */
+    OArchive oData; /**< The associated data */
+    IArchive iData; /**< The associated data */
+  protected:
+    void fillArchive() const;
+  public:
+    MessageType getType() const;
+    inline const String& getExtension() const { return extension; }
+    inline uint16 getVersion() const { return version; }
+    inline const IArchive& getData() const { return iData; }
+};
+
 }}
 
 #endif // MESSAGEDATA_H

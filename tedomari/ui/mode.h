@@ -20,7 +20,7 @@ class Mode {
     __gnu_cxx::hash_map<
         ModifiedKeyEvent, std::list<String>, ModifiedKeyEventHash
       > bindings;
-    __gnu_cxx::hash_map<String, Command, sakusen::StringHash> commands;
+    sakusen::hash_map_string<Command>::type commands;
 
   public:
     inline const __gnu_cxx::hash_map<
@@ -29,7 +29,7 @@ class Mode {
     {
       return bindings;
     }
-    inline const __gnu_cxx::hash_map<String, Command, sakusen::StringHash>&
+    inline const sakusen::hash_map_string<Command>::type&
       getCommands() const {
       return commands;
     }

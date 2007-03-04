@@ -1,78 +1,44 @@
-#include "lockingfilewriter.h"
+#include "filewriter.h"
 
 #include "fileutils.h"
+#include "fileioexn.h"
 
 #include <fcntl.h>
 #include <stdio.h>
 
 using namespace sakusen::resources;
 
-LockingFileWriter::LockingFileWriter(const String& name) :
-  LockingFile(name)
+FileWriter::FileWriter(const String& name) :
+  File(name)
 {
 }
 
-short LockingFileWriter::getLockType() const
-{
-#ifdef WIN32
-  return 0;
-#else
-  return F_WRLCK;
-#endif
-}
-
-int LockingFileWriter::open()
+void FileWriter::open()
 {
   #ifdef _MSC_VER //Secure deprecation warning
     errno_t err;
     err = fopen_s(&stream, fileName.c_str(), "wb");
     if (err) {
-      return -1;
+      throw FileIOExn("fopen_s");
     }
     fd = _fileno(stream);
   #else
     stream = fopen(fileName.c_str(), "wb");
     if (stream == NULL) {
-      return -1;
+      throw FileIOExn("fopen");
     }
     fd = fileno(stream);
   #endif
   if (fd == -1) {
     stream = NULL;
-    return -1;
+    throw FileIOExn("fileno");
   }
-  return 0;
 }
 
-bool LockingFileWriter::getLock(bool /*block*/)
+void FileWriter::write(const uint8* buffer, size_t length)
 {
-  if (haveLock) {
-    return false;
-  }
-  if (-1 == open()) {
-    return true;
-  }
-#if 0
-  /* FIXME: Locking Just Doesn't Work.  We omit and hope for the best */
-  struct flock lock;
-  lock.l_type = getLockType();
-  lock.l_whence = SEEK_CUR;
-  lock.l_start = 0;
-  lock.l_len = 1; /* Means to the end of the file */
-  
-  //if (-1 == fcntl(fd, cmd, &lock)/*lockf(fd, cmd, 0)*/) {
-  //  return true;
-  //}
-  
-  //haveLock = true;
-#endif
-  return false;
-}
-
-bool LockingFileWriter::write(const uint8* buffer, size_t length, bool block)
-{
-  if (getLock(block)) {
-    return true;
+  if (fd == -1) {
+    open();
   }
   /* The following is leftover debugging code which may again be useful for
    * someone
@@ -87,8 +53,8 @@ bool LockingFileWriter::write(const uint8* buffer, size_t length, bool block)
   /*Debug("wrote " << numBytes << " bytes");*/
   if (size_t(numBytes) != length) {
     /*QDebug("write failed. tried to write "<<length<<" bytes, but wrote "<<numBytes<<" bytes.");*/
-    return true;
+    throw FileIOExn("write");
   }
-  return false;
+  return;
 }
 

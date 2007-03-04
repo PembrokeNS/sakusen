@@ -19,6 +19,7 @@ SettingsTree::SettingsTree(Server* server) :
   addChild(Node::Ptr(new GameBranch(this, server)));
   addChild(Node::Ptr(new ClientsBranch(this, server)));
   addChild(Node::Ptr(new PlayersBranch(this, server)));
+  addChild(Node::Ptr(new PluginsBranch(this, server)));
 }
 
 list<String> SettingsTree::stringNodeAddressToList(

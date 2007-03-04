@@ -44,14 +44,15 @@ void Heightfield::sanityCheck() const
   if (width == 0 || height == 0) {
     Fatal("heightfield dimension 0");
   }
-  if (UINT32_MAX / width < height) {
+  if (numeric_limits<uint32>::max() / width < height) {
     Fatal("heightfield contains too much data");
   }
   /* Check that all possible height values fit into the proper range */
   if (verticalResolution == 0 || horizontalResolution == 0) {
     Fatal("heightfield resolution 0");
   }
-  if (INT32_MAX / verticalResolution < INT16_MAX) {
+  if (numeric_limits<sint32>::max() / verticalResolution <
+      uint32(numeric_limits<sint16>::max())) {
     Fatal(
         "heights could overflow (vertical res is " << verticalResolution <<
         ")"
@@ -110,7 +111,7 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
     Fatal("rectangle outside map");
   }
   Rectangle<sint32> croppedArea = area.intersect(world->getMap()->area());
-  sint32 result = INT32_MIN;
+  sint32 result = numeric_limits<sint32>::min();
   /* We check the height at various positions, exploiting the fact that we know
    * the height is linearly interpolated between samples.
    *

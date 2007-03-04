@@ -3,7 +3,9 @@ BASES := $(basename $(DIRS))
 SOURCES := $(addsuffix .sakusensource,$(BASES))
 MAKEFRAGS := $(foreach base,$(BASES),.makefrags/$(base).makefrag)
 
-all: $(SOURCES)
+all:
+
+sources: $(SOURCES)
 
 include $(MAKEFRAGS)
 
@@ -17,5 +19,5 @@ $(MAKEFRAGS): .makefrags/%.makefrag: %.dir
 clean:
 	-rm -rf .makefrags *.sakusensource
 
-.PHONY: all clean
+.PHONY: all sources clean
 
