@@ -139,10 +139,12 @@ String FileResourceInterface::fileSearch(
       continue;
     }
 #endif
+    /*QDebug("Searching "<<resourceDir);*/
     list<String> newMatches = fileUtils_findMatches(resourceDir, name);
     while (!newMatches.empty()) {
       String path = newMatches.front();
       newMatches.pop_front();
+      /*QDebug("Found "<<path);*/
       String fileName = fileUtils_notDirPart(path);
       /* check that the file has the correct extension */
       if (fileName.size() < extension.size() ||

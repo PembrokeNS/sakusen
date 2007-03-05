@@ -3,7 +3,7 @@ BASES := $(basename $(DIRS))
 SOURCES := $(addsuffix .sakusensource,$(BASES))
 MAKEFRAGS := $(foreach base,$(BASES),.makefrags/$(base).makefrag)
 
-all:
+all: sources
 
 sources: $(SOURCES)
 
