@@ -117,6 +117,18 @@ OArchive& OArchive::operator<<(const sint32& i)
   return *this;
 }
 
+OArchive& OArchive::operator<<(const uint64& i)
+{
+  *this << uint32(i >> 32) << uint32(i);
+  return *this;
+}
+
+OArchive& OArchive::operator<<(const sint64& i)
+{
+  *this << uint64(i);
+  return *this;
+}
+
 OArchive& OArchive::operator<<(const double& d)
 {
   *this << numToString(d);

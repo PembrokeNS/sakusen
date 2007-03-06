@@ -1,6 +1,9 @@
 #ifndef LIBSAKUSEN_RESOURCES_GLOBAL_H
 #define LIBSAKUSEN_RESOURCES_GLOBAL_H
 
+/* Ensure 64-bit ftello and fseeko are available */
+#define _FILE_OFFSET_BITS 64
+
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
 

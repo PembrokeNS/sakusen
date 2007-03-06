@@ -2,10 +2,27 @@
 \namespace sakusen
 \brief libsakusen: The core sakusen library.
 
-libsakusen is the core of Sakusen. It defines the entities involved in the game
-(weapons, units, clients, etc.) and how they interact. It is anticipated that
-all Sakusen clients and servers will use libsakusen; thus, it must be kept as
-fast as possible.
+libsakusen is the core of Sakusen. It defines things which must be used in the
+same way by both client and server, such as maps, UnitTypes, and SensorReturns
+and includes the code which allows such items to be turned into bytestreams for
+writing to disk or transmission over the network (but libsakusen itself handles
+neither of these issues). It is anticipated that all Sakusen clients and
+servers will use libsakusen; thus, it must be kept as fast as possible.
+
+The libraries immediately depending on libsakusen are:
+
+\li \ref sakusen::comms contains code pertaining to server-client
+communication, particularly networking.
+\li \ref sakusen::resources deals with loading and saving game data from and to
+disk, and transmission of such data from those who have it to those who need
+it.
+\li \ref sakusen::server conatins code central to the game engine, but of no
+interest to clients (typically because it requires total information about the
+game state).
+\li \ref sakusen::client, similarly, provides functionality for clients which
+is of no interest to servers.
+
+These four libraries are almost independent, with the exception that resources depends on comms.
 
 \todo We have some coding style issues to sort out.
 

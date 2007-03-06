@@ -1,0 +1,17 @@
+/**
+\namespace sakusen::server
+\brief libsakusen-server: Core server library
+
+libsakusen-server is a library intended to be the core of any server.  It
+provides an implementation of the game engine itself.  This code is not in
+libsakusen because it is of no use to clients.  Without total information about
+the game, clients cannot simply evolve the gamestate as a server must.
+
+The server is likely to be quite CPU-intensive.  Furthermore, we should
+consider the possibility that the game is being used in single player mode
+with a server, a human interface client and several AIs running on one machine.
+For this to be reasonable, the server should be implemented efficiently.
+
+There is also a server plugin system in a separate library using
+\ref sakusen::server::plugins.
+*/

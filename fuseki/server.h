@@ -84,8 +84,8 @@ class Server : public SettingsUser, private boost::noncopyable {
     bool allowObservers; /* Whether we allow observer clients */
     sakusen::hash_map_string<Plugin::Ptr>::type plugins;
     __gnu_cxx::hash_map<
-        sakusen::MaskedPtr<sakusen::server::Listener>,
-        sakusen::server::Listener::VPtr
+        sakusen::MaskedPtr<sakusen::server::plugins::Listener>,
+        sakusen::server::plugins::Listener::VPtr
       > listeners;
     
     bool checkForGameStartNextTime; /* Indicate that a check for whether the
@@ -148,9 +148,9 @@ class Server : public SettingsUser, private boost::noncopyable {
     void checkForGameStart();
     void ensureAdminExists();
 
-    void registerListener(const sakusen::server::Listener::VPtr&);
+    void registerListener(const sakusen::server::plugins::Listener::VPtr&);
     void unregisterListener(
-        const sakusen::MaskedPtr<sakusen::server::Listener>&
+        const sakusen::MaskedPtr<sakusen::server::plugins::Listener>&
       );
 
     /** \name Settings tree callbacks

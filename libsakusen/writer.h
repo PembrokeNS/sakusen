@@ -25,6 +25,9 @@ class Writer : boost::noncopyable {
     inline void write(const OArchive& archive) {
       write(archive.getBytes(), archive.getBytesLength());
     }
+
+    /** \brief Report stream position (e.g. ftell) */
+    virtual uint64 tell() = 0;
 };
 
 }

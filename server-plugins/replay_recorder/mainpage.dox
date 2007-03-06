@@ -1,0 +1,43 @@
+/**
+\namespace sakusen::server::plugins::replay_recorder
+\brief replay_recorder: server plugin for recording replays
+
+replay_recorder is a server plugin which monitors a game in progress and writes
+it out to disk.
+
+A replay consists of two files: an index and a main file (probably we could
+support concatenating these files together without hurting things too much).
+
+The main file consists of a sequence of chunks.  Each chunk containts the magic
+string "REPLAY", followed by either a 0 or 1, and then some data.
+
+A 0 is followed by a tick number, and then all the messages sent by any client
+during that tick.
+
+\todo We might want to support filtering out messages from some network
+extensions that are not useful to replays.
+
+A 1 is followed by a copy of the entire game state (effectively a savegame).
+I call this a "keytick" (a la keyframe in video content).
+
+The index contains information on where all the keyticks are stored in the main file, to allow them to be found without scanning the entire thing.
+
+The idea is that during playback, you can seek to keyticks (just like seeking
+to keyframes in video), and then proceed from there in the usual way by
+actually running the game engine.
+
+At the moment, there are just two settings for the recorder.  A base for the
+replay file names, and an integer keytick interval i.  Every ith tick will be
+saved as a keytick.  If i==0 then only the first tick will be (this much at
+least is necessary).
+
+I imagine that you probably won't want the performance hit of saving any
+keyticks while playing a proper game, but if you want to keep the replay you
+can run it back through with the keytick interval non-zero (essentially
+reproducing the replay) to provide for seeking.
+
+This plugin won't work yet because CompleteWorld::save is not implemented, so
+it's not possible to save keyticks.  Thus I'm not worried too much about the
+precise details of the replay format.
+*/
+

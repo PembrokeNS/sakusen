@@ -17,6 +17,7 @@ class FileWriter : public File, public Writer {
     virtual void open();
   public:
     void write(const uint8* buffer, size_t length);
+    uint64 tell();
 };
 
 }}

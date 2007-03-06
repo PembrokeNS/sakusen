@@ -1,13 +1,12 @@
 #ifndef FILEUTILS_H
 #define FILEUTILS_H
 
+#include "libsakusen-resources-global.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include <list>
-
-#include "libsakusen-global.h"
-#include "libsakusen-resources-global.h"
 
 #ifdef WIN32
 #include <direct.h>
@@ -26,6 +25,9 @@
 #define NativeFstat(a,b) fstat(a,b)
 #define NativeStructStat struct stat
 #define NativeUnlink(a) unlink(a)
+/* Note that for ftello to really be 64-bit requires
+ * #define _FILE_OFFSET_BITS 64, as in libsakusen-resource-global.h */
+#define NativeFtell64(a) ftello(a)
 #endif
 
 namespace sakusen {

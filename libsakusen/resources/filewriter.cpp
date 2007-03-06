@@ -58,3 +58,17 @@ void FileWriter::write(const uint8* buffer, size_t length)
   return;
 }
 
+uint64 FileWriter::tell()
+{
+  if (fd == -1) {
+    open();
+  }
+
+  sint64 result = NativeFtell64(stream);
+  if (-1 == result) {
+    throw FileIOExn("ftell");
+  }
+
+  return result;
+}
+

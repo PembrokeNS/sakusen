@@ -974,7 +974,7 @@ void Server::ensureAdminExists()
 
 /** \brief Add a listener that intercepts some fraction of server-client
  * communications */
-void Server::registerListener(const sakusen::server::Listener::VPtr& listener)
+void Server::registerListener(const Listener::VPtr& listener)
 {
   listeners.insert(make_pair(MaskedPtr<Listener>(listener), listener));
 }

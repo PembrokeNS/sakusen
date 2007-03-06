@@ -29,11 +29,25 @@ ReplayRecorder::ReplayRecorder(const PluginServerInterface& interface) :
 
 void ReplayRecorder::writeKeyTick()
 {
+  if (!mainReplayWriter)
+    return;
+  
   OArchive keyTick;
 
   /* 1 indicates that what follows is an entire copy of the gamestate */
   keyTick.magicValue("REPLAY") << uint8(1);
   world->save(keyTick);
+
+  /* We also need to store in the index where we put this in the replay file,
+   * for seeking */
+  uint64 keyTickStart = mainReplayWriter->tell();
+  
+  mainReplayWriter->write(keyTick);
+
+  OArchive indexEntry;
+  indexEntry.magicValue("I") << world->getTimeNow() << keyTickStart;
+
+  replayIndexWriter->write(indexEntry);
 }
 
 String ReplayRecorder::setOption(const String& name, const String& newVal)

@@ -9,6 +9,7 @@
 
 namespace sakusen {
 namespace server {
+namespace plugins {
 
 /** \brief Interface for something which listens to some or all of the
  * client/server communication.
@@ -52,7 +53,7 @@ class Listener {
     virtual void tickDone() {}
 };
 
-}}
+}}}
 
 #endif // LISTENER_H
 

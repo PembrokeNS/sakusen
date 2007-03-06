@@ -32,7 +32,7 @@ class Plugin :
     sakusen::server::plugins::PluginInfo::Ptr info;
     Server* server;
     settingsTree::PluginBranch::Ptr pluginBranch;
-    mutable std::stack<sakusen::server::Listener::VPtr> listeners;
+    mutable std::stack<sakusen::server::plugins::Listener::VPtr> listeners;
 
     typedef boost::variant<
         sakusen::server::plugins::OptionCallback<String>*,
@@ -51,7 +51,9 @@ class Plugin :
   protected:
     bool isGameStarted() const;
     sakusen::ResourceInterface::Ptr getResourceInterface() const;
-    void registerListener(const sakusen::server::Listener::VPtr&) const;
+    void registerListener(
+        const sakusen::server::plugins::Listener::VPtr&
+      ) const;
 #define REGISTER_OPTION(type)                           \
     void registerOption(                                \
         const String& name,                             \

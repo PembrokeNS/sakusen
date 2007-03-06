@@ -1,0 +1,31 @@
+/**
+\namespace sakusen::server::plugins
+\brief libsakusen-server-plugins: Plugin framework for sakusen servers.
+
+libsakusen-server-plugins provides a possible plugin framework which sakusen
+servers can make use of if they wish.  It is entirely optional;
+libsakusen-server will work perfectly well without it.  The intent in
+providing it is that plugins be written in a server-independent manner, in the
+hope that servers are more easily extensible and plugins more generally useful.
+Also, portions of a server implemented as plugins can be recompiled and
+reloaded without restarting the server.
+
+Examples of plugins which might use this framework are:
+\li A replay recorder.
+\li An AI (the plugin might spawn a seperate process to act as the AI client,
+but still allow the AI to be configured through the server).
+\li A POV-Ray scene file output device.
+\li A complete raytracer saving images of the game.
+\li Something to compile statistics about the game (what unit types fared well
+against what other unit types, which clients sent the most orders, as well as
+more normal stuff like resource collection, kills, etc.).
+\li A weather controller that monitors real-life weather conditions and
+replicates them in-game.
+\li Something to perform any server-side processing required my certain network
+extensions (e.g. automatically forwarding to clients information about their
+allies, or automatically delaying in-game VoIP chat so that people don't talk
+over one another).
+
+See PluginInfo for information on how to use this library to make plugins, and
+PluginServerInterface for more information on how to use it.
+*/

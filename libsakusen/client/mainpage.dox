@@ -1,0 +1,10 @@
+/**
+\namespace sakusen::clien
+\brief libsakusen-client: Core client library
+
+libsakusen-client is a library intended to ease the creation of sakusen
+clients.  It provides code to process the messages received from the server and
+use them to maintain the player's current knowledge of the gamestate, while
+simultaneously allowing client programmers to add what functionality they
+desire for their particular interface (or AI, etc.).
+*/
