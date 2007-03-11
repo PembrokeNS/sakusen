@@ -29,15 +29,17 @@ class ICompleteUnit;
  * sometimes meaningful); for a finite ray, \em t varies from 0 to 1
  * (open-ended) by convention. Finite rays are not explicitly handled by Ray,
  * and callers must filter out intersections whose parameter is greater than 1.
+ *
+ * Rays are immutable objects with all their fields public. This makes them
+ * convenient to use as basic values, and thread-safe once the ctor has
+ * finished.
  */
 class Ray {
-  private:
-    Point<sint32> origin; /**< origin (start) */
-    Point<sint32> d; /**< direction */
-    double length; /**< length of \c d */
-
   public:
-    Ray() {}
+    const Point<sint32> origin; /**< origin (start) */
+    const Point<sint32> d; /**< direction */
+    const double length; /**< length of \c d */
+
     Ray(Point<sint32> start, Point<sint32> direction) :
       origin(start), d(direction), length(direction.length()) {}
     virtual ~Ray() {}
@@ -45,8 +47,6 @@ class Ray {
     virtual GameObject stoppedBy() const = 0;
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
-    double intersectUnit(ICompleteUnit* u) const;
-    double intersectUnits() const;
     double intersectLand() const;
     double intersectWater() const;
 

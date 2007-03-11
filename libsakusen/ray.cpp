@@ -39,12 +39,6 @@ double Ray::distance(double t) const {
 
 /** These functions are not written yet. */
 /*@{*/
-double Ray::intersectUnit(ICompleteUnit* u) const {
-  static_cast<void>(u);
-  Fatal("not implemented");
-  return 0.0;
-}
-double Ray::intersectUnits() const {Fatal("not implemented"); return 0.0;}
 double Ray::intersectLand() const {
   /* First we check to see whether we're already underground, in which case we
    * return 0 to indicate an instant hit */
