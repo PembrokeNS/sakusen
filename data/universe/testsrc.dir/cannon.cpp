@@ -79,12 +79,12 @@ ParalyzationBeam::ParalyzationBeam(
 
 void ParalyzationBeam::onInteractLand(double position)
 {
-  cout << "ParalyzationBeam::onInteractLand at " << evaluate(position);
+  cout << "ParalyzationBeam::onInteractLand at " << evaluate(position) << endl;
 }
 
 void ParalyzationBeam::onInteractUnit(double position, const Ref<LayeredUnit>&)
 {
-  cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position);
+  cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position) << endl;
 }
 
 extern "C" {
