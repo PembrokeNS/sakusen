@@ -67,11 +67,13 @@ class ParalyzationBeam : public Beam {
         const WeaponStatus& status
       );
     GameObject interactsWith() const {
-      return gameObject_unit;
+      return gameObject_unit | gameObject_land;
     }
     GameObject stoppedBy() const {
       return gameObject_unit | gameObject_land;
     }
+    void onInteractLand(double position);
+    void onInteractUnit(double position, const Ref<LayeredUnit>&);
 };
 
 }

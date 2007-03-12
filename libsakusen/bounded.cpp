@@ -3,16 +3,15 @@
 namespace sakusen {
 
 double Bounded::fast_intersect(const Ray& r) const {
-  Box<sint32> bbox;
+  const Box<sint32> bbox(getBoundingBox());
   double t_near_x, t_far_x, t_near_y, t_far_y, t_near_z, t_far_z, t_near;
-  double inf = std::numeric_limits<double>::infinity();
-  Point<double> d = Point<double>(r.d);
+  const double inf = std::numeric_limits<double>::infinity();
+  const Point<double> d(r.d);
 
-  bbox = getBoundingBox();
   /* First off, take each pair of parallel planes, and find the interval of t
    * for which the ray is between the planes.
    */
-  if (r.d.x != 0) {
+  if (d.x != 0) {
     t_near_x = double(bbox.getMin().x - r.origin.x) / d.x;
     t_far_x = double(bbox.getMax().x - r.origin.x) / d.x;
     /* unless the ray is parallel to those planes, in which case check whether
@@ -25,7 +24,7 @@ double Bounded::fast_intersect(const Ray& r) const {
     return inf;
   /* ^ the ray misses the box entirely */
 
-  if (r.d.y != 0) {
+  if (d.y != 0) {
     t_near_y = double(bbox.getMin().y - r.origin.y) / d.y;
     t_far_y = double(bbox.getMax().y - r.origin.y) / d.y;
   } else if (r.origin.y <= bbox.getMax().y && r.origin.y >= bbox.getMax().y) {
@@ -33,7 +32,7 @@ double Bounded::fast_intersect(const Ray& r) const {
   } else
     return inf;
 
-  if (r.d.z != 0) {
+  if (d.z != 0) {
     t_near_z = double(bbox.getMin().z - r.origin.z) / d.z;
     t_far_z = double(bbox.getMax().z - r.origin.z) / d.z;
   } else if (r.origin.z <= bbox.getMax().z && r.origin.z >= bbox.getMax().z) {

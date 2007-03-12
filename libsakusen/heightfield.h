@@ -84,8 +84,16 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     inline sint32 getHeightAtSample(uint32 x, uint32 y) const {
       assert(x < width);
       assert(y < height);
-      return heightfield[x][y];
+      return heightfield[x][y] * verticalResolution;
     }
+
+    double intersectRayInCell(
+        const Ray&,
+        double minimum,
+        double extent,
+        uint32 x,
+        uint32 y
+      ) const;
   public:
     /** \name accessors */
     //@{
@@ -100,6 +108,7 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
       return getHeightAt(p.x, p.y);
     }
     sint32 getMaxHeightIn(const Rectangle<sint32>&) const;
+    double intersectRay(const Ray&, double extent) const;
     
     void store(OArchive&) const;
     static Heightfield load(IArchive&);

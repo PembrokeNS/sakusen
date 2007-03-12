@@ -45,7 +45,8 @@ bool Paralyzer::aimAt(
     const Point<sint16>& /*vel*/
   )
 {
-  Point<sint32> displacement = pos - firer->getStatus()->getPosition();
+  Point<sint32> displacement = pos - firer->getStatus()->getPosition() +
+    Point<sint32>(0, 0, -20);
   /* test whether target is within range */
   if (displacement.squareLength() < 10000) {
     status->setDirection(displacement);
@@ -57,9 +58,10 @@ bool Paralyzer::aimAt(
 
 void Paralyzer::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
-  cout << "Firing paralyzer at " << server::world->getTimeNow() << endl;
   const WeaponStatus& status =
     firer->getStatus()->getWeaponsStatus()[weaponIndex];
+  cout << "Firing paralyzer at time " << server::world->getTimeNow() <<
+    ", in direction " << status.getDirection() << endl;
   server::world->addBeam(new ParalyzationBeam(firer, status));
 }
 
@@ -73,6 +75,16 @@ ParalyzationBeam::ParalyzationBeam(
       server::world->getTimeNow(), 3 /* duration */
     )
 {
+}
+
+void ParalyzationBeam::onInteractLand(double position)
+{
+  cout << "ParalyzationBeam::onInteractLand at " << evaluate(position);
+}
+
+void ParalyzationBeam::onInteractUnit(double position, const Ref<LayeredUnit>&)
+{
+  cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position);
 }
 
 extern "C" {

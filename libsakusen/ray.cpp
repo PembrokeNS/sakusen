@@ -3,6 +3,8 @@
 #include "heightfield.h"
 #include "world.h"
 
+using namespace std;
+
 namespace sakusen {
 
 /** \brief Get a point the Ray passes through.
@@ -37,27 +39,24 @@ double Ray::distance(double t) const {
   return t * length;
 }
 
-/** These functions are not written yet. */
-/*@{*/
-double Ray::intersectLand() const {
-  /* First we check to see whether we're already underground, in which case we
-   * return 0 to indicate an instant hit */
-  const IHeightfield& hf = world->getMap()->getHeightfield();
-  if (hf.getHeightAt(origin) > origin.z) {
-    return 0.0;
-  }
-
-  /** \todo */
-  Fatal("not implemented");
-  return 0.0;
+/** \brief Intersect Ray with water surface.
+ *
+ * \note If the ray starts underwater, then this returns the first point at
+ * which it would leave the water, rather than 0.0.
+ *
+ * \return Smallest positive value d for which evaluate(d) is at the water
+ * surface, or infinity if no such d exists. */
+double Ray::intersectWater() const {
+  /** \todo Support maps with water on them */
+  return numeric_limits<double>::infinity();
 }
-double Ray::intersectWater() const {Fatal("not implemented"); return 0.0;}
-/*@}*/
 
 /** \brief Find and return all interactions of this ray to a given extent.
  *
- * \param      extent      The length (in units of d) to scan along the ray.
- * \param[out] interations The interactions found.
+ * \param      extent       The length (in units of d) to scan along the ray.
+ *                          If extent is infinity or NaN, then behaviour is
+ *                          undefined.
+ * \param[out] interactions The interactions found.
  */
 void Ray::getAllInteractionsTo(
     double extent,
@@ -70,24 +69,29 @@ void Ray::getAllInteractionsTo(
 
   assert(interactions.empty());
 
-  /* Test for intersection with the ground */
-  if (0 != (interesting & gameObject_land)) {
-    double landIntersect = intersectLand();
-    if (!isnan(landIntersect) && landIntersect <= extent) {
-      if (0 != (stop & gameObject_land)) {
-        extent = landIntersect;
-        interactions.insert(Intersection(gameObject_land, landIntersect));
+  /* Test for intersection with the water surface */
+  if (0 != (interesting & gameObject_water)) {
+    double waterIntersect = intersectWater();
+    if (waterIntersect <= extent) {
+      if (0 != (stop & gameObject_water)) {
+        extent = waterIntersect;
+      }
+      if (0 != (interact & gameObject_water)) {
+        interactions.insert(Intersection(gameObject_water, waterIntersect));
       }
     }
   }
 
-  /* Test for intersection with the water */
-  if (0 != (interesting & gameObject_water)) {
-    double waterIntersect = intersectWater();
-    if (!isnan(waterIntersect) && waterIntersect <= extent) {
-      if (0 != (stop & gameObject_water)) {
-        extent = waterIntersect;
-        interactions.insert(Intersection(gameObject_water, waterIntersect));
+  /* Test for intersection with the ground */
+  if (0 != (interesting & gameObject_land)) {
+    double landIntersect =
+      world->getMap()->getHeightfield().intersectRay(*this, extent);
+    if (landIntersect <= extent) {
+      if (0 != (stop & gameObject_land)) {
+        extent = landIntersect;
+      }
+      if (0 != (interact & gameObject_land)) {
+        interactions.insert(Intersection(gameObject_land, landIntersect));
       }
     }
   }

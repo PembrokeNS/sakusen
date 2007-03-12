@@ -47,7 +47,6 @@ class Ray {
     virtual GameObject stoppedBy() const = 0;
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
-    double intersectLand() const;
     double intersectWater() const;
 
     typedef std::set<Intersection, LessThanIntersectionPosition>

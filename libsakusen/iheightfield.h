@@ -1,6 +1,8 @@
 #ifndef IHEIGHTFIELD_H
 #define IHEIGHTFIELD_H
 
+#include "ray.h"
+
 namespace sakusen {
 
 class IHeightfield {
@@ -14,6 +16,7 @@ class IHeightfield {
       return getHeightAt(p.x, p.y);
     }
     virtual sint32 getMaxHeightIn(const Rectangle<sint32>&) const = 0;
+    virtual double intersectRay(const Ray&, double extent) const = 0;
 };
 
 }

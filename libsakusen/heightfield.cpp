@@ -1,8 +1,10 @@
 #include "heightfield-methods.h"
 
 #include "oarchive-methods.h"
+#include "mathsutils.h"
 
 using namespace std;
+using namespace boost;
 using namespace sakusen;
 
 Heightfield::Heightfield(
@@ -60,6 +62,80 @@ void Heightfield::sanityCheck() const
   }
 }
 
+/** \brief Intersect ray with a particular cell of the heightfield
+ *
+ * This function asumes that there really is an intersection to be found
+ */
+double Heightfield::intersectRayInCell(
+    const Ray& ray,
+    double minimum,
+    double extent,
+    uint32 x,
+    uint32 y
+  ) const
+{
+  assert(x<width-1);
+  assert(y<height-1);
+
+  /* To do this properly we have to solve a hideously complex quadratic
+   * equation, or maybe use some more prosaic numerical method.
+   *
+   * For now I'm trying to do it the quadratic equation way, but the
+   * probability that I've got it right is slim.  Even if it is right, it's
+   * probably horribly numerically unstable. */
+  /** \todo Test this code */
+  
+  /* First we extract some heights */
+  const double h00 = getHeightAtSample(x,   y);
+  const double h01 = getHeightAtSample(x,   y+1);
+  const double h10 = getHeightAtSample(x+1, y);
+  const double h11 = getHeightAtSample(x+1, y+1);
+
+  /* We also need to get the ray-origin in coordinates normalised to be [0,1]^2
+   * in the cell */
+  const double ox =
+    double(ray.origin.x - world->getMap()->left())/horizontalResolution;
+  const double oy =
+    double(ray.origin.y - world->getMap()->bottom())/horizontalResolution;
+  const double oz = double(ray.origin.z)/verticalResolution;
+
+  /* And same for ray direction */
+  const double dx = double(ray.d.x)/horizontalResolution;
+  const double dy = double(ray.d.y)/horizontalResolution;
+  const double dz = double(ray.d.z)/verticalResolution;
+
+  /* Compute a useful difference */
+  const double hdiff = h00 + h11 - h01 - h10;
+
+  /* Compute the coefficients of the quadratic */
+  const double a = dx*dy*hdiff;
+  const double b = hdiff*(dx*oy + dy*ox) + dy*h01 + dx*h10 - (dy+dx)*h00 - dz;
+  const double c = hdiff*ox*oy + oy*h01 + ox*h10 - (ox+oy)*h00 + h00 - oz;
+
+  double r1, r2;
+
+  tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
+
+  if (isnan(r1) || r2 < minimum) {
+    /* Something's gone wrong... */
+    Fatal("no valid solution found");
+  }
+
+  if (r1 >= minimum) {
+    if (r1 <= extent) {
+      return r1;
+    } else {
+      return std::numeric_limits<double>::infinity();
+    }
+  } else {
+    if (r2 <= extent) {
+      return r2;
+    } else {
+      return std::numeric_limits<double>::infinity();
+    }
+  }
+}
+
 sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
 {
   uint32 xoff = x - world->getMap()->left();
@@ -79,7 +155,7 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
   sint32 upperHeight;
   sint32 lowerHeight;
 
-  /* All this branching is not supposed to speed thing up, rather it is to
+  /* All this branching is not supposed to speed things up, rather it is to
    * prevent accessing memory out of range in boundary cases */
   
   if (xr == 0) {
@@ -151,10 +227,105 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
   return result;
 }
 
+double Heightfield::intersectRay(const Ray& ray, double extent) const
+{
+  /* First we check to see whether it starts underground, in which case we
+   * return 0 to indicate an instant hit */
+  if (getHeightAt(ray.origin) > ray.origin.z) {
+    return 0.0;
+  }
+
+  /* Use algorithm from
+   *
+   * A Fast Voxel Traversal Algorithm for Ray Tracing,
+   * John Amanatides, Andrew Woo
+   */
+  const double inf = numeric_limits<double>::infinity();
+
+  if (extent == inf) {
+    /* This could well make us loop forever, so abort instead */
+    Fatal("non-terminating intersection tests possible");
+  }
+
+  /* Locate starting heightfield sample cell */
+  uint32 X = dexToSampleFloorX(ray.origin.x);
+  uint32 Y = dexToSampleFloorY(ray.origin.y);
+  sint32 stepX;
+  sint32 stepY;
+  double tMaxX;
+  double tMaxY;
+  double tDeltaX;
+  double tDeltaY;
+  /* Determine direction of stepping through cells, and find t-values at
+   * which ray first crosses each of vertical and horizontal boundaries,
+   * and find delta-t from one boundary to the next. */
+  if (ray.d.x > 0) {
+    stepX = 1;
+    tMaxX = double(sampleToDexX(X+1)-ray.origin.x)/ray.d.x;
+    tDeltaX = double(horizontalResolution)/ray.d.x;
+  } else if (ray.d.x < 0) {
+    stepX = -1;
+    tMaxX = double(sampleToDexX(X)-ray.origin.x)/ray.d.x;
+    tDeltaX = double(horizontalResolution)/-ray.d.x;
+  } else {
+    stepX = 0;
+    tMaxX = inf;
+    tDeltaX = inf;
+  }
+
+  if (ray.d.y > 0) {
+    stepY = 1;
+    tMaxY = double(sampleToDexY(Y+1)-ray.origin.y)/ray.d.y;
+    tDeltaY = double(horizontalResolution)/ray.d.y;
+  } else if (ray.d.y < 0) {
+    stepY = -1;
+    tMaxY = double(sampleToDexY(Y)-ray.origin.y)/ray.d.y;
+    tDeltaY = double(horizontalResolution)/-ray.d.y;
+  } else {
+    stepY = 0;
+    tMaxY = inf;
+    tDeltaY = inf;
+  }
+
+  /* Ray position at which this cell was entered */
+  double cellEntry = 0.0;
+
+  /* loop through the cells */
+  /** \bug We don't notice an intersection if the ray is above ground again by
+   * the time it exits the cell */
+  /** \bug We don't cope with reaching the boundaries */
+  while (true) {
+    if (tMaxX < tMaxY) {
+      /* We're hitting an x-boundary before a y-boundary */
+      Position p = ray.evaluate(tMaxX);
+      if (p.z < getHeightAt(p)) {
+        return intersectRayInCell(ray, cellEntry, extent, X, Y);
+      }
+      if (tMaxX > extent) {
+        return inf;
+      }
+      X += stepX;
+      cellEntry = tMaxX;
+      tMaxX += tDeltaX;
+    } else {
+      /* We're hitting a y-boundary before an x-boundary */
+      Position p = ray.evaluate(tMaxY);
+      if (p.z < getHeightAt(p)) {
+        return intersectRayInCell(ray, cellEntry, extent, X, Y);
+      }
+      if (tMaxY > extent) {
+        return inf;
+      }
+      Y += stepY;
+      cellEntry = tMaxY;
+      tMaxY += tDeltaY;
+    }
+  }
+}
+
 void Heightfield::store(OArchive& out) const
 {
   out << horizontalResolution << verticalResolution << width << height;
-  /** \todo Make neater */
   out.insert<sint16, 2>(heightfield);
 }
 

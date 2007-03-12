@@ -1,5 +1,8 @@
 #include "weapon.h"
 
+#include "mathsutils.h"
+
+using namespace boost;
 using namespace sakusen;
 using namespace sakusen::server;
 
@@ -46,21 +49,15 @@ bool Weapon::aimAt(
   double b = -2 * range * pow(projectileSpeed, 2);
   double c = 2 * height * pow(projectileSpeed, 2) + gravity * pow(range, 2);
 
-  /* discriminant */
-  double d = pow(b,2) - 4*a*c;
+  double tanTheta;
+  /* We want the smaller root for a shorter path time.  This is
+   * always first return value. */
+  tie(tanTheta, tuples::ignore) = mathsUtils_solveQuadratic(a, b, c);
 
-  if (d < 0) {
+  if (isnan(tanTheta)) {
     return false;
   }
-
-  /* Use some cunning quadratic solution method I found online */
-  double q = -0.5*(b + sgn(b)*sqrt(d));
-
-  /*QDebug("range=" << range << ", x1=" << q/a << ", x2=" << c/q);*/
-  /* The roots are q/a and c/q.
-   * We want the smaller root for a shorter path time.  I think that this is
-   * always c/q, but I'm not sufficiently with it to be sure */
-  double tanTheta = std::min(q/a, c/q);
+  
   double theta = atan(tanTheta);
 
   Point<double> initialVelocity(
