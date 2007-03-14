@@ -1,0 +1,15 @@
+PERL5 ?= perl
+SWIG ?= swig
+PREFIX ?= /usr/local
+
+%.cpp:: ../../lib%.i
+	$(SWIG) -perl5 -c++ -o $@ $(THISINCLUDES) $<
+
+%.pm: %.cpp
+
+Makefile: Makefile.PL $(CPPFILES) $(PMFILES)
+	./Makefile.PL
+
+Makefile.common::
+MakefileSWIG::
+Makefile.PL::

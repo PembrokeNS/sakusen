@@ -8,12 +8,10 @@
 
 %import "libsakusen-global.h"
 %include "intmunger.h"
-%include "typemunger.h"
 /* tiny files */
 %include "angle.h"
 %include "revision.h"
 %include "hitpoints.h"
-%include "ireferent.h"
 %include "gameobject.h"
 %include "topology.h"
 %{
@@ -133,23 +131,19 @@ namespace sakusen {
 /* in lieu of including playerid.h */
 typedef uint8 PlayerID;
 
-%include "regiondata.h"
-%include "sphereregiondata.h"
-%include "rectangleregiondata.h"
 %include "regiontype.h"
 %include "region.h"
+%include "sphereregion.h"
+%include "rectangleregion.h"
 %{
-#include "regiontype.h"
-#include "sphereregiondata.h"
-#include "rectangleregiondata.h"
-#include "regiondata.h"
 #include "region.h"
 #include "region-methods.h"
+#include "sphereregion.h"
+#include "rectangleregion.h"
 %}
-%template(SRegionData32) sakusen::RegionData<sint32>;
-%template(SRectangleRegionData32) sakusen::RectangleRegionData<sint32>;
-%template(SSphereRegionData32) sakusen::SphereRegionData<sint32>;
 %template(SRegion32) sakusen::Region<sint32>;
+%template(SSphereRegion32) sakusen::SphereRegion<sint32>;
+%template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
 
 /* we shouldn't need to call any of the functions herein */
 %import "perception.h"

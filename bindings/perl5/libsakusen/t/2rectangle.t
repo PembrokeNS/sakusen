@@ -17,8 +17,8 @@ is($r2->getMinY(), 3, 'getMinY()');
 is($r2->getMaxX(), 10, 'getMaxX()');
 is($r2->getMaxY(), 12, 'getMaxY()');
 
-is($r2->getWidth(), 9, 'getWidth()');
-is($r2->getHeight(), 10, 'getHeight()');
+is($r2->getWidth(), 8, 'getWidth()');
+is($r2->getHeight(), 9, 'getHeight()');
 
 $p = Sakusen::SPoint32->new(5, 5, -1);
 ok($r2->contains($p), 'contains() is true in an easy case');

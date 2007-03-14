@@ -5,7 +5,7 @@ BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
 my @coords = ([5, 5, -30], [-6, 5, 0], [9, 12, 5]);
 
-plan tests => 15 + 9 * scalar @coords;
+plan tests => 27 + 5 * scalar @coords;
 
 my @points = ();
 for (@coords) {
@@ -19,12 +19,10 @@ for (@coords) {
 #
 
 $rect = Sakusen::SRectangle32->new(0,0, 15, 10);
-$rrd = Sakusen::SRectangleRegionData32->new($rect);
-isa_ok($rrd, 'Sakusen::SRectangleRegionData32');
-isa_ok($rrd, 'Sakusen::SRegionData32');
 
-$region = Sakusen::SRegion32->new($rrd);
+$region = Sakusen::SRectangleRegion32->new($rect);
 isa_ok($region, 'Sakusen::SRegion32');
+isa_ok($region, 'Sakusen::SRectangleRegion32');
 
 ok($region->contains($points[0]), "contains() point inside");
 ok(!$region->contains($points[1]), "!contains() point to the left");
@@ -64,14 +62,12 @@ diag('TODO: Test store() when OArchive is bound');
 # spherical region
 #
 
-$srd = Sakusen::SSphereRegionData32->new($points[0], 6);
-isa_ok($srd, 'Sakusen::SSphereRegionData32');
-isa_ok($srd, 'Sakusen::SRegionData32');
-$sregion = Sakusen::SRegion32->new($srd);
+$sregion = Sakusen::SSphereRegion32->new($points[0], 6);
+isa_ok($sregion, 'Sakusen::SSphereRegion32');
 isa_ok($sregion, 'Sakusen::SRegion32');
 
 SKIP: {
-  skip 'need to arrange for a World to be initted', 4 * scalar @points;
+  skip 'need to arrange for a World to be initted', 5 + 3 * scalar @points;
   ok($sregion->contains($points[0]), "contains() centre");
   ok(!$sregion->contains($points[1]), "!contains() rank outsider");
   ok(!$sregion->contains($points[2]), "!contains() rank outsider");
@@ -92,12 +88,16 @@ SKIP: {
   ok($points[2] != $strunc[2], ' and on points to the top');
 }
 # check getBestPosition()
-$p = $sregion->getBestPosition();
-ok($p == $points[0], 'getBestPosition() for a spherical region returns the centre of the sphere');
+{
+  my $p = $sregion->getBestPosition();
+  ok($p == $points[0], 'getBestPosition() for a spherical region returns the centre of the sphere');
+}
 
 # check getBoundingRectangle()
-$sr = $sregion->getBoundingRectangle();
-is($sr->getMinX(), -1, 'getBoundingRectangle() for a spherical Region, minx');
-is($sr->getMinY(), -1, 'getBoundingRectangle() for a spherical Region, miny');
-is($sr->getMaxX(), 11, 'getBoundingRectangle() for a spherical Region, maxx');
-is($sr->getMaxY(), 11, 'getBoundingRectangle() for a spherical Region, maxy');
+{
+  $sr = $sregion->getBoundingRectangle();
+  is($sr->getMinX(), -1, 'getBoundingRectangle() for a spherical Region, minx');
+  is($sr->getMinY(), -1, 'getBoundingRectangle() for a spherical Region, miny');
+  is($sr->getMaxX(), 11, 'getBoundingRectangle() for a spherical Region, maxx');
+  is($sr->getMaxY(), 11, 'getBoundingRectangle() for a spherical Region, maxy');
+}
