@@ -82,10 +82,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * be transmitted to the clients */
     bool dirty;
 
-    /** \brief A Ref to this unit, for it to pass out instead of this when
-     * appropriate */
-    Ref<LayeredUnit> refToThis;
-
     /** Accept a new order from the queue */
     void acceptOrder(OrderCondition condition);
   public:
@@ -105,18 +101,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     void setDirty(void);
     void clearDirty(void);
 
-    const Ref<LayeredUnit>& getRefToThis()
-    {
-      assert(refToThis.isRefTo(this));
-      return refToThis;
-    }
-
-    void setRefToThis(const Ref<LayeredUnit>& ref)
-    {
-      assert(!refToThis.isValid());
-      assert(ref.isRefTo(this));
-      refToThis = ref;
-    }
+    Ref<LayeredUnit> getRefToThis();
+    Ref<const LayeredUnit> getRefToThis() const;
     
     void setPosition(const Point<sint32>& pos);
     bool setRadar(bool active);

@@ -12,9 +12,12 @@
 namespace sakusen {
 
 template<typename T>
-class SerializationHandler;
+class SerializationHandler {
+  public:
+    typedef void loadArgument;
+};
 
-template<typename T>
+template<typename T, typename TIndex = void>
 class hash_list;
 
 /** \brief A reference to a game object managed by the world.
@@ -65,12 +68,12 @@ class Ref : public IRef {
      * */
     template<typename U>
     inline Ref<U> dynamicCast() const {
-      return Ref<U>(boost::dynamic_pointer_cast<boost::weak_ptr<U> >(referee));
+      return Ref<U>(boost::dynamic_pointer_cast<U>(referee.lock()));
     }
 
     template<typename U>
     inline Ref<U> staticCast() const {
-      return Ref<U>(boost::static_pointer_cast<boost::weak_ptr<U> >(referee));
+      return Ref<U>(boost::static_pointer_cast<U>(referee.lock()));
     }
 
     void store(OArchive& archive) const {

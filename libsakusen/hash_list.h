@@ -5,13 +5,14 @@
 #include "maskedptr.h"
 #include "iref.h"
 #include "ref.h"
+#include "iindex.h"
 
 namespace sakusen {
 
-template<typename T>
+template<typename T, typename TIndex>
 class hash_list_iterator;
 
-template<typename T>
+template<typename T, typename TIndex>
 class hash_list_const_iterator;
 
 /** \brief A container which is much like a list, but with some hash-like
@@ -31,13 +32,13 @@ class hash_list_const_iterator;
  *
  * The ability to splice (as can be done with lists) is absent from hash_lists.
  */
-template<typename T>
+template<typename T, typename TIndex>
 class hash_list : boost::noncopyable {
-  friend class hash_list_iterator<T>;
-  friend class hash_list_const_iterator<T>;
+  friend class hash_list_iterator<T, TIndex>;
+  friend class hash_list_const_iterator<T, TIndex>;
   public:
-    typedef hash_list_iterator<T> iterator;
-    typedef hash_list_const_iterator<T> const_iterator;
+    typedef hash_list_iterator<T, TIndex> iterator;
+    typedef hash_list_const_iterator<T, TIndex> const_iterator;
     typedef size_t size_type;
     
     hash_list();
@@ -56,6 +57,9 @@ class hash_list : boost::noncopyable {
      * ordering - different implementations of hash_map might iterate their
      * members in different orders, thus yielding non-reproducibility */
     ListIteratorHash listIts;
+
+    /** \brief Indexes to be informed when objects are added or removed */
+    std::vector<typename IIndex<TIndex>::Ptr> indexes;
   public:
     iterator begin();
     iterator end();
@@ -83,38 +87,37 @@ class hash_list : boost::noncopyable {
     void clear();
     iterator find(MaskedPtr<T>);
     const_iterator find(MaskedPtr<T>) const;
+
+    void registerIndex(const typename IIndex<TIndex>::Ptr&);
 };
 
-template <typename T>
+template <typename T, typename TIndex>
 bool operator==(
-    const hash_list_const_iterator<T>& left,
-    const hash_list_const_iterator<T>& right
+    const hash_list_const_iterator<T, TIndex>& left,
+    const hash_list_const_iterator<T, TIndex>& right
   );
 
-template <typename T>
+template <typename T, typename TIndex>
 bool operator!=(
-    const hash_list_const_iterator<T>& left,
-    const hash_list_const_iterator<T>& right
+    const hash_list_const_iterator<T, TIndex>& left,
+    const hash_list_const_iterator<T, TIndex>& right
   );
 
-template<typename T>
+template<typename T, typename TIndex>
 class hash_list_iterator {
-  friend class hash_list<T>;
-  friend class hash_list_const_iterator<T>;
+  friend class hash_list<T, TIndex>;
+  friend class hash_list_const_iterator<T, TIndex>;
   public:
     hash_list_iterator() :
-      container(NULL),
       listIt()
     {}
   private:
-    typedef typename hash_list<T>::List::iterator ListIt;
+    typedef typename hash_list<T, TIndex>::List::iterator ListIt;
 
-    hash_list_iterator(const ListIt& i, const hash_list<T>* c) :
-      container(c),
+    hash_list_iterator(const ListIt& i) :
       listIt(i)
     {}
     
-    const hash_list<T>* container;
     ListIt listIt;
   public:
     bool operator==(const hash_list_iterator&);
@@ -126,29 +129,27 @@ class hash_list_iterator {
     hash_list_iterator operator--(int);
 };
 
-template<typename T>
+template<typename T, typename TIndex>
 class hash_list_const_iterator {
-  friend bool operator==<T>(
+  friend bool operator==<T, TIndex>(
       const hash_list_const_iterator& left,
       const hash_list_const_iterator& right
     );
-  friend bool operator!=<T>(
+  friend bool operator!=<T, TIndex>(
       const hash_list_const_iterator& left,
       const hash_list_const_iterator& right
     );
-  friend class hash_list<T>;
+  friend class hash_list<T, TIndex>;
   private:
-    typedef typename hash_list<T>::List::const_iterator ListIt;
+    typedef typename hash_list<T, TIndex>::List::const_iterator ListIt;
     
-    hash_list_const_iterator(const ListIt& i, const hash_list<T>* c) :
-      container(c),
+    hash_list_const_iterator(const ListIt& i) :
       listIt(i)
     {}
 
-    const hash_list<T>* container;
     ListIt listIt;
   public:
-    hash_list_const_iterator(const hash_list_iterator<T>&);
+    hash_list_const_iterator(const hash_list_iterator<T, TIndex>&);
     Ref<const T> operator*() const;
     hash_list_const_iterator& operator++();
     hash_list_const_iterator operator++(int);
@@ -156,116 +157,121 @@ class hash_list_const_iterator {
     hash_list_const_iterator operator--(int);
 };
 
-template<typename T>
-inline hash_list<T>::hash_list()
+template<typename T, typename TIndex>
+inline hash_list<T, TIndex>::hash_list()
 {
 }
 
-template<typename T>
-inline hash_list<T>::~hash_list<T>()
+template<typename T, typename TIndex>
+inline hash_list<T, TIndex>::~hash_list<T, TIndex>()
 {
   clear();
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::begin()
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::begin()
 {
-  return iterator(list.begin(), this);
+  return iterator(list.begin());
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::end()
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::end()
 {
-  return iterator(list.end(), this);
+  return iterator(list.end());
 }
 
-template<typename T>
-inline typename hash_list<T>::const_iterator hash_list<T>::begin() const
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::const_iterator
+  hash_list<T, TIndex>::begin() const
 {
-  return const_iterator(list.begin(), this);
+  return const_iterator(list.begin());
 }
 
-template<typename T>
-inline typename hash_list<T>::const_iterator hash_list<T>::end() const
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::const_iterator
+  hash_list<T, TIndex>::end() const
 {
-  return const_iterator(list.end(), this);
+  return const_iterator(list.end());
 }
 
 /** \brief Get the size of the hash_list
  *
  * \note Unlike std::list::size, this method is O(1)
  */
-template<typename T>
-inline typename hash_list<T>::size_type hash_list<T>::size() const
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::size_type
+  hash_list<T, TIndex>::size() const
 {
   return listIts.size();
 }
 
-template<typename T>
-inline bool hash_list<T>::empty() const
+template<typename T, typename TIndex>
+inline bool hash_list<T, TIndex>::empty() const
 {
   return list.empty();
 }
 
-template<typename T>
-inline Ref<T> hash_list<T>::front()
+template<typename T, typename TIndex>
+inline Ref<T> hash_list<T, TIndex>::front()
 {
   return Ref<T>(list.front());
 }
 
-template<typename T>
-inline Ref<const T> hash_list<T>::front() const
+template<typename T, typename TIndex>
+inline Ref<const T> hash_list<T, TIndex>::front() const
 {
   return Ref<const T>(list.front());
 }
 
-template<typename T>
-inline Ref<T> hash_list<T>::back()
+template<typename T, typename TIndex>
+inline Ref<T> hash_list<T, TIndex>::back()
 {
   return Ref<T>(list.back());
 }
 
-template<typename T>
-inline Ref<const T> hash_list<T>::back() const
+template<typename T, typename TIndex>
+inline Ref<const T> hash_list<T, TIndex>::back() const
 {
   return Ref<const T>(list.back());
 }
 
-template<typename T>
-inline void hash_list<T>::push_front(T* item)
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::push_front(T* item)
 {
   insert(begin(), item);
 }
 
-template<typename T>
-inline void hash_list<T>::push_front(const boost::shared_ptr<T>& item)
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::push_front(const boost::shared_ptr<T>& item)
 {
   insert(begin(), item);
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::push_back(T* item)
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::push_back(
+    T* item
+  )
 {
   return insert(end(), item);
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::push_back(
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::push_back(
     const boost::shared_ptr<T>& item
   )
 {
   return insert(end(), item);
 }
 
-template<typename T>
-inline void hash_list<T>::pop_front()
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::pop_front()
 {
   assert(!empty());
   erase(begin());
 }
 
-template<typename T>
-inline void hash_list<T>::pop_back()
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::pop_back()
 {
   assert(!empty());
   iterator it = end();
@@ -280,8 +286,8 @@ inline void hash_list<T>::pop_back()
  * \param item Item to insert (Ownership of pointer transferred to this)
  * \returns iterator pointing to the inserted item
  */
-template<typename T>
-typename hash_list<T>::iterator hash_list<T>::insert(
+template<typename T, typename TIndex>
+typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
     iterator pos,
     T* itemPtr
   )
@@ -290,13 +296,12 @@ typename hash_list<T>::iterator hash_list<T>::insert(
   return insert(pos, item);
 }
 
-template<typename T>
-typename hash_list<T>::iterator hash_list<T>::insert(
+template<typename T, typename TIndex>
+typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
     iterator pos,
     const boost::shared_ptr<T>& item
   )
 {
-  assert(pos.container == this);
   typename List::iterator it = pos.listIt;
   list.insert(it, item);
   --it; // Now it should point at the just-inserted item
@@ -308,11 +313,16 @@ typename hash_list<T>::iterator hash_list<T>::insert(
     throw std::logic_error("duplicate pointer inserted");
   }
 
-  return iterator(it, this);
+  for (typename std::vector<typename IIndex<TIndex>::Ptr>::iterator i =
+      indexes.begin(); i != indexes.end(); ++i) {
+    (*i)->add(Ref<TIndex>(*it));
+  }
+
+  return iterator(it);
 }
 
-template<typename T> template<typename InputIterator>
-inline void hash_list<T>::insert(
+template<typename T, typename TIndex> template<typename InputIterator>
+inline void hash_list<T, TIndex>::insert(
     iterator pos,
     InputIterator first,
     InputIterator last
@@ -324,20 +334,27 @@ inline void hash_list<T>::insert(
   }
 }
 
-template<typename T>
-typename hash_list<T>::iterator hash_list<T>::erase(iterator pos)
+template<typename T, typename TIndex>
+typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
+    iterator pos
+  )
 {
-  assert(pos.container == this);
   iterator next = pos;
   ++next;
   boost::shared_ptr<T> ptr = *pos.listIt;
+  for (typename std::vector<typename IIndex<TIndex>::Ptr>::iterator i =
+      indexes.begin(); i != indexes.end(); ++i) {
+    (*i)->remove(Ref<TIndex>(ptr));
+  }
   listIts.erase(ptr);
   list.erase(pos.listIt);
   return next;
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::erase(MaskedPtr<T> item)
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
+    MaskedPtr<T> item
+  )
 {
   iterator it = find(item);
   if (it == end())
@@ -345,8 +362,8 @@ inline typename hash_list<T>::iterator hash_list<T>::erase(MaskedPtr<T> item)
   return erase(it);
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::erase(
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
     iterator first,
     iterator last
   )
@@ -357,26 +374,28 @@ inline typename hash_list<T>::iterator hash_list<T>::erase(
   return last;
 }
 
-template<typename T>
-inline void hash_list<T>::clear()
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::clear()
 {
   erase(begin(), end());
   assert(list.empty());
   assert(listIts.empty());
 }
 
-template<typename T>
-inline typename hash_list<T>::iterator hash_list<T>::find(MaskedPtr<T> tp)
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::find(
+    MaskedPtr<T> tp
+  )
 {
   typename ListIteratorHash::iterator it = listIts.find(tp);
   if (it == listIts.end()) {
     return end();
   }
-  return iterator(it->second, this);
+  return iterator(it->second);
 }
 
-template<typename T>
-inline typename hash_list<T>::const_iterator hash_list<T>::find(
+template<typename T, typename TIndex>
+inline typename hash_list<T, TIndex>::const_iterator hash_list<T, TIndex>::find(
     MaskedPtr<T> tp
   ) const
 {
@@ -384,118 +403,129 @@ inline typename hash_list<T>::const_iterator hash_list<T>::find(
   if (it == listIts.end()) {
     return end();
   }
-  return const_iterator(it->second, this);
+  return const_iterator(it->second);
 }
 
-template<typename T>
-inline bool operator==(
-    const hash_list_const_iterator<T>& left,
-    const hash_list_const_iterator<T>& right
+template<typename T, typename TIndex>
+inline void hash_list<T, TIndex>::registerIndex(
+    const typename IIndex<TIndex>::Ptr& index
   )
 {
-  assert(left.container == right.container);
+  indexes.push_back(index);
+  /* Tell index about everything already in the hash_list */
+  for (typename List::iterator i=list.begin(); i != list.end(); ++i) {
+    index->add(Ref<TIndex>(*i));
+  }
+}
+
+template<typename T, typename TIndex>
+inline bool operator==(
+    const hash_list_const_iterator<T, TIndex>& left,
+    const hash_list_const_iterator<T, TIndex>& right
+  )
+{
   return (left.listIt == right.listIt);
 }
 
-template<typename T>
+template<typename T, typename TIndex>
 inline bool operator!=(
-    const hash_list_const_iterator<T>& left,
-    const hash_list_const_iterator<T>& right
+    const hash_list_const_iterator<T, TIndex>& left,
+    const hash_list_const_iterator<T, TIndex>& right
   )
 {
-  assert(left.container == right.container);
   return (left.listIt != right.listIt);
 }
 
-template<typename T>
-inline bool hash_list_iterator<T>::operator==(const hash_list_iterator& right)
+template<typename T, typename TIndex>
+inline bool hash_list_iterator<T, TIndex>::operator==(const hash_list_iterator& right)
 {
-  assert(container == right.container);
   return (listIt == right.listIt);
 }
 
-template<typename T>
-inline bool hash_list_iterator<T>::operator!=(const hash_list_iterator& right)
+template<typename T, typename TIndex>
+inline bool hash_list_iterator<T, TIndex>::operator!=(const hash_list_iterator& right)
 {
-  assert(container == right.container);
   return (listIt != right.listIt);
 }
 
-template<typename T>
-inline Ref<T> hash_list_iterator<T>::operator*() const
+template<typename T, typename TIndex>
+inline Ref<T> hash_list_iterator<T, TIndex>::operator*() const
 {
   return Ref<T>(*listIt);
 }
 
-template<typename T>
-inline hash_list_iterator<T>& hash_list_iterator<T>::operator++()
+template<typename T, typename TIndex>
+inline hash_list_iterator<T, TIndex>& hash_list_iterator<T, TIndex>::operator++()
 {
   ++listIt;
   return *this;
 }
 
-template<typename T>
-inline hash_list_iterator<T> hash_list_iterator<T>::operator++(int)
+template<typename T, typename TIndex>
+inline hash_list_iterator<T, TIndex> hash_list_iterator<T, TIndex>::operator++(int)
 {
   hash_list_iterator copy(*this);
   ++*this;
   return copy;
 }
 
-template<typename T>
-inline hash_list_iterator<T>& hash_list_iterator<T>::operator--()
+template<typename T, typename TIndex>
+inline hash_list_iterator<T, TIndex>& hash_list_iterator<T, TIndex>::operator--()
 {
   --listIt;
   return *this;
 }
 
-template<typename T>
-inline hash_list_iterator<T> hash_list_iterator<T>::operator--(int)
+template<typename T, typename TIndex>
+inline hash_list_iterator<T, TIndex> hash_list_iterator<T, TIndex>::operator--(int)
 {
   hash_list_iterator copy(*this);
   --*this;
   return copy;
 }
 
-template<typename T>
-inline hash_list_const_iterator<T>::hash_list_const_iterator(
-    const hash_list_iterator<T>& copy
+template<typename T, typename TIndex>
+inline hash_list_const_iterator<T, TIndex>::hash_list_const_iterator(
+    const hash_list_iterator<T, TIndex>& copy
   ) :
-  container(copy.container),
   listIt(copy.listIt)
 {
 }
 
-template<typename T>
-inline Ref<const T> hash_list_const_iterator<T>::operator*() const
+template<typename T, typename TIndex>
+inline Ref<const T> hash_list_const_iterator<T, TIndex>::operator*() const
 {
   return Ref<const T>(*listIt);
 }
 
-template<typename T>
-inline hash_list_const_iterator<T>& hash_list_const_iterator<T>::operator++()
+template<typename T, typename TIndex>
+inline hash_list_const_iterator<T, TIndex>&
+  hash_list_const_iterator<T, TIndex>::operator++()
 {
   ++listIt;
   return *this;
 }
 
-template<typename T>
-inline hash_list_const_iterator<T> hash_list_const_iterator<T>::operator++(int)
+template<typename T, typename TIndex>
+inline hash_list_const_iterator<T, TIndex>
+  hash_list_const_iterator<T, TIndex>::operator++(int)
 {
   hash_list_const_iterator copy(*this);
   ++*this;
   return copy;
 }
 
-template<typename T>
-inline hash_list_const_iterator<T>& hash_list_const_iterator<T>::operator--()
+template<typename T, typename TIndex>
+inline hash_list_const_iterator<T, TIndex>&
+  hash_list_const_iterator<T, TIndex>::operator--()
 {
   --listIt;
   return *this;
 }
 
-template<typename T>
-inline hash_list_const_iterator<T> hash_list_const_iterator<T>::operator--(int)
+template<typename T, typename TIndex>
+inline hash_list_const_iterator<T, TIndex>
+  hash_list_const_iterator<T, TIndex>::operator--(int)
 {
   hash_list_const_iterator copy(*this);
   --*this;

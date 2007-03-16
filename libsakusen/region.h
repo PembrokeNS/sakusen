@@ -4,6 +4,8 @@
 #include "regiontype.h"
 #include "point.h"
 #include "rectangle.h"
+#include "box.h"
+#include "ray.h"
 #include "oarchive.h"
 
 namespace sakusen {
@@ -76,6 +78,23 @@ class LIBSAKUSEN_API Region {
      * bounding rectangle will also be empty.
      */
     virtual Rectangle<T> getBoundingRectangle() const = 0;
+
+    /** \brief Get the smallest Box that completely encloses the Region.
+     *
+     * It is guaranteed that every point inside this is also inside the
+     * bounding box, but not vice-versa. If the region is empty, the
+     * bounding box will also be empty.
+     */
+    virtual Box<T> getBoundingBox() const = 0;
+
+    /** \brief Intersect a Ray with the region.
+     *
+     * \param[in] r The Ray to trace.
+     * \return The distance parameter for the ray when it hits the boundary of
+     * the region, or +Inf if there is no intersection. If the ray starts inside
+     * the region, you still get the first intersection with the boundary.
+     */
+    virtual double intersect(const Ray& r) const = 0;
     
     virtual RegionType getType() const = 0;
 

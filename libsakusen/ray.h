@@ -6,6 +6,7 @@
 #include <set>
 
 #include "point.h"
+#include "box.h"
 #include "gameobject.h"
 #include "intersection.h"
 
@@ -43,16 +44,17 @@ class Ray {
     Ray(Point<sint32> start, Point<sint32> direction) :
       origin(start), d(direction), length(direction.length()) {}
     virtual ~Ray() {}
-    virtual GameObject interactsWith() const = 0;
-    virtual GameObject stoppedBy() const = 0;
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
     double intersectWater() const;
+    double intersectBox(const Box<sint32>&) const;
 
     typedef std::set<Intersection, LessThanIntersectionPosition>
       IntersectionSet;
     void getAllInteractionsTo(
         double extent,
+        GameObject interactWith,
+        GameObject stoppedBy,
         IntersectionSet& interactions
       ) const;
 };

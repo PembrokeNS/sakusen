@@ -42,3 +42,17 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
   return Box<sint32>(pos-pExtents, pos+pExtents);
 }
 
+double ICompleteUnit::intersect(const Ray& r) const
+{
+  const IUnitStatus* status = getIStatus();
+  const Point<uint32>& size = getITypeData()->getSize();
+
+  /* We transform the ray into local coordinates */
+  Ray localRay(
+      status->globalToLocal(r.origin),
+      status->globalToLocalRelative(r.d)
+    );
+  /* Now we can intersect this transformed ray with our box */
+  return localRay.intersectBox(Box<sint32>(-size, size));
+}
+

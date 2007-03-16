@@ -4,6 +4,7 @@
 #include "world.h"
 #include "hash_list.h"
 #include "player.h"
+#include "ispatial.h"
 #include "completemap.h"
 #include "layeredunit.h"
 #include "fuse.h"
@@ -15,11 +16,7 @@ namespace sakusen {
 namespace server {
 
 class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
-  private:
-    CompleteWorld();
-    CompleteWorld(const CompleteWorld& copy);
-      /* Shouldn't use the copy constructor - mayhem will ensue because it will
-       * invalidate all pointers to game objects stored here */
+  /* noncopyable */
   public:
     CompleteWorld(
         const MapTemplate& map,
@@ -29,11 +26,15 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     ~CompleteWorld();
   private:
     CompleteMap* map; /* owned by this */
-    hash_list<LayeredUnit> units; /* this list includes subunits */
+    hash_list<LayeredUnit, Bounded> units; /* this list includes subunits */
     hash_list<Ballistic> ballistics;
-    hash_list<Beam> beams; /* owned by this */
+    hash_list<Beam> beams;
+    hash_list<Effect, Bounded> effects;
+
+    /** \brief Spatial index to the objects in the game universe
+     * (including at least units and effects) */
+    ISpatial::Ptr spatialIndex;
     
-    std::list<Effect*> effects; /* owned by this */
     /** New effects which have been added this tick and still have to have
      * their methods called
      *
@@ -43,8 +44,13 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
     std::vector<Player> players;
 
-    void applyEffect(Effect*, void (Effect::*)(const Ref<LayeredUnit>&));
-    std::list<Effect*>::iterator processEffect(std::list<Effect*>::iterator);
+    void applyEffect(
+        const Ref<Effect>&,
+        void (Effect::*)(const Ref<LayeredUnit>&)
+      );
+    hash_list<Effect, Bounded>::iterator processEffect(
+        hash_list<Effect, Bounded>::iterator
+      );
   public:
     /* accessors */
     inline Map* getMap(void) { return map; }
@@ -63,7 +69,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     /** \warning This has to be a non-const return for stuff that happens in
      * Player::checkSensorReturns to work, but don't abuse it.  In particular,
      * don't add or remove elements */
-    inline hash_list<LayeredUnit>& getUnits(void) { return units; }
+    inline hash_list<LayeredUnit, Bounded>& getUnits(void) { return units; }
     
     inline void addBallistic(Ballistic* ballistic)
     {
@@ -83,6 +89,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline void addEffect(Effect* effect) {
       newEffects.push(effect);
     }
+
+    inline ISpatial::Ptr getSpatialIndex() { return spatialIndex; }
     
     inline Player* getPlayerPtr(const PlayerID& id)
     {

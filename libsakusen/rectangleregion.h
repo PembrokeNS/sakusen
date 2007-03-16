@@ -24,6 +24,8 @@ class RectangleRegion : public Region<T> {
     inline Point<T> truncateToFit(const Point<T>&) const;
     inline Point<T> getBestPosition() const;
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
+    inline Box<T> getBoundingBox() const;
+    inline double intersect(const Ray&) const;
     
     RegionType getType() const { return regionType_rectangle; }
 };
@@ -52,6 +54,45 @@ inline Point<T> RectangleRegion<T>::getBestPosition() const
       (rectangle.getMinX() + rectangle.getMaxX()) / 2,
       (rectangle.getMinY() + rectangle.getMaxY()) / 2,
       0
+    );
+}
+
+template<typename T>
+inline Box<T> RectangleRegion<T>::getBoundingBox() const
+{
+  return Box<T>(
+      Point<T>(
+        rectangle.getMinX(),
+        rectangle.getMinY(),
+        bottomNumber<T>()
+      ),
+      Point<T>(
+        rectangle.getMaxX(),
+        rectangle.getMaxY(),
+        topNumber<T>()
+      )
+    );
+}
+
+template<typename T>
+double RectangleRegion<T>::intersect(const Ray& r) const
+{
+  /** \todo It might be worth writing a proper ray-rectangle intersection
+   * routine, but probably not */
+  assert(std::numeric_limits<T>::is_integer && sizeof(T) <= sizeof(sint32));
+  return r.intersectBox(
+      Box<sint32>(
+        Point<sint32>(
+          rectangle.getMinX(),
+          rectangle.getMinY(),
+          bottomNumber<sint32>()
+        ),
+        Point<sint32>(
+          rectangle.getMaxX(),
+          rectangle.getMaxY(),
+          topNumber<sint32>()
+        )
+      )
     );
 }
 

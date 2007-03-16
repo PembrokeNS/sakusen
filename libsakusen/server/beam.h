@@ -46,6 +46,8 @@ class Beam : protected Ray {
 
   public:
     virtual ~Beam();
+    virtual GameObject interactsWith() const = 0;
+    virtual GameObject stoppedBy() const = 0;
     virtual void onInteract(const Intersection&);
     virtual void onInteractLand(double /*position*/) {}
     virtual void onInteractWater(double /*position*/) {}

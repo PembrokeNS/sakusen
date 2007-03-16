@@ -226,6 +226,10 @@ class LIBSAKUSEN_API Point {
       return UWide(Wide(x)*x) + Wide(y)*y + Wide(z)*z;
     }
 
+    inline UWide innerProduct(const Point<T>& right) const {
+      return UWide(Wide(x)*right.x) + Wide(y)*right.y + Wide(z)*right.z;
+    }
+
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
     }

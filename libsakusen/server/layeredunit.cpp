@@ -22,14 +22,12 @@ void LayeredUnit::spawn(
   Ptr unit(
       new LayeredUnit(type, startPosition, startOrientation, startVelocity)
     );
-  unit->setRefToThis(Ref<LayeredUnit>(unit));
   world->addUnit(unit, owner);
 }
 
 void LayeredUnit::spawn(const PlayerID owner, const UnitTemplate& t)
 {
   Ptr unit(new LayeredUnit(t));
-  unit->setRefToThis(Ref<LayeredUnit>(unit));
   world->addUnit(unit, owner);
 }
 
@@ -122,6 +120,16 @@ void LayeredUnit::clearDirty()
         Update(new UnitAlteredUpdateData(getRefToThis()))
       );
   }
+}
+
+Ref<LayeredUnit> LayeredUnit::getRefToThis()
+{
+  return *world->getUnits().find(this);
+}
+
+Ref<const LayeredUnit> LayeredUnit::getRefToThis() const
+{
+  return *world->getUnits().find(this);
 }
 
 void LayeredUnit::setPosition(const Point<sint32>& pos)

@@ -1,6 +1,10 @@
 #ifndef LIBSAKUSEN_ISPATIAL_H
 #define LIBSAKUSEN_ISPATIAL_H
 
+#include "iindex.h"
+#include "bounded.h"
+#include "box.h"
+
 namespace sakusen {
 
 /** \brief An interface to a spatial index.
@@ -16,28 +20,29 @@ namespace sakusen {
  * different types of objects in the same index, as long as they all have
  * bboxen.
  */
-class ISpatial {
+class ISpatial : public IIndex<Bounded> {
+  public:
+    typedef boost::shared_ptr<ISpatial> Ptr;
+    typedef boost::shared_ptr<const ISpatial> ConstPtr;
   protected:
     ISpatial() {}
-    ISpatial(const ISpatial& original) {}
+    ISpatial(const ISpatial&) : IIndex<Bounded>() {}
   public:
-    /** \brief Add a new entry to the index.
-     *
-     * If b is a valid Ref, adds it to the index; otherwise, does nothing.
-     * \param[in] b Ref to the bounded object to add.
-     */
-    virtual void add(const Ref<Bounded>&) = 0;
-    /** \brief Remove an about-to-be-invalidated entry from the index.
-     *
-     * If b is a valid Ref, finds its entry in the index and removes it;
-     * otherwise, does nothing.
-     *
-     * \param[in] b Ref to the bounded object to add.
-     */
-    virtual void remove(const Ref<Bounded>&) = 0;
+    virtual ~ISpatial() {}
+
+    /** \brief Typedef for result type of all the methods which return some
+     * objects */
+    typedef std::vector<Ref<Bounded> > Result;
+
     /** \brief Find objects whose bboxes are entirely inside the given bbox. */
     /** \brief Find objects whose bboxes are partially or completely inside the given bbox. */
-    /** \brief Find objects whose bbox bounds intersect the given bbox bounds. */
+    /** \brief Find objects whose bbox bounds intersect the given bbox bounds
+     * and which match the given filter. */
+    virtual Result findIntersecting(
+        const Box<sint32>&,
+        const GameObject filter
+      ) = 0;
+
     /** \brief Find objects whose bboxes partially or completely enclose the given bbox. */
     /** \brief Find objects whose bboxes completely enclose the given bbox. */
     /* find ray intersections with bboxes */

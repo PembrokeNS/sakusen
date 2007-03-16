@@ -10,6 +10,7 @@
 #include "unittype.h"
 #include "iunitstatus.h"
 #include "ref.h"
+#include "bounded.h"
 
 namespace sakusen {
 
@@ -19,7 +20,7 @@ namespace sakusen {
  * that goes with a Unit.  It is used to provide a common ground between client
  * and server as to what a Unit is for communication between them.
  */
-class LIBSAKUSEN_API ICompleteUnit {
+class LIBSAKUSEN_API ICompleteUnit : public Bounded {
   public:
     virtual ~ICompleteUnit() {}
   public:
@@ -28,15 +29,11 @@ class LIBSAKUSEN_API ICompleteUnit {
     virtual const IUnitStatus* getIStatus(void) const = 0;
     virtual const IUnitTypeData* getITypeData(void) const = 0;
     
+    GameObject getType() const { return gameObject_unit; }
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
     virtual Box<sint32> getBoundingBox(void) const;
-};
-
-/** This may or may not need content */
-template<>
-class SerializationHandler<ICompleteUnit> {
-  public:
-    typedef void loadArgument;
+    double fastIntersect(const Ray& r) const { return intersect(r); }
+    double intersect(const Ray& r) const;
 };
 
 }

@@ -26,7 +26,7 @@ class LIBSAKUSEN_API Box {
     /** Creates a Box with the given corners. The caller is
      * responsible for ensuring that \p x1 \<= \p x2.
      */
-    Box(Point<T> x1, Point<T> x2): min(x1), max(x2) {}
+    Box(const Point<T>& x1, const Point<T>& x2): min(x1), max(x2) {}
     Box(const Box<T>& b): min(b.min), max(b.max) {}
     ~Box() {}
     /** For a Box \c b, \c b[0] is the lower-left corner, and \c b[1]

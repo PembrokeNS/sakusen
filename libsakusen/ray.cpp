@@ -51,20 +51,80 @@ double Ray::intersectWater() const {
   return numeric_limits<double>::infinity();
 }
 
+double Ray::intersectBox(const Box<sint32>& box) const
+{
+  double t_near_x, t_far_x, t_near_y, t_far_y, t_near_z, t_far_z, t_near;
+  const double inf = std::numeric_limits<double>::infinity();
+
+  /* First off, take each pair of parallel planes, and find the interval of t
+   * for which the ray is between the planes.
+   */
+  if (d.x != 0) {
+    t_near_x = double(box.getMin().x - origin.x) / d.x;
+    t_far_x = double(box.getMax().x - origin.x) / d.x;
+    /* unless the ray is parallel to those planes, in which case check whether
+     * it is between them
+     */
+  } else if (origin.x <= box.getMax().x && origin.x >= box.getMin().x) {
+    /* the ray is between the planes for all t */
+    t_near_x = -inf; t_far_x = inf;
+  } else
+    return inf;
+  /* ^ the ray misses the box entirely */
+
+  if (d.y != 0) {
+    t_near_y = double(box.getMin().y - origin.y) / d.y;
+    t_far_y = double(box.getMax().y - origin.y) / d.y;
+  } else if (origin.y <= box.getMax().y && origin.y >= box.getMax().y) {
+    t_near_y = -inf; t_far_y = inf;
+  } else
+    return inf;
+
+  if (d.z != 0) {
+    t_near_z = double(box.getMin().z - origin.z) / d.z;
+    t_far_z = double(box.getMax().z - origin.z) / d.z;
+  } else if (origin.z <= box.getMax().z && origin.z >= box.getMax().z) {
+    t_near_z = -inf; t_far_z = inf;
+  } else
+    return inf;
+
+  /* now we know the interval for each, check that all three overlap */
+  if (t_near_x > t_far_y || t_near_y > t_far_z || t_near_z > t_far_x
+      || t_near_x > t_far_z || t_near_y > t_far_x || t_near_z > t_far_y)
+    return inf;
+
+  /* The entry intersection is the farthest one, i.e. the point where we enter
+   * the intersection of all three ray segments.
+   */
+  t_near = std::max(t_near_x, std::max(t_near_y, t_near_z));
+
+  /* If the entry point is behind the origin, we must be inside the box, so use
+   * the exit point.
+   */
+  if (t_near > 0.0)
+    return t_near;
+  else
+    return std::min(t_far_x, std::min(t_far_y, t_far_z));
+}
+
 /** \brief Find and return all interactions of this ray to a given extent.
  *
  * \param      extent       The length (in units of d) to scan along the ray.
  *                          If extent is infinity or NaN, then behaviour is
  *                          undefined.
+ * \param      interact     Bitfield of objects with which interactions should
+ *                          be sought.
+ * \param      stop         Bitfield of objects which stop the ray, and past
+ *                          which we need not search.
  * \param[out] interactions The interactions found.
  */
 void Ray::getAllInteractionsTo(
     double extent,
+    GameObject interact,
+    GameObject stop,
     IntersectionSet& interactions
   ) const
 {
-  GameObject interact = interactsWith();
-  GameObject stop = stoppedBy();
   GameObject interesting = interact | stop;
 
   assert(interactions.empty());

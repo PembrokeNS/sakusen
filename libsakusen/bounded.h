@@ -27,6 +27,13 @@ class Bounded {
      * subclasses want to override it.
      */
     virtual ~Bounded() {}
+
+    /** \brief Retrieve object type.
+     *
+     * Find the objects type so it can be discarded quickly without computing
+     * the bounding box in situations where that is beneficial. */
+    virtual GameObject getType() const = 0;
+
     /** \brief Retrieve the object's bbox.
      *
      * Really, you shouldn't call this method very often. If you want to do
@@ -50,7 +57,7 @@ class Bounded {
      * the bbox, or +Inf if there is no intersection. If the ray starts inside
      * the bbox, you still get the first intersection with the boundary.
      */
-    virtual double fast_intersect(const Ray& r) const;
+    virtual double fastIntersect(const Ray& r) const;
 
     /** \brief Intersect a Ray with the actual object.
      *
@@ -82,7 +89,25 @@ class Bounded {
      * this one.
      * \return true iff the two bboxes intersect.
      */
-    bool fast_intersection(const Bounded& b) const;
+    bool fastIntersection(const Bounded& b) const;
+
+    /** \brief Intersect this bbox with a box.
+     *
+     * This method decides whether the intersection of the regions enclosed by
+     * the two boxes is non-zero. That is, it will say yes iff the boundaries
+     * overlap or one is completely enclosed by the other. It cannot be
+     * overridden because the subclass would need to know the details of both
+     * objects to do it sensibly.
+     *
+     * It is named "fast" because it operates only on the bboxes rather than
+     * the bounded objects, even though there is no corresponding "slow"
+     * operation in this case.
+     *
+     * \param[in] b The box which should be intersected withthe bounding box
+     *  of this one.
+     * \return true iff the two boxes intersect.
+     */
+    bool fastIntersection(const Box<sint32>& b) const;
 };
 
 }

@@ -29,8 +29,16 @@ class LIBSAKUSEN_API IUnitStatus {
       return getOrientation()*p+getPosition();
     }
     
+    inline Point<sint32> localToGlobalRelative(const Point<sint32>& p) const {
+      return getOrientation()*p;
+    }
+    
     inline Point<sint32> globalToLocal(const Point<sint32>& p) const {
       return getOrientation().inverseMul(p-getPosition());
+    }
+    
+    inline Point<sint32> globalToLocalRelative(const Point<sint32>& p) const {
+      return getOrientation().inverseMul(p);
     }
 };
 

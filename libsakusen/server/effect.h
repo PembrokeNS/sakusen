@@ -21,7 +21,7 @@ namespace server {
 /** \brief Represents an alteration to some region of space in the game.
  *
  * \todo Some kind of visibility modification scheme. */
-class Effect {
+class Effect : public Bounded {
   private:
     PlayerID owner;
     Region<sint32>::Ptr region;
@@ -30,13 +30,18 @@ class Effect {
     Effect();
   protected:
     Effect(const Effect& copy) :
-      owner(copy.owner), region(copy.region), visibility(copy.visibility) {}
+      Bounded(copy),
+      owner(copy.owner),
+      region(copy.region),
+      visibility(copy.visibility)
+    {}
     Effect(PlayerID o, const Region<sint32>::Ptr& r, Visibility v) :
       owner(o), region(r), visibility(v) {}
     
   public:
     virtual ~Effect() {}
     /* accessors */
+    inline GameObject getType() const { return gameObject_effect; }
     inline const PlayerID getOwner(void) const { return owner; }
     inline const Region<sint32>::Ptr& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
@@ -54,6 +59,16 @@ class Effect {
      * The default implementation returns true, so, unless overridden, the
      * Effect will last for but a single tick. */
     virtual bool onRemovalTest(void) { return true; }
+
+    Box<sint32> getBoundingBox() const { return region->getBoundingBox(); }
+    /* Overloading fastIntersect because for all the regions we presently have,
+     * it's not worth primary-testing as intersection against the bounding box
+     * for the region.  If we get more complicated sorts of region, then may
+     * have to be rethought */
+    double fastIntersect(const Ray& r) const {
+      return region->intersect(r);
+    }
+    double intersect(const Ray& r) const { return fastIntersect(r); }
 };
 
 }}

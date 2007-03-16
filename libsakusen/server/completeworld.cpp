@@ -1,8 +1,10 @@
 #include "completeworld.h"
+
 #include "effect.h"
 #include "mapplaymode.h"
 #include "region-methods.h"
 #include "map-methods.h"
+#include "naivespatial.h"
 
 #include <list>
 #include <vector>
@@ -54,8 +56,14 @@ CompleteWorld::CompleteWorld(
   for (i=0; i < numPlayers; i++) {
     players[i].setPlayerId(i);
   }
+
+  /* register the spatial index so that it gets filled with units and effects
+   * */
+  spatialIndex.reset(new NaiveSpatial());/** \todo Support other choices */
+  effects.registerIndex(spatialIndex);
+  units.registerIndex(spatialIndex);
   
-  /* put units on the map as specified in map */
+  /* put units on the map as specified in MapPlayMode */
   for (i=0; i < numPlayers; i++) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
@@ -68,12 +76,6 @@ CompleteWorld::CompleteWorld(
 
 CompleteWorld::~CompleteWorld()
 {
-  /* Free memory for effects */
-  while (!effects.empty()) {
-    delete effects.front();
-    effects.pop_front();
-  }
-
   /* Clear units lest they outlive the sensor returns from them */
   units.clear();
   
@@ -86,7 +88,7 @@ CompleteWorld::~CompleteWorld()
 }
 
 void CompleteWorld::applyEffect(
-    Effect* effect,
+    const Ref<Effect>& effect,
     void (Effect::*method)(const Ref<LayeredUnit>&)
   )
 {
@@ -94,17 +96,20 @@ void CompleteWorld::applyEffect(
    * duplication.  This is possibly too slow.  To speed it up this method could
    * be inlined, so that \p method becomes a constant */
   
-  /** \todo Speed this up by storing data sensibly */
-
   /* We can't just iterate over the units and mess with them directly, because
-   * if they get destroyed then the itereator will be invalidated, and
+   * if they get destroyed then the iterator will be invalidated, and
    * segfaults ensue.  Instead, we first collect Refs to all the affected
    * units, and then process them all. */
+  ISpatial::Result possiblyAffectedUnits =
+    spatialIndex->findIntersecting(
+        effect->getRegion()->getBoundingBox(), gameObject_unit
+      );
   queue<Ref<LayeredUnit> > affectedUnits;
-  for (hash_list<LayeredUnit>::iterator unit = units.begin();
-      unit != units.end(); ++unit) {
-    if (effect->getRegion()->contains((*unit)->getStatus())) {
-      affectedUnits.push(*unit);
+  for (ISpatial::Result::iterator bounded = possiblyAffectedUnits.begin();
+      bounded != possiblyAffectedUnits.end(); ++bounded) {
+    Ref<LayeredUnit> unit = bounded->dynamicCast<LayeredUnit>();
+    if (effect->getRegion()->contains(unit->getStatus())) {
+      affectedUnits.push(unit);
     }
   }
   
@@ -112,7 +117,8 @@ void CompleteWorld::applyEffect(
     Ref<LayeredUnit> unit = affectedUnits.front();
     affectedUnits.pop();
     if (unit.isValid()) {
-      (effect->*method)(unit);
+      /* Somewhat hacky way to circumvent Ref's protection of the pointer */
+      (effect.operator->().get()->*method)(unit);
     }
   }
 }
@@ -126,8 +132,8 @@ void CompleteWorld::applyEffect(
  *
  * This method will call the Effect::onUnitPresent method, and then test the
  * Effect to see whether it should be removed */
-list<Effect*>::iterator CompleteWorld::processEffect(
-    list<Effect*>::iterator effect
+hash_list<Effect, Bounded>::iterator CompleteWorld::processEffect(
+    hash_list<Effect, Bounded>::iterator effect
   )
 {
   /* Call the 'present' method on Units */
@@ -136,7 +142,6 @@ list<Effect*>::iterator CompleteWorld::processEffect(
   if ((*effect)->onRemovalTest()) {
     /* We need to remove the effect */
     applyEffect(*effect, &Effect::onUnitLeave);
-    delete *effect;
     return effects.erase(effect);
   } else {
     return ++effect;
@@ -155,7 +160,7 @@ void CompleteWorld::addUnit(const LayeredUnit::Ptr& unit, PlayerID owner) {
 void CompleteWorld::removeUnit(LayeredUnit* unit)
 {
   unit->changeOwner(0, changeOwnerReason_destroyed);
-  hash_list<LayeredUnit>::iterator it = units.find(unit);
+  hash_list<LayeredUnit, Bounded>::iterator it = units.find(unit);
   if (it == units.end()) {
     Fatal("removing unit not present");
   }
@@ -194,7 +199,7 @@ void CompleteWorld::incrementGameState(void)
   assert(world == this);
   
   /* apply incoming orders */
-  for (std::vector<Player>:: iterator player = players.begin();
+  for (std::vector<Player>::iterator player = players.begin();
       player != players.end(); player++) {
     player->applyIncomingOrders();
   }
@@ -203,7 +208,8 @@ void CompleteWorld::incrementGameState(void)
   timeNow++;
   
   /* process units */
-  for (hash_list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
+  for (hash_list<LayeredUnit, Bounded>::iterator j=units.begin();
+      j!=units.end(); ++j) {
     /* this moves the unit according to its
      * current speed.  This method also responsible for
      * ensuring that all appropriate client messages caused by the things
@@ -236,7 +242,7 @@ void CompleteWorld::incrementGameState(void)
   
   /* Next we deal with all effects that already exist (as opposed to newly
    * created ones, which are dealt with in the loop below) */
-  for (list<Effect*>::iterator effect = effects.begin();
+  for (hash_list<Effect, Bounded>::iterator effect = effects.begin();
       effect != effects.end(); ) {
     effect = processEffect(effect);
   }
@@ -264,12 +270,11 @@ void CompleteWorld::incrementGameState(void)
 
       Effect* effect = newEffects.front();
       newEffects.pop();
-      effects.push_back(effect);
-      /* construct an iterator pointing at this new effect */
-      list<Effect*>::iterator effectIt = effects.end();
-      --effectIt;
+      /* insert, and get an iterator pointing at this new effect */
+      hash_list<Effect, Bounded>::iterator effectIt =
+        effects.push_back(effect);
       /* Units inside the effect get the 'entry' method called... */
-      applyEffect(effect, &Effect::onUnitEnter);
+      applyEffect(*effectIt, &Effect::onUnitEnter);
       /* ...and then proceed as if it was a bog standard Effect */
       processEffect(effectIt);
     }
@@ -294,7 +299,8 @@ void CompleteWorld::incrementGameState(void)
 
   /* Once everything has happened that can happen, we induce all units to send
    * to clients any information about their changedness */
-  for (hash_list<LayeredUnit>::iterator j=units.begin(); j!=units.end(); j++) {
+  for (hash_list<LayeredUnit, Bounded>::iterator j=units.begin();
+      j!=units.end(); ++j) {
     (*j)->clearDirty();
   }
 }
@@ -306,7 +312,8 @@ void CompleteWorld::applyEntryExitEffects(
   )
 {
   /** \todo make this more efficient by storing the data differently */
-  for (std::list<Effect*>::iterator i=effects.begin(); i!=effects.end(); i++) {
+  for (hash_list<Effect, Bounded>::iterator i=effects.begin();
+      i!=effects.end(); ++i) {
     if ((*i)->getRegion()->contains(oldPosition) &&
         !(*i)->getRegion()->contains(newPosition)) {
       (*i)->onUnitLeave(unit);
