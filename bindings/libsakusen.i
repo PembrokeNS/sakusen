@@ -97,11 +97,6 @@ namespace sakusen {
   %template(SPoint64) Point<sint64>;
 }
 
-%include "ray.h"
-%{
-#include "ray.h"
-%}
-
 /* temporary */
 %import "iarchive.h"
 %import "oarchive.h"
@@ -110,11 +105,6 @@ namespace sakusen {
 #include "isensorreturns.h"
 %}
 %import "isensorreturns.h"
-
-%include "quadratic.h"
-%{
-#include "quadratic.h"
-%}
 
 %include "rectangle.h"
 %{
@@ -127,6 +117,16 @@ namespace sakusen {
 #include "box.h"
 %}
 %template(SBox32) sakusen::Box<sint32>;
+
+%include "ray.h"
+%{
+#include "ray.h"
+%}
+
+%include "quadratic.h"
+%{
+#include "quadratic.h"
+%}
 
 /* in lieu of including playerid.h */
 typedef uint8 PlayerID;

@@ -1,5 +1,5 @@
 /**
-\namespace sakusen::clien
+\namespace sakusen::client
 \brief libsakusen-client: Core client library
 
 libsakusen-client is a library intended to ease the creation of sakusen

@@ -1,9 +1,9 @@
 #!/usr/bin/perl -Tw
 
-use Test::More skip_all => q/Ray is currently abstract in libsak./;
+use Test::More;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
-plan tests => 7;
+plan tests => 6;
 
 $s = Sakusen::SPoint32->new(1, 2, 3);
 $d = Sakusen::SPoint32->new(0, 0, -10);

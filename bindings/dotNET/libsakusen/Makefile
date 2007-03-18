@@ -8,7 +8,7 @@ test: all
 	$(MAKE) -C t test
 
 clean:
-	-rm -rf *.o *.so *.cs *.cpp *.lo *.la
+	-rm -rf *.o *.so *.cs *.cpp *.lo *.la .libs
 
 sakusen.la: sakusen.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
