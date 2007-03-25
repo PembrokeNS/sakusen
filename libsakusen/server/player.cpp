@@ -141,7 +141,7 @@ void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
 
 void Player::checkSensorReturns()
 {
-  /* check over our sensor returns for ones where the units have beed destroyed
+  /* check over our sensor returns for ones where the units have been destroyed
    * */
   stack<DynamicSensorReturnsRef> invalidatedSensorReturnsIds;
   for (DynamicSensorReturnsRef returns = sensorReturnsById.begin();

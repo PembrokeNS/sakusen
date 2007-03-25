@@ -4,6 +4,8 @@
 #include "layeredunit.h"
 #include "sphereregion.h"
 
+#include <stack>
+
 using namespace std;
 using namespace __gnu_cxx;
 
@@ -103,6 +105,20 @@ void DynamicSensorReturns::update()
   perception = perception_none;
   uint32 bestRadius = numeric_limits<uint32>::max();
   
+  /* Check over the sensers, and erase any who no longer exist */
+  stack<uint32> deadUnitIDs;
+  for (SensorReturnMap::iterator senser = sensers.begin();
+      senser != sensers.end(); ++senser) {
+    if (!senserOwner->getUnits().count(senser->first)) {
+      deadUnitIDs.push(senser->first);
+    }
+  }
+
+  while (!deadUnitIDs.empty()) {
+    sensers.erase(deadUnitIDs.top());
+    deadUnitIDs.pop();
+  }
+
   /* loop over all units of the player doing the sensing */
   /** \todo Loop only over the nearby units
    * \todo Stop once it is clear that adding more units will add no more
