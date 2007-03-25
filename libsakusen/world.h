@@ -8,6 +8,7 @@
 #include "map.h"
 #include "sensorreturnsid.h"
 #include "ref.h"
+#include "ispatial.h"
 
 namespace sakusen {
 
@@ -30,6 +31,7 @@ class LIBSAKUSEN_API World : boost::noncopyable {
     virtual Ref<ISensorReturns> getISensorReturns(
         PlayerID player, SensorReturnsID id
       ) = 0;
+    virtual ISpatial::ConstPtr getSpatialIndex() const = 0;
 };
 
 extern LIBSAKUSEN_API World* world;

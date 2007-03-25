@@ -3,10 +3,12 @@
 
 #include "libsakusen-global.h"
 #include "point.h"
-#include "ray.h"
 #include "box.h"
+#include "gameobject.h"
 
 namespace sakusen {
+
+class Ray;
 
 /** \brief A bounded region of or object in game-space.
  *
@@ -72,6 +74,28 @@ class Bounded {
      * boundary.
      */
     virtual double intersect(const Ray& r) const = 0;
+
+    /** \brief Determine whether the bbox contains a given point.
+     *
+     * By default, this calls getBoundingBox() and determines whether that
+     * contains the given point, but it is left virtual so that subclasses can
+     * override it (in case the actual test is at least as fast as the bbox
+     * test).
+     *
+     * \param p The position to test.
+     * \return true iff p lies in the bbox.
+     */
+    virtual bool fastContains(const Position& p) const;
+
+    /** \brief Determine whether the object contains a given point.
+     *
+     * This pure virtual method should be overriden by subclasses with the
+     * appropriate code to determine whether the actual object contains the
+     * given point.
+     * \param p The position to test.
+     * \return true iff p lies in the bbox.
+     */
+    virtual bool contains(const Position& p) const = 0;
 
     /** \brief Intersect this bbox with another.
      *

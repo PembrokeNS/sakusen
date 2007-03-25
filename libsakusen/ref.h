@@ -7,7 +7,6 @@
 #include "iarchive.h"
 #include "oarchive.h"
 #include "maskedptr.h"
-#include "iref.h"
 
 namespace sakusen {
 
@@ -27,7 +26,7 @@ class hash_list;
  * reference to an object of this form.  This reference will automatically keep
  * track of the objects removal, and invalidate itself when that happens */
 template<class T>
-class Ref : public IRef {
+class Ref {
   friend class hash_list<T>;
   private:
     typedef
@@ -45,10 +44,6 @@ class Ref : public IRef {
     }
   private:
     boost::weak_ptr<T> referee;
-
-    IRef* newCopy() const {
-      return new Ref<T>(*this);
-    }
   public:
     inline bool isValid() const { return !referee.expired(); }
     

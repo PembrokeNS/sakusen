@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_ISPATIAL_H
 #define LIBSAKUSEN_ISPATIAL_H
 
+#include <map>
+
 #include "iindex.h"
 #include "bounded.h"
 #include "box.h"
@@ -41,11 +43,39 @@ class ISpatial : public IIndex<Bounded> {
     virtual Result findIntersecting(
         const Box<sint32>&,
         const GameObject filter
-      ) = 0;
+      ) const = 0;
+
+    /** \brief Find objects which might contain the given point, and
+     * which match the given filter.  This method is permitted to overestimate
+     * and return too many objects for the sake of speed. */
+    virtual Result findFastContaining(
+        const Position&,
+        const GameObject filter
+      ) const = 0;
+
+    /** \brief Find objects which really contain the given point, and
+     * which match the given filter. */
+    virtual Result findContaining(
+        const Position&,
+        const GameObject filter
+      ) const = 0;
 
     /** \brief Find objects whose bboxes partially or completely enclose the given bbox. */
     /** \brief Find objects whose bboxes completely enclose the given bbox. */
-    /* find ray intersections with bboxes */
+    
+    /** \brief Find ray intersections with objects
+     *
+     * Returns a map, keyed by ray parameter, of all intersections of the given
+     * ray with objects in the index subject to the object matching the given
+     * \p filter, and the ray parameter of the intersection being at most
+     * \p extent.  Note that this should be the intersection with the actual
+     * object, not its bounding box.
+     */
+    virtual std::map<double, Ref<Bounded> > findIntersections(
+        const Ray&,
+        const double extent,
+        const GameObject filter
+      ) const = 0;
 };
 
 }

@@ -34,6 +34,8 @@ class LIBSAKUSEN_API ICompleteUnit : public Bounded {
     virtual Box<sint32> getBoundingBox(void) const;
     double fastIntersect(const Ray& r) const { return intersect(r); }
     double intersect(const Ray& r) const;
+    bool fastContains(const Position& p) const { return contains(p); }
+    bool contains(const Position& p) const;
 };
 
 }

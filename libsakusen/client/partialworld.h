@@ -14,9 +14,6 @@ namespace sakusen {
 namespace client {
 
 class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
-  private:
-    PartialWorld();
-    PartialWorld(const PartialWorld&);
   public:
     PartialWorld(
         const Universe::ConstPtr& universe,
@@ -33,6 +30,8 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     PlayerID playerId;
     PartialMap* map;
     __gnu_cxx::hash_map<uint32, UpdatedUnit*> units; /* units owned by this */
+
+    ISpatial::Ptr spatialIndex;
     
     hash_list<UpdatedSensorReturns> sensorReturns;
     __gnu_cxx::hash_map<
@@ -49,6 +48,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     inline PlayerID getPlayerId() const { return playerId; }
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
+    inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
 
     std::list<UpdatedUnit*> getUnitsIntersecting(const Rectangle<sint32>&);
     std::list<Ref<UpdatedSensorReturns> > getSensorReturnsIntersecting(

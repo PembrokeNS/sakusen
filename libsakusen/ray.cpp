@@ -3,7 +3,11 @@
 #include "heightfield.h"
 #include "world.h"
 
+#include <boost/algorithm/minmax.hpp>
+
 using namespace std;
+using boost::minmax;
+using boost::tie;
 
 namespace sakusen {
 
@@ -60,8 +64,10 @@ double Ray::intersectBox(const Box<sint32>& box) const
    * for which the ray is between the planes.
    */
   if (d.x != 0) {
-    t_near_x = double(box.getMin().x - origin.x) / d.x;
-    t_far_x = double(box.getMax().x - origin.x) / d.x;
+    tie(t_near_x, t_far_x) = minmax(
+        double(box.getMin().x - origin.x) / d.x,
+        double(box.getMax().x - origin.x) / d.x
+      );
     /* unless the ray is parallel to those planes, in which case check whether
      * it is between them
      */
@@ -73,17 +79,21 @@ double Ray::intersectBox(const Box<sint32>& box) const
   /* ^ the ray misses the box entirely */
 
   if (d.y != 0) {
-    t_near_y = double(box.getMin().y - origin.y) / d.y;
-    t_far_y = double(box.getMax().y - origin.y) / d.y;
-  } else if (origin.y <= box.getMax().y && origin.y >= box.getMax().y) {
+    tie(t_near_y, t_far_y) = minmax(
+        double(box.getMin().y - origin.y) / d.y,
+        double(box.getMax().y - origin.y) / d.y
+      );
+  } else if (origin.y <= box.getMax().y && origin.y >= box.getMin().y) {
     t_near_y = -inf; t_far_y = inf;
   } else
     return inf;
 
   if (d.z != 0) {
-    t_near_z = double(box.getMin().z - origin.z) / d.z;
-    t_far_z = double(box.getMax().z - origin.z) / d.z;
-  } else if (origin.z <= box.getMax().z && origin.z >= box.getMax().z) {
+    tie(t_near_z, t_far_z) = minmax(
+        double(box.getMin().z - origin.z) / d.z,
+        double(box.getMax().z - origin.z) / d.z
+      );
+  } else if (origin.z <= box.getMax().z && origin.z >= box.getMin().z) {
     t_near_z = -inf; t_far_z = inf;
   } else
     return inf;
@@ -116,7 +126,8 @@ double Ray::intersectBox(const Box<sint32>& box) const
  *                          be sought.
  * \param      stop         Bitfield of objects which stop the ray, and past
  *                          which we need not search.
- * \param[out] interactions The interactions found.
+ * \param[out] interactions The interactions found.  The set passed should be
+ *                          empty.
  */
 void Ray::getAllInteractionsTo(
     double extent,
@@ -156,7 +167,30 @@ void Ray::getAllInteractionsTo(
     }
   }
   
-  /** \todo Intersections with units and Effects */
+  /* Intersections with units and Effects */
+  map<double, Ref<Bounded> > otherIntersections =
+    world->getSpatialIndex()->findIntersections(*this, extent, interesting);
+
+  for (map<double, Ref<Bounded> >::iterator intersection =
+      otherIntersections.begin(); intersection != otherIntersections.end();
+      ++intersection) {
+    if (intersection->first > extent) {
+      break;
+    }
+    interactions.insert(
+        Intersection(intersection->second, intersection->first)
+      );
+    if (stop & intersection->second->getType()) {
+      extent = intersection->first;
+    }
+  }
+
+  /* Finally, erase any leftover intersections which may be beyond the revised
+   * value of extent (we create a dummy Intersection to be able to call
+   * upper_bound) */
+  IntersectionSet::iterator firstDud =
+    interactions.upper_bound(Intersection(gameObject_land, extent));
+  interactions.erase(firstDud, interactions.end());
 }
 
 }

@@ -278,9 +278,6 @@ void CompleteWorld::incrementGameState(void)
       /* ...and then proceed as if it was a bog standard Effect */
       processEffect(effectIt);
     }
-    /** \todo Do something with effects that calls the Effect::unitPresent
-     * method.  Also provide for effects coming to an end (and delete them when
-     * that happens!) */
   } while (effectHappened);
     /* We need to keep repeating this loop until no Effects happen because
      * Effects can cause Fuses which can cause Effects
@@ -312,15 +309,27 @@ void CompleteWorld::applyEntryExitEffects(
   )
 {
   /** \todo make this more efficient by storing the data differently */
-  for (hash_list<Effect, Bounded>::iterator i=effects.begin();
-      i!=effects.end(); ++i) {
-    if ((*i)->getRegion()->contains(oldPosition) &&
-        !(*i)->getRegion()->contains(newPosition)) {
-      (*i)->onUnitLeave(unit);
+  {
+    const ISpatial::Result possiblyLeftEffects =
+      spatialIndex->findContaining(oldPosition, gameObject_effect);
+    for (ISpatial::Result::const_iterator it=possiblyLeftEffects.begin();
+        it!=possiblyLeftEffects.end(); ++it) {
+      const Ref<Effect> i = it->dynamicCast<Effect>();
+      if (!i->getRegion()->contains(newPosition)) {
+        i->onUnitLeave(unit);
+      }
     }
-    if (!(*i)->getRegion()->contains(oldPosition) &&
-        (*i)->getRegion()->contains(newPosition)) {
-      (*i)->onUnitEnter(unit);
+  }
+
+  {
+    const ISpatial::Result possiblyEnteredEffects =
+      spatialIndex->findContaining(newPosition, gameObject_effect);
+    for (ISpatial::Result::const_iterator it=possiblyEnteredEffects.begin();
+        it!=possiblyEnteredEffects.end(); ++it) {
+      const Ref<Effect> i = it->dynamicCast<Effect>();
+      if (!i->getRegion()->contains(oldPosition)) {
+        i->onUnitEnter(unit);
+      }
     }
   }
 }

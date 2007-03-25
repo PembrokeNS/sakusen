@@ -46,7 +46,7 @@ bool Paralyzer::aimAt(
   )
 {
   Point<sint32> displacement = pos - firer->getStatus()->getPosition() +
-    Point<sint32>(0, 0, -20);
+    Point<sint32>(0, 0, 0);
   /* test whether target is within range */
   if (displacement.squareLength() < 10000) {
     status->setDirection(displacement);

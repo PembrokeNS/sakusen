@@ -3,7 +3,6 @@
 
 #include <list>
 #include "maskedptr.h"
-#include "iref.h"
 #include "ref.h"
 #include "iindex.h"
 
@@ -22,7 +21,7 @@ class hash_list_const_iterator;
  * looked up in O(1) (amortized) time from their pointer alone (Or,
  * equivalently, a Ref to the object).
  *
- * This is also an IRefContainer, so it provides its elements not by pointer or
+ * This provides its elements not by pointer or
  * by value but wrapped in a Ref<T>.  Note that such can be cast to Ref<U> for
  * other U using the members of Ref.
  *

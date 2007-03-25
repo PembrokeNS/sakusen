@@ -3,8 +3,8 @@
 #include "player.h"
 #include "layeredunit.h"
 #include "sphereregion.h"
-#include "limits.h"
 
+using namespace std;
 using namespace __gnu_cxx;
 
 using namespace sakusen;
@@ -101,7 +101,7 @@ void DynamicSensorReturns::update()
   }
   
   perception = perception_none;
-  uint32 bestRadius = UINT32_MAX;
+  uint32 bestRadius = numeric_limits<uint32>::max();
   
   /* loop over all units of the player doing the sensing */
   /** \todo Loop only over the nearby units

@@ -1,9 +1,15 @@
 #include "bounded.h"
 
+#include "ray.h"
+
 namespace sakusen {
 
 double Bounded::fastIntersect(const Ray& r) const {
   return r.intersectBox(getBoundingBox());
+}
+
+bool Bounded::fastContains(const Position& p) const {
+  return getBoundingBox().contains(p);
 }
 
 bool Bounded::fastIntersection(const Bounded& b) const {

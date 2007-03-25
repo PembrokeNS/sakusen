@@ -90,7 +90,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       newEffects.push(effect);
     }
 
-    inline ISpatial::Ptr getSpatialIndex() { return spatialIndex; }
+    inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
     
     inline Player* getPlayerPtr(const PlayerID& id)
     {

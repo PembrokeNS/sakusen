@@ -61,14 +61,17 @@ class Effect : public Bounded {
     virtual bool onRemovalTest(void) { return true; }
 
     Box<sint32> getBoundingBox() const { return region->getBoundingBox(); }
-    /* Overloading fastIntersect because for all the regions we presently have,
-     * it's not worth primary-testing as intersection against the bounding box
+    /* Overloading fastIntersect and fastContains because for all the regions
+     * we presently have, it's not worth primary-testing intersection or
+     * containment against the bounding box
      * for the region.  If we get more complicated sorts of region, then may
      * have to be rethought */
     double fastIntersect(const Ray& r) const {
       return region->intersect(r);
     }
-    double intersect(const Ray& r) const { return fastIntersect(r); }
+    double intersect(const Ray& r) const { return region->intersect(r); }
+    bool fastContains(const Position& p) const { return region->contains(p); }
+    bool contains(const Position& p) const { return region->contains(p); }
 };
 
 }}

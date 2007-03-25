@@ -56,3 +56,14 @@ double ICompleteUnit::intersect(const Ray& r) const
   return localRay.intersectBox(Box<sint32>(-size, size));
 }
 
+bool ICompleteUnit::contains(const Position& p) const
+{
+  const IUnitStatus* status = getIStatus();
+  const Point<uint32>& size = getITypeData()->getSize();
+
+  /* We transform the position into local coordinates */
+  Position localPos(status->globalToLocal(p));
+  /* Now we can check this transformed point against our box */
+  return Box<sint32>(-size, size).contains(localPos);
+}
+

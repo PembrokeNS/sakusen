@@ -1,6 +1,7 @@
 #include "partialworld.h"
 
 #include "map-methods.h"
+#include "naivespatial.h"
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -26,6 +27,8 @@ PartialWorld::PartialWorld(
       )),
   units()
 {
+  spatialIndex.reset(new NaiveSpatial());
+  /** \bug This spatial index never gets anything added to it */
   world = this;
 }
 

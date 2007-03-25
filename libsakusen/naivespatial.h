@@ -20,7 +20,20 @@ class NaiveSpatial : public ISpatial {
     Result findIntersecting(
         const Box<sint32>&,
         const GameObject filter
-      );
+      ) const;
+    Result findFastContaining(
+        const Position&,
+        const GameObject filter
+      ) const;
+    Result findContaining(
+        const Position&,
+        const GameObject filter
+      ) const;
+    std::map<double, Ref<Bounded> > findIntersections(
+        const Ray&,
+        const double extent,
+        const GameObject filter
+      ) const;
 };
 
 }
