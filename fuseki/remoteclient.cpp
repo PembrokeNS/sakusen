@@ -30,7 +30,8 @@ RemoteClient::RemoteClient(
   admin(false),
   neverAdmin(true),
   ready(false),
-  autoUnready(false)
+  autoUnready(false),
+  dead(false)
 {
   outSocket->setNonBlocking(true);
   if (createInSocket) {

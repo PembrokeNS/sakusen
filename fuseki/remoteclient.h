@@ -16,9 +16,6 @@ namespace fuseki {
  * be a TCP socket to another machine, or a Unix socket to another process on
  * the same machine, or whatever else is supported) */
 class RemoteClient : public sakusen::server::Client, public SettingsUser {
-  private:
-    RemoteClient();
-    RemoteClient(const RemoteClient& copy);
   public:
     /** \brief Standard constructor
      *
@@ -48,13 +45,15 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     Server* server;
     sakusen::comms::Socket::Ptr inSocket;
     sakusen::comms::Socket::Ptr outSocket;
-    std::queue<sakusen::comms::Message, std::list<sakusen::comms::Message> > incomingMessageQueue;
+    std::queue<sakusen::comms::Message> incomingMessageQueue;
     std::list<sakusen::Update> outgoingUpdateQueue;
     bool admin; /* Whether I am an admin */
     bool neverAdmin; /* Whether I never want to be an admin */
     bool ready; /* Whether I am ready to start the game */
     bool autoUnready; /* Whether I want to have my readiness cleared whenever
                          a setting changes */
+    bool dead; /* Whether I'm apparently dead (usually some kind of socket
+                  problem) */
 
     void setPlayerId(sakusen::PlayerID id, bool removeGroup);
     inline void setPlayerId(sakusen::PlayerID id) {
@@ -63,10 +62,12 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
   public:
     /** \name Accessors */
     //@{
-    inline bool isAdmin() { return admin; }
+    inline bool isAdmin() const { return admin; }
     inline void setAdmin(bool value);
-    inline bool isNeverAdmin() { return neverAdmin; }
-    inline bool isAutoUnready() { return autoUnready; }
+    inline bool isNeverAdmin() const { return neverAdmin; }
+    inline bool isAutoUnready() const { return autoUnready; }
+    inline bool isDead() const { return dead; }
+    inline void setDead() { dead = true; }
     inline bool messageQueueEmpty() const {
       return incomingMessageQueue.empty();
     }

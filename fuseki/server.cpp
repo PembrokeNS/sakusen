@@ -231,105 +231,113 @@ void Server::handleClientMessages()
   for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
       clientIt!=clients.end(); ) {
     RemoteClient* client = clientIt->second;
+
     bool clientRemoved = false;
-    
-    try {
-      client->flushIncoming();
-      
-      while (!client->messageQueueEmpty()) {
-        const Message& message = client->messageQueuePopFront();
 
-        /* Forward all the messages to all registered listeners
-         * (this has to come before our own processing because our own
-         * processing might result in the client being removed) */
-        /** \todo Forward only to interested listeners */
-        GetPtr<Listener> gp;
-        for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
-            listeners.begin(); listener != listeners.end(); ++listener) {
-          listener->second.apply_visitor(gp)->clientMessage(
-              client, message
-            );
-        }
+    if (client->isDead()) {
+      out << "Removing dead client " <<
+        clientID_toString(client->getClientId()) << "\n";
+      removeClient(client);
+      clientRemoved = true;
+    } else {
+      try {
+        client->flushIncoming();
+        
+        while (!client->messageQueueEmpty()) {
+          const Message& message = client->messageQueuePopFront();
 
-        /* Perform our own processing on the message */
-        switch (message.getType()) {
-          case messageType_leave:
-            out << "Removing client (leaving)\n";
-            removeClient(client);
-            clientRemoved = true;
-            break;
-          case messageType_getSetting:
-            {
-              GetSettingMessageData data = message.getGetSettingData();
-              String setting = data.getSetting();
-              out << "Client requested setting " << setting << "\n";
-              String reason;
-              String value;
-              Node::ConstPtr node;
-              reason = settings->getRequest(setting, value, node, client);
-              if (reason != "") {
-                out << "Request rejected (" << reason << ")\n";
-                client->send(new RejectMessageData(reason));
-              } else {
-                /* We send back node->getFullName() rather than just setting to
-                 * ensure that it is in canonical form */
-                client->send(
-                    new NotifySettingMessageData(node->getFullName(), value)
-                  );
-              }
-            }
-            break;
-          case messageType_changeSetting:
-            {
-              ChangeSettingMessageData data = message.getChangeSettingData();
-              out << "Client asked to change setting " << data.getSetting() <<
-                "\n";
-              String reason;
-              if (!(reason = settings->changeRequest(
-                    data.getSetting(), data.getValue(), client
-                  )).empty()) {
-                /* That a non-empty string was returned implies that a problem
-                 * occured.  We tell the client as much */
-                out << "Request rejected (" << reason << ")\n";
-                client->send(new RejectMessageData(reason));
-              }
-            }
-            break;
-          case messageType_order:
-            {
-              out << "Received order from client\n";
-              if (sakusen::world == NULL) {
-                out << "Ignoring order because game not started\n";
-              } else {
-                client->enqueueOrder(message.getOrderData().getOrderMessage());
-              }
-            }
-            break;
-          case messageType_extension:
-            {
-              extensionMessages.push(message.getExtensionData());
-            }
-            break;
-          default:
-            out << "Unexpected MessageType " << message.getType() <<
-              " from client\n";
-            break;
-        }
+          /* Forward all the messages to all registered listeners
+           * (this has to come before our own processing because our own
+           * processing might result in the client being removed) */
+          /** \todo Forward only to interested listeners */
+          GetPtr<Listener> gp;
+          for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+              listeners.begin(); listener != listeners.end(); ++listener) {
+            listener->second.apply_visitor(gp)->clientMessage(
+                client, message
+              );
+          }
 
-        if (clientRemoved) {
-          break;
+          /* Perform our own processing on the message */
+          switch (message.getType()) {
+            case messageType_leave:
+              out << "Removing client (leaving)\n";
+              removeClient(client);
+              clientRemoved = true;
+              break;
+            case messageType_getSetting:
+              {
+                GetSettingMessageData data = message.getGetSettingData();
+                String setting = data.getSetting();
+                out << "Client requested setting " << setting << "\n";
+                String reason;
+                String value;
+                Node::ConstPtr node;
+                reason = settings->getRequest(setting, value, node, client);
+                if (reason != "") {
+                  out << "Request rejected (" << reason << ")\n";
+                  client->send(new RejectMessageData(reason));
+                } else {
+                  /* We send back node->getFullName() rather than just setting to
+                   * ensure that it is in canonical form */
+                  client->send(
+                      new NotifySettingMessageData(node->getFullName(), value)
+                    );
+                }
+              }
+              break;
+            case messageType_changeSetting:
+              {
+                ChangeSettingMessageData data = message.getChangeSettingData();
+                out << "Client asked to change setting " << data.getSetting() <<
+                  "\n";
+                String reason;
+                if (!(reason = settings->changeRequest(
+                      data.getSetting(), data.getValue(), client
+                    )).empty()) {
+                  /* That a non-empty string was returned implies that a problem
+                   * occured.  We tell the client as much */
+                  out << "Request rejected (" << reason << ")\n";
+                  client->send(new RejectMessageData(reason));
+                }
+              }
+              break;
+            case messageType_order:
+              {
+                out << "Received order from client\n";
+                if (sakusen::world == NULL) {
+                  out << "Ignoring order because game not started\n";
+                } else {
+                  client->enqueueOrder(message.getOrderData().getOrderMessage());
+                }
+              }
+              break;
+            case messageType_extension:
+              {
+                extensionMessages.push(message.getExtensionData());
+              }
+              break;
+            default:
+              out << "Unexpected MessageType " << message.getType() <<
+                " from client\n";
+              break;
+          }
+
+          if (clientRemoved) {
+            break;
+          }
         }
+      } catch (SocketExn& e) {
+        out << "Removing client " << clientID_toString(client->getClientId()) <<
+          " due to causing SocketExn: " << e.message << "\n";
+        removeClient(client);
+        clientRemoved = true;
+      } catch (DeserializationExn& e) {
+        out << "Removing client " << clientID_toString(client->getClientId()) <<
+          " due to causing DeserializationExn: " << e.message << "\n";
+        removeClient(client);
+        clientRemoved = true;
       }
-    } catch (SocketExn& e) {
-      out << "Removing client " << clientID_toString(client->getClientId()) <<
-        " due to causing SocketExn: " << e.message << "\n";
-      removeClient(client);
-      clientRemoved = true;
-    } catch (DeserializationExn& e) {
-      out << "Removing client " << clientID_toString(client->getClientId()) <<
-        " due to causing DeserializationExn: " << e.message << "\n";
-      removeClient(client);
-      clientRemoved = true;
     }
     
     if (clientRemoved) {
@@ -756,7 +764,7 @@ void Server::serve()
        * - All clients either observers or else assigned to some player
        */
       if (map == NULL) {
-        out << "Not ready because no map selected";
+        out << "Not ready because no map selected" << endl;
       } else {
         bool allPlayersReady = true;
         for (vector<Player>::iterator player = players.begin();
@@ -1267,7 +1275,6 @@ void Server::settingAlteredCallback(Leaf* altered)
   bool isReadinessChange =
     pcrecpp::RE(":clients:[0-9]+:ready").FullMatch(fullName);
   NotifySettingMessageData data(fullName, altered->getValue());
-  list<RemoteClient*> deadClients;
   
   /* Inform everyone with read permission that the setting was altered */
   for (__gnu_cxx::hash_map<ClientID, RemoteClient*>::iterator
@@ -1282,17 +1289,9 @@ void Server::settingAlteredCallback(Leaf* altered)
           changeInClientBranch(client, "ready", "false");
         }
       } catch (SocketExn& e) {
-        deadClients.push_back(client);
+        client->setDead();
       }
     }
-  }
-
-  while (!deadClients.empty()) {
-    out << "Removing client " <<
-      clientID_toString(deadClients.front()->getClientId()) <<
-      "due to causing a SocketExn\n";
-    removeClient(deadClients.front());
-    deadClients.pop_front();
   }
 }
 
