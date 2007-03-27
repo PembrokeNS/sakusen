@@ -12,7 +12,8 @@ no description of the GUI is given here).
 The \c join and \c leave commands allow you
 to connect to or disconnect from the
 server.  At present only one server is supported (at an address specified on
-the command-line, if anywhere).
+the command-line, if anywhere).  The default is to join automatically at
+startup, but you can change that.
 
 \todo Allow the user to solicit many servers and join any one.  Addresses
 shouldn't really be given on the command line at all.
@@ -91,9 +92,18 @@ ourselves to be an admin, then we get this:
 Request rejected by server (cannot write to node ':clients:0:admin': permission denied)
 \endverbatim
 
-So we are no further forward.  Only an admin can set admin status.  But how can
-we resolve this, since there are no admin clients?  Well, we have to get the
-server to set our admin status for us.  We can do this as follows:
+We can also save the trouble of remembering what client number we are by using
+the \c clientset command, like this:
+
+\verbatim
+> cs admin true
+>
+Request rejected by server (cannot write to node ':clients:0:admin': permission denied)
+\endverbatim
+
+But we are no further forward.  Only an admin can set admin status.  But how
+can we resolve this, since there are no admin clients?  Well, we have to get
+the server to set our admin status for us.  We can do this as follows:
 
 \verbatim
 > s clients:0:neveradmin false
@@ -194,5 +204,24 @@ Game is starting!
 \endverbatim
 
 Hey presto!  The game has started.
+
+You can automate this whole process by putting a line like this one in your
+~/.sakusen/tedomari/config file:
+
+\verbatim
+commands=cs neveradmin 0;z 10000;s game:universe:name u;z 1000000;s game:map m;z 2000000;cs player 1;cs ready 1
+\endverbatim
+
+That queues all of the command's we've just discussed that start the game,
+interspersed with some instructions to sleep to ensure that the server can keep
+up, to be executed automatically as soon as tedomari joins the server.  Note
+that it uses \c cs, rather than \c s (where appropriate), and also that it
+abbreviates \c true to \c 1 and \c false to \c 0.
+
+If you have this in your config file, but want to start tedomari without all
+these commands being run, then do
+\verbatim
+tedomari -c ""
+\endverbatim
 */
 
