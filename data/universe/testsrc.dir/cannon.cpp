@@ -18,7 +18,7 @@ void Cannon::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 
 Shell::Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status) :
   Ballistic(
-      source->getOwner(),
+      source,
       server::world->getTimeNow(),
       source->getIStatus()->getPosition() /* start position */,
       status.getDirection() /* start velocity */

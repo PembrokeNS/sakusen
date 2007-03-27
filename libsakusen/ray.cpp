@@ -126,6 +126,9 @@ double Ray::intersectBox(const Box<sint32>& box) const
  *                          be sought.
  * \param      stop         Bitfield of objects which stop the ray, and past
  *                          which we need not search.
+ * \param      cannotHit    A single object which the ray should not intersect
+ *                          with (typically the source unit, to prevent it
+ *                          shooting itself by accident).
  * \param[out] interactions The interactions found.  The set passed should be
  *                          empty.
  */
@@ -133,6 +136,7 @@ void Ray::getAllInteractionsTo(
     double extent,
     GameObject interact,
     GameObject stop,
+    Ref<Bounded> cannotHit,
     IntersectionSet& interactions
   ) const
 {
@@ -176,6 +180,9 @@ void Ray::getAllInteractionsTo(
       ++intersection) {
     if (intersection->first > extent) {
       break;
+    }
+    if (operator==(intersection->second, cannotHit)) {
+      continue;
     }
     interactions.insert(
         Intersection(intersection->second, intersection->first)

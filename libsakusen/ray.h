@@ -55,6 +55,7 @@ class Ray {
         double extent,
         GameObject interactWith,
         GameObject stoppedBy,
+        Ref<Bounded> cannotHit,
         IntersectionSet& interactions
       ) const;
 };

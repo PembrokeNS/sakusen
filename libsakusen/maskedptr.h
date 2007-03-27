@@ -8,6 +8,12 @@
 
 namespace sakusen {
 
+template<typename T>
+class MaskedPtr;
+
+template<typename T>
+bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
+
 /** \brief Hides a pointer so that it cannot be dereferenced, but can still be
  * used as a UID.
  *
@@ -16,6 +22,7 @@ namespace sakusen {
  */
 template<typename T>
 class MaskedPtr {
+  friend bool operator==<T>(const MaskedPtr& left, const MaskedPtr& right);
   friend class __gnu_cxx::hash<MaskedPtr<T> >;
   public:
     MaskedPtr(const T* p) : ptr(p) {}
@@ -28,11 +35,15 @@ class MaskedPtr {
     MaskedPtr(const boost::shared_ptr<const T>& p) : ptr(p.get()) {}
     template<typename U>
     explicit MaskedPtr(MaskedPtr<U> p) : ptr(p.ptr) {}
-    bool operator==(const MaskedPtr& right) const { return ptr == right.ptr; }
   private:
     const T* ptr;
   public:
 };
+
+template<typename T>
+inline bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right) {
+  return left.ptr == right.ptr;
+}
 
 }
 

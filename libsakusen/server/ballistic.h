@@ -6,6 +6,7 @@
 #include "point.h"
 #include "ref.h"
 #include "playerid.h"
+#include "layeredunit.h"
 
 namespace sakusen {
 namespace server {
@@ -23,22 +24,22 @@ namespace server {
  * not affect each other (e.g. by colliding), and they do not get destroyed
  * until they collide with something.
  */
-class Ballistic {
+class Ballistic : boost::noncopyable {
   private:
-    PlayerID owner;
-    Quadratic path;
-  private:
-    /** Default constructor, private so you are forced to construct with
-     * arguments.
+    /** \brief Player who owns the Ballistic (needded for kills counts, etc.)
+     *
+     * \note It's not sufficient to use source->getOwner() to determine the
+     * Ballistic's owner, because the source may no longer exist.
      */
-    Ballistic();
-    Ballistic(const Ballistic&);
+    PlayerID owner;
+    Ref<LayeredUnit> source;
+    Quadratic path;
   protected:
     /** \brief Main constructor.
      *
      * All the parameters should be pretty obvious. */
     Ballistic(
-        PlayerID owner,
+        const Ref<LayeredUnit>& source,
         Time startTime,
         Point<sint32> startPosition,
         Point<sint32> startVelocity
@@ -49,7 +50,7 @@ class Ballistic {
      * arguments wrapped up in an existing Quadratic, of which a private copy
      * is taken.
      */
-    Ballistic(PlayerID owner, Quadratic p);
+    Ballistic(const Ref<LayeredUnit>& source, Quadratic p);
 
     /** \brief Collision callback
      *

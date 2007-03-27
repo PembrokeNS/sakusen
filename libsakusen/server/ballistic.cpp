@@ -2,19 +2,22 @@
 #include "completeworld.h"
 
 namespace sakusen {
-  namespace server {
+namespace server {
 
 Ballistic::Ballistic(
-    PlayerID o,
+    const Ref<LayeredUnit>& s,
     Time startTime,
     Point<sint32> startPosition,
     Point<sint32> startVelocity) :
-  owner(o), path(startPosition, startVelocity, startTime)
+  owner(s->getOwner()),
+  source(s),
+  path(startPosition, startVelocity, startTime)
 {
 }
 
-Ballistic::Ballistic(PlayerID o, Quadratic p) :
-  owner(o),
+Ballistic::Ballistic(const Ref<LayeredUnit>& s, Quadratic p) :
+  owner(s->getOwner()),
+  source(s),
   path(p)
 {
 }
@@ -32,7 +35,7 @@ bool Ballistic::resolveIntersections()
     gameObject_unit | gameObject_land | gameObject_water;
 
   Ray::IntersectionSet collisions;
-  path.getAllInteractionsTo(1.0, canHit, canHit, collisions);
+  path.getAllInteractionsTo(1.0, canHit, canHit, source, collisions);
 
   if (!collisions.empty()) {
     onCollision(path.evaluate(collisions.begin()->getPosition()));

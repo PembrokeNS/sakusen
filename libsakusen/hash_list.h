@@ -31,7 +31,7 @@ class hash_list_const_iterator;
  *
  * The ability to splice (as can be done with lists) is absent from hash_lists.
  */
-template<typename T, typename TIndex>
+template<typename T, typename TIndex = void>
 class hash_list : boost::noncopyable {
   friend class hash_list_iterator<T, TIndex>;
   friend class hash_list_const_iterator<T, TIndex>;

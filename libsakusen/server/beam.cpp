@@ -83,7 +83,7 @@ void Beam::resolveIntersections(void) {
 
   /* Call the Ray method to find all pertinent intersections */
   IntersectionSet interactions;
-  getAllInteractionsTo(1.0, interactsWith(), stoppedBy(), interactions);
+  getAllInteractionsTo(1.0, interactsWith(), stoppedBy(), source, interactions);
 
   /* iterate over all these intersections, calling the callbacks as we go */
   for (IntersectionSet::iterator in = interactions.begin();

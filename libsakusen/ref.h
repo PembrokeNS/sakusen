@@ -16,8 +16,11 @@ class SerializationHandler {
     typedef void loadArgument;
 };
 
-template<typename T, typename TIndex = void>
-class hash_list;
+template<typename T>
+class Ref;
+
+template<typename T>
+bool operator==(const Ref<T>&, const Ref<T>&);
 
 /** \brief A reference to a game object managed by the world.
  *
@@ -27,7 +30,7 @@ class hash_list;
  * track of the objects removal, and invalidate itself when that happens */
 template<class T>
 class Ref {
-  friend class hash_list<T>;
+  friend bool operator==<T>(const Ref<T>&, const Ref<T>&);
   private:
     typedef
       SerializationHandler<typename boost::remove_const<T>::type> SHandler;
@@ -91,6 +94,13 @@ class Ref {
       return SHandler().extract(archive, arg);
     }
 };
+
+template<typename T>
+inline bool operator==(const Ref<T>& left, const Ref<T>& right)
+{
+  return left.isValid() && right.isValid() &&
+    left.referee.lock() == right.referee.lock();
+}
 
 }
 
