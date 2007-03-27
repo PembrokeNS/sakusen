@@ -7,6 +7,7 @@
 #include <boost/functional.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/format.hpp>
 
 using std::string;
 using std::istream;
@@ -20,6 +21,8 @@ using __gnu_cxx::hash_map;
 using boost::trim;
 using boost::split;
 using boost::bind1st;
+using boost::format;
+using boost::str;
 
 using namespace optimal;
 
@@ -135,7 +138,7 @@ void OptionsParser::addOption(
   }
   
   if (shortName != '\0') {
-    shortOptionTypes[shortName] = optionType_string;
+    shortOptionTypes[shortName] = optionType_stringList;
     shortStringListOptions[shortName] = make_pair(separator, value);
   }
 }
@@ -412,8 +415,12 @@ bool OptionsParser::parse(
                     );
                   }
                 }
+                break;
               default:
-                assert(false);
+                errors.push_back(str(
+                      format("internal error: unexpected OptionType %d") %
+                      shortOptionTypes[*optionChar]
+                    ));
             }
           } else {
             errors.push_back(
