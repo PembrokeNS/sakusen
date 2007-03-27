@@ -72,6 +72,7 @@ struct Options {
     test(false),
     solicitationAddress(),
     joinAddress(),
+    autoJoin(true),
     help(false),
     version(false)
   {}
@@ -98,6 +99,10 @@ struct Options {
   String solicitationAddress;
   /** Address to use to join a server */
   String joinAddress;
+  /** Whether to join automatically on startup */
+  bool autoJoin;
+  /** Commands to be executed automatically upon joining */
+  list<String> autoCommands;
   /** When set, tedomari prints a help message and exits */
   bool help;
   /** When set, tedomari prints version information and exits */
@@ -113,9 +118,12 @@ enum Command {
   command_leave,
   command_set,
   command_get,
+  command_clientSet,
+  command_clientGet,
   command_reconnect,
   command_talk,
   command_resetUI,
+  command_sleep,
   command_quit,
   command_help
 };
@@ -346,27 +354,36 @@ void runClient(
     commands["l"] = commands["leave"] = command_leave;
     commands["g"] = commands["get"] = command_get;
     commands["s"] = commands["set"] = command_set;
+    commands["cg"] = commands["clientget"] = command_clientGet;
+    commands["cs"] = commands["clientset"] = command_clientSet;
     commands["q"] = commands["quit"] = command_quit;
     commands["r"] = commands["reconnect"] = command_reconnect;
     commands["t"] = commands["talk"] = command_talk;
     commands["u"] = commands["resetui"] = command_resetUI;
+    commands["z"] = commands["sleep"] = command_sleep;
     commands["h"] = commands["?"] = commands["help"] = command_help;
     
     String helpMessage =
       "Available commands:\n"
-      "  join (j)              Connect to server\n"
-      "  leave (l)             Leave server\n"
-      "  get (g) SETTING       Get the value of SETTING from the server\n"
-      "  set (s) SETTING VALUE Submit request to change SETTING to VALUE\n"
-      "  reconnect (r)         Close this connection to the server and start "
-        "over\n"
-      "  talk (t) MESSAGE      Send MESSAGE to other clients\n"
-      "  resetui (u)           If there is a game UI open, then close it and "
-        "reopen it\n"
-      "                        from scratch\n"
-      "  quit (q)              Quit tedomari (closing any connection to "
-        "server)\n"
-      "  help (h, ?)           Display this help\n";
+      "  join (j)                Connect to server\n"
+      "  leave (l)               Leave server\n"
+      "  get (g) SETTING         Get the value of SETTING from the server\n"
+      "  set (s) SETTING VALUE   Submit request to change SETTING to VALUE\n"
+      "  clientget (cg) SETTING  Get the value of SETTING, which is a path\n"
+      "                          inside this client's settings\n"
+      "  clientset (cs) SETTING VALUE  Submit request to change SETTING to VALUE,\n"
+      "                          where SETTING is a path inside this client's\n"
+      "                          settings\n"
+      "  reconnect (r)           Close this connection to the server and start over\n"
+      "  talk (t) MESSAGE        Send MESSAGE to other clients\n"
+      "  resetui (u)             If there is a game UI open, then close it and reopen it\n"
+      "                          from scratch\n"
+      "  sleep (z) USEC          Sleep tedomari for USEC microseconds\n"
+      "  quit (q)                Quit tedomari (closing any connection to server)\n"
+      "  help (h, ?)             Display this help\n";
+
+    /* If asked to autoJoin, then cause it to happen */
+    ioHandler.fakeCommand("join");
     
     while (!finished) {
       /* Process commands enterred through stdin */
@@ -395,6 +412,13 @@ void runClient(
                   ioHandler.message(
                       String("Joined.  Assigned client ID ") +
                         clientID_toString(serverInterface.getID()) + "\n");
+                  /* Queue all the autocommands that the user asked for */
+                  for (list<String>::const_iterator autoCommand =
+                      options.autoCommands.begin();
+                      autoCommand != options.autoCommands.end();
+                      ++autoCommand) {
+                    ioHandler.fakeCommand(*autoCommand);
+                  }
                 }
                 break;
               case command_leave:
@@ -438,6 +462,38 @@ void runClient(
                   }
                 }
                 break;
+              case command_clientGet:
+                if (!serverInterface.isJoined()) {
+                  ioHandler.message("Not joined.\n");
+                } else if (words.size() != 1) {
+                  ioHandler.message("Usage: clientget SETTING\n");
+                } else {
+                  String setting = words.front();
+                  words.pop_front();
+                  if (serverInterface.getClientSetting(setting)) {
+                    ioHandler.message("Error setting setting\n");
+                  }
+                }
+                break;
+              case command_clientSet:
+                if (!serverInterface.isJoined()) {
+                  ioHandler.message("Not joined.\n");
+                } else if (words.size() != 2) {
+                  ioHandler.message(
+                      "Usage: clientset SETTING VALUE\n"
+                      "(Values containing whitespace are not supported yet - "
+                        "sorry!)\n"
+                    );
+                } else {
+                  String setting = words.front();
+                  words.pop_front();
+                  String value = words.front();
+                  words.pop_front();
+                  if (serverInterface.setClientSetting(setting, value)) {
+                    ioHandler.message("Error setting setting\n");
+                  }
+                }
+                break;
               case command_talk:
                 if (!serverInterface.isJoined()) {
                   ioHandler.message("Not joined.\n");
@@ -463,6 +519,17 @@ void runClient(
               case command_resetUI:
                 if (ui != NULL) {
                   ui = newUI(options, uiConfFilename, game);
+                }
+                break;
+              case command_sleep:
+                if (words.size() != 1) {
+                  ioHandler.message("Usage: sleep USEC\n");
+                } else {
+                  uint32 usec = numFromString<uint32>(words.front());
+                  words.pop_front();
+                  ioHandler.message("sleeping...\n");
+                  timeUtils_sleep(usec);
+                  ioHandler.message("awoken\n");
                 }
                 break;
               case command_help:
@@ -526,8 +593,10 @@ void usage() {
 #ifndef DISABLE_SDL
           "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
 #endif
-          " -s   --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
-          " -j   --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
+          " -s,  --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
+          " -j,  --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
+          " -o-, --no-autojoin,     do not automatically try to join server\n"
+          " -c,  --commands COMMAND;..., execute each COMMAND upon joining\n"
           " -h,  --help,            display help and exit\n"
           " -V,  --version,         display version information and exit\n"
           "" << endl;
@@ -553,6 +622,8 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
 #endif
   parser.addOption("solicit",        's',  &results.solicitationAddress);
   parser.addOption("join",           'j',  &results.joinAddress);
+  parser.addOption("autojoin",       'o',  &results.autoJoin);
+  parser.addOption("commands",       'c',  &results.autoCommands, ';');
   parser.addOption("help",           'h',  &results.help);
   parser.addOption("version",        'V',  &results.version);
 

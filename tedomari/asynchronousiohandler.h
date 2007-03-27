@@ -84,6 +84,14 @@ class AsynchronousIOHandler {
      * Display given message, and follow it with the prompt and any partial
      * command which has been input by the user */
     void message(const String& message);
+    /** \brief Append a command to the command queue
+     *
+     * The command passed to this method will by added to the internal command
+     * queue, so that it will later be returned through getCommand, as if the
+     * user had typed it. */
+    void fakeCommand(const String& command) {
+      commandBuffer.push(command);
+    }
 };
 
 }

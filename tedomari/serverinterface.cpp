@@ -364,6 +364,25 @@ bool ServerInterface::setSetting(const String& setting, const String& value)
   return false;
 }
 
+/** \brief Requests a setting value from client settings tree.
+ * 
+ * \param setting Address of the setting to get relative to the client
+ * branch
+ * \return true iff an error occurs */
+bool ServerInterface::getClientSetting(
+    const String& setting
+  )
+{
+  String delim;
+  if (setting.length() != 0 && setting[0] != ':') {
+    delim = SETTINGS_DELIMITER;
+  }
+  
+  return getSetting(
+      "clients:" + clientID_toString(id) + delim + setting
+    );
+}
+
 /** \brief Requests a setting change  our client settings tree.
  * 
  * \param setting Address of the setting to change relative to the client

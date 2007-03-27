@@ -77,6 +77,7 @@ class ServerInterface {
     bool send(const sakusen::comms::MessageData* message);
     bool getSetting(const String& setting);
     bool setSetting(const String& setting, const String& value);
+    bool getClientSetting(const String& setting);
     bool setClientSetting(const String& setting, const String& value);
 };
 
