@@ -5,7 +5,8 @@
 using namespace sakusen;
 
 WeaponStatus::WeaponStatus() :
-  direction(),
+  targetType(weaponTargetType_none),
+  targetDirection(),
   energyCharge(0),
   metalCharge(0),
   active(false)
@@ -13,13 +14,24 @@ WeaponStatus::WeaponStatus() :
 }
 
 WeaponStatus::WeaponStatus(
-    const Point<sint16>& d,
+    WeaponTargetType tT,
+    const Point<sint16>& tD,
     uint16 eC,
     uint16 mC,
     bool a
   ) :
-  direction(d), energyCharge(eC), metalCharge(mC), active(a)
+  targetType(tT),
+  targetDirection(tD),
+  energyCharge(eC),
+  metalCharge(mC),
+  active(a)
 {
+}
+
+void WeaponStatus::setTargetDirection(const Point<sint16>& d)
+{
+  targetType = weaponTargetType_direction;
+  targetDirection = d;
 }
 
 void WeaponStatus::activate(void) {active = true;}
@@ -62,17 +74,23 @@ bool WeaponStatus::incrementState(WeaponTypeID type)
 
 void WeaponStatus::store(OArchive& archive) const
 {
-  archive << direction << energyCharge << metalCharge << active;
+  archive.insertEnum(targetType) << targetDirection;
+  archive << energyCharge << metalCharge << active;
 }
 
 WeaponStatus WeaponStatus::load(IArchive& archive)
 {
-  Point<sint16> direction;
+  WeaponTargetType targetType;
+  Point<sint16> targetDirection;
   uint16 energyCharge;
   uint16 metalCharge;
   bool active;
 
-  archive >> direction >> energyCharge >> metalCharge >> active;
-  return WeaponStatus(direction, energyCharge, metalCharge, active);
+  archive.extractEnum(targetType) >> targetDirection;
+  archive >> energyCharge >> metalCharge >> active;
+  return WeaponStatus(
+      targetType, targetDirection,
+      energyCharge, metalCharge, active
+    );
 }
 

@@ -14,7 +14,7 @@ class UpdatedSensorReturns : public SensorReturns {
     virtual ~UpdatedSensorReturns() {}
     
     void alter(const SensorReturns& to) {
-      *this = to;
+      this->SensorReturns::operator=(to);
     }
 };
 
@@ -26,7 +26,15 @@ class SerializationHandler<client::UpdatedSensorReturns> {
     typedef void loadArgument;
 };
 
-}
+namespace client {
+
+struct UpdatedSensorReturnsIDer {
+  uint32 operator()(const Ref<UpdatedSensorReturns>& s) const {
+    return s->getId();
+  }
+};
+
+}}
 
 #endif // UPDATEDSENSORRETURNS_H
 

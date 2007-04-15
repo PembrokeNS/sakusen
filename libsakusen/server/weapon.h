@@ -19,7 +19,17 @@ class LIBSAKUSEN_SERVER_API Weapon {
     virtual ~Weapon() {}
   private:
     WeaponTypeID type;
+
+    /* We here remember the targets for the weapon for those targets which
+     * cannot be remembered by WeaponStatus because of serialization issues */
+    Ref<LayeredUnit> targetUnit;
   protected:
+    void setTarget(const Ref<LayeredUnit>& target, WeaponStatus* status) {
+      targetUnit = target;
+      status->setTarget(target.cast<ICompleteUnit>());
+    }
+    Ref<LayeredUnit> getTargetUnit() { return targetUnit; }
+
     /* callbacks */
     virtual bool aimAt(
         const Ref<LayeredUnit>& firer,

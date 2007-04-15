@@ -89,6 +89,28 @@ int main(/*int argc, char** argv*/)
           resourceInterface
         );
     weaponTypes.push_back(paralyzerType);
+    WeaponType factorybuilderType =
+      WeaponType(
+          "factorybuilder",
+          "testsrc",
+          10 /* energyCost */,
+          10 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
+          resourceInterface
+        );
+    weaponTypes.push_back(factorybuilderType);
+    WeaponType gruntbuilderType =
+      WeaponType(
+          "gruntbuilder",
+          "testsrc",
+          10 /* energyCost */,
+          10 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
+          resourceInterface
+        );
+    weaponTypes.push_back(gruntbuilderType);
   } catch (DeserializationExn& e) {
     cout << "Exception: " << e.message << endl;
     return EXIT_FAILURE;
@@ -98,6 +120,7 @@ int main(/*int argc, char** argv*/)
   list<String> commanderWeapons;
   commanderWeapons.push_back("cannon");
   commanderWeapons.push_back("paralyzer");
+  commanderWeapons.push_back("factorybuilder");
   /* The following use of shared_ptr temporaries could lead to a memory leak in
    * extreme circumstances, but since this is only a test I don't really care
    * */
@@ -107,12 +130,12 @@ int main(/*int argc, char** argv*/)
         UnitTypeData(
           100 /* maxHitPoints */,
           10 /* mass */,
-          Point<uint32>(10,10,10) /* size */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 4))
+          Point<uint32>(1000,1000,1000) /* size */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 400))
             /* possibleAccelerations */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 10))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 1000))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 10))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 1000))
             /* possibleAngularVelocities */,
           Visibility(),
           Sensors()
@@ -128,6 +151,35 @@ int main(/*int argc, char** argv*/)
         "" /* corpseUnitType name */
       );
   unitTypes.push_back(commanderType);
+
+  list<String> factoryWeapons;
+  factoryWeapons.push_back("gruntbuilder");
+  UnitType factoryType =
+    UnitType(
+        "factory" /* name */,
+        UnitTypeData(
+          100 /* maxHitPoints */,
+          10 /* mass */,
+          Point<uint32>(5000,5000,5000) /* size */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
+            /* possibleAccelerations */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
+            /* possibleVelocities */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
+            /* possibleAngularVelocities */,
+          Visibility(),
+          Sensors()
+        ),
+        100 /* energyCost */,
+        100 /* metalCost */,
+        true /* fixed */,
+        true /* ground */,
+        false /* surface */,
+        true /* gravity */,
+        false /* seabed */,
+        factoryWeapons /* weapons */,
+        "" /* corpseUnitType name */
+      );
   
   Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
   String name = universe->resolveNames();
@@ -160,7 +212,7 @@ int main(/*int argc, char** argv*/)
   }
 
   cout << "Creating map" << endl;
-#define MAP_WIDTH 1000
+#define MAP_WIDTH 100000
   Heightfield heightfield(2*MAP_WIDTH, 2, 2, 2);
   vector<UnitTemplate> neutralPlayersUnits;
   vector<UnitTemplate> realPlayersUnits;
@@ -170,7 +222,7 @@ int main(/*int argc, char** argv*/)
         UnitStatus(
           universe,
           universe->getUnitTypeId(0),
-          Point<sint32>(50,-50,0),
+          Point<sint32>(5000,-5000,0),
           Orientation(),
           Point<sint16>()
         )
@@ -197,7 +249,7 @@ int main(/*int argc, char** argv*/)
   MapTemplate::ConstPtr t(new MapTemplate(
         universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-        heightfield, 2 /* gravity */, playModes
+        heightfield, 200 /* gravity */, playModes
       ));
 
   cout << "Saving map" << endl;
@@ -232,7 +284,7 @@ int main(/*int argc, char** argv*/)
         UnitStatus(
           universe,
           universe->getUnitTypeId(0),
-          Point<sint32>(100,-100,0),
+          Point<sint32>(10000,-10000,0),
           Orientation(),
           Point<sint16>()
         )
@@ -245,7 +297,7 @@ int main(/*int argc, char** argv*/)
   t.reset(new MapTemplate(
         universe, "2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-        heightfield, 10 /* gravity */, playModes
+        heightfield, 1000 /* gravity */, playModes
       ));
 
   cout << "Saving two player map" << endl;

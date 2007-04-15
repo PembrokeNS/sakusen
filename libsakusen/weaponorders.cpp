@@ -27,7 +27,7 @@ bool WeaponOrders::isTargetValid() const
   switch (targetType) {
     case weaponTargetType_none:
       return false;
-    case weaponTargetType_point:
+    case weaponTargetType_position:
       return true;
     case weaponTargetType_sensorReturns:
       return targetSensorReturns.isValid();
@@ -41,7 +41,7 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   switch (targetType) {
     case weaponTargetType_none:
       Fatal("no target to get position of");
-    case weaponTargetType_point:
+    case weaponTargetType_position:
       return targetPoint;
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
@@ -59,7 +59,7 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
   switch (targetType) {
     case weaponTargetType_none:
       Fatal("no target to get velocity of");
-    case weaponTargetType_point:
+    case weaponTargetType_position:
       return Point<sint32>();
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
@@ -79,7 +79,7 @@ void WeaponOrders::update(const Order& order)
     case orderType_setVelocity:
       Fatal("Order type not appropriate for a Weapon");
     case orderType_targetPoint:
-      targetType = weaponTargetType_point;
+      targetType = weaponTargetType_position;
       targetPoint = order.getTargetPointData().getTarget();
       break;
     case orderType_targetSensorReturns:

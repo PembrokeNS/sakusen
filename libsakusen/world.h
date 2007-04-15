@@ -31,6 +31,9 @@ class LIBSAKUSEN_API World : boost::noncopyable {
     virtual Ref<ISensorReturns> getISensorReturns(
         PlayerID player, SensorReturnsID id
       ) = 0;
+    virtual Ref<ICompleteUnit> getICompleteUnit(
+        PlayerID player, uint32 unitId
+      ) = 0;
     virtual ISpatial::ConstPtr getSpatialIndex() const = 0;
 };
 

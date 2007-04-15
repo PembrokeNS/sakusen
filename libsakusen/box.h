@@ -27,6 +27,16 @@ class LIBSAKUSEN_API Box {
      * responsible for ensuring that \p x1 \<= \p x2.
      */
     Box(const Point<T>& x1, const Point<T>& x2): min(x1), max(x2) {}
+    /** Constructs a box whose x-y extents are those of the given rectangle,
+     * and whose z extent is as specified (defaulting to the whole range) */
+    Box(
+        const Rectangle<T>& xy,
+        T minz = bottomNumber<T>(),
+        T maxz = topNumber<T>()
+      ) :
+      min(Point<T>(xy.minx, xy.miny, minz)),
+      max(Point<T>(xy.maxx, xy.maxy, maxz))
+    {}
     Box(const Box<T>& b): min(b.min), max(b.max) {}
     ~Box() {}
     /** For a Box \c b, \c b[0] is the lower-left corner, and \c b[1]

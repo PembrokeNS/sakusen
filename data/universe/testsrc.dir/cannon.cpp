@@ -8,6 +8,64 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace testsrc;
 
+bool Builder::aimAt(
+    const Ref<LayeredUnit>& source,
+    WeaponStatus* status,
+    const Position& pos,
+    const Orientation& orientation
+  )
+{
+  Position displacement = pos - source->getStatus()->getPosition();
+  if (displacement.squareLength() <= squareRange()) {
+    status->setTarget(pos, orientation);
+    return true;
+  }
+  return false;
+}
+
+bool Builder::aimAt(
+    const Ref<LayeredUnit>& source,
+    WeaponStatus* status,
+    const Ref<LayeredUnit>& target
+  )
+{
+  Position displacement =
+    target->getStatus()->getPosition() - source->getStatus()->getPosition();
+  if (displacement.squareLength() <= squareRange()) {
+    /** \todo Find and set the appropriate building layer */
+    setTarget(target, status);
+    return true;
+  }
+  return false;
+}
+
+void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+{
+  const WeaponStatus& status =
+    firer->getStatus()->getWeaponsStatus()[weaponIndex];
+  switch (status.getTargetType()) {
+    case weaponTargetType_unit:
+      {
+        Ref<const LayeredUnit> targetUnit = getTargetUnit();
+        BuildingLayer::Ptr bL = buildingLayer.lock();
+        if (targetUnit.isValid()) {
+          Ref<const LayeredUnit> bLUnit = bL->getOuterUnit();
+          if (operator==(bLUnit, targetUnit)) {
+            bL->build();
+          } else {
+            Debug("Agh!  I'm lost and confused");
+          }
+        }
+      }
+      break;
+    case weaponTargetType_positionOrientation:
+      Debug("I'm trying to create a unit!!!");
+      break;
+    default:
+      break;
+  }
+}
+
 void Cannon::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
   /*cout << "Firing at " << server::world->getTimeNow() << endl;*/
@@ -21,7 +79,7 @@ Shell::Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status) :
       source,
       server::world->getTimeNow(),
       source->getIStatus()->getPosition() /* start position */,
-      status.getDirection() /* start velocity */
+      status.getTargetDirection() /* start velocity */
     )
 {
 }
@@ -29,7 +87,7 @@ Shell::Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status) :
 void Shell::onCollision(const Point<sint32>& pos)
 {
   cout << "Bang!! " << pos << endl;
-  server::world->addEffect(new Explosion(getOwner(), pos, 20));
+  server::world->addEffect(new Explosion(getOwner(), pos, 2000));
 }
 
 void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
@@ -48,8 +106,8 @@ bool Paralyzer::aimAt(
   Point<sint32> displacement = pos - firer->getStatus()->getPosition() +
     Point<sint32>(0, 0, 0);
   /* test whether target is within range */
-  if (displacement.squareLength() < 10000) {
-    status->setDirection(displacement);
+  if (displacement.squareLength() < 100000000) {
+    status->setTargetDirection(displacement);
     return true;
   } else {
     return false;
@@ -61,7 +119,7 @@ void Paralyzer::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
   const WeaponStatus& status =
     firer->getStatus()->getWeaponsStatus()[weaponIndex];
   cout << "Firing paralyzer at time " << server::world->getTimeNow() <<
-    ", in direction " << status.getDirection() << endl;
+    ", in direction " << status.getTargetDirection() << endl;
   server::world->addBeam(new ParalyzationBeam(firer, status));
 }
 
@@ -71,7 +129,7 @@ ParalyzationBeam::ParalyzationBeam(
   ) :
   Beam(
       source->getStatus()->getPosition(),
-      status.getDirection(), source,
+      status.getTargetDirection(), source,
       server::world->getTimeNow(), 3 /* duration */
     )
 {
@@ -97,6 +155,16 @@ Weapon* spawn_cannon(const WeaponType* type)
 Weapon* spawn_paralyzer(const WeaponType* type)
 {
   return new Paralyzer(type);
+}
+
+Weapon* spawn_factorybuilder(const WeaponType* type)
+{
+  return new FactoryBuilder(type);
+}
+
+Weapon* spawn_gruntbuilder(const WeaponType* type)
+{
+  return new GruntBuilder(type);
 }
 
 }

@@ -5,7 +5,10 @@ namespace sakusen {
 
 enum WeaponTargetType {
   weaponTargetType_none,
-  weaponTargetType_point,
+  weaponTargetType_direction,
+  weaponTargetType_position,
+  weaponTargetType_positionOrientation,
+  weaponTargetType_unit,
   weaponTargetType_sensorReturns
 };
 

@@ -24,6 +24,7 @@ void PatrollerClient::queueUpdate(const Update& update)
           patrolFrom = data.getUnit().getStatus().getPosition();
           patrolFrom.z = patrolTo.z;
           /*Debug("sending move order");*/
+          QDebug("Patrolling to " << patrolTo);
           orderMessageQueue.push(
               OrderMessage(0 /* unit id */, orderCondition_now,
                 Order(new MoveOrderData(patrolTo))
@@ -31,6 +32,12 @@ void PatrollerClient::queueUpdate(const Update& update)
             );
           headedOutward = true;
         }
+      }
+      break;
+    case updateType_unitAltered:
+      {
+        const UnitAlteredUpdateData& data = update.getUnitAlteredData();
+        QDebug("Unit at " << data.getUnit().getStatus().getPosition());
       }
       break;
     case updateType_sensorReturnsAdded:

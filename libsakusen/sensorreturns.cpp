@@ -50,8 +50,6 @@ SensorReturns SensorReturns::load(
   } else {
     region.reset();
   }
-  /** \todo Less copying of the UnitStatus would be good here, but
-   * entails some messiness of one kind or another */
   if (0 != (perception & perception_unit)) {
     unit = new CompleteUnit(CompleteUnit::load(in, universe));
   } else {

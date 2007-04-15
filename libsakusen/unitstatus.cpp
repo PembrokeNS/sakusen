@@ -124,7 +124,10 @@ void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
     weaponsStatus;
 }
 
-UnitStatus UnitStatus::load(IArchive& in, const Universe::ConstPtr* universe)
+UnitStatus UnitStatus::load(
+    IArchive& in,
+    const Universe::ConstPtr* universe
+  )
 {
   String typeName;
   UnitTypeID type;
@@ -143,8 +146,8 @@ UnitStatus UnitStatus::load(IArchive& in, const Universe::ConstPtr* universe)
   type = (*universe)->getUnitTypeID(typeName);
   in >> position;
   orientation = Orientation::load(in);
-  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits >>
-    weaponsStatus;
+  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits;
+  in >> weaponsStatus;
 
   return UnitStatus(
       type, position, orientation, velocity,

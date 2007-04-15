@@ -5,10 +5,11 @@ namespace sakusen {
 
 /** \brief Enumeration of things that exist in the game world */
 enum GameObject {
-  gameObject_land = 1,
-  gameObject_water = 2,
-  gameObject_unit = 4,
-  gameObject_effect = 8
+  gameObject_land =          0x01,
+  gameObject_water =         0x02,
+  gameObject_unit =          0x04,
+  gameObject_sensorReturns = 0x08,
+  gameObject_effect =        0x10
 };
 
 inline GameObject operator|(const GameObject& left, const GameObject& right) {

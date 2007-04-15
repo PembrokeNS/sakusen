@@ -1,5 +1,7 @@
 #include "naivespatial.h"
 
+#include "serializationhandler.h"
+
 using namespace std;
 using namespace __gnu_cxx;
 

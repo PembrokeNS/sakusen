@@ -40,6 +40,12 @@ class UpdatedUnit : public CompleteUnit {
     void incrementState();
 };
 
+struct UpdatedUnitIDer {
+  uint32 operator()(const Ref<UpdatedUnit>& u) const {
+    return u->getId();
+  }
+};
+
 }}
 
 #endif // UPDATEDUNIT_H

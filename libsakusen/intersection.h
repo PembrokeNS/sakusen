@@ -3,6 +3,7 @@
 
 #include "ref.h"
 #include "bounded.h"
+#include "serializationhandler.h"
 
 namespace sakusen {
 

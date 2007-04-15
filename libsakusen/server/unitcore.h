@@ -14,9 +14,8 @@ class LayeredUnit;
  *
  * See \ref Units for more details on how the various Unit classes fit together
  * */
-class UnitCore : public UnitLayer, private UnitStatus {
+class UnitCore : public UnitLayer, public UnitStatus {
   private:
-    UnitCore();
     UnitCore(const UnitCore&);
   public:
     UnitCore(const UnitCore&, LayeredUnit* outerUnit);
@@ -39,7 +38,10 @@ class UnitCore : public UnitLayer, private UnitStatus {
     inline UnitLayer* newCopy(LayeredUnit* outer) const {
       return new UnitCore(*this, outer);
     }
-    inline UnitStatus* getCore() { return this; }
+    inline UnitCore* getCore() { return this; }
+    inline Ref<const LayeredUnit> getOuterUnit() const {
+      return outerUnit->getRefToThis();
+    }
     
     /* accessors */
     inline PlayerID getOwner() const { return owner; }

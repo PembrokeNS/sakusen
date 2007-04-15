@@ -92,7 +92,8 @@ void UI::initializeControls()
     );
   activeMapDisplay = new MapDisplay(
       0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game,
-      this
+      this,
+      100 /** \bug Initial scale should be fetched from GameStartMessage */
     );
   addSubControl(commandEntryBox);
   addSubControl(activeMapDisplay);
@@ -411,11 +412,13 @@ void UI::selectUnits(const String& selection)
 
 void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
 {
-  list<UpdatedUnit*> units(sakusen::client::world->getUnitsIntersecting(r));
+  ISpatial::Result units =
+    client::world->getSpatialIndex()->findIntersecting(r, gameObject_unit);
   selection.clear();
-  for (list<UpdatedUnit*>::iterator unit = units.begin(); unit != units.end();
-      ++unit) {
-    selection.insert((*unit)->getId());
+  for (ISpatial::Result::iterator unitIt = units.begin();
+      unitIt != units.end(); ++unitIt) {
+    Ref<UpdatedUnit> unit = unitIt->dynamicCast<UpdatedUnit>();
+    selection.insert(unit->getId());
   }
   paint();
 }

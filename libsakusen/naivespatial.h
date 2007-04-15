@@ -21,6 +21,7 @@ class NaiveSpatial : public ISpatial {
         const Box<sint32>&,
         const GameObject filter
       ) const;
+    using ISpatial::findIntersecting;
     Result findFastContaining(
         const Position&,
         const GameObject filter

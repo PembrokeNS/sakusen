@@ -17,9 +17,11 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
    */
 #ifdef SWIG
 #define UT IntMunger<T>::unsign
+#define WideT IntMunger<T>::widest
 #define UWideT IntMunger<IntMunger<T>::unsign>::widest
 #else
     typedef typename IntMunger<T>::unsign UT;
+    typedef typename IntMunger<T>::widest WideT;
     typedef typename IntMunger<UT>::widest UWideT;
 #endif
   public:
@@ -56,7 +58,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
 
 template<typename T>
 inline bool SphereRegion<T>::contains(const Point<T>& point) const {
-    return world->getMap()->getShortestDifference(point, centre).
+  return world->getMap()->getShortestDifference(point, centre).
     squareLength() < squareRadius();
 }
 
@@ -73,7 +75,9 @@ inline Point<T> SphereRegion<T>::truncateToFit(
   if (contains(p)) {
     return p;
   }
-  return Point<T>((Point<double>(p * radius) / p.length()).truncate());
+  return Point<T>(
+      (Point<double>(Point<WideT>(p) * radius) / p.length()).truncate()
+    );
 }
 
 template<typename T>

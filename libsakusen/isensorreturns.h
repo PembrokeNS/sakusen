@@ -20,7 +20,7 @@ typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
  *
  * \todo As well as an approximate location (the region), we need an
  * approximate size for the sensed unit. */
-class LIBSAKUSEN_API ISensorReturns {
+class LIBSAKUSEN_API ISensorReturns : public Bounded {
   public:
     virtual ~ISensorReturns() {}
 
@@ -32,8 +32,12 @@ class LIBSAKUSEN_API ISensorReturns {
     virtual Ref<const ICompleteUnit> getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
 
+    GameObject getType() const { return gameObject_sensorReturns; }
     virtual Point<sint32> getBestPosition() const;
     virtual Rectangle<sint32> getBoundingRectangle() const;
+    virtual Box<sint32> getBoundingBox() const;
+    double intersect(const Ray& r) const;
+    bool contains(const Position& p) const;
 };
 
 template<>

@@ -2,16 +2,51 @@
 #define HASH_LIST_H
 
 #include <list>
+#include <boost/variant.hpp>
+
 #include "maskedptr.h"
 #include "ref.h"
 #include "iindex.h"
 
 namespace sakusen {
 
-template<typename T, typename TIndex>
+#define SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES 2
+
+#define SAKUSEN_HASH_LIST_ENUM_INDEXES( param )  \
+    BOOST_PP_ENUM_PARAMS(SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES, param)
+
+/* Following declarations mimic the ones in boost/variant/variant_fwd.hpp,
+ * except that I've omitted the workaround in the hope that we won't actually
+ * need it */
+
+#define SAKUSEN_HASH_LIST_AUX_DECLARE_PARAMS_IMPL(z, N, T) \
+  typename BOOST_PP_CAT(T,N) = void \
+  /**/
+
+#define SAKUSEN_HASH_LIST_DECLARE_PARAMS \
+  BOOST_PP_ENUM( \
+      SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES \
+    , SAKUSEN_HASH_LIST_AUX_DECLARE_PARAMS_IMPL \
+    , TIndex \
+    ) \
+  /**/
+
+#define SAKUSEN_HASH_LIST_INDEX_ARGS_IMPL(z, N, T) \
+  typename IIndex<BOOST_PP_CAT(T,N)>::Ptr \
+  /**/
+
+#define SAKUSEN_HASH_LIST_INDEX_ARGS \
+  BOOST_PP_ENUM( \
+      SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES \
+    , SAKUSEN_HASH_LIST_INDEX_ARGS_IMPL \
+    , TIndex \
+    ) \
+  /**/
+
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 class hash_list_iterator;
 
-template<typename T, typename TIndex>
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 class hash_list_const_iterator;
 
 /** \brief A container which is much like a list, but with some hash-like
@@ -30,19 +65,60 @@ class hash_list_const_iterator;
  * erased).
  *
  * The ability to splice (as can be done with lists) is absent from hash_lists.
+ *
+ * The first template parameter, T, is the type of object stored in the
+ * hash_list.  Each subsequent template parameter declares a type which may be
+ * the template parameter of an index which can be registered with the
+ * hash_list.  No other types of index may be registered.  For example, \code
+ * hash_list<UpdatedUnit,UpdateUnit,Bounded> declares a hash_list storing
+ * UpdatedUnits and which accepts indexes of types IIndex<UpdatedUnit> and
+ * IIndex<Bounded>.  The maximum number of such index types which may be used
+ * is the compile-time constant SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES.
  */
-template<typename T, typename TIndex = void>
+template<typename T, SAKUSEN_HASH_LIST_DECLARE_PARAMS>
 class hash_list : boost::noncopyable {
-  friend class hash_list_iterator<T, TIndex>;
-  friend class hash_list_const_iterator<T, TIndex>;
+  friend class hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
+  friend class hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
   public:
-    typedef hash_list_iterator<T, TIndex> iterator;
-    typedef hash_list_const_iterator<T, TIndex> const_iterator;
+    typedef hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)> iterator;
+    typedef hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)> const_iterator;
     typedef size_t size_type;
     
     hash_list();
     ~hash_list();
   private:
+    /** \brief Helper class for adding to indexes */
+    class AddToIndexVisitor : public boost::static_visitor<void> {
+      public:
+        AddToIndexVisitor(const Ref<T>& t) : item(t) {}
+      private:
+        Ref<T> item;
+      public:
+        template<typename TIndex>
+        void operator()(const boost::shared_ptr<IIndex<TIndex> >& index) {
+          index->add(Ref<TIndex>(item));
+        }
+        void operator()(const boost::shared_ptr<IIndex<T> >& index) {
+          index->add(item);
+        }
+    };
+
+    /** \brief Helper class for removing from indexes */
+    class RemoveFromIndexVisitor : public boost::static_visitor<void> {
+      public:
+        RemoveFromIndexVisitor(const Ref<T>& t) : item(t) {}
+      private:
+        Ref<T> item;
+      public:
+        template<typename TIndex>
+        void operator()(const boost::shared_ptr<IIndex<TIndex> >& index) {
+          index->remove(Ref<TIndex>(item));
+        }
+        void operator()(const boost::shared_ptr<IIndex<T> >& index) {
+          index->remove(item);
+        }
+    };
+
     typedef std::list<boost::shared_ptr<T> > List;
     typedef __gnu_cxx::hash_map<MaskedPtr<T>, typename List::iterator>
       ListIteratorHash;
@@ -57,8 +133,9 @@ class hash_list : boost::noncopyable {
      * members in different orders, thus yielding non-reproducibility */
     ListIteratorHash listIts;
 
+    typedef boost::variant<SAKUSEN_HASH_LIST_INDEX_ARGS> IndexVariant;
     /** \brief Indexes to be informed when objects are added or removed */
-    std::vector<typename IIndex<TIndex>::Ptr> indexes;
+    std::vector<IndexVariant> indexes;
   public:
     iterator begin();
     iterator end();
@@ -87,31 +164,32 @@ class hash_list : boost::noncopyable {
     iterator find(MaskedPtr<T>);
     const_iterator find(MaskedPtr<T>) const;
 
-    void registerIndex(const typename IIndex<TIndex>::Ptr&);
+    template<typename TIndex>
+    void registerIndex(const boost::shared_ptr<IIndex<TIndex> >&);
 };
 
-template <typename T, typename TIndex>
+template <typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 bool operator==(
-    const hash_list_const_iterator<T, TIndex>& left,
-    const hash_list_const_iterator<T, TIndex>& right
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   );
 
-template <typename T, typename TIndex>
+template <typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 bool operator!=(
-    const hash_list_const_iterator<T, TIndex>& left,
-    const hash_list_const_iterator<T, TIndex>& right
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   );
 
-template<typename T, typename TIndex>
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 class hash_list_iterator {
-  friend class hash_list<T, TIndex>;
-  friend class hash_list_const_iterator<T, TIndex>;
+  friend class hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
+  friend class hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
   public:
     hash_list_iterator() :
       listIt()
     {}
   private:
-    typedef typename hash_list<T, TIndex>::List::iterator ListIt;
+    typedef typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::List::iterator ListIt;
 
     hash_list_iterator(const ListIt& i) :
       listIt(i)
@@ -128,19 +206,19 @@ class hash_list_iterator {
     hash_list_iterator operator--(int);
 };
 
-template<typename T, typename TIndex>
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 class hash_list_const_iterator {
-  friend bool operator==<T, TIndex>(
+  friend bool operator==<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>(
       const hash_list_const_iterator& left,
       const hash_list_const_iterator& right
     );
-  friend bool operator!=<T, TIndex>(
+  friend bool operator!=<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>(
       const hash_list_const_iterator& left,
       const hash_list_const_iterator& right
     );
-  friend class hash_list<T, TIndex>;
+  friend class hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
   private:
-    typedef typename hash_list<T, TIndex>::List::const_iterator ListIt;
+    typedef typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::List::const_iterator ListIt;
     
     hash_list_const_iterator(const ListIt& i) :
       listIt(i)
@@ -148,7 +226,7 @@ class hash_list_const_iterator {
 
     ListIt listIt;
   public:
-    hash_list_const_iterator(const hash_list_iterator<T, TIndex>&);
+    hash_list_const_iterator(const hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>&);
     Ref<const T> operator*() const;
     hash_list_const_iterator& operator++();
     hash_list_const_iterator operator++(int);
@@ -156,39 +234,39 @@ class hash_list_const_iterator {
     hash_list_const_iterator operator--(int);
 };
 
-template<typename T, typename TIndex>
-inline hash_list<T, TIndex>::hash_list()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::hash_list()
 {
 }
 
-template<typename T, typename TIndex>
-inline hash_list<T, TIndex>::~hash_list<T, TIndex>()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::~hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>()
 {
   clear();
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::begin()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::begin()
 {
   return iterator(list.begin());
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::end()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::end()
 {
   return iterator(list.end());
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::const_iterator
-  hash_list<T, TIndex>::begin() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::const_iterator
+  hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::begin() const
 {
   return const_iterator(list.begin());
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::const_iterator
-  hash_list<T, TIndex>::end() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::const_iterator
+  hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::end() const
 {
   return const_iterator(list.end());
 }
@@ -197,80 +275,84 @@ inline typename hash_list<T, TIndex>::const_iterator
  *
  * \note Unlike std::list::size, this method is O(1)
  */
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::size_type
-  hash_list<T, TIndex>::size() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::size_type
+  hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::size() const
 {
   return listIts.size();
 }
 
-template<typename T, typename TIndex>
-inline bool hash_list<T, TIndex>::empty() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline bool hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::empty() const
 {
   return list.empty();
 }
 
-template<typename T, typename TIndex>
-inline Ref<T> hash_list<T, TIndex>::front()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<T> hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::front()
 {
   return Ref<T>(list.front());
 }
 
-template<typename T, typename TIndex>
-inline Ref<const T> hash_list<T, TIndex>::front() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<const T> hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::front() const
 {
   return Ref<const T>(list.front());
 }
 
-template<typename T, typename TIndex>
-inline Ref<T> hash_list<T, TIndex>::back()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<T> hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::back()
 {
   return Ref<T>(list.back());
 }
 
-template<typename T, typename TIndex>
-inline Ref<const T> hash_list<T, TIndex>::back() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<const T> hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::back() const
 {
   return Ref<const T>(list.back());
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::push_front(T* item)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::push_front(T* item)
 {
   insert(begin(), item);
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::push_front(const boost::shared_ptr<T>& item)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::push_front(
+    const boost::shared_ptr<T>& item
+  )
 {
   insert(begin(), item);
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::push_back(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator
+hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::push_back(
     T* item
   )
 {
   return insert(end(), item);
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::push_back(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator
+hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::push_back(
     const boost::shared_ptr<T>& item
   )
 {
   return insert(end(), item);
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::pop_front()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::pop_front()
 {
   assert(!empty());
   erase(begin());
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::pop_back()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::pop_back()
 {
   assert(!empty());
   iterator it = end();
@@ -285,8 +367,9 @@ inline void hash_list<T, TIndex>::pop_back()
  * \param item Item to insert (Ownership of pointer transferred to this)
  * \returns iterator pointing to the inserted item
  */
-template<typename T, typename TIndex>
-typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator
+hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::insert(
     iterator pos,
     T* itemPtr
   )
@@ -295,8 +378,9 @@ typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
   return insert(pos, item);
 }
 
-template<typename T, typename TIndex>
-typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator
+hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::insert(
     iterator pos,
     const boost::shared_ptr<T>& item
   )
@@ -312,16 +396,17 @@ typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::insert(
     throw std::logic_error("duplicate pointer inserted");
   }
 
-  for (typename std::vector<typename IIndex<TIndex>::Ptr>::iterator i =
-      indexes.begin(); i != indexes.end(); ++i) {
-    (*i)->add(Ref<TIndex>(*it));
-  }
+  AddToIndexVisitor addVisitor = AddToIndexVisitor(Ref<T>(*it));
+  std::for_each(
+      indexes.begin(), indexes.end(), boost::apply_visitor(addVisitor)
+    );
 
   return iterator(it);
 }
 
-template<typename T, typename TIndex> template<typename InputIterator>
-inline void hash_list<T, TIndex>::insert(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+template<typename InputIterator>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::insert(
     iterator pos,
     InputIterator first,
     InputIterator last
@@ -333,25 +418,26 @@ inline void hash_list<T, TIndex>::insert(
   }
 }
 
-template<typename T, typename TIndex>
-typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator
+hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::erase(
     iterator pos
   )
 {
   iterator next = pos;
   ++next;
   boost::shared_ptr<T> ptr = *pos.listIt;
-  for (typename std::vector<typename IIndex<TIndex>::Ptr>::iterator i =
-      indexes.begin(); i != indexes.end(); ++i) {
-    (*i)->remove(Ref<TIndex>(ptr));
-  }
+  RemoveFromIndexVisitor removeVisitor = RemoveFromIndexVisitor(Ref<T>(ptr));
+  for_each(
+      indexes.begin(), indexes.end(), boost::apply_visitor(removeVisitor)
+    );
   listIts.erase(ptr);
   list.erase(pos.listIt);
   return next;
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::erase(
     MaskedPtr<T> item
   )
 {
@@ -361,8 +447,8 @@ inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
   return erase(it);
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::erase(
     iterator first,
     iterator last
   )
@@ -373,16 +459,16 @@ inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::erase(
   return last;
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::clear()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::clear()
 {
   erase(begin(), end());
   assert(list.empty());
   assert(listIts.empty());
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::find(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::find(
     MaskedPtr<T> tp
   )
 {
@@ -393,8 +479,8 @@ inline typename hash_list<T, TIndex>::iterator hash_list<T, TIndex>::find(
   return iterator(it->second);
 }
 
-template<typename T, typename TIndex>
-inline typename hash_list<T, TIndex>::const_iterator hash_list<T, TIndex>::find(
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::const_iterator hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::find(
     MaskedPtr<T> tp
   ) const
 {
@@ -405,9 +491,10 @@ inline typename hash_list<T, TIndex>::const_iterator hash_list<T, TIndex>::find(
   return const_iterator(it->second);
 }
 
-template<typename T, typename TIndex>
-inline void hash_list<T, TIndex>::registerIndex(
-    const typename IIndex<TIndex>::Ptr& index
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+template<typename TIndex>
+inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::registerIndex(
+    const boost::shared_ptr<IIndex<TIndex> >& index
   )
 {
   indexes.push_back(index);
@@ -417,119 +504,138 @@ inline void hash_list<T, TIndex>::registerIndex(
   }
 }
 
-template<typename T, typename TIndex>
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 inline bool operator==(
-    const hash_list_const_iterator<T, TIndex>& left,
-    const hash_list_const_iterator<T, TIndex>& right
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )
 {
   return (left.listIt == right.listIt);
 }
 
-template<typename T, typename TIndex>
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 inline bool operator!=(
-    const hash_list_const_iterator<T, TIndex>& left,
-    const hash_list_const_iterator<T, TIndex>& right
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
+    const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )
 {
   return (left.listIt != right.listIt);
 }
 
-template<typename T, typename TIndex>
-inline bool hash_list_iterator<T, TIndex>::operator==(const hash_list_iterator& right)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline bool
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator==(
+    const hash_list_iterator& right
+  )
 {
   return (listIt == right.listIt);
 }
 
-template<typename T, typename TIndex>
-inline bool hash_list_iterator<T, TIndex>::operator!=(const hash_list_iterator& right)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline bool
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator!=(
+    const hash_list_iterator& right
+  )
 {
   return (listIt != right.listIt);
 }
 
-template<typename T, typename TIndex>
-inline Ref<T> hash_list_iterator<T, TIndex>::operator*() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<T>
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator*() const
 {
   return Ref<T>(*listIt);
 }
 
-template<typename T, typename TIndex>
-inline hash_list_iterator<T, TIndex>& hash_list_iterator<T, TIndex>::operator++()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>&
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator++()
 {
   ++listIt;
   return *this;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_iterator<T, TIndex> hash_list_iterator<T, TIndex>::operator++(int)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator++(int)
 {
   hash_list_iterator copy(*this);
   ++*this;
   return copy;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_iterator<T, TIndex>& hash_list_iterator<T, TIndex>::operator--()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>&
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator--()
 {
   --listIt;
   return *this;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_iterator<T, TIndex> hash_list_iterator<T, TIndex>::operator--(int)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator--(int)
 {
   hash_list_iterator copy(*this);
   --*this;
   return copy;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_const_iterator<T, TIndex>::hash_list_const_iterator(
-    const hash_list_iterator<T, TIndex>& copy
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::
+hash_list_const_iterator(
+    const hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& copy
   ) :
   listIt(copy.listIt)
 {
 }
 
-template<typename T, typename TIndex>
-inline Ref<const T> hash_list_const_iterator<T, TIndex>::operator*() const
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline Ref<const T>
+hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator*()
+  const
 {
   return Ref<const T>(*listIt);
 }
 
-template<typename T, typename TIndex>
-inline hash_list_const_iterator<T, TIndex>&
-  hash_list_const_iterator<T, TIndex>::operator++()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>&
+  hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator++()
 {
   ++listIt;
   return *this;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_const_iterator<T, TIndex>
-  hash_list_const_iterator<T, TIndex>::operator++(int)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+  hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator++(int)
 {
   hash_list_const_iterator copy(*this);
   ++*this;
   return copy;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_const_iterator<T, TIndex>&
-  hash_list_const_iterator<T, TIndex>::operator--()
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>&
+  hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator--()
 {
   --listIt;
   return *this;
 }
 
-template<typename T, typename TIndex>
-inline hash_list_const_iterator<T, TIndex>
-  hash_list_const_iterator<T, TIndex>::operator--(int)
+template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
+inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+  hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::operator--(int)
 {
   hash_list_const_iterator copy(*this);
   --*this;
   return copy;
 }
+
+#undef SAKUSEN_HASH_LIST_INDEX_ARGS
+#undef SAKUSEN_HASH_LIST_INDEX_ARGS_IPL
+#undef SAKUSEN_HASH_LIST_AUX_DECLARE_PARAMS_IMPL
+#undef SAKUSEN_HASH_LIST_AUX_DECLARE_PARAMS
 
 }
 

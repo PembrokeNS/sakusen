@@ -27,3 +27,36 @@ Rectangle<sint32> ISensorReturns::getBoundingRectangle() const
   }
 }
 
+Box<sint32> ISensorReturns::getBoundingBox() const
+{
+  if (0 != (getPerception() & perception_unit)) {
+    return getUnit()->getBoundingBox();
+  } else if (0 != (getPerception() & perception_region)) {
+    return getRegion()->getBoundingBox();
+  } else {
+    Fatal("No bounding box available");
+  }
+}
+
+double ISensorReturns::intersect(const Ray& r) const
+{
+  if (0 != (getPerception() & perception_unit)) {
+    return getUnit()->intersect(r);
+  } else if (0 != (getPerception() & perception_region)) {
+    return getRegion()->intersect(r);
+  } else {
+    Fatal("No intersection test available");
+  }
+}
+
+bool ISensorReturns::contains(const Position& p) const
+{
+  if (0 != (getPerception() & perception_unit)) {
+    return getUnit()->contains(p);
+  } else if (0 != (getPerception() & perception_region)) {
+    return getRegion()->contains(p);
+  } else {
+    Fatal("No containment test available");
+  }
+}
+

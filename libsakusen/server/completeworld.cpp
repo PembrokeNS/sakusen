@@ -60,8 +60,8 @@ CompleteWorld::CompleteWorld(
   /* register the spatial index so that it gets filled with units and effects
    * */
   spatialIndex.reset(new NaiveSpatial());/** \todo Support other choices */
-  effects.registerIndex(spatialIndex);
-  units.registerIndex(spatialIndex);
+  effects.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
+  units.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   
   /* put units on the map as specified in MapPlayMode */
   for (i=0; i < numPlayers; i++) {

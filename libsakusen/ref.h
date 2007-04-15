@@ -11,10 +11,7 @@
 namespace sakusen {
 
 template<typename T>
-class SerializationHandler {
-  public:
-    typedef void loadArgument;
-};
+class SerializationHandler;
 
 template<typename T>
 class Ref;

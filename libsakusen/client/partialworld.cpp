@@ -27,67 +27,27 @@ PartialWorld::PartialWorld(
       )),
   units()
 {
+  unitsById.reset(new IDIndex<uint32, UpdatedUnit, UpdatedUnitIDer>());
+  sensorReturnsById.reset(
+      new IDIndex<
+        SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
+      >()
+    );
   spatialIndex.reset(new NaiveSpatial());
-  /** \bug This spatial index never gets anything added to it */
+  units.registerIndex(IIndex<UpdatedUnit>::Ptr(unitsById));
+  sensorReturns.registerIndex(
+      IIndex<UpdatedSensorReturns>::Ptr(sensorReturnsById)
+    );
+  units.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
+  sensorReturns.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   world = this;
 }
 
 PartialWorld::~PartialWorld()
 {
-  while (!units.empty()) {
-    hash_map<uint32, UpdatedUnit*>::iterator b = units.begin();
-    delete b->second;
-    units.erase(b);
-  }
-
-  sensorReturnsById.clear();
-
   delete map;
 
   world = NULL;
-}
-
-/** \brief Return a list of units intersecting the given rectangle
- *
- * \warning For speed, this may return a few extra units that do not in fact
- * intersect the rectangle */
-list<UpdatedUnit*> PartialWorld::getUnitsIntersecting(
-    const Rectangle<sint32>& rect
-  )
-{
-  /*QDebug("checking " << units.size() << " units for intersection");*/
-  /** \todo make this fast by storing data sensibly */
-  list<UpdatedUnit*> result;
-
-  for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
-      unit != units.end(); ++unit) {
-    if (rect.fastIntersects(unit->second)) {
-      result.push_back(unit->second);
-    }
-  }
-
-  return result;
-}
-
-/** \brief Return a list of sensor returns intersecting the given rectangle
- *
- * \warning For speed, this may return a few extra sensor returns that do not
- * in fact intersect the rectangle */
-list<Ref<UpdatedSensorReturns> > PartialWorld::getSensorReturnsIntersecting(
-    const Rectangle<sint32>& rect
-  )
-{
-  /** \todo make this fast by storing data sensibly */
-  list<Ref<UpdatedSensorReturns> > result;
-
-  for (hash_list<UpdatedSensorReturns>::iterator returns =
-      sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
-    if (rect.fastIntersects(*returns)) {
-      result.push_back(*returns);
-    }
-  }
-
-  return result;
 }
 
 void PartialWorld::applyUpdate(const Update& update)
@@ -96,115 +56,107 @@ void PartialWorld::applyUpdate(const Update& update)
     case updateType_unitAdded:
       {
         UnitAddedUpdateData data = update.getUnitAddedData();
-        if (units.count(data.getUnit().getId())) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
+        if (unit.isValid()) {
           Debug("adding unit of existing id");
-          delete units[data.getUnit().getId()];
+          units.erase(unit);
         }
-        units[data.getUnit().getId()] = new UpdatedUnit(data.getUnit());
+        units.push_back(new UpdatedUnit(data.getUnit()));
       }
       break;
     case updateType_unitRemoved:
       {
         UnitRemovedUpdateData data = update.getUnitRemovedData();
-        __gnu_cxx::hash_map<uint32, UpdatedUnit*>::iterator unit =
-          units.find(data.getId());
-        if (unit == units.end()) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getId());
+        if (!unit.isValid()) {
           Debug("tried to remove non-existant unit");
           break;
         }
-        delete unit->second;
         units.erase(unit);
       }
       break;
     case updateType_unitAltered:
       {
         UnitAlteredUpdateData data = update.getUnitAlteredData();
-        __gnu_cxx::hash_map<uint32, UpdatedUnit*>::iterator unit =
-          units.find(data.getUnit().getId());
-        if (unit == units.end()) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
+        if (!unit.isValid()) {
           Debug("tried to alter non-existant unit");
           break;
         }
-        unit->second->alter(data.getUnit());
+        unit->alter(data.getUnit());
       }
       break;
     case updateType_orderQueued:
       {
         OrderQueuedUpdateData data(update.getOrderQueuedData());
-        hash_map<uint32, UpdatedUnit*>::iterator unit =
-          units.find(data.getUnitId());
-        if (unit == units.end()) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
+        if (!unit.isValid()) {
           Debug("Update for non-existant unit");
           break;
         }
-        unit->second->orderQueued(data);
+        unit->orderQueued(data);
       }
       break;
     case updateType_orderAccepted:
       {
         OrderAcceptedUpdateData data(update.getOrderAcceptedData());
-        hash_map<uint32, UpdatedUnit*>::iterator unit =
-          units.find(data.getUnitId());
-        if (unit == units.end()) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
+        if (!unit.isValid()) {
           Debug("Update for non-existant unit");
           break;
         }
-        unit->second->orderAccepted(data);
+        unit->orderAccepted(data);
       }
       break;
     case updateType_orderCompleted:
       {
         OrderCompletedUpdateData data(update.getOrderCompletedData());
-        hash_map<uint32, UpdatedUnit*>::iterator unit =
-          units.find(data.getUnitId());
-        if (unit == units.end()) {
+        Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
+        if (!unit.isValid()) {
           Debug("Update for non-existant unit");
           break;
         }
-        unit->second->orderCompleted(data);
+        unit->orderCompleted(data);
       }
       break;
     case updateType_sensorReturnsAdded:
       {
         SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
         SensorReturnsID id = data.getSensorReturns().getId();
-        if (sensorReturnsById.count(id)) {
+        Ref<UpdatedSensorReturns> sensorReturnsIt = sensorReturnsById->find(id);
+        if (sensorReturnsIt.isValid()) {
           Debug("adding sensor returns of existing id");
-          sensorReturns.erase(sensorReturnsById[id]);
-          sensorReturnsById.erase(id);
+          sensorReturns.erase(sensorReturnsIt);
         }
         sensorReturns.push_back(
             new UpdatedSensorReturns(data.getSensorReturns())
           );
-        hash_list<UpdatedSensorReturns>::iterator newIt = sensorReturns.end();
-        --newIt;
-        sensorReturnsById[id] = newIt;
       }
       break;
     case updateType_sensorReturnsRemoved:
       {
         SensorReturnsRemovedUpdateData data =
           update.getSensorReturnsRemovedData();
-        UpdatedSensorReturnsIt returns = sensorReturnsById.find(data.getId());
-        if (returns == sensorReturnsById.end()) {
+        Ref<UpdatedSensorReturns> returns =
+          sensorReturnsById->find(data.getId());
+        if (!returns.isValid()) {
           Debug("tried to remove non-existant SensorReturns");
           break;
         }
-        sensorReturns.erase(returns->second);
-        sensorReturnsById.erase(returns);
+        sensorReturns.erase(returns);
       }
       break;
     case updateType_sensorReturnsAltered:
       {
         SensorReturnsAlteredUpdateData data =
           update.getSensorReturnsAlteredData();
-        UpdatedSensorReturnsIt returns =
-          sensorReturnsById.find(data.getSensorReturns().getId());
-        if (returns == sensorReturnsById.end()) {
+        Ref<UpdatedSensorReturns> returns =
+          sensorReturnsById->find(data.getSensorReturns().getId());
+        if (!returns.isValid()) {
           Debug("tried to alter non-existant SensorReturns");
           break;
         }
-        (*returns->second)->alter(data.getSensorReturns());
+        returns->alter(data.getSensorReturns());
       }
       break;
     case updateType_ballisticAdded:
@@ -237,9 +189,9 @@ void PartialWorld::applyUpdate(const Update& update)
 
 void PartialWorld::endTick()
 {
-  for (hash_map<uint32, UpdatedUnit*>::iterator unit = units.begin();
-      unit != units.end(); ++unit) {
-    unit->second->incrementState();
+  for (hash_list<UpdatedUnit, Bounded, UpdatedUnit>::iterator unit =
+      units.begin(); unit != units.end(); ++unit) {
+    (*unit)->incrementState();
   }
   ++timeNow;
 }

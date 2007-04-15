@@ -24,10 +24,11 @@ class MapDisplay : public Control {
         DockStyle ds,
         Region* r,
         tedomari::game::Game* g,
-        UI* u
+        UI* u,
+        double initialScale
       ) :
       Control(x, y, ds, r), game(g), ui(u), posOfDisplayZero(),
-      dexPerPixelX(1), dexPerPixelY(1), dragging(false)
+      dexPerPixelX(initialScale), dexPerPixelY(initialScale), dragging(false)
     {}
   private:
     tedomari::game::Game* game; /* Not owned by this */
@@ -58,7 +59,10 @@ class MapDisplay : public Control {
 
     template<typename UnitRef>
     void drawUnit(const UnitRef& unit, const Colour&);
-    void drawUnitOrders(const sakusen::client::UpdatedUnit* unit, const Colour&);
+    void drawUnitOrders(
+        const sakusen::Ref<const sakusen::client::UpdatedUnit>& unit,
+        const Colour&
+      );
 
   protected:
     void paint();

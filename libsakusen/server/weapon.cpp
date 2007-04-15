@@ -68,7 +68,7 @@ bool Weapon::aimAt(
 
   /** \todo Worry about weapon rotation speeds, etc. */
   /** \todo Inform clients */
-  status->setDirection(Point<sint16>(initialVelocity.truncate()));
+  status->setTargetDirection(Point<sint16>(initialVelocity.truncate()));
   return true;
 }
 

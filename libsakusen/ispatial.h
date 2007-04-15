@@ -38,12 +38,22 @@ class ISpatial : public IIndex<Bounded> {
 
     /** \brief Find objects whose bboxes are entirely inside the given bbox. */
     /** \brief Find objects whose bboxes are partially or completely inside the given bbox. */
+
     /** \brief Find objects whose bbox bounds intersect the given bbox bounds
      * and which match the given filter. */
     virtual Result findIntersecting(
         const Box<sint32>&,
         const GameObject filter
       ) const = 0;
+
+    /** \brief Find objects whose bbox bounds intersect the given rectangle
+     * bounds and which match the given filter. */
+    virtual Result findIntersecting(
+        const Rectangle<sint32>& r,
+        const GameObject filter
+      ) const {
+      return findIntersecting(Box<sint32>(r), filter);
+    };
 
     /** \brief Find objects which might contain the given point, and
      * which match the given filter.  This method is permitted to overestimate

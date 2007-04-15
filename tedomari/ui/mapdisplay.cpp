@@ -37,7 +37,10 @@ void MapDisplay::drawUnit(
  * \param[in] unit The unit to draw. Must not be NULL.
  * \param[in] colour The colour of the player who owns this unit.
  */
-void MapDisplay::drawUnitOrders(const UpdatedUnit* unit, const Colour& colour)
+void MapDisplay::drawUnitOrders(
+    const Ref<const UpdatedUnit>& unit,
+    const Colour& colour
+  )
 {
   Point<double> targetPosition;
   Point<double> currentPosition;
@@ -71,24 +74,31 @@ void MapDisplay::paint()
         Rectangle<double>(0, 0, getWidth(), getHeight())
       );
     
-    list<UpdatedUnit*> unitsToDraw =
-      sakusen::client::world->getUnitsIntersecting(displayRect);
+    ISpatial::Result unitsToDraw =
+      sakusen::client::world->getSpatialIndex()->findIntersecting(
+          displayRect, gameObject_unit
+        );
     /*QDebug("drawing " << unitsToDraw.size() << " units");*/
-    for (list<UpdatedUnit*>::iterator unit = unitsToDraw.begin();
-        unit != unitsToDraw.end(); ++unit) {
-      bool selected = ((ui->getSelection().count((*unit)->getId()))!=0);
+    for (ISpatial::Result::iterator unitIt = unitsToDraw.begin();
+        unitIt != unitsToDraw.end(); ++unitIt) {
+      Ref<UpdatedUnit> unit = unitIt->dynamicCast<UpdatedUnit>();
+      bool selected = ((ui->getSelection().count(unit->getId()))!=0);
       Colour colour = ( selected ? Colour::magenta : Colour::blue );
-      drawUnit(*unit, colour);
-      drawUnitOrders(*unit, colour);
+      drawUnit(unit, colour);
+      drawUnitOrders(unit, colour);
     }
     
-    list<Ref<UpdatedSensorReturns> > returnsToDraw =
-      sakusen::client::world->getSensorReturnsIntersecting(displayRect);
+    ISpatial::Result returnsToDraw =
+      sakusen::client::world->getSpatialIndex()->findIntersecting(
+          displayRect, gameObject_sensorReturns
+        );
     /*QDebug("drawing " << unitsToDraw.size() << " sensor returns");*/
-    for (list<Ref<UpdatedSensorReturns> >::iterator retrn =
-        returnsToDraw.begin(); retrn != returnsToDraw.end(); ++retrn) {
-      if ((*retrn)->getPerception() & perception_unit) {
-        drawUnit((*retrn)->getUnit(), Colour::yellow);
+    for (ISpatial::Result::iterator retrnIt = returnsToDraw.begin();
+        retrnIt != returnsToDraw.end(); ++retrnIt) {
+      Ref<UpdatedSensorReturns> retrn =
+        retrnIt->dynamicCast<UpdatedSensorReturns>();
+      if (retrn->getPerception() & perception_unit) {
+        drawUnit(retrn->getUnit(), Colour::yellow);
       } else {
         Fatal("Not implemented");
       }
