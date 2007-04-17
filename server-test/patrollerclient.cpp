@@ -36,8 +36,8 @@ void PatrollerClient::queueUpdate(const Update& update)
       break;
     case updateType_unitAltered:
       {
-        const UnitAlteredUpdateData& data = update.getUnitAlteredData();
-        QDebug("Unit at " << data.getUnit().getStatus().getPosition());
+        /*const UnitAlteredUpdateData& data = update.getUnitAlteredData();
+        QDebug("Unit at " << data.getUnit().getStatus().getPosition());*/
       }
       break;
     case updateType_sensorReturnsAdded:

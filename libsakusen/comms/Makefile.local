@@ -3,5 +3,3 @@ BIN = libsakusen-comms.la
 THIS_CXXFLAGS = -Wno-old-style-cast
 LIB_DEP_NAMES = libsakusen
 
-include ../../Makefile.common
-

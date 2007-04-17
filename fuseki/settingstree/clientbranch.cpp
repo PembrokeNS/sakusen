@@ -2,7 +2,7 @@
 
 #include "settingstree/applicationbranch.h"
 #include "settingstree/boolleaf.h"
-#include "settingstree/intleaf.h"
+#include "settingstree/intleaf-methods.h"
 
 using namespace sakusen;
 using namespace fuseki;

@@ -3,5 +3,3 @@ THIS_LDFLAGS = -module
 LIB_DEP_NAMES = libsakusen libsakusen-server
 INCLUDE =
 
-include ../../../Makefile.common
-

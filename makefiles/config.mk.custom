@@ -1,0 +1,9 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+all-nonrecursive: remove-this-target-from-config-for-the-build-to-work
+
+# Add your alterations here
+BUILD_CXXFLAGS := $(BUILD_CXXFLAGS) 
+BUILD_CFLAGS := $(BUILD_CFLAGS) 
+

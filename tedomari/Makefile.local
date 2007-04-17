@@ -1,0 +1,27 @@
+BIN = tedomari
+SOURCE_DIRS = ui ui/sdl ui/sdl/cairo game
+THIS_CXXFLAGS = -Wno-old-style-cast
+# The following flag makes debugging much easier, but it needs to be removed if
+# tedomari is to be installed
+THIS_LDFLAGS = -no-install
+LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources libsakusen-client liboptimal
+LIBS = -lstdc++
+INCLUDE =
+
+ifeq ($(ENABLE_READLINE),yes)
+LIBS := $(LIBS) -lreadline
+endif
+
+ifeq ($(ENABLE_CONVERSION),yes)
+LIBS := $(LIBS) -lunicode
+endif
+
+ifeq ($(ENABLE_SDL),yes)
+LIBS := $(LIBS) -lSDL
+endif
+
+ifeq ($(ENABLE_CAIRO),yes)
+LIBS := $(LIBS) `pkg-config --libs pangocairo`
+THIS_CXXFLAGS := $(THIS_CXXFLAGS) `pkg-config --cflags pangocairo` 
+endif
+

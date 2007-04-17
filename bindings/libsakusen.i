@@ -101,6 +101,7 @@ namespace sakusen {
 %import "iarchive.h"
 %import "oarchive.h"
 %import "ref.h"
+%import "bounded.h"
 %{
 #include "isensorreturns.h"
 %}

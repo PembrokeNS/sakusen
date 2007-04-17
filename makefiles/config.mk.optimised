@@ -1,0 +1,7 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+# Add optimisation flags
+BUILD_CXXFLAGS := $(BUILD_CXXFLAGS) -O3
+BUILD_CFLAGS := $(BUILD_CFLAGS) -O3
+

@@ -1,13 +1,9 @@
 BIN = libsakusen-server-test
 LIBS = -lrt
 LIB_DEP_NAMES = libltdl_hacked libsakusen libsakusen-server libsakusen-comms libsakusen-resources
-THIS_CXXFLAGS = #-pg
-THIS_LDFLAGS = -no-install #-pg
+THIS_CXXFLAGS =
+THIS_LDFLAGS = -no-install
 
-include ../../../Makefile.common
-
-test: $(BIN)
+test-nonrecursive: $(BIN)
 	./$(BIN)
-
-.PHONY: test
 

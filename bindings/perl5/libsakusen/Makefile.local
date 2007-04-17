@@ -1,0 +1,51 @@
+PERL5 ?= perl
+SWIG ?= swig
+PREFIX ?= /usr/local
+PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
+INCLUDE := -I$(PERL5ARCH)/CORE -I../../../libsakusen
+
+# Ask that Makefile.common not try to do things for us
+NO_AUTO_COMPILING := yes
+
+# Forward any targets we don't understand to the perl-generated Makefile
+.DEFAULT: Makefile.PL.out
+	$(MAKE) -f $< $@
+
+all-nonrecursive: Makefile.PL.out
+	$(MAKE) -f $< all
+
+test-nonrecursive: Makefile.PL.out
+	$(MAKE) -f $< test
+
+clean: Makefile.PL.out
+	$(MAKE) -f $< realclean
+	rm -rf *.lo *.so *.la *.cpp *.pm
+
+# Makefile.PL generates a makefile that expects to find Makefile.PL in the same
+# directory as itself, so we need to copy it across
+Makefile.PL: $(this_srcdir)Makefile.PL
+	cp $< $@
+
+Makefile.PL.out: Makefile.PL Sakusen.cpp
+	top_builddir=$(top_builddir) \
+	top_srcdir=$(top_srcdir) \
+	this_srcdir=$(this_srcdir) \
+	./$<
+
+# FIXME: We're not taking account of the various CXX_FLAGS to which we have
+# access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
+# etc.)
+#
+# -DHAS_BOOL was suggested as an alternative to -Dbool=char, and it seems a
+# less silly option.  It also seems to work.
+Sakusen.o: Sakusen.cpp
+	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ \
+		-DHAS_BOOL -Wall $<
+
+Sakusen.cpp: $(top_srcdir)bindings/libsakusen.i
+	$(SWIG) -perl5 -c++ -o $@ -module Sakusen -I$(top_srcdir)libsakusen $<
+
+.PHONY: all config static dynamic test linkext manifest blibdirs clean realclean disttest distdir
+
+.DELETE_ON_ERROR:
+

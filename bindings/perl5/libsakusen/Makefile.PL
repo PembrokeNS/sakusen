@@ -5,7 +5,10 @@ use ExtUtils::MakeMaker;
 my $CC = $ENV{'CXX'} || 'g++';
 my $LD = '$(CC)';
 my $LDDLFLAGS = $ENV{'LDDLFLAGS'} || '';
-$libtool = 'libtool';
+#$libtool = 'libtool';
+my $top_srcdir = $ENV{'top_srcdir'} || die;
+my $top_builddir = $ENV{'top_builddir'} || die;
+my $this_srcdir = $ENV{'this_srcdir'} || die;
 
 # note the order of these two assignments
 #$LD = "$libtool --tag=CXX --mode=link $CC -module -avoid-version";
@@ -19,9 +22,11 @@ WriteMakefile(
   CC => $CC,
   LD => $LD,
   DEFINE => '-DHAVE_BOOL',
-  INC => '-I../../../libsakusen',
+  INC => '-I'.$top_srcdir.'libsakusen',
   OBJECT => 'Sakusen.o',
-  LDLOADLIBS => '../../../libsakusen/.libs/libsakusen.so',
-  #LIBS => '../../../libsakusen/.libs/libsakusen.so',
-  LDDLFLAGS => $LDDLFLAGS . '-shared -Wl,--rpath -Wl,'.`cd ../../../libsakusen/.libs/ && pwd`,
+  FIRST_MAKEFILE => 'Makefile.PL.out',
+  #LDLOADLIBS => '../../../libsakusen/.libs/libsakusen.so',
+  #LIBS => $top_builddir . 'libsakusen/.libs/libsakusen.so',
+  test => { TESTS => $this_srcdir.'t/*.t' },
+  LDDLFLAGS => $LDDLFLAGS.' '.$top_builddir.'libsakusen/.libs/libsakusen.so -shared -Wl,--rpath -Wl,'.`cd ../../../libsakusen/.libs/ && pwd`,
 );

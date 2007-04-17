@@ -1,0 +1,33 @@
+SWIG ?= swig
+PREFIX ?= /usr/local
+INCLUDE := -I$(top_srcdir)libsakusen
+
+# Ask that Makefile.common not try to do things for us
+NO_AUTO_COMPILING := yes
+
+all-nonrecursive: sakusen.la sakusen.dll
+
+clean:
+	-rm -rf *.o *.so *.cs *.cpp *.lo *.la .libs
+
+sakusen.la: sakusen.o
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
+		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
+
+# FIXME: We're not taking account of the various CXX_FLAGS to which we have
+# access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
+# etc.)
+sakusen.o: sakusen.cpp
+	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o sakusen.o \
+		-Wall sakusen.cpp
+
+sakusen.cpp: $(top_srcdir)bindings/libsakusen.i
+	$(SWIG) -csharp -c++ -o $@ -I$(top_srcdir)libsakusen $<
+
+sakusen.dll: sakusen.cpp $(wildcard *.cs)
+	mcs -checked+ -out:$@ -recurse:'*.cs' -target:library
+
+.PHONY: all test clean
+
+.DELETE_ON_ERROR:
+

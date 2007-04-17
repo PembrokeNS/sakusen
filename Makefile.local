@@ -1,0 +1,29 @@
+ifeq ($(ENABLE_EVERYTHING),no)
+
+all-nonrecursive:
+	@echo "You appear to be lacking a critical library and so the build"
+	@echo "will not proceed.  Try 'make config' or read INSTALL for more info"
+	exit 1
+
+else
+ifeq ($(ENABLE_EVERYTHING),yes)
+
+SUBDIRS = \
+	liboptimal libltdl_hacked \
+	libsakusen \
+	data server-plugins \
+	fuseki tedomari
+
+ifeq ($(ENABLE_BINDINGS),yes)
+SUBDIRS := $(SUBDIRS) bindings
+endif
+
+else
+
+all-nonrecursive:
+	@echo "Your configuration appears to be invalid."
+	@echo "Try editing config.mk, running 'make config' or reading INSTALL."
+
+endif
+endif
+

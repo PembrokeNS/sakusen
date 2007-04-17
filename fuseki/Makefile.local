@@ -7,8 +7,6 @@ LIB_DEP_NAMES = libltdl_hacked liboptimal libsakusen libsakusen-comms libsakusen
 LIBS = -lstdc++ -lpcrecpp
 INCLUDE =
 
-include ../Makefile.common
-
 doc/man/man1/fuseki.1: $(BIN)
 	help2man --output=$@ --no-info \
 		--name="run a server for the game sakusen" ./$<

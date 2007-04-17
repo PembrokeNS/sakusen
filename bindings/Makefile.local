@@ -1,0 +1,10 @@
+SUBDIRS =
+
+ifeq ($(ENABLE_PERL_BINDINGS),yes)
+SUBDIRS := $(SUBDIRS) perl5
+endif
+
+ifeq ($(ENABLE_DOTNET_BINDINGS),yes)
+SUBDIRS := $(SUBDIRS) dotNET
+endif
+

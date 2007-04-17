@@ -1,0 +1,7 @@
+SUBDIRS = plugins
+BIN = libsakusen-server.la
+SOURCE_DIRS = 
+LIBS = -lstdc++
+LIB_DEP_NAMES = libsakusen
+INCLUDE =
+

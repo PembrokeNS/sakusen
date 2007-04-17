@@ -1,0 +1,52 @@
+Quick guide to building sakusen for users
+=========================================
+
+'make config' will run a shell script which checks for the existence of various
+executables and generates an appropriate config.mk file.  It will tell you what
+it's disabling and why, so you can install the necessary programs and repeat
+'make config' until you are satisfied with the result.
+
+Once that's done, you can further tweak config.mk by hand if you wish, then
+just 'make' should build the whole tree.
+
+If you try to 'make' before creating a config.mk, you will get a snide message
+telling you to read this file, but then the same shell script will be run.  In
+this case, the build will proceed immediately, and you won't have a chance to
+check that everything's OK.
+
+While making, you will probably see warnings like this one:
+../makefiles/Makefile.common:280: .makefrags/unittype.cpp.makefrag: No such file or directory
+Don't worry about them.  They should be fixed automatically, and not appear
+next time you make.
+
+'make test' will run some tests which should help to ensure that everything is
+working properly.  As part of these tests, it will generate some sample game
+data.  At time of writing, this is the only game data that has been created, so
+you'll need to run 'make test' if you want to try out any actual games.  If you
+want to, you can do 'make test' instead of just 'make' to build everything, and
+the tests will be performed as it goes along, so you don't waste a lot of time
+building everything if the first thing is broken.
+
+You can, if you wish, build in another directory, rather than the same place as
+the sources (perhaps because you want debug and release builds in parallel, or
+perhaps because you just don't like cluttering the source directory).  A few
+configurations have been provided which you might want to use.  Look in the
+makefiles directory, for files with names config.mk.foo.  Running 'make foo'
+for any such foo will generate a top-level directroy called foo and build in
+it, using a copy of that configuration.  You can further tweak the
+configuration for just that build by editing the config.mk it its top build
+directory.
+
+'make custom' is a special case of this.  It will create a directory 'custom'
+with a template config.mk for you to edit (and the build won't work until you
+do).  You can do 'make custom', then rename the 'custom' directory to whatever
+you want and customize as desired.
+
+Information for developers
+==========================
+
+Documentation for developers wishing to use this build system does not exist at
+time of writing.  When it does, it should be in the Doxygen docs along with all
+the other development docs.  Probably it will never exist because we'll switch
+to a different build system at some point.
+

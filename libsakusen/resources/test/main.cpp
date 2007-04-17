@@ -41,6 +41,7 @@ int main(/*int argc, char** argv*/)
   dataDirs.push_back(".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
   dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
   
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, false);
