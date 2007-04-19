@@ -32,7 +32,7 @@ the sources (perhaps because you want debug and release builds in parallel, or
 perhaps because you just don't like cluttering the source directory).  A few
 configurations have been provided which you might want to use.  Look in the
 makefiles directory, for files with names config.mk.foo.  Running 'make foo'
-for any such foo will generate a top-level directroy called foo and build in
+for any such foo will generate a top-level directory called foo and build in
 it, using a copy of that configuration.  You can further tweak the
 configuration for just that build by editing the config.mk it its top build
 directory.
