@@ -50,8 +50,15 @@ template<typename T, typename U>
 struct Storer<std::pair<T,U> > {
   void operator()(OArchive& archive, const std::pair<T,U>& toStore)
   {
-    Storer<T>()(archive, toStore.first);
-    Storer<U>()(archive, toStore.second);
+    archive << toStore;
+  }
+};
+
+template<typename T>
+struct Storer<Point<T> > {
+  void operator()(OArchive& archive, const Point<T>& toStore)
+  {
+    archive << toStore;
   }
 };
 

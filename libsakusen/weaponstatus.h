@@ -18,14 +18,14 @@ class LIBSAKUSEN_API WeaponStatus {
     WeaponStatus();
     WeaponStatus(
         WeaponTargetType targetType,
-        const Point<sint16>& direction,
+        const Point<sint32>& direction,
         uint16 energyCharge,
         uint16 metalCharge,
         bool active
       );
   private:
     WeaponTargetType targetType;
-    Point<sint16> targetDirection;
+    Point<sint32> targetDirection;
     Position targetPosition;
     Orientation targetOrientation;
     /* I did have a targetUnit here for a while, which would have been nice,
@@ -41,8 +41,8 @@ class LIBSAKUSEN_API WeaponStatus {
   public:
     /* accessors */
     WeaponTargetType getTargetType() const { return targetType; }
-    const Point<sint16>& getTargetDirection() const { return targetDirection; }
-    void setTargetDirection(const Point<sint16>& d);
+    const Point<sint32>& getTargetDirection() const { return targetDirection; }
+    void setTargetDirection(const Point<sint32>& d);
     void setTarget(const Position&, const Orientation&);
     void setTarget(const Ref<ICompleteUnit>&);
     uint16 getEnergy(void) const {return energyCharge;}

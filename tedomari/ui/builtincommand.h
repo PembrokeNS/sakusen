@@ -21,6 +21,7 @@ enum BuiltinCommand {
   builtinCommand_switchmode,
   builtinCommand_alert,
   builtinCommand_prompt,
+  builtinCommand_regex,
   builtinCommand_quit,
   /* map-related commands */
   builtinCommand_movemaprelfrac,
@@ -28,8 +29,10 @@ enum BuiltinCommand {
   builtinCommand_stopdragregion,
   /* unit-related commands */
   builtinCommand_select,
-  builtinCommand_move,
-  builtinCommand_attack
+  /* action-related commands */
+  builtinCommand_initializeaction,
+  builtinCommand_abortaction,
+  builtinCommand_supplyarg
 };
 
 void executeBuiltinCommand(

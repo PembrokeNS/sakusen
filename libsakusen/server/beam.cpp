@@ -8,7 +8,7 @@ using namespace sakusen::server;
 
 Beam::Beam(
     const Point<sint32>& start,
-    const Point<sint16>& direction,
+    const Point<sint32>& direction,
     const Ref<LayeredUnit>& s,
     Time creation,
     TimeSpan duration

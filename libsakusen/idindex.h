@@ -32,8 +32,8 @@ class IDIndex : public IIndex<T> {
     void add(const Ref<T>&);
     void remove(const Ref<T>&);
 
-    size_t count(typename boost::call_traits<TID>::param_type id);
-    Ref<T> find(typename boost::call_traits<TID>::param_type id);
+    size_t count(typename boost::call_traits<TID>::param_type id) const;
+    Ref<T> find(typename boost::call_traits<TID>::param_type id) const;
 };
 
 template<typename TID, typename T, typename IDer>
@@ -61,9 +61,10 @@ void IDIndex<TID, T, IDer>::remove(const Ref<T>& t)
 template<typename TID, typename T, typename IDer>
 Ref<T> IDIndex<TID, T, IDer>::find(
     typename boost::call_traits<TID>::param_type id
-  )
+  ) const
 {
-  typename __gnu_cxx::hash_map<TID, Ref<T> >::iterator it = idHash.find(id);
+  typename __gnu_cxx::hash_map<TID, Ref<T> >::const_iterator it =
+    idHash.find(id);
   if (it == idHash.end()) {
     return Ref<T>();
   } else {
@@ -79,10 +80,9 @@ Ref<T> IDIndex<TID, T, IDer>::find(
 template<typename TID, typename T, typename IDer>
 size_t IDIndex<TID, T, IDer>::count(
     typename boost::call_traits<TID>::param_type id
-  )
+  ) const
 {
-  typename __gnu_cxx::hash_map<TID, Ref<T> >::iterator it = idHash.find(id);
-  return (it != idHash.end());
+  return idHash.count(id);
 }
 
 }

@@ -187,7 +187,7 @@ void Ray::getAllInteractionsTo(
     interactions.insert(
         Intersection(intersection->second, intersection->first)
       );
-    if (stop & intersection->second->getType()) {
+    if (stop & intersection->second->getObjectType()) {
       extent = intersection->first;
     }
   }

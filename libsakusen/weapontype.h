@@ -28,6 +28,7 @@ class LIBSAKUSEN_API WeaponType {
     WeaponType(
         String internalName,
         String moduleName,
+        String clientHint,
         uint16 energyCost,
         uint16 metalCost,
         uint16 energyRate,
@@ -35,8 +36,27 @@ class LIBSAKUSEN_API WeaponType {
         ResourceInterface::Ptr resourceInterface
       );
   private:
+    /** \brief Internal name of the WeaponType
+     *
+     * Used for serialization and to determine the name of the spawn function
+     */
     String internalName;
+    /** \brief Name of module containing this WeaponType's spawn function */
     String moduleName;
+    /** \brief Hint for clients as to the purpose of the weapon
+     *
+     * This is so that clients can have an inkling of what weapons do, even
+     * when they have not been manually customized to a particular universe.
+     * We might want to think about some kind of sensible syntax, but for now
+     * I'm throwing in the following:
+     * \list
+     * \li o &mdash; offensive weapon.
+     * \li c:foo &mdash; creates unit type foo (internal name).
+     * \li b &mdash; for building of things after they've been created.
+     * \endlist
+     * Clients should certainly accept any value in this field without choking.
+     */
+    String clientHint;
     server::Weapon* (*spawnFunction)(const WeaponType*);
     uint16 energyCost;
     uint16 metalCost;
@@ -45,6 +65,7 @@ class LIBSAKUSEN_API WeaponType {
   public:
     /* accessors */
     inline const String& getInternalName(void) const { return internalName; }
+    inline const String& getClientHint() const { return clientHint; }
     inline WeaponTypeID getId(void) const {return this;}
     inline uint16 getEnergyCost(void) const {return energyCost;}
     inline uint16 getMetalCost(void) const {return metalCost;}

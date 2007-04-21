@@ -17,12 +17,14 @@ namespace ui {
  * things as bindings of keys to Commands, and Commands themselves. */
 class Mode {
   private:
+    String name;
     __gnu_cxx::hash_map<
         ModifiedKeyEvent, std::list<String>, ModifiedKeyEventHash
       > bindings;
     sakusen::hash_map_string<Command>::type commands;
 
   public:
+    inline const String& getName() const { return name; }
     inline const __gnu_cxx::hash_map<
         ModifiedKeyEvent, std::list<String>, ModifiedKeyEventHash
       >& getBindings() const
@@ -40,9 +42,11 @@ class Mode {
   private:
     static Mode getCommon(UI* ui);
   public:
+    static Mode getDefault(const String& name, UI* ui);
     static Mode getNormal(UI* ui);
     static Mode getUnit(UI* ui);
     static Mode getTarget(UI* ui);
+    static Mode getDefault(UI* ui);
 };
 
 }}

@@ -45,7 +45,7 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
 double ICompleteUnit::intersect(const Ray& r) const
 {
   const IUnitStatus* status = getIStatus();
-  const Point<uint32>& size = getITypeData()->getSize();
+  const Point<sint32> size(getITypeData()->getSize());
 
   /* We transform the ray into local coordinates */
   Ray localRay(
@@ -59,7 +59,7 @@ double ICompleteUnit::intersect(const Ray& r) const
 bool ICompleteUnit::contains(const Position& p) const
 {
   const IUnitStatus* status = getIStatus();
-  const Point<uint32>& size = getITypeData()->getSize();
+  const Point<sint32> size(getITypeData()->getSize());
 
   /* We transform the position into local coordinates */
   Position localPos(status->globalToLocal(p));

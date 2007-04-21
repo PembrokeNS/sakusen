@@ -11,11 +11,14 @@
 #include "ui/key.h"
 #include "ui/control.h"
 #include "ui/commandentrybox.h"
+#include "ui/regexentrybox.h"
 #include "ui/mode.h"
 #include "ui/alert.h"
 #include "ui/alertdisplay.h"
 #include "ui/mapdisplay.h"
 #include "ui/function.h"
+#include "ui/actiontarget.h"
+#include "ui/action.h"
 
 namespace tedomari {
 namespace ui {
@@ -34,8 +37,14 @@ class UI : protected Control {
     tedomari::game::Game* game;
     MapDisplay* activeMapDisplay; /**< Currently active MapDisplay, or NULL */
     CommandEntryBox* commandEntryBox;
+    RegexEntryBox* regexEntryBox;
+    Label* modeIndicator;
     AlertDisplay* alertDisplay;
     sakusen::hash_map_string<Mode>::type modes;
+    /** \brief Mode we intend to revert to when the current action executes
+     * (NULL if no Action is in progress) */
+    Mode* pendingMode;
+    /** \brief Mode we are currently in */
     Mode* mode;
     /** \brief Modifiers like ctrl from keys currently held down */
     std::set<String> currentModifiers;
@@ -48,6 +57,7 @@ class UI : protected Control {
      * */
     bool expectingChars;
     bool commandEntry;
+    bool regexEntry;
     bool quit;
 
     sakusen::Point<double> mousePos;
@@ -56,9 +66,13 @@ class UI : protected Control {
     sakusen::Rectangle<sint32> lastRectangle;
 
     /** \brief The friendly units currently selected (by unitid) */
-    __gnu_cxx::hash_set<uint32> selection;
+    std::set<uint32> selection;
+    /** \brief The Action which is presently partly initialised (or
+     * Action::Ptr() if no such Action */
+    Action::Ptr pendingAction;
 
     std::list<String> tokenise(const String&);
+    void setMode(Mode*);
   protected:
     /** \brief Create and position initial controls
      *
@@ -105,12 +119,15 @@ class UI : protected Control {
           activeMapDisplay->getRegion()->globalToLocal(p)
         );
     }
+
+    void setModeFor(ActionParameterType);
   public:
-    inline const __gnu_cxx::hash_set<uint32>& getSelection() {
+    inline const std::set<uint32>& getSelection() {
       return selection;
     }
     /** \brief Determine whether the user has asked to quit */
     inline bool isQuit() const { return quit; }
+    inline game::Game* getGame() { return game; }
     /** \brief Repaint whole UI */
     inline void paint() { Control::paint(); }
     /** \brief Set the window title to the given String */
@@ -126,11 +143,14 @@ class UI : protected Control {
 
     void executeCommands(std::list<String>& tokens);
     void executeCommands(const String& cmd);
+
+    void executeRegex(const String& re);
     
     /** \brief Add an alert to the list */
     void alert(const Alert&);
     
     void setCommandEntry(bool on);
+    void setRegexEntry(bool on);
 
     /** \brief Indicate quit request */
     inline void quitRequest() { quit = true; }
@@ -151,22 +171,21 @@ class UI : protected Control {
 
     void addFunction(const String& mode, const Function& function);
 
+    void initializeAction(const String& actionName);
+    void abortAction();
+    void supplyActionArg(const String& actionArg);
+    void supplyActionArg(const ActionArgument&);
+
     void moveMapRelative(sint32 dx, sint32 dy);
     void moveMapRelativeFrac(double dx, double dy);
     void dragRegion(bool start);
     void selectUnits(const String& selection);
     void selectUnitsIn(const sakusen::Rectangle<sint32>&);
 
-    void move(const __gnu_cxx::hash_set<uint32>& units, const String& target);
+    void move(const std::set<uint32>& units, const ActionTarget& target);
     void move(
-        const __gnu_cxx::hash_set<uint32>& units,
-        const sakusen::Point<sint32>& target
-      );
-
-    void attack(const __gnu_cxx::hash_set<uint32>& units, const String& target);
-    void attack(
-        const __gnu_cxx::hash_set<uint32>& units,
-        const sakusen::Point<sint32>& target
+        const std::set<uint32>& units,
+        const sakusen::Position& target
       );
 };
 

@@ -46,14 +46,89 @@ class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
   private:
     SetVelocityOrderData();
   public:
-    SetVelocityOrderData(const Point<sint16>& t) : OrderData(), target(t) {}
+    SetVelocityOrderData(const Velocity& t) : OrderData(), target(t) {}
     SetVelocityOrderData(IArchive& in) : OrderData() { in >> target; }
     ~SetVelocityOrderData() {};
   private:
-    Point<sint16> target;
+    Velocity target;
   public:
-    Point<sint32> getTarget(void) const { return target; }
+    const Velocity& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_setVelocity; }
+    void store(OArchive&) const;
+};
+
+class LIBSAKUSEN_API TargetPositionOrderData : public OrderData {
+  private:
+    TargetPositionOrderData();
+  public:
+    TargetPositionOrderData(uint16 wI, const Point<sint32>& t) :
+      OrderData(),
+      weaponIndex(wI),
+      target(t)
+    {}
+    TargetPositionOrderData(IArchive& in) : OrderData() {
+      in >> weaponIndex >> target;
+    }
+    ~TargetPositionOrderData() {};
+  private:
+    uint16 weaponIndex;
+    Point<sint32> target;
+  public:
+    uint16 getWeaponIndex(void) const { return weaponIndex; }
+    const Point<sint32>& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_targetPosition; }
+    void store(OArchive&) const;
+};
+
+class LIBSAKUSEN_API TargetPositionOrientationOrderData : public OrderData {
+  private:
+    TargetPositionOrientationOrderData();
+  public:
+    TargetPositionOrientationOrderData(
+        uint16 wI,
+        const std::pair<Position, Orientation>& t
+      ) :
+      OrderData(),
+      weaponIndex(wI),
+      target(t)
+    {}
+    TargetPositionOrientationOrderData(IArchive& in) : OrderData() {
+      in >> weaponIndex >> target;
+    }
+    ~TargetPositionOrientationOrderData() {};
+  private:
+    uint16 weaponIndex;
+    std::pair<Position, Orientation> target;
+  public:
+    uint16 getWeaponIndex(void) const { return weaponIndex; }
+    const std::pair<Position, Orientation>& getTarget() const { return target; }
+    OrderType getType(void) const {
+      return orderType_targetPositionOrientation;
+    }
+    void store(OArchive&) const;
+};
+
+class LIBSAKUSEN_API TargetUnitOrderData : public OrderData {
+  public:
+    TargetUnitOrderData(uint16 wI, const Ref<ICompleteUnit>& t) :
+      OrderData(),
+      weaponIndex(wI),
+      target(t)
+    {}
+    TargetUnitOrderData(IArchive& in, const PlayerID* player) :
+      OrderData()
+    {
+      in >> weaponIndex;
+      target = Ref<ICompleteUnit>::load(in, player);
+    }
+    ~TargetUnitOrderData() {};
+  private:
+    uint16 weaponIndex;
+    Ref<ICompleteUnit> target;
+  public:
+    uint16 getWeaponIndex(void) const { return weaponIndex; }
+    const Ref<ICompleteUnit>& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_targetUnit; }
     void store(OArchive&) const;
 };
 
@@ -80,29 +155,6 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
     uint16 getWeaponIndex(void) const { return weaponIndex; }
     const Ref<ISensorReturns>& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetSensorReturns; }
-    void store(OArchive&) const;
-};
-
-class LIBSAKUSEN_API TargetPointOrderData : public OrderData {
-  private:
-    TargetPointOrderData();
-  public:
-    TargetPointOrderData(uint16 wI, const Point<sint32>& t) :
-      OrderData(),
-      weaponIndex(wI),
-      target(t)
-    {}
-    TargetPointOrderData(IArchive& in) : OrderData() {
-      in >> weaponIndex >> target;
-    }
-    ~TargetPointOrderData() {};
-  private:
-    uint16 weaponIndex;
-    Point<sint32> target;
-  public:
-    uint16 getWeaponIndex(void) const { return weaponIndex; }
-    const Point<sint32>& getTarget(void) const { return target; }
-    OrderType getType(void) const { return orderType_targetPoint; }
     void store(OArchive&) const;
 };
 

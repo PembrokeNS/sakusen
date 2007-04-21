@@ -35,7 +35,8 @@ class LIBSAKUSEN_API Region {
     /** \brief Is the Point inside the Region?
      * \return true iff \p point is inside this Region.
      */
-    virtual bool contains(const Point<T>& point) const = 0;
+    virtual bool contains(const Point<sint16>& point) const = 0;
+    virtual bool contains(const Point<sint32>& point) const = 0;
 
     /** \brief Is the unit inside the Region?
      * \return true iff \p unit is inside this Region.
@@ -59,8 +60,14 @@ class LIBSAKUSEN_API Region {
      * possible one. It's probably sensible to have the client do cleverer
      * things to make this work, like scale the velocity rather than moving it
      * to a nearby vector, or plot a different route.
+     *
+     * Each of Point<sint16> and Point<sint32> is accepted rather than just
+     * Point<T>, because a Region<sint16> can still be given a Point<sint32> to
+     * truncate, and we don't want to suffer data loss before we even get into
+     * the function.
      */
-    virtual Point<T> truncateToFit(const Point<T>&) const = 0;
+    virtual Point<sint16> truncateToFit(const Point<sint16>&) const = 0;
+    virtual Point<sint32> truncateToFit(const Point<sint32>&) const = 0;
     
     /** \brief Get the centre of the Region.
      *

@@ -17,7 +17,7 @@ template<typename T>
 class Ref;
 
 template<typename T>
-bool operator==(const Ref<T>&, const Ref<T>&);
+bool operator==(const Ref<T>& left, const Ref<T>& right);
 
 /** \brief A reference to a game object managed by the world.
  *

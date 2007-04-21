@@ -29,7 +29,7 @@ class LIBSAKUSEN_API UnitType {
       bool surface,
       bool gravity,
       bool seabed,
-      const std::list<WeaponTypeID>& weapons,
+      const std::vector<WeaponTypeID>& weapons,
       const UnitTypeID& corpseUnitType
     );
     /** \brief Constructs from most required data, with some details postponed
@@ -70,7 +70,7 @@ class LIBSAKUSEN_API UnitType {
     bool seabed:1; /* true for underwater metal mines, tanks that can drive on
                       the seabed */
     std::list<String> weaponNames;
-    std::list<WeaponTypeID> weapons;
+    std::vector<WeaponTypeID> weapons;
     String corpseUnitTypeName;
     UnitTypeID corpseUnitType;
   public:
@@ -82,7 +82,7 @@ class LIBSAKUSEN_API UnitType {
     inline const uint32& getEnergyCost() const { return energyCost; }
     inline const uint32& getMetalCost() const { return metalCost; }
     inline bool getGravity() const { return gravity; }
-    inline const std::list<WeaponTypeID> getWeapons() const { return weapons; }
+    inline const std::vector<WeaponTypeID>& getWeapons() const { return weapons; }
     inline UnitTypeID getCorpseUnitType() const { return corpseUnitType; }
     
     void store(OArchive&) const;

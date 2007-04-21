@@ -38,7 +38,7 @@ class Beam : protected Ray {
   protected:
     Beam(
         const Point<sint32>& start,
-        const Point<sint16>& direction,
+        const Point<sint32>& direction,
         const Ref<LayeredUnit>& s,
         Time creation,
         TimeSpan duration

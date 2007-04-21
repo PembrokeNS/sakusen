@@ -6,7 +6,7 @@ using namespace sakusen;
 
 WeaponOrders::WeaponOrders() :
   targetType(weaponTargetType_none),
-  targetPoint(),
+  targetPosition(),
   targetSensorReturns()
 {
 }
@@ -14,10 +14,14 @@ WeaponOrders::WeaponOrders() :
 WeaponOrders::WeaponOrders(
     WeaponTargetType tT,
     const Point<sint32>& tP,
+    const Orientation& tO,
+    const Ref<ICompleteUnit>& tU,
     const Ref<ISensorReturns>& tSR
   ) :
   targetType(tT),
-  targetPoint(tP),
+  targetPosition(tP),
+  targetOrientation(tO),
+  targetUnit(tU),
   targetSensorReturns(tSR)
 {
 }
@@ -28,7 +32,10 @@ bool WeaponOrders::isTargetValid() const
     case weaponTargetType_none:
       return false;
     case weaponTargetType_position:
+    case weaponTargetType_positionOrientation:
       return true;
+    case weaponTargetType_unit:
+      return targetUnit.isValid();
     case weaponTargetType_sensorReturns:
       return targetSensorReturns.isValid();
     default:
@@ -36,13 +43,22 @@ bool WeaponOrders::isTargetValid() const
   }
 }
 
+/** \brief Turn the target of the Weapon (whatever it may be) into an estimated
+ * position
+ *
+ * \warning This method assumes the target is valid.  You should call
+ * isTargetValid first to check that.
+ */
 Point<sint32> WeaponOrders::getTargetPosition() const
 {
   switch (targetType) {
     case weaponTargetType_none:
       Fatal("no target to get position of");
     case weaponTargetType_position:
-      return targetPoint;
+    case weaponTargetType_positionOrientation:
+      return targetPosition;
+    case weaponTargetType_unit:
+      return targetUnit->getIStatus()->getPosition();
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
         return targetSensorReturns->getUnit()->getIStatus()->getPosition();
@@ -54,13 +70,22 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   }
 }
 
+/** \brief Turn the target of the Weapon (whatever it may be) into an estimated
+ * velocity
+ *
+ * \warning This method assumes the target is valid.  You should call
+ * isTargetValid first to check that.
+ */
 Point<sint16> WeaponOrders::getTargetVelocity() const
 {
   switch (targetType) {
     case weaponTargetType_none:
       Fatal("no target to get velocity of");
     case weaponTargetType_position:
-      return Point<sint32>();
+    case weaponTargetType_positionOrientation:
+      return Point<sint16>();
+    case weaponTargetType_unit:
+      return targetUnit->getIStatus()->getVelocity();
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
         return targetSensorReturns->getUnit()->getIStatus()->getVelocity();
@@ -78,9 +103,18 @@ void WeaponOrders::update(const Order& order)
     case orderType_move:
     case orderType_setVelocity:
       Fatal("Order type not appropriate for a Weapon");
-    case orderType_targetPoint:
+    case orderType_targetPosition:
       targetType = weaponTargetType_position;
-      targetPoint = order.getTargetPointData().getTarget();
+      targetPosition = order.getTargetPositionData().getTarget();
+      break;
+    case orderType_targetPositionOrientation:
+      targetType = weaponTargetType_positionOrientation;
+      boost::tie(targetPosition, targetOrientation) =
+        order.getTargetPositionOrientationData().getTarget();
+      break;
+    case orderType_targetUnit:
+      targetType = weaponTargetType_unit;
+      targetUnit = order.getTargetUnitData().getTarget();
       break;
     case orderType_targetSensorReturns:
       targetType = weaponTargetType_sensorReturns;
@@ -93,19 +127,27 @@ void WeaponOrders::update(const Order& order)
 
 void WeaponOrders::store(OArchive& archive) const
 {
-  archive.insertEnum(targetType) << targetPoint;
+  archive.insertEnum(targetType) << targetPosition;
+  targetOrientation.store(archive);
+  targetUnit.store(archive);
   targetSensorReturns.store(archive);
 }
 
 WeaponOrders WeaponOrders::load(IArchive& archive, const PlayerID* player)
 {
   WeaponTargetType targetType;
-  Point<sint32> targetPoint;
+  Point<sint32> targetPosition;
+  Orientation targetOrientation;
+  Ref<ICompleteUnit> targetUnit;
   Ref<ISensorReturns> targetSensorReturns;
 
-  archive.extractEnum(targetType) >> targetPoint;
+  archive.extractEnum(targetType) >> targetPosition;
+  targetOrientation = Orientation::load(archive);
+  targetUnit = Ref<ICompleteUnit>::load(archive, player);
   targetSensorReturns = Ref<ISensorReturns>::load(archive, player);
   
-  return WeaponOrders(targetType, targetPoint, targetSensorReturns);
+  return WeaponOrders(
+      targetType, targetPosition, targetOrientation, targetUnit, targetSensorReturns
+    );
 }
 

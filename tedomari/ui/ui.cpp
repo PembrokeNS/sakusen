@@ -5,6 +5,7 @@
 #include "ui/modifiedkeyevent.h"
 
 #include <fstream>
+#include <boost/algorithm/string/case_conv.hpp>
 #include <pcrecpp.h>
 
 using namespace std;
@@ -16,14 +17,24 @@ using namespace tedomari::game;
 using namespace tedomari::ui;
 
 UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
-  Control(0, 0, dockStyle_fill, region), game(g), activeMapDisplay(NULL),
-  commandEntryBox(NULL), alertDisplay(NULL), modes(),
-  mode(NULL), currentModifiers(), expectingChars(false), commandEntry(false),
+  Control(0, 0, dockStyle_fill, region),
+  game(g),
+  activeMapDisplay(NULL),
+  commandEntryBox(NULL),
+  alertDisplay(NULL),
+  modes(),
+  pendingMode(NULL),
+  mode(NULL),
+  currentModifiers(),
+  expectingChars(false),
+  commandEntry(false),
   quit(false)
 {
   modes["normal"] = Mode::getNormal(this);
   modes["unit"] =   Mode::getUnit(this);
   modes["target"] = Mode::getTarget(this);
+  modes["string"] = Mode::getDefault("string", this);
+  modes["targetpo"] = Mode::getDefault("targetpo", this);
   mode = &modes["normal"];
 
   list<String> tokens;
@@ -82,13 +93,32 @@ list<String> UI::tokenise(const String& s)
   return tokens;
 }
 
+void UI::setMode(Mode* newMode)
+{
+  assert(newMode != NULL);
+  mode = newMode;
+  String indicator = "-- " + boost::to_upper_copy(mode->getName());
+  if (pendingMode) {
+    indicator += " (" + pendingMode->getName() + ")";
+  }
+  indicator += " --";
+  modeIndicator->setText(indicator);
+}
+
 void UI::initializeControls()
 {
   /** \todo Make many more things.
-   * For the moment we just make a map display control and a command entry box
-   * */
+   */
   commandEntryBox = new CommandEntryBox(
       0, 0, dockStyle_bottom, newRegion(0, getHeight(), getWidth(), 0)
+    );
+  regexEntryBox = new RegexEntryBox(
+      0, 0, dockStyle_bottom, newRegion(0, getHeight(), getWidth(), 0)
+    );
+  modeIndicator = new Label(
+      /** \bug 20 should be appropriate height for font size */
+      0, 0, dockStyle_bottom, newRegion(0, getHeight()-20, getWidth(), 20),
+      "-- NORMAL --", Colour::white, Colour::black
     );
   activeMapDisplay = new MapDisplay(
       0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game,
@@ -96,6 +126,8 @@ void UI::initializeControls()
       100 /** \bug Initial scale should be fetched from GameStartMessage */
     );
   addSubControl(commandEntryBox);
+  addSubControl(regexEntryBox);
+  addSubControl(modeIndicator);
   addSubControl(activeMapDisplay);
   addLayer();
   alertDisplay =
@@ -121,8 +153,12 @@ void UI::keyDown(Key k, uint16 c)
       /* For now we assume that the chars must be being sent to the
        * commandEntryBox.  If there's anything else to which chars can be sent
        * (e.g. a chat window) then this requires more thought */
-      assert(commandEntry);
-      commandEntryBox->sendChar(c, this);
+      assert(commandEntry || regexEntry);
+      if (commandEntry) {
+        commandEntryBox->sendChar(c, this);
+      } else if (regexEntry) {
+        regexEntryBox->sendChar(c, this);
+      }
       return;
     }
     /** \todo Deal with other keys which should be significant in this context,
@@ -157,6 +193,31 @@ void UI::keyUp(Key k)
     executeCommands(tokens);
   } else {
     /*Debug("Unbound key: -" << getName(k));*/
+  }
+}
+
+/** \brief Set mode appropriate for producing given ActionParameterType */
+void UI::setModeFor(ActionParameterType type)
+{
+  switch (type) {
+    case actionParameterType_none:
+      if (pendingMode) {
+        Mode* tmpMode = pendingMode;
+        pendingMode = NULL;
+        setMode(tmpMode);
+      }
+      break;
+    case actionParameterType_target:
+      setMode(&modes["target"]);
+      break;
+    case actionParameterType_stringFromSet:
+      setMode(&modes["string"]);
+      break;
+    case actionParameterType_positionOrientation:
+      setMode(&modes["targetpo"]);
+      break;
+    default:
+      Fatal("unexpected ActionParameterType " << type);
   }
 }
 
@@ -261,6 +322,24 @@ void UI::executeCommands(const String& cmdString)
   executeCommands(tokens);
 }
 
+void UI::executeRegex(const String& regex)
+{
+  pcrecpp::RE r(regex);
+  /** \todo Other possible uses of regexes */
+  if (pendingAction &&
+      pendingAction->getNextParameterType() ==
+        actionParameterType_stringFromSet) {
+    const set<String>& options = pendingAction->getStringSet();
+    for (set<String>::iterator i=options.begin(); i != options.end(); ++i ) {
+      if (r.PartialMatch(*i)) {
+        supplyActionArg(ActionArgument(*i));
+        return;
+      }
+    }
+    alert(Alert("No option matched regex"));
+  }
+}
+
 void UI::alert(const Alert& a)
 {
   if (alertDisplay == NULL) {
@@ -279,6 +358,10 @@ void UI::setCommandEntry(bool on)
     return;
   }
 
+  if (on && regexEntry) {
+    setRegexEntry(false);
+  }
+
   expectingChars = commandEntry = on;
   commandEntryBox->setVisible(on);
 
@@ -292,6 +375,29 @@ void UI::setCommandEntry(bool on)
   paint();
 }
 
+void UI::setRegexEntry(bool on)
+{
+  if (on == regexEntry || regexEntryBox == NULL) {
+    return;
+  }
+
+  if (on && commandEntry) {
+    setCommandEntry(false);
+  }
+
+  expectingChars = regexEntry = on;
+  regexEntryBox->setVisible(on);
+
+  if (regexEntry) {
+    regexEntryBox->setDesiredHeight(20
+        /** \bug Should be appropriate height for font size */);
+  } else {
+    regexEntryBox->setDesiredHeight(0);
+  }
+  alignSubControls();
+  paint();
+}
+
 void UI::switchMode(const String& modeName)
 {
   hash_map_string<Mode>::type::iterator modeIt = modes.find(modeName);
@@ -299,7 +405,8 @@ void UI::switchMode(const String& modeName)
     alert(Alert("No such mode '" + modeName + "'"));
     return;
   }
-  mode = &modeIt->second;
+  pendingMode = NULL;
+  setMode(&modeIt->second);
 }
 
 void UI::addAlias(
@@ -371,6 +478,62 @@ void UI::addFunction(const String& mode, const Function& function)
   }
 }
 
+void UI::initializeAction(const String& actionName)
+{
+  pendingAction = ::initializeAction(actionName, selection);
+  if (!pendingAction) {
+    alert(Alert("Unknown action "+actionName));
+    return;
+  }
+  if (pendingMode == NULL) {
+    pendingMode = mode;
+  }
+  setModeFor(pendingAction->getNextParameterType());
+}
+
+void UI::abortAction()
+{
+  pendingAction.reset();
+}
+
+void UI::supplyActionArg(const String& actionArg)
+{
+  /* For now we just support the string 'cursor', meaning cursor position */
+  if (actionArg == "cursor") {
+    switch (pendingAction->getNextParameterType()) {
+      case actionParameterType_target:
+        supplyActionArg(activeMapDisplay->getMousePos());
+        break;
+      case actionParameterType_positionOrientation:
+        supplyActionArg(make_pair(
+              activeMapDisplay->getMousePos(), Orientation()
+            ));
+        break;
+      default:
+        alert(Alert("'cursor' argument cannot be interpreted in this context"));
+    }
+  } else {
+    alert(Alert("Unrecognized action argument '"+actionArg+"'"));
+  }
+}
+
+void UI::supplyActionArg(const ActionArgument& actionArg)
+{
+  if (!pendingAction) {
+    alert(Alert("No pending action for argument"));
+    return;
+  }
+  try {
+    pendingAction->supplyArgument(actionArg);
+    if (pendingAction->getNextParameterType() == actionParameterType_none) {
+      pendingAction->execute(this);
+    }
+    setModeFor(pendingAction->getNextParameterType());
+  } catch (Exn& e) {
+    alert(Alert("Problem with argument: "+e.message));
+  }
+}
+
 void UI::moveMapRelative(sint32 dx, sint32 dy)
 {
   if (activeMapDisplay == NULL) {
@@ -423,38 +586,35 @@ void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
   paint();
 }
 
+/* Helper class to foward move calls */
+class MoveVisitor : public boost::static_visitor<void> {
+  public:
+    /** \warning Stores a reference to its second argument */
+    MoveVisitor(UI* u, const set<uint32>& un) :
+      ui(u), units(un)
+    {}
+  private:
+    UI* ui;
+    const set<uint32>& units;
+  public:
+    template<typename T>
+    void operator()(const T& t) {
+      ui->move(units, t);
+    }
+};
+
 /** \todo Replace this method with the order-queue related things */
-void UI::move(const hash_set<uint32>& units, const String& target)
+void UI::move(const set<uint32>& units, const ActionTarget& target)
 {
-  if (target == "cursor") {
-    move(units, activeMapDisplay->getMousePos());
-  }
+  MoveVisitor moveVisitor(this, units);
+  target.apply_visitor(moveVisitor);
 }
 
-void UI::move(const hash_set<uint32>& units, const Point<sint32>& target)
+void UI::move(const set<uint32>& units, const Point<sint32>& target)
 {
   Order order = Order(new MoveOrderData(target));
   
-  for (hash_set<uint32>::const_iterator unit = units.begin();
-      unit != units.end(); ++unit) {
-    game->order(OrderMessage(*unit, orderCondition_now, order));
-  }
-}
-
-/** \todo Replace this method with the order-queue related things */
-void UI::attack(const hash_set<uint32>& units, const String& target)
-{
-  if (target == "cursor") {
-    attack(units, activeMapDisplay->getMousePos());
-  }
-}
-
-void UI::attack(const hash_set<uint32>& units, const Point<sint32>& target)
-{
-  /** \bug Only targeting weapon 0 */
-  Order order = Order(new TargetPointOrderData(0, target));
-  
-  for (hash_set<uint32>::const_iterator unit = units.begin();
+  for (set<uint32>::const_iterator unit = units.begin();
       unit != units.end(); ++unit) {
     game->order(OrderMessage(*unit, orderCondition_now, order));
   }

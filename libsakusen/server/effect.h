@@ -41,7 +41,7 @@ class Effect : public Bounded {
   public:
     virtual ~Effect() {}
     /* accessors */
-    inline GameObject getType() const { return gameObject_effect; }
+    inline GameObject getObjectType() const { return gameObject_effect; }
     inline const PlayerID getOwner(void) const { return owner; }
     inline const Region<sint32>::Ptr& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }

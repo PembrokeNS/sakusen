@@ -28,11 +28,16 @@ void tooFewArgs(
 
 /** \brief Constructs and displays an Alert indicating that too many arguments
  * have been given to a command */
-void tooManyArgs(const list<String>& args, int expected, UI* ui)
+void tooManyArgs(
+    const String& name,
+    const list<String>& args,
+    int expected,
+    UI* ui
+  )
 {
   ostringstream o;
-  o << "Too many arguments to command.  Expected at most " << expected <<
-    ", got " << args.size();
+  o << "Too many arguments to command '" << name << "'.  Expected at most " <<
+    expected << ", got " << args.size();
   
   ui->alert(Alert(o.str()));
 }
@@ -42,7 +47,8 @@ void tooManyArgs(const list<String>& args, int expected, UI* ui)
 void wrongNumberArgs(
     const String& name,
     const list<String>& args,
-    int expected, UI* ui
+    int expected,
+    UI* ui
   )
 {
   ostringstream o;
@@ -137,13 +143,22 @@ void executeBuiltinCommand(
       break;
     case builtinCommand_prompt:
       if (!args.empty()) {
-        tooManyArgs(args, 0, ui);
+        tooManyArgs(name, args, 0, ui);
+        break;
       }
       ui->setCommandEntry(true);
       break;
+    case builtinCommand_regex:
+      if (!args.empty()) {
+        tooManyArgs(name, args, 0, ui);
+        break;
+      }
+      ui->setRegexEntry(true);
+      break;
     case builtinCommand_quit:
       if (!args.empty()) {
-        tooManyArgs(args, 0, ui);
+        tooManyArgs(name, args, 0, ui);
+        break;
       }
       ui->quitRequest();
       break;
@@ -161,14 +176,14 @@ void executeBuiltinCommand(
       break;
     case builtinCommand_startdragregion:
       if (!args.empty()) {
-        tooManyArgs(args, 0, ui);
+        tooManyArgs(name, args, 0, ui);
         break;
       }
       ui->dragRegion(true);
       break;
     case builtinCommand_stopdragregion:
       if (!args.empty()) {
-        tooManyArgs(args, 0, ui);
+        tooManyArgs(name, args, 0, ui);
         break;
       }
       ui->dragRegion(false);
@@ -182,23 +197,26 @@ void executeBuiltinCommand(
         ui->selectUnits(args.front());
       }
       break;
-    case builtinCommand_move:
-      {
-        if (args.size() != 1) {
-          wrongNumberArgs(name, args, 1, ui);
-          break;
-        }
-        ui->move(ui->getSelection(), args.front());
+    case builtinCommand_initializeaction:
+      if (args.size() != 1) {
+        wrongNumberArgs(name, args, 1, ui);
+        break;
       }
+      ui->initializeAction(args.front());
       break;
-    case builtinCommand_attack:
-      {
-        if (args.size() != 1) {
-          wrongNumberArgs(name, args, 1, ui);
-          break;
-        }
-        ui->attack(ui->getSelection(), args.front());
+    case builtinCommand_abortaction:
+      if (!args.empty()) {
+        tooManyArgs(name, args, 0, ui);
+        break;
       }
+      ui->abortAction();
+      break;
+    case builtinCommand_supplyarg:
+      if (args.size() != 1) {
+        wrongNumberArgs(name, args, 1, ui);
+        break;
+      }
+      ui->supplyActionArg(args.front());
       break;
     default:
       Fatal("Unknown builtin command: " << cmd);

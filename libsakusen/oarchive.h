@@ -87,6 +87,14 @@ class LIBSAKUSEN_API OArchive {
     {
       return *this << static_cast<uint8>(value);
     }
+
+    template<typename T, typename U>
+    OArchive& operator<<(const std::pair<T, U>& toStore)
+    {
+      Storer<T>()(*this, toStore.first);
+      Storer<U>()(*this, toStore.second);
+      return *this;
+    }
     
     template<typename T, size_t size>
     OArchive& operator<<(const T toStore[size])

@@ -11,7 +11,7 @@ ifeq ($(ENABLE_EVERYTHING),yes)
 SUBDIRS = \
 	liboptimal libltdl_hacked \
 	libsakusen \
-	data server-plugins \
+	data server-test server-plugins \
 	fuseki tedomari
 
 ifeq ($(ENABLE_BINDINGS),yes)

@@ -1,6 +1,7 @@
 #include "weaponstatus.h"
 
 #include "world.h"
+#include "icompleteunit.h"
 
 using namespace sakusen;
 
@@ -15,7 +16,7 @@ WeaponStatus::WeaponStatus() :
 
 WeaponStatus::WeaponStatus(
     WeaponTargetType tT,
-    const Point<sint16>& tD,
+    const Point<sint32>& tD,
     uint16 eC,
     uint16 mC,
     bool a
@@ -28,10 +29,28 @@ WeaponStatus::WeaponStatus(
 {
 }
 
-void WeaponStatus::setTargetDirection(const Point<sint16>& d)
+void WeaponStatus::setTargetDirection(const Point<sint32>& d)
 {
   targetType = weaponTargetType_direction;
   targetDirection = d;
+  targetPosition = Position();
+  targetOrientation = Orientation();
+}
+
+void WeaponStatus::setTarget(const Position& p, const Orientation& o)
+{
+  targetType = weaponTargetType_positionOrientation;
+  targetDirection = Point<sint32>();
+  targetPosition = p;
+  targetOrientation = o;
+}
+
+void WeaponStatus::setTarget(const Ref<ICompleteUnit>& u)
+{
+  targetType = weaponTargetType_unit;
+  targetDirection = Point<sint32>();
+  targetPosition = u->getIStatus()->getPosition();
+  targetOrientation = Orientation();
 }
 
 void WeaponStatus::activate(void) {active = true;}
@@ -81,7 +100,7 @@ void WeaponStatus::store(OArchive& archive) const
 WeaponStatus WeaponStatus::load(IArchive& archive)
 {
   WeaponTargetType targetType;
-  Point<sint16> targetDirection;
+  Point<sint32> targetDirection;
   uint16 energyCharge;
   uint16 metalCharge;
   bool active;

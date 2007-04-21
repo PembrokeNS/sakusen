@@ -1,5 +1,6 @@
 #include "orderdata.h"
 #include "libsakusen-global.h"
+#include "oarchive-methods.h"
 
 using namespace sakusen;
 
@@ -21,14 +22,25 @@ void SetVelocityOrderData::store(OArchive& out) const
   out << target;
 }
 
-void TargetSensorReturnsOrderData::store(OArchive& out) const
+void TargetPositionOrderData::store(OArchive& out) const
+{
+  out << weaponIndex << target;
+}
+
+void TargetPositionOrientationOrderData::store(OArchive& out) const
+{
+  out << weaponIndex << target;
+}
+
+void TargetUnitOrderData::store(OArchive& out) const
 {
   out << weaponIndex;
   target.store(out);
 }
 
-void TargetPointOrderData::store(OArchive& out) const
+void TargetSensorReturnsOrderData::store(OArchive& out) const
 {
-  out << weaponIndex << target;
+  out << weaponIndex;
+  target.store(out);
 }
 

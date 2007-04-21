@@ -21,7 +21,7 @@ void MapDisplay::drawUnit(
 {
   list< Point<double> > corners;
 
-  Point<uint32> corner = unit->getITypeData()->getSize();
+  Point<sint32> corner(unit->getITypeData()->getSize());
   const UnitStatus& status = unit->getIStatus();
   corners.push_back(dexToPixel(status.localToGlobal(corner)));
   corner.x *= -1;

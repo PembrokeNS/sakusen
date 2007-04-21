@@ -15,7 +15,7 @@ UnitType::UnitType(
     bool su,
     bool gra,
     bool se,
-    const std::list<WeaponTypeID>& w,
+    const std::vector<WeaponTypeID>& w,
     const UnitTypeID& cUT) :
   internalName(iN),
   dynamicData(dD),

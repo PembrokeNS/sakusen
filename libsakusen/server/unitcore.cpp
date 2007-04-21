@@ -56,9 +56,9 @@ void UnitCore::initializeWeapons()
   Universe::ConstPtr universe = world->getUniverse();
   const UnitType* typePtr = universe->getUnitTypePtr(type);
   /* add weapons */
-  const std::list<WeaponTypeID>& weaponTypes = typePtr->getWeapons();
-  for (std::list<WeaponTypeID>::const_iterator weaponType = weaponTypes.begin();
-      weaponType != weaponTypes.end(); ++weaponType) {
+  const std::vector<WeaponTypeID>& weaponTypes = typePtr->getWeapons();
+  for (std::vector<WeaponTypeID>::const_iterator weaponType =
+      weaponTypes.begin(); weaponType != weaponTypes.end(); ++weaponType) {
     weapons.push_back(universe->getWeaponTypePtr(*weaponType)->spawn());
   }
 }

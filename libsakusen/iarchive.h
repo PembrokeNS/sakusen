@@ -42,6 +42,27 @@ class extent_generator<0> {
     }
 };
 
+/* Helper classes to handle extraction of different types from an IArchive */
+template<typename T>
+struct Extracter {
+  T operator()(IArchive&);
+  T operator()(IArchive&, ResourceInterface::Ptr resourceInterface);
+};
+
+template<typename T>
+struct Extracter1 {
+  T operator()(IArchive&, const typename T::loadArgument* arg);
+};
+
+template<typename T>
+struct Extracter2 {
+  T operator()(
+      IArchive&,
+      const typename T::loadArgument* arg,
+      const typename T::loadArgument2* arg2
+    );
+};
+
 /** \brief Source from which objects can be read.
  *
  * This class represents an archive from which we extract objects after
@@ -87,30 +108,6 @@ class LIBSAKUSEN_API IArchive {
       buffer += length;
       remainingLength -= length;
     }
-
-    template<typename T>
-    inline T load();
-
-    template<typename T>
-    inline T load(const typename T::loadArgument* arg)
-    {
-      return T::load(*this, arg);
-    }
-
-    template<typename T>
-    inline T load(
-        const typename T::loadArgument* arg,
-        const typename T::loadArgument2* arg2
-      )
-    {
-      return T::load(*this, arg, arg2);
-    }
-
-    template<typename T>
-    inline T load(ResourceInterface::Ptr resourceInterface)
-    {
-      return T::load(*this, resourceInterface);
-    }
   public:
     inline String getSecureHashAsString() const {
       return stringUtils_getSecureHashAsString(
@@ -145,6 +142,8 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(sint16& i);
     IArchive& operator>>(uint32& i);
     IArchive& operator>>(sint32& i);
+    IArchive& operator>>(uint64& i);
+    IArchive& operator>>(sint64& i);
     IArchive& operator>>(double& d);
     IArchive& operator>>(String& s);
     IArchive& operator>>(IArchive&);
@@ -157,12 +156,21 @@ class LIBSAKUSEN_API IArchive {
       result = static_cast<T>(valAsInt);
       return *this;
     }
+
+    template<typename T, typename U>
+    IArchive& operator>>(std::pair<T, U>& result)
+    {
+      result.first = Extracter<T>()(*this);
+      result.second = Extracter<U>()(*this);
+      return *this;
+    }
     
     template<typename T, size_t size>
     IArchive& extract(T result[size])
     {
+      Extracter<T> extracter;
       for (int i=0; i<size; ++i) {
-        result[i]=load<T>();
+        result[i]=extracter(*this);
       }
 
       return *this;
@@ -171,8 +179,9 @@ class LIBSAKUSEN_API IArchive {
     template<typename T, size_t size>
     IArchive& extract(T result[size], const typename T::loadArgument* arg)
     {
+      Extracter1<T> extracter;
       for (size_t i=0; i<size; ++i) {
-        result[i]=load<T>(arg);
+        result[i]=extracter(*this, arg);
       }
 
       return *this;
@@ -181,8 +190,9 @@ class LIBSAKUSEN_API IArchive {
     template<typename T>
     IArchive& extract(T* result, size_t size)
     {
+      Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
-        result[i] = load<T>();
+        result[i] = extracter();
       }
 
       return *this;
@@ -191,14 +201,13 @@ class LIBSAKUSEN_API IArchive {
     template<typename T, size_t size>
     IArchive& extract(boost::array<T, size>& result)
     {
+      Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
-        result[i]=load<T>();
+        result[i]=extracter(*this);
       }
 
       return *this;
     }
-
-  public:
 
     template<typename T, size_t rank>
 	  IArchive& extract(boost::multi_array<T, rank>& result)
@@ -217,9 +226,10 @@ class LIBSAKUSEN_API IArchive {
       boost::array<uint32, rank> i;
       std::fill(i.begin(), i.end(), 0);
       uint32 j;
+      Extracter<T> extracter;
 
       do {
-        result(i) = load<T>();
+        result(i) = extracter(*this);
         for (j=0; j<rank; ++j) {
           if (++(i[j]) == shape[j]) {
             i[j] = 0;
@@ -238,25 +248,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>());
-      }
-
-      return *this;
-    }
-    
-    template<typename T>
-    IArchive& operator>>(std::vector<std::vector<T> >& result)
-    {
-      assert(result.empty());
-      uint32 size;
-      *this >> size;
-
-      while (size--) {
-        std::vector<T> tmp;
-        *this >> tmp;
-        result.push_back(tmp);
+        result.push_back(extracter(*this));
       }
 
       return *this;
@@ -271,9 +266,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>(resourceInterface));
+        result.push_back(extracter(*this, resourceInterface));
       }
 
       return *this;
@@ -285,9 +281,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>());
+        result.push_back(extracter(*this));
       }
 
       return *this;
@@ -299,9 +296,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter<std::pair<T, U> > extracter;
 
       while (size--) {
-        if (!result.insert(std::pair<T, U>(load<T>(), load<U>())).second) {
+        if (!result.insert(extracter(*this)).second) {
           throw DeserializationExn("Duplicate key in hash_map");
         }
       }
@@ -318,9 +316,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter1<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>(arg));
+        result.push_back(extracter(*this, arg));
       }
 
       return *this;
@@ -335,9 +334,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter1<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>(arg));
+        result.push_back(extracter(*this, arg));
       }
 
       return *this;
@@ -353,9 +353,10 @@ class LIBSAKUSEN_API IArchive {
       assert(result.empty());
       uint32 size;
       *this >> size;
+      Extracter2<T> extracter;
 
       while (size--) {
-        result.push_back(load<T>(arg, arg2));
+        result.push_back(extracter(*this, arg, arg2));
       }
 
       return *this;
@@ -385,66 +386,93 @@ class LIBSAKUSEN_API IArchive {
     }
 };
 
-template<>
-inline uint8 IArchive::load<uint8>()
-{
-  uint8 s;
-  *this >> s;
-  return s;
-}
+#define SIMPLE_EXTRACTER(type) \
+template<>                     \
+struct Extracter<type> {       \
+  type operator()(             \
+      IArchive& archive        \
+    )                          \
+  {                            \
+    type item;                 \
+    archive >> item;           \
+    return item;               \
+  }                            \
+};
 
-template<>
-inline sint8 IArchive::load<sint8>()
-{
-  sint8 s;
-  *this >> s;
-  return s;
-}
+SIMPLE_EXTRACTER(uint8)
+SIMPLE_EXTRACTER(sint8)
+SIMPLE_EXTRACTER(uint16)
+SIMPLE_EXTRACTER(sint16)
+SIMPLE_EXTRACTER(uint32)
+SIMPLE_EXTRACTER(sint32)
+SIMPLE_EXTRACTER(uint64)
+SIMPLE_EXTRACTER(sint64)
+SIMPLE_EXTRACTER(String)
 
-template<>
-inline uint16 IArchive::load<uint16>()
-{
-  uint16 s;
-  *this >> s;
-  return s;
-}
+#undef SIMPLE_EXTRACTER
 
-template<>
-inline sint16 IArchive::load<sint16>()
-{
-  sint16 s;
-  *this >> s;
-  return s;
-}
+template<typename T, typename U>
+struct Extracter<std::pair<T, U> > {
+  std::pair<T, U> operator()(IArchive& archive)
+  {
+    std::pair<T, U> item;
+    archive >> item;
+    return item;
+  }
+};
 
-template<>
-inline uint32 IArchive::load<uint32>()
-{
-  uint32 s;
-  *this >> s;
-  return s;
-}
+template<typename T>
+struct Extracter<std::vector<T> > {
+  std::vector<T> operator()(IArchive& archive)
+  {
+    std::vector<T> item;
+    archive >> item;
+    return item;
+  }
+};
 
-template<>
-inline sint32 IArchive::load<sint32>()
-{
-  sint32 s;
-  *this >> s;
-  return s;
-}
+template<typename T>
+struct Extracter<Point<T> > {
+  Point<T> operator()(IArchive& archive)
+  {
+    Point<T> item;
+    archive >> item;
+    return item;
+  }
+};
 
-template<>
-inline String IArchive::load<String>()
+template<typename T>
+inline T Extracter<T>::operator()(IArchive& archive)
 {
-  String s;
-  *this >> s;
-  return s;
+  return T::load(archive);
 }
 
 template<typename T>
-inline T IArchive::load()
+inline T Extracter<T>::operator()(
+    IArchive& archive,
+    ResourceInterface::Ptr resourceInterface
+  )
 {
-  return T::load(*this);
+  return T::load(archive, resourceInterface);
+}
+
+template<typename T>
+inline T Extracter1<T>::operator()(
+    IArchive& archive,
+    const typename T::loadArgument* arg
+  )
+{
+  return T::load(archive, arg);
+}
+
+template<typename T>
+inline T Extracter2<T>::operator()(
+    IArchive& archive,
+    const typename T::loadArgument* arg,
+    const typename T::loadArgument2* arg2
+  )
+{
+  return T::load(archive, arg, arg2);
 }
 
 }

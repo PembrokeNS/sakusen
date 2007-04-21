@@ -16,7 +16,7 @@ void SensorReturns::store(OArchive& out) const
     region->store(out);
   }
   if (0 != (perception & perception_unit)) {
-    unit->store(out);
+    unit->store(out, true /* sanitize to remove unitId */);
   }
   out << returns;
 }

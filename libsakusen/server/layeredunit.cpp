@@ -203,8 +203,9 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
       {
         Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
             orders.getTargetPosition(), status->position);
-        Point<sint32> desiredVelocity =
-          topLayer->getPossibleVelocities()->truncateToFit(desiredDirection);
+        Point<sint16> desiredVelocity(
+            topLayer->getPossibleVelocities()->truncateToFit(desiredDirection)
+          );
         Point<sint16> acceleration = desiredVelocity - status->velocity;
         acceleration =
           topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
@@ -293,7 +294,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
       /** \todo Check whether the SensorReturns still exists.  If not, then we
        * imagine that we have succeeded */
       break;
-    case orderType_targetPoint:
+    case orderType_targetPosition:
       /* There's not really any sense in which this can succeed */
       break;
     default:

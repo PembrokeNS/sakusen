@@ -34,7 +34,7 @@ class Bounded {
      *
      * Find the objects type so it can be discarded quickly without computing
      * the bounding box in situations where that is beneficial. */
-    virtual GameObject getType() const = 0;
+    virtual GameObject getObjectType() const = 0;
 
     /** \brief Retrieve the object's bbox.
      *

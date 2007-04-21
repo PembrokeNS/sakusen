@@ -46,8 +46,10 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     }
   public:
     inline UWideT squareRadius() const { return UWideT(radius) * radius; }
-    inline bool contains(const Point<T>& point) const;
-    inline Point<T> truncateToFit(const Point<T>&) const;
+    inline bool contains(const Point<sint16>& point) const;
+    inline bool contains(const Point<sint32>& point) const;
+    inline Point<sint16> truncateToFit(const Point<sint16>&) const;
+    inline Point<sint32> truncateToFit(const Point<sint32>&) const;
     inline Point<T> getBestPosition() const { return centre; }
     inline Rectangle<T> getBoundingRectangle() const;
     inline Box<T> getBoundingBox() const;
@@ -57,9 +59,15 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
 };
 
 template<typename T>
-inline bool SphereRegion<T>::contains(const Point<T>& point) const {
+inline bool SphereRegion<T>::contains(const Point<sint16>& point) const {
   return world->getMap()->getShortestDifference(point, centre).
-    squareLength() < squareRadius();
+    squareLength() < this->squareRadius();
+}
+
+template<typename T>
+inline bool SphereRegion<T>::contains(const Point<sint32>& point) const {
+  return world->getMap()->getShortestDifference(point, centre).
+    squareLength() < this->squareRadius();
 }
 
 /** \bug This won't work if the sphere is not centred on the origin. I'm not
@@ -68,15 +76,33 @@ inline bool SphereRegion<T>::contains(const Point<T>& point) const {
  * of a speed penalty to make me unhappy.
  */
 template<typename T>
-inline Point<T> SphereRegion<T>::truncateToFit(
-    const Point<T>& p
+inline Point<sint16> SphereRegion<T>::truncateToFit(
+    const Point<sint16>& p
   ) const
 {
   if (contains(p)) {
     return p;
   }
-  return Point<T>(
-      (Point<double>(Point<WideT>(p) * radius) / p.length()).truncate()
+  return Point<sint16>(
+      ((Point<double>(p) * radius) / p.length()).truncate()
+    );
+}
+
+/** \bug This won't work if the sphere is not centred on the origin. I'm not
+ * sure what to do about this. It looks like we would only ever want to use
+ * this on the origin, and code to make it work anywhere would be just enough
+ * of a speed penalty to make me unhappy.
+ */
+template<typename T>
+inline Point<sint32> SphereRegion<T>::truncateToFit(
+    const Point<sint32>& p
+  ) const
+{
+  if (contains(p)) {
+    return p;
+  }
+  return Point<sint32>(
+      ((Point<double>(p) * radius) / p.length()).truncate()
     );
 }
 

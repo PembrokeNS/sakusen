@@ -31,11 +31,10 @@ class LIBSAKUSEN_SERVER_API Weapon {
     Ref<LayeredUnit> getTargetUnit() { return targetUnit; }
 
     /* callbacks */
-    virtual bool aimAt(
+    virtual bool aim(
         const Ref<LayeredUnit>& firer,
         WeaponStatus* status,
-        const Point<sint32>& pos,
-        const Point<sint16>& vel
+        const WeaponOrders&
       );
     /** \brief Allow subclasses to tell this class the speed of the fired
      * projectile.

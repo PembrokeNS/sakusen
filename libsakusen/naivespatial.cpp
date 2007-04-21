@@ -33,7 +33,7 @@ ISpatial::Result NaiveSpatial::findIntersecting(
   ISpatial::Result result;
 
   for (List::const_iterator i=list.begin(); i != list.end(); ++i) {
-    if (((*i)->getType() & filter) && (*i)->fastIntersection(box)) {
+    if (((*i)->getObjectType() & filter) && (*i)->fastIntersection(box)) {
       result.push_back(*i);
     }
   }
@@ -49,7 +49,7 @@ ISpatial::Result NaiveSpatial::findFastContaining(
   ISpatial::Result result;
 
   for (List::const_iterator i=list.begin(); i != list.end(); ++i) {
-    if (((*i)->getType() & filter) && (*i)->fastContains(pos)) {
+    if (((*i)->getObjectType() & filter) && (*i)->fastContains(pos)) {
       result.push_back(*i);
     }
   }
@@ -65,7 +65,7 @@ ISpatial::Result NaiveSpatial::findContaining(
   ISpatial::Result result;
 
   for (List::const_iterator i=list.begin(); i != list.end(); ++i) {
-    if (((*i)->getType() & filter) && (*i)->contains(pos)) {
+    if (((*i)->getObjectType() & filter) && (*i)->contains(pos)) {
       result.push_back(*i);
     }
   }
@@ -82,7 +82,7 @@ std::map<double, Ref<Bounded> > NaiveSpatial::findIntersections(
   std::map<double, Ref<Bounded> > result;
 
   for (List::const_iterator i=list.begin(); i != list.end(); ++i) {
-    if (((*i)->getType() & filter)) {
+    if (((*i)->getObjectType() & filter)) {
       double parameter = (*i)->intersect(ray);
       if (extent >= parameter) {
         result.insert(make_pair(parameter, *i));

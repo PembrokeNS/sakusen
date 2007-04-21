@@ -85,9 +85,14 @@ struct LIBSAKUSEN_API Rectangle {
   inline T getMaxX() const { return maxx; }
   inline T getMaxY() const { return maxy; }
   /*@}*/
-  inline bool isEmpty() const { return (getMinX() > getMaxX() && getMinY() > getMaxY()); }
-  inline bool contains(const Point<T>& p) const {
-    return p.x >= getMinX() && p.x <= getMaxX() && p.y >= getMinY() && p.y <= getMaxY();
+  inline bool isEmpty() const {
+    return (getMinX() > getMaxX() && getMinY() > getMaxY());
+  }
+  template<typename U>
+  inline bool contains(const Point<U>& p) const {
+    return
+      p.x >= getMinX() && p.x <= getMaxX() &&
+      p.y >= getMinY() && p.y <= getMaxY();
   }
   /** \brief Do these Rectangles intersect?
    *

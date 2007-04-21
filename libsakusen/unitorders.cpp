@@ -68,21 +68,24 @@ void UnitOrders::acceptOrder(OrderCondition condition)
       linearTarget = linearTargetType_position;
       targetPosition = thisOrder.getMoveData().getTarget();
       break;
-    case orderType_targetPoint:
-      {
-        uint16 weaponIndex =
-          thisOrder.getTargetPointData().getWeaponIndex();
-        if (weaponIndex >= weaponOrders.size()) {
-          Debug("Weapon index out of range");
-          break;
-        }
-        weaponOrders[weaponIndex].update(thisOrder);
-      }
-      break;
+    case orderType_targetPosition:
+    case orderType_targetPositionOrientation:
     case orderType_targetSensorReturns:
       {
-        uint16 weaponIndex =
-          thisOrder.getTargetSensorReturnsData().getWeaponIndex();
+        uint16 weaponIndex;
+        switch(thisOrder.getType()) {
+          case orderType_targetPosition:
+            weaponIndex = thisOrder.getTargetPositionData().getWeaponIndex();
+            break;
+          case orderType_targetPositionOrientation:
+            weaponIndex = thisOrder.getTargetPositionOrientationData().getWeaponIndex();
+            break;
+          case orderType_targetSensorReturns:
+            weaponIndex = thisOrder.getTargetSensorReturnsData().getWeaponIndex();
+            break;
+          default:
+          Fatal("Unknown OrderType " << thisOrder.getType());
+        }
         if (weaponIndex >= weaponOrders.size()) {
           Debug("Weapon index out of range");
           break;

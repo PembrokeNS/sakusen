@@ -72,6 +72,7 @@ int main(/*int argc, char** argv*/)
       WeaponType(
           "cannon",
           "testsrc",
+          "o" /* clientHint */,
           17 /* energyCost */,
           17 /* metalCost */,
           1 /* energyRate */,
@@ -83,6 +84,7 @@ int main(/*int argc, char** argv*/)
       WeaponType(
           "paralyzer",
           "testsrc",
+          "o" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
           1 /* energyRate */,
@@ -90,28 +92,42 @@ int main(/*int argc, char** argv*/)
           resourceInterface
         );
     weaponTypes.push_back(paralyzerType);
-    WeaponType factorybuilderType =
+    WeaponType factorycreaterType =
       WeaponType(
-          "factorybuilder",
+          "factorycreater",
           "testsrc",
+          "c:factory" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
           1 /* energyRate */,
           1 /* metalRate */,
           resourceInterface
         );
-    weaponTypes.push_back(factorybuilderType);
-    WeaponType gruntbuilderType =
+    weaponTypes.push_back(factorycreaterType);
+    WeaponType gruntcreaterType =
       WeaponType(
-          "gruntbuilder",
+          "gruntcreater",
           "testsrc",
+          "c:grunt" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
           1 /* energyRate */,
           1 /* metalRate */,
           resourceInterface
         );
-    weaponTypes.push_back(gruntbuilderType);
+    weaponTypes.push_back(gruntcreaterType);
+    WeaponType builderType =
+      WeaponType(
+          "builder",
+          "testsrc",
+          "b" /* clientHint */,
+          10 /* energyCost */,
+          10 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
+          resourceInterface
+        );
+    weaponTypes.push_back(builderType);
   } catch (DeserializationExn& e) {
     cout << "Exception: " << e.message << endl;
     return EXIT_FAILURE;
@@ -121,7 +137,8 @@ int main(/*int argc, char** argv*/)
   list<String> commanderWeapons;
   commanderWeapons.push_back("cannon");
   commanderWeapons.push_back("paralyzer");
-  commanderWeapons.push_back("factorybuilder");
+  commanderWeapons.push_back("factorycreater");
+  commanderWeapons.push_back("builder");
   /* The following use of shared_ptr temporaries could lead to a memory leak in
    * extreme circumstances, but since this is only a test I don't really care
    * */
@@ -154,7 +171,7 @@ int main(/*int argc, char** argv*/)
   unitTypes.push_back(commanderType);
 
   list<String> factoryWeapons;
-  factoryWeapons.push_back("gruntbuilder");
+  factoryWeapons.push_back("gruntcreater");
   UnitType factoryType =
     UnitType(
         "factory" /* name */,

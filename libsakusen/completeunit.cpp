@@ -25,10 +25,19 @@ CompleteUnit::CompleteUnit(const Ref<const ICompleteUnit>& copy) :
 {
 }
 
-void CompleteUnit::store(OArchive& out) const
+/** \brief Serialize CompleteUnit
+ *
+ * \param sanitize If true, then the unitId will be zeroed in the serialized
+ * version.  This is appropriate for when the CompleteUnit is being sent to a
+ * client as part of a SensorReturns. */
+void CompleteUnit::store(OArchive& out, bool sanitize) const
 {
   out.magicValue("CUNIT");
-  out << unitId;
+  if (sanitize) {
+    out << uint32(-1);
+  } else {
+    out << unitId;
+  }
   status.store(out, world->getUniverse());
   typeData.store(out);
 }

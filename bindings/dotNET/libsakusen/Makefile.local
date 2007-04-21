@@ -22,7 +22,7 @@ sakusen.o: sakusen.cpp
 		-Wall sakusen.cpp
 
 sakusen.cpp: $(top_srcdir)bindings/libsakusen.i
-	$(SWIG) -csharp -c++ -o $@ -I$(top_srcdir)libsakusen $<
+	$(SWIG) -csharp -namespace Sakuen -c++ -o $@ -I$(top_srcdir)libsakusen $<
 
 sakusen.dll: sakusen.cpp $(wildcard *.cs)
 	mcs -checked+ -out:$@ -recurse:'*.cs' -target:library

@@ -32,7 +32,7 @@ class LIBSAKUSEN_API ISensorReturns : public Bounded {
     virtual Ref<const ICompleteUnit> getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
 
-    GameObject getType() const { return gameObject_sensorReturns; }
+    GameObject getObjectType() const { return gameObject_sensorReturns; }
     virtual Point<sint32> getBestPosition() const;
     virtual Rectangle<sint32> getBoundingRectangle() const;
     virtual Box<sint32> getBoundingBox() const;

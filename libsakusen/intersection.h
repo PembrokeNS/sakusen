@@ -19,7 +19,7 @@ class Intersection {
       assert(type == gameObject_land || type == gameObject_water);
     }
     Intersection(const Ref<Bounded>& b, double p) :
-      type(b->getType()),
+      type(b->getObjectType()),
       position(p),
       ref(b)
     {

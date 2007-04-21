@@ -27,17 +27,20 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
         uint32 verticalHeightfieldRes
       );
     ~PartialWorld();
+    
+    typedef IDIndex<uint32, UpdatedUnit, UpdatedUnitIDer> UnitIDIndex;
+    typedef IDIndex<
+        SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
+      > SensorReturnsIDIndex;
   private:
     PlayerID playerId;
     PartialMap* map;
     hash_list<UpdatedUnit, Bounded, UpdatedUnit> units;
-    IDIndex<uint32, UpdatedUnit, UpdatedUnitIDer>::Ptr unitsById;
+    UnitIDIndex::Ptr unitsById;
     
     hash_list<UpdatedSensorReturns, Bounded, UpdatedSensorReturns>
       sensorReturns;
-    IDIndex<
-        SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
-      >::Ptr sensorReturnsById;
+    SensorReturnsIDIndex::Ptr sensorReturnsById;
 
     ISpatial::Ptr spatialIndex;
 
@@ -55,6 +58,12 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     inline PlayerID getPlayerId() const { return playerId; }
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
+    inline UnitIDIndex::ConstPtr getUnitsById() const {
+      return unitsById;
+    }
+    inline SensorReturnsIDIndex::ConstPtr getSensorReturnsById() const {
+      return sensorReturnsById;
+    }
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
 
     void applyUpdate(const Update&);

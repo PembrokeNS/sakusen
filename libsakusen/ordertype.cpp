@@ -12,12 +12,13 @@ LIBSAKUSEN_API std::ostream& operator<<(
   )
 {
   switch (orderType) {
-    #define CASE(type) case type: output << #type; break;
-    CASE(orderType_none)
-    CASE(orderType_setVelocity)
-    CASE(orderType_move)
-    CASE(orderType_targetPoint)
-    CASE(orderType_targetSensorReturns)
+    #define CASE(type) case orderType_##type: output << "orderType_" #type; break;
+    CASE(none)
+    CASE(setVelocity)
+    CASE(move)
+    CASE(targetPosition)
+    CASE(targetPositionOrientation)
+    CASE(targetSensorReturns)
     #undef CASE
     default:
       output << "orderType_" << uint32(orderType);

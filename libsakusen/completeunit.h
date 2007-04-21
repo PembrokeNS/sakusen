@@ -40,7 +40,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
     inline const IUnitTypeData* getITypeData(void) const { return &typeData; }
 
     typedef Universe::ConstPtr loadArgument;
-    void store(OArchive&) const;
+    void store(OArchive&, bool sanitize = false) const;
     static CompleteUnit load(IArchive&, const loadArgument*);
 };
 

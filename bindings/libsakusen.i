@@ -4,20 +4,6 @@
 %include "std_vector.i"
 %include "stdint.i"
 
-#define LIBSAKUSEN_API
-
-%import "libsakusen-global.h"
-%include "intmunger.h"
-/* tiny files */
-%include "angle.h"
-%include "revision.h"
-%include "hitpoints.h"
-%include "gameobject.h"
-%include "topology.h"
-%{
-#include "topology.h"
-%}
-
 #ifdef SWIGPERL
 #define BINDING_NOOVERLOAD
 %perlcode %{
@@ -42,6 +28,7 @@ $VERSION = 0.01;
  * overloading, it doesn't work in the same way as C++'s, so for now we don't
  * try to make use of it */
 %rename(Item) *::operator[];
+%rename(Or) *::operator|;
 %rename(Minus) *::operator-;
 %rename(Times) *::operator*;
 %rename(Over) *::operator/;
@@ -53,12 +40,28 @@ $VERSION = 0.01;
 %rename(Less) *::operator<;
 %rename(Greater) *::operator>;
 %ignore *::operator=;
+
+%ignore operator|(const GameObject&, const GameObject&);
 #endif
 
 /* General ignores to resolve ambiguities caused by SWIG's collapsing of types
  * */
 
 %ignore sakusen::Point::operator[](int const) const;
+
+#define LIBSAKUSEN_API
+
+%import "libsakusen-global.h"
+%include "intmunger.h"
+/* tiny files */
+%include "angle.h"
+%include "revision.h"
+%include "hitpoints.h"
+%include "gameobject.h"
+%include "topology.h"
+%{
+#include "topology.h"
+%}
 
 %include "point.h"
 %{
@@ -160,3 +163,4 @@ typedef uint8 PlayerID;
 /* we shouldn't need to call any of the functions herein */
 %import "playertemplate.h"
 %import "ordertype.h"
+

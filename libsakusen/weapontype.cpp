@@ -5,6 +5,7 @@ using namespace sakusen;
 WeaponType::WeaponType(
     String iN,
     String mN,
+    String cH,
     uint16 eC,
     uint16 mC,
     uint16 eR,
@@ -13,6 +14,7 @@ WeaponType::WeaponType(
   ) :
   internalName(iN),
   moduleName(mN),
+  clientHint(cH),
   spawnFunction(NULL),
   energyCost(eC),
   metalCost(mC),
@@ -54,8 +56,8 @@ server::Weapon* WeaponType::spawn() const
 
 void WeaponType::store(OArchive& archive) const
 {
-  archive << internalName << moduleName << energyCost << metalCost <<
-    energyRate << metalRate;
+  archive << internalName << moduleName << clientHint << energyCost <<
+    metalCost << energyRate << metalRate;
 }
 
 WeaponType WeaponType::load(
@@ -65,15 +67,16 @@ WeaponType WeaponType::load(
 {
   String internalName;
   String moduleName;
+  String clientHint;
   uint16 energyCost;
   uint16 metalCost;
   uint16 energyRate;
   uint16 metalRate;
-  archive >> internalName >> moduleName >> energyCost >> metalCost >>
-    energyRate >> metalRate;
+  archive >> internalName >> moduleName >> clientHint >> energyCost >>
+    metalCost >> energyRate >> metalRate;
   return WeaponType(
-      internalName, moduleName, energyCost, metalCost, energyRate, metalRate,
-      resourceInterface
+      internalName, moduleName, clientHint, energyCost, metalCost,
+      energyRate, metalRate, resourceInterface
     );
 }
 

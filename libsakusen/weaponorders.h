@@ -13,12 +13,16 @@ class LIBSAKUSEN_API WeaponOrders {
   private:
     WeaponOrders(
         WeaponTargetType targetType,
-        const Point<sint32>& targetPoint,
+        const Position& targetPoint,
+        const Orientation& targetOrientation,
+        const Ref<ICompleteUnit>& targetUnit,
         const Ref<ISensorReturns>& targetSensorReturns
       );
     
     WeaponTargetType targetType;
-    Point<sint32> targetPoint;
+    Position targetPosition;
+    Orientation targetOrientation;
+    Ref<ICompleteUnit> targetUnit;
     Ref<ISensorReturns> targetSensorReturns;
   public:
     /** \name accessors */
@@ -26,6 +30,8 @@ class LIBSAKUSEN_API WeaponOrders {
     WeaponTargetType getTargetType() const { return targetType; }
     bool isTargetValid() const;
     Point<sint32> getTargetPosition() const;
+    Orientation getTargetOrientation() const { return targetOrientation; }
+    Ref<ICompleteUnit> getTargetUnit() const { return targetUnit; }
     Point<sint16> getTargetVelocity() const;
     /*@}*/
     

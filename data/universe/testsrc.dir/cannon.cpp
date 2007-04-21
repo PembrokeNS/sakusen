@@ -8,27 +8,44 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace testsrc;
 
-bool Builder::aimAt(
+bool Creater::aim(
     const Ref<LayeredUnit>& source,
     WeaponStatus* status,
-    const Position& pos,
-    const Orientation& orientation
+    const WeaponOrders& orders
   )
 {
-  Position displacement = pos - source->getStatus()->getPosition();
+  Position displacement =
+    orders.getTargetPosition() - source->getStatus()->getPosition();
   if (displacement.squareLength() <= squareRange()) {
-    status->setTarget(pos, orientation);
+    status->setTarget(orders.getTargetPosition(), orders.getTargetOrientation());
     return true;
   }
   return false;
 }
 
-bool Builder::aimAt(
+void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+{
+  const WeaponStatus& status =
+    firer->getStatus()->getWeaponsStatus()[weaponIndex];
+  switch (status.getTargetType()) {
+    case weaponTargetType_positionOrientation:
+      Debug("I'm trying to create a unit!!!");
+      break;
+    default:
+      break;
+  }
+}
+
+bool Builder::aim(
     const Ref<LayeredUnit>& source,
     WeaponStatus* status,
-    const Ref<LayeredUnit>& target
+    const WeaponOrders& orders
   )
 {
+  if (orders.getTargetType() != weaponTargetType_unit) {
+    return false;
+  }
+  Ref<LayeredUnit> target = orders.getTargetUnit().dynamicCast<LayeredUnit>();
   Position displacement =
     target->getStatus()->getPosition() - source->getStatus()->getPosition();
   if (displacement.squareLength() <= squareRange()) {
@@ -47,19 +64,16 @@ void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
     case weaponTargetType_unit:
       {
         Ref<const LayeredUnit> targetUnit = getTargetUnit();
-        BuildingLayer::Ptr bL = buildingLayer.lock();
-        if (targetUnit.isValid()) {
-          Ref<const LayeredUnit> bLUnit = bL->getOuterUnit();
-          if (operator==(bLUnit, targetUnit)) {
-            bL->build();
-          } else {
-            Debug("Agh!  I'm lost and confused");
-          }
+        BuildingLayer::Ptr bL;
+        if (!buildingLayer.expired()) {
+          bL = buildingLayer.lock();
+        }
+        if (targetUnit.isValid() && operator==(bL->getOuterUnit(), targetUnit)) {
+          bL->build();
+        } else {
+          Debug("Agh!  I'm lost and confused");
         }
       }
-      break;
-    case weaponTargetType_positionOrientation:
-      Debug("I'm trying to create a unit!!!");
       break;
     default:
       break;
@@ -96,14 +110,14 @@ void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
   victim->damage(100);
 }
 
-bool Paralyzer::aimAt(
+bool Paralyzer::aim(
     const Ref<LayeredUnit>& firer,
     WeaponStatus* status,
-    const Point<sint32>& pos,
-    const Point<sint16>& /*vel*/
+    const WeaponOrders& orders
   )
 {
-  Point<sint32> displacement = pos - firer->getStatus()->getPosition() +
+  Point<sint32> displacement =
+    orders.getTargetPosition() - firer->getStatus()->getPosition() +
     Point<sint32>(0, 0, 0);
   /* test whether target is within range */
   if (displacement.squareLength() < 100000000) {
@@ -157,14 +171,19 @@ Weapon* spawn_paralyzer(const WeaponType* type)
   return new Paralyzer(type);
 }
 
-Weapon* spawn_factorybuilder(const WeaponType* type)
+Weapon* spawn_factorycreater(const WeaponType* type)
 {
-  return new FactoryBuilder(type);
+  return new FactoryCreater(type);
 }
 
-Weapon* spawn_gruntbuilder(const WeaponType* type)
+Weapon* spawn_gruntcreater(const WeaponType* type)
 {
-  return new GruntBuilder(type);
+  return new GruntCreater(type);
+}
+
+Weapon* spawn_builder(const WeaponType* type)
+{
+  return new Builder(type);
 }
 
 }

@@ -103,10 +103,22 @@ Mode Mode::getCommon(UI* ui)
   ADD_COMMAND(switchmode);
   ADD_COMMAND(alert);
   ADD_COMMAND(prompt);
+  ADD_COMMAND(regex);
   ADD_COMMAND(quit);
   ADD_COMMAND(movemaprelfrac);
   ADD_COMMAND(startdragregion);
   ADD_COMMAND(stopdragregion);
+  ADD_COMMAND(initializeaction);
+  ADD_COMMAND(abortaction);
+  ADD_COMMAND(supplyarg);
+
+  return m;
+}
+
+Mode Mode::getDefault(const String& name, UI* ui)
+{
+  Mode m(getCommon(ui));
+  m.name = name;
 
   return m;
 }
@@ -114,6 +126,7 @@ Mode Mode::getCommon(UI* ui)
 Mode Mode::getNormal(UI* ui)
 {
   Mode m(getCommon(ui));
+  m.name = "normal";
 
   return m;
 }
@@ -121,9 +134,9 @@ Mode Mode::getNormal(UI* ui)
 Mode Mode::getUnit(UI* ui)
 {
   Mode m(getCommon(ui));
+  m.name = "unit";
 
   ADD_COMMAND(select);
-  ADD_COMMAND(move);
 
   return m;
 }
@@ -131,9 +144,7 @@ Mode Mode::getUnit(UI* ui)
 Mode Mode::getTarget(UI* ui)
 {
   Mode m(getCommon(ui));
-
-  ADD_COMMAND(move);
-  ADD_COMMAND(attack);
+  m.name = "target";
 
   return m;
 }

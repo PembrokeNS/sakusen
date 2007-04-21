@@ -1,26 +1,27 @@
 #include "ui/commandentrybox.h"
 
+#include "stringutils.h"
 #include "ui/ui.h"
 
 using namespace sakusen;
 
 using namespace tedomari::ui;
 
-void CommandEntryBox::sendControlChar(uint16 c, UI* ui)
+void RegexEntryBox::sendControlChar(uint16 c, UI* ui)
 {
   switch (c) {
     case '\n':
     case '\r':
       assert(!text.empty());
-      /* remove leading ':' */
+      /* remove leading '/' */
       text.erase(text.begin());
-      ui->executeCommands(text);
-      text = ":";
-      ui->setCommandEntry(false);
+      ui->executeRegex(text);
+      text = "/";
+      ui->setRegexEntry(false);
       return;
     case 27: /* ESC */
-      text = ":";
-      ui->setCommandEntry(false);
+      text = "/";
+      ui->setRegexEntry(false);
       return;
     case '\t':
       /** \todo Tab completion */

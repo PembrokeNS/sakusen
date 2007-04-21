@@ -2,8 +2,9 @@
 #define POINT_H
 
 #include "libsakusen-global.h"
+#include <boost/utility.hpp>
+
 #include "intmunger.h"
-#include <limits>
 
 namespace sakusen {
 
@@ -69,8 +70,20 @@ class LIBSAKUSEN_API Point {
 
     Point(): x(0), y(0), z(0) {}
     Point(T a, T b, T c): x(a), y(b), z(c) {}
+    /* \brief Implicit copy constructor for when type U casts to type T
+     * without possibility of loss */
     template <typename U>
-    Point(const Point<U>& p) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
+    Point(
+        const Point<U>& p,
+        typename boost::enable_if<typename LosslessCast<T,U>::type,int>::type=0
+      ) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
+    /* \brief Explicit copy constructor for when casting type U to type T
+     * may incur loss */
+    template <typename U>
+    explicit Point(
+        const Point<U>& p,
+        typename boost::disable_if<typename LosslessCast<T,U>::type,int>::type=0
+      ) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
     ~Point() {}
 
     /** \brief Construct the bottom-left-most Point.

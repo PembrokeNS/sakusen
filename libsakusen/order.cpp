@@ -34,12 +34,14 @@ Order Order::load(IArchive& in, const PlayerID* player)
       return Order(new MoveOrderData(in));
     case orderType_setVelocity:
       return Order(new SetVelocityOrderData(in));
-    case orderType_targetPoint:
-      return Order(new TargetPointOrderData(in));
+    case orderType_targetPosition:
+      return Order(new TargetPositionOrderData(in));
+    case orderType_targetPositionOrientation:
+      return Order(new TargetPositionOrientationOrderData(in));
     case orderType_targetSensorReturns:
       return Order(new TargetSensorReturnsOrderData(in, player));
     default:
-      throw EnumDeserializationExn("type", type);
+      throw EnumDeserializationExn("OrderType type", type);
   }
 }
 

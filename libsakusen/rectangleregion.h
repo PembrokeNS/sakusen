@@ -20,8 +20,12 @@ class RectangleRegion : public Region<T> {
     void storeData(OArchive&) const;
     static RectangleRegion<T>* loadNew(IArchive&);
   public:
-    inline bool contains(const Point<T>& point) const;
-    inline Point<T> truncateToFit(const Point<T>&) const;
+    inline bool contains(const Point<sint16>& point) const;
+    inline bool contains(const Point<sint32>& point) const;
+    template<typename U>
+    inline Point<U> truncateToFitTemplate(const Point<U>&) const;
+    inline Point<sint16> truncateToFit(const Point<sint16>&) const;
+    inline Point<sint32> truncateToFit(const Point<sint32>&) const;
     inline Point<T> getBestPosition() const;
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     inline Box<T> getBoundingBox() const;
@@ -31,20 +35,43 @@ class RectangleRegion : public Region<T> {
 };
 
 template<typename T>
-inline bool RectangleRegion<T>::contains(const Point<T>& point) const {
+inline bool RectangleRegion<T>::contains(const Point<sint16>& point) const {
   return rectangle.contains(point);
 }
 
 template<typename T>
-inline Point<T> RectangleRegion<T>::truncateToFit(const Point<T>& p) const
+inline bool RectangleRegion<T>::contains(const Point<sint32>& point) const {
+  return rectangle.contains(point);
+}
+
+template<typename T>
+template<typename U>
+inline Point<U> RectangleRegion<T>::truncateToFitTemplate(const Point<U>& p) const
 {
   if (contains(p)) {
     return p;
   }
-  Point<T> t(p);
-  t.x = static_cast<T>(std::min(std::max(t.x, rectangle.getMinX()), static_cast<T>(rectangle.getMaxX())));
-  t.y = static_cast<T>(std::min(std::max(t.y, rectangle.getMinY()), static_cast<T>(rectangle.getMaxY())));
+  Point<U> t(p);
+  /** \bug Using std::min/max<sint32> may not always suffice */
+  t.x = static_cast<U>(std::min<sint32>(
+        std::max<sint32>(t.x, rectangle.getMinX()), rectangle.getMaxX()
+      ));
+  t.y = static_cast<U>(std::min<sint32>(
+        std::max<sint32>(t.y, rectangle.getMinY()), rectangle.getMaxY()
+      ));
   return t;
+}
+
+template<typename T>
+inline Point<sint16> RectangleRegion<T>::truncateToFit(const Point<sint16>& p) const
+{
+  return truncateToFitTemplate(p);
+}
+
+template<typename T>
+inline Point<sint32> RectangleRegion<T>::truncateToFit(const Point<sint32>& p) const
+{
+  return truncateToFitTemplate(p);
 }
 
 template<typename T>

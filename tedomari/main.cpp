@@ -283,12 +283,12 @@ void runClient(
     try {
       socket = Socket::newConnectionToAddress(socketAddress);
     } catch (SocketExn& e) {
-      cout << "Failed to connect: " << e.message;
+      cerr << "Failed to connect: " << e.message << endl;
       exit(EXIT_FAILURE);
     }
 
     if (socket == NULL) {
-      cout << "Socket type not supported, please check the address and try "
+      cerr << "Socket type not supported, please check the address and try "
         "again" << endl;
       exit(EXIT_FAILURE);
     }

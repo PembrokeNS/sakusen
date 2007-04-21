@@ -86,7 +86,7 @@ void Game::pushUpdates(const UpdateMessageData& data) {
   }
   list<Update> updates(data.getUpdates());
   while (!updates.empty()) {
-    QDebug(" got update " << updates.front());
+    QDebug(" got " << updates.front());
     sakusen::client::world->applyUpdate(updates.front());
     updates.pop_front();
   }

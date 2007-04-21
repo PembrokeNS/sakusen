@@ -16,24 +16,23 @@ Weapon::Weapon(const WeaponType* t) :
 {
 }
 
-/** \brief Target the weapon at an object with the given position and
- * velocity
+/** \brief Target the weapon according to given orders
  *
  * \param firer The unit firing
- * \param pos The target position
- * \param vel The target velocity
+ * \param status The status of the weapon
+ * \param orders The orders applicable to the weapon
  * \return true iff the weapon is sufficiently on-target that we wish to
  * open fire
  *
  * The default implementation targets as if the weapon fired a Ballistic
  * with speed the return value of projectileSpeed */
-bool Weapon::aimAt(
+bool Weapon::aim(
     const Ref<LayeredUnit>& firer,
     WeaponStatus* status,
-    const Point<sint32>& pos,
-    const Point<sint16>& /*vel*/
+    const WeaponOrders& orders
   )
 {
+  const Point<sint32>& pos = orders.getTargetPosition();
   /** \bug For now we ignore the target velocity and we ignore the fact that
    * the weapon is not actually at the firer unit position */
   Point<sint32> displacement = pos - firer->getStatus()->getPosition();
@@ -86,10 +85,8 @@ void Weapon::incrementState(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
   if (!orders.isTargetValid()) {
     status->deactivate();
   } else {
-    /** \todo Account for the possibility that the weapon was targeted
-     * manually, not at a given position */
-    if (aimAt(
-          firer, status, orders.getTargetPosition(), orders.getTargetVelocity()
+    if (aim(
+          firer, status, orders
         )) {
       status->activate();
     } else {

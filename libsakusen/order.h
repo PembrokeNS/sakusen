@@ -31,7 +31,9 @@ class LIBSAKUSEN_API Order {
     }
     GET_DATA(Move)
     GET_DATA(SetVelocity)
-    GET_DATA(TargetPoint)
+    GET_DATA(TargetPosition)
+    GET_DATA(TargetPositionOrientation)
+    GET_DATA(TargetUnit)
     GET_DATA(TargetSensorReturns)
     #undef GET_DATA
     /*@}*/

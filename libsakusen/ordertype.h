@@ -13,7 +13,10 @@ enum OrderType {
   orderType_none,
   orderType_setVelocity, /* Set the Unit's velocity to this value */
   orderType_move, /* Move the unit to this position */
-  orderType_targetPoint, /* Target a weapon at a Point<sint32> */
+  orderType_targetPosition, /* Target a weapon at a Point<sint32> */
+  orderType_targetPositionOrientation,
+    /* Target a weapon at a Position & Orientation (for building) */
+  orderType_targetUnit, /* Target a weapon at a Unit */
   orderType_targetSensorReturns /* Target a weapon at a SensorReturns */
 };
 
