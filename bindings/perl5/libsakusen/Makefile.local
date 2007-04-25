@@ -42,7 +42,10 @@ Sakusen.o: Sakusen.cpp
 	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ \
 		-DHAS_BOOL -Wall $<
 
-Sakusen.cpp: $(top_srcdir)bindings/libsakusen.i
+# There's no easy way to know what header files libsakusen.i is including, so
+# we just assume it's including all of them
+Sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
+		$(wildcard $(top_srcdir)libsakusen/*.h)
 	$(SWIG) -perl5 -c++ -o $@ -module Sakusen -I$(top_srcdir)libsakusen $<
 
 .PHONY: all config static dynamic test linkext manifest blibdirs clean realclean disttest distdir

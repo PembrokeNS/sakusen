@@ -21,7 +21,10 @@ sakusen.o: sakusen.cpp
 	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o sakusen.o \
 		-Wall sakusen.cpp
 
-sakusen.cpp: $(top_srcdir)bindings/libsakusen.i
+# There's no easy way to know what header files libsakusen.i is including, so
+# we just assume it's including all of them
+sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
+		$(wildcard $(top_srcdir)libsakusen/*.h)
 	$(SWIG) -csharp -namespace Sakuen -c++ -o $@ -I$(top_srcdir)libsakusen $<
 
 sakusen.dll: sakusen.cpp $(wildcard *.cs)
