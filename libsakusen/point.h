@@ -70,14 +70,16 @@ class LIBSAKUSEN_API Point {
 
     Point(): x(0), y(0), z(0) {}
     Point(T a, T b, T c): x(a), y(b), z(c) {}
-    /* \brief Implicit copy constructor for when type U casts to type T
+    /** \brief Simple copy constructor for the sake of swig's sanity */
+    Point(const Point<T>& p) : x(p.x), y(p.y), z(p.z) {}
+    /** \brief Implicit copy constructor for when type U casts to type T
      * without possibility of loss */
     template <typename U>
     Point(
         const Point<U>& p,
         typename boost::enable_if<typename LosslessCast<T,U>::type,int>::type=0
       ) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
-    /* \brief Explicit copy constructor for when casting type U to type T
+    /** \brief Explicit copy constructor for when casting type U to type T
      * may incur loss */
     template <typename U>
     explicit Point(

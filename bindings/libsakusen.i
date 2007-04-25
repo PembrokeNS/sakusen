@@ -85,7 +85,6 @@ namespace sakusen {
 %template(topdouble) topNumber<double>;
 #endif
   %extend Point {
-    %template(Point) Point<T>;
     %template("operator+") operator+<T>;
     %template("operator-") operator-<T>;
     %template("operator==") operator==<T>;
