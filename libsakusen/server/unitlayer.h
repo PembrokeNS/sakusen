@@ -18,6 +18,9 @@ class UnitCore;
  * any layer of a LayeredUnit.
  */
 class UnitLayer : public IUnitTypeData {
+  public:
+    typedef boost::shared_ptr<UnitLayer> Ptr;
+    typedef boost::shared_ptr<const UnitLayer> ConstPtr;
   protected:
     UnitLayer() {}
     UnitLayer(const UnitLayer& copy) : IUnitTypeData(copy) {}
@@ -25,7 +28,7 @@ class UnitLayer : public IUnitTypeData {
     virtual ~UnitLayer() {}
 
     /* methods to do with the layering */
-    virtual UnitLayer* newCopy(LayeredUnit* outer) const = 0;
+    virtual UnitLayer::Ptr newCopy(LayeredUnit* outer) const = 0;
     virtual UnitCore* getCore() = 0;
     virtual Ref<const LayeredUnit> getOuterUnit() const = 0;
 

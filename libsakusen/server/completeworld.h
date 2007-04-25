@@ -77,7 +77,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       }
     }
     
-    void addUnit(const LayeredUnit::Ptr& unit, PlayerID owner);
+    Ref<LayeredUnit> addUnit(const LayeredUnit::Ptr& unit, PlayerID owner);
     void removeUnit(LayeredUnit*);
     
     /** \warning This has to be a non-const return for stuff that happens in

@@ -97,6 +97,11 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
   }
 }
 
+void WeaponOrders::clear()
+{
+  targetType = weaponTargetType_none;
+}
+
 void WeaponOrders::update(const Order& order)
 {
   switch (order.getType()) {

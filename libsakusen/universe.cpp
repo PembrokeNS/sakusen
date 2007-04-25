@@ -62,11 +62,12 @@ WeaponTypeID Universe::getWeaponTypeID(String weaponTypeName) const
   return weaponType->second;
 }
 
-UnitTypeID Universe::getUnitTypeID(String unitTypeName) const
+UnitTypeID Universe::getUnitTypeId(String unitTypeName) const
 {
   hash_map_string<UnitTypeID>::type::const_iterator
     unitType = unitIDLookup.find(unitTypeName);
   if (unitType == unitIDLookup.end()) {
+    Debug("unit type '"+unitTypeName+"' not found");
     return NULL;
   }
   return unitType->second;

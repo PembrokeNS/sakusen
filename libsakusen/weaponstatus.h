@@ -42,6 +42,8 @@ class LIBSAKUSEN_API WeaponStatus {
     /* accessors */
     WeaponTargetType getTargetType() const { return targetType; }
     const Point<sint32>& getTargetDirection() const { return targetDirection; }
+    const Position& getTargetPosition() const { return targetPosition; }
+    const Orientation& getTargetOrientation() const {return targetOrientation; }
     void setTargetDirection(const Point<sint32>& d);
     void setTarget(const Position&, const Orientation&);
     void setTarget(const Ref<ICompleteUnit>&);

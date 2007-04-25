@@ -21,6 +21,16 @@ class BuildingLayer : public UnitMask {
     typedef boost::weak_ptr<BuildingLayer> WPtr;
     typedef boost::weak_ptr<const BuildingLayer> WConstPtr;
 
+    BuildingLayer() : UnitMask() {}
+  private:
+    BuildingLayer(const BuildingLayer& copy, LayeredUnit* outer) :
+      UnitMask(copy, outer)
+    {}
+  public:
+    UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
+      return UnitLayer::Ptr(new BuildingLayer(*this, outer));
+    }
+
     void build();
 };
 
@@ -42,6 +52,8 @@ class Creater : public Weapon {
     /* When overriden, gives the maximum range at which creation can take place
      * */
     virtual uint64 squareRange() const = 0;
+    /* When overriden, gives the UnitType created */
+    virtual UnitTypeID getTypeCreated() const = 0;
 };
 
 class FactoryCreater : public Creater {
@@ -52,6 +64,9 @@ class FactoryCreater : public Creater {
   private:
     Weapon* newCopy() const { return new FactoryCreater(*this); }
     uint64 squareRange() const { return 3000000; }
+    UnitTypeID getTypeCreated() const {
+      return world->getUniverse()->getUnitTypeId("factory");
+    }
 };
 
 class GruntCreater : public Creater {
@@ -62,6 +77,9 @@ class GruntCreater : public Creater {
   private:
     Weapon* newCopy() const { return new GruntCreater(*this); }
     uint64 squareRange() const { return 3000000; }
+    UnitTypeID getTypeCreated() const {
+      return world->getUniverse()->getUnitTypeId("grunt");
+    }
 };
 
 class Builder : public Weapon {

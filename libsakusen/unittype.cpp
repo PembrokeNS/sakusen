@@ -73,7 +73,7 @@ String UnitType::resolveNames(const Universe* universe)
   }
 
   if (corpseUnitTypeName != "") {
-    UnitTypeID corpseID = universe->getUnitTypeID(corpseUnitTypeName);
+    UnitTypeID corpseID = universe->getUnitTypeId(corpseUnitTypeName);
     if (corpseID == NULL) {
       return corpseUnitTypeName;
     }

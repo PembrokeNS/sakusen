@@ -198,6 +198,7 @@ int main(/*int argc, char** argv*/)
         factoryWeapons /* weapons */,
         "" /* corpseUnitType name */
       );
+  unitTypes.push_back(factoryType);
   
   Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
   String name = universe->resolveNames();

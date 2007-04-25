@@ -143,7 +143,7 @@ UnitStatus UnitStatus::load(
   std::vector<WeaponStatus> weaponsStatus;
   
   in >> typeName;
-  type = (*universe)->getUnitTypeID(typeName);
+  type = (*universe)->getUnitTypeId(typeName);
   in >> position;
   orientation = Orientation::load(in);
   in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits;

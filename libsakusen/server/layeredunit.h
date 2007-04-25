@@ -15,6 +15,8 @@
 namespace sakusen {
 namespace server {
 
+class UnitMask;
+
 /** \brief A Unit together with all layers currently attached to it.
  *
  * This is a server's representation of a Unit, with all the additional data
@@ -37,14 +39,14 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     typedef boost::shared_ptr<LayeredUnit> Ptr;
     typedef boost::shared_ptr<const LayeredUnit> ConstPtr;
 
-    static void spawn(
+    static Ref<LayeredUnit> spawn(
       const PlayerID owner,
       const UnitTypeID type,
       const Point<sint32>& startNear,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
     ); /* factory class */
-    static void spawn(const PlayerID owner, const UnitTemplate& t);
+    static Ref<LayeredUnit> spawn(const PlayerID owner, const UnitTemplate& t);
       /* factory class */
   private:
     LayeredUnit(const UnitTemplate&);
@@ -64,7 +66,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
   private:
     PlayerID owner;
     uint32 unitId;
-    UnitLayer* topLayer; /* owned by this */
+    UnitLayer::Ptr topLayer;
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
      * Not owned by this (except insofar as it may be equal to topLayer) */
@@ -89,10 +91,14 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
     inline void setId(uint32 id) { unitId = id; }
-    inline const IUnitTypeData* getITypeData(void) const { return topLayer; }
+    inline const IUnitTypeData* getITypeData(void) const {
+      /** \bug Using get() to save time; probably shouldn't really */
+      return topLayer.get();
+    }
     inline UnitStatus* getStatus(void) const { return status; }
     inline const IUnitStatus* getIStatus(void) const { return status; }
     inline const UnitOrders& getOrders(void) const { return orders; }
+    inline UnitOrders& getOrders(void) { return orders; }
     inline __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
       getSensorReturns(void) { return sensorReturns; }
     inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
@@ -119,6 +125,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       /* advances the state of the unit one unit of game time (changing its
 			   velocity, position, applying all actions for the given time) */
     void enqueueOrder(const OrderCondition& condition, const Order& order);
+
+    /** \brief Inserts a new layer at the top of the unit's layers */
+    void insertLayer(const boost::shared_ptr<UnitMask>& layer);
     
     /** kills the unit unconditionally */
     inline bool kill(HitPoints excessDamage) {

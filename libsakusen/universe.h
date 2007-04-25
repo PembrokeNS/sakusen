@@ -76,7 +76,7 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     {
       return getUnitTypePtr(getUnitTypeId(i));
     }
-    UnitTypeID getUnitTypeID(String unitTypeName) const;
+    UnitTypeID getUnitTypeId(String unitTypeName) const;
     
     bool containsUnitType(const UnitTypeID id) const;
 

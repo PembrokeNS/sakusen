@@ -34,6 +34,8 @@ class LIBSAKUSEN_API WeaponOrders {
     Ref<ICompleteUnit> getTargetUnit() const { return targetUnit; }
     Point<sint16> getTargetVelocity() const;
     /*@}*/
+
+    void clear();
     
     /** \brief Update according to the instructions in the given order */
     void update(const Order& order);

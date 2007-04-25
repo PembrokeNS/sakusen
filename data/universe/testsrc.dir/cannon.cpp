@@ -29,7 +29,20 @@ void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
     firer->getStatus()->getWeaponsStatus()[weaponIndex];
   switch (status.getTargetType()) {
     case weaponTargetType_positionOrientation:
-      Debug("I'm trying to create a unit!!!");
+      {
+        Ref<LayeredUnit> newUnit = LayeredUnit::spawn(
+            firer->getOwner(),
+            getTypeCreated(),
+            status.getTargetPosition(),
+            status.getTargetOrientation(),
+            Velocity()
+          );
+        newUnit->insertLayer(BuildingLayer::Ptr(new BuildingLayer()));
+        WeaponOrders& orders =
+          firer->getOrders().getWeaponsOrders()[weaponIndex];
+        orders.clear();
+        firer->setDirty();
+      }
       break;
     default:
       break;

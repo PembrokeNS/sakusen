@@ -148,9 +148,13 @@ hash_list<Effect, Bounded>::iterator CompleteWorld::processEffect(
   }
 }
 
-void CompleteWorld::addUnit(const LayeredUnit::Ptr& unit, PlayerID owner) {
+Ref<LayeredUnit> CompleteWorld::addUnit(
+    const LayeredUnit::Ptr& unit,
+    PlayerID owner
+  ) {
   units.push_back(unit);
   units.back()->changeOwner(owner, changeOwnerReason_created);
+  return units.back();
 }
 
 /** Removes \p unit from the World.

@@ -15,6 +15,9 @@ class LayeredUnit;
  * See \ref Units for more details on how the various Unit classes fit together
  * */
 class UnitCore : public UnitLayer, public UnitStatus {
+  public:
+    typedef boost::shared_ptr<UnitCore> Ptr;
+    typedef boost::shared_ptr<const UnitCore> ConstPtr;
   private:
     UnitCore(const UnitCore&);
   public:
@@ -35,8 +38,8 @@ class UnitCore : public UnitLayer, public UnitStatus {
 
     void initializeWeapons();
   public:
-    inline UnitLayer* newCopy(LayeredUnit* outer) const {
-      return new UnitCore(*this, outer);
+    inline UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
+      return UnitLayer::Ptr(new UnitCore(*this, outer));
     }
     inline UnitCore* getCore() { return this; }
     inline Ref<const LayeredUnit> getOuterUnit() const {

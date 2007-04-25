@@ -85,6 +85,9 @@ class LIBSAKUSEN_API UnitOrders {
     inline const std::vector<WeaponOrders>& getWeaponsOrders(void) const {
       return weaponOrders;
     }
+    inline std::vector<WeaponOrders>& getWeaponsOrders(void) {
+      return weaponOrders;
+    }
     /*@}*/
 
     /** Queues the order \p order, on condition \p c */

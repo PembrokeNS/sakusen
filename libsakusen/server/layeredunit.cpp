@@ -2,6 +2,7 @@
 
 #include "completeworld.h"
 #include "unitcore.h"
+#include "unitmask.h"
 #include "region-methods.h"
 #include "unitstatus-methods.h"
 
@@ -10,7 +11,7 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
-void LayeredUnit::spawn(
+Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerID owner,
     const UnitTypeID type,
     const Point<sint32>& startNear,
@@ -22,13 +23,16 @@ void LayeredUnit::spawn(
   Ptr unit(
       new LayeredUnit(type, startPosition, startOrientation, startVelocity)
     );
-  world->addUnit(unit, owner);
+  return world->addUnit(unit, owner);
 }
 
-void LayeredUnit::spawn(const PlayerID owner, const UnitTemplate& t)
+Ref<LayeredUnit> LayeredUnit::spawn(
+    const PlayerID owner,
+    const UnitTemplate& t
+  )
 {
   Ptr unit(new LayeredUnit(t));
-  world->addUnit(unit, owner);
+  return world->addUnit(unit, owner);
 }
 
 LayeredUnit::LayeredUnit(
@@ -68,8 +72,6 @@ LayeredUnit::~LayeredUnit()
     sensorReturns.erase(sensorReturns.begin());
   }
 
-  delete topLayer;
-  topLayer = NULL;
   status = NULL;
 }
 
@@ -319,6 +321,12 @@ void LayeredUnit::enqueueOrder(
   if (condition == orderCondition_incidental) {
     acceptOrder(orderCondition_incidental);
   }
+}
+
+void LayeredUnit::insertLayer(const UnitMask::Ptr& layer)
+{
+  layer->nextLayer = topLayer;
+  topLayer = layer;
 }
 
 bool LayeredUnit::setRadar(bool active) {
