@@ -29,7 +29,7 @@ $(SOURCE_MODULES): %.sakusenmodule.la: $(this_srcdir)../universe/%.sakusensource
 $(DIR_MAKEFILES): %.dir-tmp/Makefile.local: $(this_srcdir)Makefile.module $(this_srcdir)Makefile.local
 	mkdir -p $(dir $@)
 	echo 'BIN = ../$*.sakusenmodule.la' > $@
-	echo 'SOURCE_DIRS = $$(this_srcdir)../../universe/$*.dir' >> $@
+	echo 'SOURCE_DIRS = ../../universe/$*.dir' >> $@
 	cat $(this_srcdir)Makefile.module >> $@
 
 #$(DIR_MODULES): %.sakusenmodule.la: \
