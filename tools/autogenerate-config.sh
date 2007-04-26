@@ -100,4 +100,4 @@ enable_component CONVERSION unicode
 
 printf "BUILD_CFLAGS =%s\n" "${OUT_CFLAGS}" >> "${TARGET}"
 printf "BUILD_CXXFLAGS =%s\n" "${OUT_CFLAGS}" >> "${TARGET}"
-
+printf "BUILD_ARCH=%s\n" $(uname -m) >> "${TARGET}"
