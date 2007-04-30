@@ -18,6 +18,7 @@ LIBSAKUSEN_API std::ostream& operator<<(
     CASE(move)
     CASE(targetPosition)
     CASE(targetPositionOrientation)
+    CASE(targetUnit)
     CASE(targetSensorReturns)
     #undef CASE
     default:

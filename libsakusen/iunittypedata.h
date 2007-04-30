@@ -14,9 +14,9 @@ class LIBSAKUSEN_API IUnitTypeData {
     virtual HitPoints getMaxHitPoints() const = 0;
     virtual uint8 getMass() const = 0;
     virtual const Point<uint32>& getSize() const = 0;
-    virtual const Region<sint16>::Ptr& getPossibleAccelerations() const = 0;
-    virtual const Region<sint16>::Ptr& getPossibleVelocities() const = 0;
-    virtual const Region<sint16>::Ptr& getPossibleAngularVelocities() const = 0;
+    virtual Region<sint16>::ConstPtr getPossibleAccelerations() const = 0;
+    virtual Region<sint16>::ConstPtr getPossibleVelocities() const = 0;
+    virtual Region<sint16>::ConstPtr getPossibleAngularVelocities() const = 0;
     virtual const Visibility& getVisibility() const = 0;
     virtual const Sensors& getVision() const = 0;
 };

@@ -11,6 +11,7 @@ namespace server {
 
 class LayeredUnit;
 class UnitCore;
+class UnitMask;
 
 /** \brief Base class for all layers on LayeredUnits
  *
@@ -30,6 +31,9 @@ class UnitLayer : public IUnitTypeData {
     /* methods to do with the layering */
     virtual UnitLayer::Ptr newCopy(LayeredUnit* outer) const = 0;
     virtual UnitCore* getCore() = 0;
+    virtual boost::shared_ptr<UnitLayer> getLayer(const std::type_info&) = 0;
+    virtual void removeLayer(const UnitMask*) = 0;
+    virtual Ref<LayeredUnit> getOuterUnit() = 0;
     virtual Ref<const LayeredUnit> getOuterUnit() const = 0;
 
     /* accessors (more accessors are inherited from IUnitTypeData) */

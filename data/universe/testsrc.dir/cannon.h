@@ -21,17 +21,52 @@ class BuildingLayer : public UnitMask {
     typedef boost::weak_ptr<BuildingLayer> WPtr;
     typedef boost::weak_ptr<const BuildingLayer> WConstPtr;
 
-    BuildingLayer() : UnitMask() {}
+    BuildingLayer() :
+      UnitMask(),
+      builtHitPoints(1),
+      empty(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      blind()
+    {
+    }
   private:
     BuildingLayer(const BuildingLayer& copy, LayeredUnit* outer) :
-      UnitMask(copy, outer)
+      UnitMask(copy, outer),
+      builtHitPoints(copy.builtHitPoints),
+      empty(copy.empty),
+      blind(copy.blind)
     {}
+
+    HitPoints builtHitPoints;
+    const Region<sint16>::ConstPtr empty;
+    const Sensors blind;
   public:
     UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
       return UnitLayer::Ptr(new BuildingLayer(*this, outer));
     }
 
-    void build();
+    HitPoints getMaxHitPoints() const {
+      return builtHitPoints;
+    }
+
+    /* Prevent constructing thing from moving */
+    Region<sint16>::ConstPtr getPossibleAccelerations() const {
+      return empty;
+    }
+    Region<sint16>::ConstPtr getPossibleVelocities() const {
+      return empty;
+    }
+    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
+      return empty;
+    }
+    const Sensors& getVision() const {
+      return blind;
+    }
+
+    void incrementWeaponsState() {
+      /* Weapons do nothing when unit under construction */
+    }
+
+    HitPoints build(HitPoints amount);
 };
 
 class Creater : public Weapon {
@@ -63,7 +98,7 @@ class FactoryCreater : public Creater {
     {}
   private:
     Weapon* newCopy() const { return new FactoryCreater(*this); }
-    uint64 squareRange() const { return 3000000; }
+    uint64 squareRange() const { return 100000000; }
     UnitTypeID getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("factory");
     }
@@ -76,7 +111,7 @@ class GruntCreater : public Creater {
     {}
   private:
     Weapon* newCopy() const { return new GruntCreater(*this); }
-    uint64 squareRange() const { return 3000000; }
+    uint64 squareRange() const { return 30000000; }
     UnitTypeID getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("grunt");
     }
@@ -101,7 +136,7 @@ class Builder : public Weapon {
   protected:
     /* Gives the maximum range at which building can take place
      * */
-    virtual uint64 squareRange() const { return 3000000; }
+    virtual uint64 squareRange() const { return 100000000; }
 };
 
 class Cannon : public Weapon {

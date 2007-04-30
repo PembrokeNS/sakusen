@@ -27,22 +27,22 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     uint8 mass;
     Point<uint32> size;
     /* TODO: armour */
-    Region<sint16>::Ptr possibleAccelerations;
-    Region<sint16>::Ptr possibleVelocities;
-    Region<sint16>::Ptr possibleAngularVelocities;
+    Region<sint16>::ConstPtr possibleAccelerations;
+    Region<sint16>::ConstPtr possibleVelocities;
+    Region<sint16>::ConstPtr possibleAngularVelocities;
     Visibility visibility;
     Sensors vision;
     
     inline HitPoints getMaxHitPoints(void) const { return maxHitPoints; }
     inline uint8 getMass(void) const {return mass;}
     inline const Point<uint32>& getSize(void) const {return size;}
-    inline const Region<sint16>::Ptr& getPossibleAccelerations() const {
+    inline Region<sint16>::ConstPtr getPossibleAccelerations() const {
       return possibleAccelerations;
     }
-    inline const Region<sint16>::Ptr& getPossibleVelocities() const {
+    inline Region<sint16>::ConstPtr getPossibleVelocities() const {
       return possibleVelocities;
     }
-    inline const Region<sint16>::Ptr& getPossibleAngularVelocities() const {
+    inline Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
       return possibleAngularVelocities;
     }
     inline const Visibility& getVisibility(void) const {return visibility;}

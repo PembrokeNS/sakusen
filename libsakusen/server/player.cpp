@@ -267,8 +267,7 @@ void Player::applyIncomingOrders(void)
       __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
-        /** \bug This should not be a fatal error, but is for debugging */
-        Fatal("Order for non-existent unit id " << message.getOrderee() <<
+        Debug("Order for non-existent unit id " << message.getOrderee() <<
               ", player " << playerId);
       } else {
         /*Debug("order for unit id " << message.getOrderee());*/

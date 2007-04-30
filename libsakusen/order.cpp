@@ -38,6 +38,8 @@ Order Order::load(IArchive& in, const PlayerID* player)
       return Order(new TargetPositionOrderData(in));
     case orderType_targetPositionOrientation:
       return Order(new TargetPositionOrientationOrderData(in));
+    case orderType_targetUnit:
+      return Order(new TargetUnitOrderData(in, player));
     case orderType_targetSensorReturns:
       return Order(new TargetSensorReturnsOrderData(in, player));
     default:

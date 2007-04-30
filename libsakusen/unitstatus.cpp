@@ -71,7 +71,8 @@ UnitStatus::UnitStatus(
     const UnitTypeID& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity
+    const Point<sint16>& startVelocity,
+    const HitPoints startHP
   ) :
   type(startType),
   position(startPosition),
@@ -84,7 +85,11 @@ UnitStatus::UnitStatus(
 {
   assert(world != NULL);
   initializeWeapons(getTypePtr());
-  hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
+  if (startHP == HitPoints(-1)) {
+    hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
+  } else {
+    hitPoints = startHP;
+  }
 }
 
 UnitStatus::UnitStatus(

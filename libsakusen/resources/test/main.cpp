@@ -172,6 +172,7 @@ int main(/*int argc, char** argv*/)
 
   list<String> factoryWeapons;
   factoryWeapons.push_back("gruntcreater");
+  factoryWeapons.push_back("builder");
   UnitType factoryType =
     UnitType(
         "factory" /* name */,
@@ -199,6 +200,36 @@ int main(/*int argc, char** argv*/)
         "" /* corpseUnitType name */
       );
   unitTypes.push_back(factoryType);
+
+  list<String> gruntWeapons;
+  gruntWeapons.push_back("cannon");
+  UnitType gruntType =
+    UnitType(
+        "grunt" /* name */,
+        UnitTypeData(
+          10 /* maxHitPoints */,
+          10 /* mass */,
+          Point<uint32>(500,500,500) /* size */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleAccelerations */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleVelocities */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleAngularVelocities */,
+          Visibility(),
+          Sensors()
+        ),
+        100 /* energyCost */,
+        100 /* metalCost */,
+        false /* fixed */,
+        true /* ground */,
+        false /* surface */,
+        true /* gravity */,
+        false /* seabed */,
+        gruntWeapons /* weapons */,
+        "" /* corpseUnitType name */
+      );
+  unitTypes.push_back(gruntType);
   
   Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
   String name = universe->resolveNames();

@@ -26,9 +26,10 @@ UnitCore::UnitCore(
     const UnitTypeID& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity
+    const Point<sint16>& startVelocity,
+    const HitPoints startHP
   ) :
-  UnitStatus(startType, startPosition, startOrientation, startVelocity),
+  UnitStatus(startType, startPosition, startOrientation, startVelocity, startHP),
   outerUnit(o),
   owner(0)
 {

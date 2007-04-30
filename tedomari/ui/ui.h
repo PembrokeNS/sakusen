@@ -125,6 +125,7 @@ class UI : protected Control {
     inline const std::set<uint32>& getSelection() {
       return selection;
     }
+    std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> > getUnitsAtCursor();
     /** \brief Determine whether the user has asked to quit */
     inline bool isQuit() const { return quit; }
     inline game::Game* getGame() { return game; }

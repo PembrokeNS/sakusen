@@ -70,6 +70,7 @@ void UnitOrders::acceptOrder(OrderCondition condition)
       break;
     case orderType_targetPosition:
     case orderType_targetPositionOrientation:
+    case orderType_targetUnit:
     case orderType_targetSensorReturns:
       {
         uint16 weaponIndex;
@@ -79,6 +80,9 @@ void UnitOrders::acceptOrder(OrderCondition condition)
             break;
           case orderType_targetPositionOrientation:
             weaponIndex = thisOrder.getTargetPositionOrientationData().getWeaponIndex();
+            break;
+          case orderType_targetUnit:
+            weaponIndex = thisOrder.getTargetUnitData().getWeaponIndex();
             break;
           case orderType_targetSensorReturns:
             weaponIndex = thisOrder.getTargetSensorReturnsData().getWeaponIndex();

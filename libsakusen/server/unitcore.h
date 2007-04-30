@@ -27,7 +27,8 @@ class UnitCore : public UnitLayer, public UnitStatus {
         const UnitTypeID& startType,
         const Point<sint32>& startPosition,
         const Orientation& startOrientation,
-        const Point<sint16>& startVelocity
+        const Point<sint16>& startVelocity,
+        const HitPoints startHP
       );
     UnitCore(LayeredUnit* outerUnit, const UnitStatus& status);
     ~UnitCore();
@@ -42,6 +43,15 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return UnitLayer::Ptr(new UnitCore(*this, outer));
     }
     inline UnitCore* getCore() { return this; }
+    inline UnitLayer::Ptr getLayer(const std::type_info&) {
+      return UnitLayer::Ptr();
+    }
+    inline void removeLayer(const UnitMask*) {
+      Fatal("tried to remove non-existant layer");
+    }
+    inline Ref<LayeredUnit> getOuterUnit() {
+      return outerUnit->getRefToThis();
+    }
     inline Ref<const LayeredUnit> getOuterUnit() const {
       return outerUnit->getRefToThis();
     }
@@ -57,13 +67,13 @@ class UnitCore : public UnitLayer, public UnitStatus {
     inline const Point<uint32>& getSize(void) const {
       return getTypePtr()->getDynamicData().getSize();
     }
-    inline const Region<sint16>::Ptr& getPossibleAccelerations(void) const {
+    inline Region<sint16>::ConstPtr getPossibleAccelerations(void) const {
       return getTypePtr()->getDynamicData().getPossibleAccelerations();
     }
-    inline const Region<sint16>::Ptr& getPossibleVelocities(void) const {
+    inline Region<sint16>::ConstPtr getPossibleVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleVelocities();
     }
-    inline const Region<sint16>::Ptr& getPossibleAngularVelocities(void) const {
+    inline Region<sint16>::ConstPtr getPossibleAngularVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleAngularVelocities();
     }
     inline const Visibility& getVisibility(void) const {

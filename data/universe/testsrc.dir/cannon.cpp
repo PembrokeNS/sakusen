@@ -8,6 +8,24 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace testsrc;
 
+HitPoints BuildingLayer::build(HitPoints amount)
+{
+  if (builtHitPoints >= nextLayer->getMaxHitPoints()) {
+    /* We're finished, remove ourselves */
+    getOuterUnit()->removeLayer(this);
+    return 0;
+  }
+
+  if (builtHitPoints + amount > nextLayer->getMaxHitPoints()) {
+    /* We're going to overshoot */
+    amount = nextLayer->getMaxHitPoints() - builtHitPoints;
+  }
+
+  builtHitPoints += amount;
+  getOuterUnit()->setDirty();
+  return amount;
+}
+
 bool Creater::aim(
     const Ref<LayeredUnit>& source,
     WeaponStatus* status,
@@ -35,13 +53,13 @@ void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
             getTypeCreated(),
             status.getTargetPosition(),
             status.getTargetOrientation(),
-            Velocity()
+            Velocity(),
+            HitPoints(1)
           );
         newUnit->insertLayer(BuildingLayer::Ptr(new BuildingLayer()));
         WeaponOrders& orders =
           firer->getOrders().getWeaponsOrders()[weaponIndex];
         orders.clear();
-        firer->setDirty();
       }
       break;
     default:
@@ -76,15 +94,25 @@ void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
   switch (status.getTargetType()) {
     case weaponTargetType_unit:
       {
-        Ref<const LayeredUnit> targetUnit = getTargetUnit();
+        Ref<LayeredUnit> targetUnit = getTargetUnit();
         BuildingLayer::Ptr bL;
         if (!buildingLayer.expired()) {
           bL = buildingLayer.lock();
         }
-        if (targetUnit.isValid() && operator==(bL->getOuterUnit(), targetUnit)) {
-          bL->build();
+        if (targetUnit.isValid()) {
+          if (!(bL && operator==(bL->getOuterUnit(), targetUnit))) {
+            bL = targetUnit->getLayer<BuildingLayer>();
+            if (!bL) {
+              Debug("building target not being built");
+              WeaponOrders& orders =
+                firer->getOrders().getWeaponsOrders()[weaponIndex];
+              orders.clear();
+              return;
+            }
+          }
+          bL->build(10);
         } else {
-          Debug("Agh!  I'm lost and confused");
+          Debug("invalid building target");
         }
       }
       break;

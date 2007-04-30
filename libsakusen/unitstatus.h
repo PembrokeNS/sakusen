@@ -39,7 +39,8 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
-      const Point<sint16>& startVelocity
+      const Point<sint16>& startVelocity,
+      const HitPoints startHP
     ); /**< This is a simpler version of the above constructor for when you
          don't need to specify the extra data */
     UnitStatus(

@@ -16,13 +16,15 @@ Ref<LayeredUnit> LayeredUnit::spawn(
     const UnitTypeID type,
     const Point<sint32>& startNear,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity
+    const Point<sint16>& startVelocity,
+    const HitPoints startHP
   )
 {
+  assert(type);
   Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
-  Ptr unit(
-      new LayeredUnit(type, startPosition, startOrientation, startVelocity)
-    );
+  Ptr unit(new LayeredUnit(
+        type, startPosition, startOrientation, startVelocity, startHP
+      ));
   return world->addUnit(unit, owner);
 }
 
@@ -51,11 +53,13 @@ LayeredUnit::LayeredUnit(
     const UnitTypeID& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
-    const Point<sint16>& startVelocity
+    const Point<sint16>& startVelocity,
+    HitPoints startHP
   ) :
   owner(0),
   topLayer(new UnitCore(
-        this, startType, startPosition, startOrientation, startVelocity
+        this, startType, startPosition, startOrientation, startVelocity,
+        startHP
       )),
   status(topLayer->getCore()),
   orders(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size()),
@@ -343,6 +347,15 @@ bool LayeredUnit::setSonar(bool active) {
     setDirty();
     return active;
   } else return false;
+}
+
+void LayeredUnit::removeLayer(const UnitMask* layer) {
+  if (topLayer.get() == layer) {
+    topLayer = layer->nextLayer;
+  } else {
+    topLayer->removeLayer(layer);
+  }
+  setDirty();
 }
 
 }}//End Namespaces

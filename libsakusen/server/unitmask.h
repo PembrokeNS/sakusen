@@ -26,19 +26,19 @@ class UnitMask : public UnitLayer {
       UnitLayer(copy),
       nextLayer(copy.nextLayer->newCopy(outer))
     {}
-  private:
+
     UnitLayer::Ptr nextLayer;
   public:
     HitPoints getMaxHitPoints() const { return nextLayer->getMaxHitPoints(); }
     uint8 getMass() const { return nextLayer->getMass(); }
     const Point<uint32>& getSize() const { return nextLayer->getSize(); }
-    const Region<sint16>::Ptr& getPossibleAccelerations() const {
+    Region<sint16>::ConstPtr getPossibleAccelerations() const {
       return nextLayer->getPossibleAccelerations();
     }
-    const Region<sint16>::Ptr& getPossibleVelocities() const {
+    Region<sint16>::ConstPtr getPossibleVelocities() const {
       return nextLayer->getPossibleVelocities();
     }
-    const Region<sint16>::Ptr& getPossibleAngularVelocities() const {
+    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
       return nextLayer->getPossibleAngularVelocities();
     }
     const Visibility& getVisibility() const {
@@ -47,6 +47,23 @@ class UnitMask : public UnitLayer {
     const Sensors& getVision() const { return nextLayer->getVision(); }
 
     UnitCore* getCore() { return nextLayer->getCore(); }
+    UnitLayer::Ptr getLayer(const std::type_info& typeInfo) {
+      if (typeInfo == typeid(*nextLayer)) {
+        return nextLayer;
+      } else {
+        return nextLayer->getLayer(typeInfo);
+      }
+    }
+    void removeLayer(const UnitMask* layer) {
+      if (nextLayer.get() == layer) {
+        nextLayer = layer->nextLayer;
+      } else {
+        nextLayer->removeLayer(layer);
+      }
+    }
+    Ref<LayeredUnit> getOuterUnit() {
+      return nextLayer->getOuterUnit();
+    }
     Ref<const LayeredUnit> getOuterUnit() const {
       return nextLayer->getOuterUnit();
     }

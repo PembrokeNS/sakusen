@@ -215,6 +215,54 @@ void CreateAction::internalExecute(UI* ui) {
   ui->alert(Alert("Construction of '"+creation+"' not possible"));
 }
 
+class BuildAction : public Action {
+  public:
+    BuildAction(const set<uint32>& selection) :
+      Action(actionParameterType_unit),
+      builders(selection),
+      target()
+    {
+    }
+  private:
+    /** \brief Units to build with */
+    set<uint32> builders;
+    /** \brief Target to build
+     * (!target.isValid() if not yet set) */
+    Ref<UpdatedUnit> target;
+
+    void internalSupplyArgument(const ActionArgument& arg) {
+      target = boost::get<Ref<UpdatedUnit> >(arg);
+      nextParameterType = actionParameterType_none;
+    }
+
+    void internalExecute(UI* ui) {
+      PartialWorld::UnitIDIndex::ConstPtr unitIndex =
+        client::world->getUnitsById();
+      for (set<uint32>::const_iterator unitID = builders.begin();
+          unitID != builders.end(); ++unitID) {
+        Ref<UpdatedUnit> unit = unitIndex->find(*unitID);
+        const UnitType* type =
+          client::world->getUniverse()->
+          getUnitTypePtr(unit->getStatus().getType());
+        /* For each weapon, if it's a builder then aim it at the target */
+        const vector<WeaponTypeID>& weapons = type->getWeapons();
+        for (vector<WeaponTypeID>::const_iterator weaponTypeID =
+            weapons.begin(); weaponTypeID != weapons.end(); ++weaponTypeID) {
+          const WeaponType* weaponType =
+            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeID);
+          if (weaponType->getClientHint() == "b") {
+            Order order(
+                new TargetUnitOrderData(weaponTypeID-weapons.begin(), target)
+              );
+            ui->getGame()->order(
+                OrderMessage(*unitID, orderCondition_incidental, order)
+              );
+          }
+        }
+      }
+    }
+};
+
 /** \brief Creates a new Action based on its name and the present selection
  *
  * \param actionName Name of Action to produce
@@ -235,6 +283,8 @@ Action::Ptr initializeAction(
     return Action::Ptr(new AttackAction(selection));
   } else if (actionName == "create") {
     return Action::Ptr(new CreateAction(selection));
+  } else if (actionName == "build") {
+    return Action::Ptr(new BuildAction(selection));
   } else {
     return Action::Ptr();
   }

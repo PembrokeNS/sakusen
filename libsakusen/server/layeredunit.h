@@ -44,7 +44,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const UnitTypeID type,
       const Point<sint32>& startNear,
       const Orientation& startOrientation,
-      const Point<sint16>& startVelocity
+      const Point<sint16>& startVelocity,
+      const HitPoints startHP = HitPoints(-1)
     ); /* factory class */
     static Ref<LayeredUnit> spawn(const PlayerID owner, const UnitTemplate& t);
       /* factory class */
@@ -56,7 +57,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
-      const Point<sint16>& startVelocity
+      const Point<sint16>& startVelocity,
+      const HitPoints startHP
     ); /* constructor intended to be used when spawning a Unit on the map -
           this is called only by LayeredUnit::spawn, and is thus private.
           owner is expected to be set after construction since it should not
@@ -128,6 +130,25 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
 
     /** \brief Inserts a new layer at the top of the unit's layers */
     void insertLayer(const boost::shared_ptr<UnitMask>& layer);
+    /** \brief Gets top layer of type T
+     *
+     * \return shared_ptr<T> to layer found, or shared_ptr<T>() if none found */
+    template<typename T>
+    boost::shared_ptr<T> getLayer() {
+      return boost::dynamic_pointer_cast<T>(getLayer(typeid(T)));
+    }
+
+    boost::shared_ptr<UnitLayer> getLayer(const std::type_info& typeInfo) {
+      if (typeInfo == typeid(*topLayer)) {
+        return topLayer;
+      } else {
+        return topLayer->getLayer(typeInfo);
+      }
+    }
+    /** \brief Removes a layer from amongst the unit's layers
+     *
+     * Fatals if that layer does not exist */
+    void removeLayer(const UnitMask*);
     
     /** kills the unit unconditionally */
     inline bool kill(HitPoints excessDamage) {

@@ -35,6 +35,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
   modes["target"] = Mode::getTarget(this);
   modes["string"] = Mode::getDefault("string", this);
   modes["targetpo"] = Mode::getDefault("targetpo", this);
+  modes["targetunit"] = Mode::getDefault("targetunit", this);
   mode = &modes["normal"];
 
   list<String> tokens;
@@ -216,9 +217,27 @@ void UI::setModeFor(ActionParameterType type)
     case actionParameterType_positionOrientation:
       setMode(&modes["targetpo"]);
       break;
+    case actionParameterType_unit:
+      setMode(&modes["targetunit"]);
+      break;
     default:
       Fatal("unexpected ActionParameterType " << type);
   }
+}
+
+vector<Ref<UpdatedUnit> > UI::getUnitsAtCursor() {
+  vector<Ref<UpdatedUnit> > result;
+
+  ISpatial::Result units =
+    client::world->getSpatialIndex()->findContaining(
+        activeMapDisplay->getMousePos(), gameObject_unit
+      );
+
+  for (ISpatial::Result::iterator unitIt = units.begin();
+      unitIt != units.end(); ++unitIt) {
+    result.push_back(unitIt->dynamicCast<UpdatedUnit>());
+  }
+  return result;
 }
 
 void UI::update()
@@ -508,6 +527,14 @@ void UI::supplyActionArg(const String& actionArg)
         supplyActionArg(make_pair(
               activeMapDisplay->getMousePos(), Orientation()
             ));
+        break;
+      case actionParameterType_unit:
+        {
+          vector<Ref<UpdatedUnit> > units = getUnitsAtCursor();
+          if (!units.empty()) {
+            supplyActionArg(units.back());
+          }
+        }
         break;
       default:
         alert(Alert("'cursor' argument cannot be interpreted in this context"));
