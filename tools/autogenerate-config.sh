@@ -35,7 +35,7 @@ function check_for_lib
   shift
   # Subsequent arguments are things to pass to gcc (probably includes)
   if printf '#include <%s>\nint main() { return 0; }\n' "${header}" | \
-    gcc -x c++ -o /dev/null "$@" -l${lib} -
+    g++ -x c++ -o /dev/null "$@" -l${lib} -
   then
     eval ${lib}_exists=yes
   else
