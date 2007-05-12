@@ -15,10 +15,7 @@ server.  At present only one server is supported (at an address specified on
 the command-line, if anywhere).  The default is to join automatically at
 startup, but you can change that.
 
-\todo Allow the user to solicit many servers and join any one.  Addresses
-shouldn't really be given on the command line at all.
-
-The \c reconnect command will begin again with a new solicitation from the
+The \c reconnect command will begin again with a new connection to the
 server.  This is appropriate if the server has been shut down and restarted
 while tedomari was running.
 

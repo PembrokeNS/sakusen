@@ -70,7 +70,6 @@ struct Options {
     evil(false),
     historyLength(100),
     test(false),
-    solicitationAddress(),
     joinAddress(),
     autoJoin(true),
     help(false),
@@ -95,8 +94,6 @@ struct Options {
    * tedomari::ui:sdl::SDLUI::Options */
   SDLUI::Options sdlOptions;
 #endif
-  /** Address to use to solicit a server */
-  String solicitationAddress;
   /** Address to use to join a server */
   String joinAddress;
   /** Whether to join automatically on startup */
@@ -245,26 +242,18 @@ void runClient(
     const String& configPath
   ) {
   String uiConfFilename = configPath + FILE_SEP "ui.conf";
+  String socketAddress;
   
-  String socketAddress = options.solicitationAddress;
-
+#ifdef DISABLE_UNIX_SOCKETS
+  socketAddress = options.joinAddress;
   if (socketAddress.empty()) {
-#ifdef DISABLE_UNIX_SOCKETS
-    cout << "You must provide an address for solicitation with --solicit." <<
-      endl;
-    exit(EXIT_FAILURE);
-#else
-    /* Use default socket */
-    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
-      homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
-#endif
-  }
-
-#ifdef DISABLE_UNIX_SOCKETS
-  if (options.joinAddress.empty()) {
     cout << "You must provide an address for joining with --join" << endl;
     exit(EXIT_FAILURE);
   }
+#else
+  /* Use default socket */
+  socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
+    homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
 #endif
 
   /* Construct the path to the history file */
@@ -275,25 +264,6 @@ void runClient(
 
   do {
     reconnect = false;
-    
-    /* Connect to the socket */
-    cout << "Trying to connect to socket at " << socketAddress << endl;
-    Socket::Ptr socket;
-    
-    try {
-      socket = Socket::newConnectionToAddress(socketAddress);
-    } catch (SocketExn& e) {
-      cerr << "Failed to connect: " << e.message << endl;
-      exit(EXIT_FAILURE);
-    }
-
-    if (socket == NULL) {
-      cerr << "Socket type not supported, please check the address and try "
-        "again" << endl;
-      exit(EXIT_FAILURE);
-    }
-
-    cout << "Connected to socket." << endl;
     
     /** \todo The ResourceInterface actually needs to be able to access
      * resources over the network from the server as well as from disk */
@@ -307,28 +277,14 @@ void runClient(
     ResourceInterface::Ptr resourceInterface =
         FileResourceInterface::create(dataDirs, false);
     Game* game = new Game(resourceInterface);
-    ServerInterface serverInterface(
-        socket, options.joinAddress,
+    ServerInterface serverInterface(socketAddress,
 #ifndef DISABLE_UNIX_SOCKETS
         options.unixSockets, options.abstract,
 #endif
         game
       );
 
-    cout << "Getting advertisement." << endl;
-    
-    AdvertiseMessageData advertisement;
-
-    if (serverInterface.getAdvertisement(&advertisement)) {
-      cout << "Failed to get advertisement.  Giving up." << endl;
-      exit(1);
-    }
-
-    cout << "Advertisement:\n"
-      "Server name: " << advertisement.getServerName() << "\n"
-      "Game name:   " << advertisement.getGameName() << "\n"
-      "\n"
-      "Type 'help' for a list of commands" << endl;
+    std::cout << "Type 'help' for a list of commands" << endl;
 
     /* Create the asynchronous input handler.  Hereafter nothing else should
      * mess with stdin, because that is likely to cause problems. */
@@ -593,7 +549,6 @@ void usage() {
 #ifndef DISABLE_SDL
           "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
 #endif
-          " -s,  --solicit ADDRESS, solicit server at sakusen-style address ADDRESS\n"
           " -j,  --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
           " -o-, --no-autojoin,     do not automatically try to join server\n"
           " -c,  --commands COMMAND;..., execute each COMMAND upon joining\n"
@@ -620,7 +575,6 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
 #ifndef DISABLE_SDL
   parser.addOption("sdlopts",        '\0', &sdlOptionsParser);
 #endif
-  parser.addOption("solicit",        's',  &results.solicitationAddress);
   parser.addOption("join",           'j',  &results.joinAddress);
   parser.addOption("autojoin",       'o',  &results.autoJoin);
   parser.addOption("commands",       'c',  &results.autoCommands, ';');

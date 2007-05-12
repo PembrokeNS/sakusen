@@ -19,7 +19,6 @@ class ServerInterface {
   public:
     /** \brief Standard constructor
      *
-     * \param solicitationSocket Socket to use to solicit the server.
      * \param joinAddress Address for joining the server.
      * \param unixSockets True iff unix sockets should be used where possible.
      * \param abstract True iff the abstract unix socket namespace should be
@@ -27,7 +26,6 @@ class ServerInterface {
      * \param game Game object to which updates about the game state should be
      * sent. */
     ServerInterface(
-        const sakusen::comms::Socket::Ptr& solicitationSocket,
         const String& joinAddress,
 #ifndef DISABLE_UNIX_SOCKETS
         bool unixSockets,
@@ -37,18 +35,15 @@ class ServerInterface {
       );
     ~ServerInterface();
   private:
-    /** Socket for solicitation/advertising (owned by code that constructs
-     * this object) */
-    sakusen::comms::Socket::Ptr solicitationSocket;
-    /** Address to which join requests should be sent, if different from the
-     * solicitationSocket */
+    /** Address to which join requests should be sent. */
     String joinAddress;
-    game::Game* game; /* not owned by this */
+    game::Game* game; /**< not owned by this */
     struct timeval timeout;
 #ifndef DISABLE_UNIX_SOCKETS
-    bool unixSockets; /* OK to use Unix sockets */
-    bool abstract; /* OK to use abstract namespace */
+    bool unixSockets; /**< OK to use Unix sockets */
+    bool abstract; /**< OK to use abstract namespace */
 #endif
+    /** true iff we have joined the game */
     bool joined;
     /** ID assigned to us by the server (valid only when joined) */
     sakusen::ClientID id;
@@ -70,7 +65,6 @@ class ServerInterface {
     inline sakusen::ClientID getID() const { return id; }
     //@}
     
-    bool getAdvertisement(sakusen::comms::AdvertiseMessageData* advertisement);
     String flushIncoming();
     String join();
     bool leave(bool sendMessage);

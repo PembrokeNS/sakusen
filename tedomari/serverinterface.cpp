@@ -20,7 +20,6 @@ using namespace tedomari;
 using namespace tedomari::game;
 
 ServerInterface::ServerInterface(
-    const Socket::Ptr& s,
     const String& ja,
 #ifndef DISABLE_UNIX_SOCKETS
     bool us,
@@ -28,7 +27,6 @@ ServerInterface::ServerInterface(
 #endif
     Game* g
   ) :
-  solicitationSocket(s),
   joinAddress(ja),
   game(g),
 #ifndef DISABLE_UNIX_SOCKETS
@@ -99,47 +97,6 @@ void ServerInterface::settingAlteration(
     /* When the universe is set we need to let game know */
     game->setUniverse(universeName, value);
   }
-}
-
-/** \brief Try to get advertisement from server.
- *
- * \return true iff an error occurs */
-bool ServerInterface::getAdvertisement(AdvertiseMessageData* advertisement)
-{
-  Socket::Ptr tempSocket;
-
-#ifndef DISABLE_UNIX_SOCKETS
-  if (unixSockets) {
-    tempSocket.reset(new UnixDatagramListeningSocket(abstract));
-    String address = tempSocket->getAddress();
-    solicitationSocket->send(Message(new SolicitMessageData(address)));
-  } else {
-#endif
-    tempSocket = solicitationSocket;
-    solicitationSocket->send(Message(new SolicitMessageData("")));
-#ifndef DISABLE_UNIX_SOCKETS
-  }
-#endif
-  
-  tempSocket->setNonBlocking(true);
-  
-  uint8 buffer[BUFFER_LEN];
-  size_t messageLength;
-
-  if (0 == (messageLength =
-        tempSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
-    return true;
-  }
-
-  IArchive messageArchive(buffer, messageLength);
-  Message message(messageArchive);
-  if (message.getType() != messageType_advertise) {
-    Debug("Non-advertisement received (type was " << message.getType() << ")");
-    return true;
-  }
-  *advertisement=message.getAdvertiseData();
-  
-  return false;
 }
 
 /** \brief Deal with all pending messages from server.
@@ -243,13 +200,20 @@ String ServerInterface::join()
   try {
 #ifndef DISABLE_UNIX_SOCKETS
     if (unixSockets) {
+      /* For one-way Unix sockets we need to setup two sockets: one connected
+       * to the server's socket in the given place, and one we listen on.
+       */
       incomingSocket.reset(new UnixDatagramListeningSocket(abstract));
-      /** \bug We're assuming equal solicitation and join addresses */
-      solicitationSocket->send(
+      outgoingSocket = Socket::newConnectionToAddress(joinAddress);
+      outgoingSocket->send(
           Message(new JoinMessageData(incomingSocket->getAddress()))
         );
     } else {
 #endif
+      /* For two-way sockets, the server will talk to us on the socket we join
+       * from, and we need to be prepared to open a second socket only if the
+       * server tells us to.
+       */
       /*Debug(
           "creating new connection to " << joinAddress << " for join message"
         );*/
@@ -260,6 +224,7 @@ String ServerInterface::join()
           "specified an invalid one?";
       }
       incomingSocket->send(Message(new JoinMessageData("")));
+      outgoingSocket = incomingSocket;
 #ifndef DISABLE_UNIX_SOCKETS
     }
 #endif
@@ -286,9 +251,7 @@ String ServerInterface::join()
       {
         AcceptMessageData data = message.getAcceptData();
         id = data.getID();
-        if (data.getAddress() == "") {
-          outgoingSocket = incomingSocket;
-        } else {
+        if (data.getAddress() != "") {
           outgoingSocket = Socket::newConnectionToAddress(data.getAddress());
         }
         joined = true;
