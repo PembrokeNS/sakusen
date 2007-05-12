@@ -4,8 +4,16 @@ SOURCE_DIRS = settingstree
 # fuseki is to be installed
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = libltdl_hacked liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
-LIBS = -lstdc++ -lpcrecpp
+LIBS := -lstdc++ -lpcrecpp
 INCLUDE =
+ifeq ($(ENABLE_AVAHI),yes)
+  LIBS += $(shell pkg-config --libs avahi-client)
+  THIS_CXXFLAGS := $(shell pkg-config --cflags avahi-client)
+endif
+
+ifneq ($(ENABLE_AVAHI),yes)
+  EXCLUDE_FILES := mdns.cpp mdns.h
+endif
 
 doc/man/man1/fuseki.1: $(BIN)
 	help2man --output=$@ --no-info \

@@ -63,10 +63,12 @@ ifeq ($(NO_AUTO_COMPILING),yes)
 CXX_SOURCES :=
 C_SOURCES :=
 else
-CXX_SOURCES := $(wildcard $(this_srcdir)*.cpp) \
-	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.cpp))
-C_SOURCES := $(wildcard $(this_srcdir)*.c) \
-	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.c))
+CXX_SOURCES := $(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)),\
+	$(wildcard $(this_srcdir)*.cpp) \
+	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.cpp)))
+C_SOURCES := $(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)),\
+	$(wildcard $(this_srcdir)*.c) \
+	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.c)))
 endif
 
 # Note that though the *_SOURCES variables point at the source directory tree,

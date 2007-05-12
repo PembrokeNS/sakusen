@@ -15,6 +15,9 @@
 #include "settingstree/boolleaf.h"
 #include "timeutils.h"
 #include "revision.h"
+#ifndef DISABLE_AVAHI
+#include "mdns.h"
+#endif
 
 #include <time.h>
 #include <signal.h>
@@ -519,6 +522,12 @@ void Server::serve()
   /* A bool to get us out of the loop when it is time to start the game */
   bool startGame = false;
   
+  /* Start up the mDNS publisher. */
+  /** \todo Get the TCP port number and game name to the publisher. */
+#ifndef DISABLE_AVAHI
+  MdnsPublisher publisher("Game name", 1723);
+#endif
+
   /* To begin with we have the game init loop */
   do {
     size_t bytesReceived;
