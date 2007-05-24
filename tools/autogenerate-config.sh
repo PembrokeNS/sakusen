@@ -27,6 +27,9 @@ function check_for_lib
     printf "Internal script error: check_for_lib got $# arguments\n"
     exit 2
   fi
+  # Zeroth argument is usable name
+  name="$1"
+  shift
   # First argument is library name
   lib="$1"
   shift
@@ -37,9 +40,9 @@ function check_for_lib
   if printf '#include <%s>\nint main() { return 0; }\n' "${header}" | \
     g++ -x c++ -o /dev/null "$@" -l${lib} -
   then
-    eval ${lib}_exists=yes
+    eval ${name}_exists=yes
   else
-    eval ${lib}_exists=no
+    eval ${name}_exists=no
     printf "Missing either library '%s' or its header '%s'\n" "${lib}" "${header}"
   fi
 }
@@ -94,16 +97,17 @@ check_for_prog swig
 check_for_prog perl
 check_for_prog mcs
 #check_for_prog something_that_doesnt_exist
-check_for_lib readline readline/readline.h
-check_for_lib SDL SDL/SDL.h
+check_for_lib readline readline readline/readline.h
+check_for_lib SDL SDL SDL/SDL.h
 # Would like to check for pangocairo library relly, but don't know what
 # version number to append, so settle for reporting cairo, and relying on
 # pkg-config to link against pangocairo.  This might make the errors slightly
 # harder to understand
-check_for_lib cairo pango/pangocairo.h `pkg-config pangocairo --cflags --libs`
-check_for_lib unicode unicode.h
-check_for_lib pcrecpp pcrecpp.h
-check_for_lib mhash mhash.h
+check_for_lib cairo cairo pango/pangocairo.h `pkg-config pangocairo --cflags --libs`
+check_for_lib unicode unicode unicode.h
+check_for_lib pcrecpp pcrecpp pcrecpp.h
+check_for_lib mhash mhash mhash.h
+check_for_lib avahiclient avahi-client avahi-client/client.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
 if ! enable_component EVERYTHING pcrecpp mhash
@@ -121,6 +125,7 @@ enable_component READLINE readline
 enable_component SDL SDL
 enable_component CAIRO cairo
 enable_component CONVERSION unicode
+enable_component AVAHI avahiclient
 #enable_component IMPOSSIBLE_COMPONENT something_that_doesnt_exist
 
 printf 'BUILD_CXXFLAGS := $(BUILD_CFLAGS)\n' >> "${TARGET}"
