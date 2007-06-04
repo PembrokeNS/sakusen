@@ -184,13 +184,23 @@ typedef std::string String;
 
 namespace sakusen {
 
+/** \brief Typedef for Times, primarily to make it clear when Times are
+ * being manipulated */
 typedef uint32 Time;
-typedef uint32 TimeSpan; /* We might want to allow negative TimeSpans too. */
+/** \brief Typedef for TimeSpans (i.e. the interval between two Times
+ * primarily to make it clear when such are being manipulated
+ *
+ * \todo We might want to allow negative TimeSpans too. */
+typedef uint32 TimeSpan;
 
-/* Sign function */
+/** \brief Sign function
+ *
+ * \param x value to determine sign of
+ *
+ * \return 1, -1 or 0 according to the sign of x. */
 inline int sgn(double x) {
   if (x>0) {
-    return -1;
+    return 1;
   } else if (x<0) {
     return -1;
   } else {
