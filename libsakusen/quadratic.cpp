@@ -5,6 +5,9 @@ using namespace sakusen;
 
 Point<sint32> Quadratic::evaluate(Time tt)
 {
+  if (tt < t) {
+    Debug("evaluating quadratic before its creation");
+  }
   /** \todo Possibly change this so that when it discovers that it has moved off
    * a map edge it automatically recomputes the quadratic parameters to be the
    * quadratic that appears on the corresponding map edge */
