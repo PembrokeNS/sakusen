@@ -77,12 +77,17 @@ class Creater : public Weapon {
   private:
     bool aim(
         const Ref<LayeredUnit>& source,
-        WeaponStatus* status,
+        WeaponStatus& status,
         const WeaponOrders&
       );
     /* This method is irrelevant for builders */
     uint32 getProjectileSpeed() const { return 0; }
-    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(
+        const Ref<LayeredUnit>& firer,
+        const WeaponStatus&,
+        WeaponOrders&,
+        uint16 weaponIndex
+      );
   protected:
     /* When overriden, gives the maximum range at which creation can take place
      * */
@@ -126,12 +131,17 @@ class Builder : public Weapon {
     BuildingLayer::WPtr buildingLayer;
     bool aim(
         const Ref<LayeredUnit>& source,
-        WeaponStatus* status,
+        WeaponStatus&,
         const WeaponOrders&
       );
     /* This method is irrelevant for builders */
     uint32 getProjectileSpeed() const { return 0; }
-    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(
+        const Ref<LayeredUnit>& firer,
+        const WeaponStatus&,
+        WeaponOrders&,
+        uint16 weaponIndex
+      );
     Weapon* newCopy() const { return new Builder(*this); }
   protected:
     /* Gives the maximum range at which building can take place
@@ -146,7 +156,12 @@ class Cannon : public Weapon {
     {}
   protected:
     uint32 getProjectileSpeed() const { return 2000; }
-    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(
+        const Ref<LayeredUnit>& firer,
+        const WeaponStatus&,
+        WeaponOrders&,
+        uint16 weaponIndex
+      );
   public:
     Weapon* newCopy() const {
       return new Cannon(*this);
@@ -176,11 +191,16 @@ class Paralyzer : public Weapon {
   protected:
     bool aim(
         const Ref<LayeredUnit>& firer,
-        WeaponStatus* status,
+        WeaponStatus&,
         const WeaponOrders&
       );
     uint32 getProjectileSpeed() const { return 0; }
-    void onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex);
+    void onFire(
+        const Ref<LayeredUnit>& firer,
+        const WeaponStatus&,
+        WeaponOrders&,
+        uint16 weaponIndex
+      );
   public:
     Weapon* newCopy() const { return new Paralyzer(*this); }
 };

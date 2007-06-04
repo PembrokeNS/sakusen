@@ -28,23 +28,26 @@ HitPoints BuildingLayer::build(HitPoints amount)
 
 bool Creater::aim(
     const Ref<LayeredUnit>& source,
-    WeaponStatus* status,
+    WeaponStatus& status,
     const WeaponOrders& orders
   )
 {
   Position displacement =
     orders.getTargetPosition() - source->getStatus()->getPosition();
   if (displacement.squareLength() <= squareRange()) {
-    status->setTarget(orders.getTargetPosition(), orders.getTargetOrientation());
+    status.setTarget(orders.getTargetPosition(), orders.getTargetOrientation());
     return true;
   }
   return false;
 }
 
-void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Creater::onFire(
+    const Ref<LayeredUnit>& firer,
+    const WeaponStatus& status,
+    WeaponOrders& orders,
+    uint16 /*weaponIndex*/
+  )
 {
-  const WeaponStatus& status =
-    firer->getStatus()->getWeaponsStatus()[weaponIndex];
   switch (status.getTargetType()) {
     case weaponTargetType_positionOrientation:
       {
@@ -57,8 +60,6 @@ void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
             HitPoints(1)
           );
         newUnit->insertLayer(BuildingLayer::Ptr(new BuildingLayer()));
-        WeaponOrders& orders =
-          firer->getOrders().getWeaponsOrders()[weaponIndex];
         orders.clear();
       }
       break;
@@ -69,7 +70,7 @@ void Creater::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 
 bool Builder::aim(
     const Ref<LayeredUnit>& source,
-    WeaponStatus* status,
+    WeaponStatus& status,
     const WeaponOrders& orders
   )
 {
@@ -87,10 +88,13 @@ bool Builder::aim(
   return false;
 }
 
-void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Builder::onFire(
+    const Ref<LayeredUnit>& /*firer*/,
+    const WeaponStatus& status,
+    WeaponOrders& orders,
+    uint16 /*weaponIndex*/
+  )
 {
-  const WeaponStatus& status =
-    firer->getStatus()->getWeaponsStatus()[weaponIndex];
   switch (status.getTargetType()) {
     case weaponTargetType_unit:
       {
@@ -104,8 +108,6 @@ void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
             bL = targetUnit->getLayer<BuildingLayer>();
             if (!bL) {
               Debug("building target not being built");
-              WeaponOrders& orders =
-                firer->getOrders().getWeaponsOrders()[weaponIndex];
               orders.clear();
               return;
             }
@@ -121,11 +123,14 @@ void Builder::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
   }
 }
 
-void Cannon::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Cannon::onFire(
+    const Ref<LayeredUnit>& firer,
+    const WeaponStatus& status,
+    WeaponOrders&,
+    uint16 /*weaponIndex*/
+  )
 {
   /*cout << "Firing at " << server::world->getTimeNow() << endl;*/
-  const WeaponStatus& status =
-    firer->getStatus()->getWeaponsStatus()[weaponIndex];
   server::world->addBallistic(new Shell(firer, status));
 }
 
@@ -153,7 +158,7 @@ void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
 
 bool Paralyzer::aim(
     const Ref<LayeredUnit>& firer,
-    WeaponStatus* status,
+    WeaponStatus& status,
     const WeaponOrders& orders
   )
 {
@@ -162,17 +167,20 @@ bool Paralyzer::aim(
     Point<sint32>(0, 0, 0);
   /* test whether target is within range */
   if (displacement.squareLength() < 100000000) {
-    status->setTargetDirection(displacement);
+    status.setTargetDirection(displacement);
     return true;
   } else {
     return false;
   }
 }
 
-void Paralyzer::onFire(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
+void Paralyzer::onFire(
+    const Ref<LayeredUnit>& firer,
+    const WeaponStatus& status,
+    WeaponOrders&,
+    uint16 /*weaponIndex*/
+  )
 {
-  const WeaponStatus& status =
-    firer->getStatus()->getWeaponsStatus()[weaponIndex];
   cout << "Firing paralyzer at time " << server::world->getTimeNow() <<
     ", in direction " << status.getTargetDirection() << endl;
   server::world->addBeam(new ParalyzationBeam(firer, status));
