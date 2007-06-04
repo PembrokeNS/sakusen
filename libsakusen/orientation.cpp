@@ -3,6 +3,7 @@
 
 using namespace sakusen;
 
+/** \brief Constructs the identity Orientation */
 Orientation::Orientation()
 {
   for (int i=0; i<3; i++) {
@@ -12,6 +13,11 @@ Orientation::Orientation()
   }
 }
 
+/** \brief Constructs an Orientation representing a rotation.
+ *
+ * The rotation constructed is that by \p amount
+ * around the axis specified by \p rotation.
+ */
 Orientation::Orientation(Rotation rotation, Angle amount)
 {
   double radians;
@@ -47,7 +53,9 @@ Orientation::Orientation(
   matrix[2][0] = e20; matrix[2][1] = e21; matrix[2][2] = e22;
 }
 
-
+/** \brief Performs composition of Orientations
+ *
+ * \warning Multiplication is non-commutative! */
 Orientation Orientation::operator*(const Orientation& right) const
 {
   double retMatrix[3][3];
@@ -66,7 +74,7 @@ bool Orientation::operator==(const Orientation& right) const
 {
   for (int i=0; i<3; i++) {
     for (int j=0; j<3; j++) {
-      /* Beware: use of != operator between floating point types may lead to
+      /** \bug Use of != operator between floating point types may lead to
        * precision problems */
       if (matrix[i][j] != right.matrix[i][j]) {
         return false;

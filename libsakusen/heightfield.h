@@ -104,6 +104,13 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     //@}
 
     sint32 getHeightAt(sint32 x, sint32 y) const;
+    /** \brief Get the height of the heightfield at a given position.
+     *
+     * Given a position in space, returns the
+     * height on the vertical line through that position, in dex.
+     *
+     * \note \c p.z is irrelevant.
+     */
     inline sint32 getHeightAt(const Position& p) const {
       return getHeightAt(p.x, p.y);
     }

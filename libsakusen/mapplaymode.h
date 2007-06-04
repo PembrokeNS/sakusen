@@ -10,6 +10,15 @@ namespace sakusen {
 
 class MapTemplate;
 
+/** \brief Defines a paticular way of playing a game on a MapTemplate.
+ *
+ * A MapPlayMode specifies all the players, their units, victory conditions
+ * and other things necessary to turn a bare heightfield into something that
+ * can actually be played.
+ *
+ * Most of the important information is inside PlayerTemplates.
+ *
+ * \todo scripting / map-based actions */
 class LIBSAKUSEN_API MapPlayMode {
   private:
     MapPlayMode();
@@ -24,7 +33,6 @@ class LIBSAKUSEN_API MapPlayMode {
     uint32 minPlayers;
     uint32 maxPlayers;
     std::vector<PlayerTemplate> players;
-    /* TODO: scripting / map-based actions */
   public:
     inline uint32 getMinPlayers() const { return minPlayers; }
     inline uint32 getMaxPlayers() const { return maxPlayers; }
@@ -40,9 +48,6 @@ class LIBSAKUSEN_API MapPlayMode {
       return players[player];
     }
     
-    /* Confirms that all specified units exist in the given universe, and
-     * that they all fit onto the given map.  Returns true if a
-     * problem is found */
     bool sanityCheck(
         const Universe::ConstPtr& universe,
         const MapTemplate& map

@@ -53,7 +53,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     inline Point<T> getBestPosition() const { return centre; }
     inline Rectangle<T> getBoundingRectangle() const;
     inline Box<T> getBoundingBox() const;
-    inline double intersect(const Ray&) const;
+    inline double intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_sphere; }
 };

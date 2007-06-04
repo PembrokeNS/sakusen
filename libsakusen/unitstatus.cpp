@@ -41,7 +41,7 @@ UnitStatus::UnitStatus(const IUnitStatus* copy) :
   weaponsStatus(copy->getWeaponsStatus())
 {
   assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
-  /* TODO: subunits */
+  /** \todo Subunits. */
 }
 
 UnitStatus::UnitStatus(
@@ -52,7 +52,7 @@ UnitStatus::UnitStatus(
     HitPoints startHitPoints,
     bool startRadarActive,
     bool startSonarActive,
-    vector<WeaponStatus> startWeaponsStatus
+    std::vector<WeaponStatus> startWeaponsStatus
   ) :
   type(startType),
   position(startPosition),
@@ -113,11 +113,12 @@ UnitStatus::UnitStatus(
     universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints();
 }
 
+/** \brief Create default statuses for each of the weapons */
 void UnitStatus::initializeWeapons(const UnitType* typePtr)
 {
-  /* Create default statuses for each of the weapons */
-  while (weaponsStatus.size() < typePtr->getWeapons().size())
+  while (weaponsStatus.size() < typePtr->getWeapons().size()) {
     weaponsStatus.push_back(WeaponStatus());
+  }
 }
 
 void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const

@@ -613,7 +613,12 @@ void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
   paint();
 }
 
-/* Helper class to foward move calls */
+/** \internal \brief Helper class to foward move calls
+ *
+ * This class is constructed with the set of units to move, and then when it is
+ * used as a visitor on an ActionTarget, it orders the units to move to that
+ * target.
+ */
 class MoveVisitor : public boost::static_visitor<void> {
   public:
     /** \warning Stores a reference to its second argument */
@@ -624,6 +629,9 @@ class MoveVisitor : public boost::static_visitor<void> {
     UI* ui;
     const set<uint32>& units;
   public:
+    /** \brief Orders units to move to target
+     *
+     * \param t Target to which to move units */
     template<typename T>
     void operator()(const T& t) {
       ui->move(units, t);
@@ -631,13 +639,13 @@ class MoveVisitor : public boost::static_visitor<void> {
 };
 
 /** \todo Replace this method with the order-queue related things */
-void UI::move(const set<uint32>& units, const ActionTarget& target)
+void UI::move(const std::set<uint32>& units, const ActionTarget& target)
 {
   MoveVisitor moveVisitor(this, units);
   target.apply_visitor(moveVisitor);
 }
 
-void UI::move(const set<uint32>& units, const Point<sint32>& target)
+void UI::move(const std::set<uint32>& units, const Position& target)
 {
   Order order = Order(new MoveOrderData(target));
   

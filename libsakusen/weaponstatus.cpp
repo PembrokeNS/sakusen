@@ -56,6 +56,15 @@ void WeaponStatus::setTarget(const Ref<ICompleteUnit>& u)
 void WeaponStatus::activate(void) {active = true;}
 void WeaponStatus::deactivate(void) {active = false;}
 
+/** \brief Increment the state of the weapon
+ *
+ * If the Weapon is inactive, does nothing and returns false.
+ *
+ * If the Weapon is active, adds as much energy and metal to it as possible
+ * (subject to constraints of charging speed and availability).  If it is fully
+ * charged, then remove firing cost from energy and weapon charges and return
+ * true (in this case the Weapon should be fired), otherwise return false.
+ */
 bool WeaponStatus::incrementState(WeaponTypeID type)
 {
   /** \todo Worry about what state weapons can be left in when inactive.  Can

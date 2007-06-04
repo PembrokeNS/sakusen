@@ -3,6 +3,9 @@
 
 namespace sakusen {
 
+/** \brief Enumeration of types of target a weapon can have.
+ *
+ * Used in WeaponOrders. */
 enum WeaponTargetType {
   weaponTargetType_none,
   weaponTargetType_direction,

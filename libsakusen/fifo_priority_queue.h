@@ -8,26 +8,35 @@
 
 namespace sakusen {
 
-/* Defines a priority queue which guarantees first-in-first-out behaviour when
+/** \brief A priority queue which guarantees first-in-first-out behaviour when
  * there is a tie for the highest priority.
+ *
  * The price of this functionality is that prioritization can no longer be
  * given in terms of a partial order, but must be given as a value of
  * PriorityType, which must be a totally ordered type.  The three template
  * arguments are:
- * - ValueType, the type being stored
- * - PriorityType, the totally ordered type representing priorities.  Because
- *   it's what libsakusen wants, we take smaller values to be higher priority.
- * - PrioritizeValueType, a functor taking an argument of const ValueType, and
- *   returning an instance of PriorityType which represents the priority of
- *   that type.
+ * \li ValueType, the type being stored
+ * \li PriorityType, the totally ordered type representing priorities.  Because
+ *     it's what libsakusen wants, we take smaller values to be higher
+ *     priority.
+ * \li PrioritizeValueType, a functor taking an argument of const ValueType,
+ *     and returning an instance of PriorityType which represents the priority
+ *     of that type.
+ *
  * Insertion and removal of the top element are O(log(N)).
+ *
  * Examination of the top element is O(1).
+ *
  * The overhead in insertion and removal can be non-negligible.  Things are
  * better if there are many ValueType instances with each given priority.
- * This class breaks the libsakusen naming conventions to look more STL-ish */
-
-template<typename ValueType, typename PriorityType,
-    typename PrioritizeValueType>
+ * 
+ * This class breaks the libsakusen naming conventions to look more STL-ish
+ */
+template<
+    typename ValueType,
+    typename PriorityType,
+    typename PrioritizeValueType
+  >
 class fifo_priority_queue {
   private:
     /* Prioritize is used for the priority_queue of PriorityTypes */
@@ -37,6 +46,10 @@ class fifo_priority_queue {
           return x < y;
         }
     };
+    /* We store the actual ValueTypes in queues - one for each PriorityType
+     * value, all stored together in a hash_map keyed by their priority - and
+     * then we use a priority_queue to contain all those values of
+     * PriorityType for which a queue exists in the hash_map. */
     typedef typename __gnu_cxx::hash_map
         < PriorityType, std::queue<ValueType, std::list<ValueType> > >
       QueueHashMap;
@@ -44,10 +57,6 @@ class fifo_priority_queue {
       priorityQueue;
     QueueHashMap fifoQueues;
     PrioritizeValueType prioritizer;
-    /* We store the actual ValueTypes in queues - one for each PriorityType
-     * value, all stored together in a hash_map keyed by their priority - and
-     * then we use a priority_queue to contain all those values of
-     * PriorityType for which a queue exists in the hash_map. */
   public:
     inline bool empty() const {
       return priorityQueue.empty();

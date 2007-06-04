@@ -49,10 +49,20 @@ class Beam : protected Ray {
     virtual GameObject interactsWith() const = 0;
     virtual GameObject stoppedBy() const = 0;
     virtual void onInteract(const Intersection&);
+    /** \name Interaction functions
+     *
+     * These functions should be overriden in subclasses to define the
+     * behaviour of this Beam when it interacts with various game objects.
+     *
+     * Those which are not overloaded will retain their default behaviour,
+     * which is to do nothing.
+     */
+    //@{
     virtual void onInteractLand(double /*position*/) {}
     virtual void onInteractWater(double /*position*/) {}
     virtual void onInteractUnit(double /*position*/, const Ref<LayeredUnit>&) {}
     virtual void onInteractEffect(double /*position*/, const Ref<Effect>&) {}
+    //@}
     virtual bool onRemovalTest();
     /** \name mechanics
      * These functions deal with game mechanics. */

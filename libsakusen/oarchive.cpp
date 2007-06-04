@@ -13,6 +13,10 @@
 
 using namespace sakusen;
 
+/** \brief Default constructor.
+ *
+ * Constructs an empty OArchive, ready to have things inserted into it.
+ */
 OArchive::OArchive() :
   buffer(new uint8[DEFAULT_START_CAPACITY]),
   length(0),
@@ -20,6 +24,13 @@ OArchive::OArchive() :
 {
 }
 
+/** \brief Constructs with given start capacity.
+ *
+ * Allows the initial capacity of the OArchive's internal buffer to be
+ * specified.  This might save a few reallocations in some circumstances if you
+ * can know roughly how big the OArchive will need to be.  Don't bother to use
+ * this without good reason, though.
+ */
 OArchive::OArchive(size_t startCapacity) :
   buffer(new uint8[startCapacity]),
   length(0),
@@ -27,6 +38,14 @@ OArchive::OArchive(size_t startCapacity) :
 {
 }
 
+/** \brief Copies an exisiting OArchive
+ *
+ * Makes this a copy of the other OArchive.
+ *
+ * Note that this allocates exactly enough memory to store the data already
+ * inserted, so you can use it to keep a minimal version of an OArchive so as
+ * not to waste memory if desired.
+ */
 OArchive::OArchive(const OArchive& copy) :
   buffer(new uint8[copy.length]),
   length(copy.length),
@@ -53,6 +72,15 @@ OArchive& OArchive::operator=(const OArchive& copy)
   return *this;
 }
 
+/** \brief Makes this OArchive a copy of the given IArchive
+ *
+ * The IArchive must not have had anything extracted from it yet.
+ *
+ * This function should very rarely be needed, because it's somewhat
+ * 'backwards' when compared with how things usually work (normally things are
+ * inserted into an OArchive, then it's converted to an IArchive, from which
+ * the same things are extracted), so only use it with good reason.
+ */
 OArchive& OArchive::operator=(const IArchive& copy)
 {
   // We should only be doing this with an IArchive which we haven't extracted
@@ -80,6 +108,10 @@ void OArchive::expand()
   buffer = newBuffer;
 }
 
+/** \brief Dump the buffer as hex to stdout
+ *
+ * \note For debugging purposes.  In particular, it can be called from a
+ * debugger. */
 void OArchive::dumpBuffer() const
 {
   Debug(stringUtils_bufferToHex(buffer, length));

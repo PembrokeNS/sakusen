@@ -97,6 +97,10 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
   }
 }
 
+/** \brief Clear the orders
+ *
+ * Sets targetType to none.
+ */
 void WeaponOrders::clear()
 {
   targetType = weaponTargetType_none;

@@ -12,7 +12,7 @@ class LayeredUnit;
 
 /** \brief The lowest UnitLayer in a LayeredUnit.
  *
- * See \ref Units for more details on how the various Unit classes fit together
+ * See \ref units for more details on how the various Unit classes fit together
  * */
 class UnitCore : public UnitLayer, public UnitStatus {
   public:
@@ -56,7 +56,8 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return outerUnit->getRefToThis();
     }
     
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     inline PlayerID getOwner() const { return owner; }
     inline HitPoints getMaxHitPoints() const {
       return getTypePtr()->getDynamicData().getMaxHitPoints();
@@ -82,8 +83,11 @@ class UnitCore : public UnitLayer, public UnitStatus {
     inline const Sensors& getVision(void) const {
       return getTypePtr()->getDynamicData().getVision();
     }
+    //@}
 
-    /** \name Game mechanics */
+    /** \name Game mechanics.
+     *
+     * See similarly named methods in LayeredUnit for more details. */
     //@{
     void incrementWeaponsState();
     bool kill(HitPoints excessDamage);
@@ -95,7 +99,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     
     /* callbacks */
     void onCreate(void) {}
-    void onDestruct(void) { /* TODO: what should the default be? */ }
+    void onDestruct(void) { /** \todo what should the default be? */ }
 };
 
 }}

@@ -17,6 +17,11 @@ PlayerTemplate::PlayerTemplate(
   assert(raceFixed || !noClients);
 }
 
+/** \brief Performs some sanity checks on the PlayerTemplate
+ *
+ * Confirms that all specified units exist in the given universe, and
+ * that they all fit onto the given map.  Returns true if a
+ * problem is found */
 bool PlayerTemplate::sanityCheck(
     const Universe::ConstPtr& universe,
     const MapTemplate& map

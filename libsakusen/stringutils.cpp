@@ -16,7 +16,7 @@ list<String> sakusen::stringUtils_split(
     const String& spliton
   )
 {
-  /* TODO: Replace with or add a regex-using version */
+  /** \todo Replace with or add a regex-using version */
   String::size_type chunk_start;
   String::size_type chunk_end=0;
   list<String> result;
@@ -66,8 +66,6 @@ String sakusen::stringUtils_makePrintable(const String& s)
 
 String sakusen::stringUtils_charToUtf8(uint16 c)
 {
-  /* TODO: Is there an endianness issue here?  I'm not entirely sure how
-   * bitshifts differ under different endiannesses */
   if (c<0x0080) {
     return String(1, static_cast<char>(c));
   } else if (c<0x0800) {
@@ -111,14 +109,17 @@ String LIBSAKUSEN_API sakusen::stringUtils_bufferToHex(
   return stream.str();
 }
 
+/** \brief Computes a secure hash of the buffer and returns it as a hex string.
+ *
+ * The hash used is SHA-256. */
 String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length
   )
 {
-  /* TODO: Maybe support other hashes */
+  /** \todo Maybe support other hashes */
   MHASH thread = mhash_init(MHASH_SHA256);
-  /* FIXME: Commented out because it generates an old style cast warning (silly
+  /** \bug Commented out because it generates an old style cast warning (silly
    * reason...)
   if (thread == MHASH_FAILED) {
     Fatal("error initing hash");

@@ -1,0 +1,39 @@
+/** \page Glossary
+
+This glossary is intended to define words which are used in the documentation
+but are not simply the name of some class, or where they are the name of a
+class but have a slightly different meaning as well (e.g. 'universe') so the
+documentation for the class in question may not be sufficient to explain all
+uses.
+
+\li Module &mdash; A dlopenable library (or the sources for such a thing) which
+provides code for a universe.  A single module can be used for multiple
+universes, and a universe can use multiple modules.  A module would typically
+define classes inheriting from Weapon, UnitMask, Effect, Ballistic and Beam,
+some functions with C-style linkage for spawning the Weapons and any supporting
+code.  Modules are intended to be used on server-side only.  Not to be confused
+with plugin (q.v.).
+
+\li Plugin &mdash; A dlopenable library which adds functionality to a server or
+client (possibly both) that is probably independent of any particular universe.
+See sakusen::server::plugins.
+
+\li Unit &mdash; Covers many possible game objects.  Anything which needs to be
+controlled by a player (soldiers, buildings), needs to move in a manner which
+is not simply ballistic (missiles) or needs to have a physical prescence which
+might obstruct other units (trees, bridges, except where the ground heightfield
+will suffice) must be a unit.  Units are complex, heavyweight things from the
+perspective of the code, but they are not abstract, and cannot have subclasses
+defined in modules.  UnitLayers, on the other hand, are abstract and can have
+such subclasses; these are intended to be the means by which modules affect the
+behaviour and capabilities of units.
+
+\li Universe &mdash; A collection of UnitTypes and WeaponTypes linked to the
+modules which implement them.  In the future will probably also include
+*Representations to tell clients how to represent the things in the universe.
+A Universe contains everything that needs to be added to the game engine to
+play a game short of a map on which to play.  Some parts of the universe are
+needed by both client and server (e.g. the UnitTypes), some only by the server
+(e.g. the modules) and some only by the client (e.g. the UnitRepresentations).
+
+*/

@@ -10,7 +10,11 @@ using namespace sakusen::server;
 using namespace sakusen::server::plugins;
 using namespace fuseki;
 
-Plugin::Plugin(const String& n, const PluginInfo::Ptr& i, Server* s) :
+Plugin::Plugin(
+    const String& n,
+    const sakusen::server::plugins::PluginInfo::Ptr& i,
+    Server* s
+  ) :
   name(n),
   info(i),
   server(s)
@@ -42,7 +46,9 @@ ResourceInterface::Ptr Plugin::getResourceInterface() const
   return server->getResourceInterface();
 }
 
-void Plugin::registerListener(const Listener::VPtr& listener) const
+void Plugin::registerListener(
+    const sakusen::server::plugins::Listener::VPtr& listener
+  ) const
 {
   listeners.push(listener);
   server->registerListener(listener);

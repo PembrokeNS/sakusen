@@ -69,7 +69,7 @@ class hash_list_const_iterator;
  * The first template parameter, T, is the type of object stored in the
  * hash_list.  Each subsequent template parameter declares a type which may be
  * the template parameter of an index which can be registered with the
- * hash_list.  No other types of index may be registered.  For example, \code
+ * hash_list.  No other types of index may be registered.  For example, \c
  * hash_list<UpdatedUnit,UpdateUnit,Bounded> declares a hash_list storing
  * UpdatedUnits and which accepts indexes of types IIndex<UpdatedUnit> and
  * IIndex<Bounded>.  The maximum number of such index types which may be used
@@ -78,10 +78,14 @@ class hash_list_const_iterator;
 template<typename T, SAKUSEN_HASH_LIST_DECLARE_PARAMS>
 class hash_list : boost::noncopyable {
   friend class hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
-  friend class hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
+  friend
+    class hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
+
   public:
-    typedef hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)> iterator;
-    typedef hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)> const_iterator;
+    typedef hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+      iterator;
+    typedef hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
+      const_iterator;
     typedef size_t size_type;
     
     hash_list();
@@ -363,8 +367,8 @@ inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::pop_back()
 /** \brief insert a new item into the container at a position specified by an
  * iterator
  *
- * \param pos  Insert item immediately before this iterator
- * \param item Item to insert (Ownership of pointer transferred to this)
+ * \param pos     Insert item immediately before this iterator
+ * \param itemPtr Item to insert (Ownership of pointer transferred to this)
  * \returns iterator pointing to the inserted item
  */
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
@@ -491,6 +495,15 @@ inline typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::const_iter
   return const_iterator(it->second);
 }
 
+/** \brief Register an index with the hash_list
+ *
+ * This function will attach an index to this hash_list, so that henceforth
+ * that index can be used to look up entries in the hash_list.  The index must
+ * implement IIndex<TIndex> where TIndex is one of the index types specified
+ * amongst the type parameters of the hash_list.
+ *
+ * Indexes can be registered at any time; the hash_list need not be empty.
+ */
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
 template<typename TIndex>
 inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::registerIndex(

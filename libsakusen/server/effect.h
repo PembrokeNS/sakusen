@@ -40,14 +40,28 @@ class Effect : public Bounded {
     
   public:
     virtual ~Effect() {}
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     inline GameObject getObjectType() const { return gameObject_effect; }
     inline const PlayerID getOwner(void) const { return owner; }
     inline const Region<sint32>::Ptr& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
+    //@}
     /* callbacks */
+    /** \brief Callback called each tick with every unit within the Effect.
+     *
+     * Can be overriden by subclasses.  Otherwise, the default implementation
+     * does nothing. */
     virtual void onUnitPresent(const Ref<LayeredUnit>&) {}
+    /** \brief Callback called when a unit enters the Effect.
+     *
+     * Can be overriden by subclasses.  Otherwise, the default implementation
+     * does nothing. */
     virtual void onUnitEnter(const Ref<LayeredUnit>&) {}
+    /** \brief Callback called when a unit leaves the Effect.
+     *
+     * Can be overriden by subclasses.  Otherwise, the default implementation
+     * does nothing. */
     virtual void onUnitLeave(const Ref<LayeredUnit>&) {}
     /** \brief Test the effect for removal
      *

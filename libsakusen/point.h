@@ -146,9 +146,12 @@ class LIBSAKUSEN_API Point {
       return x!=right.x || y!=right.y || z!=right.z;
     }
 
-    /** Order operators use the product order.  Note that this is a partial
+    /** \name Order operators
+     *
+     * \note These use the product order.  This is a partial
      * order only, not a total order (so don't use Point<T>s in an
      * ordered container) */
+    //@{
     template <typename U>
     inline bool operator<=(const Point<U>& right) const {
       return x<=right.x && y<=right.y && z<=right.z;
@@ -168,8 +171,10 @@ class LIBSAKUSEN_API Point {
     inline bool operator>(const Point<U>& right) const {
       return (*this >= right) && (*this != right);
     }
+    //@}
 
-    /* arithmetic operators */
+    /** \name Arithmetic operators */
+    //@{
     inline Point<T> operator-() const {
       Point <T> result(-x,-y,-z);
       return result;
@@ -215,6 +220,7 @@ class LIBSAKUSEN_API Point {
     inline Point<T> operator/(const T scale) const {
       return Point<T>(x/scale, y/scale, z/scale);
     }
+    //@}
 
 #if 0
     inline uint64 squareLength(void) const {
@@ -307,9 +313,13 @@ inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {
   return out;
 }
 
+/** \name Typedefs for some common uses of Point, to make it clear what a Point
+ * is representing in any given context */
+//@{
 typedef Point<sint16> Acceleration;
 typedef Point<sint16> Velocity;
 typedef Point<sint32> Position;
+//@}
 
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;

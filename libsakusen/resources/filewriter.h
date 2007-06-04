@@ -9,6 +9,7 @@
 namespace sakusen {
 namespace resources {
 
+/** \brief Implementation of Writer that stores its data in a file. */
 class FileWriter : public File, public Writer {
   public:
     FileWriter(const String& fileName);

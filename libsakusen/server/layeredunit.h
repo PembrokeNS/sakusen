@@ -46,23 +46,23 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
       const HitPoints startHP = HitPoints(-1)
-    ); /* factory class */
+    );
     static Ref<LayeredUnit> spawn(const PlayerID owner, const UnitTemplate& t);
-      /* factory class */
   private:
+    /** Constructor used by LayeredUnit::spawn during initial construction
+     * of the Map */
     LayeredUnit(const UnitTemplate&);
-      /**< Constructor used by LayeredUnit::spawn during initial construction
-       * of the Map */
+    /* Constructor intended to be used when spawning a Unit on the map -
+     * this is called only by LayeredUnit::spawn, and is thus private.
+     * owner is expected to be set after construction since it should not
+     * be set until *after* the Unit has been added to the World. */
     LayeredUnit(
       const UnitTypeID& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
       const HitPoints startHP
-    ); /* constructor intended to be used when spawning a Unit on the map -
-          this is called only by LayeredUnit::spawn, and is thus private.
-          owner is expected to be set after construction since it should not
-          be set until *after* the Unit has been added to the World */
+    );
   public:
     ~LayeredUnit();
   private:
@@ -80,16 +80,17 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * sensing. */
     __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef> sensorReturns;
 
-    /** \brief Indicates that information must be transmitted to client
+    /** \brief Indicates that information must be transmitted clients.
      *
      * This bool is true iff changes have occured to the unit which have yet to
-     * be transmitted to the clients */
+     * be transmitted to the clients. */
     bool dirty;
 
     /** Accept a new order from the queue */
     void acceptOrder(OrderCondition condition);
   public:
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     inline PlayerID getOwner(void) const {return owner;}
     inline uint32 getId(void) const { return unitId; }
     inline void setId(uint32 id) { unitId = id; }
@@ -105,6 +106,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       getSensorReturns(void) { return sensorReturns; }
     inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
       getSensorReturns(void) const { return sensorReturns; }
+    //@}
 
     void setDirty(void);
     void clearDirty(void);
@@ -124,11 +126,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
         bool zeroVelocity
       );
     void incrementState(const Time& timeNow);
-      /* advances the state of the unit one unit of game time (changing its
-			   velocity, position, applying all actions for the given time) */
     void enqueueOrder(const OrderCondition& condition, const Order& order);
 
-    /** \brief Inserts a new layer at the top of the unit's layers */
     void insertLayer(const boost::shared_ptr<UnitMask>& layer);
     /** \brief Gets top layer of type T
      *
@@ -145,31 +144,38 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
         return topLayer->getLayer(typeInfo);
       }
     }
-    /** \brief Removes a layer from amongst the unit's layers
-     *
-     * Fatals if that layer does not exist */
     void removeLayer(const UnitMask*);
     
-    /** kills the unit unconditionally */
+    /** \brief Kills the unit unconditionally. */
     inline bool kill(HitPoints excessDamage) {
       return topLayer->kill(excessDamage);
     }
+    /** \brief Damages the unit and kills if HP <= 0 */
     inline void damage(HitPoints amount) { topLayer->damage(amount); }
-      /**< damages the unit and kills if HP <= 0 */
+    
+    /** \brief Repairs the unit.
+     *
+     * If superhealth is false, then repairs up to its max HP.  Otherwise,
+     * repairs the unit up to no maximum. */
     inline void repair(HitPoints amount, bool superhealth) {
       topLayer->repair(amount, superhealth);
-    } /**< repairs the unit up to its max HP, if superhealth is false; o/w,
-       * repairs the unit up to no maximum */
+    }
+    /** \brief Change the type of the unit.
+     *
+     * The semantics of this are going to need some thought, but does
+     * transforming of units, deployment and conversion to corpses on death. */
     inline void changeType(
         const UnitTypeID& to,
         hitPointAlteration hpAlteration
       ) { topLayer->changeType(to, hpAlteration); }
-      /**< the semantics of this are going to need some thought, but does
-       * transforming of units and deployment */
     inline void changeOwner(const PlayerID to, enum changeOwnerReason why) {
       topLayer->changeOwner(to, why);
       owner = topLayer->getOwner();
     }
+    /** \brief Callback on unit destruction.
+     *
+     * This is passed through the UnitLayers, so that they can take appropriate
+     * action. */
     inline void onDestruct(void) { topLayer->onDestruct(); }
 };
 

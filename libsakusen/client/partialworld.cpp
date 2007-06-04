@@ -50,6 +50,11 @@ PartialWorld::~PartialWorld()
   world = NULL;
 }
 
+/** \brief Apply incoming update.
+ *
+ * This method should be called by the client for each Update it receives from
+ * the server (in the order received!).
+ */
 void PartialWorld::applyUpdate(const Update& update)
 {
   switch (update.getType()) {
@@ -187,6 +192,13 @@ void PartialWorld::applyUpdate(const Update& update)
   }
 }
 
+/** \brief Indicate end of tick.
+ *
+ * The client should call this method after applying all the Updates for a
+ * single tick.  This is necessary because there are certain things that the
+ * server assumes the client can figure out for itself, and these things must
+ * be accounted for if there have been no Updates to the contrary.
+ */
 void PartialWorld::endTick()
 {
   for (hash_list<UpdatedUnit, Bounded, UpdatedUnit>::iterator unit =

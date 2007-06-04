@@ -8,6 +8,10 @@
 
 namespace sakusen {
 
+/** \brief Encapsulates status information about a unit.
+ *
+ * See \ref units for more details.
+ */
 class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
   private:
     UnitStatus(); /**< Default constructor should not be used */
@@ -53,17 +57,24 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
           not exist yet, so the universe must be provided directly */
   public:
     UnitTypeID type;
-    Point<sint32> position; /**< this maybe needs a 'magic value' for when
-                              the unit is a subunit of another unit */
+    /** \name Unit's physical attributes */
+    //@{
+    Position position;
     Orientation orientation;
-    Point<sint16> velocity; /**< velocity is in distance-units per frame */
+    Velocity velocity;
+    //@}
     
-    /* status stuff */
+    /** \name Unit's status */
+    //@{
     HitPoints hitPoints;
     bool radarIsActive;
     bool sonarIsActive;
-    std::list<uint32> subunits; /**< ids of subunits which must belong to
-                                  the same player as this unit */
+    //@}
+    /** \brief List of subunits
+     *
+     * \note Subunits which must belong to the same player as this unit, so
+     * need only specify ids. */
+    std::list<uint32> subunits;
     std::vector<WeaponStatus> weaponsStatus;
 
     void initializeWeapons(const UnitType* typePtr);

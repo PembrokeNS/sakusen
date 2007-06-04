@@ -62,7 +62,7 @@ String sakusen::comms::errorUtils_errorMessage(int num)
     return "error getting error message for errno " + errorUtils_parseErrno(errno);
   }
   return String(message); */
-  /* Because the above doesn't work, we have FIXME: not thread-safe */
+  /* Because the above doesn't work, we have: */
   /** \bug uses thread-unsafe strerror() */
   return String(strerror(num));
 #endif //_MSC_VER

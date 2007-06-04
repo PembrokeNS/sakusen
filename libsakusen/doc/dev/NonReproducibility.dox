@@ -24,3 +24,5 @@ I talked to a programmer who writes software that models conservatories, and he
 had in the past hit this problem with floating point arithmetic.  He was forced
 to write his own implementation of floating point numbers to solve this
 problem.
+
+*/

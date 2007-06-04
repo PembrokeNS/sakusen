@@ -67,6 +67,14 @@ class LIBSAKUSEN_API ResourceInterface {
         ResourceSearchResult* result
       );
 
+    /** \brief Search for a a symbol in a dlopenable module
+     *
+     * \param      moduleName Name (or prefix thereof) of module to search for
+     * \param      symbolName Name of symbol to search for within the module
+     * \param[out] result     Result of search returned through this value
+     * \return The pointer to the symbol, cast to type T (probably a function
+     *         pointer type); or NULL if there was an error.
+     */
     template<typename T>
     T symbolSearch(
         const String& moduleName,
@@ -81,6 +89,12 @@ class LIBSAKUSEN_API ResourceInterface {
     template<typename T>
     inline bool save(const boost::shared_ptr<const T>& resource);
 
+    /** \brief Open a Writer appropriate to this ResourceInterface.
+     *
+     * \p name should be a simple name, as opposed to a full path.  If the
+     * ResourceInterface is to files, then the appropriate directory will be
+     * chosen according to \p type.
+     */
     virtual Writer::Ptr openWriter(
         const String& name,
         ResourceType type

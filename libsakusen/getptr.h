@@ -5,7 +5,7 @@
 
 namespace sakusen {
 
-/* \brief Function object for extracting pointer in a generic fashion */
+/** \brief Function object for extracting pointer in a generic fashion */
 template<typename T>
 struct GetPtr : boost::static_visitor<T*> {
   template<typename P>

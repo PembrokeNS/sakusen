@@ -8,7 +8,9 @@ namespace client {
 
 /** \brief A heightfield with less than total information about the heights
  *
- * \bug This class fails dramatically to fulfil its intended purpose as yet */
+ * \bug This class fails dramatically to fulfil its intended purpose at
+ * present.
+ */
 class PartialHeightfield : public Heightfield {
   public:
     PartialHeightfield(

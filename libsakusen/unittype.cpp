@@ -58,6 +58,8 @@ UnitType::UnitType(
 {
 }
 
+/** \brief Converts all the weapon type names into proper WeaponTypeIDs by
+ * querying the given Universe */
 String UnitType::resolveNames(const Universe* universe)
 {
   assert(weapons.empty());
@@ -93,7 +95,7 @@ void UnitType::store(OArchive& archive) const
   archive << energyCost << metalCost;
   archive << fixed << ground << surface << gravity << seabed << weapons <<
     (corpseUnitType == NULL ? String("") : corpseUnitType->getInternalName());
-    /* FIXME: assumes UnitTypeID is UnitType* */
+    /** \bug assumes UnitTypeID is UnitType* */
 }
 
 UnitType UnitType::load(IArchive& archive)

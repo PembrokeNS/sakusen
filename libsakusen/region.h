@@ -32,11 +32,21 @@ class LIBSAKUSEN_API Region {
   protected:
     virtual void storeData(OArchive&) const = 0;
   public:
-    /** \brief Is the Point inside the Region?
-     * \return true iff \p point is inside this Region.
+    /** \name Containment functions
+     *
+     * These functions return true iff \p point is inside this Region.
+     * 
+     * We can't use Point<T> because then Point<sint32>s become corrupted when
+     * T=sint16, and we can't use a templated Point type because the functions
+     * are virtual.  We could probably get away with allowing just
+     * Point<sint64> but then there'll be lots of conversion and temporaries
+     * happening.  So, we provide one function for each necessary Point
+     * instantiation.
      */
+    //@{
     virtual bool contains(const Point<sint16>& point) const = 0;
     virtual bool contains(const Point<sint32>& point) const = 0;
+    //@}
 
     /** \brief Is the unit inside the Region?
      * \return true iff \p unit is inside this Region.
@@ -48,7 +58,9 @@ class LIBSAKUSEN_API Region {
      */
     inline bool contains(const IUnitStatus* unit) const;
 
-    /** \brief Turn a Point into one inside the Region.
+    /** \name Truncation methods
+     *
+     * These methods are for turning a Point into one inside the Region.
      *
      * If the Point is inside the region, a copy is returned. Otherwise, the
      * Point returned will be one inside the Region. No other properties of the
@@ -66,9 +78,11 @@ class LIBSAKUSEN_API Region {
      * truncate, and we don't want to suffer data loss before we even get into
      * the function.
      */
+    //@{
     virtual Point<sint16> truncateToFit(const Point<sint16>&) const = 0;
     virtual Point<sint32> truncateToFit(const Point<sint32>&) const = 0;
-    
+    //@}
+
     /** \brief Get the centre of the Region.
      *
      * Will calculate and return a Point representing the 'best' part of the
@@ -103,6 +117,10 @@ class LIBSAKUSEN_API Region {
      */
     virtual double intersect(const Ray& r) const = 0;
     
+    /** \brief Get the type of Region
+     *
+     * Used for (de)serialization.  Preferably shouldn't be needed otherwise.
+     */
     virtual RegionType getType() const = 0;
 
     void store(OArchive&) const;

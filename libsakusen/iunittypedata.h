@@ -8,6 +8,10 @@
 
 namespace sakusen {
 
+/** \brief Interface to all dynamic UnitType data.
+ *
+ * See \ref units for more details.
+ */
 class LIBSAKUSEN_API IUnitTypeData {
   public:
     virtual ~IUnitTypeData() {}

@@ -39,21 +39,23 @@ class LIBSAKUSEN_API UnitOrders {
     /** The last order given - the one which awaits its success or
      * failure */
     Order currentOrder;
-    /** current goals which have been set by orders */
-    LinearTargetType linearTarget; /**< Whether we're currently trying to
-                                      achieve a position or a velocity */
-    Point<sint32> targetPosition; /**< The position we're trying to reach */
-    Point<sint16> targetVelocity; /**< The velocity we're trying to
-                                    achieve */
-    RotationalTargetType rotationalTarget; /**< Whether we're currently
-                                             trying to achieve an
-                                             orientation or an angular
-                                             velocity. */
-    Orientation targetOrientation; /**< The orientation we're trying to
-                                     reach */
-    AngularVelocity targetAngularVelocity; /**< The angular velocity we're
-                                             trying to achieve */
-    /** The order status of the Unit's weapons */
+    /** \name Current goals which have been set by orders */
+    //@{
+    /** Whether we're currently trying to achieve a position or a velocity */
+    LinearTargetType linearTarget;
+    /** The position we're trying to reach */
+    Point<sint32> targetPosition;
+    /** The velocity we're trying to achieve */
+    Point<sint16> targetVelocity; 
+    /** Whether we're currently trying to achieve an orientation or an angular
+     * velocity. */
+    RotationalTargetType rotationalTarget;
+    /** The orientation we're trying to reach */
+    Orientation targetOrientation; 
+    /** The angular velocity we're trying to achieve */
+    AngularVelocity targetAngularVelocity; 
+    //@}
+    /** The order status of the unit's weapons */
     std::vector<WeaponOrders> weaponOrders;
   public:
     /** \name accessors */
@@ -99,6 +101,8 @@ class LIBSAKUSEN_API UnitOrders {
 
     void acceptOrder(OrderCondition condition);
     void clearQueue();
+
+    /** \brief Reset the current order to the nop order */
     inline void clearCurrent() { currentOrder = Order(); }
 
     typedef PlayerID loadArgument;

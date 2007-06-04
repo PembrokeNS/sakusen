@@ -15,14 +15,18 @@ namespace sakusen {
 class IArchive;
 class OArchive;
 
-/* Helper class to handle storing of different types in an OArchive */
+/** \internal \brief Helper class to handle storing of different types in an
+ * OArchive */
 template<typename T>
 struct Storer {
   void operator()(OArchive&, typename boost::call_traits<T>::param_type item);
 };
 
-/* This class represents an archive into which we put objects for tranmission
- * over the network or saving to disk. */
+/** \brief This class represents an archive into which we put objects for
+ * tranmission over the network or saving to disk.
+ *
+ * \see IArchive
+ */
 class LIBSAKUSEN_API OArchive {
   public:
     OArchive();
@@ -43,16 +47,22 @@ class LIBSAKUSEN_API OArchive {
     }
   public:
     inline size_t getLength() const { return length; }
+    /** \brief Get a pointer to the OArchive's buffer
+     *
+     * This can be used, for example, to transmit the archive over a network.
+     *
+     * \warning This is a pointer to memory owned by the OArchive.  Don't mess
+     * with it.
+     */
     inline const uint8* getBytes() const { return buffer; }
-      /* Danger: we're revealing a pointer to memory we own!  Possibly we
-       * should copy it instead. */
     inline size_t getBytesLength() const { return length; }
+    /** \brief Get an ASCII hex version of a hash of the contents of the
+     * OArchive at present.
+     *
+     * This hash will change as things are inserted into the OArchive. */
     inline String getSecureHashAsString() const {
       return stringUtils_getSecureHashAsString(buffer, length);
     }
-    /* \brief Dump the buffer as hex to stdout
-     *
-     * \note For debugging purposes */
     void dumpBuffer() const;
     inline OArchive& operator<<(const bool& i) {
       ensureSpace(sizeof(uint8));
@@ -82,6 +92,14 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const String& s);
     OArchive& operator<<(const OArchive&);
 
+    /** \brief Insert an enum value into the OArchive
+     *
+     * It is important to use this method to insert enum values rather than
+     * using operator<< because the underlying integer type of an enum is
+     * platform-dependent.
+     *
+     * \warning This assumes that the enum values all fall in the range 0-255
+     */
     template<typename T>
     OArchive& insertEnum(const T value)
     {

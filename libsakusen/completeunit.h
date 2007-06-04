@@ -11,6 +11,14 @@
 
 namespace sakusen {
 
+/** \brief Bare implementation of ICompleteUnit
+ *
+ * This is simply a composition of an id, a UnitStatus and a UnitTypeData, thus
+ * providing a simple implementation of ICompleteUnit with no extra bells or
+ * whistles.
+ *
+ * See \ref units for more details about the various unit classes.
+ */
 class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
   public:
     typedef boost::shared_ptr<CompleteUnit> Ptr;

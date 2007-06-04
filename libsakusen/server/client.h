@@ -1,5 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef LIBSAKUSEN_SERVER__CLIENT_H
+#define LIBSAKUSEN_SERVER__CLIENT_H
 
 #include "libsakusen-global.h"
 #include "libsakusen-server-global.h"
@@ -13,6 +13,15 @@
 namespace sakusen {
 namespace server {
 
+/** \brief Represents a client from the perspective of the server.
+ *
+ * This class handles the communication between the server and one particular
+ * client, providing for sending updates and buffering incoming orders.
+ *
+ * This is an abstract class, and does not assume any particular communication
+ * channel to the client.  Subclasses will implement some specific means, such
+ * as network communication.
+ */
 class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
   private:
     Client(const Client& copy);
@@ -27,6 +36,12 @@ class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
     PlayerID playerId; /**< ID of player for this client.  "Dummy" clients for
                           atmospherics, etc. will have id 0 - the neutral
                           player */
+    /** \brief Buffer for incoming orders from clients.
+     *
+     * This queue is filled in some manner which depends on the implementation
+     * of the class.  At the appropriate time, the orders can be extracted by
+     * calling orderMessageQueuePopFront.
+     */
     std::queue<OrderMessage> orderMessageQueue;
     bool observer;
   public:
@@ -59,5 +74,5 @@ class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
 
 }}
 
-#endif // CLIENT_H
+#endif // LIBSAKUSEN_SERVER__CLIENT_H
 

@@ -60,7 +60,7 @@ Map* CompleteMap::newMap(const MapTemplate& t)
   switch (t.getTopology()) {
     case topology_plane:
       return new PlaneMap<CompleteMap>(t);
-    /* TODO: All the other topologies */
+    /** \todo All the other topologies. */
     default:
       throw DeserializationExn("Invalid topology");
   }

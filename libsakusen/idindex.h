@@ -10,14 +10,12 @@ namespace sakusen {
 /** \brief An index based on some ID which can be used as a hash_map key
  *
  * Three template arguments are required:
- * \list
  * \li TID, the type of the ID
  * \li T, the type of the object stored
  * \li IDer, the class of a function object which will extract the ID of an
  *  object of type T.  Specifically, if t is of type Ref<T>,
- *  then \code IDer()(t)
+ *  then \c IDer()(t)
  *  should return t's ID.
- * \endlist
  */
 template<typename TID, typename T, typename IDer>
 class IDIndex : public IIndex<T> {

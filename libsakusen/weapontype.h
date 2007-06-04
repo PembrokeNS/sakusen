@@ -63,7 +63,8 @@ class LIBSAKUSEN_API WeaponType {
     uint16 energyRate;
     uint16 metalRate;
   public:
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     inline const String& getInternalName(void) const { return internalName; }
     inline const String& getClientHint() const { return clientHint; }
     inline WeaponTypeID getId(void) const {return this;}
@@ -73,6 +74,7 @@ class LIBSAKUSEN_API WeaponType {
     inline uint16 getEnergyRate(void) const {return energyRate;}
     inline uint16 getMetalRate(void) const {return metalRate;}
     inline uint32 getRate(void) const {return (energyRate<<16)|metalRate;}
+    //@}
 
     server::Weapon* spawn() const;
 

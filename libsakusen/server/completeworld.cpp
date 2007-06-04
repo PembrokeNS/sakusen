@@ -148,6 +148,12 @@ hash_list<Effect, Bounded>::iterator CompleteWorld::processEffect(
   }
 }
 
+/** \brief Add a unit to the world.
+ *
+ * This is not the function that should be called by module code which
+ * wishes to create a unit (e.g. because a new one is being built).  For
+ * that purpose, use LayeredUnit::spawn.
+ */
 Ref<LayeredUnit> CompleteWorld::addUnit(
     const LayeredUnit::Ptr& unit,
     PlayerID owner
@@ -195,6 +201,12 @@ void CompleteWorld::advanceGameState(Time timeToReach)
   }
 }
 
+/** \brief Advance the game state by one tick.
+ *
+ * This is the method most likely to be called by the server to actually
+ * perform all of the game mecahnics.  Before calling this the server should
+ * ensure that all Client's orders have reached their orderMessageQueues.
+ */
 void CompleteWorld::incrementGameState(void)
 {
   bool effectHappened;
@@ -306,6 +318,16 @@ void CompleteWorld::incrementGameState(void)
   }
 }
 
+/** \brief Performs all necessary changes to a unit caused by it entering or
+ * leaving Effects.
+ *
+ * Whenever a unit's position changed, it should call this function to ensure
+ * all appropriate Effects are processed.
+ *
+ * \param unit        Unit which is moving.
+ * \param oldPosition Position \p unit is vacating.
+ * \param newPosition Position \p unit is assuming.
+ */
 void CompleteWorld::applyEntryExitEffects(
     const Ref<LayeredUnit>& unit,
     const Point<sint32>& oldPosition,

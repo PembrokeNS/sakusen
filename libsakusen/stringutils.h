@@ -10,10 +10,19 @@
 
 #include "gnu_extensions.h"
 
+/** \file
+ * \brief String utilities
+ *
+ * This header defines various utilities (primarily functions) for
+ * manipulating strings.
+ */
+
 namespace sakusen {
 
+/** \brief Convenience typedef for a set of strings */
 typedef __gnu_cxx::hash_set<String, boost::hash<String> > hash_set_string;
 
+/** \brief Convenience metafunction for constructing a map keyed by strings */
 template<typename T>
 struct hash_map_string {
   typedef __gnu_cxx::hash_map<String, T, boost::hash<String> > type;
@@ -67,7 +76,7 @@ inline T numFromString(String str)
   return i;
 }
 
-/* Convert a number to a String */
+/** \brief Converts a number to a String */
 template<typename T>
 inline String numToString(T i);
 

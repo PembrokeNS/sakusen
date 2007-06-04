@@ -29,6 +29,8 @@ class UnitMask : public UnitLayer {
 
     UnitLayer::Ptr nextLayer;
   public:
+    /** \name Accessors. */
+    //@{
     HitPoints getMaxHitPoints() const { return nextLayer->getMaxHitPoints(); }
     uint8 getMass() const { return nextLayer->getMass(); }
     const Point<uint32>& getSize() const { return nextLayer->getSize(); }
@@ -45,6 +47,7 @@ class UnitMask : public UnitLayer {
       return nextLayer->getVisibility();
     }
     const Sensors& getVision() const { return nextLayer->getVision(); }
+    //@}
 
     UnitCore* getCore() { return nextLayer->getCore(); }
     UnitLayer::Ptr getLayer(const std::type_info& typeInfo) {
@@ -69,6 +72,10 @@ class UnitMask : public UnitLayer {
     }
     PlayerID getOwner() const { return nextLayer->getOwner(); }
 
+    /** \name Game mechanics.
+     *
+     * See similarly named methods in LayeredUnit for more details. */
+    //@{
     void incrementWeaponsState() { nextLayer->incrementWeaponsState(); }
     bool kill(HitPoints excessDamage) { return nextLayer->kill(excessDamage); }
     void damage(HitPoints amount) { nextLayer->damage(amount); }
@@ -84,6 +91,7 @@ class UnitMask : public UnitLayer {
     void changeOwner(const PlayerID to, changeOwnerReason why) {
       nextLayer->changeOwner(to, why);
     }
+    //@}
 
     void onCreate() { nextLayer->onCreate(); }
     void onDestruct() { nextLayer->onDestruct(); }

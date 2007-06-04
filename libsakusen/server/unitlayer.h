@@ -29,17 +29,34 @@ class UnitLayer : public IUnitTypeData {
     virtual ~UnitLayer() {}
 
     /* methods to do with the layering */
+    /** \brief Allocate a new copy of this UnitLayer. */
     virtual UnitLayer::Ptr newCopy(LayeredUnit* outer) const = 0;
+    /** \brief Get the UnitCore at the bottom of the sequence of layers of
+     * which this is a part. */
     virtual UnitCore* getCore() = 0;
+    /** \brief Search for a layer of a given type.
+     *
+     * Examines the layers below this one (but not this one itself) for the
+     * highest whose type matches the given type_info.  If one is found, it is
+     * returned.  If none is found then a null pointer is returned. */
     virtual boost::shared_ptr<UnitLayer> getLayer(const std::type_info&) = 0;
+    /** \brief Remove a layer from the sequence.
+     *
+     * Removes given layer from the sequence.  Fatals if the layer is not
+     * found. */
     virtual void removeLayer(const UnitMask*) = 0;
+    /** \brief Get LayeredUnit of which this layer is a part. */
     virtual Ref<LayeredUnit> getOuterUnit() = 0;
+    /** \brief Get LayeredUnit of which this layer is a part. */
     virtual Ref<const LayeredUnit> getOuterUnit() const = 0;
 
     /* accessors (more accessors are inherited from IUnitTypeData) */
     virtual PlayerID getOwner() const = 0;
 
-    /* game mechanics */
+    /** \name Game mechanics.
+     *
+     * See similarly named methods in LayeredUnit for more details. */
+    //@{
     virtual void incrementWeaponsState() = 0;
     virtual bool kill(HitPoints excessDamage) = 0;
     virtual void damage(HitPoints amount) = 0;
@@ -49,6 +66,7 @@ class UnitLayer : public IUnitTypeData {
         hitPointAlteration hpAlteration
       ) = 0;
     virtual void changeOwner(const PlayerID to, enum changeOwnerReason why) = 0;
+    //@}
 
     /* callbacks */
     virtual void onCreate(void) = 0;

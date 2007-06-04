@@ -29,7 +29,7 @@ class RectangleRegion : public Region<T> {
     inline Point<T> getBestPosition() const;
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     inline Box<T> getBoundingBox() const;
-    inline double intersect(const Ray&) const;
+    inline double intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_rectangle; }
 };

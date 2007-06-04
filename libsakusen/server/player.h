@@ -55,7 +55,8 @@ class LIBSAKUSEN_SERVER_API Player {
       > visibleBallistics;
     uint32 lastClientBallisticId;
   public:
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     PlayerID getId() const { return playerId; }
     void setPlayerId(const PlayerID& id);
     inline const String& getName(void) const { return name; }
@@ -77,22 +78,18 @@ class LIBSAKUSEN_SERVER_API Player {
     }
 
     inline bool isReadyForGameStart(void) const {
-      /* FIXME: should check that a race is selected */
+      /** \bug Should check that a race is selected. */
       return (clients.size() > 0 || noClients);
     }
+    //@}
 
     /* game mechanics */
     void removeUnit(const uint32 id, enum changeOwnerReason why);
-      /* any call to removeUnit must be followed by a call to addUnit for
-       * another player, otherwise the unit will end up in limbo */
     void addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why);
     void checkSensorReturns();
     
     void applyIncomingOrders(void);
-      /* gets the orders received from each client and applies them to update
-       * unit order queues appropriately */
     
-    /* Methods to send a update message to all this player's clients */
     void informClients(const Update& update);
 };
 

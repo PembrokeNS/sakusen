@@ -2,6 +2,12 @@
 
 using namespace sakusen;
 
+/** \brief Compute and return the bounding rectangle for this unit.
+ *
+ * \note This method is relatively slow, so it is worth storing the bounding
+ * rectangle if you need it more than once and know the unit has not moved
+ * between times.
+ */
 Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
 {
   double dExtents[2];

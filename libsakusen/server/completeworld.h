@@ -15,14 +15,26 @@
 namespace sakusen {
 namespace server {
 
+/** \brief Represents the entire game state.
+ *
+ * CompleteWorld contains everything about the game state at any given instant,
+ * including all the units, Effects, etc., the map, indexes into such things
+ * and so forth.
+ *
+ * It also provides incrementState, which moves the game state forward one tick
+ * in the 'correct' manner, and various methods for adding more objects to the
+ * game, intended to be used by modules (e.g. adding a Ballistic when a weapon
+ * gets fired).
+ */
 class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   /* noncopyable */
   public:
+    /** Constructor which the server is expected to use */
     CompleteWorld(
         const MapTemplate& map,
         uint32 playMode, /* what mode of the map we are using */
         const std::vector<Player>& players
-      ); /* The constructor which the server is actually expected to use */
+      );
     ~CompleteWorld();
   private:
     CompleteMap* map; /* owned by this */
@@ -52,7 +64,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
         hash_list<Effect, Bounded>::iterator
       );
   public:
-    /* accessors */
+    /** \name Accessors. */
+    //@{
     inline Map* getMap(void) { return map; }
     inline const Map* getMap(void) const { return map; }
     inline const CompleteMap* getCompleteMap(void) const { return map; }
@@ -76,6 +89,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
         return it->second;
       }
     }
+    //@}
     
     Ref<LayeredUnit> addUnit(const LayeredUnit::Ptr& unit, PlayerID owner);
     void removeUnit(LayeredUnit*);
@@ -85,6 +99,11 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
      * don't add or remove elements */
     inline hash_list<LayeredUnit, Bounded>& getUnits(void) { return units; }
     
+    /** \brief Add a Ballistic to the world.
+     *
+     * This is the appropriate function to call from module code when creating
+     * a Ballistic.  Transfers ownership of \p ballistic to this.
+     */
     inline void addBallistic(Ballistic* ballistic)
     {
       ballistics.push_back(ballistic);
@@ -93,19 +112,28 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       return ballistics;
     }
     
+    /** \brief Add a Beam to the world.
+     *
+     * This is the appropriate function to call from module code when creating
+     * a Beam.  Transfers ownership of \p beam to this.
+     */
     inline void addBeam(Beam* beam)
     {
       beams.push_back(beam);
     }
-    /* By calling this function, you transfer ownership of the pointer to the
-     * World.  The effect shall be deleted by the World when it is removed or
-     * when the World is destructed */
+
+    /** \brief Add an Effect to the world.
+     *
+     * This is the appropriate function to call from module code when creating
+     * an Effect.  Transfers ownership of \p effect to this.
+     */
     inline void addEffect(Effect* effect) {
       newEffects.push(effect);
     }
 
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
     
+    /** \brief Get pointer to player of given id. */
     inline Player* getPlayerPtr(const PlayerID& id)
     {
       /* assert(id>=0); (Always true) */

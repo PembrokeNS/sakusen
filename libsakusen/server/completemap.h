@@ -9,6 +9,12 @@
 namespace sakusen {
 namespace server {
 
+/** \brief Represents the complete state of the game map.
+ *
+ * This class carries all the physical information about the map, such as the
+ * heightfield and gravity.  Being on server side, it knows everything there is
+ * to know about the map.
+ */
 class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
   private:
     CompleteMap();

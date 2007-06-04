@@ -15,7 +15,7 @@ StringSetLeaf::StringSetLeaf(
     const String& writers,
     Branch* parent,
     Server* server,
-    const set<String>& initialValue
+    const std::set<String>& initialValue
   ) :
   Leaf(name, readers, writers, parent, server),
   value(initialValue)

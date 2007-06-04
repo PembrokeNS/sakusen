@@ -40,6 +40,7 @@ class UpdatedUnit : public CompleteUnit {
     void incrementState();
 };
 
+/** \brief function object to extract the id from an UpdatedUnit */
 struct UpdatedUnitIDer {
   uint32 operator()(const Ref<UpdatedUnit>& u) const {
     return u->getId();

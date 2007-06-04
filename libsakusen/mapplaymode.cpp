@@ -18,6 +18,12 @@ MapPlayMode::MapPlayMode(
   assert(players.size() == maxPlayers);
 }
 
+/** \brief Performs various sanity checks.
+ *
+ * Confirms that all specified units exist in the given universe, and
+ * that they all fit onto the given map.
+ *
+ * \returns true iff a problem is found */
 bool MapPlayMode::sanityCheck(
     const Universe::ConstPtr& universe,
     const MapTemplate& map
@@ -39,7 +45,7 @@ void MapPlayMode::store(OArchive& archive) const
 
 MapPlayMode MapPlayMode::load(
     IArchive& archive,
-    const Universe::ConstPtr* universe
+    const sakusen::Universe::ConstPtr* universe
   )
 {
   uint32 minPlayers;

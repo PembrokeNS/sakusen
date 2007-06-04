@@ -135,13 +135,16 @@ class Server : public SettingsUser, private boost::noncopyable {
      * and sets up addition and removal as appropriate */
     void checkPlugins(const std::set<String>& newList);
   public:
+    /** \brief Get the Server's ResourceInterface */
     sakusen::ResourceInterface::Ptr getResourceInterface() const {
       return resourceInterface;
     }
     sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
+    /** \brief Get the root of the Server's settings tree */
     const settingsTree::SettingsTree::Ptr& getSettings() { return settings; }
     /** \return true iff the server is currently allowing observers */
     inline bool getAllowObservers() const { return allowObservers; }
+    /** \brief Determine if the game hosted by the Server has yet started */
     inline bool getGameStarted() const { return gameStarted; }
     
     void serve();

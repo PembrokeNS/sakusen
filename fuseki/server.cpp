@@ -39,14 +39,14 @@ using namespace fuseki::settingsTree;
 
 Server::Server(
     std::ostream& o,
-    const ResourceInterface::Ptr& r,
+    const sakusen::ResourceInterface::Ptr& r,
     const std::list<String>& pP,
 #ifndef DISABLE_UNIX_SOCKETS
     bool a,
-    const Socket::Ptr& unS,
+    const sakusen::comms::Socket::Ptr& unS,
 #endif
-    const Socket::Ptr& udS,
-    const Socket::Ptr& tS,
+    const sakusen::comms::Socket::Ptr& udS,
+    const sakusen::comms::Socket::Ptr& tS,
     bool d
   ) :
   SettingsUser("server"),
@@ -118,7 +118,7 @@ Server::~Server()
 void Server::advertise(
     const SolicitMessageData& data,
     const String& receivedFrom,
-    const Socket::Ptr& receivedOn,
+    const sakusen::comms::Socket::Ptr& receivedOn,
     const Message& advertisement
   )
 {
@@ -169,7 +169,7 @@ ClientID Server::getFreeClientID()
 void Server::addClient(
     const String& requestedAddress,
     const String& fromAddress,
-    const Socket::Ptr& existingSocket
+    const sakusen::comms::Socket::Ptr& existingSocket
   )
 {
   /* Check whether this address is blocked */
@@ -437,7 +437,7 @@ void Server::changeInClientBranch(
   }
 }
 
-void Server::checkPlugins(const set<String>& newList)
+void Server::checkPlugins(const std::set<String>& newList)
 {
   /* Check for plugins to load */
   for (set<String>::const_iterator newPlugin = newList.begin();
@@ -991,7 +991,9 @@ void Server::ensureAdminExists()
 
 /** \brief Add a listener that intercepts some fraction of server-client
  * communications */
-void Server::registerListener(const Listener::VPtr& listener)
+void Server::registerListener(
+    const sakusen::server::plugins::Listener::VPtr& listener
+  )
 {
   listeners.insert(make_pair(MaskedPtr<Listener>(listener), listener));
 }

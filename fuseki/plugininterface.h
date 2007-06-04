@@ -9,8 +9,17 @@
 
 namespace fuseki {
 
+/** \brief Provides an interface to available plugins for the server
+ *
+ * This class can be used by the server to seek out and load plugins n request.
+ */
 class PluginInterface {
   public:
+    /** \brief Standard constructor
+     *
+     * \param pluginPaths List of paths in which to search for plugins
+     * \param server      Server that will be doing the loading
+     */
     PluginInterface(
         const std::list<String>& pluginPaths,
         Server* server

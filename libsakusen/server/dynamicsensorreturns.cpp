@@ -61,6 +61,11 @@ Ref<const ICompleteUnit> DynamicSensorReturns::getUnit() const
   }
 }
 
+/** \brief Indicate that the sensee has been destroyed.
+ *
+ * This is called when the unit being sensed is destroyed.  All internal fields
+ * are cleared.
+ */
 void DynamicSensorReturns::senseeDestroyed() {
   if (perception == perception_none) {
     Fatal(

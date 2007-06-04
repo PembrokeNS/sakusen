@@ -48,6 +48,13 @@ LIBSAKUSEN_RESOURCES_API void fileUtils_mkdirRecursive(
     mode_t mode
   );
 
+/** \brief Returns all files in the directory whose name
+ * begins with the given name.
+ * 
+ * \todo More general behaviour is needed.
+ *
+ * \warning This method is not thread-safe!
+ */
 LIBSAKUSEN_RESOURCES_API std::list<String> fileUtils_findMatches(
     const String& directory,
     const String& name

@@ -13,7 +13,11 @@ namespace comms {
 /** \brief This is a generic class for representing any type of socket.
  * 
  * Socket::newConnectionToAddress() and Socket::newBindingToAddress() can be
- * used to create Sockets */
+ * used to create Sockets.
+ *
+ * The static function Socket::socketsInit must be called before anything is
+ * done with sockets.
+ */
 class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
   public:
     typedef boost::shared_ptr<Socket> Ptr;
@@ -45,6 +49,7 @@ class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
     virtual ~Socket() {}
     /** \brief Reads \p len bytes of binary from \p buf and sends it.
      * \param buf Must not be NULL.
+     * \param len Number of bytes in buffer.
      */
     virtual void send(const void* buf, size_t len) = 0;
     /** \brief sends the given ::Message down the line. */
@@ -54,6 +59,7 @@ class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
     }
     /** \brief Reads \p len bytes of binary from \p buf and sends it.
      * \param buf Must not be NULL.
+     * \param len Number of bytes in buffer.
      * \param address Sakusen-style address to send to.
      */
     virtual void sendTo(const void* buf, size_t len, const String& address) = 0;

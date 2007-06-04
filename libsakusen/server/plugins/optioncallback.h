@@ -15,6 +15,15 @@ class OptionCallback {
     OptionCallback() {}
     virtual ~OptionCallback() {}
   public:
+    /** \brief Callback used when option value changed.
+     *
+     * The server calls this callback when it wants to inform a plugin that the
+     * corresponding option value has been changed.
+     *
+     * \param name   Name of option.
+     * \param newVal New value of option.
+     * \return Empty string if everything is OK, otherwise a message describing
+     * what has gone wrong. */
     virtual String setOption(
         const String& name,
         typename boost::call_traits<T>::param_type newVal

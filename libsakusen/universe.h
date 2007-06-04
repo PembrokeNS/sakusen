@@ -53,11 +53,14 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
      */
     String resolveNames();
     
-    /* accessors */
+    /** \name Accessors */
+    //@{
     inline const String& getInternalName() const { return internalName; }
     inline const String& getHash() const { return hash; }
+    //@}
     
-    /* index/pointer/ID/Name conversions */
+    /** \name Index/pointer/ID/Name conversions */
+    //@{
     inline const WeaponType* getWeaponTypePtr(WeaponTypeID id) const
     {
       return id;
@@ -77,7 +80,9 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
       return getUnitTypePtr(getUnitTypeId(i));
     }
     UnitTypeID getUnitTypeId(String unitTypeName) const;
+    //@}
     
+    /** \brief Determine whether the Universe contains a given UnitTypeID */
     bool containsUnitType(const UnitTypeID id) const;
 
     typedef void loadArgument;

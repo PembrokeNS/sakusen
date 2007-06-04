@@ -7,21 +7,33 @@
 namespace sakusen {
 namespace comms {
 
+/** \brief Represents a message sent between sakusen programs.
+ *
+ * Any communication between client and server (be it over a network or by
+ * whatever other means is appropriate) takes the form of a Message.
+ *
+ * Messages
+ * can be serialized to an OArchive to facilitate transmission over channels
+ * which carrybinary data, and then reconstructed from and IArchive at the
+ * destination.
+ *
+ * In some cases the reconstruction needs to be told which player
+ * the Message came from (this information cannot be stored within the Message
+ * itself because that would allow one player to masquerade as another).
+ */
 class LIBSAKUSEN_COMMS_API Message {
   public:
     explicit Message(const MessageData* data);
-    /*Message(
-        const uint8* buffer,
-        size_t bufferLength,
-        PlayerID player = static_cast<PlayerID>(-1)
-      );*/
     Message(
         IArchive& archive,
         PlayerID player = static_cast<PlayerID>(-1)
       );
   private:
-    /* player will be meaningful only if it was passed to the constructor,
-     * otherwise it will be -1 */
+    /** \brief Source of this message.
+     *
+     * Player will be meaningful only if it was passed to the constructor,
+     * otherwise it will be -1.  Such assignment only occurs for messages from
+     * clients to servers at game time. */
     PlayerID player;
     MessageData::ConstPtr data;
   public:

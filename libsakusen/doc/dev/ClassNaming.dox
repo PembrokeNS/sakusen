@@ -1,0 +1,60 @@
+/** \page classnaming Class Naming
+
+There is a certain convention to the names of classes which may help in
+understanding what they are supposed to be for.  This concerns primarily
+classes which are most closely related to game objects (as opposed to container
+classes and other such supporting code).
+
+The situation for units is considerably more complex than for anything else,
+and the array of unit classes has its own page in the documenation.  See \ref
+Units.
+
+In what follows, Foo is some game object.  Possible values for Foo include Unit, Beam, Ballistic, Effect, World, Map, Weapon.  Each listed item is valid for some subset of these values.
+
+\li FooType is part of a Universe, and defines everything that is important to
+both client and server and can be known about a general variety of Foo without
+thinking of any one Foo in particular.  Each FooType must have an internal name
+which is unique amongst FooTypes for this Universe, and does not vary according
+to locale.  Human-readable names should be left for the FooRepresentation and
+should not be needed server-side.  FooTypes are managed by Universe, which
+should provide methods for converting between FooTypeIDs, FooType*s and
+(internal) String names of FooTypes.  Note in particular that WeaponTypes provide the facility to spawn actual Weapons.
+
+\li FooRepresentation is also part of a Universe, and probably a part of
+FooType (no FooRepresentation classes exist a time of writing, so this is
+conjectural).  Like FooType, it concerns itself with general properties of a
+variety of Foo, but it contains those things which the client needs to know but
+the server does not, such as 3D models, human-readable names and descriptions,
+hints as to how the user interface might wish to handle this Foo (e.g. what key
+to associate with a Weapon).
+
+\li FooStatus describes the state of a particular Foo at a particular instant
+of time.  It is presented in a form which is applicable and understandable to
+both server and client.
+
+\li FooTemplate is a part of a MapTemplate, and it describes the initial state
+of a particular Foo on a particular map.  This is almost the same as a
+FooStatus but may be slightly different in some circumstances.  For example, on
+a map where the player is allowed to be any of several races, the MapTemplate
+might contain UnitTemplates which specify that they apply only for a particular
+choice of race.  Only the server should ever need to deal with FooTemplates.
+
+\li Foo or, in some cases, CompleteFoo is a complete description of a
+particular Foo at a particular instant of time.  Unlike FooStatus, it includes
+all the information which is applicable only to the server.  In many cases, Foo
+is an abstract class whose subclasses will be defined in modules, and thus it
+is impossible for a client to have one.
+
+\li PartialFoo is a class used on client-side to keep track of incomplete
+knowledge about a particular Foo.  It is not useful on server-side because the
+server always knows everything about everything, and there is no need for the
+additional complication implicit in PartialFoo.
+
+\li FooOrders is a class which keeps track of the current instruction set which
+has been applied to a Foo by its controlling player.  A FooOrders object is
+updated by Orders coming from the client to the server, and should never be
+revealed to any player other than the one controlling the Foo.  It is not clear
+what happens when a Foo changes ownership.
+
+*/
+

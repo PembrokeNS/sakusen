@@ -12,7 +12,7 @@ using namespace sakusen::client;
 using namespace tedomari;
 using namespace tedomari::game;
 
-Game::Game(const ResourceInterface::Ptr& rI) :
+Game::Game(const sakusen::ResourceInterface::Ptr& rI) :
   resourceInterface(rI),
   serverInterface(NULL),
   universe()

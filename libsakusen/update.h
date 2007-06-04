@@ -10,11 +10,17 @@ namespace sakusen {
 
 class LIBSAKUSEN_API Update {
   public:
-    /* Calling this transfers ownership of the pointer to this */
+    /** \brief Constructs Update around given data
+     *
+     * Calling this transfers ownership of \p data to this */
     explicit Update(const UpdateData* data);
   private:
     UpdateData::ConstPtr data;
   public:
+    /** \brief Get the type of this Update
+     *
+     * Primarily intended for (de)serialization
+     */
     inline UpdateType getType(void) const { return data->getType(); }
 #define GET(type) \
     inline type##UpdateData get##type##Data(void) const { \

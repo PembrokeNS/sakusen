@@ -56,6 +56,11 @@ size_t fileUtils_write(int fd, const void* buffer, size_t length)
   return retVal;
 }
 
+/** \brief Make a directory, creating parent directories as necessary.
+ *
+ * \param path Directory to create.
+ * \param mode Mode to use for all directories created.
+ */
 void fileUtils_mkdirRecursive(String path, mode_t mode)
 {
   if (path=="") {
@@ -92,13 +97,6 @@ void fileUtils_mkdirRecursive(String path, mode_t mode)
   return;
 }
 
-/** \brief Returns all files in the directory whose name
- * begins with the given name.
- * 
- * \todo More general behaviour is needed.
- *
- * \warning This method is not thread-safe!
- */
 #ifdef WIN32
 list<String> fileUtils_findMatches(
     const String& directory,
@@ -121,10 +119,14 @@ list<String> fileUtils_findMatches(
   return result;
 }
 #else
-/* static data for use by prefixFilter, set by findMatches */
-String prefix;
+/** \internal \brief Static data for use by prefixFilter, set by
+ * fileUtils_findMatches. */
+static String prefix;
 
-int prefixFilter(const struct dirent* entry)
+/** \internal \brief Static function passed to scandir by
+ * fileUtils_findMatches.
+ */
+static int prefixFilter(const struct dirent* entry)
 {
   /* Returns non-zero iff the entry name starts with prefix */
   return 0 == String(entry->d_name).compare(0, prefix.size(), prefix);
@@ -135,7 +137,7 @@ std::list<String> fileUtils_findMatches(
     const String& name
   )
 {
-  /* TODO: This function needs to be more general to cope with such things as
+  /** \todo This function needs to be more general to cope with such things as
    * archives and subdirectories, but for the moment it just searches for plain
    * old files. */
 

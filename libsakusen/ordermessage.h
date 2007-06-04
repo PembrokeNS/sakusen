@@ -18,10 +18,12 @@ class LIBSAKUSEN_API OrderMessage {
     OrderCondition condition;
     Order order;
   public:
-    /* accessors */
+    /** \name accessors */
+    //@{
     uint32 getOrderee(void) const { return orderee; }
     const OrderCondition& getCondition(void) const { return condition; }
     const Order& getOrder(void) const { return order; }
+    //@}
 
     typedef PlayerID loadArgument;
     void store(OArchive&) const;

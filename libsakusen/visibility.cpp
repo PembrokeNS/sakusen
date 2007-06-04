@@ -19,6 +19,19 @@ Visibility::Visibility(IArchive& archive)
     passiveSonar >> seismar;
 }
 
+/** \brief Update the given SensorReturn for this SensorCapability for one type
+ * of sensor.
+ *
+ * \param[in,out] retrn         SensorReturn to update.
+ * \param[in]     type          Type of sensor used.
+ * \param[in,out] changed       Set to true iff anything changes.  Not set to
+ *                              false if nothing changes.
+ * \param[in,out] maxPerception Updated by or-ing in all perceptions this
+ *                              sensor achieves.
+ * \param[in,out] bestRadius    Reduced if this sensor can detect to within a
+ *                              smaller radius than the value presently
+ *                              indicates.
+ */
 void SensorCapability::updateReturn(
     SensorReturn& retrn,
     SensorType /*type*/,
@@ -36,6 +49,17 @@ void SensorCapability::updateReturn(
   *maxPerception |= perception_unit;
 }
 
+/** \brief Update the given EachSensorReturn for this Sensors for all types
+ * of sensor.
+ *
+ * \param[in,out] returns    EachSensorReturn to update.
+ * \param[in,out] changed    Set to true iff anything changes.  Not set to false
+ *                          if nothing changes.
+ * \param[in,out] maxPerception Updated by or-ing in all perceptions these
+ *                          Sensors achieve.
+ * \param[in,out] bestRadius Reduced if these sensors can detect to within a
+ *                          smaller radius than the value presently indicates.
+ */
 void Sensors::updateReturns(
     EachSensorReturn& returns,
     bool* changed,

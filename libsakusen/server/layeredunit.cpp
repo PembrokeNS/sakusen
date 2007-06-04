@@ -11,6 +11,10 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
+/** \brief Spawn a unit on the map.
+ *
+ * This is the most likely method to call from module code when creating a
+ * unit.  The other overload may also be appropriate. */
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerID owner,
     const UnitTypeID type,
@@ -28,6 +32,10 @@ Ref<LayeredUnit> LayeredUnit::spawn(
   return world->addUnit(unit, owner);
 }
 
+/** \brief Spawn a unit on the map according to a template.
+ *
+ * This is primarily intended for use during initial population of the map, but
+ * may also be used at other times. */
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerID owner,
     const UnitTemplate& t
@@ -101,6 +109,11 @@ void LayeredUnit::acceptOrder(OrderCondition condition)
   }
 }
 
+/** \brief Indicate that a change has occured that needs to be transmitted to
+ * clients.
+ *
+ * This sets not only the dirty flag on this unit, but also on every
+ * SensorReturns from this unit. */
 void LayeredUnit::setDirty()
 {
   /* The following algorithm assumes that dirty flags on sensor returns and
@@ -118,6 +131,11 @@ void LayeredUnit::setDirty()
   }
 }
 
+/** \brief Clear dirty flag, transmitting updates as necessary.
+ *
+ * This ensures that the dirty flag for this unit is clear.  If it was not
+ * already clear, then it transmits a UnitAlteredUpdate to its players clients.
+ */
 void LayeredUnit::clearDirty()
 {
   if (dirty) {
@@ -138,6 +156,8 @@ Ref<const LayeredUnit> LayeredUnit::getRefToThis() const
   return *world->getUnits().find(this);
 }
 
+/** \brief Alters the unit's position, ensuring all appropriate action caused
+ * by this change is taken. */
 void LayeredUnit::setPosition(const Point<sint32>& pos)
 {
   if (pos == status->position)
@@ -148,6 +168,23 @@ void LayeredUnit::setPosition(const Point<sint32>& pos)
   status->position = pos;
 }
 
+/** \brief Allow simultaneous update of the unit's position, orientation and
+ * velocity.
+ *
+ * \param newPosition           New position for the unit.
+ * \param newOrientation        New orientation of the unit, or transformation
+ *                              to be performed to the unit's orientation,
+ *                              according to the value of
+ *                              orientationIsRelative.
+ * \param orientationIsRelative If true, the unit's orientation is
+ *                              premultiplied by newOrientation.  If false, the
+ *                              unit's orientation is set to newOrientation.
+ * \param zeroVelocity          If true, the unit's velocity is set to zero.
+ *                              If false, the unit's velocity is unchanged.
+ *
+ * The intended purpose of this function is to allow easy implementation of
+ * things such as teleportation from module code.
+ */
 void LayeredUnit::setPhysics(
       const Point<sint32>& newPosition,
       const Orientation& newOrientation,
@@ -171,9 +208,15 @@ void LayeredUnit::setPhysics(
   setDirty();
 }
 
+/** \brief Update the unit's state for the new tick.
+ *
+ * This function handles all the unit's order interpretation, acceleration and
+ * weapons fire.  Any changes which require it will cause the dirty flag to be
+ * set.
+ */
 void LayeredUnit::incrementState(const Time& /*timeNow*/)
 {
-  /* TODO: rethink this function for subunits */
+  /** \todo Rethink this function for subunits */
 
   /* Note that with this order system each unit can accept only one new order
    * per game cycle - if two arrive from the clients in the same game cycle
@@ -264,7 +307,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
     setDirty();
   }
   
-  /* TODO: do collision detection */
+  /** \todo Do collision detection. */
   Orientation mapOrientationChange;
   setPosition(world->getMap()->addToPosition(
         status->position, status->velocity, &mapOrientationChange
@@ -310,6 +353,10 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
   }
 }
 
+/** \brief Insert an order into the unit's order queue.
+ *
+ * Also informs clients and, if \p condition is orderCondition_incidental,
+ * accepts the order. */
 void LayeredUnit::enqueueOrder(
     const OrderCondition& condition,
     const Order& order
@@ -327,12 +374,19 @@ void LayeredUnit::enqueueOrder(
   }
 }
 
-void LayeredUnit::insertLayer(const UnitMask::Ptr& layer)
+/** \brief Inserts a new layer at the top of the unit's layers */
+void LayeredUnit::insertLayer(const sakusen::server::UnitMask::Ptr& layer)
 {
   layer->nextLayer = topLayer;
   topLayer = layer;
 }
 
+/** \brief Set radar status.
+ *
+ * Attempts to set the state of the unit's radar (active/inactive) according to
+ * \p active.  Return value indicates state after the call; if not equal to
+ * active then the unit doesn't support radar.
+ */
 bool LayeredUnit::setRadar(bool active) {
   if (topLayer->getVision().radarActive.capable) {
     status->radarIsActive = active;
@@ -341,6 +395,12 @@ bool LayeredUnit::setRadar(bool active) {
   } else return false;
 }
 
+/** \brief Set sonar status.
+ *
+ * Attempts to set the state of the unit's sonar (active/inactive) according to
+ * \p active.  Return value indicates state after the call; if not equal to
+ * active then the unit doesn't support sonar.
+ */
 bool LayeredUnit::setSonar(bool active) {
   if (topLayer->getVision().sonarActive.capable) {
     status->sonarIsActive = active;
@@ -349,6 +409,9 @@ bool LayeredUnit::setSonar(bool active) {
   } else return false;
 }
 
+/** \brief Removes a layer from amongst the unit's layers
+ *
+ * Fatals if that layer does not exist */
 void LayeredUnit::removeLayer(const UnitMask* layer) {
   if (topLayer.get() == layer) {
     topLayer = layer->nextLayer;

@@ -19,7 +19,8 @@ namespace sakusen {
 
 class OArchive;
 
-/** \brief Class used inside IArchive for working with boost::multi_array */  
+/** \internal \brief Class used inside IArchive for working with
+ * boost::multi_array */  
 template<size_t pos>
 class extent_generator {
   public:
@@ -42,18 +43,23 @@ class extent_generator<0> {
     }
 };
 
-/* Helper classes to handle extraction of different types from an IArchive */
+/** \internal \brief Helper classes to handle extraction of different types
+ * from an IArchive. */
 template<typename T>
 struct Extracter {
   T operator()(IArchive&);
   T operator()(IArchive&, ResourceInterface::Ptr resourceInterface);
 };
 
+/** \internal \brief Helper classes to handle extraction of different types
+ * from an IArchive. */
 template<typename T>
 struct Extracter1 {
   T operator()(IArchive&, const typename T::loadArgument* arg);
 };
 
+/** \internal \brief Helper classes to handle extraction of different types
+ * from an IArchive. */
 template<typename T>
 struct Extracter2 {
   T operator()(
@@ -109,15 +115,19 @@ class LIBSAKUSEN_API IArchive {
       remainingLength -= length;
     }
   public:
+    /** \brief Get an ASCII hex version of a hash of the contents of the
+     * IArchive as at time of construction.
+     *
+     * This function should continue to return the same thing, even when things
+     * are extracted from the IArchive. */
     inline String getSecureHashAsString() const {
       return stringUtils_getSecureHashAsString(
           originalBuffer, (buffer+remainingLength)-originalBuffer
         );
     }
+    /** \brief Determine whether the IArchive is exhausted, with no more data
+     * to extract */
     inline bool isFinished() const { return remainingLength == 0; }
-    /* \brief Dump the buffer as hex to stdout
-     *
-     * \note For debugging purposes */
     void dumpBuffer() const;
     inline IArchive& operator>>(bool& i) {
       assertLength(sizeof(uint8));
@@ -148,6 +158,15 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(String& s);
     IArchive& operator>>(IArchive&);
 
+    /** \brief Extract an enum value from the IArchive
+     *
+     * It is important to use this method to extract enum values rather than
+     * using operator>> because the underlying integer type of an enum is
+     * platform-dependent.  As an added bonus, it saves the caller from having
+     * to static_cast too.
+     *
+     * \warning This assumes that the enum values all fall in the range 0-255
+     */
     template<typename T>
     IArchive& extractEnum(T& result)
     {
@@ -210,7 +229,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T, size_t rank>
-	  IArchive& extract(boost::multi_array<T, rank>& result)
+    IArchive& extract(boost::multi_array<T, rank>& result)
     {
       assert(rank == result.num_dimensions());
       boost::array<uint32, rank> shape;
@@ -376,6 +395,13 @@ class LIBSAKUSEN_API IArchive {
       return *this;
     }
 
+    /** \brief Tests for a magic value in the archive at this point.
+     *
+     * As an aid to catching errors and debugging, magic values can be inserted
+     * into an archive with OArchive::magicValue.  At extraction time this
+     * method should be called to confirm that the magic value is correct and
+     * step over it.  If the magic value does not match, an exception is
+     * thrown. */
     inline void magicValue(const String& val) {
       assertLength(val.size());
       if (0 != memcmp(val.c_str(), buffer, val.size())) {

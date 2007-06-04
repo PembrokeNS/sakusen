@@ -30,6 +30,13 @@ inline boost::shared_ptr<T> ResourceInterface::search(
     );
 }
 
+/** \brief Save a resource
+ *
+ * Saves a resource, automatically determining the appropriate place and name.
+ *
+ * \param resource Resource to save
+ * \return true iff a problem occurs
+ */
 template<typename T>
 inline bool ResourceInterface::save(boost::shared_ptr<const T> const& resource)
 {

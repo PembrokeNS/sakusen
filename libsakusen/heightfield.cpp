@@ -116,7 +116,7 @@ double Heightfield::intersectRayInCell(
 
   tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
 
-  if (isnan(r1) || r2 < minimum) {
+  if (isnan(r1) || (!isnan(r2) && r2 < minimum)) {
     /* Something's gone wrong... */
     Fatal("no valid solution found");
   }
@@ -128,7 +128,7 @@ double Heightfield::intersectRayInCell(
       return std::numeric_limits<double>::infinity();
     }
   } else {
-    if (r2 <= extent) {
+    if (!isnan(r2) && r2 <= extent) {
       return r2;
     } else {
       return std::numeric_limits<double>::infinity();
@@ -136,6 +136,11 @@ double Heightfield::intersectRayInCell(
   }
 }
 
+/** \brief Get the height of the heightfield at a given position.
+ *
+ * Given x and y, horizontal coordinates in dex of a position, returns the
+ * height at that position, in dex.
+ */
 sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
 {
   uint32 xoff = x - world->getMap()->left();
@@ -181,6 +186,11 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
     horizontalResolution;
 }
 
+/** \brief Finds the greatest height in a rectangular area
+ *
+ * Given a rectangle \p area in x-y space (in dex), returns the greatest height
+ * anywhere in that rectangle in dex.
+ */
 sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
 {
   if (!area.intersects(world->getMap()->area())) {
@@ -227,6 +237,14 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
   return result;
 }
 
+/** \brief Intersect Ray with Heightfield
+ *
+ * \param ray    Ray to intersect with this.
+ * \param extent How far along ray to seartch (in units of the ray parameter).
+ *               Must not be positive infinity.
+ * \return ray parameter of first intersection point, or infinity if no such
+ *         intersection found.  Return value may be larger than extent.
+ */
 double Heightfield::intersectRay(const Ray& ray, double extent) const
 {
   /* First we check to see whether it starts underground, in which case we

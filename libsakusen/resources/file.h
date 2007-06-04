@@ -19,7 +19,8 @@ class File : boost::noncopyable {
     FILE* stream; /**< file stream of file (NULL if not open) */
     int fd; /**< file descriptor of file (-1 if not open) */
     uint64 length; /**< The length of the file */
-    bool lengthIsKnown; /**< true iff we know the length of the file (i.e. \a length is valid) */
+    /** true iff we know the length of the file (i.e. \a length is valid) */
+    bool lengthIsKnown;
     
     virtual void open() = 0;
     int close();
@@ -34,10 +35,18 @@ class File : boost::noncopyable {
      *
      * This function attempts to read the entire file into the buffer.  If
      * successful, it returns the number of bytes read.  On error, it throws a
-     * FileIOExn.  if \a length is insufficient to store the entire file, it
+     * FileIOExn.  If \a length is insufficient to store the entire file, it
      * does nothing and returns 0.
      */
     size_t getWholeFile(uint8* buffer, size_t length);
+
+    /** \brief Reads entire file into buffer
+     *
+     * This function attempts to read the entire file into the buffer.  If
+     * successful, it returns the number of bytes read.  On error, it throws a
+     * FileIOExn.  If \a length is insufficient to store the entire file, it
+     * does nothing and returns 0.
+     */
     inline size_t getWholeFile(
         const boost::shared_array<uint8>& buffer, size_t length
       ) {

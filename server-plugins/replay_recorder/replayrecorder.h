@@ -14,7 +14,7 @@ namespace replay_recorder {
 /** \brief Listener which listens to everything and stores it on disk in the
  * form of a replay.
  *
- * */
+ */
 class ReplayRecorder :
   public Listener, OptionCallback<String>, OptionCallback<uint16> {
   public:

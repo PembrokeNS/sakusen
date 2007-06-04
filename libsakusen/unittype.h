@@ -14,6 +14,10 @@ class UnitType;
 
 typedef const UnitType* UnitTypeID;
 
+/** \brief Encapsulates everything about a particular type of unit.
+ *
+ * See \ref units for more details.
+ */
 class LIBSAKUSEN_API UnitType {
   private:
     UnitType();
@@ -76,14 +80,18 @@ class LIBSAKUSEN_API UnitType {
   public:
     String resolveNames(const Universe* universe);
 
-    /* accessors */
+    /** \name Accessors */
+    //@{
     inline const String& getInternalName() const { return internalName; }
     inline const UnitTypeData& getDynamicData() const { return dynamicData; }
     inline const uint32& getEnergyCost() const { return energyCost; }
     inline const uint32& getMetalCost() const { return metalCost; }
     inline bool getGravity() const { return gravity; }
-    inline const std::vector<WeaponTypeID>& getWeapons() const { return weapons; }
+    inline const std::vector<WeaponTypeID>& getWeapons() const {
+      return weapons;
+    }
     inline UnitTypeID getCorpseUnitType() const { return corpseUnitType; }
+    //@}
     
     void store(OArchive&) const;
     static UnitType load(IArchive&);

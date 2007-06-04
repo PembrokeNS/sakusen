@@ -4,6 +4,13 @@
 namespace sakusen {
 namespace client {
 
+/** \brief SensorReturns which can be updated as new information arrives.
+ *
+ * This class inherits from SensorReturns, and thus encapsulates everything
+ * known to this client's player about some other player's unit through
+ * sensors, but it also provides for updating that information as new
+ * information is received from the server.
+ */
 class UpdatedSensorReturns : public SensorReturns {
   private:
     UpdatedSensorReturns();
@@ -13,6 +20,11 @@ class UpdatedSensorReturns : public SensorReturns {
     {}
     virtual ~UpdatedSensorReturns() {}
     
+    /** \brief Alter this to mimic the given SensorReturns
+     *
+     * \warning Don't try to achieve such an alteration with simple assignment.
+     * It will go horribly wrong.
+     */
     void alter(const SensorReturns& to) {
       this->SensorReturns::operator=(to);
     }
@@ -28,6 +40,7 @@ class SerializationHandler<client::UpdatedSensorReturns> {
 
 namespace client {
 
+/** \brief Function object to extract the id from an UpdatedSensorReturns */ 
 struct UpdatedSensorReturnsIDer {
   uint32 operator()(const Ref<UpdatedSensorReturns>& s) const {
     return s->getId();

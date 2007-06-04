@@ -3,23 +3,40 @@
 
 namespace sakusen {
 
-/* Note that current serialization implementation limits us to 256 topologies.
- * See map.cpp */
+/** \brief Enumeration of possible topologies for maps
+ *
+ * \note Current serialization implementation limits us to 256 topologies.
+ * See [IO]Archive
+ * \todo Possibly also the less symmetric versions of the mobius strip,
+ * sphere and crosscut */
 enum Topology {
+  /** Normal planar topology with no edge identification */
   topology_plane,
-  topology_cylinder, /* possibly also cylinderY */
+  /** Cylinder with edges of constant x value identified.
+   *
+   * \todo Possibly also cylinderY */
+  topology_cylinder,
+  /** Torus with both opposite pairs of edges identified */
   topology_torus,
-  topology_mobius, /* possibly also mobiusY */
-  topology_klein, /* this one has vertical edges joined normally, and
-                     horizontal edges joined twisted - possibly also the other
-                     Klein bottle */
-  topology_sphere, /* this one has singularities at top left and bottom right
-                      - possibly also the other sphere */
-    /* note that using a spherical topology on a non-square map will cause
-     * everything to go completely haywire */
-  topology_crosscut /* aka real projective plane */
-  /* possibly also the less symmetric versions of the mobius strip, sphere and
-   * crosscut */
+  /** M&ouml;bius strip with edges of constant x identified reversed
+   *
+   * \todo Possibly also mobiusY */
+  topology_mobius,
+  /** Klein bottle with edges of constant x identified normally, and
+   * edges of constant y identified twisted
+   *
+   * \todo Possibly also the other Klein bottle */
+  topology_klein,
+  /** Sphere with adjacent pairs of edges identified (singularities at top left
+   * and bottom right)
+   *
+   * \todo Possibly also the other sphere 
+   *
+   * \note Using a spherical topology on a non-square map will cause
+   * everything to go completely haywire */
+  topology_sphere,
+  /** Real projective plane with opposite pairs of edges identified reversed */
+  topology_crosscut
 };
 
 }

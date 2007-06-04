@@ -154,7 +154,7 @@ void UnixDatagramSocket::sendTo(
     const String& /*address*/
   )
 {
-  /* TODO: Maybe write this, although I think it won't ever actually be needed
+  /* \todo Maybe write this, although I think it won't ever actually be needed
    * */
   Fatal("Not implemeted");
 }

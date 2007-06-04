@@ -13,6 +13,17 @@ namespace sakusen {
 
 class ICompleteUnit;
 
+/** \brief This class describes the state of a Weapon in a form suitable to be
+ * sent to a client.
+ *
+ * This is the primary feedback the client has about the
+ * actions of its units' weapons.  Because a client does not have access to the
+ * module which implements a Weapon, this is how a client can tell that its
+ * Weapons are actually doing anything.
+ *
+ * \note The information here will also be visible to players other than the
+ * owner when they recieve a SensorReturns from the unit with perception_unit.
+ */
 class LIBSAKUSEN_API WeaponStatus {
   public:
     WeaponStatus();
@@ -28,7 +39,7 @@ class LIBSAKUSEN_API WeaponStatus {
     Point<sint32> targetDirection;
     Position targetPosition;
     Orientation targetOrientation;
-    /* I did have a targetUnit here for a while, which would have been nice,
+    /* There was a targetUnit here for a while, which would have been nice,
      * but it can't be, because this object has to be serialised as part of a
      * SensorReturns which is in turn sent to a player other than the owner,
      * who can't deserialise anything about other units owned by the player
@@ -37,9 +48,10 @@ class LIBSAKUSEN_API WeaponStatus {
      * */
     uint16 energyCharge;
     uint16 metalCharge;
-    bool active; /* true for currently firing or charging, false for inactive */
+    bool active; /* true for currently firing or charging, false otherwise */
   public:
-    /* accessors */
+    /** \name Accessors */
+    //@{
     WeaponTargetType getTargetType() const { return targetType; }
     const Point<sint32>& getTargetDirection() const { return targetDirection; }
     const Position& getTargetPosition() const { return targetPosition; }
@@ -54,6 +66,7 @@ class LIBSAKUSEN_API WeaponStatus {
 
     void activate(void);
     void deactivate(void);
+    //@}
 
     bool incrementState(WeaponTypeID type);
 

@@ -3,6 +3,9 @@
 
 namespace sakusen {
 
+/** \brief Enumeration of types of region
+ *
+ * This is used for (de)serialization of regions */
 enum RegionType {
   regionType_sphere,
   regionType_rectangle

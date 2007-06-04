@@ -84,6 +84,8 @@ class LIBSAKUSEN_API Visibility {
      * future versions.
      */
     ~Visibility() {}
+    /** \name Specific visibilities */
+    //@{
     sint8 optical;
     sint8 infraRed;
     sint8 radar;
@@ -91,6 +93,7 @@ class LIBSAKUSEN_API Visibility {
     sint8 sonar;
     sint8 passiveSonar;
     sint8 seismar;
+    //@}
     void store(OArchive& archive) const {
       archive << optical << infraRed << radar << passiveRadar << sonar <<
         passiveSonar << seismar;
@@ -152,6 +155,8 @@ struct  LIBSAKUSEN_API Sensors {
     sonarActive(archive)
   {}
   
+  /** \name Capabilities in each type of sensor */
+  //@{
   struct SensorCapability optical;
   struct SensorCapability infraRed;
   struct SensorCapability seismar;
@@ -159,6 +164,7 @@ struct  LIBSAKUSEN_API Sensors {
   struct SensorCapability radarActive;
   struct SensorCapability sonarPassive;
   struct SensorCapability sonarActive;
+  //@}
 
   void updateReturns(
       EachSensorReturn& returns,

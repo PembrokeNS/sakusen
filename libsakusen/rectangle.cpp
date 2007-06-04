@@ -19,6 +19,15 @@ bool Rectangle<sint32>::fastIntersects(const ICompleteUnit* unit) const
   return intersects(unit->getBoundingRectangle());
 }
 
+/** \brief Conducts a quick test as to whether the given ISensorReturns
+ * intersects this Rectangle.
+ * 
+ * This might return true when the ISensorReturns is only near the Rectangle,
+ * rather than actually intersecting it, but it won't return false when the
+ * ISensorReturns does in fact intersect.  It might, however, return false when
+ * the unit from which the return comes does intersect, if the ISensorReturns
+ * is far off the true position.
+ */
 template<>
 bool Rectangle<sint32>::fastIntersects(
     const Ref<const ISensorReturns>& returns

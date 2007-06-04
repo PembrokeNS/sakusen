@@ -114,6 +114,12 @@ void Player::detachClient(Client* client)
   Debug("Tried to detach an unattached client");
 }
 
+/** \brief Remove a unit from this player.
+ *
+ * For internal use only.
+ *
+ * Any call to removeUnit must be followed by a call to addUnit for
+ * another player, otherwise the unit will end up in limbo. */
 void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
 {
   __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator unit =
@@ -139,6 +145,13 @@ void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
   informClients(Update(new UnitAddedUpdateData(why, unit)));
 }
 
+/** \brief Update all player's sensor returns for a new tick.
+ *
+ * This function will add, remove and update sensor returns of this player as
+ * appropriate, performing all the necessary visibility checks and so on.
+ *
+ * Most of the server's CPU time is spent inside this function.
+ */
 void Player::checkSensorReturns()
 {
   /* check over our sensor returns for ones where the units have been destroyed
@@ -258,6 +271,10 @@ void Player::checkSensorReturns()
   }
 }
 
+/** \brief Process pending orders
+ *
+ * Gets the orders received from each client and applies them to update
+ * unit order queues appropriately */
 void Player::applyIncomingOrders(void)
 {
   for (std::list<Client*>::iterator client = clients.begin();
@@ -280,6 +297,7 @@ void Player::applyIncomingOrders(void)
   }
 }
 
+/** \brief Dispatch an update to all this player's clients */
 void Player::informClients(const Update& update)
 {
   /*Debug("clients.size()=" << clients.size());*/

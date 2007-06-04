@@ -25,18 +25,18 @@ class IIndex {
     /** \brief Add a new entry to the index.
      *
      * If b is a valid Ref, adds it to the index; otherwise, does nothing.
-     * \param[in] b Ref to the bounded object to add.
+     * \param[in] t Ref to the object to add.
      */
-    virtual void add(const Ref<T>&) = 0;
+    virtual void add(const Ref<T>& t) = 0;
 
     /** \brief Remove an about-to-be-invalidated entry from the index.
      *
      * If b is a valid Ref, finds its entry in the index and removes it;
      * otherwise, does nothing.
      *
-     * \param[in] b Ref to the bounded object to add.
+     * \param[in] t Ref to the object to add.
      */
-    virtual void remove(const Ref<T>&) = 0;
+    virtual void remove(const Ref<T>& t) = 0;
 };
 
 }

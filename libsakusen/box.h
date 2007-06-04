@@ -7,7 +7,7 @@
 
 namespace sakusen {
 
-/** Represents an axis-aligned box (cuboid) in 3D space.
+/** \brief Represents an axis-aligned box (cuboid) in 3D space.
  *
  * A box is defined by its two corner points x1 and x2, where x1 \<= x2.
  * A point p is inside the box if forall basis vectors e, x1_e \<= p_e

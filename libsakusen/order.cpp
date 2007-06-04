@@ -2,12 +2,17 @@
 
 using namespace sakusen;
 
+/** \brief Constructs an empty Order */
 Order::Order() :
   type(orderType_none),
   data()
 {
 }
 
+/** \brief Constructs an order around given data.
+ *
+ * Ownership of pointer to data is transferred to this.
+ */
 Order::Order(const OrderData* d) :
   type(d->getType()),
   data(d)

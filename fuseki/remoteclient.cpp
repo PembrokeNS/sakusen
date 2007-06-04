@@ -13,7 +13,7 @@ using namespace fuseki;
 RemoteClient::RemoteClient(
     ClientID i,
     Server* s,
-    const Socket::Ptr& socket,
+    const sakusen::comms::Socket::Ptr& socket,
     bool createInSocket
 #ifndef DISABLE_UNIX_SOCKETS
     ,

@@ -8,7 +8,12 @@
 
 namespace sakusen {
 
-/** \brief Abstract base for something to which we can write (like a file) */
+/** \brief Abstract base for something to which we can write raw binary data
+ * (like a file).
+ *
+ * The target of the Writer need not be seekable (it might be a network socket,
+ * for example) but it does have to keep track of its position.
+ */
 class Writer : boost::noncopyable {
   public:
     typedef boost::shared_ptr<Writer> Ptr;
@@ -20,8 +25,11 @@ class Writer : boost::noncopyable {
 
     /** \brief Writes given data to target of Writer.
      *
-     * Throws exception on error */
+     * Throws exception on error. */
     virtual void write(const uint8* buffer, size_t length) = 0;
+    /** \brief Writes underlying data of OArchive to target of Writer.
+     *
+     * Throw exception on error. */
     inline void write(const OArchive& archive) {
       write(archive.getBytes(), archive.getBytesLength());
     }

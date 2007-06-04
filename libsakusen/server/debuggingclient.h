@@ -23,7 +23,7 @@ class LIBSAKUSEN_SERVER_API DebuggingClient : public Client {
     PlayerID player;
     std::ostream& outputStream;
   public:
-    void flushOutgoing(Time) {}
+    void flushOutgoing(Time /*time*/) {}
     void queueUpdate(const Update& update);
 };
 

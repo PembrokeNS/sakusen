@@ -1,4 +1,4 @@
-/** \page Units
+/** \page units Units
 
 There is something of a confusion of classes with 'Unit' in their name in the
 library at present.  This page is intended to clarify what they are and what
@@ -26,6 +26,9 @@ sakusen::IUnitStatus respectively.  The classes are used whenever the data in
 question needs to be stored, and any other classes which also represent dynamic
 UnitType data or status also implements one of the interfaces.
 
+The sakusen::UnitType class combined a sakusen::UnitTypeData with all the
+static UnitType data.
+
 These two classes are combined, together with the unit id, in
 sakusen::CompleteUnit.  This encapsulates all the data about a Unit that is
 known to both client and server.  It is this class that is used to transmit
@@ -48,7 +51,7 @@ sakusen::server::UnitCore, which provides its implementation of
 sakusen::IUnitTypeData directly from the sakusen::UnitType of the object.
 Other layers are at liberty to provide the data in an almost arbitrary fashion.
 
-The status os a sakusen::server::LayeredUnit bypasses the
+The status of a sakusen::server::LayeredUnit bypasses the
 layers and shortcuts directly to the sakusen::server::UnitCore, which inherits
 from sakusen::UnitStatus and thus implements sakusen::IUnitStatus.
 
@@ -81,6 +84,10 @@ things could be arranged so that only some data is transmitted if only some
 data has changed, but that seems unnecessarily complicated for this early stage
 of the devlopment.  Also, analysis of actual game transmissions would be
 helpful in deciding exactly how to optimize this.
+
+Note that there is no class called just 'Unit'.  The corect term for the game
+object without reference to any particular class representation is 'unit', with
+a lower-case 'u'.
 
 */
 

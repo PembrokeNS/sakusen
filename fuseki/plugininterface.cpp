@@ -17,6 +17,12 @@ PluginInterface::PluginInterface(const list<String>& pP, Server* s) :
   server(s)
 {}
 
+/** \brief Attempt to find and load a plugin of a given name
+ *
+ * Looks for a plugin of the given name (the name need only be a prefix of the
+ * full name).  If it finds it, it tries to load it, create a Plugin object to
+ * wrap in, and return that.  If anything goes wrong, a PluginExn is thrown.
+ */
 Plugin::Ptr PluginInterface::load(const String& pluginName)
 {
   for (list<String>::iterator path = pluginPaths.begin();

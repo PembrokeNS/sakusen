@@ -7,6 +7,13 @@
 
 namespace sakusen {
 
+/** \brief Defines a variety of unit for a Universe
+ *
+ * A UnitType contains all the information about a variety of unit but not
+ * anything about any particular instance of that variety.
+ *
+ * \todo Armour?
+ */
 class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
   private:
     UnitTypeData();
@@ -26,13 +33,14 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     HitPoints maxHitPoints;
     uint8 mass;
     Point<uint32> size;
-    /* TODO: armour */
     Region<sint16>::ConstPtr possibleAccelerations;
     Region<sint16>::ConstPtr possibleVelocities;
     Region<sint16>::ConstPtr possibleAngularVelocities;
     Visibility visibility;
     Sensors vision;
     
+    /** \name Accessors */
+    //@{
     inline HitPoints getMaxHitPoints(void) const { return maxHitPoints; }
     inline uint8 getMass(void) const {return mass;}
     inline const Point<uint32>& getSize(void) const {return size;}
@@ -47,6 +55,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     }
     inline const Visibility& getVisibility(void) const {return visibility;}
     inline const Sensors& getVision(void) const {return vision;}
+    //@}
 
     void store(OArchive&) const;
     static UnitTypeData load(IArchive&);

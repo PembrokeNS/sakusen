@@ -55,6 +55,14 @@ double Ray::intersectWater() const {
   return numeric_limits<double>::infinity();
 }
 
+/** \brief Intersect this Ray with a Box
+ *
+ * \param box Box with which to intersect
+ * \return Ray parameter of first intersection or infinity if no intersection
+ *
+ * \todo It might be nice to be able to get both intersections, when there are
+ * two of them.
+ */
 double Ray::intersectBox(const Box<sint32>& box) const
 {
   double t_near_x, t_far_x, t_near_y, t_far_y, t_near_z, t_far_z, t_near;

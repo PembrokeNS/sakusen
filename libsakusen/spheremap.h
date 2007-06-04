@@ -5,6 +5,10 @@
 
 namespace sakusen {
 
+/** \brief Represents a spherical map.
+ *
+ * \todo Implement this class.
+ */
 class SphereMap : public Map {
   private:
     SphereMap();

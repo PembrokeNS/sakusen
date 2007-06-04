@@ -34,10 +34,6 @@ MapTemplate::MapTemplate(
     Fatal("map has negative dimension");
   }
   
-  /* TODO: determine number of distance units per pixel of heightfield, and
-   * ensure it is sane (in particular, that it is an integer, possibly even
-   * that it is a power of 2 (so we can do conversion by bitshifting)) */
-  
   for (std::vector<MapPlayMode>::iterator playMode = playModes.begin();
       playMode != playModes.end(); playMode++) {
     if (playMode->sanityCheck(universe, *this)) {
@@ -58,7 +54,7 @@ void MapTemplate::store(OArchive& archive) const
 
 MapTemplate MapTemplate::load(
     IArchive& archive,
-    const Universe::ConstPtr* universe
+    const sakusen::Universe::ConstPtr* universe
   )
 {
   Topology topology;

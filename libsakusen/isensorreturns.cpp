@@ -5,6 +5,12 @@
 
 using namespace sakusen;
 
+/** \brief Get the best guess of the position of the unit from which this is a
+ * return
+ *
+ * If there is no position information in the returns at all (which probably
+ * shouldn't happen), then Fatals.
+ */
 Point<sint32> ISensorReturns::getBestPosition() const
 {
   if (0 != (getPerception() & perception_unit)) {
@@ -16,6 +22,16 @@ Point<sint32> ISensorReturns::getBestPosition() const
   }
 }
 
+/** \brief Get the best guess of a bounding rectangle of the unit from which
+ * this is a return
+ *
+ * Note that if the sensor return only has approximate location information
+ * then the rectangle returned bounds the confidence region.  It may not bound
+ * the unit itself.
+ *
+ * If there is no position information in the returns at all (which probably
+ * shouldn't happen), then Fatals.
+ */
 Rectangle<sint32> ISensorReturns::getBoundingRectangle() const
 {
   if (0 != (getPerception() & perception_unit)) {

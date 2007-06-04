@@ -6,7 +6,7 @@
 
 #include <cerrno>
 
-/* TODO: This value for backlog was chosen entirely arbitrarily - it would be
+/** \todo This value for backlog was chosen entirely arbitrarily - it would be
  * nice if it were confirmed as sane by someone in the know */
 #define BACKLOG 10
 
@@ -16,7 +16,7 @@ TCPListeningSocket::TCPListeningSocket(uint16 port) :
   TCPSocket(port)
 {
   memset(&addr, 0, sizeof(addr));
-  /* TODO: support binding to fewer than all local interfaces */
+  /** \todo Support binding to fewer than all local interfaces */
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);

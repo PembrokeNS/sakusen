@@ -6,18 +6,26 @@
 
 namespace sakusen {
 
-/* Enumeration of types of order which can be give to units.  Each type has its
- * own subclass of OrderData which carries the relevant data for that order */
-
+/** \brief Enumeration of types of order which can be give to units.
+ *
+ * Each type has its own subclass of OrderData which carries the relevant data
+ * for that order */
 enum OrderType {
   orderType_none,
-  orderType_setVelocity, /* Set the Unit's velocity to this value */
-  orderType_move, /* Move the unit to this position */
-  orderType_targetPosition, /* Target a weapon at a Point<sint32> */
+  /** Set the Unit's velocity to this value */
+  orderType_setVelocity,
+  /** Move the unit to this position */
+  orderType_move,
+  /** Target a weapon at a Position */
+  orderType_targetPosition,
+  /** Target a weapon at a Position & Orientation (e.g. for creating a
+   * building with that Position and Orientation) */
   orderType_targetPositionOrientation,
-    /* Target a weapon at a Position & Orientation (for building) */
-  orderType_targetUnit, /* Target a weapon at a Unit */
-  orderType_targetSensorReturns /* Target a weapon at a SensorReturns */
+  /** Target a weapon at a unit.  Note that this will always be a friendly unit;
+   * enemy units are always SensorReturns */
+  orderType_targetUnit,
+  /** Target a weapon at a SensorReturns */
+  orderType_targetSensorReturns
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, OrderType);

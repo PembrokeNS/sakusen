@@ -11,6 +11,9 @@
 
 namespace sakusen {
 
+/** \brief Defines the initial state of a unit at the start of play.
+ *
+ * \bug Subunits are not handled yet. */
 class LIBSAKUSEN_API UnitTemplate {
   private:
     UnitTemplate();
@@ -20,13 +23,14 @@ class LIBSAKUSEN_API UnitTemplate {
         const UnitStatus& status
       );
   private:
+    /** \brief Universe containing type for this tempalte.
+     *
+     * A 'private line' to the universe is needed because there's no world
+     * when UnitTemplates are being used. */
     Universe::ConstPtr universe;
-      /* a 'private line' to the universe is needed because there's no world
-       * when UnitTemplates are being used */
+    
+    /** \brief Initial state of the unit */
     UnitStatus status;
-    /* FIXME: subunits are not handled yet when this template is used to
-     * construct a Map */
-
   public:
     const IUnitStatus* getStatus(void) const { return &status; }
     

@@ -49,6 +49,7 @@ class Ray {
     double intersectWater() const;
     double intersectBox(const Box<sint32>&) const;
 
+    /** \brief Typedef to aid those calling getAllInteractionsTo */
     typedef std::set<Intersection, LessThanIntersectionPosition>
       IntersectionSet;
     void getAllInteractionsTo(

@@ -16,7 +16,7 @@ UnitOrders::UnitOrders(
     const RotationalTargetType& rT,
     const Orientation& tO,
     const AngularVelocity& tAV,
-    const vector<WeaponOrders>& wO
+    const std::vector<WeaponOrders>& wO
   ) :
   currentOrder(cO),
   linearTarget(lT),

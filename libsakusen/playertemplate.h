@@ -9,6 +9,15 @@ namespace sakusen {
 
 class MapTemplate;
 
+/** \brief Defines the initial state of a player.
+ *
+ * PlayerTemplates appear as part of a MapPlayMode.  Each describes the type of
+ * player (whether it should be client controlled, etc.) and the set of units
+ * with which the player starts the game.
+ *
+ * For players with the option of which race to play, the choice of race can
+ * affect the units.  (At time of writing it doesn't, though.)
+ */
 class LIBSAKUSEN_API PlayerTemplate {
   private:
     PlayerTemplate();
@@ -31,9 +40,6 @@ class LIBSAKUSEN_API PlayerTemplate {
     inline bool isRaceFixed() const { return raceFixed; }
     inline const std::vector<UnitTemplate>& getUnits() const { return units; }
     
-    /* Confirms that all specified units exist in the given universe, and
-     * that they all fit onto the given map.  Returns true if a
-     * problem is found */
     bool sanityCheck(
         const Universe::ConstPtr& universe,
         const MapTemplate& map

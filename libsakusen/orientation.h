@@ -8,7 +8,10 @@
 
 namespace sakusen {
 
+/** \brief Enumeration of directions of rotation */
 enum Rotation {
+  /** Anticlockwise around a vertical axis as viewed from above.  This is a
+   * positive z rotation because we use a right-handed coordinate system. */
   rotation_anticlockwise
 };
 
@@ -20,7 +23,6 @@ enum Rotation {
  * Note that since some of our map topologies are non-orientable (mobius and
  * kleinBottle) not all orientations are rotations, they can be reflections
  * too. */
-
 class LIBSAKUSEN_API Orientation {
   public:
     Orientation();
@@ -41,12 +43,15 @@ class LIBSAKUSEN_API Orientation {
       return matrix[i][j];
     }
     Orientation operator*(const Orientation& right) const;
-      /* multiplication is non-commutative! */
     bool operator==(const Orientation& right) const;
     inline bool operator!=(const Orientation& right) const {
       return !operator==(right);
     }
 
+    /** \brief Multiply this matrix by given vector.
+     *
+     * T is asumed to be integral.  Result is rounded to nearest integer.
+     */
     template<typename T>
     Point<T> operator*(const Point<T>& right) const {
       Point<double> result = Point<double>();
@@ -73,11 +78,16 @@ class LIBSAKUSEN_API Orientation {
       return Point<T>(result.round());
     }
 
-    /* Some particular orientations */
+    /** \name Some particular orientations.
+     *
+     * We provide the identity and reflections in the plane perpendicular to
+     * each axis as static values. */
+    //@{
     static const Orientation identity;
     static const Orientation reflectionX;
     static const Orientation reflectionY;
     static const Orientation reflectionZ;
+    //@}
 
     void store(OArchive&) const;
     static Orientation load(IArchive&);
