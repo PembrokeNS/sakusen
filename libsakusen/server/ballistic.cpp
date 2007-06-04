@@ -27,8 +27,15 @@ Ballistic::Ballistic(const Ref<LayeredUnit>& s, Quadratic p) :
  * \return true iff the Ballistic should be removed */
 bool Ballistic::resolveIntersections()
 {
-  const Position oldPos = getPosition(world->getTimeNow()-1);
-  const Position newPos = getPosition(world->getTimeNow());
+  Time timeNow = world->getTimeNow();
+  /* If this is the first tick of existence for the Ballistic, then don't check
+   * anything (otherwise we'd be checking along a path backwards from the
+   * start, and also we might underflow the Time if this is the zeroth tick) */
+  if (timeNow == path.getStartTime()) {
+    return false;
+  }
+  const Position oldPos = getPosition(timeNow-1);
+  const Position newPos = getPosition(timeNow);
 
   const Ray path(oldPos, newPos-oldPos);
   const GameObject canHit =
