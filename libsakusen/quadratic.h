@@ -27,6 +27,10 @@ namespace sakusen {
  * where \c s is the origin (or start point), \c d is the initial velocity,
  * \c t is the time of firing (the time at which the curve passes through the
  * origin), and \em g is the acceleration due to gravity (depends on map).
+ *
+ * \bug Storing the start time means too much information is revealed to
+ * clients about other players' Ballistics that they see, but (at present)
+ * Ballisitic does require the start time for correct behaviour.
  */
 class LIBSAKUSEN_API Quadratic {
   private:
@@ -39,6 +43,7 @@ class LIBSAKUSEN_API Quadratic {
       s(start), d(velocity), t(startTime) {}
     ~Quadratic() {}
     Point<sint32> evaluate(Time tt);
+    Time getStartTime() const { return t; }
 
     void store(OArchive&) const;
     static Quadratic load(IArchive&);
