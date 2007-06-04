@@ -50,7 +50,6 @@ class Ref {
     inline bool isRefTo(const T* t) const { return referee.lock().get() == t; }
     
     inline boost::shared_ptr<T> operator->() const {
-      assert(isValid());
       return referee.lock();
     }
 
