@@ -46,14 +46,6 @@ class SerializationHandler<server::Effect>
     typedef void loadArgument;
 };
 
-/** This exists only to appease the template instantiator */
-template<>
-class SerializationHandler<server::DynamicSensorReturns>
-{
-  public:
-    typedef void loadArgument;
-};
-
 }
 
 #endif // LIBSAKUSEN_SERVER__SERIALIZATIONHANDLER_H
