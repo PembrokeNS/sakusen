@@ -11,6 +11,21 @@
 
 namespace sakusen {
 
+/** \brief Base class of all classes representing a map at game time
+ *
+ * Map is the base of a rather confusing class heirarchy which allows
+ * representation of the map while the game is being played.  Inheriting
+ * directly from Map are libsakuse::client::PartialMap and
+ * libsakusen::server::CompleteMap, and then inheriting from each of those are
+ * the various classes which define the map topology: PlaneMap, SphereMap etc.
+ * The topology classes are templated so that they can inheruit from either of
+ * the intermediate classes (and so that they can be defined in libsakusen
+ * before either of the things they inherit from).
+ *
+ * Presumably there was a good reason for doing things this way but I can't
+ * remember it.
+ *
+ * \todo Tiles */
 class LIBSAKUSEN_API Map {
   private:
     Map();
@@ -27,7 +42,6 @@ class LIBSAKUSEN_API Map {
   private:
     Point<sint32> topRight; /* Excludes top right */
     Point<sint32> bottomLeft; /* Includes bottom left */
-    /* TODO: tiles */
     uint16 gravity;
   public:
     /* accessors */
@@ -99,18 +113,6 @@ class LIBSAKUSEN_API Map {
         const Point<sint32>& pos, const Point<sint32>& inc) const {
       return addToPosition(pos, inc, NULL);
     }
-    inline Point<sint32> addToPosition(
-        const Point<sint32>& pos, const Point<sint16>& inc) const {
-      return addToPosition(pos, Point<sint32>(inc));
-    }
-    inline Point<sint32> addToPosition(
-        const Point<sint32>& pos, const Point<sint32>& inc,
-        Orientation* orientation) const {
-      Point<sint32> p;
-      resolvePosition(pos+inc, &p, orientation);
-      return p;
-    }
-    
     /** \brief Increments the given \a pos by \a inc, taking into account map
      * topology
      *
@@ -118,9 +120,11 @@ class LIBSAKUSEN_API Map {
      * edges
      */
     inline Point<sint32> addToPosition(
-        const Point<sint32>& pos, const Point<sint16>& inc,
+        const Point<sint32>& pos, const Point<sint32>& inc,
         Orientation* orientation) const {
-      return addToPosition(pos, Point<sint32>(inc), orientation);
+      Point<sint32> p;
+      resolvePosition(pos+inc, &p, orientation);
+      return p;
     }
     
     /** \brief Finds the shortest vector from op2 to op1
