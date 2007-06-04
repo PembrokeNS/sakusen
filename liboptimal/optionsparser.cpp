@@ -26,24 +26,6 @@ using boost::str;
 
 using namespace optimal;
 
-OptionsParser::OptionsParser() :
-  newLine('\n'),
-  assignment('='),
-  /* Initialize hash_maps with few buckets because we are unlikely to need many
-   * */
-  longOptionTypes(10),
-  shortOptionTypes(10),
-  longBoolOptions(10),
-  longIntOptions(10),
-  longStringOptions(10),
-  longStringListOptions(10),
-  shortBoolOptions(10),
-  shortIntOptions(10),
-  shortStringOptions(10),
-  shortStringListOptions(10)
-{
-}
-
 OptionsParser::OptionsParser(char nl) :
   newLine(nl),
   assignment('='),
@@ -163,6 +145,21 @@ void OptionsParser::addOption(
   }
 }
 
+/** \brief Parse the given stream
+ *
+ * \note This method is used by parse to parse the config file and to parse
+ * suboptions, and it probably isn't needed for other purposes, but it is
+ * provided in case it is needed (it could, for example, be used to parse
+ * options in an environment variable)
+ *
+ * \param stream      The stream to parse
+ * \param errorPrefix String with which to prefic errors (should give a hint to
+ *                    the user as to the place where the stream came from, e.g.
+ *                    a file name)
+ *
+ * \return true iff an error occurs (Use getErrors to see what the error(s)
+ *         were).
+ */
 bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
 {
   string line;
@@ -255,6 +252,11 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
   return !errors.empty();
 }
 
+/** \brief Parse the given file (if it exists - ignore otherwise), and
+ * command line.
+ *
+ * Return true if a problem occurs (which can be investigated
+ * through errors) */
 bool OptionsParser::parse(
     const string& configFileName,
     int argc,
