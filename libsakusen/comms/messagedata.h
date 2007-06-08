@@ -36,41 +36,6 @@ class LIBSAKUSEN_COMMS_API MessageData {
     virtual MessageType getType() const = 0;
 };
 
-class LIBSAKUSEN_COMMS_API SolicitMessageData : public MessageData {
-  private:
-    SolicitMessageData();
-  public:
-    SolicitMessageData(const String& address);
-    SolicitMessageData(IArchive& in);
-    ~SolicitMessageData() {}
-  private:
-    String address; /* The address where the client expects the advertisement
-                       to be sent */
-  protected:
-    void fillArchive() const;
-  public:
-    MessageType getType() const;
-    inline const String& getAddress() const { return address; }
-};
-
-class LIBSAKUSEN_COMMS_API AdvertiseMessageData : public MessageData {
-  private:
-  public:
-    AdvertiseMessageData();
-    AdvertiseMessageData(const String& serverName, const String& gameName);
-    AdvertiseMessageData(IArchive& in);
-    ~AdvertiseMessageData() {}
-  private:
-    String serverName;
-    String gameName;
-  protected:
-    void fillArchive() const;
-  public:
-    MessageType getType() const;
-    String getServerName() const;
-    String getGameName() const;
-};
-
 class LIBSAKUSEN_COMMS_API JoinMessageData : public MessageData {
   private:
     JoinMessageData();

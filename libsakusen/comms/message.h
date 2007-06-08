@@ -53,8 +53,6 @@ class LIBSAKUSEN_COMMS_API Message {
     inline type##MessageData get##type##Data(void) const { \
       return dynamic_cast<const type##MessageData&>(*data); \
     }
-    GETDATA(Advertise)
-    GETDATA(Solicit)
     GETDATA(Join)
     GETDATA(Accept)
     GETDATA(Reject)

@@ -39,12 +39,6 @@ Message::Message(
    * to show that it *really* is a sakusen message */
 
   switch (type) {
-    case messageType_solicit:
-      data.reset(new SolicitMessageData(in));
-      break;
-    case messageType_advertise:
-      data.reset(new AdvertiseMessageData(in));
-      break;
     case messageType_join:
       data.reset(new JoinMessageData(in));
       break;

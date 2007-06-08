@@ -115,40 +115,6 @@ Server::~Server()
   plugins.clear();
 }
 
-void Server::advertise(
-    const SolicitMessageData& data,
-    const String& receivedFrom,
-    const sakusen::comms::Socket::Ptr& receivedOn,
-    const Message& advertisement
-  )
-{
-  String address = data.getAddress();
-  bool respondOnExisting = false;
-  if (address.empty()) {
-    /* If no address specified then we respond to the source of the
-     * message and use the existing solicitation socket */
-    address = receivedFrom;
-    respondOnExisting = true;
-  }
-  Socket::Ptr responseSocket;
-  if (respondOnExisting) {
-    responseSocket = receivedOn;
-  } else {
-    responseSocket = Socket::newConnectionToAddress(address);
-  }
-  if (NULL != responseSocket) {
-    out << "Advertising to " << address << ".\n";
-    if (respondOnExisting) {
-      responseSocket->sendTo(advertisement, address);
-    } else {
-      responseSocket->send(advertisement);
-    }
-  } else {
-    out << "Unsupported socket type requested by client "
-      "(address was '" << address << "').\n";
-  }
-}
-
 ClientID Server::getFreeClientID()
 {
   /* Just use a hopelessly naive algorithm for allocating IDs.  Note that this
@@ -512,8 +478,6 @@ void Server::serve()
   if (tcpSocket != NULL) {
     tcpSocket->setNonBlocking(true);
   }
-  Message advertisement =
-    Message(new AdvertiseMessageData("fuseki", "Game name"));
 
   /* A list of incoming (probably TCP) connections where we expect to get join
    * messages from prospective clients */
@@ -533,23 +497,13 @@ void Server::serve()
     size_t bytesReceived;
     String receivedFrom;
 #ifndef DISABLE_UNIX_SOCKETS
-    /* Look for messages on the unix socket, which can be solicit or join
-     * messages */
+    /* Look for join messages on the unix socket. */
     if ((bytesReceived =
           unixSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
       IArchive messageArchive(buf, bytesReceived);
       Message message(messageArchive);
       if (message.isRealMessage()) {
         switch (message.getType()) {
-          case messageType_solicit:
-            {
-              SolicitMessageData data = message.getSolicitData();
-                advertise(
-                    data, receivedFrom, unixSocket,
-                    advertisement
-                  );
-            }
-            break;
           case messageType_join:
             {
               JoinMessageData data = message.getJoinData();
@@ -569,7 +523,7 @@ void Server::serve()
     }
 #endif // DISABLE_UNIX_SOCKETS
     
-    /* Look for solicit messages on the udp socket */
+    /** \todo Look for join messages on the udp socket */
     if (udpSocket != NULL) {
       if ((bytesReceived =
             udpSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
@@ -577,15 +531,6 @@ void Server::serve()
         Message message(messageArchive);
         if (message.isRealMessage()) {
           switch (message.getType()) {
-            case messageType_solicit:
-              {
-                SolicitMessageData data = message.getSolicitData();
-                advertise(
-                    data, receivedFrom, udpSocket,
-                    advertisement
-                  );
-              }
-              break;
             default:
               out << "Unexpected MessageType: " << message.getType() << "\n";
               break;
@@ -817,7 +762,7 @@ void Server::serve()
   if (!interrupted) {
     out << "Transitioning to gameplay state" << endl;
 
-    /* Close the solicitation and join socket because we aren't going to
+    /* Close the join sockets because we aren't going to
      * accept any more clients */
     /** \todo Maybe we can support dynamic join for people whose clients crash,
      * adding observers in mid-game, etc. */

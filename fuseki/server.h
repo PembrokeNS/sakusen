@@ -112,12 +112,6 @@ class Server : public SettingsUser, private boost::noncopyable {
     bool gameStarted;
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */
 
-    void advertise(
-        const sakusen::comms::SolicitMessageData& data,
-        const String& receivedFrom,
-        const sakusen::comms::Socket::Ptr& receivedOn,
-        const sakusen::comms::Message& advertisement
-      );
     sakusen::ClientID getFreeClientID();
       /* Find an unused ClientID for a new client.
        * Returns (ClientID)-1 if there are no free IDs */

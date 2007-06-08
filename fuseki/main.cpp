@@ -29,8 +29,7 @@ namespace fuseki {
  *
  * Made complicated by UNIX having UNIX sockets and Windows not. 
  * Use of a UNIX socket in Windows results in crash, and Complications(R)
- * So under windows solicit==udp
- * and joining==tcp */
+ */
 struct Options {
   /** \brief Default constructor
    *
@@ -54,10 +53,10 @@ struct Options {
   /** Whether to delete an existing unix socket to replace it with a new
    * solicitation / joining one */
   bool forceSocket;
-  /** What address to use for unix socket solicitation / joining socket */
+  /** What address to use for unix joining socket */
   String unixAddress;
 #endif
-  /** What address to use for UDP solicitation socket */
+  /** What address to use for UDP joining socket */
   String udpAddress;
   /** What address to use for TCP joining socket */
   String tcpAddress;
@@ -125,8 +124,8 @@ void usage()
 #ifndef DISABLE_UNIX_SOCKETS
           " -a-, --no-abstract      do not use the abstract unix socket namespace\n" 
           " -f,  --force-socket     overwrite any existing socket file\n"
-          " -x,  --unix ADDRESS     bind the unix solicitation socket at sakusen-style\n"
-          "                         address ADDRESS (e.g. concrete|/var/fuskeki/socket)\n"
+          " -x,  --unix ADDRESS     bind the unix socket at sakusen-style address\n"
+          "                         ADDRESS (e.g. concrete|/var/fuseki/socket)\n"
           "                         (default is a UNIX socket in ~/.sakusen/fuseki)\n"
 #endif
           " -u,  --udp ADDRESS      Bind udp socket at ADDRESS.\n"
@@ -282,7 +281,7 @@ int startServer(const String& homePath, const Options& options)
   Socket::Ptr udpSocket;
   
   if (!bindAddress.empty()) {
-    cout << "Starting UDP (solicitation) socket at " << bindAddress << endl;
+    cout << "Starting UDP socket at " << bindAddress << endl;
     udpSocket = Socket::newBindingToAddress("udp"ADDR_DELIM+bindAddress);
 
     if (udpSocket == NULL) {
@@ -297,11 +296,11 @@ int startServer(const String& homePath, const Options& options)
   Socket::Ptr tcpSocket;
   
   if (!bindAddress.empty()) {
-    cout << "Starting TCP (joining) socket at " << bindAddress << endl;
+    cout << "Starting TCP socket at " << bindAddress << endl;
     tcpSocket = Socket::newBindingToAddress("tcp"ADDR_DELIM+bindAddress);
 
     if (tcpSocket==NULL) {
-      cout << "Error creating TCP (joining) socket at:" << endl;
+      cout << "Error creating TCP socket at:" << endl;
       cout << bindAddress << endl;
       cout << "Check the address and try again." << endl;
       return EXIT_FAILURE;
@@ -310,18 +309,15 @@ int startServer(const String& homePath, const Options& options)
 
   cout << "Sockets created." << endl;
 
-#ifdef DISABLE_UNIX_SOCKETS
-  if (udpSocket == NULL) {
-    cout << "There is no solicitation socket.  This server cannot work." <<
+  if (udpSocket == NULL &&
+#ifndef DISABLE_UNIX_SOCKETS
+      unixSocket == NULL &&
+#endif
+      tcpSocket == NULL) {
+    cout << "There is no socket for clients to join.  This server cannot work." <<
       endl;
     return EXIT_FAILURE;
   }
-  
-  if (tcpSocket == NULL) {
-    cout << "There is no join socket.  This server cannot work." << endl;
-    return EXIT_FAILURE;
-  }
-#endif
   
   { /* Braces to ensure that server is destructed before lt_dlexit called */
     Server server(

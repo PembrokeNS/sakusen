@@ -10,8 +10,6 @@ std::ostream& sakusen::comms::operator<<(std::ostream& out, MessageType type)
   switch (type) {
 #define CASE(name) case messageType_##name: out << "messageType_"#name; break;
     CASE(none)
-    CASE(solicit)
-    CASE(advertise)
     CASE(join)
     CASE(accept)
     CASE(reject)

@@ -13,8 +13,6 @@ namespace comms {
  */
 enum MessageType {
   messageType_none,
-  messageType_solicit,
-  messageType_advertise,
   messageType_join,
   messageType_accept,
   messageType_reject,
