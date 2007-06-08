@@ -35,7 +35,7 @@ namespace fuseki {
  */
 class MdnsPublisher {
   public:
-    MdnsPublisher(const std::string name="sakusen", uint32 portno=1776);
+    MdnsPublisher(const String name="sakusen", uint32 portno=1776);
     ~MdnsPublisher();
     /** \brief Internal function. Do not call from outside this file.
      * 

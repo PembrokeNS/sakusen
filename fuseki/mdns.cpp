@@ -7,14 +7,16 @@
 #include <avahi-common/error.h>
 #include <avahi-common/timeval.h>
 
-/** The service name we will advertise over mDNS. mDNS service names are little-endian. */
+/** The service name we will advertise over mDNS. mDNS service names are
+ * little-endian. */
 #define MDNS_SERVICE_TYPE "_sakusen._tcp"
 
 namespace fuseki {
 /** \brief Callback for libavahi-client.
  *
  * Passed to avahi_entry_group_new, this cb handles keeping the mDNS entry
- * valid and printing diagnostics. It will be called whenever the entry group state changes.
+ * valid and printing diagnostics. It will be called whenever the entry group
+ * state changes.
  *
  * \bug This is slightly thread-unsafe, in that the this ptr might have become
  * invalid since the cb was registered, but as the dtor immediately stops the
@@ -82,7 +84,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, void * userdata) {
  *
  * \param name Must not be NULL. (Is currently unused.)
  */
-MdnsPublisher::MdnsPublisher(std::string name, uint32 portno) : port(portno), client(NULL), poll(NULL) {
+MdnsPublisher::MdnsPublisher(String name, uint32 portno) : port(portno), client(NULL), poll(NULL) {
   int error = 0;
 
   game_name = avahi_strdup(name.c_str());
@@ -97,6 +99,10 @@ MdnsPublisher::MdnsPublisher(std::string name, uint32 portno) : port(portno), cl
     std::cerr << "Failed to create Avahi client." << std::endl;
     goto fail;
   }
+
+  /* Start the thread (this function has a return value, but I don't know what
+   * it means) */
+  avahi_threaded_poll_start(poll);
 
   return;
 fail:
