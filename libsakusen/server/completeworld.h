@@ -76,12 +76,12 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       return players[player].getSensorReturns(id).cast<ISensorReturns>();
     }
     inline Ref<ICompleteUnit> getICompleteUnit(
-        PlayerID player, uint32 unitId
+        PlayerID player, UnitID unitId
       ) {
       assert(player < players.size());
-      const __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >& units =
+      const __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >& units =
         players[player].getUnits();
-      __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::const_iterator it =
+      __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::const_iterator it =
         units.find(unitId);
       if (it == units.end()) {
         return Ref<ICompleteUnit>();

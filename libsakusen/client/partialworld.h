@@ -8,6 +8,7 @@
 #include "partialmap.h"
 #include "updatedunit.h"
 #include "updatedsensorreturns.h"
+#include "updatedballistic.h"
 #include "update.h"
 #include "rectangle.h"
 
@@ -38,10 +39,12 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       );
     ~PartialWorld();
     
-    typedef IDIndex<uint32, UpdatedUnit, UpdatedUnitIDer> UnitIDIndex;
+    typedef IDIndex<UnitID, UpdatedUnit, UpdatedUnitIDer> UnitIDIndex;
     typedef IDIndex<
         SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
       > SensorReturnsIDIndex;
+    typedef IDIndex<ClientBallisticID, UpdatedBallistic, UpdatedBallisticIDer>
+      BallisticIDIndex;
   private:
     PlayerID playerId;
     PartialMap* map;
@@ -52,15 +55,16 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       sensorReturns;
     SensorReturnsIDIndex::Ptr sensorReturnsById;
 
-    ISpatial::Ptr spatialIndex;
+    hash_list<UpdatedBallistic, Bounded, UpdatedBallistic> ballistics;
+    BallisticIDIndex::Ptr ballisticsById;
 
-    __gnu_cxx::hash_map<uint32, Quadratic> ballistics;
+    ISpatial::Ptr spatialIndex;
     
     Ref<ISensorReturns> getISensorReturns(PlayerID player, SensorReturnsID id) {
       assert(player == playerId);
       return sensorReturnsById->find(id);
     }
-    Ref<ICompleteUnit> getICompleteUnit(PlayerID player, uint32 uintId) {
+    Ref<ICompleteUnit> getICompleteUnit(PlayerID player, UnitID uintId) {
       assert(player == playerId);
       return unitsById->find(uintId);
     }

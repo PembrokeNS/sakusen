@@ -11,6 +11,7 @@
 #include "iunitstatus.h"
 #include "ref.h"
 #include "bounded.h"
+#include "unitid.h"
 
 namespace sakusen {
 
@@ -25,7 +26,7 @@ class LIBSAKUSEN_API ICompleteUnit : public Bounded {
     virtual ~ICompleteUnit() {}
   public:
     /* accessors */
-    virtual uint32 getId(void) const = 0;
+    virtual UnitID getId(void) const = 0;
     virtual const IUnitStatus* getIStatus(void) const = 0;
     virtual const IUnitTypeData* getITypeData(void) const = 0;
     

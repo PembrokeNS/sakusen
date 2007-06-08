@@ -9,7 +9,7 @@ Ref<ICompleteUnit> SerializationHandler<ICompleteUnit>::extract(
     IArchive& archive,
     const PlayerID* player
   ) const {
-  uint32 unitID;
+  UnitID unitID;
   archive >> unitID;
   return world->getICompleteUnit(*player, unitID);
 }

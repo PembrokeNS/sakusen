@@ -56,6 +56,7 @@ class Region {
         double h,
         const Colour&
       ) = 0;
+    virtual void fillCircle(double x, double y, double r, const Colour&) = 0;
     virtual void fillPolygon(
         const std::list< sakusen::Point<double> >&,
         const Colour&
@@ -64,7 +65,16 @@ class Region {
         const sakusen::Rectangle<double>& rect,
         const Colour& c
       ) {
-      fillRect(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight(), c);
+      fillRect(
+          rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight(), c
+        );
+    }
+    inline void fillCircle(
+        const sakusen::Point<double>& p,
+        double r,
+        const Colour& c
+      ) {
+      fillCircle(p.x, p.y, r, c);
     }
     virtual void stroke(
         double x1,

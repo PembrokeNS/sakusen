@@ -35,9 +35,9 @@ class LIBSAKUSEN_SERVER_API Player {
     
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
-    __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> > units;
+    __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> > units;
     /* The id of the last unit that was added for this player */
-    uint32 lastUnitId;
+    UnitID lastUnitId;
     
     hash_list<DynamicSensorReturns> sensorReturns;
     
@@ -51,9 +51,9 @@ class LIBSAKUSEN_SERVER_API Player {
      * pair entry is the client-side ID */
     __gnu_cxx::hash_map<
         MaskedPtr<Ballistic>,
-        std::pair<uint32, Ref<const Ballistic> >
+        std::pair<ClientBallisticID, Ref<const Ballistic> >
       > visibleBallistics;
-    uint32 lastClientBallisticId;
+    ClientBallisticID lastClientBallisticId;
   public:
     /** \name Accessors. */
     //@{
@@ -66,7 +66,7 @@ class LIBSAKUSEN_SERVER_API Player {
     }
     void attachClient(Client* client);
     void detachClient(Client* client);
-    const __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >& getUnits(void) const {
+    const __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >& getUnits(void) const {
       return units;
     }
     Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsID id) {
@@ -84,7 +84,7 @@ class LIBSAKUSEN_SERVER_API Player {
     //@}
 
     /* game mechanics */
-    void removeUnit(const uint32 id, enum changeOwnerReason why);
+    void removeUnit(const UnitID id, enum changeOwnerReason why);
     void addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why);
     void checkSensorReturns();
     

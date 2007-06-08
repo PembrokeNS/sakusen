@@ -9,6 +9,7 @@
 #include "sensorreturnsid.h"
 #include "ref.h"
 #include "ispatial.h"
+#include "unitid.h"
 
 namespace sakusen {
 
@@ -55,7 +56,7 @@ class LIBSAKUSEN_API World : boost::noncopyable {
      * Finds a unit based on its owner and id
      */
     virtual Ref<ICompleteUnit> getICompleteUnit(
-        PlayerID player, uint32 unitId
+        PlayerID player, UnitID unitId
       ) = 0;
     /** \brief Get a spatial index for the objects in the World */
     virtual ISpatial::ConstPtr getSpatialIndex() const = 0;

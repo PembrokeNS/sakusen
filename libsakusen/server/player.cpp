@@ -18,12 +18,12 @@ Player::Player(const PlayerTemplate& t) :
   name(""),
   clients(),
   units(),
-  lastUnitId(static_cast<uint32>(-1)),
+  lastUnitId(static_cast<UnitID>(-1)),
   sensorReturns(),
   sensorReturnsById(),
   lastSensorReturnsId(static_cast<SensorReturnsID>(-1)),
   visibleBallistics(),
-  lastClientBallisticId(static_cast<uint32>(-1))
+  lastClientBallisticId(static_cast<ClientBallisticID>(-1))
 {
   assert(raceFixed || !noClients);
 }
@@ -120,9 +120,9 @@ void Player::detachClient(Client* client)
  *
  * Any call to removeUnit must be followed by a call to addUnit for
  * another player, otherwise the unit will end up in limbo. */
-void Player::removeUnit(const uint32 id, enum changeOwnerReason why)
+void Player::removeUnit(const UnitID id, enum changeOwnerReason why)
 {
-  __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator unit =
+  __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::iterator unit =
     units.find(id);
   if (unit == units.end()) {
     Fatal("tried to remove a unit which wasn't there");
@@ -232,7 +232,7 @@ void Player::checkSensorReturns()
    * that have invalidated */
   queue<MaskedPtr<Ballistic> > invalidatedBallisticIds;
   for (__gnu_cxx::hash_map<
-        MaskedPtr<Ballistic>, pair<uint32, Ref<const Ballistic> >
+        MaskedPtr<Ballistic>, pair<ClientBallisticID, Ref<const Ballistic> >
       >::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second.isValid()) {
@@ -258,10 +258,10 @@ void Player::checkSensorReturns()
     } else {
       /* It's a new one */
       /** \todo Make an actual visibilty check */
-      uint32 clientId = ++lastClientBallisticId;
+      ClientBallisticID clientId = ++lastClientBallisticId;
       /** \bug There's no wraparound check for this ID */
       visibleBallistics[*ballistic] =
-        pair<uint32, Ref<const Ballistic> >(
+        pair<ClientBallisticID, Ref<const Ballistic> >(
             clientId, *ballistic
           );
       informClients(Update(
@@ -281,7 +281,7 @@ void Player::applyIncomingOrders(void)
       client != clients.end(); client++) {
     while (!(*client)->orderMessageQueueEmpty()) {
       const OrderMessage message = (*client)->orderMessageQueuePopFront();
-      __gnu_cxx::hash_map<uint32, Ref<LayeredUnit> >::iterator orderee =
+      __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
         Debug("Order for non-existent unit id " << message.getOrderee() <<

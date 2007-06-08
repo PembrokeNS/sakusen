@@ -94,6 +94,15 @@ class Colour {
     //@}
 };
 
+/** \brief Operator multiplying a Colour by a double
+ *
+ * Can be used, for example to turn red into dark red by multiplying by some
+ * value in (0,1)
+ */
+inline Colour operator*(const Colour& c, const double d) {
+  return Colour(c.dr()*d, c.dg()*d, c.db()*d);
+}
+
 }}
 
 #endif // UI__COLOUR_H

@@ -42,7 +42,7 @@ class LIBSAKUSEN_API Quadratic {
     Quadratic(Point<sint32> start, Point<sint32> velocity, Time startTime) :
       s(start), d(velocity), t(startTime) {}
     ~Quadratic() {}
-    Point<sint32> evaluate(Time tt);
+    Point<sint32> evaluate(Time tt) const;
     Time getStartTime() const { return t; }
 
     void store(OArchive&) const;

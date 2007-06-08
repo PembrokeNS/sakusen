@@ -13,34 +13,20 @@ namespace sakusen {
  * See \ref units for more details.
  */
 class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
-  private:
-    UnitStatus(); /**< Default constructor should not be used */
-    UnitStatus(
-        UnitTypeID t,
-        const Point<sint32>& p,
-        const Orientation& o,
-        const Point<sint16>& v,
-        /* status stuff */
-        HitPoints hP,
-        bool rIA,
-        bool sIA,
-        const std::list<uint32>& su,
-        const std::vector<WeaponStatus>& w
-      );
   public:
     UnitStatus(const IUnitStatus* copy);
     UnitStatus(
-      const UnitTypeID& startType,
+      UnitTypeID startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
       HitPoints startHitPoints,
       bool startRadarActive,
       bool startSonarActive,
-      std::vector<WeaponStatus> startWeaponsStatus
+      const std::vector<WeaponStatus>& startWeaponsStatus
     );
     UnitStatus(
-      const UnitTypeID& startType,
+      UnitTypeID startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
@@ -49,7 +35,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
          don't need to specify the extra data */
     UnitStatus(
       const Universe::ConstPtr& universe,
-      const UnitTypeID& startType,
+      UnitTypeID startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
@@ -70,11 +56,6 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     bool radarIsActive;
     bool sonarIsActive;
     //@}
-    /** \brief List of subunits
-     *
-     * \note Subunits which must belong to the same player as this unit, so
-     * need only specify ids. */
-    std::list<uint32> subunits;
     std::vector<WeaponStatus> weaponsStatus;
 
     void initializeWeapons(const UnitType* typePtr);

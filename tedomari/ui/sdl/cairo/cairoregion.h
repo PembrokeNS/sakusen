@@ -54,6 +54,7 @@ class CairoRegion : public Region {
     void unsetClip();
     void fill(const Colour&);
     void fillRect(double x, double y, double w, double h, const Colour&);
+    void fillCircle(double x, double y, double r, const Colour&);
     void fillPolygon(
         const std::list< sakusen::Point<double> >&,
         const Colour&

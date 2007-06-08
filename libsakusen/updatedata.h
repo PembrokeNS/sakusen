@@ -10,6 +10,7 @@
 #include "completeunit.h"
 #include "sensorreturns.h"
 #include "quadratic.h"
+#include "clientballisticid.h"
 
 namespace sakusen {
 
@@ -33,17 +34,17 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
   private:
     UnitRemovedUpdateData();
   public:
-    UnitRemovedUpdateData(uint32 i, changeOwnerReason r) :
+    UnitRemovedUpdateData(UnitID i, changeOwnerReason r) :
       UpdateData(), id(i), reason(r) {}
     UnitRemovedUpdateData(IArchive&);
     ~UnitRemovedUpdateData() {}
   private:
-    uint32 id;
+    UnitID id;
     changeOwnerReason reason;
   public:
     UpdateType getType() const { return updateType_unitRemoved; }
     void store(OArchive& out) const;
-    uint32 getId() const { return id; }
+    UnitID getId() const { return id; }
     changeOwnerReason getReason() const { return reason; }
 };
 
@@ -88,15 +89,15 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   private:
     OrderAcceptedUpdateData();
   public:
-    OrderAcceptedUpdateData(uint32 uI, OrderCondition c) :
+    OrderAcceptedUpdateData(UnitID uI, OrderCondition c) :
       UpdateData(), unitId(uI), condition(c) {}
     OrderAcceptedUpdateData(IArchive&);
     ~OrderAcceptedUpdateData() {}
   private:
-    uint32 unitId;
+    UnitID unitId;
     OrderCondition condition;
   public:
-    inline uint32 getUnitId() const { return unitId; }
+    inline UnitID getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
     UpdateType getType() const { return updateType_orderAccepted; }
     void store(OArchive& out) const;
@@ -106,15 +107,15 @@ class LIBSAKUSEN_API OrderCompletedUpdateData : public UpdateData {
   private:
     OrderCompletedUpdateData();
   public:
-    OrderCompletedUpdateData(uint32 uI, OrderCondition c) :
+    OrderCompletedUpdateData(UnitID uI, OrderCondition c) :
       UpdateData(), unitId(uI), condition(c) {}
     OrderCompletedUpdateData(IArchive&);
     ~OrderCompletedUpdateData() {}
   private:
-    uint32 unitId;
+    UnitID unitId;
     OrderCondition condition;
   public:
-    inline uint32 getUnitId() const { return unitId; }
+    inline UnitID getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
     UpdateType getType() const { return updateType_orderCompleted; }
     void store(OArchive& out) const;
@@ -124,16 +125,16 @@ class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
   private:
     OrderQueuedUpdateData();
   public:
-    OrderQueuedUpdateData(uint32 uI, const Order& o, OrderCondition c) :
+    OrderQueuedUpdateData(UnitID uI, const Order& o, OrderCondition c) :
       UpdateData(), unitId(uI), order(o), condition(c) {}
     OrderQueuedUpdateData(IArchive&, const PlayerID*);
     ~OrderQueuedUpdateData() {}
   private:
-    uint32 unitId;
+    UnitID unitId;
     Order order;
     OrderCondition condition;
   public:
-    inline uint32 getUnitId() const { return unitId; }
+    inline UnitID getUnitId() const { return unitId; }
     inline OrderCondition getCondition() const { return condition; }
     inline const Order& getOrder() const { return order; }
     UpdateType getType() const { return updateType_orderQueued; }
@@ -192,33 +193,33 @@ class LIBSAKUSEN_API BallisticRemovedUpdateData : public UpdateData {
   private:
     BallisticRemovedUpdateData();
   public:
-    BallisticRemovedUpdateData(uint32 i) :
+    BallisticRemovedUpdateData(ClientBallisticID i) :
       UpdateData(), id(i) {}
     BallisticRemovedUpdateData(IArchive&);
     ~BallisticRemovedUpdateData() {}
   private:
-    uint32 id;
+    ClientBallisticID id;
   public:
     UpdateType getType() const { return updateType_ballisticRemoved; }
     void store(OArchive& out) const;
-    uint32 getId() const { return id; }
+    ClientBallisticID getId() const { return id; }
 };
 
 class LIBSAKUSEN_API BallisticAddedUpdateData : public UpdateData {
   private:
     BallisticAddedUpdateData();
   public:
-    BallisticAddedUpdateData(uint32 i, const Quadratic& p) :
+    BallisticAddedUpdateData(ClientBallisticID i, const Quadratic& p) :
       UpdateData(), id(i), path(p) {}
     BallisticAddedUpdateData(IArchive&);
     ~BallisticAddedUpdateData() {}
   private:
-    uint32 id;
+    ClientBallisticID id;
     Quadratic path;
   public:
     UpdateType getType() const { return updateType_ballisticAdded; }
     void store(OArchive& out) const;
-    uint32 getId() const { return id; }
+    ClientBallisticID getId() const { return id; }
     inline const Quadratic& getPath() const { return path; }
 };
 

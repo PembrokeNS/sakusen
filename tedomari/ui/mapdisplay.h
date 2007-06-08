@@ -63,6 +63,10 @@ class MapDisplay : public Control {
         const sakusen::Ref<const sakusen::client::UpdatedUnit>& unit,
         const Colour&
       );
+    void drawBallistic(
+        const sakusen::Ref<const sakusen::client::UpdatedBallistic>&,
+        const Colour&
+      );
 
   protected:
     void paint();

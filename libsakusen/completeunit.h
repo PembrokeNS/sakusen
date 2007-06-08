@@ -26,7 +26,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
   private:
     CompleteUnit(); /**< Default constructor should not be used */
     CompleteUnit(
-        uint32 uI,
+        UnitID uI,
         const UnitStatus& st,
         const UnitTypeData& tD
       );
@@ -34,14 +34,14 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
     CompleteUnit(const Ref<const ICompleteUnit>& copy);
     virtual ~CompleteUnit() {}
   protected:
-    uint32 unitId;
+    UnitID unitId;
     UnitStatus status;
     
     /* modifiable stuff from UnitType */
     UnitTypeData typeData;
   public:
     /* accessors */
-    inline uint32 getId(void) const {return unitId;}
+    inline UnitID getId(void) const {return unitId;}
     inline const UnitStatus& getStatus(void) const { return status; }
     inline const IUnitStatus* getIStatus(void) const { return &status; }
     inline const UnitTypeData& getTypeData(void) const { return typeData; }

@@ -42,7 +42,7 @@ class UpdatedUnit : public CompleteUnit {
 
 /** \brief function object to extract the id from an UpdatedUnit */
 struct UpdatedUnitIDer {
-  uint32 operator()(const Ref<UpdatedUnit>& u) const {
+  UnitID operator()(const Ref<UpdatedUnit>& u) const {
     return u->getId();
   }
 };

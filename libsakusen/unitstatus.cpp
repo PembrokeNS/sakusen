@@ -5,31 +5,6 @@
 using namespace std;
 using namespace sakusen;
 
-UnitStatus::UnitStatus(
-    UnitTypeID t,
-    const Point<sint32>& p,
-    const Orientation& o,
-    const Point<sint16>& v,
-    /* status stuff */
-    HitPoints hP,
-    bool rIA,
-    bool sIA,
-    const std::list<uint32>& su,
-    const std::vector<WeaponStatus>& w
-  ) :
-  type(t),
-  position(p),
-  orientation(o),
-  velocity(v),
-  hitPoints(hP),
-  radarIsActive(rIA),
-  sonarIsActive(sIA),
-  subunits(su),
-  weaponsStatus(w)
-{
-  assert(t->getWeapons().size() == weaponsStatus.size());
-}
-
 UnitStatus::UnitStatus(const IUnitStatus* copy) :
   type(copy->getType()),
   position(copy->getPosition()),
@@ -41,18 +16,17 @@ UnitStatus::UnitStatus(const IUnitStatus* copy) :
   weaponsStatus(copy->getWeaponsStatus())
 {
   assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
-  /** \todo Subunits. */
 }
 
 UnitStatus::UnitStatus(
-    const UnitTypeID& startType,
+    UnitTypeID startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
     HitPoints startHitPoints,
     bool startRadarActive,
     bool startSonarActive,
-    std::vector<WeaponStatus> startWeaponsStatus
+    const std::vector<WeaponStatus>& startWeaponsStatus
   ) :
   type(startType),
   position(startPosition),
@@ -61,14 +35,13 @@ UnitStatus::UnitStatus(
   hitPoints(startHitPoints),
   radarIsActive(startRadarActive),
   sonarIsActive(startSonarActive),
-  subunits(),
   weaponsStatus(startWeaponsStatus)
 {
-  assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
+  assert(type->getWeapons().size() == weaponsStatus.size());
 }
 
 UnitStatus::UnitStatus(
-    const UnitTypeID& startType,
+    UnitTypeID startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -80,7 +53,6 @@ UnitStatus::UnitStatus(
   velocity(startVelocity),
   radarIsActive(false),
   sonarIsActive(false),
-  subunits(),
   weaponsStatus()
 {
   assert(world != NULL);
@@ -94,7 +66,7 @@ UnitStatus::UnitStatus(
 
 UnitStatus::UnitStatus(
     const Universe::ConstPtr& universe,
-    const UnitTypeID& startType,
+    UnitTypeID startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity
@@ -105,7 +77,6 @@ UnitStatus::UnitStatus(
   velocity(startVelocity),
   radarIsActive(false),
   sonarIsActive(false),
-  subunits(),
   weaponsStatus()
 {
   initializeWeapons(universe->getUnitTypePtr(type));
@@ -126,7 +97,7 @@ void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
   out << universe->getUnitTypePtr(type)->getInternalName();
   out << position;
   orientation.store(out);
-  out << velocity << hitPoints << radarIsActive << sonarIsActive << subunits <<
+  out << velocity << hitPoints << radarIsActive << sonarIsActive <<
     weaponsStatus;
 }
 
@@ -145,19 +116,18 @@ UnitStatus UnitStatus::load(
   HitPoints hitPoints;
   bool radarIsActive;
   bool sonarIsActive;
-  std::list<uint32> subunits;
   std::vector<WeaponStatus> weaponsStatus;
   
   in >> typeName;
   type = (*universe)->getUnitTypeId(typeName);
   in >> position;
   orientation = Orientation::load(in);
-  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive >> subunits;
+  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive;
   in >> weaponsStatus;
 
   return UnitStatus(
       type, position, orientation, velocity,
-      hitPoints, radarIsActive, sonarIsActive, subunits,
+      hitPoints, radarIsActive, sonarIsActive,
       weaponsStatus
     );
 }

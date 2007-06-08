@@ -29,6 +29,16 @@ void CairoRegion::fillRect(
   ui->fillRect(x+xoff, y+yoff, w, h, c);
 }
 
+void CairoRegion::fillCircle(
+    double xoff,
+    double yoff,
+    double r,
+    const Colour& c
+  )
+{
+  ui->fillCircle(x+xoff, y+yoff, r, c);
+}
+
 void CairoRegion::fillPolygon(
     const std::list< sakusen::Point<double> >& poly,
     const Colour& c

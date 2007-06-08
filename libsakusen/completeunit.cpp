@@ -8,7 +8,7 @@ using namespace std;
 using namespace sakusen;
 
 CompleteUnit::CompleteUnit(
-    uint32 uI,
+    UnitID uI,
     const UnitStatus& st,
     const UnitTypeData& tD
   ) :
@@ -35,7 +35,7 @@ void CompleteUnit::store(OArchive& out, bool sanitize) const
 {
   out.magicValue("CUNIT");
   if (sanitize) {
-    out << uint32(-1);
+    out << UnitID(-1);
   } else {
     out << unitId;
   }
@@ -48,7 +48,7 @@ CompleteUnit CompleteUnit::load(
     const sakusen::Universe::ConstPtr* universe
   )
 {
-  uint32 unitId;
+  UnitID unitId;
   
   in.magicValue("CUNIT");
   in >> unitId;

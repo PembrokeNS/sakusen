@@ -42,7 +42,7 @@ namespace client {
 
 /** \brief Function object to extract the id from an UpdatedSensorReturns */ 
 struct UpdatedSensorReturnsIDer {
-  uint32 operator()(const Ref<UpdatedSensorReturns>& s) const {
+  SensorReturnsID operator()(const Ref<UpdatedSensorReturns>& s) const {
     return s->getId();
   }
 };

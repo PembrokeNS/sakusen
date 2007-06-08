@@ -6,6 +6,7 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "unitid.h"
 #include "ui/actionargument.h"
 #include "ui/uiexceptions.h"
 
@@ -66,7 +67,7 @@ class Action : boost::noncopyable {
 
 Action::Ptr initializeAction(
     const String& actionName,
-    const std::set<uint32>& selection
+    const std::set<sakusen::UnitID>& selection
   );
 
 }}

@@ -11,16 +11,16 @@ namespace sakusen {
 class LIBSAKUSEN_API OrderMessage {
   public:
     OrderMessage();
-    OrderMessage(uint32 orderee, OrderCondition condition, const Order& order);
+    OrderMessage(UnitID orderee, OrderCondition condition, const Order& order);
     ~OrderMessage() {}
   private:
-    uint32 orderee;
+    UnitID orderee;
     OrderCondition condition;
     Order order;
   public:
     /** \name accessors */
     //@{
-    uint32 getOrderee(void) const { return orderee; }
+    UnitID getOrderee(void) const { return orderee; }
     const OrderCondition& getCondition(void) const { return condition; }
     const Order& getOrder(void) const { return order; }
     //@}

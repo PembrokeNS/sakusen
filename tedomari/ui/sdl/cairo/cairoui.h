@@ -39,6 +39,7 @@ class CairoUI : public SDLUI {
     void setClipRect(double x, double y, double w, double h);
     void resetClip();
     void fillRect(double x, double y, double w, double h, const Colour&);
+    void fillCircle(double x, double y, double r, const Colour&);
     void fillPolygon(
         const std::list< sakusen::Point<double> >& poly,
         const Colour&

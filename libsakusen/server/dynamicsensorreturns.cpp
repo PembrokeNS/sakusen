@@ -111,7 +111,7 @@ void DynamicSensorReturns::update()
   uint32 bestRadius = numeric_limits<uint32>::max();
   
   /* Check over the sensers, and erase any who no longer exist */
-  stack<uint32> deadUnitIDs;
+  stack<UnitID> deadUnitIDs;
   for (SensorReturnMap::iterator senser = sensers.begin();
       senser != sensers.end(); ++senser) {
     if (!senserOwner->getUnits().count(senser->first)) {
@@ -130,7 +130,7 @@ void DynamicSensorReturns::update()
    * information. */
   EachSensorReturn workingCopy;
   
-  for (hash_map<uint32, Ref<LayeredUnit> >::const_iterator unitIt =
+  for (hash_map<UnitID, Ref<LayeredUnit> >::const_iterator unitIt =
       senserOwner->getUnits().begin(); unitIt != senserOwner->getUnits().end();
       ++unitIt) {
     /* seek out local unit/sensors corresponding to this unit */

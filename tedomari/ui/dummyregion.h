@@ -33,6 +33,7 @@ class DummyRegion : public Region {
     void unsetClip() {}
     void fill(const Colour&) {}
     void fillRect(double, double, double, double, const Colour&) {}
+    void fillCircle(double, double, double, const Colour&) {}
     void fillPolygon(
         const std::list< sakusen::Point<double> >&,
         const Colour&

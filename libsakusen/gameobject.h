@@ -11,11 +11,12 @@ namespace sakusen {
  * bitfield.
  */
 enum GameObject {
-  gameObject_land =          0x01,
-  gameObject_water =         0x02,
-  gameObject_unit =          0x04,
+  gameObject_land          = 0x01,
+  gameObject_water         = 0x02,
+  gameObject_unit          = 0x04,
   gameObject_sensorReturns = 0x08,
-  gameObject_effect =        0x10
+  gameObject_effect        = 0x10,
+  gameObject_ballistic     = 0x20
 };
 
 inline GameObject operator|(const GameObject& left, const GameObject& right) {

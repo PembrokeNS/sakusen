@@ -67,7 +67,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     ~LayeredUnit();
   private:
     PlayerID owner;
-    uint32 unitId;
+    UnitID unitId;
     UnitLayer::Ptr topLayer;
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
@@ -92,8 +92,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     /** \name Accessors. */
     //@{
     inline PlayerID getOwner(void) const {return owner;}
-    inline uint32 getId(void) const { return unitId; }
-    inline void setId(uint32 id) { unitId = id; }
+    inline UnitID getId(void) const { return unitId; }
+    inline void setId(UnitID id) { unitId = id; }
     inline const IUnitTypeData* getITypeData(void) const {
       /** \bug Using get() to save time; probably shouldn't really */
       return topLayer.get();

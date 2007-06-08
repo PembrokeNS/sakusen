@@ -27,19 +27,18 @@ PartialWorld::PartialWorld(
       )),
   units()
 {
-  unitsById.reset(new IDIndex<uint32, UpdatedUnit, UpdatedUnitIDer>());
-  sensorReturnsById.reset(
-      new IDIndex<
-        SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
-      >()
-    );
+  unitsById.reset(new UnitIDIndex());
+  sensorReturnsById.reset(new SensorReturnsIDIndex());
+  ballisticsById.reset(new BallisticIDIndex());
   spatialIndex.reset(new NaiveSpatial());
   units.registerIndex(IIndex<UpdatedUnit>::Ptr(unitsById));
   sensorReturns.registerIndex(
       IIndex<UpdatedSensorReturns>::Ptr(sensorReturnsById)
     );
+  ballistics.registerIndex(IIndex<UpdatedBallistic>::Ptr(ballisticsById));
   units.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   sensorReturns.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
+  ballistics.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   world = this;
 }
 
@@ -167,20 +166,18 @@ void PartialWorld::applyUpdate(const Update& update)
     case updateType_ballisticAdded:
       {
         BallisticAddedUpdateData data = update.getBallisticAddedData();
-        uint32 id = data.getId();
-        if (ballistics.count(id)) {
+        ClientBallisticID id = data.getId();
+        if (ballisticsById->count(id)) {
           Debug("adding Ballistic of existing id");
         }
-        ballistics[id] = data.getPath();
+        ballistics.push_back(new UpdatedBallistic(id, data.getPath()));
       }
       break;
     case updateType_ballisticRemoved:
       {
-        BallisticRemovedUpdateData data =
-          update.getBallisticRemovedData();
-        __gnu_cxx::hash_map<uint32, Quadratic>::iterator ballistic =
-          ballistics.find(data.getId());
-        if (ballistic == ballistics.end()) {
+        BallisticRemovedUpdateData data = update.getBallisticRemovedData();
+        Ref<UpdatedBallistic> ballistic = ballisticsById->find(data.getId());
+        if (!ballistic.isValid()) {
           Debug("tried to remove non-existant Ballistic");
           break;
         }

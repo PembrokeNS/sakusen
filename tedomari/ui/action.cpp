@@ -17,7 +17,7 @@ namespace ui {
 
 class MoveAction : public Action {
   public:
-    MoveAction(const set<uint32>& selection) :
+    MoveAction(const set<UnitID>& selection) :
       Action(actionParameterType_target),
       movers(selection),
       target()
@@ -25,7 +25,7 @@ class MoveAction : public Action {
     }
   private:
     /** \brief Units to move */
-    set<uint32> movers;
+    set<UnitID> movers;
     /** \brief Target to which to move them
      * (target.which()==actionTargetType_none if not yet set) */
     ActionTarget target;
@@ -45,13 +45,13 @@ class MoveAction : public Action {
 class AttackVisitor : public boost::static_visitor<void> {
   public:
     /** \warning Stores a reference to its second argument */
-    AttackVisitor(Game* g, const set<uint32>& un) :
+    AttackVisitor(Game* g, const set<UnitID>& un) :
       game(g),
       units(un)
     {}
   private:
     Game* game;
-    const set<uint32>& units;
+    const set<UnitID>& units;
   public:
 
   void operator()(const Point<sint32>& target);
@@ -64,7 +64,7 @@ void AttackVisitor::operator()(const Point<sint32>& target)
 {
   PartialWorld::UnitIDIndex::ConstPtr unitIndex =
     client::world->getUnitsById();
-  for (set<uint32>::const_iterator unitID = units.begin();
+  for (set<UnitID>::const_iterator unitID = units.begin();
       unitID != units.end(); ++unitID) {
     Ref<UpdatedUnit> unit = unitIndex->find(*unitID);
     const UnitType* type =
@@ -87,7 +87,7 @@ void AttackVisitor::operator()(const Point<sint32>& target)
 
 class AttackAction : public Action {
   public:
-    AttackAction(const set<uint32>& selection) :
+    AttackAction(const set<UnitID>& selection) :
       Action(actionParameterType_target),
       attackers(selection),
       target()
@@ -95,7 +95,7 @@ class AttackAction : public Action {
     }
   private:
     /** \brief Units to attack with */
-    set<uint32> attackers;
+    set<UnitID> attackers;
     /** \brief Target at which to attack them
      * (target.which()==actionTargetType_none if not yet set) */
     ActionTarget target;
@@ -113,13 +113,13 @@ class AttackAction : public Action {
 
 class CreateAction : public Action {
   public:
-    CreateAction(const set<uint32>& selection) :
+    CreateAction(const set<UnitID>& selection) :
       Action(actionParameterType_stringFromSet),
       creaters(selection)
     {
       /* Extract the set of all unit types represented in the selection */
       set<UnitTypeID> unitTypes;
-      for (set<uint32>::iterator createrId = creaters.begin();
+      for (set<UnitID>::iterator createrId = creaters.begin();
           createrId != creaters.end(); ++createrId) {
         Ref<UpdatedUnit> creater =
           client::world->getUnitsById()->find(*createrId);
@@ -143,7 +143,7 @@ class CreateAction : public Action {
     }
   private:
     /** \brief Units to create with */
-    set<uint32> creaters;
+    set<UnitID> creaters;
     set<String> possibleCreations;
     String creation;
     pair<Position,Orientation> target;
@@ -183,7 +183,7 @@ class CreateAction : public Action {
 };
 
 void CreateAction::internalExecute(UI* ui) {
-  for (set<uint32>::iterator createrId = creaters.begin();
+  for (set<UnitID>::iterator createrId = creaters.begin();
       createrId != creaters.end(); ++createrId) {
     Ref<UpdatedUnit> creater =
       client::world->getUnitsById()->find(*createrId);
@@ -217,7 +217,7 @@ void CreateAction::internalExecute(UI* ui) {
 
 class BuildAction : public Action {
   public:
-    BuildAction(const set<uint32>& selection) :
+    BuildAction(const set<UnitID>& selection) :
       Action(actionParameterType_unit),
       builders(selection),
       target()
@@ -225,7 +225,7 @@ class BuildAction : public Action {
     }
   private:
     /** \brief Units to build with */
-    set<uint32> builders;
+    set<UnitID> builders;
     /** \brief Target to build
      * (!target.isValid() if not yet set) */
     Ref<UpdatedUnit> target;
@@ -238,7 +238,7 @@ class BuildAction : public Action {
     void internalExecute(UI* ui) {
       PartialWorld::UnitIDIndex::ConstPtr unitIndex =
         client::world->getUnitsById();
-      for (set<uint32>::const_iterator unitID = builders.begin();
+      for (set<UnitID>::const_iterator unitID = builders.begin();
           unitID != builders.end(); ++unitID) {
         Ref<UpdatedUnit> unit = unitIndex->find(*unitID);
         const UnitType* type =
@@ -273,7 +273,7 @@ class BuildAction : public Action {
  */
 Action::Ptr initializeAction(
     const String& actionName,
-    const set<uint32>& selection
+    const set<UnitID>& selection
   )
 {
   /** \bug Possibly slow use of if statements; could use a hashtable. */

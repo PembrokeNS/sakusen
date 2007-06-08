@@ -13,7 +13,7 @@
 
 namespace sakusen {
 
-typedef __gnu_cxx::hash_map<uint32, EachSensorReturn> SensorReturnMap;
+typedef __gnu_cxx::hash_map<UnitID, EachSensorReturn> SensorReturnMap;
 
 /** \brief Interface to a collection of all sensor returns from a single unit
  * to a single player.

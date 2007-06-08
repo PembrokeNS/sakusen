@@ -54,19 +54,35 @@ void MapDisplay::drawUnitOrders(
   }
 }
 
+void MapDisplay::drawBallistic(
+    const Ref<const UpdatedBallistic>& ballistic,
+    const Colour& colour
+  )
+{
+  Position dexPos = ballistic->getPath().evaluate(sakusen::world->getTimeNow());
+  Point<double> pixelPos = dexToPixel(dexPos);
+  getRegion()->fillCircle(
+      pixelPos,
+      3 /** \bug Arbitrary number for ballistic radius */,
+      colour
+    );
+}
+
 void MapDisplay::paint()
 {
   Region* r = getRegion();
   if (!game->isStarted()) {
-    /* When game not started, we flood with green, as a proof of
-     * concept. */
+    /* When game not started, we flood with green and print a diagonal red
+     * stripe, as a proof of concept. */
     r->fill(Colour::green);
     r->stroke(0, 0, r->getWidth(), r->getHeight(), Colour::red);
   } else {
     /** \todo obviously we need a bit more functionality */
     r->setClip();
+    /* Red background */
     r->fill(Colour::red);
     Map* m = sakusen::world->getMap();
+    /* Green map ('ground') */
     r->fillRect(dexToPixel(
           Rectangle<sint32>(m->left(), m->bottom(), m->right(), m->top())
         ), Colour::green);
@@ -74,6 +90,7 @@ void MapDisplay::paint()
         Rectangle<double>(0, 0, getWidth(), getHeight())
       );
     
+    /* Draw units */
     ISpatial::Result unitsToDraw =
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_unit
@@ -88,11 +105,12 @@ void MapDisplay::paint()
       drawUnitOrders(unit, colour);
     }
     
+    /* Draw sensor returns */
     ISpatial::Result returnsToDraw =
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_sensorReturns
         );
-    /*QDebug("drawing " << unitsToDraw.size() << " sensor returns");*/
+    /*QDebug("drawing " << returnsToDraw.size() << " sensor returns");*/
     for (ISpatial::Result::iterator retrnIt = returnsToDraw.begin();
         retrnIt != returnsToDraw.end(); ++retrnIt) {
       Ref<UpdatedSensorReturns> retrn =
@@ -102,6 +120,19 @@ void MapDisplay::paint()
       } else {
         Fatal("Not implemented");
       }
+    }
+
+    /* Draw ballistics */
+    ISpatial::Result ballisticsToDraw =
+      sakusen::client::world->getSpatialIndex()->findIntersecting(
+          displayRect, gameObject_ballistic
+        );
+    QDebug("drawing " << ballisticsToDraw.size() << " ballistics");
+    for (ISpatial::Result::iterator ballisticIt = ballisticsToDraw.begin();
+        ballisticIt != ballisticsToDraw.end(); ++ballisticIt) {
+      Ref<UpdatedBallistic> ballistic =
+        ballisticIt->dynamicCast<UpdatedBallistic>();
+      drawBallistic(ballistic, Colour::yellow*0.8);
     }
     
     if (dragging) {

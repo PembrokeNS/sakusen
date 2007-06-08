@@ -93,6 +93,13 @@ void CairoUI::fillRect(double x, double y, double w, double h, const Colour& c)
   cairo_fill(cairoContext);
 }
 
+void CairoUI::fillCircle(double x, double y, double r, const Colour& c)
+{
+  cairoSetSource(c);
+  cairo_arc(cairoContext, x, y, r, 0, 2*M_PI);
+  cairo_fill(cairoContext);
+}
+
 void CairoUI::fillPolygon(
     const list< sakusen::Point<double> >& poly,
     const Colour& c

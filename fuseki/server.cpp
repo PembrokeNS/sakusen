@@ -681,7 +681,7 @@ void Server::serve()
             );
           assert(reason == "");
           /* At this point, the plugin we've just loaded will have been
-           * flagged for removel, so we must remove it, lest this recently
+           * flagged for removal, so we must remove it, lest this recently
            * loaded plugin be immediately unloaded again. */
           pluginsToRemove.erase(plugin->getName());
           /* And then add it in so the same thing doesn't happen again */

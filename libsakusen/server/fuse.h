@@ -58,7 +58,7 @@ struct FuseEntry {
  */
 class PrioritizeFuseEntries {
   public:
-    inline uint32 operator()(const FuseEntry& fuseEntry) {
+    inline Time operator()(const FuseEntry& fuseEntry) {
       return fuseEntry.time;
     }
 };
@@ -70,7 +70,7 @@ class PrioritizeFuseEntries {
  * guaranteed to return the FuseEntries in the same order on any platform, even
  * when two have equal times.
  */
-typedef fifo_priority_queue<FuseEntry, uint32, PrioritizeFuseEntries> FuseQueue;
+typedef fifo_priority_queue<FuseEntry, Time, PrioritizeFuseEntries> FuseQueue;
 
 }}
 

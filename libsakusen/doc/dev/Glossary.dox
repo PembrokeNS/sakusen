@@ -1,6 +1,7 @@
-/** \page Glossary
+/** \page glossary Glossary
 
-This glossary is intended to define words which are used in the documentation
+This glossary is intended to give sakusen-specific
+meanings of words which are used in the documentation
 but are not simply the name of some class, or where they are the name of a
 class but have a slightly different meaning as well (e.g. 'universe') so the
 documentation for the class in question may not be sufficient to explain all
