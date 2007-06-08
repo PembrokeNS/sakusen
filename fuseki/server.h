@@ -59,8 +59,9 @@ class Server : public SettingsUser, private boost::noncopyable {
     /** Whether to print dots constantly */
     bool dots;
 #ifndef DISABLE_UNIX_SOCKETS
-     /** Whether to use abstract sockets for RemoteClients to listen */
+    /** Whether to use abstract sockets for RemoteClients to listen */
     bool abstract;
+    /** The Unix socket to listen on. */
     sakusen::comms::Socket::Ptr unixSocket;
 #endif
     sakusen::comms::Socket::Ptr udpSocket;
@@ -68,20 +69,28 @@ class Server : public SettingsUser, private boost::noncopyable {
     std::ostream& out;
     sakusen::ResourceInterface::Ptr resourceInterface;
     PluginInterface pluginInterface;
+    /** Client interfaces (owned by this) */
     __gnu_cxx::hash_map<sakusen::ClientID, RemoteClient*> clients;
-      /* Client interfaces (owned by this) */
+    /** The universe we plan to use to build the map.  NULL
+     * if none selected yet.
+     */
     sakusen::Universe::ConstPtr universe;
-      /* The universe we plan to use to build the map.  NULL
-                           if none selected yet. */
+    /* The map template which we plan to use to build the world.
+     * NULL if none selected yet. */
     sakusen::MapTemplate::ConstPtr map;
-      /* The map template which we plan to use to build the world.
-         NULL if none selected yet. */
-    uint32 mapPlayMode; /* Which mode we plan to play the map on */
+    /** The mode we plan to play the map on.
+     * \todo Make this more meaningful than a plain int.
+     */
+    uint32 mapPlayMode;
+
+    /** Players.  Note that this vector *becomes obsolete* as soon as the game
+     * is started, because World makes a copy of it and works with that */
     std::vector<sakusen::server::Player> players;
-      /* Players.  Note that this vector *becomes obsolete* as soon as the game
-       * is started, because World makes a copy of it and works with that */
-    settingsTree::SettingsTree::Ptr settings; /* The tree of all the settings */
-    bool allowObservers; /* Whether we allow observer clients */
+    /** The settings for this game. */
+    settingsTree::SettingsTree::Ptr settings;
+    /** True iff we allow clients to connect as observers. */
+    bool allowObservers;
+
     sakusen::hash_map_string<Plugin::Ptr>::type plugins;
     __gnu_cxx::hash_map<
         sakusen::MaskedPtr<sakusen::server::plugins::Listener>,

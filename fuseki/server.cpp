@@ -596,7 +596,7 @@ void Server::serve()
       }
     }
     
-    /* If we have a seperate tcp socket then check for messages there too */
+    /* If we have a separate tcp socket then check for messages there too */
     if (tcpSocket != NULL) {
       while (true) {
         Socket::Ptr newConnection = tcpSocket->accept();
