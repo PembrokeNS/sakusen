@@ -77,6 +77,8 @@ CompleteWorld::CompleteWorld(
 
 CompleteWorld::~CompleteWorld()
 {
+  /* Clear fuses lest they by multiply-inheriting UnitMasks */
+  fuseMap.clear();
   /* Clear units lest they outlive the sensor returns from them */
   units.clear();
   
