@@ -127,7 +127,7 @@ void MapDisplay::paint()
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_ballistic
         );
-    QDebug("drawing " << ballisticsToDraw.size() << " ballistics");
+    /*QDebug("drawing " << ballisticsToDraw.size() << " ballistics");*/
     for (ISpatial::Result::iterator ballisticIt = ballisticsToDraw.begin();
         ballisticIt != ballisticsToDraw.end(); ++ballisticIt) {
       Ref<UpdatedBallistic> ballistic =
