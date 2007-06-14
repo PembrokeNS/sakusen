@@ -48,7 +48,6 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   if (options.debug) {
     Debug("SDL debugging output not supported on release build");
   }
-  debug = false;
 #else
   debug = options.debug;
 #endif
