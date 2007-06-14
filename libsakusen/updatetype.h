@@ -19,7 +19,7 @@ enum UpdateType {
   updateType_none, 
   /** Remove unit.
    *
-   * UnitID, changeOwnerReason */
+   * UnitId, changeOwnerReason */
   updateType_unitRemoved,
   /** Add unit.
    *
@@ -31,11 +31,11 @@ enum UpdateType {
   updateType_unitAltered,
   /** Order accepted from client.
    *
-   * UnitID, Order */
+   * UnitId, Order */
   updateType_orderAccepted,
   /** Remove SensorReturns.
    *
-   * SensorReturnsID */
+   * SensorReturnsId */
   updateType_sensorReturnsRemoved,
   /** Add new SensorReturns.
    *

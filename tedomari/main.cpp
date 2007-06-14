@@ -366,8 +366,8 @@ void runClient(
                   ioHandler.message(message+"\n");
                 } else {
                   ioHandler.message(
-                      String("Joined.  Assigned client ID ") +
-                        clientID_toString(serverInterface.getID()) + "\n");
+                      String("Joined.  Assigned client id ") +
+                        clientId_toString(serverInterface.getId()) + "\n");
                   /* Queue all the autocommands that the user asked for */
                   for (list<String>::const_iterator autoCommand =
                       options.autoCommands.begin();

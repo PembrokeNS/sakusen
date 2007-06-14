@@ -22,8 +22,8 @@ String Server::intSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    sakusen::ClientID id =
-      sakusen::clientID_fromString(fullName.front());
+    sakusen::ClientId id =
+      sakusen::clientId_fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performIntMagic(/*altering,*/ fullName, newValue);
@@ -32,7 +32,7 @@ String Server::intSettingAlteringCallback(
      * player object */
     fullName.pop_front();
     assert(!fullName.empty());
-    sakusen::PlayerID id = sakusen::playerID_fromString(fullName.front());
+    sakusen::PlayerId id = sakusen::playerId_fromString(fullName.front());
     fullName.pop_front();
     sakusen::server::Player& player = players[id];
     assert(!fullName.empty());

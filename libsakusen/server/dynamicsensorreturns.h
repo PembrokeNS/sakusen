@@ -18,13 +18,13 @@ class DynamicSensorReturns : public ISensorReturns {
     DynamicSensorReturns();
   public:
     DynamicSensorReturns(
-        SensorReturnsID id,
+        SensorReturnsId id,
         const Ref<const LayeredUnit>& sensee,
         Player* senserOwner
       );
     ~DynamicSensorReturns() {}
   private:
-    SensorReturnsID id;
+    SensorReturnsId id;
     Perception perception;
     Region<sint32>::ConstPtr region;
     Player* senserOwner;
@@ -36,10 +36,10 @@ class DynamicSensorReturns : public ISensorReturns {
   public:
     /** \name Accessors. */
     //@{
-    inline SensorReturnsID getId() const { return id; }
+    inline SensorReturnsId getId() const { return id; }
     inline Perception getPerception() const { return perception; }
-    PlayerID getSenserOwner() const;
-    PlayerID getSenseeOwner() const;
+    PlayerId getSenserOwner() const;
+    PlayerId getSenseeOwner() const;
     Region<sint32>::ConstPtr getRegion() const;
     Ref<const ICompleteUnit> getUnit() const;
     inline const SensorReturnMap& getSensorReturns() const { return sensers; }
@@ -53,7 +53,7 @@ class DynamicSensorReturns : public ISensorReturns {
 };
 
 typedef __gnu_cxx::hash_map<
-    SensorReturnsID,
+    SensorReturnsId,
     Ref<DynamicSensorReturns>
   >::iterator DynamicSensorReturnsRef;
 

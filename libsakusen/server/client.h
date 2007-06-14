@@ -27,13 +27,13 @@ class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
     Client(const Client& copy);
   protected:
     /** Client is an abstract class.  All constructors must be protected. */
-    Client(ClientID id);
+    Client(ClientId id);
   public:
     /** The default destructor does nothing. */
     virtual ~Client() {}
   protected:
-    const ClientID clientId;
-    PlayerID playerId; /**< ID of player for this client.  "Dummy" clients for
+    const ClientId clientId;
+    PlayerId playerId; /**< Id of player for this client.  "Dummy" clients for
                           atmospherics, etc. will have id 0 - the neutral
                           player */
     /** \brief Buffer for incoming orders from clients.
@@ -47,9 +47,9 @@ class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
   public:
     /** \name Accessors */
     //@{
-    inline ClientID getClientId() const { return clientId; }
-    inline PlayerID getPlayerId() const { return playerId; }
-    inline void setPlayerId(const PlayerID& id) { playerId = id; }
+    inline ClientId getClientId() const { return clientId; }
+    inline PlayerId getPlayerId() const { return playerId; }
+    inline void setPlayerId(const PlayerId& id) { playerId = id; }
     inline bool orderMessageQueueEmpty(void) const {
       return orderMessageQueue.empty();
     }

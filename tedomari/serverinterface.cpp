@@ -117,9 +117,9 @@ String ServerInterface::flushIncoming()
   while (joined &&
       0 != (messageLength = incomingSocket->receive(buf, BUFFER_LEN))) {
     try {
-      PlayerID playerId =
+      PlayerId playerId =
         ( NULL == client::world ?
-          static_cast<PlayerID>(-1) : client::world->getPlayerId() );
+          static_cast<PlayerId>(-1) : client::world->getPlayerId() );
       IArchive messageArchive(buf, messageLength);
       Message message(messageArchive, playerId);
       switch (message.getType()) {
@@ -250,7 +250,7 @@ String ServerInterface::join()
     case messageType_accept:
       {
         AcceptMessageData data = message.getAcceptData();
-        id = data.getID();
+        id = data.getId();
         if (data.getAddress() != "") {
           outgoingSocket = Socket::newConnectionToAddress(data.getAddress());
         }
@@ -342,7 +342,7 @@ bool ServerInterface::getClientSetting(
   }
   
   return getSetting(
-      "clients:" + clientID_toString(id) + delim + setting
+      "clients:" + clientId_toString(id) + delim + setting
     );
 }
 
@@ -363,7 +363,7 @@ bool ServerInterface::setClientSetting(
   }
   
   return setSetting(
-      "clients:" + clientID_toString(id) + delim + setting, value
+      "clients:" + clientId_toString(id) + delim + setting, value
     );
 }
 

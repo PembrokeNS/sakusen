@@ -67,7 +67,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     sakusen::ResourceInterface::Ptr resourceInterface;
     PluginInterface pluginInterface;
     /** Client interfaces (owned by this) */
-    __gnu_cxx::hash_map<sakusen::ClientID, RemoteClient*> clients;
+    __gnu_cxx::hash_map<sakusen::ClientId, RemoteClient*> clients;
     /** The universe we plan to use to build the map.  NULL
      * if none selected yet.
      */
@@ -109,9 +109,10 @@ class Server : public SettingsUser, private boost::noncopyable {
     bool gameStarted;
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */
 
-    sakusen::ClientID getFreeClientID();
-      /* Find an unused ClientID for a new client.
-       * Returns (ClientID)-1 if there are no free IDs */
+    /** \brief Find an unused ClientId for a new client.
+     *
+     * \returns A free ClientId, or (ClientId)-1 if there are no free ids. */
+    sakusen::ClientId getFreeClientId();
     void addClient(
         const String& requestedAddress,
         const String& fromAddress,
@@ -139,7 +140,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     sakusen::ResourceInterface::Ptr getResourceInterface() const {
       return resourceInterface;
     }
-    sakusen::server::Player* getPlayerPtr(sakusen::PlayerID id);
+    sakusen::server::Player* getPlayerPtr(sakusen::PlayerId id);
     /** \brief Get the root of the Server's settings tree */
     const settingsTree::SettingsTree::Ptr& getSettings() { return settings; }
     /** \return true iff the server is currently allowing observers */

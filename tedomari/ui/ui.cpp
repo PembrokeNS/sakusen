@@ -622,12 +622,12 @@ void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
 class MoveVisitor : public boost::static_visitor<void> {
   public:
     /** \warning Stores a reference to its second argument */
-    MoveVisitor(UI* u, const set<UnitID>& un) :
+    MoveVisitor(UI* u, const set<UnitId>& un) :
       ui(u), units(un)
     {}
   private:
     UI* ui;
-    const set<UnitID>& units;
+    const set<UnitId>& units;
   public:
     /** \brief Orders units to move to target
      *
@@ -639,17 +639,17 @@ class MoveVisitor : public boost::static_visitor<void> {
 };
 
 /** \todo Replace this method with the order-queue related things */
-void UI::move(const std::set<UnitID>& units, const ActionTarget& target)
+void UI::move(const std::set<UnitId>& units, const ActionTarget& target)
 {
   MoveVisitor moveVisitor(this, units);
   target.apply_visitor(moveVisitor);
 }
 
-void UI::move(const std::set<UnitID>& units, const Position& target)
+void UI::move(const std::set<UnitId>& units, const Position& target)
 {
   Order order = Order(new MoveOrderData(target));
   
-  for (set<UnitID>::const_iterator unit = units.begin();
+  for (set<UnitId>::const_iterator unit = units.begin();
       unit != units.end(); ++unit) {
     game->order(OrderMessage(*unit, order));
   }

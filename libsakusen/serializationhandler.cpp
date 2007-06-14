@@ -9,9 +9,9 @@ Ref<ICompleteUnit> SerializationHandler<ICompleteUnit>::extract(
     IArchive& archive,
     const DeserializationContext& context
   ) const {
-  UnitID unitID;
-  archive >> unitID;
-  return world->getICompleteUnit(context.getPlayerId(), unitID);
+  UnitId unitId;
+  archive >> unitId;
+  return world->getICompleteUnit(context.getPlayerId(), unitId);
 }
 
 void SerializationHandler<ICompleteUnit>::insert(

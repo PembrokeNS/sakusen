@@ -67,7 +67,7 @@ class Action : boost::noncopyable {
 
 Action::Ptr initializeAction(
     const String& actionName,
-    const std::set<sakusen::UnitID>& selection
+    const std::set<sakusen::UnitId>& selection
   );
 
 }}

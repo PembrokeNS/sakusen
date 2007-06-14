@@ -17,7 +17,7 @@ Message::Message(
     /*const uint8* buffer,
     size_t bufferLength,*/
     IArchive& in,
-    PlayerID p /*= static_cast<PlayerID>(-1) (default in header)*/
+    PlayerId p /*= static_cast<PlayerId>(-1) (default in header)*/
   ) :
   player(p),
   data()
@@ -67,7 +67,7 @@ Message::Message(
       data.reset(new GameStartMessageData(in));
       break;
     case messageType_order:
-      if (player == static_cast<PlayerID>(-1)) {
+      if (player == static_cast<PlayerId>(-1)) {
         /* This is what happens when we get an OrderMessage before the game
          * starts */
         throw NoWorldDeserializationExn();
@@ -77,7 +77,7 @@ Message::Message(
           ));
       break;
     case messageType_update:
-      if (world == NULL || player == static_cast<PlayerID>(-1)) {
+      if (world == NULL || player == static_cast<PlayerId>(-1)) {
         throw NoWorldDeserializationExn();
       }
       data.reset(new UpdateMessageData(
@@ -114,7 +114,7 @@ void Message::store(OArchive& archive) const
 
 Message Message::load(IArchive& archive)
 {
-  PlayerID player;
+  PlayerId player;
   IArchive subArchive;
   archive >> player >> subArchive;
   return Message(subArchive, player);

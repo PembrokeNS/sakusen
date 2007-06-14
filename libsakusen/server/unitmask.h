@@ -70,7 +70,7 @@ class UnitMask : public UnitLayer {
     Ref<const LayeredUnit> getOuterUnit() const {
       return nextLayer->getOuterUnit();
     }
-    PlayerID getOwner() const { return nextLayer->getOwner(); }
+    PlayerId getOwner() const { return nextLayer->getOwner(); }
 
     /** \name Game mechanics.
      *
@@ -83,12 +83,12 @@ class UnitMask : public UnitLayer {
       return nextLayer->repair(amount, superHealth);
     }
     void changeType(
-        const UnitTypeID& to,
+        const UnitTypeId& to,
         hitPointAlteration hpAlteration
       ) {
       nextLayer->changeType(to, hpAlteration);
     }
-    void changeOwner(const PlayerID to, changeOwnerReason why) {
+    void changeOwner(const PlayerId to, changeOwnerReason why) {
       nextLayer->changeOwner(to, why);
     }
     //@}

@@ -45,8 +45,8 @@ class ServerInterface {
 #endif
     /** true iff we have joined the game */
     bool joined;
-    /** ID assigned to us by the server (valid only when joined) */
-    sakusen::ClientID id;
+    /** Id assigned to us by the server (valid only when joined) */
+    sakusen::ClientId id;
     /** Socket used by the server to talk to us (owned by this) */
     sakusen::comms::Socket::Ptr incomingSocket;
     /** Socket the server has reserved for us to talk to it (owned by this,
@@ -62,7 +62,7 @@ class ServerInterface {
     /** \name Accessors */
     //@{
     inline bool isJoined() const { return joined; }
-    inline sakusen::ClientID getID() const { return id; }
+    inline sakusen::ClientId getId() const { return id; }
     //@}
     
     String flushIncoming();

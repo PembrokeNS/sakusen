@@ -20,7 +20,7 @@ class ReplayRecorder :
   public:
     ReplayRecorder(const PluginServerInterface&);
   private:
-    std::vector<std::pair<ClientID, comms::Message> > thisTickMessages;
+    std::vector<std::pair<ClientId, comms::Message> > thisTickMessages;
     String replayFileRoot;
     uint16 keyTickInterval;
     ResourceInterface::Ptr resourceInterface;

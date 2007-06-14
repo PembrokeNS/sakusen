@@ -66,7 +66,7 @@ class UI : protected Control {
     sakusen::Rectangle<sint32> lastRectangle;
 
     /** \brief The friendly units currently selected (by unitid) */
-    std::set<sakusen::UnitID> selection;
+    std::set<sakusen::UnitId> selection;
     /** \brief The Action which is presently partly initialised (or
      * Action::Ptr() if no such Action */
     Action::Ptr pendingAction;
@@ -122,7 +122,7 @@ class UI : protected Control {
 
     void setModeFor(ActionParameterType);
   public:
-    inline const std::set<sakusen::UnitID>& getSelection() {
+    inline const std::set<sakusen::UnitId>& getSelection() {
       return selection;
     }
     std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> > getUnitsAtCursor();
@@ -184,11 +184,11 @@ class UI : protected Control {
     void selectUnitsIn(const sakusen::Rectangle<sint32>&);
 
     void move(
-        const std::set<sakusen::UnitID>& units,
+        const std::set<sakusen::UnitId>& units,
         const ActionTarget& target
       );
     void move(
-        const std::set<sakusen::UnitID>& units,
+        const std::set<sakusen::UnitId>& units,
         const sakusen::Position& target
       );
 };

@@ -16,8 +16,8 @@ namespace server{
  * This is the most likely method to call from module code when creating a
  * unit.  The other overload may also be appropriate. */
 Ref<LayeredUnit> LayeredUnit::spawn(
-    const PlayerID owner,
-    const UnitTypeID type,
+    const PlayerId owner,
+    const UnitTypeId type,
     const Point<sint32>& startNear,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -37,7 +37,7 @@ Ref<LayeredUnit> LayeredUnit::spawn(
  * This is primarily intended for use during initial population of the map, but
  * may also be used at other times. */
 Ref<LayeredUnit> LayeredUnit::spawn(
-    const PlayerID owner,
+    const PlayerId owner,
     const UnitTemplate& t
   )
 {
@@ -58,7 +58,7 @@ LayeredUnit::LayeredUnit(
 }
 
 LayeredUnit::LayeredUnit(
-    const UnitTypeID& startType,
+    const UnitTypeId& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -110,7 +110,7 @@ void LayeredUnit::setDirty()
    * assume that if we're still dirty, then so are they. */
   if (!dirty) {
     dirty = true;
-    for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
+    for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
         sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
       const Ref<DynamicSensorReturns>& r = returns->second->second;
       if (0 != (r->getPerception() & perception_unit)) {

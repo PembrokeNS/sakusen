@@ -31,7 +31,7 @@ class Ballistic : boost::noncopyable {
      * \note It's not sufficient to use source->getOwner() to determine the
      * Ballistic's owner, because the source may no longer exist.
      */
-    PlayerID owner;
+    PlayerId owner;
     Ref<LayeredUnit> source;
     Quadratic path;
   protected:
@@ -60,7 +60,7 @@ class Ballistic : boost::noncopyable {
     /** The destructor currently does nothing. */
     virtual ~Ballistic() {}
 
-    inline PlayerID getOwner() const { return owner; }
+    inline PlayerId getOwner() const { return owner; }
     inline const Quadratic& getPath() const { return path; }
 
     /** \name mechanics

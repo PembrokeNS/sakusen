@@ -11,37 +11,37 @@ namespace sakusen {
  * 255 clients
  *
  * Code may assume this is an unsigned integer type */
-typedef uint8 PlayerID;
+typedef uint8 PlayerId;
 
-/** \brief Converts PlayerID to string
+/** \brief Converts PlayerId to string
  */
-inline PlayerID playerID_fromString(String str)
+inline PlayerId playerId_fromString(String str)
 {
-  return numFromString<PlayerID>(str);
+  return numFromString<PlayerId>(str);
 }
 
-/** \brief Converts string to PlayerID
+/** \brief Converts string to PlayerId
  *
- * Guaranteed that if \c id is some PlayerID then
+ * Guaranteed that if \c id is some PlayerId then
  * \code
- * id == playerID_fromString(playerID_toString(id))
+ * id == playerId_fromString(playerId_toString(id))
  * \endcode
  */
-inline String playerID_toString(PlayerID id)
+inline String playerId_toString(PlayerId id)
 {
   return numToString(id);
 }
 
-/** \brief Exception to describe the case of an invalid player ID.
+/** \brief Exception to describe the case of an invalid player Id.
  *
- * \todo Make the version of the ctr that takes a player ID do something useful
+ * \todo Make the version of the ctr that takes a player Id do something useful
  * with it.
  */
-class InvalidPlayerID : public std::runtime_error {
+class InvalidPlayerId : public std::runtime_error {
   public:
-    PlayerID id;
-    InvalidPlayerID(): std::runtime_error("InvalidPlayerID"), id(0) {}
-    InvalidPlayerID(PlayerID p): std::runtime_error("InvalidPlayerID"), id(p) {}
+    PlayerId id;
+    InvalidPlayerId(): std::runtime_error("InvalidPlayerId"), id(0) {}
+    InvalidPlayerId(PlayerId p): std::runtime_error("InvalidPlayerId"), id(p) {}
 };
 }
 

@@ -10,15 +10,15 @@ namespace sakusen {
 class LIBSAKUSEN_API OrderMessage {
   public:
     OrderMessage();
-    OrderMessage(UnitID orderee, const Order& order);
+    OrderMessage(UnitId orderee, const Order& order);
     ~OrderMessage() {}
   private:
-    UnitID orderee;
+    UnitId orderee;
     Order order;
   public:
     /** \name accessors */
     //@{
-    UnitID getOrderee(void) const { return orderee; }
+    UnitId getOrderee(void) const { return orderee; }
     const Order& getOrder(void) const { return order; }
     //@}
 

@@ -31,16 +31,16 @@ SIMPLE_STORER(String)
 #undef SIMPLE_STORER
 
 template<>
-struct Storer<WeaponTypeID> {
-  void operator()(OArchive& archive, const WeaponTypeID toStore)
+struct Storer<WeaponTypeId> {
+  void operator()(OArchive& archive, const WeaponTypeId toStore)
   {
     archive << toStore->getInternalName();
   }
 };
 
 template<>
-struct Storer<UnitTypeID> {
-  void operator()(OArchive& archive, const UnitTypeID toStore)
+struct Storer<UnitTypeId> {
+  void operator()(OArchive& archive, const UnitTypeId toStore)
   {
     archive << toStore->getInternalName();
   }

@@ -51,7 +51,7 @@ class UnitLayer : public IUnitTypeData {
     virtual Ref<const LayeredUnit> getOuterUnit() const = 0;
 
     /* accessors (more accessors are inherited from IUnitTypeData) */
-    virtual PlayerID getOwner() const = 0;
+    virtual PlayerId getOwner() const = 0;
 
     /** \name Game mechanics.
      *
@@ -62,10 +62,10 @@ class UnitLayer : public IUnitTypeData {
     virtual void damage(HitPoints amount) = 0;
     virtual void repair(HitPoints amount, bool superhealth) = 0;
     virtual void changeType(
-        const UnitTypeID& to,
+        const UnitTypeId& to,
         hitPointAlteration hpAlteration
       ) = 0;
-    virtual void changeOwner(const PlayerID to, enum changeOwnerReason why) = 0;
+    virtual void changeOwner(const PlayerId to, enum changeOwnerReason why) = 0;
     //@}
 
     /* callbacks */

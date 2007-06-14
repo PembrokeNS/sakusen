@@ -29,36 +29,36 @@ class LIBSAKUSEN_SERVER_API Player {
   private:
     bool noClients;
     bool raceFixed;
-    PlayerID playerId; /**< ID of player is assigned by the World constructor */
+    PlayerId playerId; /**< Id of player is assigned by the World constructor */
     String name;
     std::list<Client*> clients;
     
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
-    __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> > units;
+    __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> > units;
     /* The id of the last unit that was added for this player */
-    UnitID lastUnitId;
+    UnitId lastUnitId;
     
     hash_list<DynamicSensorReturns> sensorReturns;
     
-    __gnu_cxx::hash_map<SensorReturnsID, Ref<DynamicSensorReturns> >
+    __gnu_cxx::hash_map<SensorReturnsId, Ref<DynamicSensorReturns> >
       sensorReturnsById;
-    SensorReturnsID lastSensorReturnsId;
+    SensorReturnsId lastSensorReturnsId;
 
     /* A container of Refs to the Ballistics visible to this player.  The key
      * is a pointer which we use as a UID for the Ballistic, but it shouldn't
      * be dereferenced - use the Ref instead to avoid danglingness.  The first
-     * pair entry is the client-side ID */
+     * pair entry is the client-side id */
     __gnu_cxx::hash_map<
         MaskedPtr<Ballistic>,
-        std::pair<ClientBallisticID, Ref<const Ballistic> >
+        std::pair<ClientBallisticId, Ref<const Ballistic> >
       > visibleBallistics;
-    ClientBallisticID lastClientBallisticId;
+    ClientBallisticId lastClientBallisticId;
   public:
     /** \name Accessors. */
     //@{
-    PlayerID getId() const { return playerId; }
-    void setPlayerId(const PlayerID& id);
+    PlayerId getId() const { return playerId; }
+    void setPlayerId(const PlayerId& id);
     inline const String& getName(void) const { return name; }
     inline void setName(const String& n) { name = n; }
     inline uint16 getNumClients(void) const {
@@ -66,10 +66,10 @@ class LIBSAKUSEN_SERVER_API Player {
     }
     void attachClient(Client* client);
     void detachClient(Client* client);
-    const __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >& getUnits(void) const {
+    const __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >& getUnits(void) const {
       return units;
     }
-    Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsID id) {
+    Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsId id) {
       DynamicSensorReturnsRef it = sensorReturnsById.find(id);
       if (it == sensorReturnsById.end()) {
         return Ref<DynamicSensorReturns>();
@@ -84,7 +84,7 @@ class LIBSAKUSEN_SERVER_API Player {
     //@}
 
     /* game mechanics */
-    void removeUnit(const UnitID id, enum changeOwnerReason why);
+    void removeUnit(const UnitId id, enum changeOwnerReason why);
     void addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why);
     void checkSensorReturns();
     

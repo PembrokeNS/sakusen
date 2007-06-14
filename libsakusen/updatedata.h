@@ -33,17 +33,17 @@ class LIBSAKUSEN_API UnitRemovedUpdateData : public UpdateData {
   private:
     UnitRemovedUpdateData();
   public:
-    UnitRemovedUpdateData(UnitID i, changeOwnerReason r) :
+    UnitRemovedUpdateData(UnitId i, changeOwnerReason r) :
       UpdateData(), id(i), reason(r) {}
     UnitRemovedUpdateData(IArchive&);
     ~UnitRemovedUpdateData() {}
   private:
-    UnitID id;
+    UnitId id;
     changeOwnerReason reason;
   public:
     UpdateType getType() const { return updateType_unitRemoved; }
     void store(OArchive& out) const;
-    UnitID getId() const { return id; }
+    UnitId getId() const { return id; }
     changeOwnerReason getReason() const { return reason; }
 };
 
@@ -88,15 +88,15 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   private:
     OrderAcceptedUpdateData();
   public:
-    OrderAcceptedUpdateData(UnitID uI, const Order& o) :
+    OrderAcceptedUpdateData(UnitId uI, const Order& o) :
       UpdateData(), unitId(uI), order(o) {}
     OrderAcceptedUpdateData(IArchive&, const DeserializationContext&);
     ~OrderAcceptedUpdateData() {}
   private:
-    UnitID unitId;
+    UnitId unitId;
     Order order;
   public:
-    inline UnitID getUnitId() const { return unitId; }
+    inline UnitId getUnitId() const { return unitId; }
     inline const Order& getOrder() const { return order; }
     UpdateType getType() const { return updateType_orderAccepted; }
     void store(OArchive& out) const;
@@ -106,16 +106,16 @@ class LIBSAKUSEN_API SensorReturnsRemovedUpdateData : public UpdateData {
   private:
     SensorReturnsRemovedUpdateData();
   public:
-    SensorReturnsRemovedUpdateData(SensorReturnsID i) :
+    SensorReturnsRemovedUpdateData(SensorReturnsId i) :
       UpdateData(), id(i) {}
     SensorReturnsRemovedUpdateData(IArchive&);
     ~SensorReturnsRemovedUpdateData() {}
   private:
-    SensorReturnsID id;
+    SensorReturnsId id;
   public:
     UpdateType getType() const { return updateType_sensorReturnsRemoved; }
     void store(OArchive& out) const;
-    SensorReturnsID getId() const { return id; }
+    SensorReturnsId getId() const { return id; }
 };
 
 class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
@@ -154,33 +154,33 @@ class LIBSAKUSEN_API BallisticRemovedUpdateData : public UpdateData {
   private:
     BallisticRemovedUpdateData();
   public:
-    BallisticRemovedUpdateData(ClientBallisticID i) :
+    BallisticRemovedUpdateData(ClientBallisticId i) :
       UpdateData(), id(i) {}
     BallisticRemovedUpdateData(IArchive&);
     ~BallisticRemovedUpdateData() {}
   private:
-    ClientBallisticID id;
+    ClientBallisticId id;
   public:
     UpdateType getType() const { return updateType_ballisticRemoved; }
     void store(OArchive& out) const;
-    ClientBallisticID getId() const { return id; }
+    ClientBallisticId getId() const { return id; }
 };
 
 class LIBSAKUSEN_API BallisticAddedUpdateData : public UpdateData {
   private:
     BallisticAddedUpdateData();
   public:
-    BallisticAddedUpdateData(ClientBallisticID i, const Quadratic& p) :
+    BallisticAddedUpdateData(ClientBallisticId i, const Quadratic& p) :
       UpdateData(), id(i), path(p) {}
     BallisticAddedUpdateData(IArchive&);
     ~BallisticAddedUpdateData() {}
   private:
-    ClientBallisticID id;
+    ClientBallisticId id;
     Quadratic path;
   public:
     UpdateType getType() const { return updateType_ballisticAdded; }
     void store(OArchive& out) const;
-    ClientBallisticID getId() const { return id; }
+    ClientBallisticId getId() const { return id; }
     inline const Quadratic& getPath() const { return path; }
 };
 

@@ -26,10 +26,10 @@ SensorReturns SensorReturns::load(
     const DeserializationContext& context
   )
 {
-  SensorReturnsID id;
+  SensorReturnsId id;
   Perception perception;
-  PlayerID senserOwner;
-  PlayerID senseeOwner;
+  PlayerId senserOwner;
+  PlayerId senseeOwner;
   Region<sint32>::Ptr region;
   CompleteUnit* unit;
   SensorReturnMap returns(10);

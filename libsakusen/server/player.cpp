@@ -18,12 +18,12 @@ Player::Player(const PlayerTemplate& t) :
   name(""),
   clients(),
   units(),
-  lastUnitId(static_cast<UnitID>(-1)),
+  lastUnitId(static_cast<UnitId>(-1)),
   sensorReturns(),
   sensorReturnsById(),
-  lastSensorReturnsId(static_cast<SensorReturnsID>(-1)),
+  lastSensorReturnsId(static_cast<SensorReturnsId>(-1)),
   visibleBallistics(),
-  lastClientBallisticId(static_cast<ClientBallisticID>(-1))
+  lastClientBallisticId(static_cast<ClientBallisticId>(-1))
 {
   assert(raceFixed || !noClients);
 }
@@ -78,7 +78,7 @@ Player::~Player()
   sensorReturnsById.clear();
 }
 
-void Player::setPlayerId(const PlayerID& id)
+void Player::setPlayerId(const PlayerId& id)
 {
   playerId = id;
   for (std::list<Client*>::iterator client = clients.begin();
@@ -120,9 +120,9 @@ void Player::detachClient(Client* client)
  *
  * Any call to removeUnit must be followed by a call to addUnit for
  * another player, otherwise the unit will end up in limbo. */
-void Player::removeUnit(const UnitID id, enum changeOwnerReason why)
+void Player::removeUnit(const UnitId id, enum changeOwnerReason why)
 {
-  __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::iterator unit =
+  __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::iterator unit =
     units.find(id);
   if (unit == units.end()) {
     Fatal("tried to remove a unit which wasn't there");
@@ -181,7 +181,7 @@ void Player::checkSensorReturns()
       world->getUnits().begin();
       unit != world->getUnits().end(); ++unit) {
     /* check whether this unit already has a return to this player */
-    hash_map<PlayerID, DynamicSensorReturnsRef>::iterator it =
+    hash_map<PlayerId, DynamicSensorReturnsRef>::iterator it =
       (*unit)->getSensorReturns().find(playerId);
     if (it != (*unit)->getSensorReturns().end()) {
       /* we have a sensor return, so we update it */
@@ -203,22 +203,22 @@ void Player::checkSensorReturns()
     } else if ((*unit)->getOwner() != playerId) {
       /* we have no sensor return, so we determine whether one should exist
        * */
-      SensorReturnsID newId = lastSensorReturnsId + 1;
+      SensorReturnsId newId = lastSensorReturnsId + 1;
       DynamicSensorReturns newReturns(newId, *unit, this);
       if (!newReturns.empty()) {
         /* Clear the dirty flag that will certainly have been set */
         newReturns.clearDirty();
         sensorReturns.push_back(new DynamicSensorReturns(newReturns));
         pair<DynamicSensorReturnsRef, bool> inserted = sensorReturnsById.insert(
-            pair<SensorReturnsID, Ref<DynamicSensorReturns> >(
+            pair<SensorReturnsId, Ref<DynamicSensorReturns> >(
               newId, sensorReturns.back()
             )
           );
         if (!inserted.second) {
-          Fatal("SensorReturnsID wrapped around");
+          Fatal("SensorReturnsId wrapped around");
         }
         (*unit)->getSensorReturns().insert(
-              pair<PlayerID, DynamicSensorReturnsRef>(playerId, inserted.first)
+              pair<PlayerId, DynamicSensorReturnsRef>(playerId, inserted.first)
             );
         informClients(
             Update(new SensorReturnsAddedUpdateData(inserted.first->second))
@@ -230,9 +230,9 @@ void Player::checkSensorReturns()
 
   /* First we check over the existing visible Ballistics to remove the ones
    * that have invalidated */
-  queue<MaskedPtr<Ballistic> > invalidatedBallisticIds;
+  stack<MaskedPtr<Ballistic> > invalidatedBallisticIds;
   for (__gnu_cxx::hash_map<
-        MaskedPtr<Ballistic>, pair<ClientBallisticID, Ref<const Ballistic> >
+        MaskedPtr<Ballistic>, pair<ClientBallisticId, Ref<const Ballistic> >
       >::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second.isValid()) {
@@ -244,7 +244,7 @@ void Player::checkSensorReturns()
   /* Now we actually erase the invalidated entries (we couldn't do this before
    * because erasure in a hash_map invalidates iterators) */
   while (!invalidatedBallisticIds.empty()) {
-    visibleBallistics.erase(invalidatedBallisticIds.front());
+    visibleBallistics.erase(invalidatedBallisticIds.top());
     invalidatedBallisticIds.pop();
   }
 
@@ -258,10 +258,10 @@ void Player::checkSensorReturns()
     } else {
       /* It's a new one */
       /** \todo Make an actual visibilty check */
-      ClientBallisticID clientId = ++lastClientBallisticId;
-      /** \bug There's no wraparound check for this ID */
+      ClientBallisticId clientId = ++lastClientBallisticId;
+      /** \bug There's no wraparound check for this id */
       visibleBallistics[*ballistic] =
-        pair<ClientBallisticID, Ref<const Ballistic> >(
+        pair<ClientBallisticId, Ref<const Ballistic> >(
             clientId, *ballistic
           );
       informClients(Update(
@@ -281,7 +281,7 @@ void Player::applyIncomingOrders(void)
       client != clients.end(); client++) {
     while (!(*client)->orderMessageQueueEmpty()) {
       const OrderMessage message = (*client)->orderMessageQueuePopFront();
-      __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::iterator orderee =
+      __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
         Debug("Order for non-existent unit id " << message.getOrderee() <<

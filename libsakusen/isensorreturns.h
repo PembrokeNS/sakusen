@@ -13,7 +13,7 @@
 
 namespace sakusen {
 
-typedef __gnu_cxx::hash_map<UnitID, EachSensorReturn> SensorReturnMap;
+typedef __gnu_cxx::hash_map<UnitId, EachSensorReturn> SensorReturnMap;
 
 /** \brief Interface to a collection of all sensor returns from a single unit
  * to a single player.
@@ -24,10 +24,10 @@ class LIBSAKUSEN_API ISensorReturns : public Bounded {
   public:
     virtual ~ISensorReturns() {}
 
-    virtual SensorReturnsID getId() const = 0;
+    virtual SensorReturnsId getId() const = 0;
     virtual Perception getPerception() const = 0;
-    virtual PlayerID getSenserOwner() const = 0;
-    virtual PlayerID getSenseeOwner() const = 0;
+    virtual PlayerId getSenserOwner() const = 0;
+    virtual PlayerId getSenseeOwner() const = 0;
     virtual Region<sint32>::ConstPtr getRegion() const = 0;
     virtual Ref<const ICompleteUnit> getUnit() const = 0;
     virtual const SensorReturnMap& getSensorReturns() const = 0;
@@ -47,7 +47,7 @@ class SerializationHandler<ISensorReturns> {
         IArchive& archive,
         const DeserializationContext& context
       ) const {
-      SensorReturnsID id;
+      SensorReturnsId id;
       archive >> id;
       return world->getISensorReturns(context.getPlayerId(), id);
     }

@@ -17,7 +17,7 @@ namespace ui {
 
 class MoveAction : public Action {
   public:
-    MoveAction(const set<UnitID>& selection) :
+    MoveAction(const set<UnitId>& selection) :
       Action(actionParameterType_target),
       movers(selection),
       target()
@@ -25,7 +25,7 @@ class MoveAction : public Action {
     }
   private:
     /** \brief Units to move */
-    set<UnitID> movers;
+    set<UnitId> movers;
     /** \brief Target to which to move them
      * (target.which()==actionTargetType_none if not yet set) */
     ActionTarget target;
@@ -45,13 +45,13 @@ class MoveAction : public Action {
 class AttackVisitor : public boost::static_visitor<void> {
   public:
     /** \warning Stores a reference to its second argument */
-    AttackVisitor(Game* g, const set<UnitID>& un) :
+    AttackVisitor(Game* g, const set<UnitId>& un) :
       game(g),
       units(un)
     {}
   private:
     Game* game;
-    const set<UnitID>& units;
+    const set<UnitId>& units;
   public:
 
   void operator()(const Point<sint32>& target);
@@ -62,24 +62,24 @@ class AttackVisitor : public boost::static_visitor<void> {
 
 void AttackVisitor::operator()(const Point<sint32>& target)
 {
-  PartialWorld::UnitIDIndex::ConstPtr unitIndex =
+  PartialWorld::UnitIdIndex::ConstPtr unitIndex =
     client::world->getUnitsById();
-  for (set<UnitID>::const_iterator unitID = units.begin();
-      unitID != units.end(); ++unitID) {
-    Ref<UpdatedUnit> unit = unitIndex->find(*unitID);
+  for (set<UnitId>::const_iterator unitId = units.begin();
+      unitId != units.end(); ++unitId) {
+    Ref<UpdatedUnit> unit = unitIndex->find(*unitId);
     const UnitType* type =
       client::world->getUniverse()->getUnitTypePtr(unit->getStatus().getType());
     /* For each weapon, if it's a violent weapon then aim it at the target */
-    const vector<WeaponTypeID>& weapons = type->getWeapons();
-    for (vector<WeaponTypeID>::const_iterator weaponTypeID = weapons.begin();
-        weaponTypeID != weapons.end(); ++weaponTypeID) {
+    const vector<WeaponTypeId>& weapons = type->getWeapons();
+    for (vector<WeaponTypeId>::const_iterator weaponTypeId = weapons.begin();
+        weaponTypeId != weapons.end(); ++weaponTypeId) {
       const WeaponType* weaponType =
-        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeID);
+        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
       if (weaponType->getClientHint() == "o") {
         Order order(
-            new TargetPositionOrderData(weaponTypeID-weapons.begin(), target)
+            new TargetPositionOrderData(weaponTypeId-weapons.begin(), target)
           );
-        this->game->order(OrderMessage(*unitID, order));
+        this->game->order(OrderMessage(*unitId, order));
       }
     }
   }
@@ -87,7 +87,7 @@ void AttackVisitor::operator()(const Point<sint32>& target)
 
 class AttackAction : public Action {
   public:
-    AttackAction(const set<UnitID>& selection) :
+    AttackAction(const set<UnitId>& selection) :
       Action(actionParameterType_target),
       attackers(selection),
       target()
@@ -95,7 +95,7 @@ class AttackAction : public Action {
     }
   private:
     /** \brief Units to attack with */
-    set<UnitID> attackers;
+    set<UnitId> attackers;
     /** \brief Target at which to attack them
      * (target.which()==actionTargetType_none if not yet set) */
     ActionTarget target;
@@ -113,28 +113,28 @@ class AttackAction : public Action {
 
 class CreateAction : public Action {
   public:
-    CreateAction(const set<UnitID>& selection) :
+    CreateAction(const set<UnitId>& selection) :
       Action(actionParameterType_stringFromSet),
       creaters(selection)
     {
       /* Extract the set of all unit types represented in the selection */
-      set<UnitTypeID> unitTypes;
-      for (set<UnitID>::iterator createrId = creaters.begin();
+      set<UnitTypeId> unitTypes;
+      for (set<UnitId>::iterator createrId = creaters.begin();
           createrId != creaters.end(); ++createrId) {
         Ref<UpdatedUnit> creater =
           client::world->getUnitsById()->find(*createrId);
         unitTypes.insert(creater->getStatus().getType());
       }
       /* Extract all the types of things any of these unit types can build */
-      for (set<UnitTypeID>::iterator typeId = unitTypes.begin();
+      for (set<UnitTypeId>::iterator typeId = unitTypes.begin();
           typeId != unitTypes.end(); ++typeId) {
         const UnitType* unitType =
           client::world->getUniverse()->getUnitTypePtr(*typeId);
-        const vector<WeaponTypeID>& weapons = unitType->getWeapons();
-        for (vector<WeaponTypeID>::const_iterator weaponTypeID =
-            weapons.begin(); weaponTypeID != weapons.end(); ++weaponTypeID) {
+        const vector<WeaponTypeId>& weapons = unitType->getWeapons();
+        for (vector<WeaponTypeId>::const_iterator weaponTypeId =
+            weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
           const WeaponType* weaponType =
-            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeID);
+            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
           if (boost::starts_with(weaponType->getClientHint(), "c:")) {
             possibleCreations.insert(weaponType->getClientHint().substr(2));
           }
@@ -143,7 +143,7 @@ class CreateAction : public Action {
     }
   private:
     /** \brief Units to create with */
-    set<UnitID> creaters;
+    set<UnitId> creaters;
     set<String> possibleCreations;
     String creation;
     pair<Position,Orientation> target;
@@ -183,7 +183,7 @@ class CreateAction : public Action {
 };
 
 void CreateAction::internalExecute(UI* ui) {
-  for (set<UnitID>::iterator createrId = creaters.begin();
+  for (set<UnitId>::iterator createrId = creaters.begin();
       createrId != creaters.end(); ++createrId) {
     Ref<UpdatedUnit> creater =
       client::world->getUnitsById()->find(*createrId);
@@ -193,14 +193,14 @@ void CreateAction::internalExecute(UI* ui) {
     const UnitType* unitType =
       client::world->getUniverse()->
       getUnitTypePtr(creater->getStatus().getType());
-    const vector<WeaponTypeID>& weapons = unitType->getWeapons();
-    for (vector<WeaponTypeID>::const_iterator weaponTypeID =
-        weapons.begin(); weaponTypeID != weapons.end(); ++weaponTypeID) {
+    const vector<WeaponTypeId>& weapons = unitType->getWeapons();
+    for (vector<WeaponTypeId>::const_iterator weaponTypeId =
+        weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
       const WeaponType* weaponType =
-        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeID);
+        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
       if (weaponType->getClientHint() == "c:"+creation) {
         Order order(new TargetPositionOrientationOrderData(
-              weaponTypeID-weapons.begin(), target
+              weaponTypeId-weapons.begin(), target
             ));
         ui->getGame()->order(OrderMessage(*createrId, order));
         return;
@@ -217,7 +217,7 @@ void CreateAction::internalExecute(UI* ui) {
 
 class BuildAction : public Action {
   public:
-    BuildAction(const set<UnitID>& selection) :
+    BuildAction(const set<UnitId>& selection) :
       Action(actionParameterType_unit),
       builders(selection),
       target()
@@ -225,7 +225,7 @@ class BuildAction : public Action {
     }
   private:
     /** \brief Units to build with */
-    set<UnitID> builders;
+    set<UnitId> builders;
     /** \brief Target to build
      * (!target.isValid() if not yet set) */
     Ref<UpdatedUnit> target;
@@ -236,26 +236,26 @@ class BuildAction : public Action {
     }
 
     void internalExecute(UI* ui) {
-      PartialWorld::UnitIDIndex::ConstPtr unitIndex =
+      PartialWorld::UnitIdIndex::ConstPtr unitIndex =
         client::world->getUnitsById();
-      for (set<UnitID>::const_iterator unitID = builders.begin();
-          unitID != builders.end(); ++unitID) {
-        Ref<UpdatedUnit> unit = unitIndex->find(*unitID);
+      for (set<UnitId>::const_iterator unitId = builders.begin();
+          unitId != builders.end(); ++unitId) {
+        Ref<UpdatedUnit> unit = unitIndex->find(*unitId);
         const UnitType* type =
           client::world->getUniverse()->
           getUnitTypePtr(unit->getStatus().getType());
         /* For each weapon, if it's a builder then aim it at the target */
-        const vector<WeaponTypeID>& weapons = type->getWeapons();
-        for (vector<WeaponTypeID>::const_iterator weaponTypeID =
-            weapons.begin(); weaponTypeID != weapons.end(); ++weaponTypeID) {
+        const vector<WeaponTypeId>& weapons = type->getWeapons();
+        for (vector<WeaponTypeId>::const_iterator weaponTypeId =
+            weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
           const WeaponType* weaponType =
-            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeID);
+            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
           if (weaponType->getClientHint() == "b") {
             Order order(
-                new TargetUnitOrderData(weaponTypeID-weapons.begin(), target)
+                new TargetUnitOrderData(weaponTypeId-weapons.begin(), target)
               );
             ui->getGame()->order(
-                OrderMessage(*unitID, order)
+                OrderMessage(*unitId, order)
               );
           }
         }
@@ -273,7 +273,7 @@ class BuildAction : public Action {
  */
 Action::Ptr initializeAction(
     const String& actionName,
-    const set<UnitID>& selection
+    const set<UnitId>& selection
   )
 {
   /** \bug Possibly slow use of if statements; could use a hashtable. */

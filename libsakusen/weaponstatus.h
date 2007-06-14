@@ -68,7 +68,7 @@ class LIBSAKUSEN_API WeaponStatus {
     void deactivate(void);
     //@}
 
-    bool incrementState(WeaponTypeID type);
+    bool incrementState(WeaponTypeId type);
 
     void store(OArchive&) const;
     static WeaponStatus load(IArchive&);

@@ -11,18 +11,18 @@ ClientsBranch::ClientsBranch(Branch* parent, Server* server) :
 {
 }
 
-void ClientsBranch::addClient(ClientID id)
+void ClientsBranch::addClient(ClientId id)
 {
-  String name = clientID_toString(id);
+  String name = clientId_toString(id);
   if (getChild(name)) {
     Fatal("tried to add client branch of existing name " << name);
   }
   addChild(Node::Ptr(new ClientBranch(id, this, server)));
 }
 
-void ClientsBranch::removeClient(ClientID id)
+void ClientsBranch::removeClient(ClientId id)
 {
-  String name = clientID_toString(id);
+  String name = clientId_toString(id);
   if (!getChild(name)) {
     Fatal("tried to remove non-existant client branch " << name);
   }

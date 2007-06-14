@@ -27,7 +27,7 @@ class LIBSAKUSEN_SERVER_API Weapon {
   public:
     virtual ~Weapon() {}
   private:
-    WeaponTypeID type;
+    WeaponTypeId type;
 
     /* We here remember the targets for the weapon for those targets which
      * cannot be remembered by WeaponStatus because of serialization issues */
@@ -79,7 +79,7 @@ class LIBSAKUSEN_SERVER_API Weapon {
       ) = 0;
   public:
     /* accessors */
-    WeaponTypeID getType(void) const {return type;}
+    WeaponTypeId getType(void) const {return type;}
 
     virtual void incrementState(
         const Ref<LayeredUnit>& firer,

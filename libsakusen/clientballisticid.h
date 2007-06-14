@@ -3,12 +3,12 @@
 
 namespace sakusen {
 
-/** \brief ID for a particular player's perspective of a ballictic.
+/** \brief Id for a particular player's perspective of a ballictic.
  *
- * Each player that can see a Ballistic will give it an ID.  These are
- * independent of one another; there is no overall ID for a Ballistic, and if
- * no one can see it then it has no ID at alli. */
-typedef uint32 ClientBallisticID;
+ * Each player that can see a Ballistic will give it an id.  These are
+ * independent of one another; there is no overall id for a Ballistic, and if
+ * no one can see it then it has no id at all. */
+typedef uint32 ClientBallisticId;
 
 }
 

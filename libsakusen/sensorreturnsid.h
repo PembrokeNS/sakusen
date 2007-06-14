@@ -3,7 +3,7 @@
 
 namespace sakusen {
 
-typedef uint32 SensorReturnsID;
+typedef uint32 SensorReturnsId;
 
 }
 

@@ -36,16 +36,16 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     String internalName;
     String hash;
     std::vector<WeaponType> weaponTypes;
-    hash_map_string<WeaponTypeID>::type weaponIDLookup;
+    hash_map_string<WeaponTypeId>::type weaponIdLookup;
     std::vector<UnitType> unitTypes;
-    hash_map_string<UnitTypeID>::type unitIDLookup;
+    hash_map_string<UnitTypeId>::type unitIdLookup;
 
     void constructHashMaps();
   public:
     /** \brief finishes initialization of Universe
      *
      * This method finishes off the initialization of the Universe by resolving
-     * all the names that have been inserted into it into IDs.
+     * all the names that have been inserted into it into Ids.
      *
      * If an unresolvable name is encoutered then it is returned (in this case
      * the Universe should *not* be used for anything).  Otherwise,
@@ -59,19 +59,19 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     inline const String& getHash() const { return hash; }
     //@}
     
-    /** \name Index/pointer/ID/Name conversions */
+    /** \name Index/pointer/Id/Name conversions */
     //@{
-    inline const WeaponType* getWeaponTypePtr(WeaponTypeID id) const
+    inline const WeaponType* getWeaponTypePtr(WeaponTypeId id) const
     {
       return id;
     }
-    WeaponTypeID getWeaponTypeID(String weaponTypeName) const;
-    inline const UnitTypeID getUnitTypeId(uint32 i) const
+    WeaponTypeId getWeaponTypeId(String weaponTypeName) const;
+    inline const UnitTypeId getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
       return &unitTypes[i];
     }
-    inline const UnitType* getUnitTypePtr(const UnitTypeID id) const
+    inline const UnitType* getUnitTypePtr(const UnitTypeId id) const
     {
       return id;
     }
@@ -79,11 +79,11 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     {
       return getUnitTypePtr(getUnitTypeId(i));
     }
-    UnitTypeID getUnitTypeId(String unitTypeName) const;
+    UnitTypeId getUnitTypeId(String unitTypeName) const;
     //@}
     
-    /** \brief Determine whether the Universe contains a given UnitTypeID */
-    bool containsUnitType(const UnitTypeID id) const;
+    /** \brief Determine whether the Universe contains a given UnitTypeId */
+    bool containsUnitType(const UnitTypeId id) const;
 
     void store(OArchive&) const;
     /** \brief Loads a Universe from an archive

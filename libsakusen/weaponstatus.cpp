@@ -65,7 +65,7 @@ void WeaponStatus::deactivate(void) {active = false;}
  * charged, then remove firing cost from energy and weapon charges and return
  * true (in this case the Weapon should be fired), otherwise return false.
  */
-bool WeaponStatus::incrementState(WeaponTypeID type)
+bool WeaponStatus::incrementState(WeaponTypeId type)
 {
   /** \todo Worry about what state weapons can be left in when inactive.  Can
    * they be charged, for example? */

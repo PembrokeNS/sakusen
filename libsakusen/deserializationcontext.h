@@ -20,11 +20,11 @@ class Universe;
  * symbols in a module or loading a heightfield PNG).
  *
  * When deserializing messages, the DeserializationContext may provide a
- * PlayerID for the player from whose client the message was received.  This
- * can be used, for example, to find units based only on their client-side ID.
- * The message itself cannot be used to store the PlayerID, because that would
+ * PlayerId for the player from whose client the message was received.  This
+ * can be used, for example, to find units based only on their client-side id.
+ * The message itself cannot be used to store the PlayerId, because that would
  * allow one player to masquerade as another.  When not set, this has the value
- * PlayerID(-1).
+ * PlayerId(-1).
  *
  * In either case, the DeserializationContext may provide a Universe, if one
  * has yet been loaded and there is reason to believe it cannot be obtained by
@@ -42,7 +42,7 @@ class DeserializationContext {
       playerId(-1)
     {}
     explicit DeserializationContext(
-        PlayerID pI = PlayerID(-1),
+        PlayerId pI = PlayerId(-1),
         boost::shared_ptr<const Universe> u=boost::shared_ptr<const Universe>()
       ) :
       resourceInterface(),
@@ -52,13 +52,13 @@ class DeserializationContext {
   private:
     ResourceInterface::Ptr resourceInterface;
     boost::shared_ptr<const Universe> universe;
-    PlayerID playerId;
+    PlayerId playerId;
   public:
     ResourceInterface::Ptr getResourceInterface() const {
       return resourceInterface;
     }
     boost::shared_ptr<const Universe> getUniverse() const { return universe; }
-    PlayerID getPlayerId() const { return playerId; }
+    PlayerId getPlayerId() const { return playerId; }
 };
 
 }

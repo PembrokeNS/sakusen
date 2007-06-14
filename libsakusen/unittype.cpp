@@ -15,8 +15,8 @@ UnitType::UnitType(
     bool su,
     bool gra,
     bool se,
-    const std::vector<WeaponTypeID>& w,
-    const UnitTypeID& cUT) :
+    const std::vector<WeaponTypeId>& w,
+    const UnitTypeId& cUT) :
   internalName(iN),
   dynamicData(dD),
   energyCost(eC),
@@ -58,7 +58,7 @@ UnitType::UnitType(
 {
 }
 
-/** \brief Converts all the weapon type names into proper WeaponTypeIDs by
+/** \brief Converts all the weapon type names into proper WeaponTypeIds by
  * querying the given Universe */
 String UnitType::resolveNames(const Universe* universe)
 {
@@ -66,21 +66,21 @@ String UnitType::resolveNames(const Universe* universe)
   assert(corpseUnitType == NULL);
   
   while (!weaponNames.empty()) {
-    WeaponTypeID weaponID = universe->getWeaponTypeID(weaponNames.front());
-    if (weaponID == NULL) {
+    WeaponTypeId weaponId = universe->getWeaponTypeId(weaponNames.front());
+    if (weaponId == NULL) {
       return weaponNames.front();
     }
     weaponNames.pop_front();
-    weapons.push_back(weaponID);
+    weapons.push_back(weaponId);
   }
 
   if (corpseUnitTypeName != "") {
-    UnitTypeID corpseID = universe->getUnitTypeId(corpseUnitTypeName);
-    if (corpseID == NULL) {
+    UnitTypeId corpseId = universe->getUnitTypeId(corpseUnitTypeName);
+    if (corpseId == NULL) {
       return corpseUnitTypeName;
     }
     corpseUnitTypeName = "";
-    corpseUnitType = corpseID;
+    corpseUnitType = corpseId;
   } else {
     corpseUnitType = NULL;
   }
@@ -95,7 +95,7 @@ void UnitType::store(OArchive& archive) const
   archive << energyCost << metalCost;
   archive << fixed << ground << surface << gravity << seabed << weapons <<
     (corpseUnitType == NULL ? String("") : corpseUnitType->getInternalName());
-    /** \bug assumes UnitTypeID is UnitType* */
+    /** \bug assumes UnitTypeId is UnitType* */
 }
 
 UnitType UnitType::load(IArchive& archive)

@@ -4,7 +4,7 @@ namespace sakusen{
 namespace server{
 
 DebuggingClient::DebuggingClient(
-    ClientID i,
+    ClientId i,
     std::ostream& output
   ) :
   Client(i),

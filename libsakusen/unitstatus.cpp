@@ -19,7 +19,7 @@ UnitStatus::UnitStatus(const IUnitStatus* copy) :
 }
 
 UnitStatus::UnitStatus(
-    UnitTypeID startType,
+    UnitTypeId startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -41,7 +41,7 @@ UnitStatus::UnitStatus(
 }
 
 UnitStatus::UnitStatus(
-    UnitTypeID startType,
+    UnitTypeId startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -66,7 +66,7 @@ UnitStatus::UnitStatus(
 
 UnitStatus::UnitStatus(
     const Universe::ConstPtr& universe,
-    UnitTypeID startType,
+    UnitTypeId startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity
@@ -107,7 +107,7 @@ UnitStatus UnitStatus::load(
   )
 {
   String typeName;
-  UnitTypeID type;
+  UnitTypeId type;
   Point<sint32> position;
   Orientation orientation;
   Point<sint16> velocity;

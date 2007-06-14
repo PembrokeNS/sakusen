@@ -26,7 +26,7 @@ class LIBSAKUSEN_API ICompleteUnit : public Bounded {
     virtual ~ICompleteUnit() {}
   public:
     /* accessors */
-    virtual UnitID getId(void) const = 0;
+    virtual UnitId getId(void) const = 0;
     virtual const IUnitStatus* getIStatus(void) const = 0;
     virtual const IUnitTypeData* getITypeData(void) const = 0;
     

@@ -11,7 +11,7 @@ using namespace sakusen::comms;
 using namespace fuseki;
 
 RemoteClient::RemoteClient(
-    ClientID i,
+    ClientId i,
     Server* s,
     const sakusen::comms::Socket::Ptr& socket,
     bool createInSocket
@@ -21,7 +21,7 @@ RemoteClient::RemoteClient(
 #endif
   ) :
   Client(i),
-  SettingsUser(String("client")+clientID_toString(i)),
+  SettingsUser(String("client")+clientId_toString(i)),
   server(s),
   inSocket(),
   outSocket(socket),
@@ -68,7 +68,7 @@ RemoteClient::~RemoteClient()
   setPlayerId(0, false);
 }
 
-void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)
+void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
 {
   if (playerId != 0) {
     try {
@@ -77,21 +77,21 @@ void RemoteClient::setPlayerId(PlayerID id, bool removeGroup)
         /* This condition is necessary because when this method is called from
          * the destructor, this->groups may already have been cleared when the
          * game started */
-        this->removeGroup(String("player")+playerID_toString(playerId));
+        this->removeGroup(String("player")+playerId_toString(playerId));
       }
-    } catch (InvalidPlayerID& e) {
-      /* The last player ID was invalid. Continue anyway, o/w we can never
+    } catch (InvalidPlayerId& e) {
+      /* The last player id was invalid. Continue anyway, o/w we can never
        * recover.
        */
-      Debug("RemoteClient::setPlayerId found the old ID was invalid");
+      Debug("RemoteClient::setPlayerId found the old id was invalid");
     }
   }
   if (id != 0) {
     try {
       server->getPlayerPtr(id)->attachClient(this);
-      addGroup(String("player")+playerID_toString(id));
-    } catch (InvalidPlayerID& e) {
-      Debug("RemoteClient::setPlayerId was given an invalid ID");
+      addGroup(String("player")+playerId_toString(id));
+    } catch (InvalidPlayerId& e) {
+      Debug("RemoteClient::setPlayerId was given an invalid id");
       throw;
     }
   }

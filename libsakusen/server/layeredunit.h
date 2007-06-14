@@ -40,14 +40,14 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     typedef boost::shared_ptr<const LayeredUnit> ConstPtr;
 
     static Ref<LayeredUnit> spawn(
-      const PlayerID owner,
-      const UnitTypeID type,
+      const PlayerId owner,
+      const UnitTypeId type,
       const Point<sint32>& startNear,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
       const HitPoints startHP = HitPoints(-1)
     );
-    static Ref<LayeredUnit> spawn(const PlayerID owner, const UnitTemplate& t);
+    static Ref<LayeredUnit> spawn(const PlayerId owner, const UnitTemplate& t);
   private:
     /** Constructor used by LayeredUnit::spawn during initial construction
      * of the Map */
@@ -57,7 +57,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * owner is expected to be set after construction since it should not
      * be set until *after* the Unit has been added to the World. */
     LayeredUnit(
-      const UnitTypeID& startType,
+      const UnitTypeId& startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
@@ -66,8 +66,8 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
   public:
     ~LayeredUnit();
   private:
-    PlayerID owner;
-    UnitID unitId;
+    PlayerId owner;
+    UnitId unitId;
     UnitLayer::Ptr topLayer;
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
@@ -78,7 +78,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     
     /** \brief Sensor returns from this unit, indexed by the player doing the
      * sensing. */
-    __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef> sensorReturns;
+    __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef> sensorReturns;
 
     /** \brief Indicates that information must be transmitted clients.
      *
@@ -88,9 +88,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
   public:
     /** \name Accessors. */
     //@{
-    inline PlayerID getOwner(void) const {return owner;}
-    inline UnitID getId(void) const { return unitId; }
-    inline void setId(UnitID id) { unitId = id; }
+    inline PlayerId getOwner(void) const {return owner;}
+    inline UnitId getId(void) const { return unitId; }
+    inline void setId(UnitId id) { unitId = id; }
     inline const IUnitTypeData* getITypeData(void) const {
       /** \bug Using get() to save time; probably shouldn't really */
       return topLayer.get();
@@ -99,9 +99,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     inline const IUnitStatus* getIStatus(void) const { return status; }
     inline const UnitOrders& getOrders(void) const { return orders; }
     inline UnitOrders& getOrders(void) { return orders; }
-    inline __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
+    inline __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef>&
       getSensorReturns(void) { return sensorReturns; }
-    inline const __gnu_cxx::hash_map<PlayerID, DynamicSensorReturnsRef>&
+    inline const __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef>&
       getSensorReturns(void) const { return sensorReturns; }
     //@}
 
@@ -164,10 +164,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * The semantics of this are going to need some thought, but does
      * transforming of units, deployment and conversion to corpses on death. */
     inline void changeType(
-        const UnitTypeID& to,
+        const UnitTypeId& to,
         hitPointAlteration hpAlteration
       ) { topLayer->changeType(to, hpAlteration); }
-    inline void changeOwner(const PlayerID to, enum changeOwnerReason why) {
+    inline void changeOwner(const PlayerId to, enum changeOwnerReason why) {
       topLayer->changeOwner(to, why);
       owner = topLayer->getOwner();
     }

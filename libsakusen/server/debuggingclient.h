@@ -17,10 +17,10 @@ namespace server {
 class LIBSAKUSEN_SERVER_API DebuggingClient : public Client {
   public:
     DebuggingClient();
-    DebuggingClient(ClientID, std::ostream& output);
+    DebuggingClient(ClientId, std::ostream& output);
     ~DebuggingClient() {};
   private:
-    PlayerID player;
+    PlayerId player;
     std::ostream& outputStream;
   public:
     void flushOutgoing(Time /*time*/) {}

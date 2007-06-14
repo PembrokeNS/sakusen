@@ -57,19 +57,19 @@ class LIBSAKUSEN_COMMS_API AcceptMessageData : public MessageData {
   private:
     AcceptMessageData();
   public:
-    AcceptMessageData(const String& address, const ClientID& id);
+    AcceptMessageData(const String& address, const ClientId& id);
     AcceptMessageData(IArchive& in);
     ~AcceptMessageData() {}
   private:
     String address; /* The address where the server want all future
                        communication from this client to be sent */
-    ClientID id; /* The id assigned to this client */
+    ClientId id; /* The id assigned to this client */
   protected:
     void fillArchive() const;
   public:
     MessageType getType() const;
     inline const String& getAddress() const { return address; }
-    inline const ClientID& getID() const { return id; }
+    inline const ClientId& getId() const { return id; }
 };
 
 class LIBSAKUSEN_COMMS_API RejectMessageData : public MessageData {
@@ -179,7 +179,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     GameStartMessageData();
   public:
     GameStartMessageData(
-        PlayerID playerId,
+        PlayerId playerId,
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
@@ -190,7 +190,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     GameStartMessageData(IArchive& in);
     ~GameStartMessageData() {}
   private:
-    PlayerID playerId;
+    PlayerId playerId;
     Topology topology;
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
@@ -201,7 +201,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     void fillArchive() const;
   public:
     MessageType getType() const;
-    inline PlayerID getPlayerId() const { return playerId; }
+    inline PlayerId getPlayerId() const { return playerId; }
     inline Topology getTopology() const { return topology; }
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }

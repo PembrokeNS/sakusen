@@ -94,7 +94,7 @@ class Creater : public Weapon {
      * */
     virtual uint64 squareRange() const = 0;
     /* When overriden, gives the UnitType created */
-    virtual UnitTypeID getTypeCreated() const = 0;
+    virtual UnitTypeId getTypeCreated() const = 0;
 };
 
 class FactoryCreater : public Creater {
@@ -105,7 +105,7 @@ class FactoryCreater : public Creater {
   private:
     Weapon* newCopy() const { return new FactoryCreater(*this); }
     uint64 squareRange() const { return 100000000; }
-    UnitTypeID getTypeCreated() const {
+    UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("factory");
     }
 };
@@ -118,7 +118,7 @@ class GruntCreater : public Creater {
   private:
     Weapon* newCopy() const { return new GruntCreater(*this); }
     uint64 squareRange() const { return 30000000; }
-    UnitTypeID getTypeCreated() const {
+    UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("grunt");
     }
 };
@@ -131,7 +131,7 @@ class SpiderCreater : public Creater {
   private:
     Weapon* newCopy() const { return new SpiderCreater(*this); }
     uint64 squareRange() const { return 30000000; }
-    UnitTypeID getTypeCreated() const {
+    UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("spider");
     }
 };
@@ -191,7 +191,7 @@ class Shell : public Ballistic {
 
 class Explosion : public Effect {
   public:
-    Explosion(PlayerID owner, const Point<sint32>& centre, uint32 radius) :
+    Explosion(PlayerId owner, const Point<sint32>& centre, uint32 radius) :
       Effect(
           owner, Region<sint32>::Ptr(new SphereRegion<sint32>(centre, radius)),
           Visibility()

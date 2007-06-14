@@ -16,7 +16,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
   public:
     UnitStatus(const IUnitStatus* copy);
     UnitStatus(
-      UnitTypeID startType,
+      UnitTypeId startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
@@ -26,7 +26,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       const std::vector<WeaponStatus>& startWeaponsStatus
     );
     UnitStatus(
-      UnitTypeID startType,
+      UnitTypeId startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
@@ -35,14 +35,14 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
          don't need to specify the extra data */
     UnitStatus(
       const Universe::ConstPtr& universe,
-      UnitTypeID startType,
+      UnitTypeId startType,
       const Point<sint32>& startPosition,
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity
     ); /**< This is a variant of the above constructor for when the world does
           not exist yet, so the universe must be provided directly */
   public:
-    UnitTypeID type;
+    UnitTypeId type;
     /** \name Unit's physical attributes */
     //@{
     Position position;
@@ -61,7 +61,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     void initializeWeapons(const UnitType* typePtr);
   public:
     /* accessors */
-    inline UnitTypeID getType(void) const {return type;}
+    inline UnitTypeId getType(void) const {return type;}
     inline const UnitType* getTypePtr(void) const;
     inline const Point<sint32>& getPosition(void) const {return position;}
     inline const Orientation& getOrientation(void) const {return orientation;}

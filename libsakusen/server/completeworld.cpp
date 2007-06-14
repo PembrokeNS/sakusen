@@ -157,7 +157,7 @@ hash_list<Effect, Bounded>::iterator CompleteWorld::processEffect(
  */
 Ref<LayeredUnit> CompleteWorld::addUnit(
     const LayeredUnit::Ptr& unit,
-    PlayerID owner
+    PlayerId owner
   ) {
   units.push_back(unit);
   units.back()->changeOwner(owner, changeOwnerReason_created);

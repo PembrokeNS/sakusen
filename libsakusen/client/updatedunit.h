@@ -39,8 +39,8 @@ class UpdatedUnit : public CompleteUnit {
 };
 
 /** \brief function object to extract the id from an UpdatedUnit */
-struct UpdatedUnitIDer {
-  UnitID operator()(const Ref<UpdatedUnit>& u) const {
+struct UpdatedUnitIder {
+  UnitId operator()(const Ref<UpdatedUnit>& u) const {
     return u->getId();
   }
 };

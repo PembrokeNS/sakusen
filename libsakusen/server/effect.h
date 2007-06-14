@@ -23,7 +23,7 @@ namespace server {
  * \todo Some kind of visibility modification scheme. */
 class Effect : public Bounded {
   private:
-    PlayerID owner;
+    PlayerId owner;
     Region<sint32>::Ptr region;
     Visibility visibility;
 
@@ -35,7 +35,7 @@ class Effect : public Bounded {
       region(copy.region),
       visibility(copy.visibility)
     {}
-    Effect(PlayerID o, const Region<sint32>::Ptr& r, Visibility v) :
+    Effect(PlayerId o, const Region<sint32>::Ptr& r, Visibility v) :
       owner(o), region(r), visibility(v) {}
     
   public:
@@ -43,7 +43,7 @@ class Effect : public Bounded {
     /** \name Accessors. */
     //@{
     inline GameObject getObjectType() const { return gameObject_effect; }
-    inline const PlayerID getOwner(void) const { return owner; }
+    inline const PlayerId getOwner(void) const { return owner; }
     inline const Region<sint32>::Ptr& getRegion(void) const { return region; }
     inline const Visibility& getVisibility(void) const { return visibility; }
     //@}

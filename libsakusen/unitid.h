@@ -6,7 +6,7 @@
 namespace sakusen {
 
 /** \brief Unique identifier for a unit amongst units of one player. */
-typedef uint32 UnitID;
+typedef uint32 UnitId;
 
 }
 

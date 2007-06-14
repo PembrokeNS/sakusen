@@ -24,7 +24,7 @@ class Player {
     Player(const Player& copy);
     ~Player();
   private:
-    PlayerID playerId;
+    PlayerId playerId;
     String name;
     std::list<Client*> clients; /* owned by this */
   public:

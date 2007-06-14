@@ -13,7 +13,7 @@ using namespace sakusen;
 using namespace sakusen::server;
 
 DynamicSensorReturns::DynamicSensorReturns(
-    SensorReturnsID i,
+    SensorReturnsId i,
     const Ref<const LayeredUnit>& s,
     Player* sO
   ) :
@@ -28,12 +28,12 @@ DynamicSensorReturns::DynamicSensorReturns(
   update();
 }
 
-PlayerID DynamicSensorReturns::getSenserOwner() const
+PlayerId DynamicSensorReturns::getSenserOwner() const
 {
   return senserOwner->getId();
 }
 
-PlayerID DynamicSensorReturns::getSenseeOwner() const
+PlayerId DynamicSensorReturns::getSenseeOwner() const
 {
   if (0 != (perception & (perception_owner | perception_unit))) {
     return sensee->getOwner();
@@ -111,17 +111,17 @@ void DynamicSensorReturns::update()
   uint32 bestRadius = numeric_limits<uint32>::max();
   
   /* Check over the sensers, and erase any who no longer exist */
-  stack<UnitID> deadUnitIDs;
+  stack<UnitId> deadUnitIds;
   for (SensorReturnMap::iterator senser = sensers.begin();
       senser != sensers.end(); ++senser) {
     if (!senserOwner->getUnits().count(senser->first)) {
-      deadUnitIDs.push(senser->first);
+      deadUnitIds.push(senser->first);
     }
   }
 
-  while (!deadUnitIDs.empty()) {
-    sensers.erase(deadUnitIDs.top());
-    deadUnitIDs.pop();
+  while (!deadUnitIds.empty()) {
+    sensers.erase(deadUnitIds.top());
+    deadUnitIds.pop();
   }
 
   /* loop over all units of the player doing the sensing */
@@ -130,7 +130,7 @@ void DynamicSensorReturns::update()
    * information. */
   EachSensorReturn workingCopy;
   
-  for (hash_map<UnitID, Ref<LayeredUnit> >::const_iterator unitIt =
+  for (hash_map<UnitId, Ref<LayeredUnit> >::const_iterator unitIt =
       senserOwner->getUnits().begin(); unitIt != senserOwner->getUnits().end();
       ++unitIt) {
     /* seek out local unit/sensors corresponding to this unit */

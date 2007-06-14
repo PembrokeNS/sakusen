@@ -24,18 +24,18 @@ void Universe::constructHashMaps()
 {
   for (vector<WeaponType>::iterator weaponType = weaponTypes.begin();
       weaponType != weaponTypes.end(); weaponType++) {
-    if (weaponIDLookup.count(weaponType->getInternalName())) {
+    if (weaponIdLookup.count(weaponType->getInternalName())) {
       throw DuplicateNameDeserializationExn(weaponType->getInternalName());
     }
-    weaponIDLookup[weaponType->getInternalName()] = &*weaponType;
+    weaponIdLookup[weaponType->getInternalName()] = &*weaponType;
   }
   
   for (vector<UnitType>::iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {
-    if (unitIDLookup.count(unitType->getInternalName())) {
+    if (unitIdLookup.count(unitType->getInternalName())) {
       throw DuplicateNameDeserializationExn(unitType->getInternalName());
     }
-    unitIDLookup[unitType->getInternalName()] = &*unitType;
+    unitIdLookup[unitType->getInternalName()] = &*unitType;
   }
 }
 
@@ -52,30 +52,30 @@ String Universe::resolveNames()
   return "";
 }
 
-WeaponTypeID Universe::getWeaponTypeID(String weaponTypeName) const
+WeaponTypeId Universe::getWeaponTypeId(String weaponTypeName) const
 {
-  hash_map_string<WeaponTypeID>::type::const_iterator
-    weaponType = weaponIDLookup.find(weaponTypeName);
-  if (weaponType == weaponIDLookup.end()) {
+  hash_map_string<WeaponTypeId>::type::const_iterator
+    weaponType = weaponIdLookup.find(weaponTypeName);
+  if (weaponType == weaponIdLookup.end()) {
     return NULL;
   }
   return weaponType->second;
 }
 
-UnitTypeID Universe::getUnitTypeId(String unitTypeName) const
+UnitTypeId Universe::getUnitTypeId(String unitTypeName) const
 {
-  hash_map_string<UnitTypeID>::type::const_iterator
-    unitType = unitIDLookup.find(unitTypeName);
-  if (unitType == unitIDLookup.end()) {
+  hash_map_string<UnitTypeId>::type::const_iterator
+    unitType = unitIdLookup.find(unitTypeName);
+  if (unitType == unitIdLookup.end()) {
     Debug("unit type '"+unitTypeName+"' not found");
     return NULL;
   }
   return unitType->second;
 }
 
-bool Universe::containsUnitType(const UnitTypeID id) const
+bool Universe::containsUnitType(const UnitTypeId id) const
 {
-  /** \todo Rewrite using unitIDLookup so that it takes only O(1) time */
+  /** \todo Rewrite using unitIdLookup so that it takes only O(1) time */
   const UnitType* typePtr = getUnitTypePtr(id);
   for (std::vector<UnitType>::const_iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {

@@ -23,7 +23,7 @@ UnitCore::UnitCore(const UnitCore& copy, LayeredUnit* o) :
 
 UnitCore::UnitCore(
     LayeredUnit* o,
-    const UnitTypeID& startType,
+    const UnitTypeId& startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
     const Point<sint16>& startVelocity,
@@ -57,8 +57,8 @@ void UnitCore::initializeWeapons()
   Universe::ConstPtr universe = world->getUniverse();
   const UnitType* typePtr = universe->getUnitTypePtr(type);
   /* add weapons */
-  const std::vector<WeaponTypeID>& weaponTypes = typePtr->getWeapons();
-  for (std::vector<WeaponTypeID>::const_iterator weaponType =
+  const std::vector<WeaponTypeId>& weaponTypes = typePtr->getWeapons();
+  for (std::vector<WeaponTypeId>::const_iterator weaponType =
       weaponTypes.begin(); weaponType != weaponTypes.end(); ++weaponType) {
     weapons.push_back(universe->getWeaponTypePtr(*weaponType)->spawn());
   }
@@ -139,7 +139,7 @@ void UnitCore::repair(HitPoints amount, bool superhealth) {
  * \param to New type of the unit.
  * \param hpAlteration How to compute the HP of the newly transformed unit */
 void UnitCore::changeType(
-    const UnitTypeID& to,
+    const UnitTypeId& to,
     hitPointAlteration hpAlteration
   ) {
   const UnitType* newType;
@@ -178,7 +178,7 @@ void UnitCore::changeType(
  *
  * \param to New owner of the unit.
  * \param why Reason for the ownership change */
-void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
+void UnitCore::changeOwner(PlayerId to, enum changeOwnerReason why) {
   /* existence check goes here */
   Player* fromPtr = world->getPlayerPtr(owner);
   Player* toPtr = world->getPlayerPtr(to);
@@ -194,7 +194,7 @@ void UnitCore::changeOwner(PlayerID to, enum changeOwnerReason why) {
     
     /* We also need to ensure that sensor returns from this unit are flagged so
      * that the change of ownership is transmitted. */
-    for (hash_map<PlayerID, DynamicSensorReturnsRef>::iterator returns =
+    for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
         outerUnit->getSensorReturns().begin();
         returns != outerUnit->getSensorReturns().end(); ++returns) {
       Ref<DynamicSensorReturns> r = returns->second->second;

@@ -11,18 +11,18 @@ PlayersBranch::PlayersBranch(Branch* parent, Server* server) :
 {
 }
 
-void PlayersBranch::addPlayer(PlayerID id, const PlayerTemplate& t)
+void PlayersBranch::addPlayer(PlayerId id, const PlayerTemplate& t)
 {
-  String name = playerID_toString(id);
+  String name = playerId_toString(id);
   if (getChild(name) != NULL) {
     Fatal("tried to add player branch of existing name");
   }
   addChild(Node::Ptr(new PlayerBranch(id, this, server, t)));
 }
 
-void PlayersBranch::removePlayer(PlayerID id)
+void PlayersBranch::removePlayer(PlayerId id)
 {
-  String name = playerID_toString(id);
+  String name = playerId_toString(id);
   if (getChild(name) == NULL) {
     Fatal("tried to remove non-existant player branch " << name);
   }

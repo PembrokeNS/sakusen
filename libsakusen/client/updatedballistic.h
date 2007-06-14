@@ -12,15 +12,15 @@ namespace client {
  * own reasons). */
 class UpdatedBallistic : public Bounded {
   public:
-    UpdatedBallistic(ClientBallisticID i, const Quadratic& p) :
+    UpdatedBallistic(ClientBallisticId i, const Quadratic& p) :
       id(i),
       path(p)
     {}
   private:
-    ClientBallisticID id;
+    ClientBallisticId id;
     Quadratic path;
   public:
-    ClientBallisticID getId() const { return id; }
+    ClientBallisticId getId() const { return id; }
     const Quadratic& getPath() const { return path; }
 
     GameObject getObjectType() const { return gameObject_ballistic; }
@@ -39,8 +39,8 @@ class UpdatedBallistic : public Bounded {
     }
 };
 
-struct UpdatedBallisticIDer {
-  ClientBallisticID operator()(const Ref<const UpdatedBallistic>& b) const {
+struct UpdatedBallisticIder {
+  ClientBallisticId operator()(const Ref<const UpdatedBallistic>& b) const {
     return b->getId();
   }
 };

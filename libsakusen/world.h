@@ -49,14 +49,14 @@ class LIBSAKUSEN_API World : boost::noncopyable {
      * Finds a SensorReturns based on its owner and id
      */
     virtual Ref<ISensorReturns> getISensorReturns(
-        PlayerID player, SensorReturnsID id
+        PlayerId player, SensorReturnsId id
       ) = 0;
     /** \brief Get a particular unit
      *
      * Finds a unit based on its owner and id
      */
     virtual Ref<ICompleteUnit> getICompleteUnit(
-        PlayerID player, UnitID unitId
+        PlayerId player, UnitId unitId
       ) = 0;
     /** \brief Get a spatial index for the objects in the World */
     virtual ISpatial::ConstPtr getSpatialIndex() const = 0;

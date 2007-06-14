@@ -18,10 +18,10 @@ namespace sakusen {
 class SensorReturns : public ISensorReturns {
   private:
     SensorReturns(
-        SensorReturnsID i,
+        SensorReturnsId i,
         Perception p,
-        PlayerID srO,
-        PlayerID seO,
+        PlayerId srO,
+        PlayerId seO,
         Region<sint32>::Ptr reg,
         CompleteUnit* s,
         SensorReturnMap ret
@@ -62,16 +62,16 @@ class SensorReturns : public ISensorReturns {
       assert(0 == (perception & ~perception_full));
     }
   private:
-    SensorReturnsID id;
+    SensorReturnsId id;
     Perception perception;
-    PlayerID senserOwner;
-    PlayerID senseeOwner;
+    PlayerId senserOwner;
+    PlayerId senseeOwner;
     Region<sint32>::ConstPtr region;
     CompleteUnit::ConstPtr unit;
 
     SensorReturnMap returns;
   public:
-    inline SensorReturnsID getId() const { return id; }
+    inline SensorReturnsId getId() const { return id; }
     /** \brief Get information acquired by sensor returns
      *
      * Returns a bitfield of the various things that this SensorReturns can
@@ -79,12 +79,12 @@ class SensorReturns : public ISensorReturns {
      */
     inline Perception getPerception() const { return perception; }
     /** \brief Get owner of this SensorReturns. */
-    inline PlayerID getSenserOwner() const { return senserOwner; }
+    inline PlayerId getSenserOwner() const { return senserOwner; }
     /** \brief Get sensee's owner's id
      *
      * If the sensee is known, then returns its id.  If not, then return 0
      */
-    inline PlayerID getSenseeOwner() const { return senseeOwner; }
+    inline PlayerId getSenseeOwner() const { return senseeOwner; }
     /** \brief Get region indicating approximate location of sensee
      *
      * If the SensorReturns carries an approximate region (which it will in

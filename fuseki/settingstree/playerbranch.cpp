@@ -10,14 +10,14 @@ using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 PlayerBranch::PlayerBranch(
-    PlayerID id,
+    PlayerId id,
     Branch* parent,
     Server* server,
     const PlayerTemplate& t
   ) :
-  Branch(playerID_toString(id), "world", "", parent, server)
+  Branch(playerId_toString(id), "world", "", parent, server)
 {
-  String playerGroup = String("player") + playerID_toString(id);
+  String playerGroup = String("player") + playerId_toString(id);
   String playerAdminGroup = playerGroup+",admin";
   
   addChild(Node::Ptr(new StringLeaf(

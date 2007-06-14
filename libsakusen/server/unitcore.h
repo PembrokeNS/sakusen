@@ -24,7 +24,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     UnitCore(const UnitCore&, LayeredUnit* outerUnit);
     UnitCore(
         LayeredUnit* outerUnit,
-        const UnitTypeID& startType,
+        const UnitTypeId& startType,
         const Point<sint32>& startPosition,
         const Orientation& startOrientation,
         const Point<sint16>& startVelocity,
@@ -34,7 +34,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     ~UnitCore();
   private:
     LayeredUnit* outerUnit;
-    PlayerID owner;
+    PlayerId owner;
     std::vector<Weapon*> weapons;
 
     void initializeWeapons();
@@ -58,7 +58,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     
     /** \name Accessors. */
     //@{
-    inline PlayerID getOwner() const { return owner; }
+    inline PlayerId getOwner() const { return owner; }
     inline HitPoints getMaxHitPoints() const {
       return getTypePtr()->getDynamicData().getMaxHitPoints();
     }
@@ -93,8 +93,8 @@ class UnitCore : public UnitLayer, public UnitStatus {
     bool kill(HitPoints excessDamage);
     void damage(HitPoints amount);
     void repair(HitPoints amount, bool superhealth);
-    void changeType(const UnitTypeID& to, hitPointAlteration hpAlteration);
-    void changeOwner(const PlayerID to, enum changeOwnerReason why);
+    void changeType(const UnitTypeId& to, hitPointAlteration hpAlteration);
+    void changeOwner(const PlayerId to, enum changeOwnerReason why);
     //@}
     
     /* callbacks */

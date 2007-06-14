@@ -45,7 +45,7 @@ MessageType JoinMessageData::getType() const
   return messageType_join;
 }
 
-AcceptMessageData::AcceptMessageData(const String& a, const ClientID& i) :
+AcceptMessageData::AcceptMessageData(const String& a, const ClientId& i) :
   MessageData(),
   address(a),
   id(i)
@@ -214,7 +214,7 @@ MessageType NotifySettingMessageData::getType() const
 }
 
 GameStartMessageData::GameStartMessageData(
-    PlayerID pI,
+    PlayerId pI,
     Topology t,
     const Point<sint32>& tR,
     const Point<sint32>& bL,

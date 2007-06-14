@@ -113,21 +113,21 @@ Server::~Server()
   plugins.clear();
 }
 
-ClientID Server::getFreeClientID()
+ClientId Server::getFreeClientId()
 {
-  /* Just use a hopelessly naive algorithm for allocating IDs.  Note that this
-   * assumes that ClientID is an integer type (or at least sufficiently similar
+  /* Just use a hopelessly naive algorithm for allocating Ids.  Note that this
+   * assumes that ClientId is an integer type (or at least sufficiently similar
    * for this algorithm to work properly) */
-  ClientID i = 0;
+  ClientId i = 0;
   do {
     if (0 == clients.count(i)) {
       return i;
     }
     i++;
-  } while (i != static_cast<ClientID>(-1));
+  } while (i != static_cast<ClientId>(-1));
 
-  /* Return of -1 indicates no free IDs */
-  return static_cast<ClientID>(-1);
+  /* Return of -1 indicates no free Ids */
+  return static_cast<ClientId>(-1);
 }
 
 void Server::addClient(
@@ -166,9 +166,9 @@ void Server::addClient(
     out << "Could not decide where to send response.\n";
     return;
   }
-  ClientID id = getFreeClientID();
-  if (id == static_cast<ClientID>(-1)) {
-    /* No free IDs */
+  ClientId id = getFreeClientId();
+  if (id == static_cast<ClientId>(-1)) {
+    /* No free ids */
     out << "Rejecting join request due to lack of space for more clients.\n";
     socket->send(Message(new RejectMessageData("No space for more clients")));
     return;
@@ -195,7 +195,7 @@ void Server::handleClientMessages()
 {
   queue<ExtensionMessageData> extensionMessages;
 
-  for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
+  for (hash_map<ClientId, RemoteClient*>::iterator clientIt=clients.begin();
       clientIt!=clients.end(); ) {
     RemoteClient* client = clientIt->second;
 
@@ -203,7 +203,7 @@ void Server::handleClientMessages()
 
     if (client->isDead()) {
       out << "Removing dead client " <<
-        clientID_toString(client->getClientId()) << "\n";
+        clientId_toString(client->getClientId()) << "\n";
       removeClient(client);
       clientRemoved = true;
     } else {
@@ -295,12 +295,12 @@ void Server::handleClientMessages()
           }
         }
       } catch (SocketExn& e) {
-        out << "Removing client " << clientID_toString(client->getClientId()) <<
+        out << "Removing client " << clientId_toString(client->getClientId()) <<
           " due to causing SocketExn: " << e.message << "\n";
         removeClient(client);
         clientRemoved = true;
       } catch (DeserializationExn& e) {
-        out << "Removing client " << clientID_toString(client->getClientId()) <<
+        out << "Removing client " << clientId_toString(client->getClientId()) <<
           " due to causing DeserializationExn: " << e.message << "\n";
         removeClient(client);
         clientRemoved = true;
@@ -325,13 +325,13 @@ void Server::handleClientMessages()
      * restrictions attached to the message (e.g. chat message sent
      * only to allies) */
     /** \todo Send to other listeners who want it */
-    stack<ClientID> clientsToRemove;
-    for (hash_map<ClientID, RemoteClient*>::iterator dest =
+    stack<ClientId> clientsToRemove;
+    for (hash_map<ClientId, RemoteClient*>::iterator dest =
         clients.begin(); dest!=clients.end(); ++dest) {
       try {
         dest->second->send(new ExtensionMessageData(data));
       } catch (SocketExn& e) {
-        out << "Removing client " << clientID_toString(dest->first) <<
+        out << "Removing client " << clientId_toString(dest->first) <<
           " due to causing SocketExn: " << e.message << endl;
         clientsToRemove.push(dest->first);
       }
@@ -347,7 +347,7 @@ void Server::handleClientMessages()
 
 void Server::clearPlayers()
 {
-  for (hash_map<ClientID, RemoteClient*>::iterator clientIt = clients.begin();
+  for (hash_map<ClientId, RemoteClient*>::iterator clientIt = clients.begin();
       clientIt != clients.end(); ++clientIt) {
     RemoteClient* client = clientIt->second;
     if (client->getPlayerId() != 0) {
@@ -355,7 +355,7 @@ void Server::clearPlayers()
     }
   }
   while (!players.empty()) {
-    PlayerID id = static_cast<PlayerID>(players.size()-1);
+    PlayerId id = static_cast<PlayerId>(players.size()-1);
     players.pop_back();
     settings->getPlayersBranch()->removePlayer(id);
   }
@@ -376,7 +376,7 @@ void Server::setAllowObservers(bool value)
   if (allowObservers && !value) {
     /* In this case, we may have to dump some clients who have themselves
      * registered as observers */
-    for (hash_map<ClientID, RemoteClient*>::iterator client = clients.begin();
+    for (hash_map<ClientId, RemoteClient*>::iterator client = clients.begin();
         client != clients.end(); ++client) {
       if (client->second->isObserver()) {
         changeInClientBranch(client->second, "observer", "false");
@@ -394,7 +394,7 @@ void Server::changeInClientBranch(
   )
 {
   if ("" != settings->changeRequest(
-      String("clients:") + clientID_toString(client->getClientId()) +
+      String("clients:") + clientId_toString(client->getClientId()) +
         ":" + node, value, this
     )) {
       Fatal("something has gone wrong with the settings tree");
@@ -420,18 +420,18 @@ void Server::checkPlugins(const std::set<String>& newList)
   }
 }
 
-/** \brief Converts a PlayerID into a pointer to a player
+/** \brief Converts a PlayerId into a pointer to a player
  *
- * \param id PlayerID to convert.
+ * \param id PlayerId to convert.
  * \return Pointer to Player with given id.
  *
- * Throws InvalidPlayerID if the ID is invalid.
+ * Throws InvalidPlayerId if the id is invalid.
  */
-Player* Server::getPlayerPtr(PlayerID id)
+Player* Server::getPlayerPtr(PlayerId id)
 {
   if (sakusen::server::world == NULL) {
     if (id >= players.size())
-      throw InvalidPlayerID(id);
+      throw InvalidPlayerId(id);
     return &players[id];
   } else {
     return sakusen::server::world->getPlayerPtr(id);
@@ -589,7 +589,7 @@ void Server::serve()
       RemoteClient* adminCandidate = NULL;
       bool needAdmin = true;
 
-      for (hash_map<ClientID, RemoteClient*>::iterator client = clients.begin();
+      for (hash_map<ClientId, RemoteClient*>::iterator client = clients.begin();
           client != clients.end(); client++) {
         if (client->second->isAdmin()) {
           needAdmin = false;
@@ -714,12 +714,12 @@ void Server::serve()
         }
         if (allPlayersReady) {
           bool allClientsReady = true;
-          for (hash_map<ClientID, RemoteClient*>::iterator client =
+          for (hash_map<ClientId, RemoteClient*>::iterator client =
               clients.begin(); client != clients.end(); client++) {
             if (!client->second->isReadyForGameStart()) {
               allClientsReady = false;
               out << "Not ready because client '" <<
-                clientID_toString(client->second->getClientId()) <<
+                clientId_toString(client->second->getClientId()) <<
                 "' not ready\n";
               break;
             }
@@ -753,7 +753,7 @@ void Server::serve()
     /* Remove settings tree manipulation permissions from all clients, except
      * for some which remain in the 'playtime' group so that they can do such
      * things as pause the game */
-    for (hash_map<ClientID, RemoteClient*>::iterator clientIt =
+    for (hash_map<ClientId, RemoteClient*>::iterator clientIt =
         clients.begin(); clientIt != clients.end(); ++clientIt) {
       RemoteClient* client = clientIt->second;
       client->send(new GameStartMessageData(
@@ -814,7 +814,7 @@ void Server::serve()
       sakusen::server::world->incrementGameState();
 
       /* Send out updates */
-      for (hash_map<ClientID, RemoteClient*>::iterator clientIt=clients.begin();
+      for (hash_map<ClientId, RemoteClient*>::iterator clientIt=clients.begin();
           clientIt!=clients.end(); ) {
         RemoteClient* client = clientIt->second;
         bool clientRemoved = false;
@@ -823,7 +823,7 @@ void Server::serve()
           client->flushOutgoing(sakusen::server::world->getTimeNow());
         } catch (SocketExn& e) {
           out << "Removing client " <<
-            clientID_toString(client->getClientId()) <<
+            clientId_toString(client->getClientId()) <<
             " due to causing SocketExn: " << e.message;
           removeClient(client);
           clientRemoved = true;
@@ -942,7 +942,7 @@ String Server::boolSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientID id = clientID_fromString(fullName.front());
+    ClientId id = clientId_fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performBoolMagic(/*altering,*/ fullName, newValue);
@@ -951,7 +951,7 @@ String Server::boolSettingAlteringCallback(
      * player object */
     fullName.pop_front();
     assert(!fullName.empty());
-    //PlayerID id = playerID_fromString(fullName.front());
+    //PlayerId id = playerId_fromString(fullName.front());
     fullName.pop_front();
     //Player& player = players[id];
     assert(!fullName.empty());
@@ -1010,7 +1010,7 @@ String Server::stringSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientID id = clientID_fromString(fullName.front());
+    ClientId id = clientId_fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performStringMagic(/*altering,*/ fullName, newValue);
@@ -1019,7 +1019,7 @@ String Server::stringSettingAlteringCallback(
      * player object */
     fullName.pop_front();
     assert(!fullName.empty());
-    //PlayerID id = playerID_fromString(fullName.front());
+    //PlayerId id = playerId_fromString(fullName.front());
     fullName.pop_front();
     //Player& player = players[id];
     assert(!fullName.empty());
@@ -1136,7 +1136,7 @@ String Server::stringSetSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientID id = clientID_fromString(fullName.front());
+    ClientId id = clientId_fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performStringSetMagic(fullName, newValue);
@@ -1145,7 +1145,7 @@ String Server::stringSetSettingAlteringCallback(
      * player object */
     fullName.pop_front();
     assert(!fullName.empty());
-    //PlayerID id = playerID_fromString(fullName.front());
+    //PlayerId id = playerId_fromString(fullName.front());
     fullName.pop_front();
     //Player& player = players[id];
     assert(!fullName.empty());
@@ -1207,7 +1207,7 @@ void Server::settingAlteredCallback(Leaf* altered)
   NotifySettingMessageData data(fullName, altered->getValue());
   
   /* Inform everyone with read permission that the setting was altered */
-  for (__gnu_cxx::hash_map<ClientID, RemoteClient*>::iterator
+  for (__gnu_cxx::hash_map<ClientId, RemoteClient*>::iterator
       clientIt = clients.begin(); clientIt != clients.end(); ++clientIt) {
     RemoteClient* client = clientIt->second;
     if (client->hasReadPermissionFor(altered)) {

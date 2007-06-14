@@ -7,61 +7,61 @@
 
 namespace sakusen {
 
-/** \brief An index based on some ID which can be used as a hash_map key
+/** \brief An index based on some id which can be used as a hash_map key
  *
  * Three template arguments are required:
- * \li TID, the type of the ID
+ * \li TId, the type of the id
  * \li T, the type of the object stored
- * \li IDer, the class of a function object which will extract the ID of an
+ * \li Ider, the class of a function object which will extract the id of an
  *  object of type T.  Specifically, if t is of type Ref<T>,
- *  then \c IDer()(t)
- *  should return t's ID.
+ *  then \c Ider()(t)
+ *  should return t's id.
  */
-template<typename TID, typename T, typename IDer>
-class IDIndex : public IIndex<T> {
+template<typename TId, typename T, typename Ider>
+class IdIndex : public IIndex<T> {
   public:
-    typedef boost::shared_ptr<IDIndex<TID, T, IDer> > Ptr;
-    typedef boost::shared_ptr<const IDIndex<TID, T, IDer> > ConstPtr;
+    typedef boost::shared_ptr<IdIndex<TId, T, Ider> > Ptr;
+    typedef boost::shared_ptr<const IdIndex<TId, T, Ider> > ConstPtr;
     
-    IDIndex() {}
+    IdIndex() {}
   private:
-    __gnu_cxx::hash_map<TID, Ref<T> > idHash;
+    __gnu_cxx::hash_map<TId, Ref<T> > idHash;
   public:
     void add(const Ref<T>&);
     void remove(const Ref<T>&);
 
-    size_t count(typename boost::call_traits<TID>::param_type id) const;
-    Ref<T> find(typename boost::call_traits<TID>::param_type id) const;
+    size_t count(typename boost::call_traits<TId>::param_type id) const;
+    Ref<T> find(typename boost::call_traits<TId>::param_type id) const;
 };
 
-template<typename TID, typename T, typename IDer>
-void IDIndex<TID, T, IDer>::add(const Ref<T>& t)
+template<typename TId, typename T, typename Ider>
+void IdIndex<TId, T, Ider>::add(const Ref<T>& t)
 {
-  TID id = IDer()(t);
+  TId id = Ider()(t);
   assert(idHash.count(id) == 0);
   idHash[id] = t;
 }
 
-template<typename TID, typename T, typename IDer>
-void IDIndex<TID, T, IDer>::remove(const Ref<T>& t)
+template<typename TId, typename T, typename Ider>
+void IdIndex<TId, T, Ider>::remove(const Ref<T>& t)
 {
-  TID id = IDer()(t);
-  typename __gnu_cxx::hash_map<TID, Ref<T> >::iterator it = idHash.find(id);
+  TId id = Ider()(t);
+  typename __gnu_cxx::hash_map<TId, Ref<T> >::iterator it = idHash.find(id);
   assert(it != idHash.end());
   idHash.erase(it);
 }
 
-/** \brief Search for an object of the given ID
+/** \brief Search for an object of the given id
  *
- * \param id ID to search for
+ * \param id id to search for
  * \return Ref to the object found, or an invalid Ref if none is found
  */
-template<typename TID, typename T, typename IDer>
-Ref<T> IDIndex<TID, T, IDer>::find(
-    typename boost::call_traits<TID>::param_type id
+template<typename TId, typename T, typename Ider>
+Ref<T> IdIndex<TId, T, Ider>::find(
+    typename boost::call_traits<TId>::param_type id
   ) const
 {
-  typename __gnu_cxx::hash_map<TID, Ref<T> >::const_iterator it =
+  typename __gnu_cxx::hash_map<TId, Ref<T> >::const_iterator it =
     idHash.find(id);
   if (it == idHash.end()) {
     return Ref<T>();
@@ -70,14 +70,14 @@ Ref<T> IDIndex<TID, T, IDer>::find(
   }
 }
 
-/** \brief Count objects of the given ID
+/** \brief Count objects of the given id
  *
- * \param id ID to search for
+ * \param id id to search for
  * \return 1 if an object with that key is found, or 0 if none is found
  */
-template<typename TID, typename T, typename IDer>
-size_t IDIndex<TID, T, IDer>::count(
-    typename boost::call_traits<TID>::param_type id
+template<typename TId, typename T, typename Ider>
+size_t IdIndex<TId, T, Ider>::count(
+    typename boost::call_traits<TId>::param_type id
   ) const
 {
   return idHash.count(id);

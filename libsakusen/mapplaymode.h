@@ -41,7 +41,7 @@ class LIBSAKUSEN_API MapPlayMode {
     {
       return numPlayers >= minPlayers && numPlayers <= maxPlayers;
     }
-    inline const PlayerTemplate& getPlayer(PlayerID player) const
+    inline const PlayerTemplate& getPlayer(PlayerId player) const
     {
       assert(player < maxPlayers);
       assert(player < players.size());

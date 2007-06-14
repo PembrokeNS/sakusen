@@ -9,25 +9,25 @@ namespace sakusen {
  * 255 clients
  *
  * Code may assume this is an unsigned integer type */
-typedef uint8 ClientID;
+typedef uint8 ClientId;
 
-/** \brief Converts ClientID to string
+/** \brief Converts ClientId to string
  */
-inline String clientID_toString(ClientID id)
+inline String clientId_toString(ClientId id)
 {
   return numToString(id);
 }
 
-/** \brief Converts string to ClientID
+/** \brief Converts string to ClientId
  *
- * Guaranteed that if \c id is some ClientID then
+ * Guaranteed that if \c id is some ClientId then
  * \code
- * id == clientID_fromString(clientID_toString(id))
+ * id == clientId_fromString(clientId_toString(id))
  * \endcode
  */
-inline ClientID clientID_fromString(String str)
+inline ClientId clientId_fromString(String str)
 {
-  return numFromString<ClientID>(str);
+  return numFromString<ClientId>(str);
 }
 
 }

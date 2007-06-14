@@ -11,7 +11,7 @@ using namespace sakusen::client;
 
 PartialWorld::PartialWorld(
     const Universe::ConstPtr& universe,
-    PlayerID pI,
+    PlayerId pI,
     Topology topology,
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
@@ -27,9 +27,9 @@ PartialWorld::PartialWorld(
       )),
   units()
 {
-  unitsById.reset(new UnitIDIndex());
-  sensorReturnsById.reset(new SensorReturnsIDIndex());
-  ballisticsById.reset(new BallisticIDIndex());
+  unitsById.reset(new UnitIdIndex());
+  sensorReturnsById.reset(new SensorReturnsIdIndex());
+  ballisticsById.reset(new BallisticIdIndex());
   spatialIndex.reset(new NaiveSpatial());
   units.registerIndex(IIndex<UpdatedUnit>::Ptr(unitsById));
   sensorReturns.registerIndex(
@@ -104,7 +104,7 @@ void PartialWorld::applyUpdate(const Update& update)
     case updateType_sensorReturnsAdded:
       {
         SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
-        SensorReturnsID id = data.getSensorReturns().getId();
+        SensorReturnsId id = data.getSensorReturns().getId();
         Ref<UpdatedSensorReturns> sensorReturnsIt = sensorReturnsById->find(id);
         if (sensorReturnsIt.isValid()) {
           Debug("adding sensor returns of existing id");
@@ -144,7 +144,7 @@ void PartialWorld::applyUpdate(const Update& update)
     case updateType_ballisticAdded:
       {
         BallisticAddedUpdateData data = update.getBallisticAddedData();
-        ClientBallisticID id = data.getId();
+        ClientBallisticId id = data.getId();
         if (ballisticsById->count(id)) {
           Debug("adding Ballistic of existing id");
         }

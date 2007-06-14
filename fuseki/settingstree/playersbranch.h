@@ -14,8 +14,8 @@ class PlayersBranch : public Branch {
   public:
     PlayersBranch(Branch* parent, Server* server);
 
-    void addPlayer(sakusen::PlayerID id, const sakusen::PlayerTemplate& t);
-    void removePlayer(sakusen::PlayerID id);
+    void addPlayer(sakusen::PlayerId id, const sakusen::PlayerTemplate& t);
+    void removePlayer(sakusen::PlayerId id);
 };
 
 }}

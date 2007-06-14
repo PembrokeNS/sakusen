@@ -8,10 +8,10 @@ using namespace sakusen;
 using namespace fuseki;
 using namespace fuseki::settingsTree;
 
-ClientBranch::ClientBranch(ClientID id, Branch* parent, Server* server) :
-  Branch(clientID_toString(id), "world", "", parent, server)
+ClientBranch::ClientBranch(ClientId id, Branch* parent, Server* server) :
+  Branch(clientId_toString(id), "world", "", parent, server)
 {
-  String clientGroup = String("client") + clientID_toString(id);
+  String clientGroup = String("client") + clientId_toString(id);
   addChild(Node::Ptr(
         new ApplicationBranch("world", "", clientGroup, this, server)
       ));

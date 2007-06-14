@@ -29,7 +29,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   public:
     PartialWorld(
         const Universe::ConstPtr& universe,
-        PlayerID playerId,
+        PlayerId playerId,
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
@@ -39,45 +39,45 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       );
     ~PartialWorld();
     
-    typedef IDIndex<UnitID, UpdatedUnit, UpdatedUnitIDer> UnitIDIndex;
-    typedef IDIndex<
-        SensorReturnsID, UpdatedSensorReturns, UpdatedSensorReturnsIDer
-      > SensorReturnsIDIndex;
-    typedef IDIndex<ClientBallisticID, UpdatedBallistic, UpdatedBallisticIDer>
-      BallisticIDIndex;
+    typedef IdIndex<UnitId, UpdatedUnit, UpdatedUnitIder> UnitIdIndex;
+    typedef IdIndex<
+        SensorReturnsId, UpdatedSensorReturns, UpdatedSensorReturnsIder
+      > SensorReturnsIdIndex;
+    typedef IdIndex<ClientBallisticId, UpdatedBallistic, UpdatedBallisticIder>
+      BallisticIdIndex;
   private:
-    PlayerID playerId;
+    PlayerId playerId;
     PartialMap* map;
     hash_list<UpdatedUnit, Bounded, UpdatedUnit> units;
-    UnitIDIndex::Ptr unitsById;
+    UnitIdIndex::Ptr unitsById;
     
     hash_list<UpdatedSensorReturns, Bounded, UpdatedSensorReturns>
       sensorReturns;
-    SensorReturnsIDIndex::Ptr sensorReturnsById;
+    SensorReturnsIdIndex::Ptr sensorReturnsById;
 
     hash_list<UpdatedBallistic, Bounded, UpdatedBallistic> ballistics;
-    BallisticIDIndex::Ptr ballisticsById;
+    BallisticIdIndex::Ptr ballisticsById;
 
     ISpatial::Ptr spatialIndex;
     
-    Ref<ISensorReturns> getISensorReturns(PlayerID player, SensorReturnsID id) {
+    Ref<ISensorReturns> getISensorReturns(PlayerId player, SensorReturnsId id) {
       assert(player == playerId);
       return sensorReturnsById->find(id);
     }
-    Ref<ICompleteUnit> getICompleteUnit(PlayerID player, UnitID uintId) {
+    Ref<ICompleteUnit> getICompleteUnit(PlayerId player, UnitId uintId) {
       assert(player == playerId);
       return unitsById->find(uintId);
     }
   public:
     /** \name Accessors. */
     //@{
-    inline PlayerID getPlayerId() const { return playerId; }
+    inline PlayerId getPlayerId() const { return playerId; }
     inline Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
-    inline UnitIDIndex::ConstPtr getUnitsById() const {
+    inline UnitIdIndex::ConstPtr getUnitsById() const {
       return unitsById;
     }
-    inline SensorReturnsIDIndex::ConstPtr getSensorReturnsById() const {
+    inline SensorReturnsIdIndex::ConstPtr getSensorReturnsById() const {
       return sensorReturnsById;
     }
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }

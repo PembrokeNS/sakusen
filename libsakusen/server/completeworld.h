@@ -75,18 +75,18 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline const Map* getMap(void) const { return map; }
     inline const CompleteMap* getCompleteMap(void) const { return map; }
     inline Ref<ISensorReturns> getISensorReturns(
-        PlayerID player, SensorReturnsID id
+        PlayerId player, SensorReturnsId id
       ) {
       assert(player < players.size());
       return players[player].getSensorReturns(id).cast<ISensorReturns>();
     }
     inline Ref<ICompleteUnit> getICompleteUnit(
-        PlayerID player, UnitID unitId
+        PlayerId player, UnitId unitId
       ) {
       assert(player < players.size());
-      const __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >& units =
+      const __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >& units =
         players[player].getUnits();
-      __gnu_cxx::hash_map<UnitID, Ref<LayeredUnit> >::const_iterator it =
+      __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::const_iterator it =
         units.find(unitId);
       if (it == units.end()) {
         return Ref<ICompleteUnit>();
@@ -96,7 +96,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     }
     //@}
     
-    Ref<LayeredUnit> addUnit(const LayeredUnit::Ptr& unit, PlayerID owner);
+    Ref<LayeredUnit> addUnit(const LayeredUnit::Ptr& unit, PlayerId owner);
     void removeUnit(LayeredUnit*);
     
     /** \warning This has to be a non-const return for stuff that happens in
@@ -168,7 +168,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
     
     /** \brief Get pointer to player of given id. */
-    inline Player* getPlayerPtr(const PlayerID& id)
+    inline Player* getPlayerPtr(const PlayerId& id)
     {
       /* assert(id>=0); (Always true) */
       assert(id<players.size());

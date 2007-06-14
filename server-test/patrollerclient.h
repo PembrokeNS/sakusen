@@ -12,7 +12,7 @@ namespace test {
 
 class PatrollerClient : public Client {
   public:
-    PatrollerClient(ClientID, Point<sint32> patrolTo);
+    PatrollerClient(ClientId, Point<sint32> patrolTo);
     ~PatrollerClient() {};
   private:
     Point<sint32> patrolTo;

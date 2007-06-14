@@ -12,7 +12,7 @@ namespace settingsTree {
 class PlayerBranch : public Branch {
   public:
     PlayerBranch(
-        sakusen::PlayerID id,
+        sakusen::PlayerId id,
         Branch* parent,
         Server* server,
         const sakusen::PlayerTemplate& t

@@ -26,7 +26,7 @@ class LIBSAKUSEN_COMMS_API Message {
     explicit Message(const MessageData* data);
     Message(
         IArchive& archive,
-        PlayerID player = static_cast<PlayerID>(-1)
+        PlayerId player = static_cast<PlayerId>(-1)
       );
   private:
     /** \brief Source of this message.
@@ -34,7 +34,7 @@ class LIBSAKUSEN_COMMS_API Message {
      * Player will be meaningful only if it was passed to the constructor,
      * otherwise it will be -1.  Such assignment only occurs for messages from
      * clients to servers at game time. */
-    PlayerID player;
+    PlayerId player;
     MessageData::ConstPtr data;
   public:
     inline MessageType getType(void) const {

@@ -35,8 +35,8 @@ class UpdatedSensorReturns : public SensorReturns {
 namespace client {
 
 /** \brief Function object to extract the id from an UpdatedSensorReturns */ 
-struct UpdatedSensorReturnsIDer {
-  SensorReturnsID operator()(const Ref<UpdatedSensorReturns>& s) const {
+struct UpdatedSensorReturnsIder {
+  SensorReturnsId operator()(const Ref<UpdatedSensorReturns>& s) const {
     return s->getId();
   }
 };

@@ -31,7 +31,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
      * determines whether the abstract socket namespace should be used for that
      * socket. */
     RemoteClient(
-        sakusen::ClientID id,
+        sakusen::ClientId id,
         Server* server,
         const sakusen::comms::Socket::Ptr& socket,
         bool createInSocket
@@ -55,8 +55,8 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     bool dead; /* Whether I'm apparently dead (usually some kind of socket
                   problem) */
 
-    void setPlayerId(sakusen::PlayerID id, bool removeGroup);
-    inline void setPlayerId(sakusen::PlayerID id) {
+    void setPlayerId(sakusen::PlayerId id, bool removeGroup);
+    inline void setPlayerId(sakusen::PlayerId id) {
       setPlayerId(id, true);
     }
   public:
