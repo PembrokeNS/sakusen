@@ -87,26 +87,14 @@ LayeredUnit::~LayeredUnit()
   status = NULL;
 }
 
-void LayeredUnit::acceptOrder(OrderCondition condition)
+void LayeredUnit::acceptOrder(const Order& order)
 {
-  if (orders.getOrder(condition).isRealOrder()) {
-    orders.acceptOrder(condition);
+  orders.acceptOrder(order);
 
-    /* Inform clients */
-    world->getPlayerPtr(owner)->informClients(
-        Update(new OrderAcceptedUpdateData(unitId, condition))
-      );
-  } else {
-    /* This part of the function only meant for accepting new orders from
-     * success or failure, not other conditions */
-    assert(condition == orderCondition_lastOrderSuccess ||
-        condition == orderCondition_lastOrderFailure);
-    orders.clearQueue();
-    orders.clearCurrent();
-    world->getPlayerPtr(owner)->informClients(
-        Update(new OrderCompletedUpdateData(unitId, condition))
-      );
-  }
+  /* Inform clients */
+  world->getPlayerPtr(owner)->informClients(
+      Update(new OrderAcceptedUpdateData(unitId, order))
+    );
 }
 
 /** \brief Indicate that a change has occured that needs to be transmitted to
@@ -224,11 +212,6 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
    * of this and pay attention to the reports from the server about the unit's
    * orders' changes */
 
-  /* If we've an order to apply right now, then do so */
-  if (orders.getOrder(orderCondition_now).isRealOrder()) {
-    acceptOrder(orderCondition_now);
-  }
-
   Point<sint16> expectedVelocity(status->velocity);
   
   /* compute the expected velocity based on the unit's orders */
@@ -244,8 +227,6 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
         acceleration =
           topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
         expectedVelocity += acceleration;
-      } else {
-        acceptOrder(orderCondition_lastOrderFailure);
       }
       break;
     case linearTargetType_position:
@@ -321,57 +302,6 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
 
   /* Process the weapons */
   topLayer->incrementWeaponsState();
-  
-  /* determine if the currentOrder has succeeded or failed, and if so
-   * then update the currentOrder appropriately and inform clients */
-  switch (orders.getCurrentOrder().getType()) {
-    case orderType_none:
-      break;
-    case orderType_setVelocity:
-      if (status->velocity ==
-          orders.getCurrentOrder().getSetVelocityData().getTarget()) {
-        acceptOrder(orderCondition_lastOrderSuccess);
-      }
-      break;
-    case orderType_move:
-      if (status->position ==
-          orders.getCurrentOrder().getMoveData().getTarget()) {
-        acceptOrder(orderCondition_lastOrderSuccess);
-      }
-      break;
-    case orderType_targetSensorReturns:
-      /** \todo Check whether the SensorReturns still exists.  If not, then we
-       * imagine that we have succeeded */
-      break;
-    case orderType_targetPosition:
-      /* There's not really any sense in which this can succeed */
-      break;
-    default:
-      Fatal("Unknown orderType '" <<
-          orders.getCurrentOrder().getType() << "'");
-      break;
-  }
-}
-
-/** \brief Insert an order into the unit's order queue.
- *
- * Also informs clients and, if \p condition is orderCondition_incidental,
- * accepts the order. */
-void LayeredUnit::enqueueOrder(
-    const OrderCondition& condition,
-    const Order& order
-  ) {
-  /*Debug("condition=" << condition);*/
-  if (condition >= orderCondition_max || condition < 0) {
-    Fatal("Unknown OrderCondition");
-  }
-  orders.enqueueOrder(condition, order);
-  world->getPlayerPtr(owner)->informClients(
-      Update(new OrderQueuedUpdateData(unitId, order, condition))
-    );
-  if (condition == orderCondition_incidental) {
-    acceptOrder(orderCondition_incidental);
-  }
 }
 
 /** \brief Inserts a new layer at the top of the unit's layers */

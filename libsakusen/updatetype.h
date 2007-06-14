@@ -29,21 +29,9 @@ enum UpdateType {
    *
    * CompleteUnit */
   updateType_unitAltered,
-  /** Order placed in the queue with the given condition.
-   * 
-   * UnitID, Order, OrderCondition */
-  updateType_orderQueued,
-  /** Order finished
+  /** Order accepted from client.
    *
-   * Success or failure given by condition, but no new order accepted to
-   * replace it.  If such a new order had been accepted then
-   * updateType_orderAccepted used instead.
-   * 
-   * UnitID, OrderCondition */
-  updateType_orderCompleted,
-  /** Order accepted from queue entry specified by condition.
-   *
-   * UnitID, OrderCondition */
+   * UnitID, Order */
   updateType_orderAccepted,
   /** Remove SensorReturns.
    *

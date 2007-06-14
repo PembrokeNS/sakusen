@@ -30,8 +30,6 @@ class LIBSAKUSEN_API Update {
     GET(UnitAdded)
     GET(UnitAltered)
     GET(OrderAccepted)
-    GET(OrderCompleted)
-    GET(OrderQueued)
     GET(SensorReturnsRemoved)
     GET(SensorReturnsAdded)
     GET(SensorReturnsAltered)

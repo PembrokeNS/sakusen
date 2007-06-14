@@ -79,7 +79,7 @@ void AttackVisitor::operator()(const Point<sint32>& target)
         Order order(
             new TargetPositionOrderData(weaponTypeID-weapons.begin(), target)
           );
-        this->game->order(OrderMessage(*unitID, orderCondition_incidental, order));
+        this->game->order(OrderMessage(*unitID, order));
       }
     }
   }
@@ -202,7 +202,7 @@ void CreateAction::internalExecute(UI* ui) {
         Order order(new TargetPositionOrientationOrderData(
               weaponTypeID-weapons.begin(), target
             ));
-        ui->getGame()->order(OrderMessage(*createrId, orderCondition_incidental, order));
+        ui->getGame()->order(OrderMessage(*createrId, order));
         return;
       }
     }
@@ -255,7 +255,7 @@ class BuildAction : public Action {
                 new TargetUnitOrderData(weaponTypeID-weapons.begin(), target)
               );
             ui->getGame()->order(
-                OrderMessage(*unitID, orderCondition_incidental, order)
+                OrderMessage(*unitID, order)
               );
           }
         }

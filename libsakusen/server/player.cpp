@@ -288,8 +288,7 @@ void Player::applyIncomingOrders(void)
               ", player " << playerId);
       } else {
         /*Debug("order for unit id " << message.getOrderee());*/
-        orderee->second->enqueueOrder(
-            message.getCondition(),
+        orderee->second->acceptOrder(
             message.getOrder()
           );
       }

@@ -38,12 +38,8 @@ Update Update::load(
       return Update(new UnitAddedUpdateData(in, universe));
     case updateType_unitAltered:
       return Update(new UnitAlteredUpdateData(in, universe));
-    case updateType_orderQueued:
-      return Update(new OrderQueuedUpdateData(in, player));
-    case updateType_orderCompleted:
-      return Update(new OrderCompletedUpdateData(in));
     case updateType_orderAccepted:
-      return Update(new OrderAcceptedUpdateData(in));
+      return Update(new OrderAcceptedUpdateData(in, player));
     case updateType_sensorReturnsRemoved:
       return Update(new SensorReturnsRemovedUpdateData(in));
     case updateType_sensorReturnsAdded:

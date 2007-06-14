@@ -651,7 +651,7 @@ void UI::move(const std::set<UnitID>& units, const Position& target)
   
   for (set<UnitID>::const_iterator unit = units.begin();
       unit != units.end(); ++unit) {
-    game->order(OrderMessage(*unit, orderCondition_now, order));
+    game->order(OrderMessage(*unit, order));
   }
 }
 

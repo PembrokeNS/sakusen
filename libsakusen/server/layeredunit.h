@@ -85,9 +85,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * This bool is true iff changes have occured to the unit which have yet to
      * be transmitted to the clients. */
     bool dirty;
-
-    /** Accept a new order from the queue */
-    void acceptOrder(OrderCondition condition);
   public:
     /** \name Accessors. */
     //@{
@@ -126,7 +123,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
         bool zeroVelocity
       );
     void incrementState(const Time& timeNow);
-    void enqueueOrder(const OrderCondition& condition, const Order& order);
+
+    /** Accept a new order from the queue */
+    void acceptOrder(const Order&);
 
     void insertLayer(const boost::shared_ptr<UnitMask>& layer);
     /** \brief Gets top layer of type T

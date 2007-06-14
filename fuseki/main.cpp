@@ -126,7 +126,7 @@ void usage()
           "                         (default is a UNIX socket in ~/.sakusen/fuseki)\n"
 #endif
           " -t,  --tcp ADDRESS      Bind tcp socket at ADDRESS.\n"
-          "                         Default: localhost, specift a null ADDRESS to disable\n"
+          "                         Default: localhost, specify a null ADDRESS to disable\n"
           " -p,  --plugins PATH:... Search for plugins in each given PATH, in given order\n"
           "\n"
           "Port for TCP socket defaults to "<<DEFAULT_PORT<<" if not specified.\n"

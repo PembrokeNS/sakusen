@@ -162,7 +162,7 @@ int main(/* int argc, char** argv */)
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
   
-  PatrollerClient patrollerClient(1, Point<sint32>(500, 0, 100000));
+  PatrollerClient patrollerClient(1, Point<sint32>(50000, 0, 1000));
   players.back().attachClient(&patrollerClient);
   
   w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);

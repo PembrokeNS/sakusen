@@ -4,7 +4,6 @@
 #include "libsakusen-global.h"
 
 #include "order.h"
-#include "ordercondition.h"
 #include "targettype.h"
 #include "orientation.h"
 #include "weaponorders.h"
@@ -19,9 +18,6 @@ namespace sakusen {
 class LIBSAKUSEN_API UnitOrders {
   private:
     UnitOrders(
-        /* conditioned orders */
-        Order ord[orderCondition_max],
-        const Order& cO,
         /* current goals which have been set by orders */
         const LinearTargetType& lT,
         const Point<sint32>& tP,
@@ -34,11 +30,6 @@ class LIBSAKUSEN_API UnitOrders {
   public:
     UnitOrders(uint16 numWeapons);
   private:
-    /** One order per condition. The order may be the nop order. */
-    Order orders[orderCondition_max];
-    /** The last order given - the one which awaits its success or
-     * failure */
-    Order currentOrder;
     /** \name Current goals which have been set by orders */
     //@{
     /** Whether we're currently trying to achieve a position or a velocity */
@@ -60,14 +51,6 @@ class LIBSAKUSEN_API UnitOrders {
   public:
     /** \name accessors */
     /*@{*/
-    /** Gets the order with order condition \p c */
-    inline const Order& getOrder(OrderCondition c) const {
-      assert(c>=0);
-      assert(c<orderCondition_max);
-      return orders[c];
-    }
-    /** Gets the order currently being followed. */
-    inline const Order& getCurrentOrder(void) const { return currentOrder; }
     inline LinearTargetType getLinearTarget(void) const { return linearTarget; }
     inline const Point<sint32>& getTargetPosition(void) const {
       return targetPosition;
@@ -92,18 +75,7 @@ class LIBSAKUSEN_API UnitOrders {
     }
     /*@}*/
 
-    /** Queues the order \p order, on condition \p c */
-    inline void enqueueOrder(OrderCondition c, const Order& order) {
-      assert(c>=0);
-      assert(c<orderCondition_max);
-      orders[c] = order;
-    }
-
-    void acceptOrder(OrderCondition condition);
-    void clearQueue();
-
-    /** \brief Reset the current order to the nop order */
-    inline void clearCurrent() { currentOrder = Order(); }
+    void acceptOrder(const Order& condition);
 
     typedef PlayerID loadArgument;
     void store(OArchive&) const;

@@ -42,44 +42,19 @@ void UnitAlteredUpdateData::store(OArchive& out) const
   unit.store(out);
 }
 
-OrderAcceptedUpdateData::OrderAcceptedUpdateData(IArchive& in)
+OrderAcceptedUpdateData::OrderAcceptedUpdateData(
+    IArchive& in,
+    const PlayerID* player
+  )
 {
   in >> unitId;
-  in.extractEnum(condition);
+  order = Order::load(in, player);
 }
 
 void OrderAcceptedUpdateData::store(OArchive& out) const
 {
-  (out << unitId).insertEnum(condition);
-}
-
-OrderCompletedUpdateData::OrderCompletedUpdateData(IArchive& in)
-{
-  in >> unitId;
-  in.extractEnum(condition);
-}
-
-void OrderCompletedUpdateData::store(OArchive& out) const
-{
-  (out << unitId).insertEnum(condition);
-}
-
-OrderQueuedUpdateData::OrderQueuedUpdateData(
-    IArchive& in,
-    const PlayerID* player
-  ) :
-  UpdateData()
-{
-  in >> unitId;
-  order = Order::load(in, player);
-  in.extractEnum(condition);
-}
-
-void OrderQueuedUpdateData::store(OArchive& out) const
-{
   out << unitId;
   order.store(out);
-  out.insertEnum(condition);
 }
 
 SensorReturnsRemovedUpdateData::SensorReturnsRemovedUpdateData(IArchive& in) :

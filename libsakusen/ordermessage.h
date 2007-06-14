@@ -3,7 +3,6 @@
 
 #include "libsakusen-global.h"
 
-#include "ordercondition.h"
 #include "order.h"
 
 namespace sakusen {
@@ -11,17 +10,15 @@ namespace sakusen {
 class LIBSAKUSEN_API OrderMessage {
   public:
     OrderMessage();
-    OrderMessage(UnitID orderee, OrderCondition condition, const Order& order);
+    OrderMessage(UnitID orderee, const Order& order);
     ~OrderMessage() {}
   private:
     UnitID orderee;
-    OrderCondition condition;
     Order order;
   public:
     /** \name accessors */
     //@{
     UnitID getOrderee(void) const { return orderee; }
-    const OrderCondition& getCondition(void) const { return condition; }
     const Order& getOrder(void) const { return order; }
     //@}
 

@@ -90,17 +90,6 @@ void PartialWorld::applyUpdate(const Update& update)
         unit->alter(data.getUnit());
       }
       break;
-    case updateType_orderQueued:
-      {
-        OrderQueuedUpdateData data(update.getOrderQueuedData());
-        Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
-        if (!unit.isValid()) {
-          Debug("Update for non-existant unit");
-          break;
-        }
-        unit->orderQueued(data);
-      }
-      break;
     case updateType_orderAccepted:
       {
         OrderAcceptedUpdateData data(update.getOrderAcceptedData());
@@ -110,17 +99,6 @@ void PartialWorld::applyUpdate(const Update& update)
           break;
         }
         unit->orderAccepted(data);
-      }
-      break;
-    case updateType_orderCompleted:
-      {
-        OrderCompletedUpdateData data(update.getOrderCompletedData());
-        Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
-        if (!unit.isValid()) {
-          Debug("Update for non-existant unit");
-          break;
-        }
-        unit->orderCompleted(data);
       }
       break;
     case updateType_sensorReturnsAdded:

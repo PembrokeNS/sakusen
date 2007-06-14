@@ -57,16 +57,26 @@ class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API TargetPositionOrderData : public OrderData {
+/** \brief Base for all OrderData classes which target a weapon.
+ *
+ * This is an intermediate class which allows extraction of the weaponIndex
+ * without worrying about exactly what type of targeting is being performed.
+ */
+class LIBSAKUSEN_API TargetWeaponOrderData : public OrderData {
+  public:
+    virtual uint16 getWeaponIndex() const = 0;
+};
+
+class LIBSAKUSEN_API TargetPositionOrderData : public TargetWeaponOrderData {
   private:
     TargetPositionOrderData();
   public:
     TargetPositionOrderData(uint16 wI, const Point<sint32>& t) :
-      OrderData(),
+      TargetWeaponOrderData(),
       weaponIndex(wI),
       target(t)
     {}
-    TargetPositionOrderData(IArchive& in) : OrderData() {
+    TargetPositionOrderData(IArchive& in) : TargetWeaponOrderData() {
       in >> weaponIndex >> target;
     }
     ~TargetPositionOrderData() {};
@@ -80,7 +90,8 @@ class LIBSAKUSEN_API TargetPositionOrderData : public OrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API TargetPositionOrientationOrderData : public OrderData {
+class LIBSAKUSEN_API TargetPositionOrientationOrderData :
+  public TargetWeaponOrderData {
   private:
     TargetPositionOrientationOrderData();
   public:
@@ -88,11 +99,11 @@ class LIBSAKUSEN_API TargetPositionOrientationOrderData : public OrderData {
         uint16 wI,
         const std::pair<Position, Orientation>& t
       ) :
-      OrderData(),
+      TargetWeaponOrderData(),
       weaponIndex(wI),
       target(t)
     {}
-    TargetPositionOrientationOrderData(IArchive& in) : OrderData() {
+    TargetPositionOrientationOrderData(IArchive& in) : TargetWeaponOrderData() {
       in >> weaponIndex >> target;
     }
     ~TargetPositionOrientationOrderData() {};
@@ -108,15 +119,15 @@ class LIBSAKUSEN_API TargetPositionOrientationOrderData : public OrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API TargetUnitOrderData : public OrderData {
+class LIBSAKUSEN_API TargetUnitOrderData : public TargetWeaponOrderData {
   public:
     TargetUnitOrderData(uint16 wI, const Ref<ICompleteUnit>& t) :
-      OrderData(),
+      TargetWeaponOrderData(),
       weaponIndex(wI),
       target(t)
     {}
     TargetUnitOrderData(IArchive& in, const PlayerID* player) :
-      OrderData()
+      TargetWeaponOrderData()
     {
       in >> weaponIndex;
       target = Ref<ICompleteUnit>::load(in, player);
@@ -132,17 +143,18 @@ class LIBSAKUSEN_API TargetUnitOrderData : public OrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API TargetSensorReturnsOrderData : public OrderData {
+class LIBSAKUSEN_API TargetSensorReturnsOrderData :
+  public TargetWeaponOrderData {
   private:
     TargetSensorReturnsOrderData();
   public:
     TargetSensorReturnsOrderData(uint16 wI, const Ref<ISensorReturns>& t) :
-      OrderData(),
+      TargetWeaponOrderData(),
       weaponIndex(wI),
       target(t)
     {}
     TargetSensorReturnsOrderData(IArchive& in, const PlayerID* player) :
-      OrderData()
+      TargetWeaponOrderData()
     {
       in >> weaponIndex;
       target = Ref<ISensorReturns>::load(in, player);

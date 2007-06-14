@@ -6,9 +6,6 @@ using namespace std;
 using namespace sakusen;
 
 UnitOrders::UnitOrders(
-    /* conditioned orders */
-    Order ord[orderCondition_max],
-    const Order& cO,
     /* current goals which have been set by orders */
     const LinearTargetType& lT,
     const Point<sint32>& tP,
@@ -18,7 +15,6 @@ UnitOrders::UnitOrders(
     const AngularVelocity& tAV,
     const std::vector<WeaponOrders>& wO
   ) :
-  currentOrder(cO),
   linearTarget(lT),
   targetPosition(tP),
   targetVelocity(tV),
@@ -27,9 +23,6 @@ UnitOrders::UnitOrders(
   targetAngularVelocity(tAV),
   weaponOrders(wO)
 {
-  for (int i=0; i<orderCondition_max; ++i) {
-    orders[i] = ord[i];
-  }
 }
 
 UnitOrders::UnitOrders(uint16 numWeapons) :
@@ -45,28 +38,17 @@ UnitOrders::UnitOrders(uint16 numWeapons) :
 /** Makes the queued order with condition \p condition the current order, and
  * updates the state to follow the order.
  */
-void UnitOrders::acceptOrder(OrderCondition condition)
+void UnitOrders::acceptOrder(const Order& order)
 {
-  assert(condition < orderCondition_max);
-  /* accept the order */
-  Order thisOrder;
-  if (condition == orderCondition_incidental) {
-    thisOrder = orders[condition];
-    orders[condition] = Order();
-  } else {
-    thisOrder = currentOrder = orders[condition];
-    clearQueue();
-  }
-
   /* Alter the Unit's state appropriately for the order */
-  switch (thisOrder.getType()) {
+  switch (order.getType()) {
     case orderType_setVelocity:
       linearTarget = linearTargetType_velocity;
-      targetVelocity = thisOrder.getSetVelocityData().getTarget();
+      targetVelocity = order.getSetVelocityData().getTarget();
       break;
     case orderType_move:
       linearTarget = linearTargetType_position;
-      targetPosition = thisOrder.getMoveData().getTarget();
+      targetPosition = order.getMoveData().getTarget();
       break;
     case orderType_targetPosition:
     case orderType_targetPositionOrientation:
@@ -74,47 +56,21 @@ void UnitOrders::acceptOrder(OrderCondition condition)
     case orderType_targetSensorReturns:
       {
         uint16 weaponIndex;
-        switch(thisOrder.getType()) {
-          case orderType_targetPosition:
-            weaponIndex = thisOrder.getTargetPositionData().getWeaponIndex();
-            break;
-          case orderType_targetPositionOrientation:
-            weaponIndex = thisOrder.getTargetPositionOrientationData().getWeaponIndex();
-            break;
-          case orderType_targetUnit:
-            weaponIndex = thisOrder.getTargetUnitData().getWeaponIndex();
-            break;
-          case orderType_targetSensorReturns:
-            weaponIndex = thisOrder.getTargetSensorReturnsData().getWeaponIndex();
-            break;
-          default:
-          Fatal("Unknown OrderType " << thisOrder.getType());
-        }
+        weaponIndex = order.getTargetWeaponData().getWeaponIndex();
         if (weaponIndex >= weaponOrders.size()) {
           Debug("Weapon index out of range");
           break;
         }
-        weaponOrders[weaponIndex].update(thisOrder);
+        weaponOrders[weaponIndex].update(order);
       }
       break;
     default:
-      Fatal("Unknown OrderType " << thisOrder.getType());
-  }
-}
-
-/** Clears all queued orders. */
-void UnitOrders::clearQueue()
-{
-  /* Clear all orders from the queue */
-  for (int i=0; i<orderCondition_max; i++) {
-    orders[i] = Order();
+      Fatal("Unknown OrderType " << order.getType());
   }
 }
 
 void UnitOrders::store(OArchive& out) const
 {
-  out << orders;
-  currentOrder.store(out);
   (out.insertEnum(linearTarget) << targetPosition <<
     targetVelocity).insertEnum(rotationalTarget);
   targetOrientation.store(out);
@@ -123,9 +79,6 @@ void UnitOrders::store(OArchive& out) const
 
 UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
 {
-  /* conditioned orders */
-  Order orders[orderCondition_max];
-  Order currentOrder;
   /* current goals which have been set by orders */
   LinearTargetType linearTarget;
   Point<sint32> targetPosition;
@@ -135,8 +88,6 @@ UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
   AngularVelocity targetAngularVelocity;
   vector<WeaponOrders> weaponOrders;
 
-  in.extract<Order, orderCondition_max>(orders, player);
-  currentOrder = Order::load(in, player);
   in.extractEnum(linearTarget);
   in >> targetPosition >> targetVelocity;
   in.extractEnum(rotationalTarget);
@@ -145,8 +96,7 @@ UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
   in.extract(weaponOrders, player);
 
   return UnitOrders(
-      orders, currentOrder, linearTarget,
-      targetPosition, targetVelocity,
+      linearTarget, targetPosition, targetVelocity,
       rotationalTarget, targetOrientation, targetAngularVelocity, weaponOrders
     );
 }

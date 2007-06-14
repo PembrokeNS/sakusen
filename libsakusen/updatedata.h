@@ -5,7 +5,6 @@
 #include "changeownerreason.h"
 #include "updatetype.h"
 #include "order.h"
-#include "ordercondition.h"
 #include "oarchive.h"
 #include "completeunit.h"
 #include "sensorreturns.h"
@@ -89,55 +88,17 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   private:
     OrderAcceptedUpdateData();
   public:
-    OrderAcceptedUpdateData(UnitID uI, OrderCondition c) :
-      UpdateData(), unitId(uI), condition(c) {}
-    OrderAcceptedUpdateData(IArchive&);
+    OrderAcceptedUpdateData(UnitID uI, const Order& o) :
+      UpdateData(), unitId(uI), order(o) {}
+    OrderAcceptedUpdateData(IArchive&, const PlayerID*);
     ~OrderAcceptedUpdateData() {}
   private:
     UnitID unitId;
-    OrderCondition condition;
-  public:
-    inline UnitID getUnitId() const { return unitId; }
-    inline OrderCondition getCondition() const { return condition; }
-    UpdateType getType() const { return updateType_orderAccepted; }
-    void store(OArchive& out) const;
-};
-
-class LIBSAKUSEN_API OrderCompletedUpdateData : public UpdateData {
-  private:
-    OrderCompletedUpdateData();
-  public:
-    OrderCompletedUpdateData(UnitID uI, OrderCondition c) :
-      UpdateData(), unitId(uI), condition(c) {}
-    OrderCompletedUpdateData(IArchive&);
-    ~OrderCompletedUpdateData() {}
-  private:
-    UnitID unitId;
-    OrderCondition condition;
-  public:
-    inline UnitID getUnitId() const { return unitId; }
-    inline OrderCondition getCondition() const { return condition; }
-    UpdateType getType() const { return updateType_orderCompleted; }
-    void store(OArchive& out) const;
-};
-
-class LIBSAKUSEN_API OrderQueuedUpdateData : public UpdateData {
-  private:
-    OrderQueuedUpdateData();
-  public:
-    OrderQueuedUpdateData(UnitID uI, const Order& o, OrderCondition c) :
-      UpdateData(), unitId(uI), order(o), condition(c) {}
-    OrderQueuedUpdateData(IArchive&, const PlayerID*);
-    ~OrderQueuedUpdateData() {}
-  private:
-    UnitID unitId;
     Order order;
-    OrderCondition condition;
   public:
     inline UnitID getUnitId() const { return unitId; }
-    inline OrderCondition getCondition() const { return condition; }
     inline const Order& getOrder() const { return order; }
-    UpdateType getType() const { return updateType_orderQueued; }
+    UpdateType getType() const { return updateType_orderAccepted; }
     void store(OArchive& out) const;
 };
 

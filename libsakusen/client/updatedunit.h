@@ -33,9 +33,7 @@ class UpdatedUnit : public CompleteUnit {
       return orders;
     }
     /*@}*/
-    void orderQueued(const OrderQueuedUpdateData& data);
     void orderAccepted(const OrderAcceptedUpdateData& data);
-    void orderCompleted(const OrderCompletedUpdateData& data);
     void alter(const CompleteUnit&);
     void incrementState();
 };

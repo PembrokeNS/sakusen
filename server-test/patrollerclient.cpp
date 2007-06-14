@@ -1,5 +1,7 @@
 #include "patrollerclient.h"
 
+#define CLOSE_ENOUGH 1000
+
 using namespace sakusen;
 using namespace sakusen::server;
 using namespace sakusen::server::test;
@@ -26,7 +28,7 @@ void PatrollerClient::queueUpdate(const Update& update)
           /*Debug("sending move order");*/
           QDebug("Patrolling to " << patrolTo);
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */, orderCondition_now,
+              OrderMessage(0 /* unit id */,
                 Order(new MoveOrderData(patrolTo))
               )
             );
@@ -36,8 +38,27 @@ void PatrollerClient::queueUpdate(const Update& update)
       break;
     case updateType_unitAltered:
       {
-        /*const UnitAlteredUpdateData& data = update.getUnitAlteredData();
-        QDebug("Unit at " << data.getUnit().getStatus().getPosition());*/
+        const UnitAlteredUpdateData& data = update.getUnitAlteredData();
+        Position position = data.getUnit().getStatus().getPosition();
+        /*QDebug("Unit at " << data.getUnit().getStatus().getPosition());*/
+
+        if (headedOutward && (position - patrolTo).length() < CLOSE_ENOUGH) {
+          orderMessageQueue.push(
+              OrderMessage(0 /* unit id */,
+                Order(new MoveOrderData(patrolFrom))
+              )
+            );
+          headedOutward = false;
+        } else if (
+            !headedOutward && (position - patrolFrom).length() < CLOSE_ENOUGH
+          ) {
+          orderMessageQueue.push(
+              OrderMessage(0 /* unit id */,
+                Order(new MoveOrderData(patrolTo))
+              )
+            );
+          headedOutward = true;
+        }
       }
       break;
     case updateType_sensorReturnsAdded:
@@ -50,43 +71,13 @@ void PatrollerClient::queueUpdate(const Update& update)
         /* throw in a weapon targeting orders */
         for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */, orderCondition_incidental, Order(
+              OrderMessage(0 /* unit id */, Order(
                   new TargetPositionOrderData(
                     weaponIndex,
                     otherUnit->getUnit()->getIStatus()->getPosition()
                   )
                 ))
             );
-        }
-      }
-      break;
-    case updateType_orderCompleted:
-      {
-        const OrderCompletedUpdateData& data = update.getOrderCompletedData();
-        if (data.getUnitId() == 0) {
-          switch (data.getCondition()) {
-            case orderCondition_lastOrderSuccess:
-              if (headedOutward) {
-                orderMessageQueue.push(
-                    OrderMessage(0 /* unit id */, orderCondition_now,
-                      Order(new MoveOrderData(patrolFrom))
-                    )
-                  );
-                headedOutward = false;
-              } else {
-                orderMessageQueue.push(
-                    OrderMessage(0 /* unit id */, orderCondition_now,
-                      Order(new MoveOrderData(patrolTo))
-                    )
-                  );
-                headedOutward = true;
-              }
-              break;
-            case orderCondition_lastOrderFailure:
-              break;
-            default:
-              break;
-          }
         }
       }
       break;
