@@ -195,7 +195,7 @@ class hash_list_iterator {
   private:
     typedef typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::List::iterator ListIt;
 
-    hash_list_iterator(const ListIt& i) :
+    explicit hash_list_iterator(const ListIt& i) :
       listIt(i)
     {}
     
@@ -224,7 +224,7 @@ class hash_list_const_iterator {
   private:
     typedef typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::List::const_iterator ListIt;
     
-    hash_list_const_iterator(const ListIt& i) :
+    explicit hash_list_const_iterator(const ListIt& i) :
       listIt(i)
     {}
 
