@@ -85,6 +85,7 @@ LayeredUnit::~LayeredUnit()
   }
 
   status = NULL;
+  assert(topLayer.unique());
 }
 
 void LayeredUnit::acceptOrder(const Order& order)
@@ -136,7 +137,10 @@ void LayeredUnit::clearDirty()
 
 Ref<LayeredUnit> LayeredUnit::getRefToThis()
 {
-  return *world->getUnits().find(this);
+  hash_list<LayeredUnit, Bounded>& units = world->getUnits();
+  hash_list<LayeredUnit, Bounded>::iterator thisIt = units.find(this);
+  assert(thisIt != units.end());
+  return *thisIt;
 }
 
 Ref<const LayeredUnit> LayeredUnit::getRefToThis() const
