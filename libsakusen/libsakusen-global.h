@@ -47,7 +47,6 @@
    * clashes, and the inline function versions are better anyway */
   #define NOMINMAX
   
-  #include <cassert>
   /*Define types the MSVC way */
   typedef signed __int8          sint8;
   typedef unsigned __int8        uint8;
@@ -58,30 +57,13 @@
   typedef signed __int64       sint64;
   typedef unsigned __int64     uint64;
 
-  //Limit constants following the types.
-  #define INT8_MIN _I8_MIN
-  #define INT8_MAX _I8_MAX
-  #define UINT8_MAX _UI8_MAX  
-  
-  #define INT16_MIN _I16_MIN
-  #define INT16_MAX _I16_MAX
-  #define UINT16_MAX _UI16_MAX  
-
-  #define INT32_MIN _I32_MIN
-  #define INT32_MAX _I32_MAX
-  #define UINT32_MAX _UI32_MAX  
-
-  #define INT64_MIN _I64_MIN
-  #define INT64_MAX _I64_MAX
-  #define UINT64_MAX _UI64_MAX  
-
   #define _USE_MATH_DEFINES 1;
   //Carries several maths constants with it.
 
 #elif defined(__GNUC__)
 
-  /* In gcc, we have the following dll export thing, which will do nothing unless
-   * we should happen to add the compiler options to alter the default
+  /* In gcc, we have the following dll export thing, which will do nothing
+   * unless we should happen to add the compiler options to alter the default
    * visibility. */
 
   #if (__GNUC__ >= 4)
@@ -96,9 +78,7 @@
   #define FILE_SEP "/"
   #define FILE_SEPC '/'
 
-  #include <cassert>
   /* Define types the gcc way. */
-  #define __STDC_LIMIT_MACROS /* defined so that UINT32_MAX gets defined */
   #include <stdint.h>
   typedef uint8_t  uint8;
   typedef int8_t   sint8;
@@ -129,6 +109,8 @@
  * sakusen stuff happens. */
 #define CONFIG_SUBDIR FILE_SEP ".sakusen"
 
+#include <cassert>
+
 /* Now define the streams used for debugging and error output */
 
 #include <ostream>
@@ -139,16 +121,21 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 /* Define macros for debug and error output.  They're inside loops to absorb
  * the semicolon that should be used after calling them. */
 
-#define Debug(msg) \
-  do { \
-    debugStream << __FILE__ << ":" << __LINE__ << ":" << \
-      __PRETTY_FUNCTION__ <<  ": " << msg << std::endl; \
-  } while(false)
+#ifndef NDEBUG
+  #define Debug(msg) \
+    do { \
+      debugStream << __FILE__ << ":" << __LINE__ << ":" << \
+        __PRETTY_FUNCTION__ <<  ": " << msg << std::endl; \
+    } while(false)
 
-#define QDebug(msg) \
-  do { \
-    debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << std::endl; \
-  } while(false)
+  #define QDebug(msg) \
+    do { \
+      debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << std::endl; \
+    } while(false)
+#else
+  #define Debug(msg)
+  #define QDebug(msg)
+#endif
 
 #define Fatal(msg) \
   do { \
@@ -161,7 +148,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 #include <cmath>
 
 #if defined(_MSC_VER)
-    /* The MS math.h lacks a truncate function */
+  /* The MS math.h lacks a truncate function */
   inline double trunc(double x) {
     return ( x > 0 ? floor(x) : ceil(x) );
   }
@@ -187,7 +174,7 @@ namespace sakusen {
 /** \brief Typedef for Times, primarily to make it clear when Times are
  * being manipulated */
 typedef uint32 Time;
-/** \brief Typedef for TimeSpans (i.e. the interval between two Times
+/** \brief Typedef for TimeSpans (i.e. the interval between two Times)
  * primarily to make it clear when such are being manipulated
  *
  * \todo We might want to allow negative TimeSpans too. */
