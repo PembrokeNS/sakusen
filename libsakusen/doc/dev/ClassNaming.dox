@@ -7,7 +7,7 @@ classes and other such supporting code).
 
 The situation for units is considerably more complex than for anything else,
 and the array of unit classes has its own page in the documenation.  See \ref
-Units.
+units.
 
 In what follows, Foo is some game object.  Possible values for Foo include Unit, Beam, Ballistic, Effect, World, Map, Weapon.  Each listed item is valid for some subset of these values.
 
