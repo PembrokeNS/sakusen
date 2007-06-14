@@ -10,7 +10,7 @@
 
 namespace sakusen {
 
-class Exn {
+class LIBSAKUSEN_API Exn {
   public:
     Exn(const String& m) :
       errorNum(errno), message(m) { }
@@ -19,7 +19,7 @@ class Exn {
     const String message;
 };
 
-class DeserializationExn : public Exn {
+class LIBSAKUSEN_API DeserializationExn : public Exn {
   private:
     DeserializationExn();
   public:
@@ -27,7 +27,7 @@ class DeserializationExn : public Exn {
     virtual ~DeserializationExn() throw() { }
 };
 
-class WrongVersionDeserializationExn :
+class LIBSAKUSEN_API WrongVersionDeserializationExn :
     public DeserializationExn {
   public:
     WrongVersionDeserializationExn(uint8 expected, uint8 found) :
@@ -37,7 +37,7 @@ class WrongVersionDeserializationExn :
     virtual ~WrongVersionDeserializationExn() throw() { }
 };
 
-class EndOfArchiveDeserializationExn :
+class LIBSAKUSEN_API EndOfArchiveDeserializationExn :
     public DeserializationExn {
   public:
     EndOfArchiveDeserializationExn() :
@@ -45,7 +45,7 @@ class EndOfArchiveDeserializationExn :
     virtual ~EndOfArchiveDeserializationExn() throw() { }
 };
 
-class TooMuchArchiveDeserializationExn :
+class LIBSAKUSEN_API TooMuchArchiveDeserializationExn :
     public DeserializationExn {
   public:
     TooMuchArchiveDeserializationExn() :
@@ -53,7 +53,7 @@ class TooMuchArchiveDeserializationExn :
     virtual ~TooMuchArchiveDeserializationExn() throw() { }
 };
 
-class UnresolvedNameDeserializationExn :
+class LIBSAKUSEN_API UnresolvedNameDeserializationExn :
     public DeserializationExn {
   public:
     UnresolvedNameDeserializationExn(String name) :
@@ -63,7 +63,7 @@ class UnresolvedNameDeserializationExn :
     virtual ~UnresolvedNameDeserializationExn() throw() { }
 };
 
-class DuplicateNameDeserializationExn :
+class LIBSAKUSEN_API DuplicateNameDeserializationExn :
     public DeserializationExn {
   public:
     DuplicateNameDeserializationExn(String name) :
@@ -73,7 +73,7 @@ class DuplicateNameDeserializationExn :
     virtual ~DuplicateNameDeserializationExn() throw() { }
 };
 
-class NoWorldDeserializationExn :
+class LIBSAKUSEN_API NoWorldDeserializationExn :
     public DeserializationExn {
   public:
     NoWorldDeserializationExn() :
@@ -81,7 +81,7 @@ class NoWorldDeserializationExn :
     virtual ~NoWorldDeserializationExn() throw() {}
 };
 
-class WrongMagicDeserializationExn :
+class LIBSAKUSEN_API WrongMagicDeserializationExn :
     public DeserializationExn {
   public:
     WrongMagicDeserializationExn(
@@ -97,7 +97,7 @@ class WrongMagicDeserializationExn :
     virtual ~WrongMagicDeserializationExn() throw() {}
 };
 
-class EnumDeserializationExn :
+class LIBSAKUSEN_API EnumDeserializationExn :
     public DeserializationExn {
   public:
     /** \brief Constructs a new exception
@@ -113,7 +113,7 @@ class EnumDeserializationExn :
     virtual ~EnumDeserializationExn() throw() {}
 };
 
-class ResourceDeserializationExn :
+class LIBSAKUSEN_API ResourceDeserializationExn :
     public DeserializationExn {
   public:
     ResourceDeserializationExn(

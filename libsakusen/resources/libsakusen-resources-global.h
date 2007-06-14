@@ -23,7 +23,11 @@
     #define LIBSAKUSEN_RESOURCES_API   __declspec(dllimport)
   #endif
 #else
-  #define LIBSAKUSEN_RESOURCES_API
+  #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #define LIBSAKUSEN_RESOURCES_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBSAKUSEN_RESOURCES_API
+  #endif
 #endif
 
 #ifdef WIN32

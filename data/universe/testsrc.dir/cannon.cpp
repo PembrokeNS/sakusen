@@ -232,32 +232,32 @@ void ParalyzingLayer::onRemoval() {
 
 extern "C" {
 
-Weapon* spawn_cannon(const WeaponType* type)
+MODULE_API Weapon* spawn_cannon(const WeaponType* type)
 {
   return new Cannon(type);
 }
 
-Weapon* spawn_paralyzer(const WeaponType* type)
+MODULE_API Weapon* spawn_paralyzer(const WeaponType* type)
 {
   return new Paralyzer(type);
 }
 
-Weapon* spawn_factorycreater(const WeaponType* type)
+MODULE_API Weapon* spawn_factorycreater(const WeaponType* type)
 {
   return new FactoryCreater(type);
 }
 
-Weapon* spawn_gruntcreater(const WeaponType* type)
+MODULE_API Weapon* spawn_gruntcreater(const WeaponType* type)
 {
   return new GruntCreater(type);
 }
 
-Weapon* spawn_spidercreater(const WeaponType* type)
+MODULE_API Weapon* spawn_spidercreater(const WeaponType* type)
 {
   return new SpiderCreater(type);
 }
 
-Weapon* spawn_builder(const WeaponType* type)
+MODULE_API Weapon* spawn_builder(const WeaponType* type)
 {
   return new Builder(type);
 }

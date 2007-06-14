@@ -4,11 +4,7 @@
 #include <string>
 #include <list>
 
-#ifdef __GNUC__
-  #include <ext/hash_map>
-
-  #define LIBOPTIMAL_API
-#else
+#if defined(_MSC_VER)
   #include <hash_map>
   #define __gnu_cxx std
   /* This warning is about members of exported classes not being exported.
@@ -21,6 +17,12 @@
   #else
     #define LIBOPTIMAL_API _declspec(dllimport)
   #endif
+#elif defined(__GNUC__) && (__GNUC__ >= 4)
+  #include <ext/hash_map>
+
+  #define LIBOPTIMAL_API __attribute__ ((visibility ("default")))
+#else
+  #error Unknown compiler
 #endif
 
 namespace optimal {

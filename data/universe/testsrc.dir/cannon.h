@@ -10,6 +10,21 @@
 #include "unitmask.h"
 #include "fuse.h"
 
+#if defined(_MSC_VER)
+/* The __declspec stuff for ensuring symbols are exported from DLLs and
+ * imported back into libraries.
+ *
+ * This being a module opened at runtime, we always export and never import. */
+  #define MODULE_API   __declspec(dllexport)
+  #define MODULE_EXIMP extern
+#else
+  #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #define MODULE_API __attribute__ ((visibility ("default")))
+  #else
+    #define MODULE_API
+  #endif
+#endif
+
 using namespace sakusen;
 using namespace sakusen::server;
 

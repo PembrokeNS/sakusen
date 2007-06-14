@@ -8,7 +8,7 @@ namespace sakusen {
  *
  * This simple implementation of a spatial index is intended to serve as a
  * reference against which more efficient indices can be compared */
-class NaiveSpatial : public ISpatial {
+class LIBSAKUSEN_API NaiveSpatial : public ISpatial {
   private:
     typedef std::list<Ref<Bounded> > List;
     List list;

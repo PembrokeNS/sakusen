@@ -12,7 +12,11 @@
     #define LIBSAKUSEN_CLIENT_EXIMP
   #endif
 #else
-  #define LIBSAKUSEN_CLIENT_API
+  #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #define LIBSAKUSEN_CLIENT_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBSAKUSEN_CLIENT_API
+  #endif
 #endif
 
 #endif // LIBSAKUSEN_CLIENT_GLOBAL_H

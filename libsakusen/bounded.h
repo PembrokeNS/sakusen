@@ -21,7 +21,7 @@ class Ray;
  * It demands methods for finding the bbox of the bounded object and spatially
  * relating with other game objects.
  */
-class Bounded {
+class LIBSAKUSEN_API Bounded {
   public:
     /** \brief Virtual destructor.
      *

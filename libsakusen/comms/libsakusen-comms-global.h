@@ -16,7 +16,11 @@
   #undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
   #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #else
-  #define LIBSAKUSEN_COMMS_API
+  #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #define LIBSAKUSEN_COMMS_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBSAKUSEN_COMMS_API
+  #endif
 #endif
 
 #ifdef WIN32

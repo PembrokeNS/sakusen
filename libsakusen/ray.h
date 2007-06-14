@@ -35,7 +35,7 @@ class ICompleteUnit;
  * convenient to use as basic values, and thread-safe once the ctor has
  * finished.
  */
-class Ray {
+class LIBSAKUSEN_API Ray {
   public:
     const Point<sint32> origin; /**< origin (start) */
     const Point<sint32> d; /**< direction */

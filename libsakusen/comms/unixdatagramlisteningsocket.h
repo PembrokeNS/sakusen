@@ -8,7 +8,8 @@
 namespace sakusen {
 namespace comms {
 
-class UnixDatagramListeningSocket : public UnixDatagramSocket {
+class LIBSAKUSEN_COMMS_API UnixDatagramListeningSocket :
+  public UnixDatagramSocket {
   private:
     UnixDatagramListeningSocket();
     UnixDatagramListeningSocket(const UnixDatagramListeningSocket& copy);
