@@ -144,7 +144,7 @@ void MdnsPublisher::create_services(AvahiClient *c) {
   return;
 
 fail:
-  avahi_threaded_poll_quit(poll);
+  avahi_threaded_poll_stop(poll);
 }
 
 
