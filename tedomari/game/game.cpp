@@ -38,7 +38,7 @@ void Game::setUniverse(const String& name, const String& hash)
 {
   ResourceSearchResult result;
   universe =
-    resourceInterface->search<Universe>(name + "." + hash, NULL, &result);
+    resourceInterface->search<Universe>(name + "." + hash, &result);
   switch (result) {
     case resourceSearchResult_success:
       return;

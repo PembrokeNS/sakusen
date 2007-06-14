@@ -180,8 +180,8 @@ String FileResourceInterface::fileSearch(
 shared_ptr<void> FileResourceInterface::internalSearch(
     const String& name,
     ResourceType type,
-    const void* arg,
-    ResourceSearchResult* result
+    ResourceSearchResult* result,
+    Universe::ConstPtr universe
   )
 {
   uint64 length;
@@ -237,13 +237,15 @@ shared_ptr<void> FileResourceInterface::internalSearch(
   try {
     switch (type) {
       case resourceType_universe:
-        resource.reset(Universe::loadNew(fileAsArchive, ptrToThis.lock()));
+        resource.reset(Universe::loadNew(
+              fileAsArchive, DeserializationContext(ptrToThis.lock())
+            ));
         break;
       case resourceType_mapTemplate:
         resource.reset(new MapTemplate(
             MapTemplate::load(
               fileAsArchive,
-              static_cast<const Universe::ConstPtr*>(arg)
+              DeserializationContext(ptrToThis.lock(), universe)
             )
           ));
         break;

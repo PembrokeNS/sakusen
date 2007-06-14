@@ -77,7 +77,7 @@ void UnitOrders::store(OArchive& out) const
   out << targetAngularVelocity << weaponOrders;
 }
 
-UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
+UnitOrders UnitOrders::load(IArchive& in, const DeserializationContext& context)
 {
   /* current goals which have been set by orders */
   LinearTargetType linearTarget;
@@ -93,7 +93,7 @@ UnitOrders UnitOrders::load(IArchive& in, const PlayerID* player)
   in.extractEnum(rotationalTarget);
   targetOrientation = Orientation::load(in);
   in >> targetAngularVelocity;
-  in.extract(weaponOrders, player);
+  in.extract(weaponOrders, context);
 
   return UnitOrders(
       linearTarget, targetPosition, targetVelocity,

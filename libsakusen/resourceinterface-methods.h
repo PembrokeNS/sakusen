@@ -22,11 +22,11 @@ inline ResourceType ResourceInterface::typenameToResourceType<MapTemplate>()
 template<typename T>
 inline boost::shared_ptr<T> ResourceInterface::search(
     const String& name,
-    const typename T::loadArgument* arg,
-    ResourceSearchResult* result
+    ResourceSearchResult* result,
+    Universe::ConstPtr universe
   ) {
   return boost::static_pointer_cast<T>(
-      internalSearch(name, typenameToResourceType<T>(), arg, result)
+      internalSearch(name, typenameToResourceType<T>(), result, universe)
     );
 }
 

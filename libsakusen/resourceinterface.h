@@ -11,6 +11,8 @@
 
 namespace sakusen {
 
+class Universe;
+
 /** \brief Abstract class providing an interface to a supply of resources
  *
  * This class is an abstract class which can be used to aid in serialization
@@ -31,8 +33,8 @@ class LIBSAKUSEN_API ResourceInterface {
     virtual boost::shared_ptr<void> internalSearch(
         const String& name,
         ResourceType type,
-        const void* arg,
-        ResourceSearchResult* result
+        ResourceSearchResult* result,
+        boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       ) = 0;
     
     virtual void* internalSymbolSearch(
@@ -63,8 +65,8 @@ class LIBSAKUSEN_API ResourceInterface {
     template<typename T>
     inline boost::shared_ptr<T> search(
         const String& name,
-        const typename T::loadArgument* arg,
-        ResourceSearchResult* result
+        ResourceSearchResult* result,
+        boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       );
 
     /** \brief Search for a a symbol in a dlopenable module

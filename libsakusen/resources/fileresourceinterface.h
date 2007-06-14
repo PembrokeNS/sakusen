@@ -7,6 +7,7 @@
 #include <boost/weak_ptr.hpp>
 
 #include "resourceinterface.h"
+#include "universe.h"
 
 namespace sakusen {
 namespace resources {
@@ -52,8 +53,8 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
     virtual boost::shared_ptr<void> internalSearch(
         const String& name,
         ResourceType type,
-        const void* arg,
-        ResourceSearchResult* result
+        ResourceSearchResult* result,
+        Universe::ConstPtr
       );
     
     virtual void* internalSymbolSearch(

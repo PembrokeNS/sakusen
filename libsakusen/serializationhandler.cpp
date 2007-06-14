@@ -7,11 +7,11 @@ namespace sakusen {
 
 Ref<ICompleteUnit> SerializationHandler<ICompleteUnit>::extract(
     IArchive& archive,
-    const PlayerID* player
+    const DeserializationContext& context
   ) const {
   UnitID unitID;
   archive >> unitID;
-  return world->getICompleteUnit(*player, unitID);
+  return world->getICompleteUnit(context.getPlayerId(), unitID);
 }
 
 void SerializationHandler<ICompleteUnit>::insert(

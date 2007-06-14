@@ -85,7 +85,6 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
     /** \brief Determine whether the Universe contains a given UnitTypeID */
     bool containsUnitType(const UnitTypeID id) const;
 
-    typedef void loadArgument;
     void store(OArchive&) const;
     /** \brief Loads a Universe from an archive
      *
@@ -95,7 +94,7 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
      * It returns a newly allocated Universe, which must be deleted by the
      * caller.
      */
-    static Universe* loadNew(IArchive&, ResourceInterface::Ptr);
+    static Universe* loadNew(IArchive&, const DeserializationContext&);
 };
 
 }

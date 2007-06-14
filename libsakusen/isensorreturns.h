@@ -45,16 +45,15 @@ class SerializationHandler<ISensorReturns> {
   public:
     Ref<ISensorReturns> extract(
         IArchive& archive,
-        const PlayerID* player
+        const DeserializationContext& context
       ) const {
       SensorReturnsID id;
       archive >> id;
-      return world->getISensorReturns(*player, id);
+      return world->getISensorReturns(context.getPlayerId(), id);
     }
     void insert(OArchive& archive, const Ref<const ISensorReturns>& ret) const {
       archive << ret->getId();
     }
-    typedef PlayerID loadArgument;
 };
 
 }

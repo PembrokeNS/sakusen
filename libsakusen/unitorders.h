@@ -77,9 +77,8 @@ class LIBSAKUSEN_API UnitOrders {
 
     void acceptOrder(const Order& condition);
 
-    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static UnitOrders load(IArchive&, const loadArgument*);
+    static UnitOrders load(IArchive&, const DeserializationContext&);
 };
 
 }

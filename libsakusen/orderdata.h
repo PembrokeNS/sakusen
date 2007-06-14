@@ -126,11 +126,11 @@ class LIBSAKUSEN_API TargetUnitOrderData : public TargetWeaponOrderData {
       weaponIndex(wI),
       target(t)
     {}
-    TargetUnitOrderData(IArchive& in, const PlayerID* player) :
+    TargetUnitOrderData(IArchive& in, const DeserializationContext& context) :
       TargetWeaponOrderData()
     {
       in >> weaponIndex;
-      target = Ref<ICompleteUnit>::load(in, player);
+      target = Ref<ICompleteUnit>::load(in, context);
     }
     ~TargetUnitOrderData() {};
   private:
@@ -153,11 +153,14 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData :
       weaponIndex(wI),
       target(t)
     {}
-    TargetSensorReturnsOrderData(IArchive& in, const PlayerID* player) :
+    TargetSensorReturnsOrderData(
+        IArchive& in,
+        const DeserializationContext& context
+      ) :
       TargetWeaponOrderData()
     {
       in >> weaponIndex;
-      target = Ref<ISensorReturns>::load(in, player);
+      target = Ref<ISensorReturns>::load(in, context);
     }
     ~TargetSensorReturnsOrderData() {};
   private:

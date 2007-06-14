@@ -103,7 +103,7 @@ void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
 
 UnitStatus UnitStatus::load(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   String typeName;
@@ -119,7 +119,7 @@ UnitStatus UnitStatus::load(
   std::vector<WeaponStatus> weaponsStatus;
   
   in >> typeName;
-  type = (*universe)->getUnitTypeId(typeName);
+  type = context.getUniverse()->getUnitTypeId(typeName);
   in >> position;
   orientation = Orientation::load(in);
   in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive;

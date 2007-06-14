@@ -110,7 +110,7 @@ int main(/* int argc, char** argv */)
   cout << "Loading Universe" << endl;
   ResourceSearchResult result;
   Universe::ConstPtr universe =
-    resourceInterface->search<Universe>("universe", NULL, &result);
+    resourceInterface->search<Universe>("universe", &result);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -126,7 +126,7 @@ int main(/* int argc, char** argv */)
   /* Load the map */
   cout << "Loading Map" << endl;
   MapTemplate::Ptr mapTemplate =
-    resourceInterface->search<MapTemplate>("map", &universe, &result);
+    resourceInterface->search<MapTemplate>("map", &result, universe);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {

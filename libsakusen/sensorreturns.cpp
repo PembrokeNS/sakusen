@@ -23,7 +23,7 @@ void SensorReturns::store(OArchive& out) const
 
 SensorReturns SensorReturns::load(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   SensorReturnsID id;
@@ -51,7 +51,7 @@ SensorReturns SensorReturns::load(
     region.reset();
   }
   if (0 != (perception & perception_unit)) {
-    unit = new CompleteUnit(CompleteUnit::load(in, universe));
+    unit = new CompleteUnit(CompleteUnit::load(in, context));
   } else {
     unit = NULL;
   }

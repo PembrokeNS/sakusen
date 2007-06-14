@@ -16,12 +16,15 @@ void OrderMessage::store(OArchive& out) const
   order.store(out);
 }
 
-OrderMessage OrderMessage::load(IArchive& in, const PlayerID* player)
+OrderMessage OrderMessage::load(
+    IArchive& in,
+    const DeserializationContext& context
+  )
 {
   uint32 orderee;
   
   in >> orderee;
-  Order order(Order::load(in, player));
+  Order order(Order::load(in, context));
 
   return OrderMessage(orderee, order);
 }

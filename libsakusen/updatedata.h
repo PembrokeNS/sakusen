@@ -56,7 +56,7 @@ class LIBSAKUSEN_API UnitAddedUpdateData : public UpdateData {
         const Ref<const ICompleteUnit>& u
       ) :
       UpdateData(), reason(r), unit(u) {}
-    UnitAddedUpdateData(IArchive&, const Universe::ConstPtr*);
+    UnitAddedUpdateData(IArchive&, const DeserializationContext&);
     ~UnitAddedUpdateData() {}
   private:
     changeOwnerReason reason;
@@ -74,7 +74,7 @@ class LIBSAKUSEN_API UnitAlteredUpdateData : public UpdateData {
   public:
     UnitAlteredUpdateData(const Ref<const ICompleteUnit>& u) :
       UpdateData(), unit(u) {}
-    UnitAlteredUpdateData(IArchive&, const Universe::ConstPtr*);
+    UnitAlteredUpdateData(IArchive&, const DeserializationContext&);
     ~UnitAlteredUpdateData() {}
   private:
     CompleteUnit unit;
@@ -90,7 +90,7 @@ class LIBSAKUSEN_API OrderAcceptedUpdateData : public UpdateData {
   public:
     OrderAcceptedUpdateData(UnitID uI, const Order& o) :
       UpdateData(), unitId(uI), order(o) {}
-    OrderAcceptedUpdateData(IArchive&, const PlayerID*);
+    OrderAcceptedUpdateData(IArchive&, const DeserializationContext&);
     ~OrderAcceptedUpdateData() {}
   private:
     UnitID unitId;
@@ -124,7 +124,7 @@ class LIBSAKUSEN_API SensorReturnsAddedUpdateData : public UpdateData {
   public:
     SensorReturnsAddedUpdateData(const Ref<const ISensorReturns> r) :
       UpdateData(), returns(r) {}
-    SensorReturnsAddedUpdateData(IArchive&, const Universe::ConstPtr*);
+    SensorReturnsAddedUpdateData(IArchive&, const DeserializationContext&);
     ~SensorReturnsAddedUpdateData() {}
   private:
     SensorReturns returns;
@@ -140,7 +140,7 @@ class LIBSAKUSEN_API SensorReturnsAlteredUpdateData : public UpdateData {
   public:
     SensorReturnsAlteredUpdateData(const Ref<const ISensorReturns>& r) :
       UpdateData(), returns(r) {}
-    SensorReturnsAlteredUpdateData(IArchive&, const Universe::ConstPtr*);
+    SensorReturnsAlteredUpdateData(IArchive&, const DeserializationContext&);
     ~SensorReturnsAlteredUpdateData() {}
   private:
     SensorReturns returns;

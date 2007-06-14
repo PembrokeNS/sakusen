@@ -219,7 +219,7 @@ class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
     OrderMessageData();
   public:
     OrderMessageData(const OrderMessage&);
-    OrderMessageData(IArchive& in, const PlayerID*);
+    OrderMessageData(IArchive&, const DeserializationContext&);
     ~OrderMessageData() {}
   private:
     OrderMessage orderMessage; /**< The order message */
@@ -235,7 +235,7 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     UpdateMessageData();
   public:
     UpdateMessageData(Time time, std::list<Update>& update);
-    UpdateMessageData(IArchive& in, const PlayerID*);
+    UpdateMessageData(IArchive&, const DeserializationContext&);
     ~UpdateMessageData() {}
   private:
     Time time; /**< The game time at which these updates apply */

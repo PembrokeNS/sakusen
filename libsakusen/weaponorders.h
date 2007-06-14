@@ -40,9 +40,8 @@ class LIBSAKUSEN_API WeaponOrders {
     /** \brief Update according to the instructions in the given order */
     void update(const Order& order);
 
-    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static WeaponOrders load(IArchive&, const loadArgument*);
+    static WeaponOrders load(IArchive&, const DeserializationContext&);
 };
 
 }

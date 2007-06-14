@@ -45,13 +45,13 @@ void MapPlayMode::store(OArchive& archive) const
 
 MapPlayMode MapPlayMode::load(
     IArchive& archive,
-    const sakusen::Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   uint32 minPlayers;
   uint32 maxPlayers;
   std::vector<PlayerTemplate> players;
-  (archive >> minPlayers >> maxPlayers).extract(players, universe);
+  (archive >> minPlayers >> maxPlayers).extract(players, context);
   return MapPlayMode(minPlayers, maxPlayers, players);
 }
 

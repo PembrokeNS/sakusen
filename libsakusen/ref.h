@@ -79,7 +79,7 @@ class Ref {
     
     static Ref<T> load(
         IArchive& archive,
-        const typename SHandler::loadArgument* arg
+        const DeserializationContext& context
       ) {
       bool valid;
       archive >> valid;
@@ -87,7 +87,7 @@ class Ref {
         return Ref<T>();
       }
       
-      return SHandler().extract(archive, arg);
+      return SHandler().extract(archive, context);
     }
 };
 

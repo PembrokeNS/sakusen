@@ -39,9 +39,8 @@ class LIBSAKUSEN_API Order {
     #undef GET_DATA
     /*@}*/
 
-    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static Order load(IArchive&, const loadArgument*);
+    static Order load(IArchive&, const DeserializationContext&);
 };
 
 }

@@ -13,10 +13,7 @@ namespace sakusen {
  * such serialization.  See any of the existing examples for the method
  * signatures and an idea of how this works. */
 template<typename T>
-class SerializationHandler {
-  public:
-    typedef void loadArgument;
-};
+class SerializationHandler;
 
 class ICompleteUnit;
 
@@ -25,10 +22,9 @@ class SerializationHandler<ICompleteUnit> {
   public:
     Ref<ICompleteUnit> extract(
         IArchive& archive,
-        const PlayerID* player
+        const DeserializationContext& player
       ) const;
     void insert(OArchive& archive, const Ref<const ICompleteUnit>& unit) const;
-    typedef PlayerID loadArgument;
 };
 
 }

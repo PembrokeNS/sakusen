@@ -45,14 +45,14 @@ void CompleteUnit::store(OArchive& out, bool sanitize) const
 
 CompleteUnit CompleteUnit::load(
     IArchive& in,
-    const sakusen::Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   UnitID unitId;
   
   in.magicValue("CUNIT");
   in >> unitId;
-  UnitStatus status = UnitStatus::load(in, universe);
+  UnitStatus status = UnitStatus::load(in, context);
   UnitTypeData typeData = UnitTypeData::load(in);
   
   return CompleteUnit(

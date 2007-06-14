@@ -32,12 +32,6 @@ class UpdatedSensorReturns : public SensorReturns {
 
 } /* back into namespace sakusen */
 
-template<>
-class SerializationHandler<client::UpdatedSensorReturns> {
-  public:
-    typedef void loadArgument;
-};
-
 namespace client {
 
 /** \brief Function object to extract the id from an UpdatedSensorReturns */ 

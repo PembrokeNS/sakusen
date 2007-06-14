@@ -53,9 +53,8 @@ class LIBSAKUSEN_API MapPlayMode {
         const MapTemplate& map
       );
     
-    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&) const;
-    static MapPlayMode load(IArchive&, const loadArgument*);
+    static MapPlayMode load(IArchive&, const DeserializationContext&);
 };
 
 }

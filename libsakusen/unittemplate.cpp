@@ -29,10 +29,10 @@ void UnitTemplate::store(OArchive& out) const
 
 UnitTemplate UnitTemplate::load(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   in.magicValue("UT");
-  return UnitTemplate(*universe, UnitStatus::load(in, universe));
+  return UnitTemplate(context.getUniverse(), UnitStatus::load(in, context));
 }
 

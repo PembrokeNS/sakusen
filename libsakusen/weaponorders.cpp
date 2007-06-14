@@ -142,7 +142,10 @@ void WeaponOrders::store(OArchive& archive) const
   targetSensorReturns.store(archive);
 }
 
-WeaponOrders WeaponOrders::load(IArchive& archive, const PlayerID* player)
+WeaponOrders WeaponOrders::load(
+    IArchive& archive,
+    const DeserializationContext& context
+  )
 {
   WeaponTargetType targetType;
   Point<sint32> targetPosition;
@@ -152,11 +155,12 @@ WeaponOrders WeaponOrders::load(IArchive& archive, const PlayerID* player)
 
   archive.extractEnum(targetType) >> targetPosition;
   targetOrientation = Orientation::load(archive);
-  targetUnit = Ref<ICompleteUnit>::load(archive, player);
-  targetSensorReturns = Ref<ISensorReturns>::load(archive, player);
+  targetUnit = Ref<ICompleteUnit>::load(archive, context);
+  targetSensorReturns = Ref<ISensorReturns>::load(archive, context);
   
   return WeaponOrders(
-      targetType, targetPosition, targetOrientation, targetUnit, targetSensorReturns
+      targetType, targetPosition, targetOrientation, targetUnit,
+      targetSensorReturns
     );
 }
 

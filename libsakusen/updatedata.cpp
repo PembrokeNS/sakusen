@@ -16,9 +16,9 @@ void UnitRemovedUpdateData::store(OArchive& out) const
 
 UnitAddedUpdateData::UnitAddedUpdateData(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   ) :
-  unit(CompleteUnit::load(in, universe))
+  unit(CompleteUnit::load(in, context))
 {
   in.extractEnum(reason);
 }
@@ -31,9 +31,9 @@ void UnitAddedUpdateData::store(OArchive& out) const
 
 UnitAlteredUpdateData::UnitAlteredUpdateData(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   ) :
-  unit(CompleteUnit::load(in, universe))
+  unit(CompleteUnit::load(in, context))
 {
 }
 
@@ -44,11 +44,11 @@ void UnitAlteredUpdateData::store(OArchive& out) const
 
 OrderAcceptedUpdateData::OrderAcceptedUpdateData(
     IArchive& in,
-    const PlayerID* player
+    const DeserializationContext& context
   )
 {
   in >> unitId;
-  order = Order::load(in, player);
+  order = Order::load(in, context);
 }
 
 void OrderAcceptedUpdateData::store(OArchive& out) const
@@ -70,10 +70,10 @@ void SensorReturnsRemovedUpdateData::store(OArchive& out) const
 
 SensorReturnsAddedUpdateData::SensorReturnsAddedUpdateData(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   ) :
   UpdateData(),
-  returns(SensorReturns::load(in, universe))
+  returns(SensorReturns::load(in, context))
 {
 }
 
@@ -84,10 +84,10 @@ void SensorReturnsAddedUpdateData::store(OArchive& out) const
 
 SensorReturnsAlteredUpdateData::SensorReturnsAlteredUpdateData(
     IArchive& in,
-    const Universe::ConstPtr* universe
+    const DeserializationContext& context
   ) :
   UpdateData(),
-  returns(SensorReturns::load(in, universe))
+  returns(SensorReturns::load(in, context))
 {
 }
 

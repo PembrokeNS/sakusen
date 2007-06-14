@@ -49,13 +49,13 @@ void PlayerTemplate::store(OArchive& archive) const
 
 PlayerTemplate PlayerTemplate::load(
     IArchive& archive,
-    const loadArgument* arg
+    const DeserializationContext& context
   )
 {
   bool noClients;
   bool fixedRace;
   std::vector<UnitTemplate> units;
-  (archive >> noClients >> fixedRace).extract(units, arg);
+  (archive >> noClients >> fixedRace).extract(units, context);
   return PlayerTemplate(noClients, fixedRace, units);
 }
 

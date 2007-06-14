@@ -13,7 +13,7 @@
 #include "point.h"
 #include "exceptions.h"
 #include "stringutils.h"
-#include "resourceinterface.h"
+#include "deserializationcontext.h"
 
 namespace sakusen {
 
@@ -43,30 +43,12 @@ class extent_generator<0> {
     }
 };
 
-/** \internal \brief Helper classes to handle extraction of different types
+/** \internal \brief Helper class to handle extraction of different types
  * from an IArchive. */
 template<typename T>
 struct Extracter {
   T operator()(IArchive&);
-  T operator()(IArchive&, ResourceInterface::Ptr resourceInterface);
-};
-
-/** \internal \brief Helper classes to handle extraction of different types
- * from an IArchive. */
-template<typename T>
-struct Extracter1 {
-  T operator()(IArchive&, const typename T::loadArgument* arg);
-};
-
-/** \internal \brief Helper classes to handle extraction of different types
- * from an IArchive. */
-template<typename T>
-struct Extracter2 {
-  T operator()(
-      IArchive&,
-      const typename T::loadArgument* arg,
-      const typename T::loadArgument2* arg2
-    );
+  T operator()(IArchive&, const DeserializationContext& context);
 };
 
 /** \brief Source from which objects can be read.
@@ -196,11 +178,11 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T, size_t size>
-    IArchive& extract(T result[size], const typename T::loadArgument* arg)
+    IArchive& extract(T result[size], const DeserializationContext& context)
     {
-      Extracter1<T> extracter;
+      Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
-        result[i]=extracter(*this, arg);
+        result[i]=extracter(*this, context);
       }
 
       return *this;
@@ -275,24 +257,6 @@ class LIBSAKUSEN_API IArchive {
 
       return *this;
     }
-    
-    template<typename T>
-    IArchive& extract(
-        std::vector<T>& result,
-        ResourceInterface::Ptr resourceInterface
-      )
-    {
-      assert(result.empty());
-      uint32 size;
-      *this >> size;
-      Extracter<T> extracter;
-
-      while (size--) {
-        result.push_back(extracter(*this, resourceInterface));
-      }
-
-      return *this;
-    }
 
     template<typename T>
     IArchive& operator>>(std::list<T>& result)
@@ -329,16 +293,16 @@ class LIBSAKUSEN_API IArchive {
     template<typename T>
     IArchive& extract(
         std::vector<T>& result,
-        const typename T::loadArgument* arg
+        const DeserializationContext& context
       )
     {
       assert(result.empty());
       uint32 size;
       *this >> size;
-      Extracter1<T> extracter;
+      Extracter<T> extracter;
 
       while (size--) {
-        result.push_back(extracter(*this, arg));
+        result.push_back(extracter(*this, context));
       }
 
       return *this;
@@ -347,35 +311,16 @@ class LIBSAKUSEN_API IArchive {
     template<typename T>
     IArchive& extract(
         std::list<T>& result,
-        const typename T::loadArgument* arg
+        const DeserializationContext& context
       )
     {
       assert(result.empty());
       uint32 size;
       *this >> size;
-      Extracter1<T> extracter;
+      Extracter<T> extracter;
 
       while (size--) {
-        result.push_back(extracter(*this, arg));
-      }
-
-      return *this;
-    }
-
-    template<typename T>
-    IArchive& extract(
-        std::list<T>& result,
-        const typename T::loadArgument* arg,
-        const typename T::loadArgument2* arg2
-      )
-    {
-      assert(result.empty());
-      uint32 size;
-      *this >> size;
-      Extracter2<T> extracter;
-
-      while (size--) {
-        result.push_back(extracter(*this, arg, arg2));
+        result.push_back(extracter(*this, context));
       }
 
       return *this;
@@ -476,29 +421,10 @@ inline T Extracter<T>::operator()(IArchive& archive)
 template<typename T>
 inline T Extracter<T>::operator()(
     IArchive& archive,
-    ResourceInterface::Ptr resourceInterface
+    const DeserializationContext& context
   )
 {
-  return T::load(archive, resourceInterface);
-}
-
-template<typename T>
-inline T Extracter1<T>::operator()(
-    IArchive& archive,
-    const typename T::loadArgument* arg
-  )
-{
-  return T::load(archive, arg);
-}
-
-template<typename T>
-inline T Extracter2<T>::operator()(
-    IArchive& archive,
-    const typename T::loadArgument* arg,
-    const typename T::loadArgument2* arg2
-  )
-{
-  return T::load(archive, arg, arg2);
+  return T::load(archive, context);
 }
 
 }

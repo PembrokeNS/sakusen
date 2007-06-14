@@ -93,13 +93,13 @@ void Universe::store(OArchive& archive) const
 
 Universe* Universe::loadNew(
     IArchive& archive,
-    ResourceInterface::Ptr resourceInterface
+    const DeserializationContext& context
   )
 {
   String internalName;
   vector<WeaponType> weaponTypes;
   vector<UnitType> unitTypes;
-  (archive >> internalName).extract(weaponTypes, resourceInterface) >>
+  (archive >> internalName).extract(weaponTypes, context) >>
     unitTypes;
   Universe* u = new Universe(
       internalName, archive.getSecureHashAsString(), weaponTypes, unitTypes

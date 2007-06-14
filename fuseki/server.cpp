@@ -1054,7 +1054,7 @@ String Server::stringSettingAlteringCallback(
         }
         ResourceSearchResult result;
         Universe::Ptr u = resourceInterface->search<Universe>(
-            newValue, NULL, &result
+            newValue, &result
           );
         switch(result) {
           case resourceSearchResult_success:
@@ -1086,7 +1086,7 @@ String Server::stringSettingAlteringCallback(
       }
       ResourceSearchResult result;
       MapTemplate::Ptr m = resourceInterface->search<MapTemplate>(
-          newValue, &universe, &result
+          newValue, &result, universe
         );
       switch(result) {
         case resourceSearchResult_success:

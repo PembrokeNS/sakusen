@@ -257,9 +257,12 @@ OrderMessageData::OrderMessageData(const OrderMessage& oM) :
 {
 }
 
-OrderMessageData::OrderMessageData(IArchive& in, const PlayerID* player) :
+OrderMessageData::OrderMessageData(
+    IArchive& in,
+    const DeserializationContext& context
+  ) :
   MessageData(),
-  orderMessage(OrderMessage::load(in, player))
+  orderMessage(OrderMessage::load(in, context))
 {
 }
 
@@ -284,12 +287,15 @@ UpdateMessageData::UpdateMessageData(Time t, list<Update>& u) :
   updates.swap(u);
 }
 
-UpdateMessageData::UpdateMessageData(IArchive& in, const PlayerID* player) :
+UpdateMessageData::UpdateMessageData(
+    IArchive& in,
+    const DeserializationContext& context
+  ) :
   MessageData(),
   updates()
 {
   in >> time;
-  in.extract(updates, &world->getUniverse(), player);
+  in.extract(updates, context);
 }
 
 void UpdateMessageData::fillArchive() const

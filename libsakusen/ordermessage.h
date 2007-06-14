@@ -22,9 +22,8 @@ class LIBSAKUSEN_API OrderMessage {
     const Order& getOrder(void) const { return order; }
     //@}
 
-    typedef PlayerID loadArgument;
     void store(OArchive&) const;
-    static OrderMessage load(IArchive&, const loadArgument*);
+    static OrderMessage load(IArchive&, const DeserializationContext&);
 };
 
 }

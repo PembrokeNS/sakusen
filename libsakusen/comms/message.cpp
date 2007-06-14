@@ -68,17 +68,21 @@ Message::Message(
       break;
     case messageType_order:
       if (player == static_cast<PlayerID>(-1)) {
-        /* NoWorld is perhaps not entirely descriptive, but it should be
-         * accurate */
+        /* This is what happens when we get an OrderMessage before the game
+         * starts */
         throw NoWorldDeserializationExn();
       }
-      data.reset(new OrderMessageData(in, &player));
+      data.reset(new OrderMessageData(
+            in, DeserializationContext(player, world->getUniverse())
+          ));
       break;
     case messageType_update:
       if (world == NULL || player == static_cast<PlayerID>(-1)) {
         throw NoWorldDeserializationExn();
       }
-      data.reset(new UpdateMessageData(in, &player));
+      data.reset(new UpdateMessageData(
+            in, DeserializationContext(player, world->getUniverse())
+          ));
       break;
     case messageType_extension:
       data.reset(new ExtensionMessageData(in));

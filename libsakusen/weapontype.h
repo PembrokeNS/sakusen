@@ -79,7 +79,7 @@ class LIBSAKUSEN_API WeaponType {
     server::Weapon* spawn() const;
 
     void store(OArchive&) const;
-    static WeaponType load(IArchive&, ResourceInterface::Ptr);
+    static WeaponType load(IArchive&, const DeserializationContext&);
 };
 
 }

@@ -54,7 +54,7 @@ void MapTemplate::store(OArchive& archive) const
 
 MapTemplate MapTemplate::load(
     IArchive& archive,
-    const sakusen::Universe::ConstPtr* universe
+    const DeserializationContext& context
   )
 {
   Topology topology;
@@ -66,10 +66,10 @@ MapTemplate MapTemplate::load(
   uint16 gravity;
   vector<MapPlayMode> playModes;
   archive >> gravity;
-  archive.extract(playModes, universe);
+  archive.extract(playModes, context);
   
   return MapTemplate(
-      *universe, internalName, topRight, bottomLeft,
+      context.getUniverse(), internalName, topRight, bottomLeft,
       topology, heightfield, gravity, playModes
     );
 }

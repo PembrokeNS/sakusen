@@ -62,7 +62,7 @@ void WeaponType::store(OArchive& archive) const
 
 WeaponType WeaponType::load(
     IArchive& archive,
-    ResourceInterface::Ptr resourceInterface
+    const DeserializationContext& context
   )
 {
   String internalName;
@@ -76,7 +76,7 @@ WeaponType WeaponType::load(
     metalCost >> energyRate >> metalRate;
   return WeaponType(
       internalName, moduleName, clientHint, energyCost, metalCost,
-      energyRate, metalRate, resourceInterface
+      energyRate, metalRate, context.getResourceInterface()
     );
 }
 

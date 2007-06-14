@@ -18,32 +18,24 @@ class DynamicSensorReturns;
 template<>
 class SerializationHandler<server::LayeredUnit>
 {
-  public:
-    typedef void loadArgument;
 };
 
 /** \todo Write class */
 template<>
 class SerializationHandler<server::Ballistic>
 {
-  public:
-    typedef void loadArgument;
 };
 
 /** \todo Write class */
 template<>
 class SerializationHandler<server::Beam>
 {
-  public:
-    typedef void loadArgument;
 };
 
 /** \todo Write class */
 template<>
 class SerializationHandler<server::Effect>
 {
-  public:
-    typedef void loadArgument;
 };
 
 }

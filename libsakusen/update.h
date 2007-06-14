@@ -37,13 +37,11 @@ class LIBSAKUSEN_API Update {
     GET(BallisticAdded)
 #undef GET
 
-    typedef Universe::ConstPtr loadArgument;
-    typedef PlayerID loadArgument2;
     inline void store(OArchive& out) const {
       out.insertEnum(getType());
       data->store(out);
     }
-    static Update load(IArchive& in, const loadArgument*, const loadArgument2*);
+    static Update load(IArchive&, const DeserializationContext&);
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, const Update& update);

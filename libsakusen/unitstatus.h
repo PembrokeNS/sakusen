@@ -76,9 +76,8 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
       return weaponsStatus;
     }
 
-    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&, Universe::ConstPtr const&) const;
-    static UnitStatus load(IArchive&, const loadArgument*);
+    static UnitStatus load(IArchive&, const DeserializationContext&);
 };
 
 }

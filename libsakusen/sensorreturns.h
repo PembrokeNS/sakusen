@@ -103,7 +103,7 @@ class SensorReturns : public ISensorReturns {
     inline const SensorReturnMap& getSensorReturns() const { return returns; }
 
     void store(OArchive&) const;
-    static SensorReturns load(IArchive&, const Universe::ConstPtr*);
+    static SensorReturns load(IArchive&, const DeserializationContext&);
 };
 
 }

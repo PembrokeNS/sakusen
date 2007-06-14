@@ -34,9 +34,8 @@ class LIBSAKUSEN_API UnitTemplate {
   public:
     const IUnitStatus* getStatus(void) const { return &status; }
     
-    typedef Universe::ConstPtr loadArgument;
     void store(OArchive&) const;
-    static UnitTemplate load(IArchive&, const loadArgument*);
+    static UnitTemplate load(IArchive&, const DeserializationContext&);
 };
 }
 

@@ -27,7 +27,7 @@ void Order::store(OArchive& out) const
   }
 }
 
-Order Order::load(IArchive& in, const PlayerID* player)
+Order Order::load(IArchive& in, const DeserializationContext& context)
 {
   OrderType type;
   in.extractEnum(type);
@@ -44,9 +44,9 @@ Order Order::load(IArchive& in, const PlayerID* player)
     case orderType_targetPositionOrientation:
       return Order(new TargetPositionOrientationOrderData(in));
     case orderType_targetUnit:
-      return Order(new TargetUnitOrderData(in, player));
+      return Order(new TargetUnitOrderData(in, context));
     case orderType_targetSensorReturns:
-      return Order(new TargetSensorReturnsOrderData(in, player));
+      return Order(new TargetSensorReturnsOrderData(in, context));
     default:
       throw EnumDeserializationExn("OrderType type", type);
   }
