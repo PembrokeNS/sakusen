@@ -53,7 +53,12 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
      * Pointers owned by this.  Effects should not appear in this container and
      * effects above at the same time. */
     std::queue<Effect*> newEffects;
+
+    FuseToken lastFuseToken;
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
+    __gnu_cxx::hash_map<FuseToken, Fuse::Ptr> fuseMap;
+    __gnu_cxx::hash_set<FuseToken> removedFuses;
+
     std::vector<Player> players;
 
     void applyEffect(
@@ -129,6 +134,35 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
      */
     inline void addEffect(Effect* effect) {
       newEffects.push(effect);
+    }
+
+    /** \brief Add a Fuse to the world.
+     *
+     * This is the appropriate function to call from module code when adding a
+     * Fuse.
+     */
+    inline FuseToken addFuse(Fuse::Ptr fuse, Time expiryTime) {
+      FuseToken token = ++lastFuseToken;
+      if (fuseMap.count(token) || removedFuses.count(token)) {
+        Fatal("FuseToken wraparound");
+      }
+      fuseQueue.push(FuseEntry(expiryTime, token));
+      fuseMap[token] = fuse;
+      return token;
+    }
+
+    /** \brief Remove a Fuse from the world.
+     *
+     * Removes an existing fuse, bsed on its FuseToken.
+     */
+    inline void removeFuse(FuseToken token) {
+      __gnu_cxx::hash_map<FuseToken, Fuse::Ptr>::iterator fuseIt =
+        fuseMap.find(token);
+      if (fuseIt == fuseMap.end()) {
+        Fatal("Removing nonexistant Fuse");
+      }
+      removedFuses.insert(token);
+      fuseMap.erase(fuseIt);
     }
 
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }

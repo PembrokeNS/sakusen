@@ -23,6 +23,7 @@ CompleteWorld::CompleteWorld(
   World(m.getUniverse()),
   map(Map::newMap<CompleteMap>(m)),
   units(),
+  lastFuseToken(-1),
   fuseQueue(),
   players(p)
 {
@@ -79,8 +80,6 @@ CompleteWorld::~CompleteWorld()
   /* Clear units lest they outlive the sensor returns from them */
   units.clear();
   
-  /** \todo Something about freeing Fuse memory. */
-
   delete map;
   map = NULL;
 
@@ -270,13 +269,27 @@ void CompleteWorld::incrementGameState(void)
         (fuseEntry = fuseQueue.top()).time <= timeNow) {
       fuseQueue.pop();
       if (fuseEntry.time < timeNow) {
-        Debug("Fuse occurance time missed");
+        Debug(
+            "Fuse occurance time missed (fuse time=" << fuseEntry.time <<
+            ", timeNow = " << timeNow << ")"
+          );
       }
-      /* perform action, delete if necessary */
-      if (fuseEntry.fuse->expire(fuseEntry.token))
-      {
-        delete fuseEntry.fuse;
+      /* Check to see if this fuse has been removed since it was added */
+      hash_set<FuseToken>::iterator rFuseIt =
+        removedFuses.find(fuseEntry.token);
+      if (rFuseIt != removedFuses.end()) {
+        removedFuses.erase(rFuseIt);
+        continue;
       }
+      /* Use token to look up the fuse in the map */
+      hash_map<FuseToken, Fuse::Ptr>::iterator fuseIt = fuseMap.find(fuseEntry.token);
+      if (fuseIt == fuseMap.end()) {
+        Fatal("Fuse missing from fuseMap");
+      }
+      /* perform action */
+      fuseIt->second->expire(fuseEntry.token);
+      /* remove from map */
+      fuseMap.erase(fuseIt);
     }
 
     effectHappened = false;

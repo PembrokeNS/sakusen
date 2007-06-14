@@ -174,8 +174,15 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     /** \brief Callback on unit destruction.
      *
      * This is passed through the UnitLayers, so that they can take appropriate
-     * action. */
+     * action.  This doesn't mean that the unit will be removed entirely; it
+     * may merely turn into a corpse.  onRemoval is called when the unit is
+     * really vanishing entirely. */
     inline void onDestruct(void) { topLayer->onDestruct(); }
+    /** \brief Callback on unit removal.
+     *
+     * This is passed through the UnitLayers when the unit is going to be
+     * entirely removed frm the game (rather than simply killed). */
+    inline void onRemoval() { topLayer->onRemoval(); }
 };
 
 }}

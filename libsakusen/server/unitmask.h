@@ -95,6 +95,7 @@ class UnitMask : public UnitLayer {
 
     void onCreate() { nextLayer->onCreate(); }
     void onDestruct() { nextLayer->onDestruct(); }
+    void onRemoval() { nextLayer->onRemoval(); }
 };
 
 }}

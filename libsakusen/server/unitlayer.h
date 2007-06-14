@@ -69,8 +69,9 @@ class UnitLayer : public IUnitTypeData {
     //@}
 
     /* callbacks */
-    virtual void onCreate(void) = 0;
-    virtual void onDestruct(void) = 0;
+    virtual void onCreate() = 0;
+    virtual void onDestruct() = 0;
+    virtual void onRemoval() = 0;
 };
 
 }}

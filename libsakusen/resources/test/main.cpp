@@ -116,6 +116,18 @@ int main(/*int argc, char** argv*/)
           resourceInterface
         );
     weaponTypes.push_back(gruntcreaterType);
+    WeaponType spidercreaterType =
+      WeaponType(
+          "spidercreater",
+          "testsrc",
+          "c:spider" /* clientHint */,
+          10 /* energyCost */,
+          10 /* metalCost */,
+          1 /* energyRate */,
+          1 /* metalRate */,
+          resourceInterface
+        );
+    weaponTypes.push_back(spidercreaterType);
     WeaponType builderType =
       WeaponType(
           "builder",
@@ -172,6 +184,7 @@ int main(/*int argc, char** argv*/)
 
   list<String> factoryWeapons;
   factoryWeapons.push_back("gruntcreater");
+  factoryWeapons.push_back("spidercreater");
   factoryWeapons.push_back("builder");
   UnitType factoryType =
     UnitType(
@@ -230,7 +243,37 @@ int main(/*int argc, char** argv*/)
         "" /* corpseUnitType name */
       );
   unitTypes.push_back(gruntType);
-  
+
+  list<String> spiderWeapons;
+  spiderWeapons.push_back("paralyzer");
+  UnitType spiderType =
+    UnitType(
+        "spider" /* name */,
+        UnitTypeData(
+          10 /* maxHitPoints */,
+          10 /* mass */,
+          Point<uint32>(2000,2000,250) /* size */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleAccelerations */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleVelocities */,
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+            /* possibleAngularVelocities */,
+          Visibility(),
+          Sensors()
+        ),
+        100 /* energyCost */,
+        100 /* metalCost */,
+        false /* fixed */,
+        true /* ground */,
+        false /* surface */,
+        true /* gravity */,
+        false /* seabed */,
+        spiderWeapons /* weapons */,
+        "" /* corpseUnitType name */
+      );
+  unitTypes.push_back(spiderType);
+
   Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
   String name = universe->resolveNames();
   if (name != "") {

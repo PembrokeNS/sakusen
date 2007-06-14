@@ -8,6 +8,7 @@
 #include "sphereregion.h"
 #include "beam.h"
 #include "unitmask.h"
+#include "fuse.h"
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -122,6 +123,19 @@ class GruntCreater : public Creater {
     }
 };
 
+class SpiderCreater : public Creater {
+  public:
+    SpiderCreater(const WeaponType* type) :
+      Creater(type)
+    {}
+  private:
+    Weapon* newCopy() const { return new SpiderCreater(*this); }
+    uint64 squareRange() const { return 30000000; }
+    UnitTypeID getTypeCreated() const {
+      return world->getUniverse()->getUnitTypeId("spider");
+    }
+};
+
 class Builder : public Weapon {
   public:
     Builder(const WeaponType* type) :
@@ -219,6 +233,54 @@ class ParalyzationBeam : public Beam {
     }
     void onInteractLand(double position);
     void onInteractUnit(double position, const Ref<LayeredUnit>&);
+};
+
+class ParalyzingLayer : public UnitMask, public Fuse {
+  friend class ParalyzationBeam;
+  public:
+    typedef boost::shared_ptr<ParalyzingLayer> Ptr;
+    typedef boost::shared_ptr<const ParalyzingLayer> ConstPtr;
+
+    ParalyzingLayer() :
+      empty(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      blind(),
+      token(-1)
+    {}
+  private:
+    ParalyzingLayer(const ParalyzingLayer& copy, LayeredUnit* outer) :
+      UnitMask(copy, outer),
+      empty(copy.empty),
+      blind(copy.blind)
+    {}
+    const Region<sint16>::ConstPtr empty;
+    const Sensors blind;
+    FuseToken token;
+  public:
+    UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
+      Fatal("Can't copy because also fuse.");
+      return UnitLayer::Ptr(new ParalyzingLayer(*this, outer));
+    }
+    /* Prevent paralyzed thing from moving */
+    Region<sint16>::ConstPtr getPossibleAccelerations() const {
+      return empty;
+    }
+    Region<sint16>::ConstPtr getPossibleVelocities() const {
+      return empty;
+    }
+    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
+      return empty;
+    }
+    const Sensors& getVision() const {
+      return blind;
+    }
+
+    void incrementWeaponsState() {
+      /* Weapons do nothing when unit under construction */
+    }
+
+    /* Remove self whe fuse expires */
+    void expire(FuseToken);
+    void onRemoval();
 };
 
 }

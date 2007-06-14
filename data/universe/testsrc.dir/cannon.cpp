@@ -203,9 +203,31 @@ void ParalyzationBeam::onInteractLand(double position)
   cout << "ParalyzationBeam::onInteractLand at " << evaluate(position) << endl;
 }
 
-void ParalyzationBeam::onInteractUnit(double position, const Ref<LayeredUnit>&)
+void ParalyzationBeam::onInteractUnit(
+    double position,
+    const Ref<LayeredUnit>& unit
+  )
 {
-  cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position) << endl;
+  cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position) <<
+    "(unitId=" << unit->getId() << ", sourceId=" << getSource()->getId() <<
+    ")" << endl;
+  ParalyzingLayer::Ptr layer(new ParalyzingLayer());
+  unit->insertLayer(layer);
+  FuseToken token =
+    server::world->addFuse(layer, server::world->getTimeNow()+50);
+  layer->token = token;
+}
+
+void ParalyzingLayer::expire(FuseToken) {
+  Ref<LayeredUnit> u = getOuterUnit();
+  if (u.isValid()) {
+    u->removeLayer(this);
+  }
+}
+
+void ParalyzingLayer::onRemoval() {
+  UnitMask::onRemoval();
+  server::world->removeFuse(token);
 }
 
 extern "C" {
@@ -228,6 +250,11 @@ Weapon* spawn_factorycreater(const WeaponType* type)
 Weapon* spawn_gruntcreater(const WeaponType* type)
 {
   return new GruntCreater(type);
+}
+
+Weapon* spawn_spidercreater(const WeaponType* type)
+{
+  return new SpiderCreater(type);
 }
 
 Weapon* spawn_builder(const WeaponType* type)

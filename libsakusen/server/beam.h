@@ -26,7 +26,7 @@ class Beam : protected Ray {
     /** when the beam sprang into existence */
     Time startTime;
     /** The beam will stop at this time at the
-     * latest: it may stop earlier e.g. if
+     * latest; it may stop earlier e.g. if
      * the unit that created it is destroyed.
      */
     Time endTime;
@@ -44,6 +44,7 @@ class Beam : protected Ray {
         TimeSpan duration
       );
 
+    Ref<LayeredUnit> getSource() const { return source; }
   public:
     virtual ~Beam();
     virtual GameObject interactsWith() const = 0;

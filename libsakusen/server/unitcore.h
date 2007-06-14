@@ -98,8 +98,9 @@ class UnitCore : public UnitLayer, public UnitStatus {
     //@}
     
     /* callbacks */
-    void onCreate(void) {}
-    void onDestruct(void) { /** \todo what should the default be? */ }
+    void onCreate() {}
+    void onDestruct() { /** \todo what should the default be? */ }
+    void onRemoval() {}
 };
 
 }}

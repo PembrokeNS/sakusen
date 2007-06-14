@@ -23,31 +23,29 @@ typedef uint32 FuseToken;
  * this same token will be passed to Fuse::expire.  This allows the same Fuse
  * to be registered multiple times and perform different actions according to
  * the token, if desired.
- *
- * \todo Rejig to use smart pointers to avoid the present memory management
- * mess.
  */
 class Fuse {
+  public:
+    typedef boost::shared_ptr<Fuse> Ptr;
+    typedef boost::shared_ptr<const Fuse> ConstPtr;
   protected:
     /* Fuse is an abstract class, so all constructors are protected. */
-    Fuse();
-    Fuse(const Fuse&);
+    Fuse() {}
+    Fuse(const Fuse&) {}
   public:
-    virtual ~Fuse();
+    virtual ~Fuse() {}
   public:
-    /** \brief Called when the time for the Fuse has arrived
-     *
-     * Returns true iff this Fuse should now be deleted.
+    /** \brief Called when the time for the Fuse has arrived.
      */
-    virtual bool expire(FuseToken) const = 0;
+    virtual void expire(FuseToken) = 0;
 };
 
-/** \brief Encapsulates all the necessary information about a Fuse for
- * CompleteWorld to handle it. */
+/** \brief Combines a FuseToken with an expiry time for ease of inserting into
+ * a FuseQueue
+ */
 struct FuseEntry {
-  FuseEntry() : fuse(NULL), time(0), token(0) {}
-  FuseEntry(Fuse* f, Time t, FuseToken ft) : fuse(f), time(t), token(ft) {}
-  Fuse* fuse;
+  FuseEntry() : time(0), token(0) {}
+  FuseEntry(Time t, FuseToken ft) : time(t), token(ft) {}
   Time time;
   FuseToken token;
 };
@@ -59,7 +57,8 @@ struct FuseEntry {
 class PrioritizeFuseEntries {
   public:
     inline Time operator()(const FuseEntry& fuseEntry) {
-      return fuseEntry.time;
+      /* negate time to get fuses in correct order */
+      return ~fuseEntry.time;
     }
 };
 

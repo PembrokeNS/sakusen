@@ -90,6 +90,7 @@ bool UnitCore::kill(HitPoints excessDamage) {
   if (NULL == corpseType) {
     /* No corpse, remove me */
     /** \todo deal with subunits */
+    outerUnit->onRemoval();
     world->removeUnit(outerUnit);
     return true;
   } else {
