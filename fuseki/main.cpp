@@ -40,7 +40,6 @@ struct Options {
     forceSocket(false),
     unixAddress(),
 #endif
-    udpAddress("localhost"),
     tcpAddress("localhost"),
     dots(true),
     help(false),
@@ -56,8 +55,6 @@ struct Options {
   /** What address to use for unix joining socket */
   String unixAddress;
 #endif
-  /** What address to use for UDP joining socket */
-  String udpAddress;
   /** What address to use for TCP joining socket */
   String tcpAddress;
   /** What paths to search for plugins */
@@ -128,16 +125,14 @@ void usage()
           "                         ADDRESS (e.g. concrete|/var/fuseki/socket)\n"
           "                         (default is a UNIX socket in ~/.sakusen/fuseki)\n"
 #endif
-          " -u,  --udp ADDRESS      Bind udp socket at ADDRESS.\n"
-          "                         Default: localhost, specify a null ADDRESS to disable\n"
           " -t,  --tcp ADDRESS      Bind tcp socket at ADDRESS.\n"
           "                         Default: localhost, specift a null ADDRESS to disable\n"
           " -p,  --plugins PATH:... Search for plugins in each given PATH, in given order\n"
           "\n"
-          "Port for UDP and TCP sockets defaults to "<<DEFAULT_PORT<<" if not specified.\n"
+          "Port for TCP socket defaults to "<<DEFAULT_PORT<<" if not specified.\n"
           "Some examples: \n"
-          "fuseki -u localhost \n"
-          "fuseki -u 192.168.1.1:1776 -t 192.168.1.1:1775 \n"
+          "fuseki -t \"\" \n"
+          "fuseki -t 192.168.1.1:1775 \n"
           "\n"
           "This is an alpha version of fuseki.  Functionality is extremely "
             "limited." << endl;
@@ -154,7 +149,6 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
     parser.addOption("unix",         'x', &results.unixAddress);
     parser.addOption("force-socket", 'f', &results.forceSocket);
   #endif
-  parser.addOption("udp",          'u', &results.udpAddress);
   parser.addOption("tcp",          't', &results.tcpAddress);
   parser.addOption("plugins",      'p', &results.pluginPaths, ':');
   parser.addOption("dots",         'd', &results.dots);
@@ -276,23 +270,8 @@ int startServer(const String& homePath, const Options& options)
     return EXIT_FAILURE;
   }
   #endif // DISABLE_UNIX_SOCKETS
-  
-  String bindAddress = options.udpAddress;
-  Socket::Ptr udpSocket;
-  
-  if (!bindAddress.empty()) {
-    cout << "Starting UDP socket at " << bindAddress << endl;
-    udpSocket = Socket::newBindingToAddress("udp"ADDR_DELIM+bindAddress);
 
-    if (udpSocket == NULL) {
-      cout << "Error creating UDP socket at:"<< endl;
-      cout << bindAddress << endl;
-      cout << "Check the address and try again." << endl;
-      return EXIT_FAILURE;
-    }
-  }
-
-  bindAddress = options.tcpAddress;
+  String bindAddress = options.tcpAddress;
   Socket::Ptr tcpSocket;
   
   if (!bindAddress.empty()) {
@@ -309,7 +288,7 @@ int startServer(const String& homePath, const Options& options)
 
   cout << "Sockets created." << endl;
 
-  if (udpSocket == NULL &&
+  if (
 #ifndef DISABLE_UNIX_SOCKETS
       unixSocket == NULL &&
 #endif
@@ -326,7 +305,7 @@ int startServer(const String& homePath, const Options& options)
 #ifndef DISABLE_UNIX_SOCKETS
         options.abstract, unixSocket,
 #endif
-        udpSocket, tcpSocket, options.dots
+        tcpSocket, options.dots
       );
     server.serve();
   }

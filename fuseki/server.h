@@ -33,7 +33,6 @@ class Server : public SettingsUser, private boost::noncopyable {
      * possible.
      * \param unixSocket A Socket on which to listen for both
      * solicitation and join messages.
-     * \param udpSocket A Socket on which to listen for solicitation messages.
      * \param tcpSocket A Socket on which to listen for join messages.
      * \param dots Whether to print dots so as to indicate that the server is
      * alive.
@@ -49,7 +48,6 @@ class Server : public SettingsUser, private boost::noncopyable {
         bool abstract,
         const sakusen::comms::Socket::Ptr& unixSocket,
 #endif
-        const sakusen::comms::Socket::Ptr& udpSocket,
         const sakusen::comms::Socket::Ptr& tcpSocket,
         bool dots
       );
@@ -64,7 +62,6 @@ class Server : public SettingsUser, private boost::noncopyable {
     /** The Unix socket to listen on. */
     sakusen::comms::Socket::Ptr unixSocket;
 #endif
-    sakusen::comms::Socket::Ptr udpSocket;
     sakusen::comms::Socket::Ptr tcpSocket;
     std::ostream& out;
     sakusen::ResourceInterface::Ptr resourceInterface;

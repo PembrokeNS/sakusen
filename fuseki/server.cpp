@@ -45,7 +45,6 @@ Server::Server(
     bool a,
     const sakusen::comms::Socket::Ptr& unS,
 #endif
-    const sakusen::comms::Socket::Ptr& udS,
     const sakusen::comms::Socket::Ptr& tS,
     bool d
   ) :
@@ -55,7 +54,6 @@ Server::Server(
   abstract(a),
   unixSocket(unS),
 #endif
-  udpSocket(udS),
   tcpSocket(tS),
   out(o),
   resourceInterface(r),
@@ -472,9 +470,6 @@ void Server::serve()
 #ifndef DISABLE_UNIX_SOCKETS
   unixSocket->setNonBlocking(true);
 #endif
-  if (udpSocket != NULL) {
-    udpSocket->setNonBlocking(true);
-  }
   if (tcpSocket != NULL) {
     tcpSocket->setNonBlocking(true);
   }
@@ -522,24 +517,6 @@ void Server::serve()
       }
     }
 #endif // DISABLE_UNIX_SOCKETS
-    
-    /** \todo Look for join messages on the udp socket */
-    if (udpSocket != NULL) {
-      if ((bytesReceived =
-            udpSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
-        IArchive messageArchive(buf, bytesReceived);
-        Message message(messageArchive);
-        if (message.isRealMessage()) {
-          switch (message.getType()) {
-            default:
-              out << "Unexpected MessageType: " << message.getType() << "\n";
-              break;
-          }
-        } else {
-          out << "Unrecognized message received\n";
-        }
-      }
-    }
     
     /* If we have a separate tcp socket then check for messages there too */
     if (tcpSocket != NULL) {
@@ -769,9 +746,6 @@ void Server::serve()
 #ifndef DISABLE_UNIX_SOCKETS
     unixSocket->close();
 #endif
-    if (udpSocket != NULL) {
-      udpSocket->close();
-    }
     if (tcpSocket != NULL) {
       tcpSocket->close();
     }
