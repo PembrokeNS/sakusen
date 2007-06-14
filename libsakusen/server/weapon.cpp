@@ -6,11 +6,6 @@ using namespace boost;
 using namespace sakusen;
 using namespace sakusen::server;
 
-Weapon::Weapon(const Weapon& copy) :
-  type(copy.type)
-{
-}
-
 Weapon::Weapon(const WeaponType* t) :
   type(t->getId())
 {

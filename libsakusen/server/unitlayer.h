@@ -18,19 +18,16 @@ class UnitMask;
  * Essentially an interface specifying what methods should be implemented by
  * any layer of a LayeredUnit.
  */
-class UnitLayer : public IUnitTypeData {
+class UnitLayer : public IUnitTypeData, boost::noncopyable {
   public:
     typedef boost::shared_ptr<UnitLayer> Ptr;
     typedef boost::shared_ptr<const UnitLayer> ConstPtr;
   protected:
     UnitLayer() {}
-    UnitLayer(const UnitLayer& copy) : IUnitTypeData(copy) {}
   public:
     virtual ~UnitLayer() {}
 
     /* methods to do with the layering */
-    /** \brief Allocate a new copy of this UnitLayer. */
-    virtual UnitLayer::Ptr newCopy(LayeredUnit* outer) const = 0;
     /** \brief Get the UnitCore at the bottom of the sequence of layers of
      * which this is a part. */
     virtual UnitCore* getCore() = 0;

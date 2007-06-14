@@ -18,11 +18,10 @@ namespace server {
  * managed by Weapon::incrementState, which calls both the aforementioned
  * functions.
  */
-class LIBSAKUSEN_SERVER_API Weapon {
+class LIBSAKUSEN_SERVER_API Weapon : boost::noncopyable {
   private:
     Weapon();
   protected:
-    Weapon(const Weapon&);
     Weapon(const WeaponType* type);
   public:
     virtual ~Weapon() {}
@@ -91,9 +90,6 @@ class LIBSAKUSEN_SERVER_API Weapon {
      * This might be used if a Weapon wants to have ammo exploding or
      * anything like that */
     virtual void onDestruct(const Point<sint32>&) {}
-
-    /** Create a new copy of this Weapon which must be deleted by the caller */
-    virtual Weapon* newCopy() const = 0;
 };
 
 }}

@@ -22,10 +22,6 @@ class UnitMask : public UnitLayer {
     typedef boost::shared_ptr<const UnitMask> ConstPtr;
   protected:
     UnitMask() : UnitLayer() { /* nextLayer set later by LayeredUnit */ }
-    UnitMask(const UnitMask& copy, LayeredUnit* outer) :
-      UnitLayer(copy),
-      nextLayer(copy.nextLayer->newCopy(outer))
-    {}
 
     UnitLayer::Ptr nextLayer;
   public:

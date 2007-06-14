@@ -30,21 +30,10 @@ class BuildingLayer : public UnitMask {
     {
     }
   private:
-    BuildingLayer(const BuildingLayer& copy, LayeredUnit* outer) :
-      UnitMask(copy, outer),
-      builtHitPoints(copy.builtHitPoints),
-      empty(copy.empty),
-      blind(copy.blind)
-    {}
-
     HitPoints builtHitPoints;
     const Region<sint16>::ConstPtr empty;
     const Sensors blind;
   public:
-    UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
-      return UnitLayer::Ptr(new BuildingLayer(*this, outer));
-    }
-
     HitPoints getMaxHitPoints() const {
       return builtHitPoints;
     }
@@ -103,7 +92,6 @@ class FactoryCreater : public Creater {
       Creater(type)
     {}
   private:
-    Weapon* newCopy() const { return new FactoryCreater(*this); }
     uint64 squareRange() const { return 100000000; }
     UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("factory");
@@ -116,7 +104,6 @@ class GruntCreater : public Creater {
       Creater(type)
     {}
   private:
-    Weapon* newCopy() const { return new GruntCreater(*this); }
     uint64 squareRange() const { return 30000000; }
     UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("grunt");
@@ -129,7 +116,6 @@ class SpiderCreater : public Creater {
       Creater(type)
     {}
   private:
-    Weapon* newCopy() const { return new SpiderCreater(*this); }
     uint64 squareRange() const { return 30000000; }
     UnitTypeId getTypeCreated() const {
       return world->getUniverse()->getUnitTypeId("spider");
@@ -156,7 +142,6 @@ class Builder : public Weapon {
         WeaponOrders&,
         uint16 weaponIndex
       );
-    Weapon* newCopy() const { return new Builder(*this); }
   protected:
     /* Gives the maximum range at which building can take place
      * */
@@ -177,9 +162,6 @@ class Cannon : public Weapon {
         uint16 weaponIndex
       );
   public:
-    Weapon* newCopy() const {
-      return new Cannon(*this);
-    }
 };
 
 class Shell : public Ballistic {
@@ -216,7 +198,6 @@ class Paralyzer : public Weapon {
         uint16 weaponIndex
       );
   public:
-    Weapon* newCopy() const { return new Paralyzer(*this); }
 };
 
 class ParalyzationBeam : public Beam {
@@ -247,19 +228,10 @@ class ParalyzingLayer : public UnitMask, public Fuse {
       token(-1)
     {}
   private:
-    ParalyzingLayer(const ParalyzingLayer& copy, LayeredUnit* outer) :
-      UnitMask(copy, outer),
-      empty(copy.empty),
-      blind(copy.blind)
-    {}
     const Region<sint16>::ConstPtr empty;
     const Sensors blind;
     FuseToken token;
   public:
-    UnitLayer::Ptr newCopy(LayeredUnit* outer) const {
-      Fatal("Can't copy because also fuse.");
-      return UnitLayer::Ptr(new ParalyzingLayer(*this, outer));
-    }
     /* Prevent paralyzed thing from moving */
     Region<sint16>::ConstPtr getPossibleAccelerations() const {
       return empty;

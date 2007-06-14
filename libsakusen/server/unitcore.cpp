@@ -9,18 +9,6 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
-UnitCore::UnitCore(const UnitCore& copy, LayeredUnit* o) :
-  UnitStatus(copy),
-  outerUnit(o),
-  owner(copy.owner),
-  weapons()
-{
-  for (vector<Weapon*>::const_iterator weapon = copy.weapons.begin();
-      weapon != copy.weapons.end(); ++weapon) {
-    weapons.push_back((*weapon)->newCopy());
-  }
-}
-
 UnitCore::UnitCore(
     LayeredUnit* o,
     const UnitTypeId& startType,
