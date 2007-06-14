@@ -121,8 +121,14 @@ double Ray::intersectBox(const Box<sint32>& box) const
    */
   if (t_near > 0.0)
     return t_near;
-  else
-    return std::min(t_far_x, std::min(t_far_y, t_far_z));
+  else {
+    const double t_far = std::min(t_far_x, std::min(t_far_y, t_far_z));
+    if (t_far > 0.0) {
+      return t_far;
+    }
+  }
+
+  return inf;
 }
 
 /** \brief Find and return all interactions of this ray to a given extent.
