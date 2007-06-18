@@ -113,7 +113,12 @@ namespace sakusen {
 %{
 #include "rectangle.h"
 %}
-%template(SRectangle32) sakusen::Rectangle<sint32>;
+namespace sakusen {
+  %extend Rectangle {
+    %template(contains) contains<sint32>;
+  }
+  %template(SRectangle32) Rectangle<sint32>;
+}
 
 %include "box.h"
 %{
