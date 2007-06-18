@@ -1,5 +1,7 @@
 #include "asynchronousiohandler.h"
 #include "errorutils.h"
+#include "fileutils.h"
+#include "fileioexn.h"
 
 #ifndef DISABLE_READLINE
 #include <readline/readline.h>
@@ -14,7 +16,9 @@
 
 using namespace std;
 
+using namespace sakusen;
 using namespace sakusen::comms;
+using namespace sakusen::resources;
 using namespace tedomari;
 
 #ifdef DISABLE_READLINE
@@ -22,14 +26,8 @@ using namespace tedomari;
 #define INPUT_BUFFER_LEN 512
 
 #ifdef WIN32
-#define NativeRead _read
-#define NativeReadReturnType int
-#include <io.h>
 #include <conio.h>
 #include <stdio.h>
-#else
-#define NativeRead read
-#define NativeReadReturnType ssize_t
 #endif
 
 AsynchronousIOHandler::AsynchronousIOHandler(
@@ -38,7 +36,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     String hf,
     int hl
   ) :
-  infd(_fileno(in)),
+  infd(NativeFileno(in)),
   out(o),
   historyFile(hf),
   historyLength(hl),
@@ -60,7 +58,8 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   FD_SET(infd, &inSet);
 #ifndef _MSC_VER
   while(true) {
-    switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
+    struct timeval localTimeout = timeout;
+    switch(select(infd+1, &inSet, NULL, NULL, &localTimeout)) {
       case -1:
         Fatal("select failed: " << errorUtils_parseErrno(socket_errno));
       case 0:
@@ -71,13 +70,16 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
         {
           char buf[INPUT_BUFFER_LEN];
           /* Read what we can from the input file descriptor */
-          NativeReadReturnType bytesRead = NativeRead(infd, buf, INPUT_BUFFER_LEN);
-          if (bytesRead < 0)
+          try {
+            size_t bytesRead = fileUtils_read(infd, buf, INPUT_BUFFER_LEN);
+            /* Append what we've read to the input buffer */
+            inputBuffer.append(buf, bytesRead);
+          } catch (FileIOExn&) {
             Fatal("error reading input: " << errorUtils_errorMessage(errno));
-          /* Append what we've read to the input buffer */
-          inputBuffer.append(buf, bytesRead);
+          }
           /* Strip newline-delimited commands from the input buffer */
-          String::iterator nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
+          String::iterator nl =
+            find(inputBuffer.begin(), inputBuffer.end(), '\n');
           while (nl != inputBuffer.end()) {
             commandBuffer.push(String(inputBuffer.begin(), nl));
             inputBuffer.erase(inputBuffer.begin(), nl+1);
