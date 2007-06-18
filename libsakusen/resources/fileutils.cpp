@@ -25,10 +25,12 @@ namespace resources {
 size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
 {
 #ifdef WIN32
+  assert(bufferLen <= numeric_limits<sint32>::max());
   int retVal = _read(fd, buffer, (sint32)bufferLen);
 #else
   /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the
    * result is undefined), so we would need to read the file in chunks */
+  assert(bufferLen <= size_t(numeric_limits<ssize_t>::max()));
   ssize_t retVal = read(fd, buffer, bufferLen);
 #endif
   if (retVal == -1)
