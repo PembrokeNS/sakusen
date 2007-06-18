@@ -17,6 +17,7 @@
 #define NativeStructStat struct _stat
 #define S_ISDIR(mode) (((mode) & _S_IFDIR) != 0)
 #define NativeUnlink(a) _unlink(a)
+#define NativeFileno(a) _fileno(a)
 #else
 #include <dirent.h>
 #include <sys/unistd.h>
@@ -28,6 +29,7 @@
 /* Note that for ftello to really be 64-bit requires
  * #define _FILE_OFFSET_BITS 64, as in libsakusen-resource-global.h */
 #define NativeFtell64(a) ftello(a)
+#define NativeFileno(a) fileno(a)
 #endif
 
 namespace sakusen {
