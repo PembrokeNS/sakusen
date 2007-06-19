@@ -82,7 +82,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, void * userdata) {
  * Advertises a game with name \p serverName running on TCP port \p portno via
  * mDNS. Uses \p out to report progress.
  *
- * \param name Must not be NULL. (Is currently unused.)
+ * \param name Must not be NULL.
  */
 MdnsPublisher::MdnsPublisher(String name, uint32 portno) : port(portno), client(NULL), poll(NULL) {
   int error = 0;
