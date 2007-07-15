@@ -13,7 +13,7 @@ PlayersBranch::PlayersBranch(Branch* parent, Server* server) :
 
 void PlayersBranch::addPlayer(PlayerId id, const PlayerTemplate& t)
 {
-  String name = playerId_toString(id);
+  String name = id.toString();
   if (getChild(name) != NULL) {
     Fatal("tried to add player branch of existing name");
   }
@@ -22,7 +22,7 @@ void PlayersBranch::addPlayer(PlayerId id, const PlayerTemplate& t)
 
 void PlayersBranch::removePlayer(PlayerId id)
 {
-  String name = playerId_toString(id);
+  String name = id.toString();
   if (getChild(name) == NULL) {
     Fatal("tried to remove non-existant player branch " << name);
   }

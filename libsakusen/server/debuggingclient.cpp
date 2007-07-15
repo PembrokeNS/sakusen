@@ -8,7 +8,7 @@ DebuggingClient::DebuggingClient(
     std::ostream& output
   ) :
   Client(i),
-  player(0),
+  player(),
   outputStream(output)
 {
 }

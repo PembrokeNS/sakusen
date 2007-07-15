@@ -8,7 +8,7 @@ namespace sakusen {
 namespace comms{
 
 Message::Message(const MessageData* d) :
-  player(-1),
+  player(PlayerId::invalid()),
   data(d)
 {
 }
@@ -67,7 +67,7 @@ Message::Message(
       data.reset(new GameStartMessageData(in));
       break;
     case messageType_order:
-      if (player == static_cast<PlayerId>(-1)) {
+      if (!player.valid()) {
         /* This is what happens when we get an OrderMessage before the game
          * starts */
         throw NoWorldDeserializationExn();
@@ -77,7 +77,7 @@ Message::Message(
           ));
       break;
     case messageType_update:
-      if (world == NULL || player == static_cast<PlayerId>(-1)) {
+      if (world == NULL || !player.valid()) {
         throw NoWorldDeserializationExn();
       }
       data.reset(new UpdateMessageData(

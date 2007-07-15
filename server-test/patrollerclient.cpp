@@ -28,7 +28,7 @@ void PatrollerClient::queueUpdate(const Update& update)
           /*Debug("sending move order");*/
           QDebug("Patrolling to " << patrolTo);
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */,
+              OrderMessage(UnitId(),
                 Order(new MoveOrderData(patrolTo))
               )
             );
@@ -44,7 +44,7 @@ void PatrollerClient::queueUpdate(const Update& update)
 
         if (headedOutward && (position - patrolTo).length() < CLOSE_ENOUGH) {
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */,
+              OrderMessage(UnitId(),
                 Order(new MoveOrderData(patrolFrom))
               )
             );
@@ -53,7 +53,7 @@ void PatrollerClient::queueUpdate(const Update& update)
             !headedOutward && (position - patrolFrom).length() < CLOSE_ENOUGH
           ) {
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */,
+              OrderMessage(UnitId(),
                 Order(new MoveOrderData(patrolTo))
               )
             );
@@ -71,7 +71,7 @@ void PatrollerClient::queueUpdate(const Update& update)
         /* throw in a weapon targeting orders */
         for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {
           orderMessageQueue.push(
-              OrderMessage(0 /* unit id */, Order(
+              OrderMessage(UnitId(), Order(
                   new TargetPositionOrderData(
                     weaponIndex,
                     otherUnit->getUnit()->getIStatus()->getPosition()

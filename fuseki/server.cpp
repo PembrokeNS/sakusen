@@ -118,16 +118,16 @@ ClientId Server::getFreeClientId()
   /* Just use a hopelessly naive algorithm for allocating Ids.  Note that this
    * assumes that ClientId is an integer type (or at least sufficiently similar
    * for this algorithm to work properly) */
-  ClientId i = 0;
+  ClientId i;
   do {
     if (0 == clients.count(i)) {
       return i;
     }
     i++;
-  } while (i != static_cast<ClientId>(-1));
+  } while (i.valid());
 
   /* Return of -1 indicates no free Ids */
-  return static_cast<ClientId>(-1);
+  return ClientId::invalid();
 }
 
 void Server::addClient(
@@ -167,7 +167,7 @@ void Server::addClient(
     return;
   }
   ClientId id = getFreeClientId();
-  if (id == static_cast<ClientId>(-1)) {
+  if (!id.valid()) {
     /* No free ids */
     out << "Rejecting join request due to lack of space for more clients.\n";
     socket->send(Message(new RejectMessageData("No space for more clients")));
@@ -203,7 +203,7 @@ void Server::handleClientMessages()
 
     if (client->isDead()) {
       out << "Removing dead client " <<
-        clientId_toString(client->getClientId()) << "\n";
+        client->getClientId().toString() << "\n";
       removeClient(client);
       clientRemoved = true;
     } else {
@@ -295,12 +295,12 @@ void Server::handleClientMessages()
           }
         }
       } catch (SocketExn& e) {
-        out << "Removing client " << clientId_toString(client->getClientId()) <<
+        out << "Removing client " << client->getClientId().toString() <<
           " due to causing SocketExn: " << e.message << "\n";
         removeClient(client);
         clientRemoved = true;
       } catch (DeserializationExn& e) {
-        out << "Removing client " << clientId_toString(client->getClientId()) <<
+        out << "Removing client " << client->getClientId().toString() <<
           " due to causing DeserializationExn: " << e.message << "\n";
         removeClient(client);
         clientRemoved = true;
@@ -331,7 +331,7 @@ void Server::handleClientMessages()
       try {
         dest->second->send(new ExtensionMessageData(data));
       } catch (SocketExn& e) {
-        out << "Removing client " << clientId_toString(dest->first) <<
+        out << "Removing client " << dest->first.toString() <<
           " due to causing SocketExn: " << e.message << endl;
         clientsToRemove.push(dest->first);
       }
@@ -355,7 +355,8 @@ void Server::clearPlayers()
     }
   }
   while (!players.empty()) {
-    PlayerId id = static_cast<PlayerId>(players.size()-1);
+    PlayerId id = players.back().getId();
+    assert(id == players.size()-1);
     players.pop_back();
     settings->getPlayersBranch()->removePlayer(id);
   }
@@ -364,7 +365,7 @@ void Server::clearPlayers()
 void Server::createPlayersFor(const MapPlayMode& mode)
 {
   assert(players.empty());
-  for (uint32 i=0; i<mode.getMaxPlayers(); i++) {
+  for (PlayerId i; i<mode.getMaxPlayers(); ++i) {
     const PlayerTemplate& player = mode.getPlayer(i);
     players.push_back(Player(player));
     settings->getPlayersBranch()->addPlayer(i, player);
@@ -394,7 +395,7 @@ void Server::changeInClientBranch(
   )
 {
   if ("" != settings->changeRequest(
-      String("clients:") + clientId_toString(client->getClientId()) +
+      String("clients:") + client->getClientId().toString() +
         ":" + node, value, this
     )) {
       Fatal("something has gone wrong with the settings tree");
@@ -719,7 +720,7 @@ void Server::serve()
             if (!client->second->isReadyForGameStart()) {
               allClientsReady = false;
               out << "Not ready because client '" <<
-                clientId_toString(client->second->getClientId()) <<
+                client->second->getClientId().toString() <<
                 "' not ready\n";
               break;
             }
@@ -822,8 +823,7 @@ void Server::serve()
         try {
           client->flushOutgoing(sakusen::server::world->getTimeNow());
         } catch (SocketExn& e) {
-          out << "Removing client " <<
-            clientId_toString(client->getClientId()) <<
+          out << "Removing client " << client->getClientId().toString() <<
             " due to causing SocketExn: " << e.message;
           removeClient(client);
           clientRemoved = true;
@@ -942,7 +942,7 @@ String Server::boolSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientId id = clientId_fromString(fullName.front());
+    ClientId id = ClientId::fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performBoolMagic(/*altering,*/ fullName, newValue);
@@ -1010,7 +1010,7 @@ String Server::stringSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientId id = clientId_fromString(fullName.front());
+    ClientId id = ClientId::fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performStringMagic(/*altering,*/ fullName, newValue);
@@ -1136,7 +1136,7 @@ String Server::stringSetSettingAlteringCallback(
      * client object */
     fullName.pop_front();
     assert(!fullName.empty());
-    ClientId id = clientId_fromString(fullName.front());
+    ClientId id = ClientId::fromString(fullName.front());
     assert(clients.count(id));
     fullName.pop_front();
     return clients[id]->performStringSetMagic(fullName, newValue);

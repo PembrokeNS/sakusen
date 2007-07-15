@@ -9,6 +9,7 @@
 #include "gnu_extensions.h"
 #include "stringutils.h"
 #include "point.h"
+#include "idwrapper.h"
 
 namespace sakusen {
 
@@ -101,22 +102,24 @@ class LIBSAKUSEN_API OArchive {
      * \warning This assumes that the enum values all fall in the range 0-255
      */
     template<typename T>
-    OArchive& insertEnum(const T value)
-    {
+    OArchive& insertEnum(const T value) {
       return *this << static_cast<uint8>(value);
     }
 
     template<typename T, typename U>
-    OArchive& operator<<(const std::pair<T, U>& toStore)
-    {
+    OArchive& operator<<(const std::pair<T, U>& toStore) {
       Storer<T>()(*this, toStore.first);
       Storer<U>()(*this, toStore.second);
       return *this;
     }
+
+    template<typename TInteger, typename TBase>
+    OArchive& operator<<(const IdWrapper<TInteger, TBase>& toStore) {
+      return *this << toStore.val;
+    }
     
     template<typename T, size_t size>
-    OArchive& operator<<(const T toStore[size])
-    {
+    OArchive& operator<<(const T (&toStore)[size]) {
       Storer<T> storer;
       for (size_t i=0; i<size; ++i) {
         storer(*this, toStore[i]);
@@ -126,8 +129,7 @@ class LIBSAKUSEN_API OArchive {
     }
     
     template<typename T>
-    OArchive& insert(const T* toStore, size_t size)
-    {
+    OArchive& insert(const T* toStore, size_t size) {
       Storer<T> storer;
       for (size_t i=0; i<size; ++i) {
         storer(*this, toStore[i]);
@@ -137,8 +139,7 @@ class LIBSAKUSEN_API OArchive {
     }
     
     template<typename T, size_t size>
-    OArchive& insert(const boost::array<T, size>& toStore)
-    {
+    OArchive& insert(const boost::array<T, size>& toStore) {
       Storer<T> storer;
       for (size_t i=0; i<size; ++i) {
         storer(*this, toStore[i]);
@@ -148,8 +149,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T, size_t rank>
-	  OArchive& insert(const boost::multi_array<T, rank>& toStore)
-    {
+	  OArchive& insert(const boost::multi_array<T, rank>& toStore) {
       /** \bug Handles only zero-based-indexed multi_arrays */
       assert(rank == toStore.num_dimensions());
       boost::array<uint32, rank> shape;
@@ -181,8 +181,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T>
-	  OArchive& operator<<(const std::vector<T>& toStore)
-    {
+	  OArchive& operator<<(const std::vector<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
   
@@ -195,8 +194,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T>
-    OArchive& operator<<(const std::list<T>& toStore)
-    {
+    OArchive& operator<<(const std::list<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
   
@@ -209,8 +207,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename T, typename U, typename THash>
-    OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore)
-    {
+    OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore) {
       *this << uint32(toStore.size());
       Storer<std::pair<T, U> > storer;
   
@@ -223,8 +220,7 @@ class LIBSAKUSEN_API OArchive {
     }
     
     template<typename T>
-    inline OArchive& operator<<(const Point<T>& p)
-    {
+    inline OArchive& operator<<(const Point<T>& p) {
       return *this << p.x << p.y << p.z;
     }
 

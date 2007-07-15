@@ -15,9 +15,9 @@ PlayerBranch::PlayerBranch(
     Server* server,
     const PlayerTemplate& t
   ) :
-  Branch(playerId_toString(id), "world", "", parent, server)
+  Branch(id.toString(), "world", "", parent, server)
 {
-  String playerGroup = String("player") + playerId_toString(id);
+  String playerGroup = String("player") + id.toString();
   String playerAdminGroup = playerGroup+",admin";
   
   addChild(Node::Ptr(new StringLeaf(

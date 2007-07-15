@@ -19,7 +19,7 @@ UnitCore::UnitCore(
   ) :
   UnitStatus(startType, startPosition, startOrientation, startVelocity, startHP),
   outerUnit(o),
-  owner(0)
+  owner()
 {
   initializeWeapons();
 }
@@ -27,7 +27,7 @@ UnitCore::UnitCore(
 UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
   UnitStatus(status),
   outerUnit(o),
-  owner(0)
+  owner()
 {
   initializeWeapons();
 }

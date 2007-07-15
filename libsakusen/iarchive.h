@@ -150,8 +150,7 @@ class LIBSAKUSEN_API IArchive {
      * \warning This assumes that the enum values all fall in the range 0-255
      */
     template<typename T>
-    IArchive& extractEnum(T& result)
-    {
+    IArchive& extractEnum(T& result) {
       uint8 valAsInt;
       *this >> valAsInt;
       result = static_cast<T>(valAsInt);
@@ -159,16 +158,22 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T, typename U>
-    IArchive& operator>>(std::pair<T, U>& result)
-    {
+    IArchive& operator>>(std::pair<T, U>& result) {
       result.first = Extracter<T>()(*this);
       result.second = Extracter<U>()(*this);
       return *this;
     }
+
+    template<typename TInteger, typename TBase>
+    IArchive& operator>>(IdWrapper<TInteger, TBase>& result) {
+      TInteger v;
+      *this >> v;
+      result.val = v;
+      return *this;
+    }
     
     template<typename T, size_t size>
-    IArchive& extract(T result[size])
-    {
+    IArchive& extract(T result[size]) {
       Extracter<T> extracter;
       for (int i=0; i<size; ++i) {
         result[i]=extracter(*this);
@@ -178,7 +183,7 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T, size_t size>
-    IArchive& extract(T result[size], const DeserializationContext& context)
+    IArchive& extract(T (&result)[size], const DeserializationContext& context)
     {
       Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
@@ -189,8 +194,7 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T>
-    IArchive& extract(T* result, size_t size)
-    {
+    IArchive& extract(T* result, size_t size) {
       Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
         result[i] = extracter();
@@ -200,8 +204,7 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T, size_t size>
-    IArchive& extract(boost::array<T, size>& result)
-    {
+    IArchive& extract(boost::array<T, size>& result) {
       Extracter<T> extracter;
       for (size_t i=0; i<size; ++i) {
         result[i]=extracter(*this);
@@ -211,8 +214,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T, size_t rank>
-    IArchive& extract(boost::multi_array<T, rank>& result)
-    {
+    IArchive& extract(boost::multi_array<T, rank>& result) {
       assert(rank == result.num_dimensions());
       boost::array<uint32, rank> shape;
       extract<uint32, rank>(shape);
@@ -244,8 +246,7 @@ class LIBSAKUSEN_API IArchive {
     }
     
     template<typename T>
-    IArchive& operator>>(std::vector<T>& result)
-    {
+    IArchive& operator>>(std::vector<T>& result) {
       assert(result.empty());
       uint32 size;
       *this >> size;
@@ -259,8 +260,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
-    IArchive& operator>>(std::list<T>& result)
-    {
+    IArchive& operator>>(std::list<T>& result) {
       assert(result.empty());
       uint32 size;
       *this >> size;
@@ -274,8 +274,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T, typename U, typename THash>
-    IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result)
-    {
+    IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result) {
       assert(result.empty());
       uint32 size;
       *this >> size;
@@ -294,8 +293,7 @@ class LIBSAKUSEN_API IArchive {
     IArchive& extract(
         std::vector<T>& result,
         const DeserializationContext& context
-      )
-    {
+      ) {
       assert(result.empty());
       uint32 size;
       *this >> size;
@@ -312,8 +310,7 @@ class LIBSAKUSEN_API IArchive {
     IArchive& extract(
         std::list<T>& result,
         const DeserializationContext& context
-      )
-    {
+      ) {
       assert(result.empty());
       uint32 size;
       *this >> size;
@@ -327,8 +324,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename T>
-    IArchive& operator>>(Point<T>& result)
-    {
+    IArchive& operator>>(Point<T>& result) {
       T x;
       *this >> x;
       T y;

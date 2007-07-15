@@ -35,7 +35,7 @@ void CompleteUnit::store(OArchive& out, bool sanitize) const
 {
   out.magicValue("CUNIT");
   if (sanitize) {
-    out << UnitId(-1);
+    out << UnitId::invalid();
   } else {
     out << unitId;
   }

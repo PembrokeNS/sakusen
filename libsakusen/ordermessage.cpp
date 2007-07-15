@@ -3,7 +3,7 @@
 using namespace sakusen;
 
 OrderMessage::OrderMessage(
-    uint32 oee,
+    UnitId oee,
     const Order& o) :
   orderee(oee),
   order(o)
@@ -21,7 +21,7 @@ OrderMessage OrderMessage::load(
     const DeserializationContext& context
   )
 {
-  uint32 orderee;
+  UnitId orderee;
   
   in >> orderee;
   Order order(Order::load(in, context));

@@ -13,7 +13,7 @@ ClientsBranch::ClientsBranch(Branch* parent, Server* server) :
 
 void ClientsBranch::addClient(ClientId id)
 {
-  String name = clientId_toString(id);
+  String name = id.toString();
   if (getChild(name)) {
     Fatal("tried to add client branch of existing name " << name);
   }
@@ -22,7 +22,7 @@ void ClientsBranch::addClient(ClientId id)
 
 void ClientsBranch::removeClient(ClientId id)
 {
-  String name = clientId_toString(id);
+  String name = id.toString();
   if (!getChild(name)) {
     Fatal("tried to remove non-existant client branch " << name);
   }

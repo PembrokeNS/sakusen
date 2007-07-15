@@ -8,7 +8,22 @@ namespace sakusen {
  * Each player that can see a Ballistic will give it an id.  These are
  * independent of one another; there is no overall id for a Ballistic, and if
  * no one can see it then it has no id at all. */
-typedef uint32 ClientBallisticId;
+class ClientBallisticId : public IdWrapper<uint32, ClientBallisticId> {
+};
+
+}
+
+namespace __gnu_cxx {
+
+template<>
+struct hash<sakusen::ClientBallisticId> {
+  private:
+    hash<sakusen::ClientBallisticId::internal_type> intHasher;
+  public:
+    size_t operator()(const sakusen::ClientBallisticId i) const {
+      return intHasher(i);
+    }
+};
 
 }
 

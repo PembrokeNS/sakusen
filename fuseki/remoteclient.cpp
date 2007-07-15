@@ -21,7 +21,7 @@ RemoteClient::RemoteClient(
 #endif
   ) :
   Client(i),
-  SettingsUser(String("client")+clientId_toString(i)),
+  SettingsUser(String("client")+i.toString()),
   server(s),
   inSocket(),
   outSocket(socket),
@@ -65,7 +65,7 @@ RemoteClient::~RemoteClient()
   /* Must setPlayerId so as to detach from any player to whom we
    * might be attached, and thus avoid the Player having a dangling
    * pointer */
-  setPlayerId(0, false);
+  setPlayerId(PlayerId(), false);
 }
 
 void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
@@ -77,7 +77,7 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
         /* This condition is necessary because when this method is called from
          * the destructor, this->groups may already have been cleared when the
          * game started */
-        this->removeGroup(String("player")+playerId_toString(playerId));
+        this->removeGroup(String("player")+playerId.toString());
       }
     } catch (InvalidPlayerId& e) {
       /* The last player id was invalid. Continue anyway, o/w we can never
@@ -89,7 +89,7 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
   if (id != 0) {
     try {
       server->getPlayerPtr(id)->attachClient(this);
-      addGroup(String("player")+playerId_toString(id));
+      addGroup(String("player")+id.toString());
     } catch (InvalidPlayerId& e) {
       Debug("RemoteClient::setPlayerId was given an invalid id");
       throw;

@@ -38,7 +38,7 @@ PlayerId DynamicSensorReturns::getSenseeOwner() const
   if (0 != (perception & (perception_owner | perception_unit))) {
     return sensee->getOwner();
   } else {
-    return 0;
+    return PlayerId::invalid();
   }
 }
 

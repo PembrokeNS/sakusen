@@ -9,9 +9,9 @@ using namespace fuseki;
 using namespace fuseki::settingsTree;
 
 ClientBranch::ClientBranch(ClientId id, Branch* parent, Server* server) :
-  Branch(clientId_toString(id), "world", "", parent, server)
+  Branch(id.toString(), "world", "", parent, server)
 {
-  String clientGroup = String("client") + clientId_toString(id);
+  String clientGroup = String("client") + id.toString();
   addChild(Node::Ptr(
         new ApplicationBranch("world", "", clientGroup, this, server)
       ));

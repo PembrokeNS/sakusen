@@ -4,33 +4,35 @@
 #include "libsakusen-global.h"
 
 #include "stringutils.h"
+#include "idwrapper.h"
 
 namespace sakusen {
 
-/** \brief Typedef for unique client identifier, in case we ever want more than
- * 255 clients
+/** \brief Unique player identifier
  *
- * Code may assume this is an unsigned integer type */
-typedef uint8 PlayerId;
-
-/** \brief Converts PlayerId to string
+ * At present this is essentially a wrapper for uint8.  It can be altered if
+ * we ever want more than 255 players
  */
-inline PlayerId playerId_fromString(String str)
-{
-  return numFromString<PlayerId>(str);
+class PlayerId : public IdWrapper<uint8, PlayerId> {
+};
+
 }
 
-/** \brief Converts string to PlayerId
- *
- * Guaranteed that if \c id is some PlayerId then
- * \code
- * id == playerId_fromString(playerId_toString(id))
- * \endcode
- */
-inline String playerId_toString(PlayerId id)
-{
-  return numToString(id);
+namespace __gnu_cxx {
+
+template<>
+struct hash<sakusen::PlayerId> {
+  private:
+    hash<sakusen::PlayerId::internal_type> intHasher;
+  public:
+    size_t operator()(const sakusen::PlayerId i) const {
+      return intHasher(i);
+    }
+};
+
 }
+
+namespace sakusen {
 
 /** \brief Exception to describe the case of an invalid player Id.
  *
@@ -40,7 +42,7 @@ inline String playerId_toString(PlayerId id)
 class InvalidPlayerId : public std::runtime_error {
   public:
     PlayerId id;
-    InvalidPlayerId(): std::runtime_error("InvalidPlayerId"), id(0) {}
+    InvalidPlayerId(): std::runtime_error("InvalidPlayerId"), id() {}
     InvalidPlayerId(PlayerId p): std::runtime_error("InvalidPlayerId"), id(p) {}
 };
 }

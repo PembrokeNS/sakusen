@@ -34,7 +34,7 @@ ServerInterface::ServerInterface(
   abstract(a),
 #endif
   joined(false),
-  id(0),
+  id(),
   incomingSocket(),
   outgoingSocket(),
   universeName()
@@ -119,7 +119,7 @@ String ServerInterface::flushIncoming()
     try {
       PlayerId playerId =
         ( NULL == client::world ?
-          static_cast<PlayerId>(-1) : client::world->getPlayerId() );
+          PlayerId::invalid() : client::world->getPlayerId() );
       IArchive messageArchive(buf, messageLength);
       Message message(messageArchive, playerId);
       switch (message.getType()) {
@@ -342,7 +342,7 @@ bool ServerInterface::getClientSetting(
   }
   
   return getSetting(
-      "clients:" + clientId_toString(id) + delim + setting
+      "clients:" + id.toString() + delim + setting
     );
 }
 
@@ -363,7 +363,7 @@ bool ServerInterface::setClientSetting(
   }
   
   return setSetting(
-      "clients:" + clientId_toString(id) + delim + setting, value
+      "clients:" + id.toString() + delim + setting, value
     );
 }
 

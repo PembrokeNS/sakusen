@@ -32,7 +32,6 @@ CompleteWorld::CompleteWorld(
    */
   size_t vectorSize;
   uint32 numPlayers;
-  uint8 i;
 
   /* Some sanity checks */
   if (world) {
@@ -54,7 +53,10 @@ CompleteWorld::CompleteWorld(
   
   /* assign player ids */
   
-  for (i=0; i < numPlayers; i++) {
+  for (PlayerId i; i < numPlayers; ++i) {
+    if (!i.valid()) {
+      Fatal("too many players");
+    }
     players[i].setPlayerId(i);
   }
 
@@ -65,7 +67,7 @@ CompleteWorld::CompleteWorld(
   units.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   
   /* put units on the map as specified in MapPlayMode */
-  for (i=0; i < numPlayers; i++) {
+  for (PlayerId i; i < numPlayers; ++i) {
     std::vector<UnitTemplate> playersUnits =
       playMode->getPlayer(i).getUnits();
     for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
@@ -170,7 +172,7 @@ Ref<LayeredUnit> CompleteWorld::addUnit(
  * LayeredUnit::kill method */
 void CompleteWorld::removeUnit(LayeredUnit* unit)
 {
-  unit->changeOwner(0, changeOwnerReason_destroyed);
+  unit->changeOwner(PlayerId(), changeOwnerReason_destroyed);
   hash_list<LayeredUnit, Bounded>::iterator it = units.find(unit);
   if (it == units.end()) {
     Fatal("removing unit not present");

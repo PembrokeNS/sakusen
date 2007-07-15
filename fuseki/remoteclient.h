@@ -55,10 +55,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     bool dead; /* Whether I'm apparently dead (usually some kind of socket
                   problem) */
 
-    void setPlayerId(sakusen::PlayerId id, bool removeGroup);
-    inline void setPlayerId(sakusen::PlayerId id) {
-      setPlayerId(id, true);
-    }
+    void setPlayerId(sakusen::PlayerId id, bool removeGroup = true);
   public:
     /** \name Accessors */
     //@{

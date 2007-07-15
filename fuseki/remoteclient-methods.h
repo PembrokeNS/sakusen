@@ -7,7 +7,6 @@
 namespace fuseki {
 
 template<typename T>
-
 String RemoteClient::performIntMagic(
     const std::list<String>& name,
     T newValue
@@ -30,7 +29,7 @@ String RemoteClient::performIntMagic(
     }
 
     try {
-      setPlayerId(newValue);
+      setPlayerId(sakusen::PlayerId::fromInteger(newValue));
     } catch (sakusen::InvalidPlayerId& e) {
       return "the given player id does not exist in this map";
     }

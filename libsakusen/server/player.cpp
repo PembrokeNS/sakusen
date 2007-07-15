@@ -14,16 +14,16 @@ namespace server{
 Player::Player(const PlayerTemplate& t) :
   noClients(t.isNoClients()),
   raceFixed(t.isRaceFixed()),
-  playerId(0),
+  playerId(),
   name(""),
   clients(),
   units(),
-  lastUnitId(static_cast<UnitId>(-1)),
+  nextUnitId(),
   sensorReturns(),
   sensorReturnsById(),
-  lastSensorReturnsId(static_cast<SensorReturnsId>(-1)),
+  nextSensorReturnsId(),
   visibleBallistics(),
-  lastClientBallisticId(static_cast<ClientBallisticId>(-1))
+  nextClientBallisticId()
 {
   assert(raceFixed || !noClients);
 }
@@ -35,12 +35,12 @@ Player::Player(const Player& copy) :
   name(copy.name),
   clients(copy.clients),
   units(copy.units),
-  lastUnitId(copy.lastUnitId),
+  nextUnitId(copy.nextUnitId),
   sensorReturns(),
   sensorReturnsById(),
-  lastSensorReturnsId(copy.lastSensorReturnsId),
+  nextSensorReturnsId(copy.nextSensorReturnsId),
   visibleBallistics(copy.visibleBallistics),
-  lastClientBallisticId(copy.lastClientBallisticId)
+  nextClientBallisticId(copy.nextClientBallisticId)
 {
   if (!copy.sensorReturns.empty()) {
     /* To perform this copy we'd need to set up sensorReturnsById, which would
@@ -63,12 +63,12 @@ Player& Player::operator=(const Player& copy)
   name = copy.name;
   clients = copy.clients;
   units = copy.units;
-  lastUnitId = copy.lastUnitId;
+  nextUnitId = copy.nextUnitId;
   sensorReturnsById.clear();
   sensorReturns.clear();
-  lastSensorReturnsId = copy.lastSensorReturnsId;
+  nextSensorReturnsId = copy.nextSensorReturnsId;
   visibleBallistics = copy.visibleBallistics;
-  lastClientBallisticId = copy.lastClientBallisticId;
+  nextClientBallisticId = copy.nextClientBallisticId;
 
   return *this;
 }
@@ -135,14 +135,14 @@ void Player::removeUnit(const UnitId id, enum changeOwnerReason why)
 void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
 {
   /*QDebug("[Player::addUnit]");*/
-  ++lastUnitId;
-  if (units.count(lastUnitId)) {
+  if (units.count(nextUnitId)) {
     Fatal("tried to insert a unit with an existing id");
   }
-  units[lastUnitId] = unit;
-  assert(units.find(lastUnitId) != units.end());
-  unit->setId(lastUnitId);
+  units[nextUnitId] = unit;
+  assert(units.find(nextUnitId) != units.end());
+  unit->setId(nextUnitId);
   informClients(Update(new UnitAddedUpdateData(why, unit)));
+  ++nextUnitId;
 }
 
 /** \brief Update all player's sensor returns for a new tick.
@@ -203,7 +203,7 @@ void Player::checkSensorReturns()
     } else if ((*unit)->getOwner() != playerId) {
       /* we have no sensor return, so we determine whether one should exist
        * */
-      SensorReturnsId newId = lastSensorReturnsId + 1;
+      SensorReturnsId newId = nextSensorReturnsId;
       DynamicSensorReturns newReturns(newId, *unit, this);
       if (!newReturns.empty()) {
         /* Clear the dirty flag that will certainly have been set */
@@ -223,7 +223,7 @@ void Player::checkSensorReturns()
         informClients(
             Update(new SensorReturnsAddedUpdateData(inserted.first->second))
           );
-        lastSensorReturnsId = newId;
+        ++nextSensorReturnsId;
       }
     }
   }
@@ -258,7 +258,7 @@ void Player::checkSensorReturns()
     } else {
       /* It's a new one */
       /** \todo Make an actual visibilty check */
-      ClientBallisticId clientId = ++lastClientBallisticId;
+      ClientBallisticId clientId = nextClientBallisticId++;
       /** \bug There's no wraparound check for this id */
       visibleBallistics[*ballistic] =
         pair<ClientBallisticId, Ref<const Ballistic> >(

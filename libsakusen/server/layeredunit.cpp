@@ -48,7 +48,7 @@ Ref<LayeredUnit> LayeredUnit::spawn(
 LayeredUnit::LayeredUnit(
     const UnitTemplate& t
   ) :
-  owner(0),
+  owner(),
   topLayer(new UnitCore(this, t.getStatus())),
   status(topLayer->getCore()),
   orders(t.getStatus()->getWeaponsStatus().size()),
@@ -64,7 +64,7 @@ LayeredUnit::LayeredUnit(
     const Point<sint16>& startVelocity,
     HitPoints startHP
   ) :
-  owner(0),
+  owner(),
   topLayer(new UnitCore(
         this, startType, startPosition, startOrientation, startVelocity,
         startHP

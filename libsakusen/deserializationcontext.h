@@ -39,10 +39,10 @@ class DeserializationContext {
       ) :
       resourceInterface(rI),
       universe(u),
-      playerId(-1)
+      playerId(PlayerId::invalid())
     {}
     explicit DeserializationContext(
-        PlayerId pI = PlayerId(-1),
+        PlayerId pI = PlayerId::invalid(),
         boost::shared_ptr<const Universe> u=boost::shared_ptr<const Universe>()
       ) :
       resourceInterface(),

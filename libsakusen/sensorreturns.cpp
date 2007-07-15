@@ -43,7 +43,7 @@ SensorReturns SensorReturns::load(
   if (0 != (perception & perception_owner)) {
     in >> senseeOwner;
   } else {
-    senseeOwner = 0;
+    senseeOwner = PlayerId();
   }
   if (0 != (perception & perception_region)) {
     region = Region<sint32>::loadNew(in);

@@ -4,7 +4,7 @@ using namespace sakusen::server;
 
 Client::Client(ClientId i) :
   clientId(i),
-  playerId(0),
+  playerId(),
   orderMessageQueue(),
   observer(false)
 {

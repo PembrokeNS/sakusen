@@ -36,14 +36,14 @@ class LIBSAKUSEN_SERVER_API Player {
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
     __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> > units;
-    /* The id of the last unit that was added for this player */
-    UnitId lastUnitId;
+    /* The id of the next unit to be added for this player */
+    UnitId nextUnitId;
     
     hash_list<DynamicSensorReturns> sensorReturns;
     
     __gnu_cxx::hash_map<SensorReturnsId, Ref<DynamicSensorReturns> >
       sensorReturnsById;
-    SensorReturnsId lastSensorReturnsId;
+    SensorReturnsId nextSensorReturnsId;
 
     /* A container of Refs to the Ballistics visible to this player.  The key
      * is a pointer which we use as a UID for the Ballistic, but it shouldn't
@@ -53,7 +53,7 @@ class LIBSAKUSEN_SERVER_API Player {
         MaskedPtr<Ballistic>,
         std::pair<ClientBallisticId, Ref<const Ballistic> >
       > visibleBallistics;
-    ClientBallisticId lastClientBallisticId;
+    ClientBallisticId nextClientBallisticId;
   public:
     /** \name Accessors. */
     //@{

@@ -102,7 +102,7 @@ int main(/* int argc, char** argv */)
     FileResourceInterface::create(dataDirs, true);
   
   /* Create a debugging client */
-  DebuggingClient client(0, cout);
+  DebuggingClient client(ClientId(), cout);
   vector<Client*> clients;
   clients.push_back(&client);
 
@@ -142,8 +142,8 @@ int main(/* int argc, char** argv */)
   /* For our toy example we create two players: the neutral player with no
    * client, and a "real" player with a debugging client */
   const MapPlayMode& mode = mapTemplate->getPlayModes()[0];
-  Player neutralPlayer = Player(mode.getPlayer(0));
-  Player realPlayer = Player(mode.getPlayer(1));
+  Player neutralPlayer = Player(mode.getPlayer(PlayerId::fromInteger(0)));
+  Player realPlayer = Player(mode.getPlayer(PlayerId::fromInteger(1)));
   realPlayer.attachClient(&client);
   vector<Player> players;
   players.push_back(neutralPlayer);
@@ -162,7 +162,9 @@ int main(/* int argc, char** argv */)
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
   
-  PatrollerClient patrollerClient(1, Point<sint32>(50000, 0, 1000));
+  PatrollerClient patrollerClient(
+      ClientId::fromInteger(1), Point<sint32>(50000, 0, 1000)
+    );
   players.back().attachClient(&patrollerClient);
   
   w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);

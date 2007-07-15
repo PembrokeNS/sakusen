@@ -2,33 +2,29 @@
 #define CLIENTID_H
 
 #include "stringutils.h"
+#include "idwrapper.h"
 
 namespace sakusen {
 
 /** \brief Typedef for unique client identifier, in case we ever want more than
  * 255 clients
- *
- * Code may assume this is an unsigned integer type */
-typedef uint8 ClientId;
-
-/** \brief Converts ClientId to string
  */
-inline String clientId_toString(ClientId id)
-{
-  return numToString(id);
+class ClientId : public IdWrapper<uint8, ClientId> {
+};
+
 }
 
-/** \brief Converts string to ClientId
- *
- * Guaranteed that if \c id is some ClientId then
- * \code
- * id == clientId_fromString(clientId_toString(id))
- * \endcode
- */
-inline ClientId clientId_fromString(String str)
-{
-  return numFromString<ClientId>(str);
-}
+namespace __gnu_cxx {
+
+template<>
+struct hash<sakusen::ClientId> {
+  private:
+    hash<sakusen::ClientId::internal_type> intHasher;
+  public:
+    size_t operator()(const sakusen::ClientId i) const {
+      return intHasher(i);
+    }
+};
 
 }
 

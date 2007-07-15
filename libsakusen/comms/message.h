@@ -26,7 +26,7 @@ class LIBSAKUSEN_COMMS_API Message {
     explicit Message(const MessageData* data);
     Message(
         IArchive& archive,
-        PlayerId player = static_cast<PlayerId>(-1)
+        PlayerId player = PlayerId::invalid()
       );
   private:
     /** \brief Source of this message.
