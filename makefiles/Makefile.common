@@ -91,7 +91,7 @@ MAKEFRAGS := \
 # and such things, they should be added to BUILD_CXXFLAGS in a config.mk or to
 # THIS_CXXFLAGS in a Makefile.local (depending on whether they are supposed to
 # apply to a build or a binary respectively).
-GLOBAL_CXXFLAGS := -Werror -Wall -Wextra -Woverloaded-virtual -Wold-style-cast -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
+GLOBAL_CXXFLAGS := -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
 GLOBAL_CFLAGS := -Werror -O0 -g3
 
 # We replace '-' with '/' in the library name when using it as a directory

@@ -4,7 +4,7 @@
 #include "libsakusen-global.h"
 
 #include "stringutils.h"
-#include "idwrapper.h"
+#include "idbase.h"
 
 namespace sakusen {
 
@@ -13,7 +13,7 @@ namespace sakusen {
  * At present this is essentially a wrapper for uint8.  It can be altered if
  * we ever want more than 255 players
  */
-class PlayerId : public IdWrapper<uint8, PlayerId> {
+class PlayerId : public IdBase<uint8, PlayerId> {
 };
 
 }

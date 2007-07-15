@@ -165,7 +165,7 @@ class LIBSAKUSEN_API IArchive {
     }
 
     template<typename TInteger, typename TBase>
-    IArchive& operator>>(IdWrapper<TInteger, TBase>& result) {
+    IArchive& operator>>(IdBase<TInteger, TBase>& result) {
       TInteger v;
       *this >> v;
       result.val = v;

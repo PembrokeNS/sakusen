@@ -9,7 +9,7 @@
 #include "gnu_extensions.h"
 #include "stringutils.h"
 #include "point.h"
-#include "idwrapper.h"
+#include "idbase.h"
 
 namespace sakusen {
 
@@ -114,7 +114,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     template<typename TInteger, typename TBase>
-    OArchive& operator<<(const IdWrapper<TInteger, TBase>& toStore) {
+    OArchive& operator<<(const IdBase<TInteger, TBase>& toStore) {
       return *this << toStore.val;
     }
     

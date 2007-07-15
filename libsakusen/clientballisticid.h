@@ -8,7 +8,7 @@ namespace sakusen {
  * Each player that can see a Ballistic will give it an id.  These are
  * independent of one another; there is no overall id for a Ballistic, and if
  * no one can see it then it has no id at all. */
-class ClientBallisticId : public IdWrapper<uint32, ClientBallisticId> {
+class ClientBallisticId : public IdBase<uint32, ClientBallisticId> {
 };
 
 }

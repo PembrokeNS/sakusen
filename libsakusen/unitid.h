@@ -2,12 +2,12 @@
 #define UNITID_H
 
 #include "libsakusen-global.h"
-#include "idwrapper.h"
+#include "idbase.h"
 
 namespace sakusen {
 
 /** \brief Unique identifier for a unit amongst units of one player. */
-class UnitId : public IdWrapper<uint32, UnitId> {
+class UnitId : public IdBase<uint32, UnitId> {
 };
 
 }

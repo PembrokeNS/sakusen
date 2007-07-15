@@ -1,11 +1,11 @@
 #ifndef SENSORRETURNSID_H
 #define SENSORRETURNSID_H
 
-#include "idwrapper.h"
+#include "idbase.h"
 
 namespace sakusen {
 
-class SensorReturnsId : public IdWrapper<uint32, SensorReturnsId> {
+class SensorReturnsId : public IdBase<uint32, SensorReturnsId> {
 };
 
 }

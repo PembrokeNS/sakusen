@@ -1,5 +1,7 @@
-#ifndef IDWRAPPER_H
-#define IDWRAPPER_H
+#ifndef IDBASE_H
+#define IDBASE_H
+
+#include <boost/static_assert.hpp>
 
 #include "gnu_extensions.h"
 #include "stringutils.h"
@@ -15,7 +17,7 @@ class OArchive;
  * The template parameters should be some integral type and the type of the
  * derived class itself.  See PlayerId for an example.
  *
- * IdWrapper adds as much appropriate functionality as it can to the derived
+ * IdBase adds as much appropriate functionality as it can to the derived
  * class through the use of friend function definitions and static methods.
  * 
  * One thing that cannot be added here is a specialization of hash for the
@@ -27,7 +29,8 @@ class OArchive;
  * observed.
  */
 template<typename TInteger, typename TDerived>
-class IdWrapper {
+class IdBase {
+  BOOST_STATIC_ASSERT((std::numeric_limits<TInteger>::is_integer));
   friend class IArchive;
   friend class OArchive;
   public:
@@ -35,7 +38,7 @@ class IdWrapper {
     typedef TInteger internal_type;
   protected:
     /** \brief Default constructor always produces the same, valid id */
-    IdWrapper() : val(0) {}
+    IdBase() : val(0) {}
   private:
     TInteger val;
   public:
@@ -48,7 +51,7 @@ class IdWrapper {
     bool valid() const { return val != TInteger(-1); }
     /** \brief Convert to string. 
      *
-     * \see IdWrapper::fromString */
+     * \see IdBase::fromString */
     String toString() const { return numToString(val); }
     /** \brief Store in OArchive.
      *
@@ -74,7 +77,7 @@ class IdWrapper {
      * It is guaranteed that converting an id to a string and back again will
      * yield the original value.
      *
-     * \see IdWrapper::toString. */
+     * \see IdBase::toString. */
     static TDerived fromString(const String& s) {
       return fromInteger(numFromString<TInteger>(s));
     }
@@ -98,5 +101,5 @@ class IdWrapper {
 
 }
 
-#endif // IDWRAPPER_H
+#endif // IDBASE_H
 
