@@ -1,4 +1,4 @@
- - Attempted to make this compile with VC2005 Express. Since it is legal and a little less antiquated. I hope running it doesn't break John's laptop.
+ - Attempted to make this compile with VC2005 Express. Since it is free and a little less antiquated. I hope running it doesn't break John's laptop.
  - To make Windows programs compile with VC2005, you must:
  Step 1: Install Visual C++ Express.
 

@@ -17,6 +17,9 @@
 
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
+#if 0 
+//If libsakusen was a dll, this would specify what is in the dll interface.
+//However, in order to make life easier, I am making it a static library.
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)
     #define LIBSAKUSEN_EXIMP extern
@@ -25,18 +28,22 @@
     #define LIBSAKUSEN_API   __declspec(dllimport)
     #define LIBSAKUSEN_EXIMP
   #endif
+#else 
+	#define LIBSAKUSEN_API 
+	#define LIBSAKUSEN_EXIMP
+    #define LIBSAKUSEN_METHOD_DEFINITIONS
+#endif
 
-  /* This warning is about members of exported classes not being exported.
+  /*4251: This warning is about members of exported classes not being exported.
    * This is mostly to do with stuff from std, but in at least one case it 
    * was very important.  In the long run we should do without disabling 
    * this warning. */
-  #pragma warning(disable: 4251)
+  #pragma warning(disable: 4251 4715)
 
-  /* Disable "not all code paths return a value" warning because the
+  /* 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */
-  #pragma warning(disable: 4715)
-
-  //Alias of __PRETTY_FUNCTION for 
+ 
+	//Alias of __PRETTY_FUNCTION for 
   #define __PRETTY_FUNCTION__ __FUNCDNAME__
 
   /* Define file seperator */
@@ -157,6 +164,9 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   {
     return ( x < 0 ? ceil(x-0.5) : floor (x+0.5) );
   }
+
+  //isnan -> _isnan for MSVC
+#define isnan _isnan
 
 
 #endif

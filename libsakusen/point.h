@@ -21,6 +21,16 @@ namespace sakusen {
  * representable number not equal to the negation of the most +ve
  * representable number. So sue me.
  */
+
+/* Apparently MSVC is on the ball in this case, but because it has reduced the 
+ * answer to a constant, generates a warning about the now unreferenced local variable.
+ * This is slightly mystifying for a few seconds, and clutters things up, so I have disabled
+ * it.
+ */
+#ifdef _MSC_VER 
+	#pragma warning (disable:4101)
+#endif
+
 template<typename T>
 inline T bottomNumber() {
   std::numeric_limits<T> limits;
@@ -44,6 +54,7 @@ inline T bottomNumber() {
  * compile-time, so if your compiler is at all on the ball it should reduce to
  * including a constant.
  */
+
 template<typename T>
 inline T topNumber() {
   std::numeric_limits<T> limits;
@@ -53,6 +64,9 @@ inline T topNumber() {
   else
     return limits.max();
 }
+#ifdef _MSC_VER //Re-enable warning diabled above, in case it is useful later.
+#pragma warning (default:4101)
+#endif
 
 /** \brief point in 3-space
  *
@@ -244,11 +258,11 @@ class LIBSAKUSEN_API Point {
 
     inline UWide squareLength(void) const {
       /* Ugly casting here because of paranoia. */
-      return UWide(Wide(x)*x) + Wide(y)*y + Wide(z)*z;
+      return UWide(UWide(Wide(x)*x) + Wide(y)*y + Wide(z)*z);
     }
 
     inline UWide innerProduct(const Point<T>& right) const {
-      return UWide(Wide(x)*right.x) + Wide(y)*right.y + Wide(z)*right.z;
+      return UWide(UWide(Wide(x)*right.x) + Wide(y)*right.y + Wide(z)*right.z);
     }
 
     inline double length(void) const {
@@ -274,11 +288,13 @@ class LIBSAKUSEN_API Point {
 #ifndef SWIG
 /** \brief Truncate a Point towards zero.
  *
- * This function is only defined for Point<double> and truncates each
+ * This function is defined for all types. For Point<double> it truncates each
  * co-ordinate towards zero, so you can cast it to a Point of integer type
  * knowing it is at least as close to the origin as the original.
  *
  * Don't forget that not all integral doubles have integer representations.
+ *
+ * For all other types, it has no effect, and returns the Point.
  */
 template<>
 inline Point<double> Point<double>::truncate(void) const {
@@ -289,13 +305,29 @@ inline Point<double> Point<double>::truncate(void) const {
   );
 }
 
+#if defined LIBSAKUSEN_METHOD_DEFINITIONS
+
+template<typename T>
+inline Point<T> Point<T>::truncate(void) const {
+  return Point<T>(x,y,z);
+}
+
+template<typename T>
+inline Point<T> Point<T>::round(void) const {
+  return Point<T>(x,y,z);
+}
+
+#endif //LIBSAKUSEN_METHOD_DEFINITIONS
+
 /** \brief Round a Point to the nearest integer co-ordinates.
  *
- * This function is only defined for Point<double> and rounds each co-ordinate
+ * This function is defined for all types. For Point<double> it rounds each co-ordinate
  * to the nearest integer, so you can cast it to a Point of integer type
  * knowing it is as close as you can get to the original.
  *
  * Don't forget that not all integral doubles have integer representations.
+ *
+ * For all other types, it has no effect, and returns the Point.
  */
 template<>
 inline Point<double> Point<double>::round(void) const {
@@ -321,11 +353,13 @@ typedef Point<sint16> Velocity;
 typedef Point<sint32> Position;
 //@}
 
+
+/* For this to be necessary, libsakusen must be a dll. 
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;
 template class LIBSAKUSEN_API Point<sint32>;
 #endif
-
+*/
 }
 
 #endif // POINT_H

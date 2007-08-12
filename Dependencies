@@ -1,6 +1,8 @@
 Dependencies:
 
 libsakusen: mhash  libmhash-dev
+		Boost
+(Windows): STLPort
 
 Fuseki: pcre libpcre-dev
 

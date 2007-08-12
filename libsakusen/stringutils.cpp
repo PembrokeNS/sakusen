@@ -132,6 +132,6 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   
   mhash_deinit(thread, hash);
   
-  return stringUtils_bufferToHex(hash, 32);
+  return sakusen::stringUtils_bufferToHex(hash, 32);
 }
 

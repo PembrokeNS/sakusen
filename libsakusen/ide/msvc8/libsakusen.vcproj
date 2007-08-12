@@ -18,11 +18,12 @@
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -52,7 +53,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\STLport\stlport;&quot;..\..\..\mhash-win32\include&quot;;&quot;..\..\..\mhash-win32\lib&quot;"
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;;&quot;C:\Program files\boost\boost_1_34_1&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -77,25 +78,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib libmhash.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\STLport\lib;&quot;..\..\..\mhash-win32\win32\libmhash\Release\&quot;"
-				ProgramDatabaseFile=".\Release/libsakusen.pdb"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
-				LinkTimeCodeGeneration="1"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -107,12 +93,6 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -230,6 +210,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\bounded.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\bounded.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\box.h"
 			>
 		</File>
@@ -238,11 +226,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\clientballisticid.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\clientid.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\completeunit.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\..\completeunit.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\deserializationcontext.h"
 			>
 		</File>
 		<File
@@ -262,7 +262,19 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\gameobject.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\getptr.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\gnu_extensions.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\hash_list.h"
 			>
 		</File>
 		<File
@@ -302,11 +314,39 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\idbase.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\idindex.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\iheightfield.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\iindex.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\intersection.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\intmunger.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\isensorreturns.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\..\isensorreturns.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ispatial.h"
 			>
 		</File>
 		<File
@@ -354,6 +394,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\maskedptr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\mathsutils.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\naivespatial.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\naivespatial.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\oarchive-methods.h"
 			>
 		</File>
@@ -371,10 +427,6 @@
 		</File>
 		<File
 			RelativePath="..\..\order.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\ordercondition.h"
 			>
 		</File>
 		<File
@@ -462,7 +514,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\rectangleregiondata.h"
+			RelativePath="..\..\rectangleregion.h"
 			>
 		</File>
 		<File
@@ -474,15 +526,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\region.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\region.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\regiondata.h"
 			>
 		</File>
 		<File
@@ -538,6 +582,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\serializationhandler.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\serializationhandler.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\spheremap.cpp"
 			>
 		</File>
@@ -546,7 +598,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\sphereregiondata.h"
+			RelativePath="..\..\sphereregion.h"
 			>
 		</File>
 		<File
@@ -563,14 +615,6 @@
 		</File>
 		<File
 			RelativePath="..\..\topology.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\typemunger.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\unitid.cpp"
 			>
 		</File>
 		<File
@@ -695,6 +739,10 @@
 		</File>
 		<File
 			RelativePath="..\..\world.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\writer.h"
 			>
 		</File>
 	</Files>

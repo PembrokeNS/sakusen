@@ -5,7 +5,7 @@
 
 namespace sakusen {
 
-class IHeightfield {
+class LIBSAKUSEN_API IHeightfield {
   protected:
     IHeightfield() {}
     IHeightfield(const IHeightfield&) {}

@@ -184,10 +184,12 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 }
 
 #endif // LIBSAKUSEN_METHOD_DEFINITIONS
-
+// For this to be necessary, libsakusen must be a dll. 
+//Generates a load of warnings to do with explicit template instantiation if it is.
+/*
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Box<sint32>;
 #endif
-
+*/
 }
 #endif
