@@ -25,7 +25,7 @@ class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-		uint32 horizontalHeightfieldRes,
+        uint32 horizontalHeightfieldRes,
         uint32 verticalHeightfieldRes
       );
     CompleteMap(
