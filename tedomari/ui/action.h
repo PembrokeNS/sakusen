@@ -36,11 +36,9 @@ class Action : boost::noncopyable {
     virtual void internalSupplyArgument(const ActionArgument&) = 0;
     virtual void internalExecute(UI*) = 0;
     virtual const std::set<String>& internalGetStringSet() const {
-      Fatal("not supported");
-      //MSVC errors if nothing is returned.
-      std::set<String> irrelevant;
-      return irrelevant;
+      throw sakusen::Exn("tedomari::ui::Action::internalGetStringSet() not supported");
     }
+
   public:
     ActionParameterType getNextParameterType() const {
       return nextParameterType;
