@@ -79,6 +79,7 @@ class LIBSAKUSEN_API IArchive {
     IArchive(const boost::shared_array<uint8>& buffer, size_t length);
     IArchive(const boost::shared_array<const uint8>& buffer, size_t length);
     IArchive(const OArchive&);
+    IArchive& operator=(const IArchive&);
     ~IArchive();
   private:
     uint8* originalBuffer; /* owned by this */

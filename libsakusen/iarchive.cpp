@@ -80,6 +80,23 @@ IArchive::~IArchive()
   delete[] originalBuffer;
 }
 
+IArchive& IArchive::operator=(const IArchive& copy) {
+  if (this != &copy) {
+    uint8 *my_originalBuffer = 0;
+    size_t buffer_size = (copy.buffer + remainingLength) - copy.originalBuffer;
+    if (copy.originalBuffer != NULL) {
+      my_originalBuffer = new uint8[buffer_size];
+    }
+    delete[] originalBuffer;
+    originalBuffer = my_originalBuffer;
+    if (copy.originalBuffer != NULL)
+      memcpy(originalBuffer, copy.originalBuffer, buffer_size * sizeof(uint8));
+    buffer = originalBuffer + (copy.buffer - copy.originalBuffer);
+    remainingLength = copy.remainingLength;
+  }
+  return *this;
+}
+
 /** \brief Dump the buffer as hex to stdout
  *
  * \note For debugging purposes.  In particular, it can be called from a
