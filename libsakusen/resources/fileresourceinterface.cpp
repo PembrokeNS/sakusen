@@ -9,10 +9,11 @@
 #include "filewriter.h"
 #include "fileutils.h"
 #include "fileioexn.h"
+#ifdef __GNUC__
+#include "ltdl.h"
+#endif //__GNUC__: I don't want to use this with MSVC.
 
 #include <sys/stat.h>
-#include <ltdl_hacked.h>
-
 #include <pcrecpp.h>
 
 using namespace std;
@@ -304,6 +305,7 @@ void* FileResourceInterface::internalSymbolSearch(
   }
   /*Debug("modulePath='" << modulePath << "'");*/
 
+#ifdef __GNUC__
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
   lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
@@ -329,6 +331,32 @@ void* FileResourceInterface::internalSymbolSearch(
     error = "lt_dlsym(..., \"" + symbolName + "\") failed: " + lt_dlerror();
     return NULL;
   }
+#else
+  //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());	
+  //Opens the library for searching. Must be a dll or an exe.
+  /** \bug This should work for UNICODE filenames.*/
+  HMODULE moduleHandle = LoadLibrary(modulePath.c_str());
+  //Error handling for the above.
+  if(moduleHandle == NULL) {
+	char buffer[33];
+	_itoa_s(GetLastError(), buffer, 33,2);
+	*result = resourceSearchResult_error;
+	error= "LoadLibrary() failed. Error value: " + String(buffer);
+	return NULL;
+  }
+  
+  //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
+  FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());
+  //Error handling if this fails.
+  if(symbol==NULL)
+  {
+	 char buffer[33];
+	_itoa_s(GetLastError(), buffer, 33,2);
+	*result = resourceSearchResult_error;
+	error= "GetProcAddress() on "+symbolName+" in " + modulePath+ " failed. Error value: " + String(buffer);
+	return NULL;
+  }
+#endif //__GNUC__
 
   *result = resourceSearchResult_success;
   return symbol;

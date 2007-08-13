@@ -3,6 +3,10 @@
 
 #include "remoteclient.h"
 #include "server.h"
+#ifdef _MSC_VER
+#pragma warning (disable:4101)
+#endif //This is about unreferenced local variables. 
+//Called on e, below. Spurious, because the constructor to e does all the work.
 
 namespace fuseki {
 
@@ -40,6 +44,11 @@ String RemoteClient::performIntMagic(
 }
 
 }
+
+#ifdef _MSC_VER
+#pragma warning (default:4101)
+#endif //This is about unreferenced local variables. 
+//Called on e, below. Spurious, because the constructor to e does all the work.
 
 #endif // REMOTECLIENT_METHODS_H
 

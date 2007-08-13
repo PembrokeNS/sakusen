@@ -15,7 +15,9 @@ CompleteMap::CompleteMap(const MapTemplate& t) :
 CompleteMap::CompleteMap(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
-    uint16 gravity
+    uint16 gravity,
+	uint32 horizontalHeightfieldRes,
+    uint32 verticalHeightfieldRes
     ) :
   Map(topRight, bottomLeft, gravity),
   heightfield(1, 1, 1, 1)

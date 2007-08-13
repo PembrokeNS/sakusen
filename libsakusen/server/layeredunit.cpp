@@ -51,7 +51,7 @@ LayeredUnit::LayeredUnit(
   owner(),
   topLayer(new UnitCore(this, t.getStatus())),
   status(topLayer->getCore()),
-  orders(t.getStatus()->getWeaponsStatus().size()),
+  orders(static_cast<uint16>(t.getStatus()->getWeaponsStatus().size())),
   sensorReturns(10),
   dirty(false)
 {
@@ -70,7 +70,7 @@ LayeredUnit::LayeredUnit(
         startHP
       )),
   status(topLayer->getCore()),
-  orders(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size()),
+  orders(static_cast<uint16>(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size())),
   sensorReturns(10),
   dirty(false)
 {

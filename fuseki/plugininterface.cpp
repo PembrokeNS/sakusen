@@ -1,10 +1,15 @@
 #include "plugininterface.h"
-
 #include "fileutils.h"
-#include "pluginexn.h"
-#include "plugininfo.h"
+#include "plugins/pluginexn.h"
+#include "plugins/plugininfo.h"
 
-#include <ltdl.h>
+#ifdef WIN32
+	#include <windows.h>
+#endif
+
+#ifdef __GNUC__
+	#include <ltdl.h>
+#endif //The Guild does not condone ltdl
 
 using namespace std;
 
@@ -38,6 +43,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           // therein
           String& candidate = candidates.front();
           String fullPluginName = fileUtils_notDirPart(candidate);
+	#ifdef __GNUC__
           String module = candidate + FILE_SEP + fullPluginName + ".la";
           lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
           if (moduleHandle == NULL) {
@@ -61,6 +67,32 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
               lt_dlerror();
             throw PluginExn(error);
           }
+	#else
+		  //Opens the plugin.
+		  String module = candidate + FILE_SEP + fullPluginName + ".dll";
+		  //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
+		  /** \bug This should work for UNICODE filenames. */
+          HMODULE moduleHandle = LoadLibraryA(module.c_str());
+		  //Error handling for the above.
+		  if(moduleHandle == NULL) {
+			char buffer[33];
+			_itoa_s(GetLastError(), buffer, 33,2);
+			String error= "LoadLibrary() failed. Error value: " + String(buffer);
+			throw PluginExn(error);
+		  }
+		  
+		  String symbolName = "get_"+fullPluginName+"_info";
+          //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
+		  FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());
+		  //Error handling if this fails.
+		  if(symbol==NULL)
+		  {
+			char buffer[33];
+			_itoa_s(GetLastError(), buffer, 33,2);
+			String error= "GetProcAddress() on "+symbolName+" in " + module+ " failed. Error value: " + String(buffer);
+			throw PluginExn(error);
+		  }
+	#endif //__GNUC__
 
           PluginInfo* (*infoSource)() =
             reinterpret_cast<PluginInfo* (*)()>(symbol);

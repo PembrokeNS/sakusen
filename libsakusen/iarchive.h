@@ -62,7 +62,7 @@ struct Extracter {
  * Bad Thing, because the << and >> operators should only be used for formatted
  * input and output.  The correct solution is make these classes ([IO]Archive)
  * subclasses of streambuf, but I don't know how to do that.
- * Besides that, we have the problem of differnt floating point formats (solved
+ * Besides that, we have the problem of different floating point formats (solved
  * at present by storing such numbers as text).
  *
  * \see OArchive

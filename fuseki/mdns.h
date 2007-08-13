@@ -1,3 +1,7 @@
+#ifndef DISABLE_AVAHI
+#ifndef _MDNS_H
+#define _MDNS_H
+
 #include <avahi-client/client.h>
 #include <avahi-client/publish.h>
 #include <avahi-common/thread-watch.h>
@@ -56,3 +60,6 @@ class MdnsPublisher {
 };
 
 }
+
+#endif //_MDNS_H
+#endif //DISABLE_AVAHI

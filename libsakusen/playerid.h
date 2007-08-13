@@ -6,6 +6,7 @@
 #include "stringutils.h"
 #include "idbase.h"
 
+
 namespace sakusen {
 
 /** \brief Unique player identifier

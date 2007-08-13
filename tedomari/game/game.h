@@ -3,6 +3,7 @@
 
 #include <queue>
 
+#include "tedomari-global.h"
 #include "universe.h"
 #include "update.h"
 #include "resourceinterface.h"

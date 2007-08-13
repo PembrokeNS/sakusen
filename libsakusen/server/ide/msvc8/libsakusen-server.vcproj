@@ -52,7 +52,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -78,11 +78,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="stlport.5.0.lib"
+				AdditionalDependencies=" Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
 				ProgramDatabaseFile=".\Release/libsakusen.pdb"
 				OptimizeReferences="2"
@@ -153,7 +153,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\;..\..\..\"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -182,11 +182,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies=" Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
@@ -223,6 +224,30 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="plugins"
+			>
+			<File
+				RelativePath="..\..\plugins\listener.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\plugins\optioncallback.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\plugins\pluginexn.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\plugins\plugininfo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\plugins\pluginserverinterface.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\ballistic-methods.h"
 			>

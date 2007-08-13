@@ -244,7 +244,7 @@ inline hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::hash_list()
 }
 
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-inline hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::~hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>()
+inline hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::~hash_list()
 {
   clear();
 }

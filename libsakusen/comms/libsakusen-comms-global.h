@@ -6,11 +6,15 @@
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
+#if 0 //Make this one a static library also.
   #ifdef LIBSAKUSEN_COMMS_EXPORTS
     #define LIBSAKUSEN_COMMS_API __declspec(dllexport)
   #else
     #define LIBSAKUSEN_COMMS_API __declspec(dllimport)
-  #endif
+  #endif //LIBSAKUSEN_COMMS_EXPORTS
+#else 
+	#define LIBSAKUSEN_COMMS_API
+#endif //if 0, static library.
 
   //Uses the bounds checked versions of certain string functions
   #undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES

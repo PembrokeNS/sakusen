@@ -6,6 +6,7 @@
 #include <queue>
 
 #include "libsakusen-global.h"
+#include "tedomari-global.h"
 #include "converter.h"
 #include "timeutils.h"
 

@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;.;..\.."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\pcrecpp\debug\pcrecpp.lib"
+				AdditionalDependencies="Ws2_32.lib $(SolutionDir)$(ConfigurationName)\pcrecpp.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -123,7 +123,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;.;..\.."
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -143,9 +143,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\pcrecpp\Release\pcrecpp.lib stlport.5.0.lib"
+				AdditionalDependencies="Ws2_32.lib $(SolutionDir)$(ConfigurationName)\pcrecpp.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
 				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -274,6 +274,26 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\settingstree\pluginbranch-methods.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\settingstree\pluginbranch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\settingstree\pluginbranch.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\settingstree\pluginsbranch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\settingstree\pluginsbranch.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\settingstree\serverbranch.cpp"
 				>
 			</File>
@@ -298,11 +318,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\settingstree\stringlistleaf.cpp"
+				RelativePath="..\..\settingstree\stringsetleaf.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\settingstree\stringlistleaf.h"
+				RelativePath="..\..\settingstree\stringsetleaf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\settingstree\treetraits.h"
 				>
 			</File>
 			<File
@@ -323,6 +347,30 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\mdns.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\mdns.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\plugin.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\plugin.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\plugininterface.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\plugininterface.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\remoteclient-methods.h"
 			>
 		</File>
@@ -332,10 +380,6 @@
 		</File>
 		<File
 			RelativePath="..\..\remoteclient.h"
-			>
-		</File>
-		<File
-			RelativePath=".\revision.h"
 			>
 		</File>
 		<File

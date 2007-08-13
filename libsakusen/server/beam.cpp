@@ -3,6 +3,7 @@
 #include "serializationhandler.h"
 
 using namespace std;
+using namespace sakusen;
 
 using namespace sakusen::server;
 

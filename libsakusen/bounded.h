@@ -2,7 +2,6 @@
 #define LIBSAKUSEN__BOUNDED_H
 
 #include "libsakusen-global.h"
-#include "point.h"
 #include "box.h"
 #include "gameobject.h"
 

@@ -8,7 +8,10 @@
 #include "server.h"
 
 #include <sys/stat.h>
-#include <ltdl_hacked.h>
+
+#ifdef __GNUC__
+	#include <ltdl_hacked.h>
+#endif //Not condoned here.
 
 #include <cerrno>
 #include <iostream>
@@ -178,9 +181,11 @@ int startServer(const String& homePath, const Options& options)
           "*****************************" << endl;
   
   /* ltdl initialization */
+#ifdef __GNUC__
   if (lt_dlinit()) {
     Fatal("lt_dlinit() failed");
   }
+#endif
 
   /* Create the resource interface */
   /** \todo make the directories searched configurable */
@@ -310,10 +315,12 @@ int startServer(const String& homePath, const Options& options)
     server.serve();
   }
 
+#ifdef __GNUC__
   /* ltdl finalization */
   if (lt_dlexit()) {
     Fatal("lt_dlexit() failed");
   }
+#endif
 
   return EXIT_SUCCESS;
 }

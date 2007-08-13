@@ -1,6 +1,7 @@
 #ifndef SERVERINTERFACE_H
 #define SERVERINTERFACE_H
 
+#include "tedomari-global.h"
 #include "timeutils.h"
 #include "socket.h"
 #include "game/game.h"

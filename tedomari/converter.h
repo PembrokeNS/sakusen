@@ -2,6 +2,7 @@
 #define CONVERTER_H
 
 #include "libsakusen-global.h"
+#include "tedomari-global.h"
 
 #include <boost/utility.hpp>
 

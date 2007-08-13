@@ -25,7 +25,7 @@ namespace resources {
 size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
 {
 #ifdef WIN32
-  assert(bufferLen <= numeric_limits<sint32>::max());
+  assert(static_cast<sint32>(bufferLen) <= numeric_limits<sint32>::max());
   int retVal = _read(fd, buffer, (sint32)bufferLen);
 #else
   /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the

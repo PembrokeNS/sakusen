@@ -16,7 +16,7 @@ class PluginBranch : public Branch {
     typedef boost::shared_ptr<PluginBranch> Ptr;
     typedef boost::shared_ptr<const PluginBranch> ConstPtr;
 
-    PluginBranch(
+    PluginBranch::PluginBranch(
         const String& name,
         Plugin* plugin,
         Branch* parent,

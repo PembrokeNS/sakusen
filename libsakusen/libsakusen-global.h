@@ -28,7 +28,7 @@
     #define LIBSAKUSEN_API   __declspec(dllimport)
     #define LIBSAKUSEN_EXIMP
   #endif
-#else 
+#else //Blank defines for static lib.
 	#define LIBSAKUSEN_API 
 	#define LIBSAKUSEN_EXIMP
     #define LIBSAKUSEN_METHOD_DEFINITIONS
@@ -38,7 +38,8 @@
    * This is mostly to do with stuff from std, but in at least one case it 
    * was very important.  In the long run we should do without disabling 
    * this warning. */
-  #pragma warning(disable: 4251 4715)
+//  #pragma warning(disable: 4251)
+  #pragma warning(disable: 4715)
 
   /* 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */

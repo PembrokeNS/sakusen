@@ -37,6 +37,7 @@ class Action : boost::noncopyable {
     virtual void internalExecute(UI*) = 0;
     virtual const std::set<String>& internalGetStringSet() const {
       Fatal("not supported");
+      return NULL;
     }
   public:
     ActionParameterType getNextParameterType() const {

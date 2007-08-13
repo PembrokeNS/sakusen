@@ -81,6 +81,6 @@ size_t File::getWholeFile(
     throw FileIOExn("fflush");
   }
 
-  return fileUtils_read(fd, buffer, length);
+  return fileUtils_read(fd, buffer, static_cast<size_t>(length));
 }
 

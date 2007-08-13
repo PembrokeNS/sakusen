@@ -160,4 +160,3 @@ IArchive& IArchive::operator>>(IArchive& i)
   advance(length);
   return *this;
 }
-

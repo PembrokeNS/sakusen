@@ -16,7 +16,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -52,7 +52,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\..\..\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -80,11 +80,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\pcrecpp\Release\pcrecpp.lib stlport.5.0.lib"
+				AdditionalDependencies="pcrecpp.lib libsakusen.lib Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(ConfigurationName)&quot;;..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
 				ProgramDatabaseFile=".\Release/libsakusen.pdb"
 				OptimizeReferences="2"
@@ -154,7 +154,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\STLport\STLport;..\..\..\..\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -183,12 +183,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\pcrecpp\debug\pcrecpp.lib"
+				AdditionalDependencies="pcrecpp.lib libsakusen.lib Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\..\STLport\lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(ConfigurationName)&quot;;..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
@@ -226,7 +226,23 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\file.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\file.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\fileioexn.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\filereader.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\filereader.h"
 			>
 		</File>
 		<File
@@ -246,31 +262,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\filewriter.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\filewriter.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\libsakusen-resources-global.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfile.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfile.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfilereader.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfilereader.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfilewriter.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\lockingfilewriter.h"
 			>
 		</File>
 	</Files>

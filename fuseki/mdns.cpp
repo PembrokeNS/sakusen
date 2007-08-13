@@ -1,3 +1,5 @@
+#ifndef DISABLE_AVAHI
+
 #include "mdns.h"
 #include <iostream>
 
@@ -168,3 +170,6 @@ MdnsPublisher::~MdnsPublisher() {
 }
 
 }
+
+#endif //DISABLE_AVAHI
+

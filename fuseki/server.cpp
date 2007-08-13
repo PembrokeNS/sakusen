@@ -8,15 +8,23 @@
 #include "socketexn.h"
 #include "resourceinterface-methods.h"
 #include "completeworld.h"
-#include "pluginexn.h"
 #include "fuseki-global.h"
 #include "settingstree/stringsetleaf.h"
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
 #include "timeutils.h"
-#include "revision.h"
+
+//In libsakusen/server.
+#include "plugins/pluginexn.h"
+
+#ifndef _MSC_VER
+	#include "revision.h"
+#else
+    #define REVISION "0.1"
+#endif
+
 #ifndef DISABLE_AVAHI
-#include "mdns.h"
+	#include "mdns.h"
 #endif
 
 #include <time.h>

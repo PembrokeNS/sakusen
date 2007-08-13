@@ -1,4 +1,5 @@
 #include "libsakusen-global.h"
+#include "tedomari-global.h"
 #include "stringutils.h"
 #include "partialworld.h"
 #include "libsakusen-comms-global.h"
@@ -10,7 +11,6 @@
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 
-#include "tedomari-global.h"
 #include "asynchronousiohandler.h"
 #include "revision.h"
 #include "serverinterface.h"

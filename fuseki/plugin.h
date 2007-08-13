@@ -6,10 +6,13 @@
 #include <stack>
 #include <boost/variant.hpp>
 
-#include "plugininfo.h"
+//In libsakusen/server directory.
+#include "plugins/plugininfo.h"
+#include "plugins/optioncallback.h"
+
 #include "settingstree/leaf.h"
 #include "settingstree/pluginbranch.h"
-#include "optioncallback.h"
+
 
 namespace fuseki {
 

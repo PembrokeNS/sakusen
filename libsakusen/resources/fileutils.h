@@ -17,6 +17,7 @@
 #define NativeStructStat struct _stat
 #define S_ISDIR(mode) (((mode) & _S_IFDIR) != 0)
 #define NativeUnlink(a) _unlink(a)
+#define NativeFtell64(a) _ftelli64(a)
 #define NativeFileno(a) _fileno(a)
 #else
 #include <dirent.h>

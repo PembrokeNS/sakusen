@@ -17,7 +17,8 @@ class UpdatedUnit : public CompleteUnit {
   public:
     UpdatedUnit(const CompleteUnit& copy) :
       CompleteUnit(copy),
-      orders(copy.getStatus().getWeaponsStatus().size()),
+	  orders(static_cast<uint16>(copy.getStatus().getWeaponsStatus().size())),
+	  
       altered(false)
     {}
     virtual ~UpdatedUnit() {}

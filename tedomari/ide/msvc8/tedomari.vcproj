@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\pcrecpp;.;..\.."
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;.;..\..;..\..\..\externals"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,7 +65,7 @@
 				AdditionalOptions="&#x0D;&#x0A;"
 				AdditionalDependencies="..\..\..\pcrecpp\debug\pcrecpp.lib ws2_32.lib ..\..\SDL\lib\SDL.lib ..\..\SDL\lib\SDLmain.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared-g&quot;;..\..\..\STLport\lib;..\..\SDL\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -124,7 +124,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\STLport\STLport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\pcrecpp;.;..\.."
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;.;..\..;..\..\..\externals"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_UNIX_SOCKETS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -145,7 +145,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\..\..\pcrecpp\debug\pcrecpp.lib ws2_32.lib ..\..\SDL\lib\SDL.lib ..\..\SDL\lib\SDLmain.lib stlport.5.0.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\..\STLport\build\lib\obj\vc8\shared&quot;;..\..\..\STLport\lib;..\..\SDL\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
 				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -185,6 +185,26 @@
 		<Filter
 			Name="ui"
 			>
+			<File
+				RelativePath="..\..\ui\action.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\action.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\actionargument.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\actionparametertype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\actiontarget.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\ui\alert.h"
 				>
@@ -262,6 +282,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\ui\label.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\label.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\ui\layout.h"
 				>
 			</File>
@@ -298,7 +326,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\ui\regexentrybox.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\regexentrybox.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\ui\region.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\textbox.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\textbox.h"
 				>
 			</File>
 			<File
@@ -307,6 +351,10 @@
 			</File>
 			<File
 				RelativePath="..\..\ui\ui.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\uiexceptions.h"
 				>
 			</File>
 			<Filter

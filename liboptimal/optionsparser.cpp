@@ -419,10 +419,7 @@ bool OptionsParser::parse(
                 }
                 break;
               default:
-                errors.push_back(str(
-                      format("internal error: unexpected OptionType %d") %
-                      shortOptionTypes[*optionChar]
-                    ));
+                errors.push_back(str(format("internal error: unexpected OptionType %1%") % shortOptionTypes[*optionChar]));
             }
           } else {
             errors.push_back(
