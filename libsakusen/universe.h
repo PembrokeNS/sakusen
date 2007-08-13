@@ -47,9 +47,9 @@ class LIBSAKUSEN_API Universe : boost::noncopyable {
      * This method finishes off the initialization of the Universe by resolving
      * all the names that have been inserted into it into Ids.
      *
-     * If an unresolvable name is encoutered then it is returned (in this case
-     * the Universe should *not* be used for anything).  Otherwise,
-     * the null String is returned.
+     * If an unresolvable name is encountered then it is returned (in this case
+     * the Universe should *not* be used for anything).  Otherwise, the null
+     * String is returned.
      */
     String resolveNames();
     
