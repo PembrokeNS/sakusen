@@ -88,11 +88,7 @@ Server::Server(
   assert(reason == "");
   reason = settings->changeRequest(
       "server:application:revision",
-#if defined(REVISION)
-      numToString(REVISION),
-#else
-      "unknown",
-#endif
+      REVISION,
       this
     );
   assert(reason == "");

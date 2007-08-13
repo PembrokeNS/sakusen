@@ -183,9 +183,7 @@ int main(int argc, char const* const* argv)
 
   if (options.version) {
     cout << APPLICATION_NAME " " APPLICATION_VERSION;
-#if defined(REVISION)
     cout << " (revision " << REVISION << ")";
-#endif
     cout << endl;
     exit(EXIT_SUCCESS);
   }

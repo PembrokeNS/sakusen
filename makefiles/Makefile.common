@@ -310,23 +310,27 @@ $(MAKEFRAGS): .makefrags/%.makefrag:
 
 # If we're in a working copy then we can make a revision.h containing the
 # current revision number if so desired (this should be automatically
-# generated iff it's included from anywhere).  If we're not in a working copy,
-# then we don't define anything.
+# generated iff it's included from anywhere).
 
-revision.h: $(wildcard $(top_srcdir).svn/entries)
-	if test -f $(top_srcdir).svn/entries ; \
+# Wildcarding these deps makes the file be regenerated after an update but
+# doesn't break make when they don't exist.
+revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/HEAD)
+	@if test -f $(top_srcdir).svn/entries ; \
 	then \
 		REVISION=`svn info -R $(top_srcdir) | grep "^Revision:" | \
 			awk '{print $$2}' | sort -nr | head -n 1`; \
-		if test "x$$REVISION" != "x"; \
-		then \
-			echo '#define REVISION ' "$$REVISION" > $@; \
-		else \
-		echo '' > $@; \
-		fi; \
+	elif test -d $(top_srcdir).git ; \
+	then \
+		REVISION=`git-rev-list --max-count=1 HEAD`; \
 	else \
-		echo '' > $@; \
-	fi
+		REVISION='unknown' ; \
+	fi; \
+	if test "x$$REVISION" != "x"; \
+	then \
+		echo "#define REVISION \"$$REVISION\"" > $@; \
+	else \
+	echo '' > $@; \
+	fi;
 
 .PHONY: \
 		all all-nonrecursive $(ALL_RECURSIONS) \
