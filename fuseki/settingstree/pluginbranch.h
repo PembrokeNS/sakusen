@@ -16,12 +16,12 @@ class PluginBranch : public Branch {
     typedef boost::shared_ptr<PluginBranch> Ptr;
     typedef boost::shared_ptr<const PluginBranch> ConstPtr;
 
-    PluginBranch::PluginBranch(
+    PluginBranch(
         const String& name,
         Plugin* plugin,
         Branch* parent,
         Server* server
-      );
+    );
   private:
     Plugin* plugin;
   public:
@@ -29,7 +29,7 @@ class PluginBranch : public Branch {
     void addLeaf(
         const String& name,
         typename boost::call_traits<T>::param_type defaultVal
-      );
+    );
 };
 
 }}
