@@ -23,11 +23,7 @@ bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
 template<typename T>
 class MaskedPtr {
   friend bool operator==<T>(const MaskedPtr& left, const MaskedPtr& right);
-#ifdef _MSC_VER //STLport's hash is a struct, not a class. 
-  friend struct std::hash < MaskedPtr<T> >;
-#else
-  friend class __gnu_cxx::hash<MaskedPtr<T> >;
-#endif //_MSC_VER
+  friend struct __gnu_cxx::hash < MaskedPtr<T> >;
   public:
     MaskedPtr(const T* p) : ptr(p) {}
     MaskedPtr(const boost::shared_ptr<T>& p) : ptr(p.get()) {}
@@ -52,18 +48,14 @@ inline bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right) {
 }
 
 namespace __gnu_cxx {
-#ifdef _MSC_VER //STLport's hash is a struct, not a class. 
-	template<typename T>
-	struct hash<sakusen::MaskedPtr<T> > {
-#else
-	template<typename T>
-	class hash<sakusen::MaskedPtr<T> > {
-#endif //_MSC_VER
-	  public:
-		inline size_t operator()(const sakusen::MaskedPtr<T>& p) const {
-		  return reinterpret_cast<size_t>(p.ptr);
-		}
-	};
+
+  template<typename T>
+  struct hash<sakusen::MaskedPtr<T> > {
+    public:
+    inline size_t operator()(const sakusen::MaskedPtr<T>& p) const {
+      return reinterpret_cast<size_t>(p.ptr);
+    }
+  };
 
 }
 
