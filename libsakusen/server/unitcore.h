@@ -19,6 +19,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     typedef boost::shared_ptr<UnitCore> Ptr;
     typedef boost::shared_ptr<const UnitCore> ConstPtr;
   public:
+    /** \brief Usual ctor, specifying everything. */
     UnitCore(
         LayeredUnit* outerUnit,
         const UnitTypeId& startType,
@@ -27,6 +28,16 @@ class UnitCore : public UnitLayer, public UnitStatus {
         const Point<sint16>& startVelocity,
         const HitPoints startHP
       );
+
+    /** \brief Abbreviated ctor, getting HitPoints from the type. */
+    UnitCore(
+        LayeredUnit* outerUnit,
+        const UnitTypeId& startType,
+        const Point<sint32>& startPosition,
+        const Orientation& startOrientation,
+        const Point<sint16>& startVelocity
+      );
+
     UnitCore(LayeredUnit* outerUnit, const UnitStatus& status);
     ~UnitCore();
   private:

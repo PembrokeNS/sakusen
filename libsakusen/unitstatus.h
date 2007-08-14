@@ -34,6 +34,13 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     ); /**< This is a simpler version of the above constructor for when you
          don't need to specify the extra data */
     UnitStatus(
+      UnitTypeId startType,
+      const Point<sint32>& startPosition,
+      const Orientation& startOrientation,
+      const Point<sint16>& startVelocity
+    ); /**< This is an even simpler version of the above constructor and will
+         set the starting hit points from the default for that unit type. */
+    UnitStatus(
       const Universe::ConstPtr& universe,
       UnitTypeId startType,
       const Point<sint32>& startPosition,

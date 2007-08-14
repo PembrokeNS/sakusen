@@ -158,7 +158,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "commander" /* name */,
         UnitTypeData(
-          100 /* maxHitPoints */,
+          HitPoints(100) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(1000,1000,1000) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 400))
@@ -190,7 +190,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "factory" /* name */,
         UnitTypeData(
-          100 /* maxHitPoints */,
+          HitPoints(100) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(5000,5000,5000) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
@@ -220,7 +220,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "grunt" /* name */,
         UnitTypeData(
-          10 /* maxHitPoints */,
+          HitPoints(10) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(500,500,500) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
@@ -250,7 +250,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "spider" /* name */,
         UnitTypeData(
-          10 /* maxHitPoints */,
+          HitPoints(10) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(2000,2000,250) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))

@@ -24,6 +24,20 @@ UnitCore::UnitCore(
   initializeWeapons();
 }
 
+UnitCore::UnitCore(
+    LayeredUnit* o,
+    const UnitTypeId& startType,
+    const Point<sint32>& startPosition,
+    const Orientation& startOrientation,
+    const Point<sint16>& startVelocity
+  ) :
+  UnitStatus(startType, startPosition, startOrientation, startVelocity),
+  outerUnit(o),
+  owner()
+{
+  initializeWeapons();
+}
+
 UnitCore::UnitCore(LayeredUnit* o, const UnitStatus& status) :
   UnitStatus(status),
   outerUnit(o),
@@ -92,34 +106,37 @@ bool UnitCore::kill(HitPoints excessDamage) {
 }
 
 void UnitCore::damage(HitPoints amount) {
-  if (0 == amount) {
-    return;
-  }
-  
-  if (hitPoints <= amount) {
-    if (outerUnit->kill(amount-hitPoints)) {
-      return;
+  if (0 != amount) {
+    if (hitPoints <= amount) {
+      if (outerUnit->kill(amount-hitPoints)) {
+        return;
+      }
+    } else {
+      hitPoints -= amount;
     }
-  } else {
-    hitPoints -= amount;
+    outerUnit->setDirty();
   }
-  outerUnit->setDirty();
 }
 
 void UnitCore::repair(HitPoints amount, bool superhealth) {
-  if (0 == amount) {
-    return;
-  }
+  if (0 != amount) {
+    HitPoints max = getMaxHitPoints();
   
-  if (superhealth) {
-    hitPoints += amount;
-  } else {
-    if (hitPoints + amount > getMaxHitPoints())
-      hitPoints = getMaxHitPoints();
-    else
+    if (superhealth) {
       hitPoints += amount;
+    } else if (hitPoints + amount > max) {
+      if (hitPoints < max)
+        hitPoints = max;
+      /* o/w, superhealth is false but hitPoints is already more than the
+       * maximum, so do nothing.
+       */
+    }
+    else
+    {
+      hitPoints += amount;
+    }
+    outerUnit->setDirty();
   }
-  outerUnit->setDirty();
 }
 
 /** \brief Change the type of this unit
@@ -137,14 +154,17 @@ void UnitCore::changeType(
     switch (hpAlteration)
     {
       case scaleHitPoints:
+        /** \todo Edit the HitPoints class to make this unnecessary. */
         /* The cast to uint64 is intended to prevent overflow */
-        hitPoints = static_cast<HitPoints>((static_cast<uint64>(hitPoints) *
-          static_cast<uint64>(newType->getDynamicData().getMaxHitPoints())) /
-          static_cast<uint64>(type->getDynamicData().getMaxHitPoints()));
+        hitPoints = HitPoints(uint32(
+              (uint64(hitPoints) *
+              uint64(newType->getDynamicData().getMaxHitPoints())) /
+              uint64(type->getDynamicData().getMaxHitPoints())
+            ));
         break;
       case fixHitPoints:
         hitPoints =
-          static_cast<HitPoints>(std::min(hitPoints, newType->getDynamicData().getMaxHitPoints()));
+          std::min<HitPoints>(hitPoints, newType->getDynamicData().getMaxHitPoints());
         break;
       default:
         Debug("Invalid hitpointAlteration");

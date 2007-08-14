@@ -51,21 +51,15 @@ UnitStatus::UnitStatus(
   position(startPosition),
   orientation(startOrientation),
   velocity(startVelocity),
+  hitPoints(startHP),
   radarIsActive(false),
   sonarIsActive(false),
   weaponsStatus()
 {
   assert(world != NULL);
-  initializeWeapons(getTypePtr());
-  if (startHP == HitPoints(-1)) {
-    hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
-  } else {
-    hitPoints = startHP;
-  }
 }
 
 UnitStatus::UnitStatus(
-    const Universe::ConstPtr& universe,
     UnitTypeId startType,
     const Point<sint32>& startPosition,
     const Orientation& startOrientation,
@@ -79,9 +73,28 @@ UnitStatus::UnitStatus(
   sonarIsActive(false),
   weaponsStatus()
 {
+  assert(world != NULL);
+  hitPoints = getTypePtr()->getDynamicData().getMaxHitPoints();
+  initializeWeapons(getTypePtr());
+}
+
+UnitStatus::UnitStatus(
+    const Universe::ConstPtr& universe,
+    UnitTypeId startType,
+    const Point<sint32>& startPosition,
+    const Orientation& startOrientation,
+    const Point<sint16>& startVelocity
+  ) :
+  type(startType),
+  position(startPosition),
+  orientation(startOrientation),
+  velocity(startVelocity),
+  hitPoints(universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints()),
+  radarIsActive(false),
+  sonarIsActive(false),
+  weaponsStatus()
+{
   initializeWeapons(universe->getUnitTypePtr(type));
-  hitPoints =
-    universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints();
 }
 
 /** \brief Create default statuses for each of the weapons */

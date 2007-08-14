@@ -13,7 +13,7 @@ HitPoints BuildingLayer::build(HitPoints amount)
   if (builtHitPoints >= nextLayer->getMaxHitPoints()) {
     /* We're finished, remove ourselves */
     getOuterUnit()->removeLayer(this);
-    return 0;
+    return HitPoints(0);
   }
 
   if (builtHitPoints + amount > nextLayer->getMaxHitPoints()) {
@@ -112,7 +112,7 @@ void Builder::onFire(
               return;
             }
           }
-          bL->build(10);
+          bL->build(HitPoints(10));
         } else {
           Debug("invalid building target");
         }
@@ -153,7 +153,7 @@ void Shell::onCollision(const Point<sint32>& pos)
 void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
 {
   cout << "Explosion engulfed someone" << endl;
-  victim->damage(100);
+  victim->damage(HitPoints(100));
 }
 
 bool Paralyzer::aim(

@@ -86,6 +86,7 @@ class LIBSAKUSEN_API Point {
     Point(T a, T b, T c): x(a), y(b), z(c) {}
     /** \brief Simple copy constructor for the sake of swig's sanity */
     Point(const Point<T>& p) : x(p.x), y(p.y), z(p.z) {}
+#ifndef SWIG
     /** \brief Implicit copy constructor for when type U casts to type T
      * without possibility of loss */
     template <typename U>
@@ -100,6 +101,7 @@ class LIBSAKUSEN_API Point {
         const Point<U>& p,
         typename boost::disable_if<typename LosslessCast<T,U>::type,int>::type=0
       ) : x(T(p.x)), y(T(p.y)), z(T(p.z)) {}
+#endif /*SWIG*/
     ~Point() {}
 
     /** \brief Construct the bottom-left-most Point.

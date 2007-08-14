@@ -11,10 +11,7 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
-/** \brief Spawn a unit on the map.
- *
- * This is the most likely method to call from module code when creating a
- * unit.  The other overload may also be appropriate. */
+/** \brief Spawn a unit on the map, specifying the hp. */
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerId owner,
     const UnitTypeId type,
@@ -28,6 +25,26 @@ Ref<LayeredUnit> LayeredUnit::spawn(
   Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
   Ptr unit(new LayeredUnit(
         type, startPosition, startOrientation, startVelocity, startHP
+      ));
+  return world->addUnit(unit, owner);
+}
+
+/** \brief Spawn a unit on the map, with default hp.
+ *
+ * This is the most likely method to call from module code when creating a
+ * unit.  The other overload may also be appropriate. */
+Ref<LayeredUnit> LayeredUnit::spawn(
+    const PlayerId owner,
+    const UnitTypeId type,
+    const Point<sint32>& startNear,
+    const Orientation& startOrientation,
+    const Point<sint16>& startVelocity
+  )
+{
+  assert(type);
+  Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
+  Ptr unit(new LayeredUnit(
+        type, startPosition, startOrientation, startVelocity
       ));
   return world->addUnit(unit, owner);
 }
@@ -68,6 +85,23 @@ LayeredUnit::LayeredUnit(
   topLayer(new UnitCore(
         this, startType, startPosition, startOrientation, startVelocity,
         startHP
+      )),
+  status(topLayer->getCore()),
+  orders(static_cast<uint16>(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size())),
+  sensorReturns(10),
+  dirty(false)
+{
+}
+
+LayeredUnit::LayeredUnit(
+    const UnitTypeId& startType,
+    const Point<sint32>& startPosition,
+    const Orientation& startOrientation,
+    const Point<sint16>& startVelocity
+  ) :
+  owner(),
+  topLayer(new UnitCore(
+        this, startType, startPosition, startOrientation, startVelocity
       )),
   status(topLayer->getCore()),
   orders(static_cast<uint16>(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size())),

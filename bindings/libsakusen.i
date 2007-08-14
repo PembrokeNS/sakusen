@@ -9,6 +9,8 @@
 %perlcode %{
 $VERSION = 0.01;
 %}
+
+%rename(numify) *::operator uint32;
 #endif
 
 #ifdef SWIGCSHARP
@@ -30,9 +32,13 @@ $VERSION = 0.01;
 %rename(Item) *::operator[];
 %rename(Or) *::operator|;
 %rename(Minus) *::operator-;
+%rename(MinusEquals) *::operator-=;
 %rename(Times) *::operator*;
+%rename(TimesEquals) *::operator*=;
 %rename(Over) *::operator/;
+%rename(OverEquals) *::operator/=;
 %rename(Plus) *::operator+;
+%rename(PlusEquals) *::operator+=;
 %rename(Equals) *::operator==;
 %ignore *::operator!=;
 %rename(Leq) *::operator<=;
@@ -56,7 +62,6 @@ $VERSION = 0.01;
 /* tiny files */
 %include "angle.h"
 %include "revision.h"
-%include "hitpoints.h"
 %include "gameobject.h"
 %include "topology.h"
 %{
@@ -108,6 +113,11 @@ namespace sakusen {
 #include "isensorreturns.h"
 %}
 %import "isensorreturns.h"
+
+%include "hitpoints.h"
+%{
+#include "hitpoints.h"
+%}
 
 %include "rectangle.h"
 %{

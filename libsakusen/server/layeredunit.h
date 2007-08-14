@@ -47,14 +47,22 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const Point<sint16>& startVelocity,
       const HitPoints startHP = HitPoints(-1)
     );
+
+    static Ref<LayeredUnit> spawn(
+      const PlayerId owner,
+      const UnitTypeId type,
+      const Point<sint32>& startNear,
+      const Orientation& startOrientation,
+      const Point<sint16>& startVelocity
+    );
     static Ref<LayeredUnit> spawn(const PlayerId owner, const UnitTemplate& t);
   private:
     /** Constructor used by LayeredUnit::spawn during initial construction
      * of the Map */
     LayeredUnit(const UnitTemplate&);
-    /* Constructor intended to be used when spawning a Unit on the map -
+    /** Constructor intended to be used when spawning a Unit on the map -
      * this is called only by LayeredUnit::spawn, and is thus private.
-     * owner is expected to be set after construction since it should not
+     * \p owner is expected to be set after construction since it should not
      * be set until *after* the Unit has been added to the World. */
     LayeredUnit(
       const UnitTypeId& startType,
@@ -62,6 +70,13 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const Orientation& startOrientation,
       const Point<sint16>& startVelocity,
       const HitPoints startHP
+    );
+    /** Another version of the same constructor for the other LayeredUnit::spawn. */
+    LayeredUnit(
+      const UnitTypeId& startType,
+      const Point<sint32>& startPosition,
+      const Orientation& startOrientation,
+      const Point<sint16>& startVelocity
     );
   public:
     ~LayeredUnit();
