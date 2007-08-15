@@ -311,7 +311,7 @@ void* FileResourceInterface::internalSymbolSearch(
   lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
   if (moduleHandle == NULL) {
     *result = resourceSearchResult_error;
-    error = "lt_dlopen() failed: " + lt_dlerror();
+    error = String("lt_dlopen() failed: ") + lt_dlerror();
     return NULL;
   }
   /* We could make the module resident (it cannot be closed) so as to avoid
@@ -395,7 +395,7 @@ bool FileResourceInterface::internalSave(
     }
 
     if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(shortName)) {
-      error = "Name '" + shortName + "' contains invalid characters and "
+      error = String("Name '") + shortName + "' contains invalid characters and "
         "cannot be used as part of a filename.  The name must match " +
         FILENAME_REGEX + ".";
       return true;
