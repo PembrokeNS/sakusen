@@ -5,3 +5,6 @@ LIBS = -lstdc++
 LIB_DEP_NAMES = libsakusen
 INCLUDE =
 
+ifneq ($(ENABLE_AVAHI),yes)
+  EXCLUDE_FILES := mdns.cpp mdns.h
+endif

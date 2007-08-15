@@ -2,18 +2,17 @@
 #ifndef _MDNS_H
 #define _MDNS_H
 
-#include <avahi-client/client.h>
-#include <avahi-client/publish.h>
-#include <avahi-common/thread-watch.h>
 #include "libsakusen-global.h"
+#include "servedgame.h"
+#include <boost/shared_ptr.hpp>
 /** \file
  *
  * Negotiate with Avahi to advertise games via mDNS.
  *
- * For LAN games, clients need a way of finding the server. mDNS (multicast
- * DNS) is a service discovery or rendezvous protocol. Avahi provides both a
- * library for talking mDNS directly, and a daemon that handles all the details
- * of the protocol on servers' and clients' behalf.
+ * Clients need a way of finding the server. mDNS (multicast DNS) is a service
+ * discovery or rendezvous protocol. Avahi provides both a library for talking
+ * mDNS directly, and a daemon that handles all the details of the protocol on
+ * servers' and clients' behalf.
  *
  * There are some features in mDNS that have interesting edge cases that
  * slightly break if you have more than one mDNS endpoint on the same computer,
@@ -27,7 +26,13 @@
  * \todo Fall back to libavahi-core if there is no avahid.
  */
 
-namespace fuseki {
+struct AvahiClient;
+struct AvahiEntryGroup;
+struct AvahiThreadedPoll;
+
+namespace sakusen {
+namespace server {
+
 /** \brief RAII interface to Avahi.
  *
  * Construct an instance to start advertising the service. This will also start
@@ -36,30 +41,40 @@ namespace fuseki {
  * accessed from only a single thread, but you can have as many instances as
  * you like, each accessed from a possibly different thread. Each will get its
  * own Avahi event loop thread.
+ *
+ * \todo Pass the AVAHI_PUBLISH_UPDATE flag to avahi_entry_group_add_service()
+ * when the portno is updated, and use avahi_entry_group_update_txt() when
+ * anything else is changed.
  */
 class MdnsPublisher {
   public:
-    MdnsPublisher(const String name="sakusen", uint32 portno=1776);
+    MdnsPublisher(boost::shared_ptr<ServedGame const>);
     ~MdnsPublisher();
-    /** \brief Internal function. Do not call from outside this file.
-     * 
-     * This function has to be public because internal non-methods need to call
-     * it, but you should not. It creates the service for Avahi to advertise,
-     * from the information you have already given the ctor.
-     */
+    void game_changed();
     void create_services(AvahiClient *c);
-  private:
-    uint32 port;
-    /** The name of the server, as supplied to Avahi.
+
+    /** \brief Access the internal ServedGame.
      *
-     * Needs to be a cstr, I'm afraid.
+     * This is for convenience, so users of this class can throw away their
+     * pointer to the ServedGame once they have used it to init this class, and
+     * then get it back later to update it. Don't forget to call game_changed()
+     * after updating it.
      */
-    char * game_name;
+    boost::shared_ptr<ServedGame> const getGame() { return boost::const_pointer_cast<ServedGame,ServedGame const>(game); }
+  private:
+    boost::shared_ptr<ServedGame const> const game;
+    /** We need this to pass to avahi.
+     *
+     * It needs to be a member rather than local to the function it is used
+     * because we can't free it until Avahi is shut down in the dtor.
+     */
+    char *game_name;
     AvahiClient *client;
+    AvahiEntryGroup *group;
     AvahiThreadedPoll *poll;
 };
 
-}
+}}
 
 #endif //_MDNS_H
 #endif //DISABLE_AVAHI

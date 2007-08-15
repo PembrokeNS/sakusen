@@ -8,6 +8,7 @@
 #include "socketexn.h"
 #include "resourceinterface-methods.h"
 #include "completeworld.h"
+#include "servedgame.h"
 #include "fuseki-global.h"
 #include "settingstree/stringsetleaf.h"
 #include "settingstree/intleaf.h"
@@ -467,6 +468,8 @@ void Server::serve()
 {
   uint8 buf[BUFFER_LEN];
   struct timeval sleepTime = {0, MICRO/10};
+  /** \todo Get the TCP port number and game name to the publisher. */
+  shared_ptr<ServedGame> game_to_advertise(new ServedGame("Game name", 1723));
   /** \bug signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
@@ -486,10 +489,9 @@ void Server::serve()
   /* A bool to get us out of the loop when it is time to start the game */
   bool startGame = false;
   
-  /* Start up the mDNS publisher. */
-  /** \todo Get the TCP port number and game name to the publisher. */
 #ifndef DISABLE_AVAHI
-  MdnsPublisher publisher("Game name", 1723);
+  /* Start up the mDNS publisher. */
+  MdnsPublisher publisher(game_to_advertise);
 #endif
 
   /* To begin with we have the game init loop */
@@ -624,6 +626,10 @@ void Server::serve()
           "game:universe:hash", universe->getHash(), this
         );
       assert(reason == "");
+      game_to_advertise->setUniverse(universe->getInternalName());
+#ifndef DISABLE_AVAHI
+      publisher.game_changed();
+#endif
     }
     
     if (requestedMap != NULL) {
@@ -634,6 +640,11 @@ void Server::serve()
         );
       assert(reason == "");
       setMapPlayMode(0);
+
+      game_to_advertise->setMap(map->getInternalName());
+#ifndef DISABLE_AVAHI
+      publisher.game_changed();
+#endif
     }
 
     if (!pluginsToRemove.empty()) {

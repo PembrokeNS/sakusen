@@ -1,8 +1,13 @@
 BIN = libsakusen-server-test
-LIBS = -lrt
+LIBS := -lrt
 LIB_DEP_NAMES = libltdl_hacked libsakusen libsakusen-server libsakusen-comms libsakusen-resources
 THIS_CXXFLAGS =
 THIS_LDFLAGS = -no-install
+
+ifeq ($(ENABLE_AVAHI),yes)
+  LIBS += $(shell pkg-config --libs avahi-client)
+  THIS_CXXFLAGS += $(shell pkg-config --cflags avahi-client)
+endif
 
 test-nonrecursive: $(BIN)
 	./$(BIN)
