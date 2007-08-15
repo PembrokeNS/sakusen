@@ -349,13 +349,15 @@ void UI::executeRegex(const String& regex)
       pendingAction->getNextParameterType() ==
         actionParameterType_stringFromSet) {
     const set<String>& options = pendingAction->getStringSet();
-    for (set<String>::iterator i=options.begin(); i != options.end(); ++i ) {
+    for (set<String>::const_iterator i=options.begin(); i != options.end(); ++i ) {
       if (r.PartialMatch(*i)) {
         supplyActionArg(ActionArgument(*i));
         return;
       }
     }
-    alert(Alert("No option matched regex"));
+    //alert(Alert("No option matched regex"));
+    //Please stop writing lines like this. They are silly.
+    alert("No option matched regex");
   }
 }
 

@@ -39,7 +39,8 @@
    * was very important.  In the long run we should do without disabling 
    * this warning. */
 //  #pragma warning(disable: 4251)
-  #pragma warning(disable: 4715)
+  #pragma warning(disable: 4715 4345)
+   /* 4345 is a warning about a change from VS 2003. We don't care. 
 
   /* 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */

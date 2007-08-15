@@ -1,7 +1,6 @@
 #include "serverinterface.h"
 
 #include "stringutils.h"
-#include "libsakusen-comms-global.h"
 #include "timeutils.h"
 #include "udplisteningsocket.h"
 #include "unixdatagramlisteningsocket.h"
@@ -13,9 +12,8 @@
 #include <sstream>
 
 using namespace std;
-
 using namespace sakusen;
-using namespace sakusen::comms;
+using namespace comms;
 using namespace tedomari;
 using namespace tedomari::game;
 
@@ -362,4 +360,3 @@ bool ServerInterface::setClientSetting(
       "clients:" + id.toString() + delim + setting, value
     );
 }
-

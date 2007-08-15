@@ -53,7 +53,7 @@
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_CLIENT_EXPORTS;WIN32"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_CLIENT_EXPORTS;WIN32"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"

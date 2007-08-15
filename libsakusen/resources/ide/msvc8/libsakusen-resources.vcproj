@@ -53,7 +53,7 @@
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
 				StringPooling="true"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"

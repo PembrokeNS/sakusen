@@ -124,7 +124,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DISABLE_UNIX_SOCKETS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

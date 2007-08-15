@@ -49,7 +49,7 @@ using namespace tedomari;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 
-#ifndef DIABLE_SDL
+#ifndef DISABLE_SDL
   using namespace tedomari::ui::sdl;
   #ifndef DISABLE_CAIRO
     using namespace tedomari::ui::sdl::cairo;

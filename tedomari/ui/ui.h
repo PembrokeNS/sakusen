@@ -149,6 +149,7 @@ class UI : protected Control {
     
     /** \brief Add an alert to the list */
     void alert(const Alert&);
+    inline void alert(const String s) { alert(Alert(s)); }
     
     void setCommandEntry(bool on);
     void setRegexEntry(bool on);
