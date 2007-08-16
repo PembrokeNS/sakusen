@@ -64,7 +64,11 @@ class AsynchronousIOHandler {
 #ifdef DISABLE_READLINE
     /** Chars which have been input but not terminated with a newline */
     String inputBuffer;
-#endif
+    #ifdef _MSC_VER
+        HANDLE hStdout, hStdin;
+        DWORD cRead, cWritten, fdwMode, fdwOldMode; 
+    #endif //_MSC_VER
+#endif //DISABLE_READLINE
     
     /** \brief Put all pending commands into commandBuffer
      *

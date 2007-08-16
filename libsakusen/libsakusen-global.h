@@ -38,8 +38,9 @@
    * This is mostly to do with stuff from std, but in at least one case it 
    * was very important.  In the long run we should do without disabling 
    * this warning. */
-//  #pragma warning(disable: 4251)
-  #pragma warning(disable: 4715 4345)
+  /*4275: This warning is about exported classes having non-exported classes as a base.
+   * Mostly to do with boost libraries. */
+  #pragma warning(disable: 4715 4345 4251 4275)
   /* 4345 is a warning about a change from VS 2003. We don't care. 
    * 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */

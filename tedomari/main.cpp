@@ -476,9 +476,14 @@ void runClient(
                 }
                 break;
               case command_sleep:
-                if (words.size() != 1) {
+                 if((words.size()==2) &&(words.front()==String("data"))&&(words.back()==String("sleep")))
+                  {
+                      ioHandler.message("He's exhausted!\n");
+                } else if (words.size() != 1) {
                   ioHandler.message("Usage: sleep USEC\n");
-                } else {
+                 } else if (words.front()==String("data")){
+                     ioHandler.message("I don't understand...\n");
+                 } else {
                   uint32 usec = numFromString<uint32>(words.front());
                   words.pop_front();
                   ioHandler.message("sleeping...\n");
