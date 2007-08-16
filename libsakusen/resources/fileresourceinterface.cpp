@@ -172,6 +172,7 @@ String FileResourceInterface::fileSearch(
   switch (matchingFiles.size()) {
     case 0:
       *result = resourceSearchResult_notFound;
+      error = name+extension+" in subdir "+subdir;
       return "";
     case 1:
       break;
@@ -305,8 +306,12 @@ void* FileResourceInterface::internalSymbolSearch(
     if (*result == resourceSearchResult_notFound) {
       *result = resourceSearchResult_error;
       /** \todo runtime compilation of modules */
-      error = "source found but module not found; runtime compiling not yet "
-        "implemented";
+      error = "Source file "+sourcePath+" found.\nCorresponding "
+          "module "+moduleFile+" in subdir "+getSubdir(resourceType_module)
+          +" not found; runtime compiling not yet implemented.\n"
+          "If you have already compiled this module from the source, try moving "
+          "it to the "+getSubdir(resourceType_module)+" subdir next to the "
+          +getSubdir(resourceType_source)+" subdir the source file was found in.";
     }
     return NULL;
   }
@@ -348,7 +353,7 @@ void* FileResourceInterface::internalSymbolSearch(
 	char buffer[33];
 	_itoa_s(GetLastError(), buffer, 33,2);
 	*result = resourceSearchResult_error;
-	error= "LoadLibrary() failed. Error value: " + String(buffer);
+	error= "LoadLibrary() failed on "+modulePath+".\n Error value: " + String(buffer);
 	return NULL;
   }
   
@@ -430,7 +435,7 @@ Writer::Ptr FileResourceInterface::openWriter(
   fileUtils_mkdirRecursive(directory, 0777);
 
   return FileWriter::Ptr(new FileWriter(
-        directory+name+"."+getExtension(type)
+        directory+name+getExtension(type)
       ));
 }
 

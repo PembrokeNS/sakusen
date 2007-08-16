@@ -125,7 +125,7 @@ class LIBSAKUSEN_API ResourceDeserializationExn :
           "resource '"+resource+"' "+
           ( result == resourceSearchResult_error ?
             "caused error: " + error : "" ) +
-          ( result == resourceSearchResult_notFound ? "not found" : "" ) +
+            ( result == resourceSearchResult_notFound ? "not found. File: "+error : "" ) +
           ( result == resourceSearchResult_ambiguous ? "ambiguous" : "" ) +
           ( result == resourceSearchResult_notSupported ? "not supported" : "" )
         ) {}
