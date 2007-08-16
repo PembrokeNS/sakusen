@@ -106,7 +106,7 @@ list<String> fileUtils_findMatches(
   )
 {
   String pattern = directory + FILE_SEP + name + "*";
-  /*Debug("Searching with pattern" << pattern);*/
+  /*QDebug("Searching with pattern" << pattern);*/
   struct __finddata64_t file;
   intptr_t hFile;
   list<String> result;
@@ -114,7 +114,7 @@ list<String> fileUtils_findMatches(
   if (-1 != (hFile = _findfirst64(pattern.c_str(), &file))) {
     do {
       result.push_back(directory + FILE_SEP + file.name);
-    } while (-1 != (hFile = _findnext64(hFile, &file)));
+    } while (-1 != _findnext64(hFile, &file));
   }
   _findclose(hFile);
 

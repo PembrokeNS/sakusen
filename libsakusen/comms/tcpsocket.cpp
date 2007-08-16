@@ -159,6 +159,9 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
         if (socket_errno == ECONNABORTED) {
           throw SocketClosedExn();
         }
+        if (socket_errno == ECONNRESET) {
+           throw SocketClosedExn();
+        }
         Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
       }
       if (received != 0) {
