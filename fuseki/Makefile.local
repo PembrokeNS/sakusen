@@ -11,10 +11,6 @@ ifeq ($(ENABLE_AVAHI),yes)
   THIS_CXXFLAGS := $(shell pkg-config --cflags avahi-client)
 endif
 
-ifneq ($(ENABLE_AVAHI),yes)
-  EXCLUDE_FILES := mdns.cpp mdns.h
-endif
-
 doc/man/man1/fuseki.1: $(BIN)
 	help2man --output=$@ --no-info \
 		--name="run a server for the game sakusen" ./$<
