@@ -157,7 +157,7 @@ $(ALL_RECURSIONS): all-recurse-%: %/Makefile
 
 # Default target is to build the binary (and recurse)
 # the printf is supposed to stop the 'Nothing to be done for all' messages
-all: all-nonrecursive $(ALL_RECURSIONS)
+all: all-nonrecursive $(ALL_RECURSIONS) all-post-recurse
 	@printf ""
 
 all-nonrecursive: $(BIN)
@@ -333,7 +333,7 @@ revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/H
 	fi;
 
 .PHONY: \
-		all all-nonrecursive $(ALL_RECURSIONS) \
+		all all-nonrecursive all-post-recurse $(ALL_RECURSIONS) \
 		test test-nonrecursive $(TEST_RECURSIONS) \
 		clean clean-nonrecursive remove-empty-subdirs $(CLEAN_RESURSIONS) \
 		$(BUILTIN_CONFIGS)
