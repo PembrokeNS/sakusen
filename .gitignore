@@ -1,4 +1,5 @@
 revision.h
 Makefile
 *.la
+*.exe
 config.mk
