@@ -4,7 +4,8 @@
 
 #include "libsakusen-global.h"
 #include "servedgame.h"
-#include <boost/shared_ptr.hpp>
+#include <boost/utility.hpp> // for noncopyable
+#include <boost/shared_ptr.hpp> // for shared_ptr
 /** \file
  *
  * Negotiate with Avahi to advertise games via mDNS.
@@ -46,7 +47,7 @@ namespace server {
  * when the portno is updated, and use avahi_entry_group_update_txt() when
  * anything else is changed.
  */
-class MdnsPublisher {
+class MdnsPublisher : public boost::noncopyable {
   public:
     MdnsPublisher(boost::shared_ptr<ServedGame const>);
     ~MdnsPublisher();
