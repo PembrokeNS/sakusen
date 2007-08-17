@@ -347,14 +347,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\mdns.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\mdns.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\plugin.cpp"
 			>
 		</File>

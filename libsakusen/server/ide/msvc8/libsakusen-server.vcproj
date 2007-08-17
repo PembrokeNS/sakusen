@@ -53,7 +53,7 @@
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32;DISABLE_AVAHI"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
@@ -154,7 +154,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_SERVER_EXPORTS;WIN32;DISABLE_AVAHI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -330,6 +330,14 @@
 		</File>
 		<File
 			RelativePath="..\..\maskedptr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\mdns.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\mdns.h"
 			>
 		</File>
 		<File

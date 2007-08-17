@@ -572,6 +572,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\servedgame.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\spheremap.cpp"
 			>
 		</File>
