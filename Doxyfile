@@ -80,7 +80,7 @@ INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.cpp \
                          *.h \
                          *.dox
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                = data \
                          bindings \
                          externals \
