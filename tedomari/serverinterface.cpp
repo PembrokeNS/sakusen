@@ -62,7 +62,7 @@ void ServerInterface::initialSettingsSetup()
   /** \todo deal with return values */
   setClientSetting("application:name", APPLICATION_NAME);
   setClientSetting("application:version", APPLICATION_VERSION);
-  setClientSetting("application:revision", numToString(REVISION));
+  setClientSetting("application:revision", REVISION);
 
   /* we request the universe name and hash so that our game can be set up
    * correctly if they were set before we joined */
