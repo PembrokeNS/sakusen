@@ -2,3 +2,6 @@ BIN = libsakusen-client.la
 LIBS = -lstdc++
 LIB_DEP_NAMES = libsakusen
 
+ifneq ($(ENABLE_AVAHI),yes)
+  EXCLUDE_FILES := mdnsbrowser.cpp
+endif

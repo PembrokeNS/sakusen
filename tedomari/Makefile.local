@@ -25,3 +25,8 @@ LIBS += `pkg-config --libs pangocairo`
 THIS_CXXFLAGS += `pkg-config --cflags pangocairo` 
 endif
 
+ifeq ($(ENABLE_AVAHI),yes)
+  LIBS += $(shell pkg-config --libs avahi-client)
+  THIS_CXXFLAGS += $(shell pkg-config --cflags avahi-client)
+endif
+

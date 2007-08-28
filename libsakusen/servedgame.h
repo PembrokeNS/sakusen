@@ -23,6 +23,8 @@ class GameNameTooLong : public Exn {
  * games, e.g. MdnsPublisher. Clients will be given instances of this by code
  * that finds games, e.g. MdnsBrowser.
  *
+ * \bug Store the address of the server, tard.
+ *
  * \todo Store the network protocol version, but for a sensible default we need
  * an include from libsak-comms.
  *
