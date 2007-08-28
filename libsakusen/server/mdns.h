@@ -1,4 +1,3 @@
-#ifndef DISABLE_AVAHI
 #ifndef _MDNS_H
 #define _MDNS_H
 
@@ -6,6 +5,7 @@
 #include "servedgame.h"
 #include <boost/utility.hpp> // for noncopyable
 #include <boost/shared_ptr.hpp> // for shared_ptr
+#include <boost/scoped_ptr.hpp> // for scoped_ptr
 /** \file
  *
  * Negotiate with Avahi to advertise games via mDNS.
@@ -18,18 +18,8 @@
  * There are some features in mDNS that have interesting edge cases that
  * slightly break if you have more than one mDNS endpoint on the same computer,
  * so it is recommended that we talk to the Avahi daemon and don't attempt to
- * do any mDNS on our own. However, it seems a bit of a subtle dependency, the
- * edge cases are things that don't seem likely to come up, and it is likely
- * that if the user doesn't have Avahi he isn't using mDNS anywhere else, so
- * Sakusen will (eventually) fall back to using libavahi-core to talk mDNS
- * directly if the Avahi daemon is not found.
- *
- * \todo Fall back to libavahi-core if there is no avahid.
+ * do any mDNS on our own.
  */
-
-struct AvahiClient;
-struct AvahiEntryGroup;
-struct AvahiThreadedPoll;
 
 namespace sakusen {
 namespace server {
@@ -43,16 +33,16 @@ namespace server {
  * you like, each accessed from a possibly different thread. Each will get its
  * own Avahi event loop thread.
  *
+ * Uses the pimpl idiom to hide Avahi details from callers.
+ *
  * \todo Pass the AVAHI_PUBLISH_UPDATE flag to avahi_entry_group_add_service()
- * when the portno is updated, and use avahi_entry_group_update_txt() when
- * anything else is changed.
+ * when the portno is updated.
  */
 class MdnsPublisher : public boost::noncopyable {
   public:
     MdnsPublisher(boost::shared_ptr<ServedGame const>);
     ~MdnsPublisher();
     void game_changed();
-    void create_services(AvahiClient *c);
 
     /** \brief Access the internal ServedGame.
      *
@@ -63,19 +53,16 @@ class MdnsPublisher : public boost::noncopyable {
      */
     boost::shared_ptr<ServedGame> const getGame() { return boost::const_pointer_cast<ServedGame,ServedGame const>(game); }
   private:
-    boost::shared_ptr<ServedGame const> const game;
-    /** We need this to pass to avahi.
-     *
-     * It needs to be a member rather than local to the function it is used
-     * because we can't free it until Avahi is shut down in the dtor.
+    /** \note Here rather than in Implementation chiefly so that getGame() can
+     * be inlined.
      */
-    char *game_name;
-    AvahiClient *client;
-    AvahiEntryGroup *group;
-    AvahiThreadedPoll *poll;
+    boost::shared_ptr<ServedGame const> const game;
+
+    class Implementation;
+    boost::scoped_ptr<Implementation> pimpl;
+
 };
 
 }}
 
 #endif //_MDNS_H
-#endif //DISABLE_AVAHI

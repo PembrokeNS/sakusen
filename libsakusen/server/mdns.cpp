@@ -13,12 +13,6 @@
 #include <avahi-common/timeval.h>
 #include <avahi-common/strlst.h>
 
-/** \file
- *
- * \todo Refactor this code to look less like the C-ish mess that is the
- * example code.
- */
-
 /** The service name we will advertise over mDNS. */
 #define MDNS_SERVICE_TYPE "_sakusen._tcp"
 /** The TXT record version number, as recommended by RFC. */
@@ -26,6 +20,35 @@
 
 namespace sakusen {
 namespace server {
+
+class MdnsPublisher::Implementation : public boost::noncopyable {
+  public:
+    Implementation(boost::shared_ptr<ServedGame const>);
+    ~Implementation();
+    void game_changed();
+
+  private:
+    boost::shared_ptr<ServedGame const> const game;
+    /** We need this to pass to avahi.
+     *
+     * It needs to be a member rather than local to the function it is used
+     * because we can't free it until Avahi is shut down in the dtor.
+     */
+    char *game_name;
+    AvahiClient *client;
+    AvahiEntryGroup *group;
+    AvahiThreadedPoll *poll;
+    static void entry_group_callback(
+        AvahiEntryGroup *g,
+        AvahiEntryGroupState state,
+        void *userdata);
+    static void client_callback(
+        AvahiClient *c,
+        AvahiClientState state,
+        void * userdata);
+    void create_services(AvahiClient *c);
+};
+
 /** \brief Callback for libavahi-client.
  *
  * Passed to avahi_entry_group_new, this cb handles keeping the mDNS entry
@@ -38,8 +61,10 @@ namespace server {
  *
  * The prototype is mandated by avahi.
  */
-void entry_group_callback(AVAHI_GCC_UNUSED AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_GCC_UNUSED void *userdata) {
-  //MdnsPublisher *self = reinterpret_cast<MdnsPublisher*>(userdata);
+void MdnsPublisher::Implementation::entry_group_callback(
+    AVAHI_GCC_UNUSED AvahiEntryGroup *g,
+    AvahiEntryGroupState state,
+    AVAHI_GCC_UNUSED void *userdata) {
 
   switch(state) {
     case AVAHI_ENTRY_GROUP_ESTABLISHED:
@@ -79,8 +104,11 @@ void entry_group_callback(AVAHI_GCC_UNUSED AvahiEntryGroup *g, AvahiEntryGroupSt
  *
  * The prototype is mandated by avahi.
  */
-void client_callback(AvahiClient *c, AvahiClientState state, void * userdata) {
-  MdnsPublisher *self = reinterpret_cast<MdnsPublisher*>(userdata);
+void MdnsPublisher::Implementation::client_callback(
+    AvahiClient *c,
+    AvahiClientState state,
+    void * userdata) {
+  Implementation *self = reinterpret_cast<Implementation*>(userdata);
   switch (state) {
     case AVAHI_CLIENT_S_RUNNING:
       Debug("Avahi enters running state");
@@ -116,7 +144,15 @@ void client_callback(AvahiClient *c, AvahiClientState state, void * userdata) {
  * \param game_to_advertise Must not be empty.
  */
 MdnsPublisher::MdnsPublisher(boost::shared_ptr<ServedGame const> game_to_advertise)
-    : game(game_to_advertise), client(NULL), group(NULL), poll(NULL) {
+    : pimpl(new Implementation(game_to_advertise))
+{ }
+
+/** \brief Advertise a game on mDNS.
+ *
+ * Does the real work.
+ */
+MdnsPublisher::Implementation::Implementation(boost::shared_ptr<ServedGame const> game_to_advertise)
+    : game(game_to_advertise), game_name(0), client(NULL), group(NULL), poll(NULL) {
   int error = 0;
 
   assert(game.get()); // check for emptiness
@@ -155,9 +191,6 @@ fail:
  *
  * \returns A pointer to an allocated AvahiStringList. You must free it when
  * you are done by passing it to avahi_string_list_free().
- *
- * \note This is not a member function to avoid having to include
- * avahi_strlst.h from mdns.h.
  */
 static AvahiStringList * game_to_txt_records(boost::shared_ptr<ServedGame const> game) {
   /* start with an empty list */
@@ -179,6 +212,14 @@ static AvahiStringList * game_to_txt_records(boost::shared_ptr<ServedGame const>
  * call this method shortly afterwards to push the update out on the ether.
  */
 void MdnsPublisher::game_changed() {
+  pimpl->game_changed();
+}
+
+/** \brief Update mDNS info to reflect changes to \c game.
+ *
+ * Does all the real work.
+ */
+void MdnsPublisher::Implementation::game_changed() {
   if (group) {
     AvahiStringList *txt_records = game_to_txt_records(game);
 
@@ -204,47 +245,36 @@ void MdnsPublisher::game_changed() {
   }
 }
 
-/** \brief Internal function. Do not call from outside this file.
- * 
- * This function has to be public because internal non-methods need to call
- * it, but you should not. It creates the service for Avahi to advertise,
- * from the information you have already given the ctor.
+/** \brief Create and commit the services to be advertised.
  */
-void MdnsPublisher::create_services(AvahiClient *c) {
-  AvahiStringList *txt_records = game_to_txt_records(game);
-  int ret;
+void MdnsPublisher::Implementation::create_services(AvahiClient *c) {
 
-  group = avahi_entry_group_new(c, entry_group_callback, NULL);
+  group = avahi_entry_group_new(c, entry_group_callback, this);
   if (!group) {
     std::cerr << "Failed to create Avahi advert: " << avahi_strerror(avahi_client_errno(client)) << std::endl;
-    goto fail;
+  } else {
+    AvahiStringList *txt_records = game_to_txt_records(game);
+    int ret;
+
+    ret = avahi_entry_group_add_service_strlst(group,
+      AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+      static_cast<AvahiPublishFlags>(0),
+      game_name,
+      MDNS_SERVICE_TYPE, NULL, NULL,
+      game->getPort(), txt_records);
+
+    if (ret < 0) {
+      std::cerr << "Failed to add service: " << avahi_strerror(ret) << std::endl;
+    } else {
+
+      ret = avahi_entry_group_commit(group);
+
+      if (ret < 0) {
+        std::cerr << "Failed to publish Avahi advert: " << avahi_strerror(ret) << std::endl;
+      }
+    }
+    avahi_string_list_free(txt_records);
   }
-
-  ret = avahi_entry_group_add_service_strlst(group,
-    AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
-    static_cast<AvahiPublishFlags>(0),
-    game_name,
-    MDNS_SERVICE_TYPE, NULL, NULL,
-    game->getPort(), txt_records);
-
-  if (ret < 0) {
-    std::cerr << "Failed to add service: " << avahi_strerror(ret) << std::endl;
-    goto fail;
-  }
-
-  ret = avahi_entry_group_commit(group);
-
-  if (ret < 0) {
-    std::cerr << "Failed to publish Avahi advert: " << avahi_strerror(ret) << std::endl;
-    goto fail;
-  }
-
-  avahi_string_list_free(txt_records);
-  return;
-
-fail:
-  avahi_string_list_free(txt_records);
-  avahi_threaded_poll_stop(poll);
 }
 
 
@@ -253,6 +283,13 @@ fail:
  * Stops the Avahi client and frees all internal memory.
  */
 MdnsPublisher::~MdnsPublisher() {
+}
+
+/** \brief Shut off the mDNS.
+ *
+ * Does all the real work.
+ */
+MdnsPublisher::Implementation::~Implementation() {
   if (poll)
     avahi_threaded_poll_stop(poll);
 
