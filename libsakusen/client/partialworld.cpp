@@ -183,5 +183,4 @@ void PartialWorld::endTick()
   ++timeNow;
 }
 
-PartialWorld* sakusen::client::world = NULL;
-
+LIBSAKUSEN_CLIENT_API PartialWorld* sakusen::client::world = NULL;

@@ -114,6 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\..\externals\STLport\stlport;..\..\..\..\..\libsakusen\;..\..\..\..\..\libsakusen\server"
+				PreprocessorDefinitions="NDEBUG"
 				RuntimeLibrary="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"

@@ -11,4 +11,4 @@ readline  libreadline5-dev
 unicode   libunicode-dev
 SDL       libsdl-dev
 pango     libpango1.0-dev
-
+For the Cairo UI you need Cairo and glib. A GTK 2 install will bring these.

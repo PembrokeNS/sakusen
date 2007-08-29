@@ -17,9 +17,10 @@
 
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
-#if 0 
+//#if 0 
 //If libsakusen was a dll, this would specify what is in the dll interface.
 //However, in order to make life easier, I am making it a static library.
+//Alas this does not work, because of C4251 and John doing funky things with global pointers. 
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)
     #define LIBSAKUSEN_EXIMP extern
@@ -28,19 +29,13 @@
     #define LIBSAKUSEN_API   __declspec(dllimport)
     #define LIBSAKUSEN_EXIMP
   #endif
-#else //Blank defines for static lib.
-	#define LIBSAKUSEN_API 
-	#define LIBSAKUSEN_EXIMP
-    #define LIBSAKUSEN_METHOD_DEFINITIONS
-#endif
 
   /*4251: This warning is about members of exported classes not being exported.
-   * This is mostly to do with stuff from std, but in at least one case it 
-   * was very important.  In the long run we should do without disabling 
-   * this warning. */
+   * This is mostly to do with stuff from std, but in at least two cases it 
+   * was very important.  This warning should be enabled every now and again for checking. */
   /*4275: This warning is about exported classes having non-exported classes as a base.
    * Mostly to do with boost libraries. */
-  #pragma warning(disable: 4715 4345 4251 4275)
+  #pragma warning(disable: 4715 4345 4275 4251)
   /* 4345 is a warning about a change from VS 2003. We don't care. 
    * 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */

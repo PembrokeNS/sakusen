@@ -88,14 +88,8 @@ class LIBSAKUSEN_API Box {
     bool intersects(const Box<T>& b) const;
     Box<T> intersection(const Box<T>& b) const;
     Box<T> enclosure(const Box<T>& b) const;
-
-    /** \brief Gets the smallest Rectangle bounding this Box.
-     *
-     * Obviously, for the empty Box it returns the empty Rectangle.
-     */
-    Rectangle<T> rectangle() const {
-      return Rectangle<T>(min.x, min.y, max.x, max.y);
-    }
+    Rectangle<T> rectangle() const;
+    
 };
 
 /** Prints the co-ordinates of a box, for debugging purposes. */
@@ -104,6 +98,10 @@ inline std::ostream& operator<<(std::ostream& out, const Box<T>& box) {
   out << "box <" << box.getMin() << "," << box.getMax() << ">";
   return out;
 }
+
+#ifdef _MSC_VER
+template class LIBSAKUSEN_API Box<sint32>;
+#endif
 
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS
 
@@ -114,6 +112,15 @@ bool Box<T>::contains(const Point<T>& p) const {
   return (p.x >= min.x && p.y >= min.y && p.z >= min.z &&
     p.x <= max.x && p.y <= max.y && p.z <= max.z);
 }
+
+/** \brief Gets the smallest Rectangle bounding this Box.
+     *
+     * Obviously, for the empty Box it returns the empty Rectangle.
+     */
+template<typename T> Rectangle<T> Box<T>::rectangle() const {
+      return Rectangle<T>(min.x, min.y, max.x, max.y);
+    }
+
 
 /** \brief Tests whether \p b is entirely inside this ::Box.
  */
@@ -184,12 +191,5 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 }
 
 #endif // LIBSAKUSEN_METHOD_DEFINITIONS
-// For this to be necessary, libsakusen must be a dll. 
-//Generates a load of warnings to do with explicit template instantiation if it is.
-/*
-#ifdef _MSC_VER
-template class LIBSAKUSEN_API Box<sint32>;
-#endif
-*/
 }
 #endif

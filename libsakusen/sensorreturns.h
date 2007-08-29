@@ -15,7 +15,7 @@ namespace sakusen {
  * This is a bare implementation of ISensorReturns, which no extra
  * functionality.
  */
-class SensorReturns : public ISensorReturns {
+class LIBSAKUSEN_API SensorReturns : public ISensorReturns {
   private:
     SensorReturns(
         SensorReturnsId i,

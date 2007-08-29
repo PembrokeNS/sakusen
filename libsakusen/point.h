@@ -64,7 +64,7 @@ inline T topNumber() {
   else
     return limits.max();
 }
-#ifdef _MSC_VER //Re-enable warning diabled above, in case it is useful later.
+#ifdef _MSC_VER //Re-enable warning disabled above, in case it is useful later.
 #pragma warning (default:4101)
 #endif
 
@@ -356,12 +356,12 @@ typedef Point<sint32> Position;
 //@}
 
 
-/* For this to be necessary, libsakusen must be a dll. 
+/* For this to be necessary, libsakusen must be a dll. */
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;
 template class LIBSAKUSEN_API Point<sint32>;
+template class LIBSAKUSEN_API Point<double>;
 #endif
-*/
 }
 
 #endif // POINT_H

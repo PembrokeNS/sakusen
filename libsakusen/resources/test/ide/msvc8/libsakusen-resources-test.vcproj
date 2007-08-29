@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib $(SolutionDir)$(ConfigurationName)\pcrecpp.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
@@ -141,10 +141,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib $(SolutionDir)$(ConfigurationName)\pcrecpp.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib"
-				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

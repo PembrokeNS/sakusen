@@ -47,6 +47,11 @@ typename Region<T>::Ptr Region<T>::loadNew(IArchive& archive)
 
 #endif
 
+
+#ifdef _MSC_VER
+template class LIBSAKUSEN_API Region<sint32>;
+#endif
+
 }
 
 #endif // REGION_METHODS_H
