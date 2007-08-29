@@ -177,10 +177,11 @@ String fileUtils_getHome()
 #ifdef WIN32
   char *buffer;
   errno_t err;
-  err=_dupenv_s(&buffer, NULL, "HOMEDRIVE");
+  //err=_dupenv_s(&buffer, NULL, "HOMEDRIVE");
+  
+  err=_dupenv_s(&buffer, NULL, "APPDATA");
   String path(buffer);
-  err=_dupenv_s(&buffer, NULL, "HOMEPATH");
-  path += buffer;
+  //path += buffer;
   if(err)
     Fatal("Error getting environment variable");
   return path;
