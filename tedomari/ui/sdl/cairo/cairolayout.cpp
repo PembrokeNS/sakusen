@@ -1,3 +1,5 @@
+#ifndef DISABLE_CAIRO
+
 #include "ui/sdl/cairo/cairolayout.h"
 #include <pango/pangocairo.h>
 
@@ -35,3 +37,4 @@ void CairoLayout::contextChanged()
   pango_layout_context_changed(layout);
 }
 
+#endif

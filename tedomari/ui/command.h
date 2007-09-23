@@ -80,7 +80,7 @@ class Command {
     {}
   private:
     CommandType type;
-    /* Only one or two of the following fields is every used, so this is a bit
+    /* Only one or two of the following fields is ever used, so this is a bit
      * memory-wasteful. */
     String fullName; /* Only when abbreviation */
     BuiltinCommand builtin; /* Only when builtin */

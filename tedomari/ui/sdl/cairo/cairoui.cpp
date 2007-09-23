@@ -1,4 +1,9 @@
+#ifndef DISABLE_CAIRO
+
+#include "libsakusen-global.h"
+=======
 #include "tedomari-global.h"
+>>>>>>> .r536
 #include "ui/sdl/cairo/cairoui.h"
 #include "ui/sdl/cairo/cairoregion.h"
 
@@ -161,3 +166,4 @@ void CairoUI::drawText(double x, double y, const CairoLayout* sdlLayout)
   pango_cairo_show_layout(cairoContext, sdlLayout->getLayout());
 }
 
+#endif

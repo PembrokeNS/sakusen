@@ -41,10 +41,15 @@ PngImage_impl::PngImage_impl(const String& fileName) :
   bitDepth(0),
   rowPointers(NULL)
 {
+#ifndef _MSC_VER
   fp = fopen(fileName.c_str(), "rb");
   if (!fp) {
     throw FileIOExn("fopen");
   }
+#else
+  if (fopen_s(&fp, fileName.c_str(), "rb"))
+        throw FileIOExn("fopen");
+#endif
 
 #define SIG_BYTES 8
   /* Read in a bit of file and check it matches the PNG header */

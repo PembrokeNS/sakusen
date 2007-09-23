@@ -14,7 +14,7 @@ namespace resources {
 
 class PngImage_impl;
 
-class PngImage : public Image {
+class LIBSAKUSEN_RESOURCES_API PngImage : public Image {
   public:
     PngImage(const String& fileName);
     ~PngImage();
