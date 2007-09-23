@@ -156,9 +156,9 @@ $(ALL_RECURSIONS): all-recurse-%: %/Makefile
 	@$(MAKE) -C $* all
 
 # Default target is to build the binary (and recurse)
-# the printf is supposed to stop the 'Nothing to be done for all' messages
+# the 'true' is supposed to stop the 'Nothing to be done for all' messages
 all: all-nonrecursive $(ALL_RECURSIONS) all-post-recurse
-	@printf ""
+	@true
 
 all-nonrecursive: $(BIN)
 
