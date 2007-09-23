@@ -46,35 +46,35 @@ AsynchronousIOHandler::AsynchronousIOHandler(
 {
   out << "> " << flush;
 #ifdef _MSC_VER
-    hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    if (hStdin == INVALID_HANDLE_VALUE) 
-    {
-        /* No reason why this should stop the whole show. */
-        Fatal("Error getting console handle. Will try again later.");
-        return;
-    }
+  hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+  hStdin = GetStdHandle(STD_INPUT_HANDLE);
+  if (hStdin == INVALID_HANDLE_VALUE) 
+  {
+    /* No reason why this should stop the whole show. */
+    Fatal("Error getting console handle. Will try again later.");
+    return;
+  }
 
-    //Change the console mode to single-character. 
-    if (! GetConsoleMode(hStdin, &fdwOldMode)) 
-    {
-        Fatal("GetConsoleMode Console Error"); 
-        return;
-    }
+  //Change the console mode to single-character. 
+  if (! GetConsoleMode(hStdin, &fdwOldMode)) 
+  {
+    Fatal("GetConsoleMode Console Error"); 
+    return;
+  }
 
-    fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT); 
-    if (! SetConsoleMode(hStdin, fdwMode)) 
-    {
-        Fatal("SetConsoleMode Console Error"); 
-        return;
-    }
+  fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT); 
+  if (! SetConsoleMode(hStdin, fdwMode)) 
+  {
+    Fatal("SetConsoleMode Console Error"); 
+    return;
+  }
 #endif
 }
 
 AsynchronousIOHandler::~AsynchronousIOHandler()
 {
 #ifdef _MSC_VER
-     SetConsoleMode(hStdin, fdwOldMode);
+  SetConsoleMode(hStdin, fdwOldMode);
 #endif
 }
 
@@ -123,41 +123,41 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
 /* Read what we can from the console */
   while (_kbhit())
   {
-      char buf[3];
-      if (! ReadConsole(hStdin, buf,1, &cRead, NULL) ){
-          out<<"Error Reading from Console."<<endl;
-          break;
-      }
-      if (! WriteConsole(hStdout,buf,1,&cWritten,NULL) ){
-          out<<"Error Writing to Console."<<endl;
-          break;
-      }      
-   /* Append what we've read to the input buffer */
-   /*QDebug("[updateBuffer] got char " << chr);*/
-  /* If a backspace is pressed, we want to remove a character from the buffer 
-   * and then move the cursor back one.*/
+    char buf[3];
+    if (! ReadConsole(hStdin, buf,1, &cRead, NULL) ){
+      out<<"Error Reading from Console."<<endl;
+      break;
+    }
+    if (! WriteConsole(hStdout,buf,1,&cWritten,NULL) ){
+      out<<"Error Writing to Console."<<endl;
+      break;
+    }      
+    /* Append what we've read to the input buffer */
+    /*QDebug("[updateBuffer] got char " << chr);*/
+    /* If a backspace is pressed, we want to remove a character from the buffer 
+     * and then move the cursor back one.*/
     if (buf[0] == '\b'){
-            CONSOLE_SCREEN_BUFFER_INFO ScreenBufferInfo;
-            GetConsoleScreenBufferInfo(hStdout, &ScreenBufferInfo);
-            if(ScreenBufferInfo.dwCursorPosition.X>=2)
-            {
-            String temp(inputBuffer, 0, inputBuffer.length()-1);
-            inputBuffer=temp;
-            SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
-            WriteConsole(hStdout," ",1,&cWritten,NULL);
-            SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
-            }
-            else{
-                ScreenBufferInfo.dwCursorPosition.X+=1;
-                SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
-            }
-     }
+      CONSOLE_SCREEN_BUFFER_INFO ScreenBufferInfo;
+      GetConsoleScreenBufferInfo(hStdout, &ScreenBufferInfo);
+      if(ScreenBufferInfo.dwCursorPosition.X>=2)
+      {
+        String temp(inputBuffer, 0, inputBuffer.length()-1);
+        inputBuffer=temp;
+        SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
+        WriteConsole(hStdout," ",1,&cWritten,NULL);
+        SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
+      }
+      else{
+        ScreenBufferInfo.dwCursorPosition.X+=1;
+        SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
+      }
+    }
     else
     {
-        inputBuffer += buf[0];
-        if ((buf[0] == '\n') || (buf[0] == '\r')) {
-          out << "\n> " << flush;
-        }
+      inputBuffer += buf[0];
+      if ((buf[0] == '\n') || (buf[0] == '\r')) {
+        out << "\n> " << flush;
+      }
     }        
   }
 

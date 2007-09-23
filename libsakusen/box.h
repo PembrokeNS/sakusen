@@ -114,12 +114,13 @@ bool Box<T>::contains(const Point<T>& p) const {
 }
 
 /** \brief Gets the smallest Rectangle bounding this Box.
-     *
-     * Obviously, for the empty Box it returns the empty Rectangle.
-     */
-template<typename T> Rectangle<T> Box<T>::rectangle() const {
-      return Rectangle<T>(min.x, min.y, max.x, max.y);
-    }
+  *
+  * Obviously, for the empty Box it returns the empty Rectangle.
+  */
+template<typename T>
+Rectangle<T> Box<T>::rectangle() const {
+  return Rectangle<T>(min.x, min.y, max.x, max.y);
+}
 
 
 /** \brief Tests whether \p b is entirely inside this ::Box.
@@ -193,3 +194,4 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 #endif // LIBSAKUSEN_METHOD_DEFINITIONS
 }
 #endif
+

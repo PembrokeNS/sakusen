@@ -40,7 +40,7 @@
    * 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */
 
-	//Alias of __PRETTY_FUNCTION for 
+  //Alias of __PRETTY_FUNCTION for 
   #define __PRETTY_FUNCTION__ __FUNCDNAME__
 
   /* Define file seperator */
