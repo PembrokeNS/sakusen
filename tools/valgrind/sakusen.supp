@@ -182,5 +182,30 @@
    fun:sys_dl_sym
    fun:lt_dlsym
 }
+{
+   lt_dl*
+   Memcheck:Cond
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   lt_dl*
+   Memcheck:Cond
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+   obj:/lib/ld-2.6.so
+}
+
+
 
 
