@@ -129,13 +129,10 @@ String FileResourceInterface::fileSearch(
     String resourceDir = *directory + subdir;
     /*_stat calls FindFileFirst, which fails if the directory has a trailing 
      * backslash. We need the resourceDir to not have a trailing backslash. */
-#ifdef _MSC_VER
-    if(resourceDir[resourceDir.length()-1]=='\\')
+    if(!resourceDir.empty() && resourceDir[resourceDir.size()-1] == '\\')
     {
-        String temp(resourceDir,0,resourceDir.length()-1);
-        resourceDir=temp;
+        resourceDir.erase(resourceDir.end()-1);
     }
-#endif
     NativeStructStat s;
     if (-1 == NativeStat(resourceDir.c_str(), &s)) {
       /* The directory was not there (or other
@@ -151,18 +148,18 @@ String FileResourceInterface::fileSearch(
     while (!newMatches.empty()) {
       String path = newMatches.front();
       newMatches.pop_front();
-    /*  QDebug("Found "<<path);*/
+      /*QDebug("Found "<<path);*/
       String fileName = fileUtils_notDirPart(path);
       /* check that the file has the correct extension */
       if (fileName.size() < extension.size() ||
           0 != fileName.compare(
             fileName.size() - extension.size(), extension.size(), extension
           )) {
-       /* QDebug("Looking for extension to "<<name<<" "<<extension);*/
+          /*QDebug("Looking for extension to "<<name<<" "<<extension);*/
         continue;
       }
       if (0 == matchingFiles.count(fileName)) {
-      /*  QDebug("Adding " << fileName << " at " << path);*/
+        /*QDebug("Adding " << fileName << " at " << path);*/
         matchingFiles[fileName] = path;
       }
     }
