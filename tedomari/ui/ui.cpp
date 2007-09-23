@@ -1,6 +1,7 @@
 #include "ui/ui.h"
 
 #include "stringutils.h"
+#include "socketexn.h"
 #include "ui/mapdisplay.h"
 #include "ui/modifiedkeyevent.h"
 
@@ -12,6 +13,7 @@ using namespace std;
 using namespace __gnu_cxx;
 
 using namespace sakusen;
+using namespace sakusen::comms;
 using namespace sakusen::client;
 using namespace tedomari::game;
 using namespace tedomari::ui;
@@ -539,7 +541,11 @@ void UI::supplyActionArg(const String& actionArg)
         }
         break;
       default:
-        alert(Alert("'cursor' argument cannot be interpreted in this context"));
+        {
+          ostringstream s;
+          s << pendingAction->getNextParameterType();
+          alert(Alert("'cursor' argument invalid (need "+s.str()+")"));
+        }
     }
   } else {
     alert(Alert("Unrecognized action argument '"+actionArg+"'"));
@@ -558,6 +564,9 @@ void UI::supplyActionArg(const ActionArgument& actionArg)
       pendingAction->execute(this);
     }
     setModeFor(pendingAction->getNextParameterType());
+  } catch (SocketExn& e) {
+    alert("Caught SocketExn ("+e.message+")!");
+    /** \bug Need to do something more dramatic at this point */
   } catch (Exn& e) {
     alert(Alert("Problem with argument: "+e.message));
   }
