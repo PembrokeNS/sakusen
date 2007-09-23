@@ -21,7 +21,7 @@ class Alert {
     /** \brief Constructor for string Alert
      *
      * \param m String message for Alert */
-    Alert(const String& m) : message(m) {}
+    explicit Alert(const String& m) : message(m) {}
   private:
     String message;
   public:
