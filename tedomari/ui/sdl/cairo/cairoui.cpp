@@ -1,4 +1,4 @@
-#include "libsakusen-global.h"
+#include "tedomari-global.h"
 #include "ui/sdl/cairo/cairoui.h"
 #include "ui/sdl/cairo/cairoregion.h"
 

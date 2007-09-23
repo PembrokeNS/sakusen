@@ -1,6 +1,8 @@
 #ifndef TEDOMARI_GLOBAL_H
 #define TEDOMARI_GLOBAL_H
 
+#include "libsakusen-global.h"
+
 #define APPLICATION_NAME "tedomari"
 #define APPLICATION_VERSION "0.1"
 
