@@ -45,7 +45,7 @@ Socket::Ptr TCPSocket::newBindingToAddress(std::list<String>& address)
 }
 
 TCPSocket::TCPSocket() :
-  buffer(new uint8[0]),
+  buffer(NULL),
   bufferLength(0),
   bufferCapacity(0)
 {
@@ -54,7 +54,7 @@ TCPSocket::TCPSocket() :
 
 TCPSocket::TCPSocket(uint16 myPort):
   IPSocket(myPort),
-  buffer(new uint8[0]),
+  buffer(NULL),
   bufferLength(0),
   bufferCapacity(0)
 {
@@ -63,7 +63,7 @@ TCPSocket::TCPSocket(uint16 myPort):
 
 TCPSocket::TCPSocket(NativeSocket s, const sockaddr_in& peerAddress) :
   IPSocket(s, peerAddress),
-  buffer(new uint8[0]),
+  buffer(NULL),
   bufferLength(0),
   bufferCapacity(0)
 {
