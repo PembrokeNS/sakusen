@@ -102,7 +102,7 @@ class HitPoints {
      * \param divisor Must be a non-negative number.
      */
     HitPoints operator/(const double divisor) const {
-      return HitPoints(uint32(hp * divisor));
+      return HitPoints(uint32(hp / divisor));
     }
 
     /** \brief Destructively divide HitPoints by a double. */
