@@ -10,6 +10,7 @@
 #include "iarchive.h"
 #include "oarchive.h"
 #include "iheightfield.h"
+#include "image.h"
 
 namespace sakusen {
 
@@ -53,6 +54,11 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
         uint32 verticalResolution,
         uint32 width,
         uint32 height
+      );
+    Heightfield(
+        uint32 horizontalResolution,
+        uint32 verticalResolution,
+        const Image& image
       );
   private:
     /** Dex between adjacent height samples in the heightfield */

@@ -38,6 +38,30 @@ Heightfield::Heightfield(
   sanityCheck();
 }
 
+/** \brief Construct heightfield by taking data from an image. */
+Heightfield::Heightfield(
+    uint32 hR,
+    uint32 vR,
+    const Image& image
+  ) :
+  horizontalResolution(hR),
+  verticalResolution(vR)
+{
+  boost::multi_array<uint16, 2> imageData;
+  image.read(imageData);
+  width = imageData.shape()[0];
+  height = imageData.shape()[1];
+  heightfield.resize(boost::extents[width][height]);
+  /* Note that image data is in uint16 values, where we want sint16 values, so
+   * we have to translate everything appropriately... */
+  for (uint32 x=0; x<width; ++x) {
+    for (uint32 y=0; y<height; ++y) {
+      heightfield[x][y] = imageData[x][y]-std::numeric_limits<sint16>::min();
+    }
+  }
+  sanityCheck();
+}
+
 void Heightfield::sanityCheck() const
 {
   /* Check that width*height fits into a uint32.  In theory we might be able to

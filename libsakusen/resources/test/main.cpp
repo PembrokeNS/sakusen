@@ -10,6 +10,7 @@
 #include "resourceinterface-methods.h"
 #include "fileresourceinterface.h"
 #include "fileutils.h"
+#include "pngimage.h"
 
 #include <iostream>
 
@@ -398,6 +399,12 @@ int main(/*int argc, char** argv*/)
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
   }
+
+  /* As an afterthought, we test the image stuff */
+  /** \todo This would be better in the Perl tests or something similar */
+  /** \bug Doesn't work when in an alternate build dir */
+  PngImage image("../../../data/maptemplate/test-heightfield0.png");
+  Heightfield hf(1, 1, image);
   
   return EXIT_SUCCESS;
 }

@@ -107,6 +107,7 @@ check_for_lib cairo cairo pango/pangocairo.h `pkg-config pangocairo --cflags --l
 check_for_lib unicode unicode unicode.h
 check_for_lib pcrecpp pcrecpp pcrecpp.h
 check_for_lib mhash mhash mhash.h
+check_for_lib png png png.h
 check_for_lib avahiclient avahi-client avahi-client/client.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
@@ -125,6 +126,7 @@ enable_component READLINE readline
 enable_component SDL SDL
 enable_component CAIRO cairo
 enable_component CONVERSION unicode
+enable_component PNG png
 enable_component AVAHI avahiclient
 #enable_component IMPOSSIBLE_COMPONENT something_that_doesnt_exist
 
