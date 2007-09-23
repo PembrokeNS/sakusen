@@ -57,6 +57,7 @@ UnitStatus::UnitStatus(
   weaponsStatus()
 {
   assert(world != NULL);
+  initializeWeapons(getTypePtr());
 }
 
 UnitStatus::UnitStatus(
