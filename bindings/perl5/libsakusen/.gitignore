@@ -1,6 +1,7 @@
 Makefile.PL.out
 Sakusen.bs
 Sakusen.cpp
+Sakusen.o
 Sakusen.pm
 blib
 pm_to_blib

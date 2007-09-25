@@ -3,3 +3,6 @@ Makefile
 *.la
 *.exe
 config.mk
+.libs
+.makefrags
+.obj
