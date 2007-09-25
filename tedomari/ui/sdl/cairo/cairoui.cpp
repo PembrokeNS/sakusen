@@ -1,9 +1,6 @@
 #ifndef DISABLE_CAIRO
 
-#include "libsakusen-global.h"
-=======
 #include "tedomari-global.h"
->>>>>>> .r536
 #include "ui/sdl/cairo/cairoui.h"
 #include "ui/sdl/cairo/cairoregion.h"
 
