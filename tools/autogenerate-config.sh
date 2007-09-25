@@ -111,7 +111,7 @@ check_for_lib png png png.h
 check_for_lib avahiclient avahi-client avahi-client/client.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
-if ! enable_component EVERYTHING pcrecpp mhash
+if ! enable_component EVERYTHING pcrecpp mhash png
 then
   printf 'Sorry, that component is critical.  Aborting.\n'
   rm "${TARGET}"
@@ -126,7 +126,6 @@ enable_component READLINE readline
 enable_component SDL SDL
 enable_component CAIRO cairo
 enable_component CONVERSION unicode
-enable_component PNG png
 enable_component AVAHI avahiclient
 #enable_component IMPOSSIBLE_COMPONENT something_that_doesnt_exist
 

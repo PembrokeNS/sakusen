@@ -1,5 +1,3 @@
-#ifndef DISABLE_PNG
-
 #include "pngimage.h"
 
 #include "fileioexn.h"
@@ -186,5 +184,3 @@ void PngImage::read(boost::multi_array<uint16, 2>& out) const
 }
 
 }}
-
-#endif // DISABLE_PNG

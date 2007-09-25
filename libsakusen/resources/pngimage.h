@@ -1,8 +1,6 @@
 #ifndef PNGIMAGE_H
 #define PNGIMAGE_H
 
-#ifndef DISABLE_PNG
-
 #include "libsakusen-resources-global.h"
 
 #include <boost/scoped_ptr.hpp>
@@ -25,8 +23,6 @@ class LIBSAKUSEN_RESOURCES_API PngImage : public Image {
 };
 
 }}
-
-#endif // DISABLE_PNG
 
 #endif // PNGIMAGE_H
 

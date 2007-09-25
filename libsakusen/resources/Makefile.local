@@ -1,11 +1,7 @@
 BIN = libsakusen-resources.la
 SUBDIRS = test
 LIB_DEP_NAMES = libltdl_hacked libsakusen libsakusen-comms
-LIBS := -lpcrecpp
-
-ifeq ($(ENABLE_PNG),yes)
-LIBS += -lpng
-endif
+LIBS := -lpcrecpp -lpng
 
 .PHONY: test
 
