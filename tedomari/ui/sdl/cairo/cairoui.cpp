@@ -1,5 +1,3 @@
-#ifndef DISABLE_CAIRO
-
 #include "tedomari-global.h"
 #include "ui/sdl/cairo/cairoui.h"
 #include "ui/sdl/cairo/cairoregion.h"
@@ -162,5 +160,3 @@ void CairoUI::drawText(double x, double y, const CairoLayout* sdlLayout)
   cairo_move_to(cairoContext, x, y);
   pango_cairo_show_layout(cairoContext, sdlLayout->getLayout());
 }
-
-#endif

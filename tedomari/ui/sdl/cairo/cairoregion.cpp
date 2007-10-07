@@ -1,5 +1,3 @@
-#ifndef DISABLE_CAIRO
-
 #include "ui/sdl/cairo/cairoregion.h"
 
 using namespace tedomari::ui;
@@ -85,5 +83,3 @@ void CairoRegion::drawText(double xoff, double yoff, const Layout* layout)
 {
   ui->drawText(x+xoff, y+yoff, dynamic_cast<const CairoLayout*>(layout));
 }
-
-#endif
