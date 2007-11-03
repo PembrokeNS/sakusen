@@ -80,12 +80,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pcrecpp.lib libsakusen.lib Ws2_32.lib libpng13.lib zlib1.lib"
+				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(ConfigurationName)&quot;;..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
-				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
+				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\Release/libsakusen.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -183,12 +183,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pcrecpp.lib libsakusen.lib Ws2_32.lib libpng13d.lib zlib1d.lib"
+				AdditionalDependencies="Ws2_32.lib ..\..\..\..\externals\libpng\projects\visualc71\Win32_DLL_Debug\libpng13d.lib ..\..\..\..\externals\libpng\projects\visualc71\Win32_DLL_Debug\Zlib\zlib1d.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(ConfigurationName)&quot;;..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"

@@ -26,6 +26,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Moving dll to .sakusen"
+				CommandLine="copy $(TargetPath) &quot;%AppData%\.sakusen\data\module\testsrc.sakusenmodule&quot;"
+				Outputs="testsrc.sakusenmodule"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -101,6 +104,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Moving dll to .sakusen"
+				CommandLine="copy $(TargetPath) &quot;%AppData%\.sakusen\data\module\testsrc.sakusenmodule&quot;"
+				Outputs="testsrc.sakusenmodule"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"

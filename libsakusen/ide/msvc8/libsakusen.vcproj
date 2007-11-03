@@ -79,8 +79,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmhash.lib Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;&quot;..\..\..\externals\mhash-win32\win32\libmhash\Release&quot;;..\..\..\externals\STLport\bin"
+				AdditionalDependencies="Ws2_32.lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;..\..\..\externals\STLport\bin"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -173,8 +173,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmhash.lib Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;&quot;..\..\..\externals\mhash-win32\win32\libmhash\Release&quot;;..\..\..\externals\STLport\bin"
+				AdditionalDependencies="Ws2_32.lib"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;..\..\..\externals\STLport\bin"
 				OptimizeReferences="1"
 				EnableCOMDATFolding="1"
 			/>

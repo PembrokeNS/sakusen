@@ -1,0 +1,24 @@
+To Compile and Run Sakusen for windows, do the following:
+
+0. Download an svn copy. I assume you have already done this to be reading this file.
+1. Download and install VC 2005 (Express or otherwise), the Platform SDK and the DirectX SDK (note: depending on the state of the source code, the last two may or may not be necessary. DirectX is probably not necessary at this point). The file "Installing VC Express" in this directory may be useful here.
+2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost library and include directories to your VC++ include and library paths. These can be altered in the Projects and Solutions section in the Options dialog box.
+3. Compile and install STLPort. This can be done by running "externals\STLport\build\lib\configure.bat -c msvc8" and then following the instructions. You must execute *both* commands it instructs you to. The version of STLPort used should be at least 5. You do not need the STLport IOStreams library. You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
+4. Install PCRE 6.x from http://sourceforge.net/project/showfiles.php?group_id=23617&package_id=26189 Note that PCRE 7 will not, at present, work. Add C:\Program Files\GnuWin32\include to VC's include directories and similarly C:\Program Files\GnuWin32\lib to the lib dirs.
+5. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 Place libpng in externals\libpng and zlib in externals\zlib
+6. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here: http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
+C:\GTK\include\pango-1.0
+C:\GTK\include\glib-2.0
+C:\GTK\lib\glib-2.0\include
+C:\GTK\include\cairo
+and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
+7. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
+8. To actually "play" Sakusen you must:
+   a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
+     i)Moves the requisite dlls into the same directory as your binaries.
+     ii)Runs libsakusen-resources-test to generate the universe if this hasn't already been done.
+     iii)Moves tedomari\doc\user\ui.conf and config into %AppData%\.sakusen\tedomari\
+   b) Compress (either zip or tar will do) data\universe\testsrc.dir\cannon.cpp and cannon.h into one file, rename it testsrc.sakusensource and move it to %AppData%\.sakusen\data\universe
+   c) Run fuseki.
+   d) Invoke tedomari with tedomari -j "tcp|localhost"
+9. Sing "Rule Britannia!"

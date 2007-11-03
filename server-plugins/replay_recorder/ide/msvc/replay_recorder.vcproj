@@ -2,10 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="libsakusen-resources-test"
-	ProjectGUID="{1CB628B3-89A4-4238-ABC6-A71B53AA7764}"
-	RootNamespace="libsakusenresourcestest"
-	Keyword="Win32Proj"
+	Name="replay_recorder"
+	ProjectGUID="{C2051D9C-D256-458A-9192-126D074F1EFD}"
+	RootNamespace="replay_recorder"
 	>
 	<Platforms>
 		<Platform
@@ -19,8 +18,8 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="1"
+			ConfigurationType="2"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,12 +39,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\externals\STLport\stlport;..\..\..\;..\..\..\..\comms;..\..\..\..\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -61,11 +58,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
-				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -97,8 +91,8 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="1"
+			ConfigurationType="2"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -118,14 +112,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\..\..\externals\STLport\stlport;..\..\..\;..\..\..\..\comms;..\..\..\..\"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -141,12 +129,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib"
-				IgnoreDefaultLibraryNames=""
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
-				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -181,7 +165,19 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\main.cpp"
+			RelativePath="..\..\replayrecorder.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\replayrecorder.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\replayrecorderinfo.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\replayrecorderinfo.h"
 			>
 		</File>
 	</Files>
