@@ -37,7 +37,7 @@ function check_for_lib
   header="$1"
   shift
   # Subsequent arguments are things to pass to gcc (probably includes)
-  if printf '#include <%s>\nint main() { return 0; }\n' "${header}" | \
+  if printf '#include <stdio.h>\n#include <%s>\nint main() { return 0; }\n' "${header}" | \
     g++ -x c++ -o /dev/null "$@" -l${lib} -
   then
     eval ${name}_exists=yes
