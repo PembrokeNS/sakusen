@@ -183,7 +183,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib ..\..\..\..\externals\libpng\projects\visualc71\Win32_DLL_Debug\libpng13d.lib ..\..\..\..\externals\libpng\projects\visualc71\Win32_DLL_Debug\Zlib\zlib1d.lib"
+				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"

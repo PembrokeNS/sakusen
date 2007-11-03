@@ -7,7 +7,7 @@
 namespace sakusen {
 namespace resources {
 
-class FileIOExn : public Exn
+class LIBSAKUSEN_RESOURCES_API FileIOExn : public Exn
 {
   private:
     FileIOExn(const String& message, int) :

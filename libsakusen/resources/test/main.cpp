@@ -11,6 +11,7 @@
 #include "fileresourceinterface.h"
 #include "fileutils.h"
 #include "pngimage.h"
+#include "fileioexn.h"
 
 #include <iostream>
 
@@ -22,7 +23,7 @@ using namespace sakusen::resources;
 /** \file
  *
  * This file contains code for a test of the libsakusen-resources library.  It
- * doubles as a convinient source of toy gamedata for testing servers and
+ * doubles as a convenient source of toy gamedata for testing servers and
  * clients.
  *
  * The intent is to create a simple Universe and Map, save them to disk and
@@ -403,8 +404,13 @@ int main(/*int argc, char** argv*/)
   /* As an afterthought, we test the image stuff */
   /** \todo This would be better in the Perl tests or something similar */
   /** \bug Doesn't work when in an alternate build dir */
-  PngImage image("../../../data/maptemplate/test-heightfield0.png");
-  Heightfield hf(1, 1, image);
+  cout<< "Loading Image"<<endl;
+  try{
+      PngImage image("../../../data/maptemplate/test-heightfield0.png");
+      Heightfield hf(1, 1, image);
+  }catch(sakusen::resources::FileIOExn){
+      cout<<"Could not open \"../../../data/maptemplate/test-heightfield0.png\""<<endl;
+  }
   
   return EXIT_SUCCESS;
 }
