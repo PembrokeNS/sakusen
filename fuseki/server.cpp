@@ -933,7 +933,9 @@ void Server::registerListener(
 }
 
 /** \brief Remove a previously registered listener */
-void Server::unregisterListener(const MaskedPtr<Listener>& listener)
+void Server::unregisterListener(
+    const MaskedPtr<sakusen::server::plugins::Listener>& listener
+  )
 {
   listeners.erase(listener);
 }

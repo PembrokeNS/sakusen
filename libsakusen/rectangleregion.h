@@ -52,7 +52,7 @@ inline Point<U> RectangleRegion<T>::truncateToFitTemplate(const Point<U>& p) con
     return p;
   }
   Point<U> t(p);
-  /** \bug Using std::min/max<sint32> may not always suffice */
+  /** \bug Using std::min/max&lt;sint32&gt; may not always suffice */
   t.x = static_cast<U>(std::min<sint32>(
         std::max<sint32>(t.x, rectangle.getMinX()), rectangle.getMaxX()
       ));

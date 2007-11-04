@@ -107,7 +107,7 @@ void OptionsParser::addOption(
 void OptionsParser::addOption(
     const string& longName,
     char shortName,
-    list<string>* value,
+    list<std::string>* value,
     char separator
   )
 {

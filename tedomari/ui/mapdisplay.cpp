@@ -38,7 +38,7 @@ void MapDisplay::drawUnit(
  * \param[in] colour The colour of the player who owns this unit.
  */
 void MapDisplay::drawUnitOrders(
-    const Ref<const UpdatedUnit>& unit,
+    const Ref<const sakusen::client::UpdatedUnit>& unit,
     const Colour& colour
   )
 {
@@ -55,7 +55,7 @@ void MapDisplay::drawUnitOrders(
 }
 
 void MapDisplay::drawBallistic(
-    const Ref<const UpdatedBallistic>& ballistic,
+    const Ref<const sakusen::client::UpdatedBallistic>& ballistic,
     const Colour& colour
   )
 {

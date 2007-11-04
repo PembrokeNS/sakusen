@@ -650,13 +650,13 @@ class MoveVisitor : public boost::static_visitor<void> {
 };
 
 /** \todo Replace this method with the order-queue related things */
-void UI::move(const std::set<UnitId>& units, const ActionTarget& target)
+void UI::move(const set<sakusen::UnitId>& units, const ActionTarget& target)
 {
   MoveVisitor moveVisitor(this, units);
   target.apply_visitor(moveVisitor);
 }
 
-void UI::move(const std::set<UnitId>& units, const Position& target)
+void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
 {
   Order order = Order(new MoveOrderData(target));
   
