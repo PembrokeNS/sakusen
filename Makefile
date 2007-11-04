@@ -30,7 +30,7 @@ config:
 	$(AUTOCONFIG)
 
 doc:
-	doxygen
+	doxygen Doxyfile
 
 .PHONY: config doc
 
