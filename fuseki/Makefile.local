@@ -12,6 +12,7 @@ ifeq ($(ENABLE_AVAHI),yes)
 endif
 
 doc/man/man1/fuseki.1: $(BIN)
+	@mkdir -p $(dir $@)
 	help2man --output=$@ --no-info \
 		--name="run a server for the game sakusen" ./$<
 
