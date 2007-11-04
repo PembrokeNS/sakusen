@@ -91,7 +91,6 @@ int main(int argc, char* const* argv)
   
   String fusekiConfigFile =
     homePath + CONFIG_SUBDIR FILE_SEP "fuseki" FILE_SEP "config";
-  cout << "Looking for fuseki config file at " << fusekiConfigFile << endl;
   
   /* Parse config file and command line arguments */
   Options options = getOptions(fusekiConfigFile, argc, argv);
@@ -105,6 +104,8 @@ int main(int argc, char* const* argv)
     cout << APPLICATION_NAME << " " << APPLICATION_VERSION << endl;
     return EXIT_SUCCESS;
   }
+
+  cout << "Looked for fuseki config file at " << fusekiConfigFile << endl;
   
   return startServer(homePath, options);
 }
@@ -113,32 +114,35 @@ int main(int argc, char* const* argv)
 
 void usage()
 {
-  cout << "fuseki is a server for the game sakusen, accepting connections\n"
-          "from clients through a unix(7) socket.\n"
-          "\n"
-          "Usage: fuseki [OPTIONS]\n"
-          "\n"
-          " -d-, --no-dots          do not print dots while server running\n"
-          " -h,  --help             display help and exit\n"
-          " -V,  --version          display version information and exit\n"
+  cout <<
+  "fuseki is a server for the game sakusen, accepting connections\n"
+  "from clients through unix(7) and tcp(7) sockets.\n"
+  "\n"
+  "Usage: fuseki [OPTIONS]\n"
+  "\n"
+  " -d-, --no-dots          do not print dots while server running.\n"
+  " -h,  --help             display help and exit.\n"
+  " -V,  --version          display version information and exit.\n"
 #ifndef DISABLE_UNIX_SOCKETS
-          " -a-, --no-abstract      do not use the abstract unix socket namespace\n" 
-          " -f,  --force-socket     overwrite any existing socket file\n"
-          " -x,  --unix ADDRESS     bind the unix socket at sakusen-style address\n"
-          "                         ADDRESS (e.g. concrete|/var/fuseki/socket)\n"
-          "                         (default is a UNIX socket in ~/.sakusen/fuseki)\n"
+  " -a-, --no-abstract      do not use the abstract unix socket namespace.\n" 
+  " -f,  --force-socket     overwrite any existing socket file.\n"
+  " -x,  --unix ADDRESS     bind the unix socket at sakusen-style address\n"
+  "                         ADDRESS (e.g. concrete|/var/fuseki/socket)\n"
+  "                         (default is a UNIX socket in ~/.sakusen/fuseki).\n"
 #endif
-          " -t,  --tcp ADDRESS      Bind tcp socket at ADDRESS.\n"
-          "                         Default: localhost, specify a null ADDRESS to disable\n"
-          " -p,  --plugins PATH:... Search for plugins in each given PATH, in given order\n"
-          "\n"
-          "Port for TCP socket defaults to "<<DEFAULT_PORT<<" if not specified.\n"
-          "Some examples: \n"
-          "fuseki -t \"\" \n"
-          "fuseki -t 192.168.1.1:1775 \n"
-          "\n"
-          "This is an alpha version of fuseki.  Functionality is extremely "
-            "limited." << endl;
+  " -t,  --tcp ADDRESS      Bind tcp socket at ADDRESS.\n"
+  "                         Default: localhost, specify a null ADDRESS to disable.\n"
+  " -p,  --plugins PATH:... Search for plugins in each given PATH, in given order.\n"
+  "                         A plugin foo is expected at PATH/foo/foo.la or\n"
+  "                         PATH/foo/foo.dll according to platform.\n"
+  "\n"
+  "Port for TCP socket defaults to "<<DEFAULT_PORT<<" if not specified.\n"
+  "Some examples: \n"
+  "fuseki -t \"\" \n"
+  "fuseki -t 192.168.1.1:1775 \n"
+  "\n"
+  "This is an alpha version of fuseki.  Functionality is extremely limited."
+  << endl;
 }
 
 /** Parses the config file and command line */
@@ -170,11 +174,6 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
 
 int startServer(const String& homePath, const Options& options)
 {
-  if (options.version) {
-    cout << APPLICATION_NAME " " APPLICATION_VERSION << endl;
-    return EXIT_SUCCESS;
-  }
-  
   cout << "*****************************\n"
           "* fuseki (a Sakusen server) *\n"
           "* Similus est circo mortis! *\n"
