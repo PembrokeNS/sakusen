@@ -66,81 +66,103 @@ The settings tree as I presently imagine it stands as follows.  Some has been
 implemented.
 
 <ul>
-  <li>server
+  <li><var>server</var>
   <ul>
-    <li>application
+    <li><var>application</var>
     <ul>
-      <li>name</li>
-      <li>version</li>
-      <li>revision</li>
+      <li><var>name</var></li>
+      <li><var>version</var></li>
+      <li><var>revision</var></li>
     </ul></li>
-    <li>blockedaddresses</li>
-    <li>allowobservers</li>
-    <li>deadclienttimeout</li>
-    <li>countdown</li>
+    <li><var>blockedaddresses</var></li>
+    <li><var>allowobservers</var></li>
+    <li><var>deadclienttimeout</var></li>
+    <li><var>countdown</var></li>
+    <li><var>plugins</var>, a stringset. Adding an element <var>foo</var> to
+      this list causes fuseki to search for a plugin with a name starting
+      <var>foo</var> and load it.  If there is no such plugin or more than one
+      such then the attempt fails.  The --plugins
+      command line option allows the search path
+      for plugins to be specified.</li>
   </ul></li>
 
-  <li>game
+  <li><var>game</var>
   <ul>
-    <li>name</li>
-    <li>universe
+    <li><var>name</var></li>
+    <li><var>universe</var>
     <ul>
-      <li>name</li>
-      <li>hash</li>
+      <li><var>name</var>, a string.  Setting it to
+        <var>foo</var>causes fuseki to search for a
+        universe with name starting <var>foo</var>, and load it if found.</li>
+      <li><var>hash</var>, a string.  Set to the hex value of the universe
+        hash once one is loaded.</li>
     </ul></li>
-    <li>map</li>
-    <li>mapplaymode</li>
-    <li>usesuggesteduniverse</li>
-    <li>speed</li>
-    <li>paused</li>
+    <li><var>map</var>, a string.  Analagous to universe:name, but for the
+      map.</li>
+    <li><var>mapplaymode</var>, and integer.  Which mode of the map to
+      use.</li>
+    <li><var>usesuggesteduniverse</var></li>
+    <li><var>speed</var>, an integer.  Number of microseconds per tick of
+      game.  Note that this is really inverse speed, not speed.</li>
+    <li><var>paused</var>, a bool.  When true, pauses the game.</li>
   </ul></li>
       
-  <li>clients
+  <li><var>clients</var>
   <ul>
-    <li><var>n</var>
+    <li><var>n</var> (where <var>n</var> is the number of the client)
     <ul>
-      <li>application
+      <li><var>application</var>
       <ul>
-        <li>name</li>
-        <li>version</li>
-        <li>revision</li>
+        <li><var>name</var></li>
+        <li><var>version</var></li>
+        <li><var>revision</var></li>
       </ul></li>
-      <li>ping</li>
-      <li>admin</li>
-      <li>neveradmin</li>
-      <li>observer</li>
-      <li>player</li>
-      <li>ready</li>
-      <li>controller
+      <li><var>ping</var></li>
+      <li><var>admin</var>, a bool.  True iff the client has admin privelages
+        (which means the ability to edit more of the settings in this
+        tree).</li>
+      <li><var>neveradmin</var>, a bool.  If true, the server will never make
+        this client into an admin.  Should be true for AI players, for
+        example.</li>
+      <li><var>observer</var>, a bool.  True if the client is (to be) an
+        observer, and not control a player.</li>
+      <li><var>player</var>, an int.  Specifies the player that the client
+        controls / will control.  Should be 0 for observers.</li>
+      <li><var>ready</var>, a bool.  True if the client is ready to begin.
+        The server will not start until all clients are ready.</li>
+      <li><var>controller</var>
       <ul>
-        <li>name</li>
-        <li>comments</li>
-        <li>guidance
+        <li><var>name</var></li>
+        <li><var>comments</var></li>
+        <li><var>guidance</var>
         <ul>
           <li>...</li>
         </ul></li>
       </ul></li>
-      <li>kicked</li>
-      <li>connection</li>
-      <li>autounready</li>
-      <li>capabilities
+      <li><var>kicked</var></li>
+      <li><var>connection</var></li>
+      <li><var>autounready</var>, a bool.  If true, then the server will
+        automatically clear the client's ready flag whenever any setting
+        except for a clients readiness changes.</li>
+      <li><var>capabilities</var>
       <ul>
         <li>...</li>
       </ul></li>
     </ul></li>
   </ul></li>
 
-  <li>players
+  <li><var>players</var>
   <ul>
-    <li><var>n</var>
+    <li><var>n</var> (where <var>n</var> is the number of the player)
     <ul>
-      <li>name</li>
-      <li>race</li>
-      <li>racefixed</li>
-      <li>maxclients</li>
-      <li>noclients</li>
-      <li>colour (also color?)</li>
-      <li>handicap</li>
+      <li><var>name</var></li>
+      <li><var>race</var></li>
+      <li><var>racefixed</var></li>
+      <li><var>maxclients</var></li>
+      <li><var>noclients</var>, a bool.  True when the player is not intended
+        to have clients attached (e.g. a player of critters)</li>
+      <li><var>colour</var> (also <var>color</var>?)</li>
+      <li><var>handicap</var></li>
     </ul></li>
   </ul></li>
 </ul>
