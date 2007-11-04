@@ -4,11 +4,11 @@
 #include "plugins/plugininfo.h"
 
 #ifdef WIN32
-	#include <windows.h>
+  #include <windows.h>
 #endif
 
 #ifdef __GNUC__
-	#include <ltdl.h>
+  #include <ltdl.h>
 #endif //The Guild does not condone ltdl
 
 using namespace std;
@@ -68,30 +68,30 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
             throw PluginExn(error);
           }
 #else
-      	  //Opens the plugin.
-      	  String module = candidate + FILE_SEP + fullPluginName + ".dll";
-      	  //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
-      	  /** \bug This should work for UNICODE filenames. */
+          //Opens the plugin.
+          String module = candidate + FILE_SEP + fullPluginName + ".dll";
+          //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
+          /** \bug This should work for UNICODE filenames. */
           HMODULE moduleHandle = LoadLibraryA(module.c_str());
-      	  //Error handling for the above.
-      	  if(moduleHandle == NULL) {
+          //Error handling for the above.
+          if(moduleHandle == NULL) {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,2);
             String error= "LoadLibrary() failed. Error value: " + String(buffer);
             throw PluginExn(error);
-      	  }
-      	  
-      	  String symbolName = "get_"+fullPluginName+"_info";
+          }
+          
+          String symbolName = "get_"+fullPluginName+"_info";
           //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
-      	  FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());
-      	  //Error handling if this fails.
-      	  if(symbol==NULL)
-      	  {
+          FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());
+          //Error handling if this fails.
+          if(symbol==NULL)
+          {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,2);
             String error = "GetProcAddress() on "+symbolName+" in " + module+ " failed. Error value: " + String(buffer);
             throw PluginExn(error);
-      	  }
+          }
 #endif //__GNUC__
 
           PluginInfo* (*infoSource)() =
