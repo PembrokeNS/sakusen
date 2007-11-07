@@ -29,6 +29,10 @@
 //
 // Author: Sanjay Ghemawat
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -37,9 +41,11 @@
 #include <errno.h>
 #include <string>
 #include <algorithm>
-#include <pcre.h>
-#include "pcre_stringpiece.h"
+
+#include "pcrecpp_internal.h"
+#include "pcre.h"
 #include "pcrecpp.h"
+#include "pcre_stringpiece.h"
 
 
 namespace pcrecpp {
@@ -49,15 +55,15 @@ static const int kMaxArgs = 16;
 static const int kVecSize = (1 + kMaxArgs) * 3;  // results + PCRE workspace
 
 // Special object that stands-in for no argument
-Arg no_arg((void*)NULL);
+PCRECPP_EXP_DEFN Arg no_arg((void*)NULL);
 
 // If a regular expression has no error, its error_ field points here
-static const std::string empty_string;
+static const string empty_string;
 
 // If the user doesn't ask for any options, we just use this one
 static RE_Options default_options;
 
-void RE::Init(const char* pat, const RE_Options* options) {
+void RE::Init(const string& pat, const RE_Options* options) {
   pattern_ = pat;
   if (options == NULL) {
     options_ = default_options;
@@ -70,26 +76,21 @@ void RE::Init(const char* pat, const RE_Options* options) {
 
   re_partial_ = Compile(UNANCHORED);
   if (re_partial_ != NULL) {
-    // Check for complicated patterns.  The following change is
-    // conservative in that it may treat some "simple" patterns
-    // as "complex" (e.g., if the vertical bar is in a character
-    // class or is escaped).  But it seems good enough.
-    if (strchr(pat, '|') == NULL) {
-      // Simple pattern: we can use position-based checks to perform
-      // fully anchored matches
-      re_full_ = re_partial_;
-    } else {
-      // We need a special pattern for anchored matches
-      re_full_ = Compile(ANCHOR_BOTH);
-    }
+    re_full_ = Compile(ANCHOR_BOTH);
   }
 }
 
-RE::~RE() {
-  if (re_full_ != NULL && re_full_ != re_partial_) (*pcre_free)(re_full_);
-  if (re_partial_ != NULL)                         (*pcre_free)(re_partial_);
-  if (error_ != &empty_string)                     delete error_;
+void RE::Cleanup() {
+  if (re_full_ != NULL)         (*pcre_free)(re_full_);
+  if (re_partial_ != NULL)      (*pcre_free)(re_partial_);
+  if (error_ != &empty_string)  delete error_;
 }
+
+
+RE::~RE() {
+  Cleanup();
+}
+
 
 pcre* RE::Compile(Anchor anchor) {
   // First, convert RE_Options into pcre options
@@ -117,14 +118,14 @@ pcre* RE::Compile(Anchor anchor) {
   } else {
     // Tack a '\z' at the end of RE.  Parenthesize it first so that
     // the '\z' applies to all top-level alternatives in the regexp.
-    std::string wrapped = "(?:";  // A non-counting grouping operator
+    string wrapped = "(?:";  // A non-counting grouping operator
     wrapped += pattern_;
     wrapped += ")\\z";
     re = pcre_compile(wrapped.c_str(), pcre_options,
                       &compile_error, &eoffset, NULL);
   }
   if (re == NULL) {
-    if (error_ == &empty_string) error_ = new std::string(compile_error);
+    if (error_ == &empty_string) error_ = new string(compile_error);
   }
   return re;
 }
@@ -312,13 +313,13 @@ bool RE::FindAndConsume(StringPiece* input,
 }
 
 bool RE::Replace(const StringPiece& rewrite,
-                 std::string *str) const {
+                 string *str) const {
   int vec[kVecSize];
   int matches = TryMatch(*str, 0, UNANCHORED, vec, kVecSize);
   if (matches == 0)
     return false;
 
-  std::string s;
+  string s;
   if (!Rewrite(&s, rewrite, *str, vec, matches))
     return false;
 
@@ -328,11 +329,43 @@ bool RE::Replace(const StringPiece& rewrite,
   return true;
 }
 
+// Returns PCRE_NEWLINE_CRLF, PCRE_NEWLINE_CR, or PCRE_NEWLINE_LF.
+// Note that PCRE_NEWLINE_CRLF is defined to be P_N_CR | P_N_LF.
+// Modified by PH to add PCRE_NEWLINE_ANY and PCRE_NEWLINE_ANYCRLF.
+
+static int NewlineMode(int pcre_options) {
+  // TODO: if we can make it threadsafe, cache this var
+  int newline_mode = 0;
+  /* if (newline_mode) return newline_mode; */  // do this once it's cached
+  if (pcre_options & (PCRE_NEWLINE_CRLF|PCRE_NEWLINE_CR|PCRE_NEWLINE_LF|
+                      PCRE_NEWLINE_ANY|PCRE_NEWLINE_ANYCRLF)) {
+    newline_mode = (pcre_options &
+                    (PCRE_NEWLINE_CRLF|PCRE_NEWLINE_CR|PCRE_NEWLINE_LF|
+                     PCRE_NEWLINE_ANY|PCRE_NEWLINE_ANYCRLF));
+  } else {
+    int newline;
+    pcre_config(PCRE_CONFIG_NEWLINE, &newline);
+    if (newline == 10)
+      newline_mode = PCRE_NEWLINE_LF;
+    else if (newline == 13)
+      newline_mode = PCRE_NEWLINE_CR;
+    else if (newline == 3338)
+      newline_mode = PCRE_NEWLINE_CRLF;
+    else if (newline == -1)
+      newline_mode = PCRE_NEWLINE_ANY;
+    else if (newline == -2)
+      newline_mode = PCRE_NEWLINE_ANYCRLF;
+    else
+      assert("" == "Unexpected return value from pcre_config(NEWLINE)");
+  }
+  return newline_mode;
+}
+
 int RE::GlobalReplace(const StringPiece& rewrite,
-                      std::string *str) const {
+                      string *str) const {
   int count = 0;
   int vec[kVecSize];
-  std::string out;
+  string out;
   int start = 0;
   int lastend = -1;
 
@@ -346,9 +379,31 @@ int RE::GlobalReplace(const StringPiece& rewrite,
     if (matchstart == matchend && matchstart == lastend) {
       // advance one character if we matched an empty string at the same
       // place as the last match occurred
-      if (start < static_cast<int>(str->length()))
-        out.push_back((*str)[start]);
-      start++;
+      matchend = start + 1;
+      // If the current char is CR and we're in CRLF mode, skip LF too.
+      // Note it's better to call pcre_fullinfo() than to examine
+      // all_options(), since options_ could have changed bewteen
+      // compile-time and now, but this is simpler and safe enough.
+      // Modified by PH to add ANY and ANYCRLF.
+      if (start+1 < static_cast<int>(str->length()) &&
+          (*str)[start] == '\r' && (*str)[start+1] == '\n' &&
+          (NewlineMode(options_.all_options()) == PCRE_NEWLINE_CRLF ||
+           NewlineMode(options_.all_options()) == PCRE_NEWLINE_ANY ||
+           NewlineMode(options_.all_options()) == PCRE_NEWLINE_ANYCRLF)
+          ) {
+        matchend++;
+      }
+      // We also need to advance more than one char if we're in utf8 mode.
+#ifdef SUPPORT_UTF8
+      if (options_.utf8()) {
+        while (matchend < static_cast<int>(str->length()) &&
+               ((*str)[matchend] & 0xc0) == 0x80)
+          matchend++;
+      }
+#endif
+      if (matchend <= static_cast<int>(str->length()))
+        out.append(*str, start, matchend - start);
+      start = matchend;
     } else {
       out.append(*str, start, matchstart - start);
       Rewrite(&out, rewrite, *str, vec, matches);
@@ -369,13 +424,41 @@ int RE::GlobalReplace(const StringPiece& rewrite,
 
 bool RE::Extract(const StringPiece& rewrite,
                  const StringPiece& text,
-                 std::string *out) const {
+                 string *out) const {
   int vec[kVecSize];
   int matches = TryMatch(text, 0, UNANCHORED, vec, kVecSize);
   if (matches == 0)
     return false;
   out->erase();
   return Rewrite(out, rewrite, text, vec, matches);
+}
+
+/*static*/ string RE::QuoteMeta(const StringPiece& unquoted) {
+  string result;
+
+  // Escape any ascii character not in [A-Za-z_0-9].
+  //
+  // Note that it's legal to escape a character even if it has no
+  // special meaning in a regular expression -- so this function does
+  // that.  (This also makes it identical to the perl function of the
+  // same name; see `perldoc -f quotemeta`.)
+  for (int ii = 0; ii < unquoted.size(); ++ii) {
+    // Note that using 'isalnum' here raises the benchmark time from
+    // 32ns to 58ns:
+    if ((unquoted[ii] < 'a' || unquoted[ii] > 'z') &&
+        (unquoted[ii] < 'A' || unquoted[ii] > 'Z') &&
+        (unquoted[ii] < '0' || unquoted[ii] > '9') &&
+        unquoted[ii] != '_' &&
+        // If this is the part of a UTF8 or Latin1 character, we need
+        // to copy this byte without escaping.  Experimentally this is
+        // what works correctly with the regexp library.
+        !(unquoted[ii] & 128)) {
+      result += '\\';
+    }
+    result += unquoted[ii];
+  }
+
+  return result;
 }
 
 /***** Actual matching and rewriting code *****/
@@ -391,16 +474,14 @@ int RE::TryMatch(const StringPiece& text,
     return 0;
   }
 
-  pcre_extra extra = { 0 };
+  pcre_extra extra = { 0, 0, 0, 0, 0, 0 };
   if (options_.match_limit() > 0) {
     extra.flags |= PCRE_EXTRA_MATCH_LIMIT;
     extra.match_limit = options_.match_limit();
   }
   if (options_.match_limit_recursion() > 0) {
-    // This appears to not be supported in this version of pcre - JJB
-    abort();
-    //extra.flags |= PCRE_EXTRA_MATCH_LIMIT_RECURSION;
-    //extra.match_limit_recursion = options_.match_limit_recursion();
+    extra.flags |= PCRE_EXTRA_MATCH_LIMIT_RECURSION;
+    extra.match_limit_recursion = options_.match_limit_recursion();
   }
   int rc = pcre_exec(re,              // The regular expression object
                      &extra,
@@ -424,13 +505,6 @@ int RE::TryMatch(const StringPiece& text,
     // When this happens, there is a match and the output vector
     // is filled, but we miss out on the positions of the extra subpatterns.
     rc = vecsize / 2;
-  }
-
-  if ((anchor == ANCHOR_BOTH) && (re_full_ == re_partial_)) {
-    // We need an extra check to make sure that the match extended
-    // to the end of the input string
-    assert(vec[0] == 0);                 // PCRE_ANCHORED forces starting match
-    if (vec[1] != text.size()) return 0; // Did not get ending match
   }
 
   return rc;
@@ -486,12 +560,12 @@ bool RE::DoMatch(const StringPiece& text,
                                        // (as for kVecSize)
   int space[21];   // use stack allocation for small vecsize (common case)
   int* vec = vecsize <= 21 ? space : new int[vecsize];
-  bool retval = DoMatchImpl(text, anchor, consumed, args, n, vec, vecsize);
+  bool retval = DoMatchImpl(text, anchor, consumed, args, n, vec, (int)vecsize);
   if (vec != space) delete [] vec;
   return retval;
 }
 
-bool RE::Rewrite(std::string *out, const StringPiece &rewrite,
+bool RE::Rewrite(string *out, const StringPiece &rewrite,
                  const StringPiece &text, int *vec, int veclen) const {
   for (const char *s = rewrite.data(), *end = s + rewrite.size();
        s < end; s++) {
@@ -544,7 +618,7 @@ bool Arg::parse_null(const char* str, int n, void* dest) {
 }
 
 bool Arg::parse_string(const char* str, int n, void* dest) {
-  reinterpret_cast<std::string*>(dest)->assign(str, n);
+  reinterpret_cast<string*>(dest)->assign(str, n);
   return true;
 }
 
@@ -637,7 +711,7 @@ bool Arg::parse_short_radix(const char* str,
   long r;
   if (!parse_long_radix(str, n, &r, radix)) return false; // Could not parse
   if (r < SHRT_MIN || r > SHRT_MAX) return false;       // Out of range
-  *(reinterpret_cast<short*>(dest)) = r;
+  *(reinterpret_cast<short*>(dest)) = static_cast<short>(r);
   return true;
 }
 
@@ -648,7 +722,7 @@ bool Arg::parse_ushort_radix(const char* str,
   unsigned long r;
   if (!parse_ulong_radix(str, n, &r, radix)) return false; // Could not parse
   if (r > USHRT_MAX) return false;                      // Out of range
-  *(reinterpret_cast<unsigned short*>(dest)) = r;
+  *(reinterpret_cast<unsigned short*>(dest)) = static_cast<unsigned short>(r);
   return true;
 }
 
@@ -690,6 +764,8 @@ bool Arg::parse_longlong_radix(const char* str,
   long long r = strtoq(str, &end, radix);
 #elif defined HAVE_STRTOLL
   long long r = strtoll(str, &end, radix);
+#elif defined HAVE__STRTOI64
+  long long r = _strtoi64(str, &end, radix);
 #else
 #error parse_longlong_radix: cannot convert input to a long-long
 #endif
@@ -717,6 +793,8 @@ bool Arg::parse_ulonglong_radix(const char* str,
   unsigned long long r = strtouq(str, &end, radix);
 #elif defined HAVE_STRTOLL
   unsigned long long r = strtoull(str, &end, radix);
+#elif defined HAVE__STRTOI64
+  unsigned long long r = _strtoui64(str, &end, radix);
 #else
 #error parse_ulonglong_radix: cannot convert input to a long-long
 #endif
@@ -765,14 +843,14 @@ bool Arg::parse_float(const char* str, int n, void* dest) {
     return parse_##name##_radix(str, n, dest, 0);                       \
   }
 
-DEFINE_INTEGER_PARSERS(short);
-DEFINE_INTEGER_PARSERS(ushort);
-DEFINE_INTEGER_PARSERS(int);
-DEFINE_INTEGER_PARSERS(uint);
-DEFINE_INTEGER_PARSERS(long);
-DEFINE_INTEGER_PARSERS(ulong);
-DEFINE_INTEGER_PARSERS(longlong);
-DEFINE_INTEGER_PARSERS(ulonglong);
+DEFINE_INTEGER_PARSERS(short)      /*                                   */
+DEFINE_INTEGER_PARSERS(ushort)     /*                                   */
+DEFINE_INTEGER_PARSERS(int)        /* Don't use semicolons after these  */
+DEFINE_INTEGER_PARSERS(uint)       /* statements because they can cause */
+DEFINE_INTEGER_PARSERS(long)       /* compiler warnings if the checking */
+DEFINE_INTEGER_PARSERS(ulong)      /* level is turned up high enough.   */
+DEFINE_INTEGER_PARSERS(longlong)   /*                                   */
+DEFINE_INTEGER_PARSERS(ulonglong)  /*                                   */
 
 #undef DEFINE_INTEGER_PARSERS
 

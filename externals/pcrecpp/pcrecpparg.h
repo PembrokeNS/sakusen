@@ -35,6 +35,8 @@
 #include <stdlib.h>    // for NULL
 #include <string>
 
+#include <pcre.h>
+
 namespace pcrecpp {
 
 class StringPiece;
@@ -51,7 +53,7 @@ class _RE_MatchObject {
   }
 };
 
-class PCRECPP_API Arg {
+class PCRECPP_EXP_DEFN Arg {
  public:
   // Empty constructor so we can declare arrays of Arg
   Arg();
@@ -75,12 +77,12 @@ class PCRECPP_API Arg {
   PCRE_MAKE_PARSER(unsigned int,       parse_uint);
   PCRE_MAKE_PARSER(long,               parse_long);
   PCRE_MAKE_PARSER(unsigned long,      parse_ulong);
-//#if @pcre_have_long_long@
+#if 1
   PCRE_MAKE_PARSER(long long,          parse_longlong);
-//#endif
-//#if @pcre_have_ulong_long@
+#endif
+#if 1
   PCRE_MAKE_PARSER(unsigned long long, parse_ulonglong);
-//#endif
+#endif
   PCRE_MAKE_PARSER(float,              parse_float);
   PCRE_MAKE_PARSER(double,             parse_double);
   PCRE_MAKE_PARSER(std::string,        parse_string);
@@ -148,18 +150,18 @@ inline bool Arg::Parse(const char* str, int n) const {
   inline Arg CRadix(type* ptr) { \
     return Arg(ptr, Arg::parse_ ## name ## _cradix); }
 
-MAKE_INTEGER_PARSER(short,              short);
-MAKE_INTEGER_PARSER(unsigned short,     ushort);
-MAKE_INTEGER_PARSER(int,                int);
-MAKE_INTEGER_PARSER(unsigned int,       uint);
-MAKE_INTEGER_PARSER(long,               long);
-MAKE_INTEGER_PARSER(unsigned long,      ulong);
-//#if @pcre_have_long_long@
-MAKE_INTEGER_PARSER(long long,          longlong);
-//#endif
-//#if @pcre_have_ulong_long@
-MAKE_INTEGER_PARSER(unsigned long long, ulonglong);
-//#endif
+MAKE_INTEGER_PARSER(short,              short)     /*                        */
+MAKE_INTEGER_PARSER(unsigned short,     ushort)    /*                        */
+MAKE_INTEGER_PARSER(int,                int)       /* Don't use semicolons   */
+MAKE_INTEGER_PARSER(unsigned int,       uint)      /* after these statement  */
+MAKE_INTEGER_PARSER(long,               long)      /* because they can cause */
+MAKE_INTEGER_PARSER(unsigned long,      ulong)     /* compiler warnings if   */
+#if 1                          /* the checking level is  */
+MAKE_INTEGER_PARSER(long long,          longlong)  /* turned up high enough. */
+#endif                                             /*                        */
+#if 1                         /*                        */
+MAKE_INTEGER_PARSER(unsigned long long, ulonglong) /*                        */
+#endif
 
 #undef PCRE_IS_SET
 #undef PCRE_SET_OR_CLEAR

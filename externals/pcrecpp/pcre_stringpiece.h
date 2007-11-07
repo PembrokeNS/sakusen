@@ -42,11 +42,21 @@
 #include <string>
 #include <iosfwd>    // for ostream forward-declaration
 
-#include <pcrecpp_api.h>
+#if 0
+#define HAVE_TYPE_TRAITS
+#include <type_traits.h>
+#elif 0
+#define HAVE_TYPE_TRAITS
+#include <bits/type_traits.h>
+#endif
+
+#include <pcre.h>
+
+using std::string;
 
 namespace pcrecpp {
 
-class PCRECPP_API StringPiece {
+class PCRECPP_EXP_DEFN StringPiece {
  private:
   const char*   ptr_;
   int           length_;
@@ -58,8 +68,11 @@ class PCRECPP_API StringPiece {
   StringPiece()
     : ptr_(NULL), length_(0) { }
   StringPiece(const char* str)
-    : ptr_(str), length_(static_cast<int>(strlen(str))) { }
-  StringPiece(const std::string& str)
+    : ptr_(str), length_(static_cast<int>(strlen(ptr_))) { }
+  StringPiece(const unsigned char* str)
+    : ptr_(reinterpret_cast<const char*>(str)),
+      length_(static_cast<int>(strlen(ptr_))) { }
+  StringPiece(const string& str)
     : ptr_(str.data()), length_(static_cast<int>(str.size())) { }
   StringPiece(const char* offset, int len)
     : ptr_(offset), length_(len) { }
@@ -124,11 +137,11 @@ class PCRECPP_API StringPiece {
     return r;
   }
 
-  std::string as_string() const {
-    return std::string(data(), size());
+  string as_string() const {
+    return string(data(), size());
   }
 
-  void CopyToString(std::string* target) const {
+  void CopyToString(string* target) const {
     target->assign(ptr_, length_);
   }
 
@@ -159,6 +172,6 @@ template<> struct __type_traits<pcrecpp::StringPiece> {
 #endif
 
 // allow StringPiece to be logged
-PCRECPP_API std::ostream& operator<<(std::ostream& o, const pcrecpp::StringPiece& piece);
+std::ostream& operator<<(std::ostream& o, const pcrecpp::StringPiece& piece);
 
 #endif /* _PCRE_STRINGPIECE_H */

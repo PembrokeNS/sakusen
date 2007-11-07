@@ -3,8 +3,4 @@ code was originally contributed by Google, and has been altered to allow it to
 compile with Visual C++ 2005, when linked against the windows port of the pcre
 library.
 
-To compile this, you must install the Windows port of pcre (see Google), and
-add appropriate include and libarry paths to the Visual C++ configurations.
-These paths will be something like C:\Program Files\GnuWin32\include and
-C:\Program Files\GnuWin32\lib respectively.
 

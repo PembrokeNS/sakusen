@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\STLport\STLport;.."
+				AdditionalIncludeDirectories="..\..\STLport\STLport;..;..\pcre"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PCRECPP_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="false"
-				AdditionalDependencies="pcre.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\STLport\bin;..\..\STLport\lib"
 				GenerateDebugInformation="true"
@@ -123,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\STLport\STLport;.."
+				AdditionalIncludeDirectories="..\..\STLport\STLport;..;..\pcre"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PCRECPP_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -142,7 +141,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pcre.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\STLport\bin;..\..\STLport\lib"
 				GenerateDebugInformation="true"
@@ -194,10 +192,6 @@
 		</File>
 		<File
 			RelativePath="..\pcrecpp.h"
-			>
-		</File>
-		<File
-			RelativePath="..\pcrecpp_api.h"
 			>
 		</File>
 		<File
