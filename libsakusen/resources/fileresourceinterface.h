@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <boost/weak_ptr.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include "resourceinterface.h"
 #include "universe.h"
@@ -19,32 +20,40 @@ namespace resources {
  * All constructors are private.  To get one, call a create method.  This aids
  * in establishing certain internal properties.
  */
-class LIBSAKUSEN_RESOURCES_API FileResourceInterface : public ResourceInterface
+class LIBSAKUSEN_RESOURCES_API FileResourceInterface :
+  public ResourceInterface,
+  private boost::noncopyable
 {
   public:
-    static Ptr create(const String& directory, bool loadModules);
     static Ptr create(
-        const std::vector<String>& directories,
+        const boost::filesystem::path& directory,
+        bool loadModules
+      );
+    static Ptr create(
+        const std::vector<boost::filesystem::path>& directories,
         bool loadModules
       );
   private:
-    FileResourceInterface(const String& directory, bool loadModules);
     FileResourceInterface(
-        const std::vector<String>& directories,
+        const boost::filesystem::path& directory,
+        bool loadModules
+      );
+    FileResourceInterface(
+        const std::vector<boost::filesystem::path>& directories,
         bool loadModules
       );
   public:
     virtual ~FileResourceInterface() {}
   private:
-    String saveDirectory;
-    std::vector<String> directories;
+    boost::filesystem::path saveDirectory;
+    std::vector<boost::filesystem::path> directories;
     bool loadModules;
     boost::weak_ptr<ResourceInterface> ptrToThis;
 
     String getSubdir(ResourceType type);
     String getExtension(ResourceType type);
   protected:
-    String fileSearch(
+    boost::filesystem::path fileSearch(
         const String& name,
         ResourceType type,
         ResourceSearchResult* result

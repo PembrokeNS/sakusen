@@ -5,17 +5,18 @@
 
 #include <boost/shared_array.hpp>
 #include <boost/utility.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace sakusen {
 namespace resources {
 
 class File : boost::noncopyable {
   protected:
-    File(const String& fileName);
+    File(const boost::filesystem::path& filePath);
   public:
     virtual ~File();
   protected:
-    String fileName;
+    boost::filesystem::path filePath;
     FILE* stream; /**< file stream of file (NULL if not open) */
     int fd; /**< file descriptor of file (-1 if not open) */
     uint64 length; /**< The length of the file */

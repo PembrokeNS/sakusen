@@ -14,6 +14,7 @@
 #include "fileioexn.h"
 
 #include <iostream>
+#include <boost/filesystem/operations.hpp>
 
 using namespace std;
 
@@ -33,37 +34,41 @@ using namespace sakusen::resources;
 /** \brief main function for test */
 int main(/*int argc, char** argv*/)
 {
-  String homePath = fileUtils_getHome();
-  String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
+  boost::filesystem::path::default_name_check(
+      boost::filesystem::portable_posix_name
+    );
+  boost::filesystem::path homePath = fileUtils_getHome();
+  boost::filesystem::path dataDir = homePath / CONFIG_SUBDIR / DATA_SUBDIR;
+  boost::filesystem::path dotDot("..");
   
   cout << "Creating ResourceInterface" << endl;
-  vector<String> dataDirs;
-  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  vector<boost::filesystem::path> dataDirs;
+  dataDirs.push_back(dataDir);
   dataDirs.push_back("data");
-  dataDirs.push_back(".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(dotDot/"data");
+  dataDirs.push_back(dotDot/".."/"data");
+  dataDirs.push_back(dotDot/".."/".."/"data");
+  dataDirs.push_back(dotDot/".."/".."/".."/"data");
   
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, false);
 
   cout << "Cleaning out existing test files" << endl;
-  list<String> universes =
-    fileUtils_findMatches(dataDir + "/universe", "universe.");
+  list<boost::filesystem::path> universes =
+    fileUtils_findMatches(dataDir / "universe", "universe.");
   while (!universes.empty()) {
-    NativeUnlink(universes.front().c_str());
+    boost::filesystem::remove(universes.front());
     universes.pop_front();
   }
-  list<String> maps =
-    fileUtils_findMatches(dataDir + "/maptemplate", "map.");
+  list<boost::filesystem::path> maps =
+    fileUtils_findMatches(dataDir / "maptemplate", "map.");
   while (!maps.empty()) {
-    NativeUnlink(maps.front().c_str());
+    boost::filesystem::remove(maps.front());
     maps.pop_front();
   }
-  maps = fileUtils_findMatches(dataDir + "/maptemplate", "2map.");
+  maps = fileUtils_findMatches(dataDir / "maptemplate", "2map.");
   while (!maps.empty()) {
-    NativeUnlink(maps.front().c_str());
+    boost::filesystem::remove(maps.front());
     maps.pop_front();
   }
   

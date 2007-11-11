@@ -1,7 +1,7 @@
 BIN = libsakusen-resources.la
 SUBDIRS = test
 LIB_DEP_NAMES = libltdl_hacked libsakusen libsakusen-comms
-LIBS := -lpcrecpp -lpng
+LIBS := -lpcrecpp -lpng -lboost_filesystem
 
 .PHONY: test
 

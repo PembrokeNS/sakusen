@@ -43,7 +43,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     Server(
         std::ostream& output,
         const sakusen::ResourceInterface::Ptr& resourceInterface,
-        const std::list<String>& pluginPaths,
+        const std::vector<boost::filesystem::path>& pluginPaths,
 #ifndef DISABLE_UNIX_SOCKETS
         bool abstract,
         const sakusen::comms::Socket::Ptr& unixSocket,

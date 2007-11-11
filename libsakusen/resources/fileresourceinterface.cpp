@@ -9,12 +9,16 @@
 #include "filewriter.h"
 #include "fileutils.h"
 #include "fileioexn.h"
+
 #ifdef __GNUC__
-#include "ltdl.h"
+  #include <ltdl_hacked.h>
 #endif //__GNUC__: I don't want to use this with MSVC.
 
 #include <sys/stat.h>
 #include <pcrecpp.h>
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -27,7 +31,7 @@ using namespace sakusen::comms;
 using namespace sakusen::resources;
 
 ResourceInterface::Ptr FileResourceInterface::create(
-    const String& directory,
+    const boost::filesystem::path& directory,
     bool loadModules
   )
 {
@@ -38,7 +42,7 @@ ResourceInterface::Ptr FileResourceInterface::create(
 }
 
 ResourceInterface::Ptr FileResourceInterface::create(
-    const std::vector<String>& directories,
+    const std::vector<boost::filesystem::path>& directories,
     bool loadModules
   )
 {
@@ -48,7 +52,10 @@ ResourceInterface::Ptr FileResourceInterface::create(
   return result;
 }
 
-FileResourceInterface::FileResourceInterface(const String& d, bool lM) :
+FileResourceInterface::FileResourceInterface(
+    const boost::filesystem::path& d,
+    bool lM
+  ) :
   saveDirectory(d),
   directories(),
   loadModules(lM)
@@ -57,7 +64,7 @@ FileResourceInterface::FileResourceInterface(const String& d, bool lM) :
 }
 
 FileResourceInterface::FileResourceInterface(
-    const std::vector<String>& d,
+    const std::vector<boost::filesystem::path>& d,
     bool lM
   ) :
   saveDirectory(d.front()),
@@ -71,14 +78,14 @@ String FileResourceInterface::getSubdir(ResourceType type)
   switch (type) {
     case resourceType_universe:
     case resourceType_source:
-      return String(FILE_SEP "universe" FILE_SEP);
+      return "universe";
     case resourceType_mapTemplate:
-      return String(FILE_SEP "maptemplate" FILE_SEP);
+      return "maptemplate";
     case resourceType_module:
-      return String(FILE_SEP "module" FILE_SEP);
+      return "module";
     case resourceType_replay:
     case resourceType_replayIndex:
-      return String(FILE_SEP "replay" FILE_SEP);
+      return "replay";
     default:
       Fatal("Unexpected ResourceType: " << type);
   }
@@ -106,7 +113,7 @@ String FileResourceInterface::getExtension(ResourceType type)
   }
 }
 
-String FileResourceInterface::fileSearch(
+boost::filesystem::path FileResourceInterface::fileSearch(
     const String& name,
     ResourceType type,
     ResourceSearchResult* result
@@ -121,40 +128,30 @@ String FileResourceInterface::fileSearch(
    * to those files.  We store the names also so that we don't consider it an
    * ambiguous result if there are two files of the same name in different
    * places; we rather assume that they are identical. */
-  hash_map_string<String>::type matchingFiles(10);
+  hash_map_string<boost::filesystem::path>::type matchingFiles(10);
 
   /* Search through all our directories to find all matching files */
-  for (vector<String>::const_iterator directory = directories.begin();
+  for (vector<boost::filesystem::path>::const_iterator
+      directory = directories.begin();
       directory != directories.end(); directory++) {
-    String resourceDir = *directory + subdir;
-    /*_stat calls FindFileFirst, which fails if the directory has a trailing 
-     * backslash. We need the resourceDir to not have a trailing backslash. */
-    if(!resourceDir.empty() && resourceDir[resourceDir.size()-1] == '\\')
-    {
-        resourceDir.erase(resourceDir.end()-1);
-    }
-    NativeStructStat s;
-    if (-1 == NativeStat(resourceDir.c_str(), &s)) {
+    boost::filesystem::path resourceDir = *directory / subdir;
+    if (!boost::filesystem::exists(resourceDir)) {
       /* The directory was not there (or other
        * error), but this is not an error, because a
        * resource repository might not have all the different types of resource
        * in it. */
-      /*QDebug("Could not stat resource search path '" << resourceDir << "' (" << errorUtils_parseErrno(errno) << ")");*/
-      /*QDebug("Couldn't find directory. "<<resourceDir<<" GetLastError reports: "<<GetLastError ()); */
       continue;
     }
     /*QDebug("Searching "<<resourceDir);*/
-    list<String> newMatches = fileUtils_findMatches(resourceDir, name);
+    list<boost::filesystem::path> newMatches =
+      fileUtils_findMatches(resourceDir, name);
     while (!newMatches.empty()) {
-      String path = newMatches.front();
+      boost::filesystem::path path = newMatches.front();
       newMatches.pop_front();
       /*QDebug("Found "<<path);*/
-      String fileName = fileUtils_notDirPart(path);
+      String fileName = path.leaf();
       /* check that the file has the correct extension */
-      if (fileName.size() < extension.size() ||
-          0 != fileName.compare(
-            fileName.size() - extension.size(), extension.size(), extension
-          )) {
+      if (!boost::algorithm::ends_with(fileName, extension)) {
           /*QDebug("Looking for extension to "<<name<<" "<<extension);*/
         continue;
       }
@@ -192,7 +189,7 @@ shared_ptr<void> FileResourceInterface::internalSearch(
 {
   uint64 length;
   size_t lengthAsSizeT;
-  String path = fileSearch(name, type, result);
+  boost::filesystem::path path = fileSearch(name, type, result);
 
   if (path == "")
     return shared_ptr<void>();
@@ -203,7 +200,8 @@ shared_ptr<void> FileResourceInterface::internalSearch(
   } catch (FileIOExn& e) {
     /* Indicates error while getting length */
     *result = resourceSearchResult_error;
-    error = String("error getting length of file '") + path + "': " +
+    error = String("error getting length of file '") +
+      path.native_file_string() + "': " +
       errorUtils_errorMessage(errno);
     return shared_ptr<void>();
   }
@@ -286,29 +284,31 @@ void* FileResourceInterface::internalSymbolSearch(
     return NULL;
   }
   
-  String sourcePath = fileSearch(moduleName, resourceType_source, result);
-  if (sourcePath == "") {
+  boost::filesystem::path sourcePath = fileSearch(moduleName, resourceType_source, result);
+  if (sourcePath.empty()) {
     return NULL;
   }
   
   /*Debug("sourcePath='" << sourcePath << "'");*/
 
-  String sourceFile = fileUtils_notDirPart(sourcePath);
+  String sourceFile = sourcePath.leaf();
 
   /* replace the extension of the filename to get the module name */
   size_t dot = sourceFile.rfind('.');
   String moduleFile = sourceFile.substr(0, dot) + ".sakusenmodule";
-  String modulePath = fileSearch(moduleFile, resourceType_module, result);
+  boost::filesystem::path modulePath =
+    fileSearch(moduleFile, resourceType_module, result);
   if (modulePath == "") {
     if (*result == resourceSearchResult_notFound) {
       *result = resourceSearchResult_error;
       /** \todo runtime compilation of modules */
-      error = "Source file "+sourcePath+" found.\nCorresponding "
-          "module "+moduleFile+" in subdir "+getSubdir(resourceType_module)
-          +" not found; runtime compiling not yet implemented.\n"
-          "If you have already compiled this module from the source, try moving "
-          "it to the "+getSubdir(resourceType_module)+" subdir next to the "
-          +getSubdir(resourceType_source)+" subdir the source file was found in.";
+      error = "Source file "+sourcePath.native_file_string()+
+        " found.\nCorresponding "
+        "module "+moduleFile+" in subdir "+getSubdir(resourceType_module)
+        +" not found; runtime compiling not yet implemented.\n"
+        "If you have already compiled this module from the source, try moving "
+        "it to the "+getSubdir(resourceType_module)+" subdir next to the "
+        +getSubdir(resourceType_source)+" subdir the source file was found in.";
     }
     return NULL;
   }
@@ -317,7 +317,8 @@ void* FileResourceInterface::internalSymbolSearch(
 #ifdef __GNUC__
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
-  lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
+  lt_dlhandle moduleHandle =
+    lt_dlopenext(modulePath.native_file_string().c_str());
   if (moduleHandle == NULL) {
     *result = resourceSearchResult_error;
     error = String("lt_dlopen() failed: ") + lt_dlerror();
@@ -344,14 +345,15 @@ void* FileResourceInterface::internalSymbolSearch(
   //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());	
   //Opens the library for searching. Must be a dll or an exe.
   /** \bug This should work for UNICODE filenames.*/
-  HMODULE moduleHandle = LoadLibrary(modulePath.c_str());
+  HMODULE moduleHandle = LoadLibrary(modulePath.native_file_string().c_str());
   //Error handling for the above.
   if(moduleHandle == NULL) {
-	char buffer[33];
-	_itoa_s(GetLastError(), buffer, 33,2);
-	*result = resourceSearchResult_error;
-	error= "LoadLibrary() failed on "+modulePath+".\n Error value: " + String(buffer);
-	return NULL;
+    char buffer[33];
+    _itoa_s(GetLastError(), buffer, 33,2);
+    *result = resourceSearchResult_error;
+    error = "LoadLibrary() failed on "+modulePath.native_file_string()+
+      ".\n Error value: " + String(buffer);
+    return NULL;
   }
   
   //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
@@ -359,11 +361,12 @@ void* FileResourceInterface::internalSymbolSearch(
   //Error handling if this fails.
   if(symbol==NULL)
   {
-	 char buffer[33];
-	_itoa_s(GetLastError(), buffer, 33,2);
-	*result = resourceSearchResult_error;
-	error= "GetProcAddress() on "+symbolName+" in " + modulePath+ " failed. Error value: " + String(buffer);
-	return NULL;
+    char buffer[33];
+    _itoa_s(GetLastError(), buffer, 33,2);
+    *result = resourceSearchResult_error;
+    error = "GetProcAddress() on "+symbolName+" in " + modulePath +
+      " failed. Error value: " + String(buffer);
+    return NULL;
   }
 #endif //__GNUC__
 
@@ -381,7 +384,8 @@ bool FileResourceInterface::internalSave(
     String shortName;
     OArchive archive;
 
-    /** \todo The following switch could be neatly made into a template method */
+    /** \todo The following switch could be neatly made into a template method
+     * */
     switch(type) {
       case resourceType_universe:
         {
@@ -428,11 +432,11 @@ Writer::Ptr FileResourceInterface::openWriter(
     ResourceType type
   )
 {
-  String directory = saveDirectory+getSubdir(type);
-  fileUtils_mkdirRecursive(directory, 0777);
+  boost::filesystem::path directory = saveDirectory / getSubdir(type);
+  fileUtils_mkdirRecursive(directory);
 
   return FileWriter::Ptr(new FileWriter(
-        directory+name+getExtension(type)
+        directory / (name+getExtension(type))
       ));
 }
 

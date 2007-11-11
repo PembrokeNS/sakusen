@@ -43,10 +43,6 @@
   //Alias of __PRETTY_FUNCTION for 
   #define __PRETTY_FUNCTION__ __FUNCDNAME__
 
-  /* Define file seperator */
-  #define FILE_SEP "\\"
-  #define FILE_SEPC '\\'
-
   /* Try to prevent min and max macros being defined.  They cause name
    * clashes, and the inline function versions are better anyway */
   #define NOMINMAX
@@ -78,10 +74,6 @@
 
   #define LIBSAKUSEN_METHOD_DEFINITIONS
 
-  /* Define file seperator */
-  #define FILE_SEP "/"
-  #define FILE_SEPC '/'
-
   /* Define types the gcc way. */
   #include <stdint.h>
   typedef uint8_t  uint8;
@@ -111,7 +103,7 @@
 
 /* CONFIG_SUBDIR is the subdirectory of the users home directory where general
  * sakusen stuff happens. */
-#define CONFIG_SUBDIR FILE_SEP ".sakusen"
+#define CONFIG_SUBDIR ".sakusen"
 
 #include <cassert>
 

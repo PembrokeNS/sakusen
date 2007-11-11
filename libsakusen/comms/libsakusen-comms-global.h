@@ -52,7 +52,7 @@
 
 /* SOCKET_SUBDIR is the subdirectory of CONFG_SUBDIR where servers are
  * expected to put their sockets */
-#define SOCKET_SUBDIR FILE_SEP "servers"
+#define SOCKET_SUBDIR "servers"
 
 /* SETTINGS_DELIMITER is the character used to split the names of nodes when
  * constructing full names of nodes in the settings tree */

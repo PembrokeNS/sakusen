@@ -87,16 +87,21 @@ int main(/* int argc, char** argv */)
     Fatal("lt_dlinit() failed");
   }
   
-  String homePath = fileUtils_getHome();
-  String dataDir = homePath + CONFIG_SUBDIR DATA_SUBDIR;
+  boost::filesystem::path::default_name_check(
+      boost::filesystem::portable_posix_name
+    );
+  boost::filesystem::path homePath = fileUtils_getHome();
+  boost::filesystem::path dataDir = homePath / CONFIG_SUBDIR / DATA_SUBDIR;
+  boost::filesystem::path dotDot("..");
   
-  cout << "Creating ResourceInterface with data root " << dataDir << endl;
-  vector<String> dataDirs;
-  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  cout << "Creating ResourceInterface with data root " <<
+    dataDir.native_directory_string() << endl;
+  vector<boost::filesystem::path> dataDirs;
+  dataDirs.push_back(dataDir);
   dataDirs.push_back("data");
-  dataDirs.push_back(".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(dotDot/"data");
+  dataDirs.push_back(dotDot/".."/"data");
+  dataDirs.push_back(dotDot/".."/".."/"data");
   
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, true);

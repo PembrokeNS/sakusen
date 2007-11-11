@@ -8,7 +8,7 @@
 #endif
 
 #ifdef __GNUC__
-  #include <ltdl.h>
+  #include <ltdl_hacked.h>
 #endif //The Guild does not condone ltdl
 
 using namespace std;
@@ -17,7 +17,10 @@ using namespace sakusen::resources;
 using namespace sakusen::server::plugins;
 using namespace fuseki;
 
-PluginInterface::PluginInterface(const list<String>& pP, Server* s) :
+PluginInterface::PluginInterface(
+    const vector<boost::filesystem::path>& pP,
+    Server* s
+  ) :
   pluginPaths(pP),
   server(s)
 {}
@@ -30,10 +33,14 @@ PluginInterface::PluginInterface(const list<String>& pP, Server* s) :
  */
 Plugin::Ptr PluginInterface::load(const String& pluginName)
 {
-  for (list<String>::iterator path = pluginPaths.begin();
+  for (vector<boost::filesystem::path>::iterator path = pluginPaths.begin();
       path != pluginPaths.end(); ++path) {
-    Debug("Looking for plugin " << pluginName << " in " << *path);
-    list<String> candidates = fileUtils_findMatches(*path, pluginName);
+    Debug(
+        "Looking for plugin " << pluginName << " in " <<
+        path->native_directory_string()
+      );
+    list<boost::filesystem::path> candidates =
+      fileUtils_findMatches(*path, pluginName);
     switch (candidates.size()) {
       case 0:
         break;
@@ -41,13 +48,16 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
         {
           // We should have found a directory, and we want to open the module
           // therein
-          String& candidate = candidates.front();
-          String fullPluginName = fileUtils_notDirPart(candidate);
+          boost::filesystem::path& candidate = candidates.front();
+          String fullPluginName = candidate.leaf();
 #ifdef __GNUC__
-          String module = candidate + FILE_SEP + fullPluginName + ".la";
-          lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
+          boost::filesystem::path module =
+            candidate / (fullPluginName + ".la");
+          lt_dlhandle moduleHandle =
+            lt_dlopen(module.native_file_string().c_str());
           if (moduleHandle == NULL) {
-            String error = "lt_dlopen(" + module + ") failed: " + lt_dlerror();
+            String error = "lt_dlopen(" + module.native_file_string() +
+              ") failed: " + lt_dlerror();
             throw PluginExn(error);
           }
 
@@ -69,15 +79,18 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           }
 #else
           //Opens the plugin.
-          String module = candidate + FILE_SEP + fullPluginName + ".dll";
+          boost::filesystem::path module =
+            candidate / (fullPluginName + ".dll");
           //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
           /** \bug This should work for UNICODE filenames. */
-          HMODULE moduleHandle = LoadLibraryA(module.c_str());
+          HMODULE moduleHandle =
+            LoadLibraryA(module.native_file_string().c_str());
           //Error handling for the above.
           if(moduleHandle == NULL) {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,2);
-            String error= "LoadLibrary() failed. Error value: " + String(buffer);
+            String error =
+              "LoadLibrary() failed. Error value: " + String(buffer);
             throw PluginExn(error);
           }
           
@@ -89,7 +102,8 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,2);
-            String error = "GetProcAddress() on "+symbolName+" in " + module+ " failed. Error value: " + String(buffer);
+            String error = "GetProcAddress() on "+symbolName+" in " + module+
+              " failed. Error value: " + String(buffer);
             throw PluginExn(error);
           }
 #endif //__GNUC__

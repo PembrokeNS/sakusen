@@ -11,8 +11,8 @@
 using namespace sakusen::comms;
 using namespace sakusen::resources;
 
-File::File(const String& f) :
-  fileName(f),
+File::File(const boost::filesystem::path& f) :
+  filePath(f),
   stream(NULL),
   fd(-1),
   length(0),

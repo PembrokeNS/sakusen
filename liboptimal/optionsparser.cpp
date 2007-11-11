@@ -7,11 +7,12 @@
 #include <boost/functional.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 using std::string;
 using std::istream;
-using std::ifstream;
 using std::istringstream;
 using std::pair;
 using std::make_pair;
@@ -258,15 +259,15 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
  * Return true if a problem occurs (which can be investigated
  * through errors) */
 bool OptionsParser::parse(
-    const string& configFileName,
+    const boost::filesystem::path& configFilePath,
     int argc,
     char const* const* argv
   )
 {
   errors.clear();
-  ifstream configFile(configFileName.c_str());
+  boost::filesystem::ifstream configFile(configFilePath);
   if (configFile.is_open()) {
-    parseStream(configFile, configFileName);
+    parseStream(configFile, configFilePath.native_file_string());
   }
 
   /* Now we process the command line */
@@ -276,7 +277,7 @@ bool OptionsParser::parse(
     if (arg[0] == '-') {
       if (arg[1] == '-') {
         /* long option */
-        if (strlen(arg+2) > 3 && 0 == strncmp(arg+2, "no-", 3)) {
+        if (boost::algorithm::starts_with(arg+2, "no-")) {
           /* negated boolean option */
           string optionName(arg+5);
           if (longBoolOptions.count(optionName)) {

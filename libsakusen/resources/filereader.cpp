@@ -8,8 +8,8 @@
 
 using namespace sakusen::resources;
 
-FileReader::FileReader(const String& fileName) :
-  File(fileName)
+FileReader::FileReader(const boost::filesystem::path& filePath) :
+  File(filePath)
 {
 }
 
@@ -21,13 +21,13 @@ void FileReader::open()
 {
   #ifdef _MSC_VER //Secure deprecation warning
     errno_t err;
-    err = fopen_s(&stream, fileName.c_str(), "rb");
+    err = fopen_s(&stream, filePath.native_file_string().c_str(), "rb");
     if (err) {
       throw FileIOExn("fopen_s");
     }
     fd = _fileno(stream);
   #else
-    stream = fopen(fileName.c_str(), "rb");
+    stream = fopen(filePath.native_file_string().c_str(), "rb");
     if (stream == NULL) {
       throw FileIOExn("fopen");
     }

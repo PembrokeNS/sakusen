@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <boost/filesystem/path.hpp>
 
 #if defined(_MSC_VER)
   #include <hash_map>
@@ -119,7 +120,7 @@ class LIBOPTIMAL_API OptionsParser {
     bool parseStream(std::istream&, const std::string& errorPrefix);
     
     bool parse(
-        const std::string& configFile,
+        const boost::filesystem::path& configFile,
         int argc,
         char const* const* argv
       );

@@ -13,6 +13,7 @@
 #include <cerrno>
 #include <ostream>
 #include <algorithm>
+#include <boost/filesystem/operations.hpp>
 
 using namespace std;
 
@@ -215,7 +216,7 @@ void tedomari::line_callback_handler(char* line)
 AsynchronousIOHandler::AsynchronousIOHandler(
     FILE* in,
     ostream& o,
-    String hf,
+    const boost::filesystem::path& hf,
     int hl
   ) :
   infd(fileno(in)),
@@ -230,10 +231,9 @@ AsynchronousIOHandler::AsynchronousIOHandler(
   }
   handler = this;
   rl_callback_handler_install("> ", line_callback_handler);
-  struct stat s;
-  if (0 == stat(historyFile.c_str(), &s)) {
-    if (S_ISREG(s.st_mode)) {
-      if (0 == read_history(historyFile.c_str())) {
+  if (boost::filesystem::exists(historyFile)) {
+    if (!boost::filesystem::is_directory(historyFile)) {
+      if (0 == read_history(historyFile.native_file_string().c_str())) {
         if (0 == history_set_pos(history_length)) {
           Debug("error setting history position");
         }
@@ -247,8 +247,10 @@ AsynchronousIOHandler::AsynchronousIOHandler(
 
 AsynchronousIOHandler::~AsynchronousIOHandler()
 {
-  if (0 == write_history(historyFile.c_str())) {
-    if (0 != history_truncate_file(historyFile.c_str(), historyLength)) {
+  if (0 == write_history(historyFile.native_file_string().c_str())) {
+    if (0 != history_truncate_file(
+          historyFile.native_file_string().c_str(), historyLength
+        )) {
       Debug("error truncating history");
     }
   } else {

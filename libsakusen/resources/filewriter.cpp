@@ -8,7 +8,7 @@
 
 using namespace sakusen::resources;
 
-FileWriter::FileWriter(const String& name) :
+FileWriter::FileWriter(const boost::filesystem::path& name) :
   File(name)
 {
 }
@@ -17,13 +17,13 @@ void FileWriter::open()
 {
   #ifdef _MSC_VER //Secure deprecation warning
     errno_t err;
-    err = fopen_s(&stream, fileName.c_str(), "wb");
+    err = fopen_s(&stream, fileName.native_file_string().c_str(), "wb");
     if (err) {
       throw FileIOExn("fopen_s");
     }
     fd = _fileno(stream);
   #else
-    stream = fopen(fileName.c_str(), "wb");
+    stream = fopen(filePath.native_file_string().c_str(), "wb");
     if (stream == NULL) {
       throw FileIOExn("fopen");
     }

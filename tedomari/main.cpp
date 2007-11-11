@@ -30,11 +30,11 @@
   #include <locale.h>
 #endif
 
-#include <sys/stat.h>
-
 #include <iostream>
 #include <fstream>
 #include <list>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <optionsparser.h>
 
 using namespace std;
@@ -129,19 +129,27 @@ enum Command {
 
 void runTest(
     const Options& options,
-    const String& homePath,
-    const String& configPath
+    const boost::filesystem::path& homePath,
+    const boost::filesystem::path& configPath
   );
 
 void runClient(
     const Options& options,
-    const String& homePath,
-    const String& configPath
+    const boost::filesystem::path& homePath,
+    const boost::filesystem::path& configPath
   );
 
-Options getOptions(String optionsFile, int argc, char const* const* argv);
+Options getOptions(
+    const boost::filesystem::path& optionsFile,
+    int argc,
+    char const* const* argv
+  );
 
-UI::Ptr newUI(const Options& o, const String& uiConfFilename, Game* game);
+UI::Ptr newUI(
+    const Options& o,
+    const boost::filesystem::path& uiConfFilename,
+    Game* game
+  );
 
 void usage();
 
@@ -150,31 +158,24 @@ int main(int argc, char const* const* argv)
   if (NULL == setlocale(LC_CTYPE, "")) {
     Fatal("error setting locale");
   }
-
-  /* For the moment we simply attempt to connect to a socket where fuseki puts
-   * it. */
-  /** \todo Allow for connecting elsewhere, or not connecting at all at once */
   
+  boost::filesystem::path::default_name_check(
+      boost::filesystem::portable_posix_name
+    );
   /* Seek out the home directory */
-  String homePath = fileUtils_getHome();
+  boost::filesystem::path homePath = fileUtils_getHome();
   
   /* Construct the path to the tedomari config directory */
-  String configPath = homePath + CONFIG_SUBDIR FILE_SEP "tedomari";
-  cout << "Using directory " << configPath << " for tedomari configuration\n";
-  struct stat tmpStat;
+  boost::filesystem::path configPath = homePath / CONFIG_SUBDIR / "tedomari";
+  cout << "Using directory " << configPath.native_file_string() <<
+    " for tedomari configuration\n";
 
-  if (-1 == stat(configPath.c_str(), &tmpStat)) {
-    switch (errno) {
-      case ENOENT:
-        cout << "Directory not found, trying to create it" << endl;
-        fileUtils_mkdirRecursive(configPath, 0777);
-        break;
-      default:
-        Fatal("could not stat directory");
-    }
+  if (!boost::filesystem::exists(configPath)) {
+    cout << "Directory not found, trying to create it" << endl;
+    fileUtils_mkdirRecursive(configPath);
   }
   
-  Options options = getOptions(configPath + FILE_SEP "config", argc, argv);
+  Options options = getOptions(configPath / "config", argc, argv);
 
   if (options.help) {
     usage();
@@ -207,15 +208,15 @@ int main(int argc, char const* const* argv)
 
 void runTest(
     const Options& options,
-    const String& homePath,
-    const String& configPath
+    const boost::filesystem::path& homePath,
+    const boost::filesystem::path& configPath
   ) {
-  String uiConfFilename = configPath + FILE_SEP "ui.conf";
+  boost::filesystem::path uiConfFilePath = configPath / "ui.conf";
   ResourceInterface::Ptr resourceInterface = FileResourceInterface::create(
-      homePath + CONFIG_SUBDIR DATA_SUBDIR, false
+      homePath / CONFIG_SUBDIR / DATA_SUBDIR, false
     );
   Game* game = new Game(resourceInterface);
-  UI::Ptr ui = newUI(options, uiConfFilename, game);
+  UI::Ptr ui = newUI(options, uiConfFilePath, game);
 
   struct timeval sleepTime = {0, MICRO/25};
   if (options.evil) {
@@ -236,10 +237,14 @@ void runTest(
 
 void runClient(
     const Options& options,
-    const String& homePath,
-    const String& configPath
+    const boost::filesystem::path& homePath,
+    const boost::filesystem::path& configPath
   ) {
-  String uiConfFilename = configPath + FILE_SEP "ui.conf";
+  boost::filesystem::path uiConfFilename = configPath / "ui.conf";
+
+  /* For the moment we simply attempt to connect to a socket where fuseki puts
+   * it. */
+  /** \todo Allow for connecting elsewhere, or not connecting at all at once */
   String socketAddress;
   
 #ifdef DISABLE_UNIX_SOCKETS
@@ -251,12 +256,13 @@ void runClient(
 #else
   /* Use default socket */
   socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
-    homePath + CONFIG_SUBDIR SOCKET_SUBDIR FILE_SEP "fuseki-socket";
+    (homePath / CONFIG_SUBDIR / SOCKET_SUBDIR / "fuseki-socket").
+    native_file_string();
 #endif
 
   /* Construct the path to the history file */
-  String historyPath = configPath + FILE_SEP "history";
-  cout << "Using history file at " << historyPath << "\n";
+  boost::filesystem::path historyPath = configPath / "history";
+  cout << "Using history file at " << historyPath.native_file_string() << "\n";
   
   bool reconnect;
 
@@ -265,13 +271,15 @@ void runClient(
     
     /** \todo The ResourceInterface actually needs to be able to access
      * resources over the network from the server as well as from disk */
-    vector<String> dataDirs;
-    dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+    boost::filesystem::path dotDot("..");
+    vector<boost::filesystem::path> dataDirs;
+    dataDirs.push_back(homePath / CONFIG_SUBDIR / DATA_SUBDIR);
     dataDirs.push_back("data");
-    dataDirs.push_back(".."FILE_SEP"data");
-    dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
-    dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
-    
+    dataDirs.push_back(dotDot/"data");
+    dataDirs.push_back(dotDot/".."/"data");
+    dataDirs.push_back(dotDot/".."/".."/"data");
+    dataDirs.push_back(dotDot/".."/".."/".."/"data");
+   
     ResourceInterface::Ptr resourceInterface =
         FileResourceInterface::create(dataDirs, false);
     Game* game = new Game(resourceInterface);
@@ -561,7 +569,11 @@ void usage() {
 }
 
 /* Function to parse the command line */
-Options getOptions(String optionsFile, int argc, char const* const* argv) {
+Options getOptions(
+    const boost::filesystem::path& optionsFile,
+    int argc,
+    char const* const* argv
+  ) {
   Options results = Options();
   OptionsParser parser;
 #ifndef DISABLE_SDL
@@ -597,10 +609,14 @@ Options getOptions(String optionsFile, int argc, char const* const* argv) {
   return results;
 }
 
-UI::Ptr newUI(const Options& o, const String& uiConfFilename, Game* game)
+UI::Ptr newUI(
+    const Options& o,
+    const boost::filesystem::path& uiConfFilePath,
+    Game* game
+  )
 {
   /** \todo Support alternate UIs (OpenGL, DirectX) */
-  ifstream uiConf(uiConfFilename.c_str());
+  boost::filesystem::ifstream uiConf(uiConfFilePath);
 #ifndef DISABLE_CAIRO
   UI::Ptr ui(new CairoUI(o.sdlOptions, uiConf, game));
 #else

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <iosfwd>
 #include <queue>
+#include <boost/filesystem/path.hpp>
 
 #include "libsakusen-global.h"
 #include "tedomari-global.h"
@@ -19,11 +20,8 @@ void line_callback_handler(char* line);
  * By default, GNU Readline is used to handle the input, which allows for
  * command history, etc.  However, if the preprocessor symbol DISABLE_READLINE
  * is set then a simpler fallback method is used. */
-class AsynchronousIOHandler {
+class AsynchronousIOHandler : boost::noncopyable {
   friend void line_callback_handler(char* line);
-  private:
-    AsynchronousIOHandler();
-    AsynchronousIOHandler(const AsynchronousIOHandler& copy);
   public:
     /** \brief Constructor
      *
@@ -43,7 +41,7 @@ class AsynchronousIOHandler {
     AsynchronousIOHandler(
         FILE* in,
         std::ostream& out,
-        String historyFile,
+        const boost::filesystem::path& historyFile,
         int historyLength
       );
     /** \brief Destructor
@@ -55,7 +53,7 @@ class AsynchronousIOHandler {
   private:
     int infd;
     std::ostream& out;
-    String historyFile;
+    boost::filesystem::path historyFile;
     int historyLength;
     std::queue<String> commandBuffer;
     String lastLine;

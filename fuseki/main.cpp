@@ -16,6 +16,7 @@
 #include <cerrno>
 #include <iostream>
 #include <optionsparser.h>
+#include <boost/filesystem/operations.hpp>
 
 using namespace std;
 using namespace optimal;
@@ -74,9 +75,12 @@ struct Options {
 }
 
 /* Forward-declarations */
-int startServer(const String& homePath, const Options& options);
+int startServer(
+    const boost::filesystem::path& homePath,
+    const Options& options
+  );
 Options getOptions(
-    const String& optionsFile,
+    const boost::filesystem::path& optionsFile,
     int argc,
     char const* const* argv
   );
@@ -86,11 +90,14 @@ void usage();
 
 int main(int argc, char* const* argv)
 {
+  boost::filesystem::path::default_name_check(
+      boost::filesystem::portable_posix_name
+    );
   /* Seek out the home directory */
-  String homePath = fileUtils_getHome();
+  boost::filesystem::path homePath = fileUtils_getHome();
   
-  String fusekiConfigFile =
-    homePath + CONFIG_SUBDIR FILE_SEP "fuseki" FILE_SEP "config";
+  boost::filesystem::path fusekiConfigFile =
+    homePath / CONFIG_SUBDIR / "fuseki" / "config";
   
   /* Parse config file and command line arguments */
   Options options = getOptions(fusekiConfigFile, argc, argv);
@@ -105,7 +112,8 @@ int main(int argc, char* const* argv)
     return EXIT_SUCCESS;
   }
 
-  cout << "Looked for fuseki config file at " << fusekiConfigFile << endl;
+  cout << "Looked for fuseki config file at " <<
+    fusekiConfigFile.native_file_string() << endl;
   
   return startServer(homePath, options);
 }
@@ -146,7 +154,11 @@ void usage()
 }
 
 /** Parses the config file and command line */
-Options getOptions(const String& optionsFile, int argc, char const* const* argv)
+Options getOptions(
+    const boost::filesystem::path& optionsFile,
+    int argc,
+    char const* const* argv
+  )
 {
   OptionsParser parser;
   Options results;
@@ -172,7 +184,7 @@ Options getOptions(const String& optionsFile, int argc, char const* const* argv)
   return results;
 }
 
-int startServer(const String& homePath, const Options& options)
+int startServer(const boost::filesystem::path& homePath, const Options& options)
 {
   cout << "*****************************\n"
           "* fuseki (a Sakusen server) *\n"
@@ -188,12 +200,14 @@ int startServer(const String& homePath, const Options& options)
 
   /* Create the resource interface */
   /** \todo make the directories searched configurable */
-  vector<String> dataDirs;
-  dataDirs.push_back(homePath + CONFIG_SUBDIR DATA_SUBDIR);
+  boost::filesystem::path dotDot("..");
+  vector<boost::filesystem::path> dataDirs;
+  dataDirs.push_back(homePath / CONFIG_SUBDIR / DATA_SUBDIR);
   dataDirs.push_back("data");
-  dataDirs.push_back(".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP"data");
-  dataDirs.push_back(".."FILE_SEP".."FILE_SEP".."FILE_SEP"data");
+  dataDirs.push_back(dotDot/"data");
+  dataDirs.push_back(dotDot/".."/"data");
+  dataDirs.push_back(dotDot/".."/".."/"data");
+  dataDirs.push_back(dotDot/".."/".."/".."/"data");
   
   ResourceInterface::Ptr resourceInterface =
       FileResourceInterface::create(dataDirs, true);
@@ -218,39 +232,33 @@ int startServer(const String& homePath, const Options& options)
      * on a unix datagram socket located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
 
     /* Construct the server directory */
-    struct stat tmpStat;
-    String serverPath = homePath + CONFIG_SUBDIR SOCKET_SUBDIR;
+    boost::filesystem::path serverPath =
+      homePath / CONFIG_SUBDIR / SOCKET_SUBDIR;
 
-    cout << "Using directory '" << serverPath << "' for unix socket.\n";
+    cout << "Using directory '" << serverPath.native_directory_string() <<
+      "' for unix socket.\n";
     
     /* Determine whether the directory exists */
     
-    while (-1==stat(serverPath.c_str(), &tmpStat)) {
-      switch (errno) {
-        case ENOENT:
-          /* Try to create the directory if it doesn't */
-          cout << "Directory not found, trying to create it." <<
-            endl;
-          fileUtils_mkdirRecursive(serverPath, 0777);
-          break;
-        default:
-          Fatal("could not stat directory");
-          break;
-      }
+    if (!boost::filesystem::exists(serverPath)) {
+      /* Try to create the directory if it doesn't */
+      cout << "Directory not found, trying to create it." <<
+        endl;
+      fileUtils_mkdirRecursive(serverPath);
     }
 
     /* Check that config directory is really a directory */
-    if (!S_ISDIR(tmpStat.st_mode)) {
-      Fatal("path '" << serverPath <<
+    if (!boost::filesystem::is_directory(serverPath)) {
+      Fatal("path '" << serverPath.native_directory_string() <<
           "' not a directory");
     }
 
-    String unixSocketPath = serverPath + FILE_SEP "fuseki-socket";
+    boost::filesystem::path unixSocketPath = serverPath / "fuseki-socket";
 
-    if (!stat(unixSocketPath.c_str(), &tmpStat)) {
+    if (boost::filesystem::exists(unixSocketPath)) {
       if (options.forceSocket) {
         cout << "Removing existing socket." << endl;
-        NativeUnlink(unixSocketPath.c_str());
+        boost::filesystem::remove(unixSocketPath);
       } else {
         cout << "Socket already exists.  Another instance of fuseki is\n"
           "already running or has crashed.  Please delete the socket file or\n"
@@ -261,7 +269,8 @@ int startServer(const String& homePath, const Options& options)
     }
 
     /* Use the default socket address */
-    unixSocketAddress = "concrete"ADDR_DELIM + unixSocketPath;
+    unixSocketAddress =
+      "concrete"ADDR_DELIM + unixSocketPath.native_file_string();
   }
 
   cout << "Creating unix socket " << unixSocketAddress << endl;
@@ -303,9 +312,14 @@ int startServer(const String& homePath, const Options& options)
   }
   
   { /* Braces to ensure that server is destructed before lt_dlexit called */
+    vector<boost::filesystem::path> pluginPaths;
+    copy(
+        options.pluginPaths.begin(), options.pluginPaths.end(),
+        back_inserter(pluginPaths)
+      );
     Server server(
         cout, resourceInterface,
-        options.pluginPaths,
+        pluginPaths,
 #ifndef DISABLE_UNIX_SOCKETS
         options.abstract, unixSocket,
 #endif

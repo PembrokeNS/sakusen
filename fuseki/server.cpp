@@ -49,7 +49,7 @@ using namespace fuseki::settingsTree;
 Server::Server(
     std::ostream& o,
     const sakusen::ResourceInterface::Ptr& r,
-    const std::list<String>& pP,
+    const std::vector<boost::filesystem::path>& pP,
 #ifndef DISABLE_UNIX_SOCKETS
     bool a,
     const sakusen::comms::Socket::Ptr& unS,
