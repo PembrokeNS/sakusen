@@ -18,48 +18,6 @@ using namespace sakusen::comms;
 namespace sakusen {
 namespace resources {
 
-/** \brief Wrapper for native read function.
- *
- * Returns number of bytes read.  Throws FileIOExn on error
- *
- * \todo Perhaps should be inlined?
- */
-size_t fileUtils_read(int fd, void* buffer, size_t bufferLen)
-{
-#ifdef WIN32
-  assert(static_cast<sint32>(bufferLen) <= numeric_limits<sint32>::max());
-  int retVal = _read(fd, buffer, (sint32)bufferLen);
-#else
-  /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the
-   * result is undefined), so we would need to read the file in chunks */
-  assert(bufferLen <= size_t(numeric_limits<ssize_t>::max()));
-  ssize_t retVal = read(fd, buffer, bufferLen);
-#endif
-  if (retVal == -1)
-    throw FileIOExn("read");
-  return retVal;
-}
-
-/** \brief Wrapper for native write function.
- *
- * Returns number of bytes written.  Throws FileIOExn on error
- *
- * \todo Perhaps should be inlined?
- */
-size_t fileUtils_write(int fd, const void* buffer, size_t length)
-{
-#ifdef WIN32
-  int retVal = _write(fd, buffer, (sint32)length);
-#else
-  /** \bug I note that if length>SSIZE_MAX, then this might cause problems (the
-   * result is undefined), so we would need to read the file in chunks */
-  ssize_t retVal = write(fd, buffer, length);
-#endif
-  if (retVal == -1)
-    throw FileIOExn("write");
-  return retVal;
-}
-
 /** \brief Make a directory, creating parent directories as necessary.
  *
  * \param path Directory to create.

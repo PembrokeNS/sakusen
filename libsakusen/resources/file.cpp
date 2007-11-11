@@ -3,58 +3,38 @@
 #include "errorutils.h"
 #include "fileioexn.h"
 
-#include <fcntl.h>
-#include <stdio.h>
-
 #include <cerrno>
+#include <boost/filesystem/operations.hpp>
 
 using namespace sakusen::comms;
 using namespace sakusen::resources;
 
 File::File(const boost::filesystem::path& f) :
-  filePath(f),
-  stream(NULL),
-  fd(-1),
+  path(f),
+  stream(),
   length(0),
   lengthIsKnown(false)
 {
+  /* Ask for exceptions to be throw on error */
+  stream.exceptions(std::ios::badbit | std::ios::failbit);
 }
 
 File::~File()
 {
-  if (fd != -1) {
-    if (-1 == close()) {
-      Debug("error closing file: " << errorUtils_parseErrno(errno));
-    }
-    fd = -1;
-  }
 }
 
 int File::close()
 {
-  if (EOF == fclose(stream)) {
-    stream = NULL;
-    fd = -1;
+  stream.close();
+  if (stream.fail()) {
     return -1;
   }
-  stream = NULL;
-  fd = -1;
   return 0;
 }
 
 uint64 File::getLength()
 {
-  if (fd == -1) {
-    open();
-  }
-  NativeStructStat statResult;
-  if (lengthIsKnown) {
-    return length;
-  }
-  if (NativeFstat(fd, &statResult) == -1) {
-    throw FileIOExn("fstat");
-  }
-  length = static_cast<uint64>(statResult.st_size);
+  length = boost::filesystem::file_size(path);
   lengthIsKnown = true;
   return length;
 }
@@ -72,15 +52,16 @@ size_t File::getWholeFile(
     return 0;
   }
   
-  if (-1 == fseek(stream, 0, SEEK_SET)) {
-    throw FileIOExn("fseek");
+  if (!stream.is_open()) {
+    open();
   }
+  stream.seekg(0, std::ios_base::beg);
 
-  /* It's totally bizarre that this fflush should be necessary, but it is */
-  if (EOF == fflush(stream)) {
-    throw FileIOExn("fflush");
-  }
-
-  return fileUtils_read(fd, buffer, static_cast<size_t>(length));
+  /** \todo It might be better to make stream a basic_fstream&lt;uint8&gt;,
+   * then this reinterpret_cast is not needed. */
+  stream.read(
+      reinterpret_cast<char*>(buffer), static_cast<size_t>(length)
+    );
+  return stream.gcount();
 }
 

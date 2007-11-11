@@ -6,19 +6,24 @@
 #include <boost/shared_array.hpp>
 #include <boost/utility.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 namespace sakusen {
 namespace resources {
 
+/** \brief Class representing a file on disk with appropriate helper functions
+ * 
+ * \bug Methods marked as throwing FileIOExns (and maybe other methods), may
+ * also throw std::ios_base::failure or boost::filesystem::filesystem_error. */
 class File : boost::noncopyable {
   protected:
     File(const boost::filesystem::path& filePath);
   public:
     virtual ~File();
   protected:
-    boost::filesystem::path filePath;
-    FILE* stream; /**< file stream of file (NULL if not open) */
-    int fd; /**< file descriptor of file (-1 if not open) */
+    boost::filesystem::path path;
+    /** stream interface to the file (not necessarily open) */
+    boost::filesystem::fstream stream;
     uint64 length; /**< The length of the file */
     /** true iff we know the length of the file (i.e. \a length is valid) */
     bool lengthIsKnown;
