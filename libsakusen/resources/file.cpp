@@ -34,9 +34,14 @@ int File::close()
 
 uint64 File::getLength()
 {
-  length = boost::filesystem::file_size(path);
-  lengthIsKnown = true;
-  return length;
+  try {
+    length = boost::filesystem::file_size(path);
+    lengthIsKnown = true;
+    return length;
+  } catch (...) {
+    lengthIsKnown = false;
+    throw;
+  }
 }
 
 size_t File::getWholeFile(
