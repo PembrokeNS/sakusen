@@ -314,7 +314,7 @@ $(MAKEFRAGS): .makefrags/%.makefrag:
 
 # Wildcarding these deps makes the file be regenerated after an update but
 # doesn't break make when they don't exist.
-revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/HEAD)
+revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/index)
 	@if test -f $(top_srcdir).svn/entries ; \
 	then \
 		REVISION=`svn info -R $(top_srcdir) | grep "^Revision:" | \
