@@ -40,6 +40,8 @@ $(DIR_MAKEFILES): %.dir-tmp/Makefile.local: $(this_srcdir)Makefile.module $(this
 #	mkdir -p $(dir $@)
 #	echo $@ $*.sakusenmodule.la: $(wildcard ../universe/$*.dir/*) > $@
 
+$(addprefix clean-recurse-,$(SUBDIRS)): clean-recurse-%: %/Makefile.local
+
 clean:
 	-rm -rf .libs *.la *.tmp *.dir-tmp
 
