@@ -152,7 +152,7 @@ endif
 
 # Phony targets to make all in each subdirectory
 ALL_RECURSIONS := $(addprefix all-recurse-,$(SUBDIRS))
-$(ALL_RECURSIONS): all-recurse-%: %/Makefile
+$(ALL_RECURSIONS): all-recurse-%: %/Makefile all-nonrecursive
 	@$(MAKE) -C $* all
 
 # Default target is to build the binary (and recurse)
@@ -164,7 +164,7 @@ all-nonrecursive: $(BIN)
 
 # Same stuff for test
 TEST_RECURSIONS := $(addprefix test-recurse-,$(SUBDIRS))
-$(TEST_RECURSIONS): test-recurse-%: %/Makefile
+$(TEST_RECURSIONS): test-recurse-%: %/Makefile all-nonrecursive
 	@$(MAKE) -C $* test
 
 # Tests are performed "on the way down" the recursion

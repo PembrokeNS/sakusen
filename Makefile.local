@@ -18,6 +18,12 @@ ifeq ($(ENABLE_BINDINGS),yes)
 SUBDIRS := $(SUBDIRS) bindings
 endif
 
+all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings: all-recurse-libsakusen
+
+all-recurse-fuseki all-recurse-tedomari: liboptimal
+
+all-recurse-libsakusen: all-recurse-libltdl_hacked
+
 else
 
 all-nonrecursive:
