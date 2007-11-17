@@ -41,5 +41,5 @@ class DirectoryBranch : public Branch {
 
 }}}
 
-#endif // LIBSAKUSEN_RESOURCES__VFS__DIRECTORIESBRANCH_H
+#endif // LIBSAKUSEN_RESOURCES__VFS__DIRECTORYBRANCH_H
 

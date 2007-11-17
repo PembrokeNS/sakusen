@@ -53,7 +53,7 @@ class LIBSAKUSEN_API ResourceInterface {
     template<typename T>
     inline ResourceType typenameToResourceType();
   public:
-    /** \brief Search resources for given name type T
+    /** \brief Search for resource of given name and type T
      *
      * This method searches for a resource of the given name type T.  It
      * returns a shared_ptr to the resource, if found, a ResourceSearchResult
@@ -71,8 +71,8 @@ class LIBSAKUSEN_API ResourceInterface {
         boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       );
 
-    /** \brief Search resources for given name type T, insisting on an exact
-     * hash.
+    /** \brief Search for resources of given name and type T, insisting on an
+     * exact hash.
      *
      * As the other overload of search, but also specifying a hash.  If the
      * hash does not match, the result will be an error.
