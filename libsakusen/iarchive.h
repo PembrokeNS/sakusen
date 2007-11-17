@@ -78,7 +78,7 @@ class LIBSAKUSEN_API IArchive : boost::noncopyable {
     IArchive(const uint8* buffer, size_t length);
     IArchive(const boost::shared_array<uint8>& buffer, size_t length);
     IArchive(const boost::shared_array<const uint8>& buffer, size_t length);
-    IArchive(const Buffer& buffer);
+    explicit IArchive(const Buffer& buffer);
   private:
     const Buffer originalBuffer;
     /* Pointer into originalBuffer's memory, which is safe only because
