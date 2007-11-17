@@ -53,7 +53,7 @@ void ReplayRecorder::writeKeyTick()
 String ReplayRecorder::setOption(const String& name, const String& newVal)
 {
   if (name == "file") {
-    if (!(newVal == "" || RE(FILENAME_REGEX).FullMatch(newVal))) {
+    if (!(newVal == "" || resources::filenameRegex.FullMatch(newVal))) {
       return "filename contains invalid characters";
     }
     replayFileRoot = newVal;

@@ -28,8 +28,8 @@ Branch::Ptr DirectoryBranch::getSubBranch(const String& subBranchName)
 {
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators; for now we insist more
-   * strongly that it match the FILENAME_REGEX. */
-  if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(subBranchName)) {
+   * strongly that it match the filenameRegex. */
+  if (!filenameRegex.FullMatch(subBranchName)) {
     Fatal("invalid name");
   }
   assert(!subBranchName.empty());
@@ -55,8 +55,8 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
 {
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators; for now we insist more
-   * strongly that it match the FILENAME_REGEX. */
-  if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(subBranchName)) {
+   * strongly that it match the filenameRegex. */
+  if (!filenameRegex.FullMatch(subBranchName)) {
     Fatal("invalid name");
   }
   assert(!subBranchName.empty());
@@ -133,8 +133,8 @@ Writer::Ptr DirectoryBranch::getWriter(const String& writerName)
 {
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators and isn't ..; for now we insist more
-   * strongly that it match the FILENAME_REGEX. */
-  if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(writerName)) {
+   * strongly that it match the filenameRegex. */
+  if (!filenameRegex.FullMatch(writerName)) {
     Fatal("invalid name");
   }
   boost::filesystem::path filePath = directory / writerName;

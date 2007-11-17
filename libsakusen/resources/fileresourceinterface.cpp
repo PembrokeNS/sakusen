@@ -326,17 +326,16 @@ bool FileResourceInterface::internalSave(
         Fatal("unexpected ResourceType: " << type);
     }
 
-    if (!pcrecpp::RE(FILENAME_REGEX).FullMatch(shortName)) {
-      error = String("Name '") + shortName + "' contains invalid characters and "
-        "cannot be used as part of a filename.  The name must match " +
-        FILENAME_REGEX + ".";
+    if (!filenameRegex.FullMatch(shortName)) {
+      error = String("Name '") + shortName +
+        "' contains invalid characters and "
+        "cannot be used as part of a filename.";
       return true;
     }
 
-    if (!pcrecpp::RE(PATH_REGEX).FullMatch(path)) {
+    if (!pathRegex.FullMatch(path)) {
       error = String("Path '") + path + "' contains invalid characters and "
-        "cannot be used as part of a filename.  The name must match " +
-        PATH_REGEX + ".";
+        "cannot be used as part of a filename.";
       return true;
     }
 

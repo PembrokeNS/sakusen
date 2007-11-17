@@ -1,22 +1,20 @@
 #ifndef LIBSAKUSEN_RESOURCES_GLOBAL_H
 #define LIBSAKUSEN_RESOURCES_GLOBAL_H
 
-/* Ensure 64-bit ftello and fseeko are available */
+/* Ensure 64-bit ftello and fseeko are available
+ *
+ * \todo See whether this is actually necessary any more given that we're
+ * using boost::filesystem::fstream tell methods now. */
 #define _FILE_OFFSET_BITS 64
 
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
 
+#include "pcrecpp.h"
+
 /** DATA_SUBDIR is the subdirectory of CONFIG_SUBDIR where the game data is to
  * be found */
 #define DATA_SUBDIR "data"
-
-/** FILENAME_REGEX defines a regex which must be matched by filenames */
-#define FILENAME_REGEX "[-a-z0-9_.]+"
-
-/** PATH_REGEX defines a regex which must be matched by paths in the Skusen
- * VFS */
-#define PATH_REGEX "[-a-z0-9_./]+"
 
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -34,11 +32,21 @@
   #endif
 #endif
 
-#ifdef WIN32
-/* typederfs for types that don't exist in Windows, to allow for common API.
- * Arguments of these types should not have any effect under Windows */
-typedef int mode_t;
-#endif
+namespace sakusen {
+namespace resources {
+
+/** \brief Defines a regex which must be matched by filenames.
+ *
+ * \warning Do not expect this to be initialised during static constructors. */
+extern pcrecpp::RE filenameRegex;
+
+/** Defines a regex which must be matched by paths in the Skusen
+ * VFS
+ *
+ * \warning Do not expect this to be initialised during static constructors. */
+extern pcrecpp::RE pathRegex;
+
+}}
 
 #endif // LIBSAKUSEN_RESOURCES_GLOBAL_H
 
