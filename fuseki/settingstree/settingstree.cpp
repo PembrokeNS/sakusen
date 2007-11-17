@@ -27,7 +27,7 @@ list<String> SettingsTree::stringNodeAddressToList(
   ) const
 {
   list<String> addressAsList =
-    stringUtils_split(nodeAddress, SETTINGS_DELIMITER);
+    stringUtils_split<list<String> >(nodeAddress, SETTINGS_DELIMITER);
   /* Remove effect of leading, trailing or duplicate delimiters */
   list<String>::iterator name = addressAsList.begin();
   while (name != addressAsList.end()) {

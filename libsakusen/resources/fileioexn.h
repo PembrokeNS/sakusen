@@ -1,6 +1,8 @@
 #ifndef FILEIOEXN_H
 #define FILEIOEXN_H
 
+#include "libsakusen-resources-global.h"
+
 #include "exceptions.h"
 #include "errorutils.h"
 

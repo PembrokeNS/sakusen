@@ -7,7 +7,7 @@ using namespace tedomari::ui;
 
 ModifiedKey::ModifiedKey(const String& name) : key(K_Unknown), modifiers()
 {
-  list<String> components = stringUtils_split(name, "-");
+  list<String> components = stringUtils_split<list<String> >(name, "-");
   if (components.empty()) {
     return;
   }

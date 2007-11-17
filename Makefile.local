@@ -20,9 +20,17 @@ endif
 
 all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings: all-recurse-libsakusen
 
-all-recurse-fuseki all-recurse-tedomari: liboptimal
+all-recurse-fuseki all-recurse-tedomari: all-recurse-liboptimal
 
 all-recurse-libsakusen: all-recurse-libltdl_hacked
+
+test-recurse-server-test: test-recurse-data
+
+test-recurse-server-test test-recurse-server-plugins test-recurse-fuseki test-recurse-tedomari test-recurse-data test-recurse-bindings: test-recurse-libsakusen
+
+test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
+
+test-recurse-libsakusen: test-recurse-libltdl_hacked
 
 else
 

@@ -1,2 +1,40 @@
-SUBDIRS = universe module
+DIRS := $(shell find $(this_srcdir)test -type d -a -name '*.dir')
+BASES := $(patsubst $(this_srcdir)%,%,$(basename $(DIRS)))
+SAKUSNSOURCES := $(addsuffix .sakusensource,$(BASES))
+DIR_MAKEFRAGS := $(foreach base,$(BASES),.makefrags/$(base).makefrag)
+SUBDIRS := $(foreach base,$(BASES),module/$(base))
+SUBDIR_MAKEFILES := $(addsuffix /Makefile.local,$(SUBDIRS))
+
+all-nonrecursive: sources
+
+sources: $(SAKUSNSOURCES)
+
+include $(DIR_MAKEFRAGS)
+
+$(SAKUSNSOURCES): %.sakusensource: .makefrags/%.makefrag
+	ORIG_DIR=`pwd` && \
+	cd $(this_srcdir)$*.dir && \
+	tar -cjf $${ORIG_DIR}/$@ $(notdir $(filter $(this_srcdir)$*.dir/%,$^))
+
+$(DIR_MAKEFRAGS): .makefrags/%.makefrag: $(this_srcdir)%.dir
+	mkdir -p $(dir $@)
+	echo $@ $*.sakusensource: $(wildcard $(this_srcdir)$*.dir/*) > $@
+
+$(SUBDIR_MAKEFILES): %/Makefile.local: $(this_srcdir)Makefile.module $(this_srcdir)Makefile.local
+	mkdir -p $(dir $@)
+	echo 'BIN = ../$(notdir $*).sakusenmodule.la' > $@
+	@DOTS="`echo "$*" | sed -r 's![^/]+!..!g'`" && \
+	echo "SOURCE_DIRS = $${DOTS}"/'$(patsubst module/%,%,$*.dir)' >> $@
+	cat $(this_srcdir)Makefile.module >> $@
+
+$(addprefix clean-recurse-,$(SUBDIRS)): clean-recurse-%: %/Makefile.local
+
+$(addprefix all-recurse-,$(SUBDIRS)): all-recurse-%: %/Makefile.local
+
+$(addprefix test-recurse-,$(SUBDIRS)): test-recurse-%: %/Makefile.local
+
+clean:
+	-rm -rf .makefrags $(SAKUSNSOURCES) $(SUBDIRS)
+
+.PHONY: sources
 

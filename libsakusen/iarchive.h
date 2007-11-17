@@ -14,6 +14,7 @@
 #include "exceptions.h"
 #include "stringutils.h"
 #include "deserializationcontext.h"
+#include "buffer.h"
 
 namespace sakusen {
 
@@ -70,20 +71,19 @@ struct Extracter {
  *
  * \note The name IArchive follows the istream/ostream convention.
  */
-class LIBSAKUSEN_API IArchive {
+class LIBSAKUSEN_API IArchive : boost::noncopyable {
   friend class OArchive;
   public:
     IArchive();
-    IArchive(const IArchive&);
     IArchive(const uint8* buffer, size_t length);
     IArchive(const boost::shared_array<uint8>& buffer, size_t length);
     IArchive(const boost::shared_array<const uint8>& buffer, size_t length);
-    IArchive(const OArchive&);
-    IArchive& operator=(const IArchive&);
-    ~IArchive();
+    IArchive(const Buffer& buffer);
   private:
-    uint8* originalBuffer; /* owned by this */
-    const uint8* buffer;
+    const Buffer originalBuffer;
+    /* Pointer into originalBuffer's memory, which is safe only because
+     * originalBuffer is const, and thus will never copy its memory */
+    const uint8* pos; 
     size_t remainingLength;
     inline void assertLength(size_t length) const {
       /* We ensure that enough length remains.
@@ -93,7 +93,7 @@ class LIBSAKUSEN_API IArchive {
       }
     }
     inline void advance(size_t length) {
-      buffer += length;
+      pos += length;
       remainingLength -= length;
     }
   public:
@@ -103,9 +103,7 @@ class LIBSAKUSEN_API IArchive {
      * This function should continue to return the same thing, even when things
      * are extracted from the IArchive. */
     inline String getSecureHashAsString() const {
-      return stringUtils_getSecureHashAsString(
-          originalBuffer, (buffer+remainingLength)-originalBuffer
-        );
+      return originalBuffer.getSecureHashAsString();
     }
     /** \brief Determine whether the IArchive is exhausted, with no more data
      * to extract */
@@ -113,20 +111,20 @@ class LIBSAKUSEN_API IArchive {
     void dumpBuffer() const;
     inline IArchive& operator>>(bool& i) {
       assertLength(sizeof(uint8));
-      assert(*buffer <= 1);
-      i = !(0 == *buffer);
+      assert(*pos <= 1);
+      i = !(0 == *pos);
       advance(sizeof(uint8));
       return *this;
     }
     inline IArchive& operator>>(uint8& i) {
       assertLength(sizeof(uint8));
-      i = *buffer;
+      i = *pos;
       advance(sizeof(uint8));
       return *this;
     }
     inline IArchive& operator>>(sint8& i) {
       assertLength(sizeof(sint8));
-      i = *buffer;
+      i = *pos;
       advance(sizeof(sint8));
       return *this;
     }
@@ -138,7 +136,7 @@ class LIBSAKUSEN_API IArchive {
     IArchive& operator>>(sint64& i);
     IArchive& operator>>(double& d);
     IArchive& operator>>(String& s);
-    IArchive& operator>>(IArchive&);
+    IArchive& operator>>(Buffer&);
 
     /** \brief Extract an enum value from the IArchive
      *
@@ -345,9 +343,9 @@ class LIBSAKUSEN_API IArchive {
      * thrown. */
     inline void magicValue(const String& val) {
       assertLength(val.size());
-      if (0 != memcmp(val.c_str(), buffer, val.size())) {
+      if (0 != memcmp(val.c_str(), pos, val.size())) {
         Debug("Wrong magic");
-        throw WrongMagicDeserializationExn(val, buffer);
+        throw WrongMagicDeserializationExn(val, pos);
       }
       advance(val.size());
     }

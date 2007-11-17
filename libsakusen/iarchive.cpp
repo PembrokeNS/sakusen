@@ -15,86 +15,41 @@ using namespace sakusen;
  *
  * Creates an empty IArchive, from which nothing can be extracted */
 IArchive::IArchive() :
-  originalBuffer(NULL),
-  buffer(NULL),
+  originalBuffer(),
+  pos(NULL),
   remainingLength(0)
 {
 }
 
-/** \brief Copy constructor
- *
- * Constructs a copy of another IArchive.  After the copy, both will behave the
- * same.  i.e. this one will not be reset to where the copied one was when it
- * was first constructed.
- */
-IArchive::IArchive(const IArchive& copy) :
-  originalBuffer(new uint8[copy.remainingLength]),
-  buffer(originalBuffer),
-  remainingLength(copy.remainingLength)
-{
-  assert(copy.originalBuffer == copy.buffer);
-  memcpy(originalBuffer, copy.buffer, remainingLength);
-}
-
 /** \brief Constructs IArchive from raw data buffer */
 IArchive::IArchive(const uint8* b, size_t l) :
-  originalBuffer(new uint8[l]),
-  buffer(originalBuffer),
+  originalBuffer(b, l),
+  pos(originalBuffer.getConst()),
   remainingLength(l)
 {
-  memcpy(originalBuffer, b, l*sizeof(uint8));
 }
 
 /** \brief Constructs IArchive from raw data in a shared_array */
 IArchive::IArchive(const boost::shared_array<uint8>& b, size_t l) :
-  originalBuffer(new uint8[l]),
-  buffer(originalBuffer),
+  originalBuffer(b, l),
+  pos(originalBuffer.getConst()),
   remainingLength(l)
 {
-  memcpy(originalBuffer, b.get(), l*sizeof(uint8));
 }
 
 /** \brief Constructs IArchive from raw data in a shared_array */
 IArchive::IArchive(const boost::shared_array<const uint8>& b, size_t l) :
-  originalBuffer(new uint8[l]),
-  buffer(originalBuffer),
+  originalBuffer(b, l),
+  pos(originalBuffer.getConst()),
   remainingLength(l)
 {
-  memcpy(originalBuffer, b.get(), l*sizeof(uint8));
 }
 
-/** \brief Constructs IArchive from an OArchive.
- *
- * The things extractable from this IArchive will be exactly the things that
- * were inserted into the OArchive before this call. */
-IArchive::IArchive(const OArchive& archive) :
-  originalBuffer(new uint8[archive.getLength()]),
-  buffer(originalBuffer),
-  remainingLength(archive.getLength())
+IArchive::IArchive(const Buffer& b) :
+  originalBuffer(b),
+  pos(originalBuffer.getConst()),
+  remainingLength(originalBuffer.getSize())
 {
-  memcpy(originalBuffer, archive.getBytes(), remainingLength*sizeof(uint8));
-}
-
-IArchive::~IArchive()
-{
-  delete[] originalBuffer;
-}
-
-IArchive& IArchive::operator=(const IArchive& copy) {
-  if (this != &copy) {
-    uint8 *my_originalBuffer = 0;
-    size_t buffer_size = (copy.buffer + remainingLength) - copy.originalBuffer;
-    if (copy.originalBuffer != NULL) {
-      my_originalBuffer = new uint8[buffer_size];
-    }
-    delete[] originalBuffer;
-    originalBuffer = my_originalBuffer;
-    if (copy.originalBuffer != NULL)
-      memcpy(originalBuffer, copy.originalBuffer, buffer_size * sizeof(uint8));
-    buffer = originalBuffer + (copy.buffer - copy.originalBuffer);
-    remainingLength = copy.remainingLength;
-  }
-  return *this;
 }
 
 /** \brief Dump the buffer as hex to stdout
@@ -103,13 +58,13 @@ IArchive& IArchive::operator=(const IArchive& copy) {
  * debugger. */
 void IArchive::dumpBuffer() const
 {
-  Debug(stringUtils_bufferToHex(buffer, remainingLength));
+  Debug(stringUtils_bufferToHex(pos, remainingLength));
 }
 
 IArchive& IArchive::operator>>(uint16& i)
 {
   assertLength(sizeof(uint16));
-  i = ntohs(*reinterpret_cast<const uint16*>(buffer));
+  i = ntohs(*reinterpret_cast<const uint16*>(pos));
   advance(sizeof(uint16));
   return *this;
 }
@@ -117,7 +72,7 @@ IArchive& IArchive::operator>>(uint16& i)
 IArchive& IArchive::operator>>(sint16& i)
 {
   assertLength(sizeof(sint16));
-  i = ntohs(*reinterpret_cast<const sint16*>(buffer));
+  i = ntohs(*reinterpret_cast<const sint16*>(pos));
   advance(sizeof(sint16));
   return *this;
 }
@@ -125,7 +80,7 @@ IArchive& IArchive::operator>>(sint16& i)
 IArchive& IArchive::operator>>(uint32& i)
 {
   assertLength(sizeof(uint32));
-  i = ntohl(*reinterpret_cast<const uint32*>(buffer));
+  i = ntohl(*reinterpret_cast<const uint32*>(pos));
   advance(sizeof(uint32));
   return *this;
 }
@@ -133,7 +88,7 @@ IArchive& IArchive::operator>>(uint32& i)
 IArchive& IArchive::operator>>(sint32& i)
 {
   assertLength(sizeof(sint32));
-  i = ntohl(*reinterpret_cast<const sint32*>(buffer));
+  i = ntohl(*reinterpret_cast<const sint32*>(pos));
   advance(sizeof(sint32));
   return *this;
 }
@@ -156,7 +111,7 @@ IArchive& IArchive::operator>>(String& s)
   *this >> length;
   assertLength(length);
   s = String(
-      reinterpret_cast<const char*>(buffer),
+      reinterpret_cast<const char*>(pos),
       static_cast<size_t>(length)
     );
   advance(length);
@@ -165,15 +120,13 @@ IArchive& IArchive::operator>>(String& s)
   return *this;
 }
 
-IArchive& IArchive::operator>>(IArchive& i)
+IArchive& IArchive::operator>>(Buffer& b)
 {
   uint32 length;
   *this >> length;
   assertLength(length);
-  delete[] i.originalBuffer;
-  i.buffer = i.originalBuffer = new uint8[length];
-  i.remainingLength = length;
-  memcpy(i.originalBuffer, buffer, length);
+  b.resize(length);
+  memcpy(b.get(), pos, length);
   advance(length);
   return *this;
 }

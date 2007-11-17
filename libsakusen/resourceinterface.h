@@ -4,6 +4,7 @@
 #include "libsakusen-global.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include "resourcesearchresult.h"
 #include "resourcetype.h"
@@ -30,42 +31,57 @@ class LIBSAKUSEN_API ResourceInterface {
   protected:
     String error;
     
-    virtual boost::shared_ptr<void> internalSearch(
+    virtual boost::tuple<boost::shared_ptr<void>, ResourceSearchResult, String>
+    internalSearch(
         const String& name,
+        const String& hash,
         ResourceType type,
-        ResourceSearchResult* result,
         boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       ) = 0;
     
-    virtual void* internalSymbolSearch(
+    virtual boost::tuple<void*, ResourceSearchResult> internalSymbolSearch(
         const String& moduleName,
-        const String& symbolName,
-        ResourceSearchResult* result
+        const String& symbolName
       ) = 0;
 
     virtual bool internalSave(
         const boost::shared_ptr<const void>& resource,
+        const String& path,
         ResourceType type
       ) = 0;
     
     template<typename T>
     inline ResourceType typenameToResourceType();
   public:
-    /** \brief Search resources for given name and type
+    /** \brief Search resources for given name type T
      *
-     * This method searches for a resource of the given name and type.  It puts
-     * the result of the search at the place pointed to by the \a result
-     * argument (unless \a result is \c NULL), and returns a pointer to
-     * whatever was found (if anything, otherwise NULL).
+     * This method searches for a resource of the given name type T.  It
+     * returns a shared_ptr to the resource, if found, a ResourceSearchResult
+     * value indicating the result of the search, and the path in the sakusen
+     * VFS where the resource was found.
      *
-     * \a arg allows some other argument to be passed through to the
-     * constructor or factory method for the resource (typically this will be a
-     * Universe).
+     * The last optional argument allows a universe to be passed through to
+     * the search if one exists and might be useful.  This is necessary, for
+     * example, when loading a MapTemplate.
      */
     template<typename T>
-    inline boost::shared_ptr<T> search(
+    inline boost::tuple<boost::shared_ptr<T>, ResourceSearchResult, String>
+    search(
         const String& name,
-        ResourceSearchResult* result,
+        boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
+      );
+
+    /** \brief Search resources for given name type T, insisting on an exact
+     * hash.
+     *
+     * As the other overload of search, but also specifying a hash.  If the
+     * hash does not match, the result will be an error.
+     */
+    template<typename T>
+    inline boost::tuple<boost::shared_ptr<T>, ResourceSearchResult, String>
+    search(
+        const String& name,
+        const String& hash,
         boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       );
 
@@ -78,31 +94,32 @@ class LIBSAKUSEN_API ResourceInterface {
      *         pointer type); or NULL if there was an error.
      */
     template<typename T>
-    T symbolSearch(
+    boost::tuple<T, ResourceSearchResult> symbolSearch(
         const String& moduleName,
-        const String& symbolName,
-        ResourceSearchResult* result
+        const String& symbolName
       ) {
-      return reinterpret_cast<T>(
-          internalSymbolSearch(moduleName, symbolName, result)
-        );
+      void* p;
+      ResourceSearchResult result;
+      boost::tie(p, result) = internalSymbolSearch(moduleName, symbolName);
+      return boost::make_tuple(reinterpret_cast<T>(p), result);
     }
     
     template<typename T>
-    inline bool save(const boost::shared_ptr<const T>& resource);
+    inline bool save(
+        const boost::shared_ptr<const T>& resource,
+        const String& path
+      );
 
     /** \brief Open a Writer appropriate to this ResourceInterface.
      *
-     * \p name should be a simple name, as opposed to a full path.  If the
-     * ResourceInterface is to files, then the appropriate directory will be
-     * chosen according to \p type.
+     * \p path is a full path to the desired destination.  If the writer
+     * cannot be created for some reason, then a NULL pointer is returned.
      */
     virtual Writer::Ptr openWriter(
-        const String& name,
-        ResourceType type
+        const String& path
       ) = 0;
 
-    /** \brief Returns description of last error
+    /** \brief Returns description of last error.
      *
      * When a search indicates a result of resourceSearchResult_error, a
      * description of the error can be obtained by calling this function.

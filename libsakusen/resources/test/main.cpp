@@ -39,6 +39,8 @@ int main(/*int argc, char** argv*/)
     );
   boost::filesystem::path homePath = fileUtils_getHome();
   boost::filesystem::path dataDir = homePath / CONFIG_SUBDIR / DATA_SUBDIR;
+  boost::filesystem::path testDir = dataDir / "test";
+  fileUtils_mkdirRecursive(dataDir);
   boost::filesystem::path dotDot("..");
   
   cout << "Creating ResourceInterface" << endl;
@@ -53,23 +55,14 @@ int main(/*int argc, char** argv*/)
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, false);
 
-  cout << "Cleaning out existing test files" << endl;
-  list<boost::filesystem::path> universes =
-    fileUtils_findMatches(dataDir / "universe", "universe.");
-  while (!universes.empty()) {
-    boost::filesystem::remove(universes.front());
-    universes.pop_front();
-  }
-  list<boost::filesystem::path> maps =
-    fileUtils_findMatches(dataDir / "maptemplate", "map.");
-  while (!maps.empty()) {
-    boost::filesystem::remove(maps.front());
-    maps.pop_front();
-  }
-  maps = fileUtils_findMatches(dataDir / "maptemplate", "2map.");
-  while (!maps.empty()) {
-    boost::filesystem::remove(maps.front());
-    maps.pop_front();
+  if (boost::filesystem::exists(testDir)) {
+    cout << "Cleaning out existing test files" << endl;
+    list<boost::filesystem::path> files =
+      fileUtils_findMatches(testDir, "");
+    while (!files.empty()) {
+      boost::filesystem::remove(files.front());
+      files.pop_front();
+    }
   }
   
   cout << "Creating Universe" << endl;
@@ -78,7 +71,7 @@ int main(/*int argc, char** argv*/)
     WeaponType cannonType =
       WeaponType(
           "cannon",
-          "testsrc",
+          "test/testsrc",
           "o" /* clientHint */,
           17 /* energyCost */,
           17 /* metalCost */,
@@ -90,7 +83,7 @@ int main(/*int argc, char** argv*/)
     WeaponType paralyzerType =
       WeaponType(
           "paralyzer",
-          "testsrc",
+          "test/testsrc",
           "o" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
@@ -102,7 +95,7 @@ int main(/*int argc, char** argv*/)
     WeaponType factorycreaterType =
       WeaponType(
           "factorycreater",
-          "testsrc",
+          "test/testsrc",
           "c:factory" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
@@ -114,7 +107,7 @@ int main(/*int argc, char** argv*/)
     WeaponType gruntcreaterType =
       WeaponType(
           "gruntcreater",
-          "testsrc",
+          "test/testsrc",
           "c:grunt" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
@@ -126,7 +119,7 @@ int main(/*int argc, char** argv*/)
     WeaponType spidercreaterType =
       WeaponType(
           "spidercreater",
-          "testsrc",
+          "test/testsrc",
           "c:spider" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
@@ -138,7 +131,7 @@ int main(/*int argc, char** argv*/)
     WeaponType builderType =
       WeaponType(
           "builder",
-          "testsrc",
+          "test/testsrc",
           "b" /* clientHint */,
           10 /* energyCost */,
           10 /* metalCost */,
@@ -289,7 +282,7 @@ int main(/*int argc, char** argv*/)
   }
 
   cout << "Saving Universe" << endl;
-  if(resourceInterface->save(Universe::ConstPtr(universe)))
+  if(resourceInterface->save(Universe::ConstPtr(universe), "test"))
   {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
@@ -297,8 +290,9 @@ int main(/*int argc, char** argv*/)
 
   cout << "Loading Universe" << endl;
   ResourceSearchResult result;
-  Universe::ConstPtr reloadedUniverse =
-    resourceInterface->search<Universe>("universe", &result);
+  Universe::ConstPtr reloadedUniverse;
+  boost::tie(reloadedUniverse, result, boost::tuples::ignore) =
+    resourceInterface->search<Universe>("test/universe");
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -353,17 +347,16 @@ int main(/*int argc, char** argv*/)
       ));
 
   cout << "Saving map" << endl;
-  if(resourceInterface->save(t))
+  if(resourceInterface->save(t, "test"))
   {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
   }
 
   cout << "Loading map" << endl;
-  MapTemplate::Ptr reloadedTemplate =
-    resourceInterface->search<MapTemplate>(
-        "map", &result, reloadedUniverse
-      );
+  MapTemplate::Ptr reloadedTemplate;
+  boost::tie(reloadedTemplate, result, boost::tuples::ignore) =
+    resourceInterface->search<MapTemplate>("test/map", reloadedUniverse);
   cout << "Result of reload was " << result << endl;
   
   switch(result) {
@@ -401,7 +394,7 @@ int main(/*int argc, char** argv*/)
       ));
 
   cout << "Saving two player map" << endl;
-  if (resourceInterface->save(t)) {
+  if (resourceInterface->save(t, "test")) {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
   }

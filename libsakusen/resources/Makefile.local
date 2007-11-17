@@ -1,4 +1,5 @@
 BIN = libsakusen-resources.la
+SOURCE_DIRS = vfs
 SUBDIRS = test
 LIB_DEP_NAMES = libltdl_hacked libsakusen libsakusen-comms
 LIBS := -lpcrecpp -lpng -lboost_filesystem

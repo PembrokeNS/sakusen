@@ -12,6 +12,8 @@
 #define NativeReceiveReturnType ssize_t
 #endif
 
+using namespace std;
+
 using namespace sakusen;
 using namespace sakusen::comms;
 
@@ -75,7 +77,8 @@ void UDPSocket::send(const void* buf, size_t len)
 
 void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
 {
-  std::list<String> splitAddress = stringUtils_split(address, ADDR_DELIM);
+  std::list<String> splitAddress =
+    stringUtils_split<list<String> >(address, ADDR_DELIM);
   assert(!splitAddress.empty());
   assert(splitAddress.front() == getType());
   splitAddress.pop_front();

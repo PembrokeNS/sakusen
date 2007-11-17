@@ -123,11 +123,22 @@ class LIBSAKUSEN_API ResourceDeserializationExn :
       ) :
       DeserializationExn(
           "resource '"+resource+"' "+
-          ( result == resourceSearchResult_error ?
-            "caused error: " + error : "" ) +
-            ( result == resourceSearchResult_notFound ? "not found. File: "+error : "" ) +
-          ( result == resourceSearchResult_ambiguous ? "ambiguous" : "" ) +
-          ( result == resourceSearchResult_notSupported ? "not supported" : "" )
+          ( result == resourceSearchResult_error
+            ? "caused error: " + error
+            : ""
+          ) +
+          ( result == resourceSearchResult_notFound
+            ? "not found. Error: "+error
+            : ""
+          ) +
+          ( result == resourceSearchResult_ambiguous
+            ? "ambiguous"
+            : ""
+          ) +
+          ( result == resourceSearchResult_notSupported
+            ? "not supported"
+            : ""
+          )
         ) {}
     virtual ~ResourceDeserializationExn() throw() {}
 };

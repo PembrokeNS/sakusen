@@ -52,10 +52,10 @@ class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
      * \param len Number of bytes in buffer.
      */
     virtual void send(const void* buf, size_t len) = 0;
-    /** \brief sends the given ::Message down the line. */
+    /** \brief sends the given Message down the line. */
     inline void send(const Message& message)
     {
-      send(message.getBytes(), message.getBytesLength());
+      send(message.getBuffer().getConst(), message.getBuffer().getSize());
     }
     /** \brief Reads \p len bytes of binary from \p buf and sends it.
      * \param buf Must not be NULL.
@@ -66,7 +66,10 @@ class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
     /** \brief sends the given ::Message to the given address. */
     inline void sendTo(const Message& message, const String& address)
     {
-      sendTo(message.getBytes(), message.getBytesLength(), address);
+      sendTo(
+          message.getBuffer().getConst(), message.getBuffer().getSize(),
+          address
+        );
     }
     /** \brief receives a binary stream from the network
      * \param[out] buf Must not be NULL, and should point to a buffer into

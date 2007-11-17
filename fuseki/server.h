@@ -72,9 +72,11 @@ class Server : public SettingsUser, private boost::noncopyable {
      * if none selected yet.
      */
     sakusen::Universe::ConstPtr universe;
+    String universePath;
     /* The map template which we plan to use to build the world.
      * NULL if none selected yet. */
     sakusen::MapTemplate::ConstPtr map;
+    String mapPath;
     /** The mode we plan to play the map on.
      * \todo Make this more meaningful than a plain int.
      */
@@ -99,9 +101,11 @@ class Server : public SettingsUser, private boost::noncopyable {
     bool ensureAdminExistsNextTime; /* Indicate that a check for whether an
                                        admin exists is in order */
     sakusen::Universe::ConstPtr requestedUniverse;
-      /* Put a universe here to be promoted to universe when possible */
+    String requestedUniversePath;
+      /* Put a universe & path here to be promoted to universe when possible */
     sakusen::MapTemplate::ConstPtr requestedMap;
-      /* Put a map here to be promoted to map when possible */
+    String requestedMapPath;
+      /* Put a map & path here to be promoted to map when possible */
     std::queue<String> pluginsToAdd;
     sakusen::hash_set_string pluginsToRemove;
     bool mapPlayModeChanged;

@@ -27,11 +27,17 @@ class Writer : boost::noncopyable {
      *
      * Throws exception on error. */
     virtual void write(const uint8* buffer, size_t length) = 0;
+    /** \brief Writes underlying data of Buffer to target of Writer.
+     *
+     * Throw exception on error. */
+    inline void write(const Buffer& buffer) {
+      write(buffer.getConst(), buffer.getSize());
+    }
     /** \brief Writes underlying data of OArchive to target of Writer.
      *
      * Throw exception on error. */
     inline void write(const OArchive& archive) {
-      write(archive.getBytes(), archive.getBytesLength());
+      write(archive.getBuffer());
     }
 
     /** \brief Report stream position (e.g. ftell) */

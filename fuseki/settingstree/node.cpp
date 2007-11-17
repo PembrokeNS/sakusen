@@ -32,14 +32,14 @@ Node::Node(
   readingGroups.insert("server");
   writingGroups.insert("server");
 
-  list<String> readerList = stringUtils_split(readers, ",");
+  list<String> readerList = stringUtils_split<list<String> >(readers, ",");
 
   for (list<String>::iterator reader = readerList.begin();
       reader != readerList.end(); reader++) {
     readingGroups.insert(*reader);
   }
 
-  list<String> writerList = stringUtils_split(writers, ",");
+  list<String> writerList = stringUtils_split<list<String> >(writers, ",");
 
   for (list<String>::iterator writer = writerList.begin();
       writer != writerList.end(); writer++) {

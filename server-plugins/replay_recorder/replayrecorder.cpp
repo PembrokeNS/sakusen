@@ -82,9 +82,9 @@ void ReplayRecorder::gameStart()
   
   /* Open the writers */
   mainReplayWriter =
-    resourceInterface->openWriter(replayFileRoot, resourceType_replay);
+    resourceInterface->openWriter("replays/"+replayFileRoot+".sakusenreplay");
   replayIndexWriter =
-    resourceInterface->openWriter(replayFileRoot, resourceType_replayIndex);
+    resourceInterface->openWriter("replays/"+replayFileRoot+".sakusenreplayindex");
 
   /* Save a keytick */
   writeKeyTick();

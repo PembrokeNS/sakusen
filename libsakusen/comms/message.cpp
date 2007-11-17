@@ -103,20 +103,21 @@ void Message::store(OArchive& archive) const
 {
   archive << player;
   if (data) {
-    archive << data->getArchive();
+    archive << data->getBuffer();
   } else {
     OArchive subArchive;
     subArchive << uint8(NETWORK_PROTOCOL_VERSION);
     subArchive.insertEnum(messageType_none);
-    archive << subArchive;
+    archive << subArchive.getBuffer();
   }
 }
 
 Message Message::load(IArchive& archive)
 {
   PlayerId player;
-  IArchive subArchive;
-  archive >> player >> subArchive;
+  Buffer subBuffer;
+  archive >> player >> subBuffer;
+  IArchive subArchive(subBuffer);
   return Message(subArchive, player);
 }
 

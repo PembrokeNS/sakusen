@@ -52,7 +52,7 @@ class Game {
     /** Returns true iff the game is underway */
     inline bool isStarted() const { return sakusen::client::world != NULL; }
     
-    void setUniverse(const String& name, const String& hash);
+    void setUniverse(const String& path, const String& hash);
     /** \brief Starts the game
      *
      * Creates world and starts the game.  A previous call to setUniverse

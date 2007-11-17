@@ -10,12 +10,12 @@ namespace sakusen{
 namespace comms{
 
 MessageData::MessageData() :
-  archive()
+  buffer()
 {
 }
 
 MessageData::MessageData(const MessageData& copy) :
-  archive(copy.archive)
+  buffer(copy.buffer)
 {
 }
 
@@ -35,7 +35,7 @@ JoinMessageData::JoinMessageData(IArchive& in) :
   in >> address;
 }
 
-void JoinMessageData::fillArchive() const
+void JoinMessageData::fillArchive(OArchive& archive) const
 {
   archive << address;
 }
@@ -59,7 +59,7 @@ AcceptMessageData::AcceptMessageData(IArchive& in) :
   in >> id;
 }
 
-void AcceptMessageData::fillArchive() const
+void AcceptMessageData::fillArchive(OArchive& archive) const
 {
   archive << address;
   archive << id;
@@ -82,7 +82,7 @@ RejectMessageData::RejectMessageData(IArchive& in) :
   in >> reason;
 }
 
-void RejectMessageData::fillArchive() const
+void RejectMessageData::fillArchive(OArchive& archive) const
 {
   archive << reason;
 }
@@ -104,7 +104,7 @@ KickMessageData::KickMessageData(IArchive& in) :
   in >> reason;
 }
 
-void KickMessageData::fillArchive() const
+void KickMessageData::fillArchive(OArchive& archive) const
 {
   archive << reason;
 }
@@ -124,7 +124,7 @@ LeaveMessageData::LeaveMessageData(IArchive&) :
 {
 }
 
-void LeaveMessageData::fillArchive() const
+void LeaveMessageData::fillArchive(OArchive&) const
 {
 }
 
@@ -147,7 +147,7 @@ GetSettingMessageData::GetSettingMessageData(IArchive& in) :
   in >> setting;
 }
 
-void GetSettingMessageData::fillArchive() const
+void GetSettingMessageData::fillArchive(OArchive& archive) const
 {
   archive << setting;
 }
@@ -174,7 +174,7 @@ ChangeSettingMessageData::ChangeSettingMessageData(IArchive& in) :
   in >> value;
 }
 
-void ChangeSettingMessageData::fillArchive() const
+void ChangeSettingMessageData::fillArchive(OArchive& archive) const
 {
   archive << setting;
   archive << value;
@@ -202,7 +202,7 @@ NotifySettingMessageData::NotifySettingMessageData(IArchive& in) :
   in >> value;
 }
 
-void NotifySettingMessageData::fillArchive() const
+void NotifySettingMessageData::fillArchive(OArchive& archive) const
 {
   archive << setting;
   archive << value;
@@ -240,7 +240,7 @@ GameStartMessageData::GameStartMessageData(IArchive& in) :
     gravity >> horizontalHeightfieldRes >> verticalHeightfieldRes;
 }
 
-void GameStartMessageData::fillArchive() const
+void GameStartMessageData::fillArchive(OArchive& archive) const
 {
   (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
     gravity << horizontalHeightfieldRes << verticalHeightfieldRes;
@@ -266,7 +266,7 @@ OrderMessageData::OrderMessageData(
 {
 }
 
-void OrderMessageData::fillArchive() const
+void OrderMessageData::fillArchive(OArchive& archive) const
 {
   orderMessage.store(archive);
 }
@@ -298,7 +298,7 @@ UpdateMessageData::UpdateMessageData(
   in.extract(updates, context);
 }
 
-void UpdateMessageData::fillArchive() const
+void UpdateMessageData::fillArchive(OArchive& archive) const
 {
   archive << time << updates;
 }
@@ -311,24 +311,22 @@ MessageType UpdateMessageData::getType() const
 ExtensionMessageData::ExtensionMessageData(
     const String& e,
     uint16 v,
-    const OArchive& d
+    const Buffer& d
   ) :
   extension(e),
   version(v),
-  oData(d),
-  iData(d)
+  data(d)
 {
 }
 
 ExtensionMessageData::ExtensionMessageData(IArchive& in)
 {
-  in >> extension >> version >> iData;
-  oData = iData;
+  in >> extension >> version >> data;
 }
 
-void ExtensionMessageData::fillArchive() const
+void ExtensionMessageData::fillArchive(OArchive& archive) const
 {
-  archive << extension << version << oData;
+  archive << extension << version << data;
 }
 
 MessageType ExtensionMessageData::getType() const

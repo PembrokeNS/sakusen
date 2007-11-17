@@ -22,9 +22,9 @@ WeaponType::WeaponType(
   metalRate(mR)
 {
   ResourceSearchResult result;
-  spawnFunction = resourceInterface->
+  boost::tie(spawnFunction, result) = resourceInterface->
     symbolSearch<server::Weapon* (*)(const WeaponType*)>(
-        moduleName, "spawn_"+internalName, &result
+        moduleName, "spawn_"+internalName
       );
   switch (result)
   {

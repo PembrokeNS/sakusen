@@ -28,7 +28,8 @@ void Socket::socketsInit(void)
 
 Socket::Ptr Socket::newConnectionToAddress(const String& address)
 {
-  list<String> addressComponents = stringUtils_split(address, ADDR_DELIM);
+  list<String> addressComponents =
+    stringUtils_split<list<String> >(address, ADDR_DELIM);
   if (addressComponents.empty()) {
     return Ptr();
   }
@@ -52,7 +53,8 @@ Socket::Ptr Socket::newConnectionToAddress(const String& address)
 
 Socket::Ptr Socket::newBindingToAddress(const String& address)
 {
-  list<String> addressComponents = stringUtils_split(address, ADDR_DELIM);
+  list<String> addressComponents =
+    stringUtils_split<list<String> >(address, ADDR_DELIM);
   if (addressComponents.empty()) {
     return Ptr();
   }

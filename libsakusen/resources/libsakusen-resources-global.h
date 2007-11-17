@@ -14,6 +14,10 @@
 /** FILENAME_REGEX defines a regex which must be matched by filenames */
 #define FILENAME_REGEX "[-a-z0-9_.]+"
 
+/** PATH_REGEX defines a regex which must be matched by paths in the Skusen
+ * VFS */
+#define PATH_REGEX "[-a-z0-9_./]+"
+
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */

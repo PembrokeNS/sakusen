@@ -11,27 +11,6 @@
 
 using namespace std;
 
-list<String> sakusen::stringUtils_split(
-    const String& splitee,
-    const String& spliton
-  )
-{
-  /** \todo Replace with or add a regex-using version */
-  String::size_type chunk_start;
-  String::size_type chunk_end=0;
-  list<String> result;
-  
-  while (chunk_end != splitee.npos) {
-    chunk_start = splitee.find_first_not_of(spliton, chunk_end);
-    if (chunk_start == splitee.npos) {
-      break;
-    }
-    chunk_end = splitee.find_first_of(spliton, chunk_start);
-    result.push_back(splitee.substr(chunk_start, chunk_end-chunk_start));
-  }
-  return result;
-}
-
 String sakusen::stringUtils_join(
     const list<String>& strings,
     const String& delim

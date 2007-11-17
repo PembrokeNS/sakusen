@@ -9,6 +9,7 @@
 
 #include "resourceinterface.h"
 #include "universe.h"
+#include "vfs/branch.h"
 
 namespace sakusen {
 namespace resources {
@@ -45,41 +46,33 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface :
   public:
     virtual ~FileResourceInterface() {}
   private:
-    boost::filesystem::path saveDirectory;
-    std::vector<boost::filesystem::path> directories;
+    vfs::Branch::Ptr vfsRoot;
     bool loadModules;
     boost::weak_ptr<ResourceInterface> ptrToThis;
 
-    String getSubdir(ResourceType type);
-    String getExtension(ResourceType type);
+    String getExtension(ResourceType type) const;
   protected:
-    boost::filesystem::path fileSearch(
-        const String& name,
+    virtual boost::tuple<boost::shared_ptr<void>, ResourceSearchResult, String>
+    internalSearch(
+        const String& sakusenPath,
+        const String& hash,
         ResourceType type,
-        ResourceSearchResult* result
-      );
-    
-    virtual boost::shared_ptr<void> internalSearch(
-        const String& name,
-        ResourceType type,
-        ResourceSearchResult* result,
         Universe::ConstPtr
       );
     
-    virtual void* internalSymbolSearch(
+    virtual boost::tuple<void*, ResourceSearchResult> internalSymbolSearch(
         const String& moduleName,
-        const String& symbolName,
-        ResourceSearchResult* result
+        const String& symbolName
       );
     
     virtual bool internalSave(
         const boost::shared_ptr<const void>& resource,
+        const String& path,
         ResourceType type
       );
   public:
     virtual Writer::Ptr openWriter(
-        const String& name,
-        ResourceType
+        const String& sakusenPath
       );
 };
 

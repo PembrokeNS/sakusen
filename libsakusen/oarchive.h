@@ -10,6 +10,7 @@
 #include "stringutils.h"
 #include "point.h"
 #include "idbase.h"
+#include "buffer.h"
 
 namespace sakusen {
 
@@ -28,59 +29,36 @@ struct Storer {
  *
  * \see IArchive
  */
-class LIBSAKUSEN_API OArchive {
+class LIBSAKUSEN_API OArchive : boost::noncopyable {
   public:
     OArchive();
     OArchive(size_t startCapacity);
-    OArchive(const OArchive& copy);
-    ~OArchive();
-    OArchive& operator=(const OArchive& copy);
-    OArchive& operator=(const IArchive& copy);
   private:
-    uint8* buffer; /* owned by this */
-    size_t length;
-    size_t capacity;
-    void expand();
-    inline void ensureSpace(size_t space) {
-      while(capacity-length < space) {
-        expand();
-      }
-    }
+    Buffer buffer;
   public:
-    inline size_t getLength() const { return length; }
-    /** \brief Get a pointer to the OArchive's buffer
+    /** \brief Get the OArchive's buffer
      *
      * This can be used, for example, to transmit the archive over a network.
-     *
-     * \warning This is a pointer to memory owned by the OArchive.  Don't mess
-     * with it.
      */
-    inline const uint8* getBytes() const { return buffer; }
-    inline size_t getBytesLength() const { return length; }
+    inline const Buffer& getBuffer() const { return buffer; }
     /** \brief Get an ASCII hex version of a hash of the contents of the
      * OArchive at present.
      *
      * This hash will change as things are inserted into the OArchive. */
     inline String getSecureHashAsString() const {
-      return stringUtils_getSecureHashAsString(buffer, length);
+      return buffer.getSecureHashAsString();
     }
     void dumpBuffer() const;
     inline OArchive& operator<<(const bool& i) {
-      ensureSpace(sizeof(uint8));
-      buffer[length] = i;
-      length += sizeof(uint8);
+      buffer.appendByte(i);
       return *this;
     }
     OArchive& operator<<(const uint8& i) {
-      ensureSpace(sizeof(uint8));
-      buffer[length]=i;
-      length+=sizeof(uint8);
+      buffer.appendByte(i);
       return *this;
     }
     OArchive& operator<<(const sint8& i) {
-      ensureSpace(sizeof(sint8));
-      buffer[length] = i;
-      length+=sizeof(sint8);
+      buffer.appendByte(i);
       return *this;
     }
     OArchive& operator<<(const uint16& i);
@@ -91,7 +69,7 @@ class LIBSAKUSEN_API OArchive {
     OArchive& operator<<(const sint64& i);
     OArchive& operator<<(const double& d);
     OArchive& operator<<(const String& s);
-    OArchive& operator<<(const OArchive&);
+    OArchive& operator<<(const Buffer&);
 
     /** \brief Insert an enum value into the OArchive
      *
@@ -225,9 +203,7 @@ class LIBSAKUSEN_API OArchive {
     }
 
     inline OArchive& magicValue(const String& val) {
-      ensureSpace(val.size());
-      memcpy(buffer+length, val.c_str(), val.size());
-      length += val.size();
+      buffer.appendBytes(val.c_str(), val.size());
       return *this;
     }
 };

@@ -7,6 +7,8 @@
 #include <sstream>
 
 #include <boost/functional/hash/hash.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 #include "gnu_extensions.h"
 
@@ -29,10 +31,17 @@ struct hash_map_string {
 };
 
 /** \brief Split the string splitee at characters contained in spliton */
-LIBSAKUSEN_API std::list<String> stringUtils_split(
+template<typename Container>
+LIBSAKUSEN_API Container stringUtils_split(
     const String& splitee,
     const String& spliton
-  );
+  ) {
+  Container c;
+  return boost::algorithm::split(
+      c, splitee, boost::algorithm::is_any_of(spliton),
+      boost::algorithm::token_compress_on
+    );
+}
 
 /** \brief Join the list of strings together, joining them with delim */
 LIBSAKUSEN_API String stringUtils_join(

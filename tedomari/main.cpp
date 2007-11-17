@@ -283,7 +283,8 @@ void runClient(
     ResourceInterface::Ptr resourceInterface =
         FileResourceInterface::create(dataDirs, false);
     Game* game = new Game(resourceInterface);
-    ServerInterface serverInterface(socketAddress,
+    ServerInterface serverInterface(
+        socketAddress,
 #ifndef DISABLE_UNIX_SOCKETS
         options.unixSockets, options.abstract,
 #endif
@@ -352,7 +353,8 @@ void runClient(
       String command;
       String message;
       if (ioHandler.getCommand(command, commandSleepTime)) {
-        list<String> words = stringUtils_split(command, whitespace);
+        list<String> words =
+          stringUtils_split<list<String> >(command, whitespace);
         if (!words.empty()) {
           String commandName = words.front();
           words.pop_front();
@@ -473,7 +475,7 @@ void runClient(
                     OArchive data;
                     data << message;
                     serverInterface.send(
-                        new ExtensionMessageData("talk", 0, data)
+                        new ExtensionMessageData("talk", 0, data.getBuffer())
                       );
                   }
                 }

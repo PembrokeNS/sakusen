@@ -43,11 +43,8 @@ class LIBSAKUSEN_COMMS_API Message {
     inline bool isRealMessage(void) const {
       return data;
     }
-    inline const uint8* getBytes(void) const {
-      return data->getArchive().getBytes();
-    }
-    inline size_t getBytesLength(void) const {
-      return data->getArchive().getLength();
+    inline const Buffer& getBuffer(void) const {
+      return data->getBuffer();
     }
 #define GETDATA(type) \
     inline type##MessageData get##type##Data(void) const { \

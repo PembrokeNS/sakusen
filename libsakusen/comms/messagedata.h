@@ -21,17 +21,19 @@ class LIBSAKUSEN_COMMS_API MessageData {
     /* Abstract class - all constructors must be protected */
     MessageData();
     MessageData(const MessageData& copy);
-    mutable OArchive archive;
+    mutable Buffer buffer;
     
-    virtual void fillArchive() const = 0;
+    virtual void fillArchive(OArchive&) const = 0;
   public:
     virtual ~MessageData();
-    const OArchive& getArchive() const {
-      if (archive.getLength() == 0) {
+    const Buffer& getBuffer() const {
+      if (buffer.getSize() == 0) {
+        OArchive archive;
         (archive << uint8(NETWORK_PROTOCOL_VERSION)).insertEnum(getType());
-        fillArchive();
+        fillArchive(archive);
+        buffer = archive.getBuffer();
       }
-      return archive;
+      return buffer;
     }
     virtual MessageType getType() const = 0;
 };
@@ -47,7 +49,7 @@ class LIBSAKUSEN_COMMS_API JoinMessageData : public MessageData {
     String address; /* The address where the client want all future
                        communication to be sent */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getAddress() const { return address; }
@@ -65,7 +67,7 @@ class LIBSAKUSEN_COMMS_API AcceptMessageData : public MessageData {
                        communication from this client to be sent */
     ClientId id; /* The id assigned to this client */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getAddress() const { return address; }
@@ -82,7 +84,7 @@ class LIBSAKUSEN_COMMS_API RejectMessageData : public MessageData {
   private:
     String reason; /* The reason for rejection */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getReason() const { return reason; }
@@ -98,7 +100,7 @@ class LIBSAKUSEN_COMMS_API KickMessageData : public MessageData {
   private:
     String reason; /* The reason for kicking */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getReason() const { return reason; }
@@ -112,7 +114,7 @@ class LIBSAKUSEN_COMMS_API LeaveMessageData : public MessageData {
     ~LeaveMessageData() {}
   private:
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
 };
@@ -127,7 +129,7 @@ class LIBSAKUSEN_COMMS_API GetSettingMessageData : public MessageData {
   private:
     String setting; /* The full path of the setting to get */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getSetting() const { return setting; }
@@ -144,7 +146,7 @@ class LIBSAKUSEN_COMMS_API ChangeSettingMessageData : public MessageData {
     String setting; /* The full path of the setting to change */
     String value; /* The value to give to the setting */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getSetting() const { return setting; }
@@ -162,7 +164,7 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
     String setting; /* The full path of the setting being sent */
     String value; /* The value of the setting */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getSetting() const { return setting; }
@@ -198,7 +200,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     uint32 horizontalHeightfieldRes;
     uint32 verticalHeightfieldRes;
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline PlayerId getPlayerId() const { return playerId; }
@@ -224,7 +226,7 @@ class LIBSAKUSEN_COMMS_API OrderMessageData : public MessageData {
   private:
     OrderMessage orderMessage; /**< The order message */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const OrderMessage& getOrderMessage() const { return orderMessage; }
@@ -241,7 +243,7 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
     Time time; /**< The game time at which these updates apply */
     std::list<Update> updates; /**< The updates */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline Time getTime() const { return time; }
@@ -262,22 +264,21 @@ class LIBSAKUSEN_COMMS_API ExtensionMessageData : public MessageData {
     ExtensionMessageData(
         const String& extension,
         uint16 version,
-        const OArchive& data
+        const Buffer& data
       );
     ExtensionMessageData(IArchive& in);
     ~ExtensionMessageData() {}
   private:
     String extension; /**< The name of the extension */
     uint16 version; /**< The version number of the extension */
-    OArchive oData; /**< The associated data */
-    IArchive iData; /**< The associated data */
+    Buffer data; /**< The associated data */
   protected:
-    void fillArchive() const;
+    void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getExtension() const { return extension; }
     inline uint16 getVersion() const { return version; }
-    inline const IArchive& getData() const { return iData; }
+    inline const Buffer& getData() const { return data; }
 };
 
 }}

@@ -616,32 +616,38 @@ void Server::serve()
     }
 
     if (requestedUniverse != NULL) {
+      assert(!requestedUniversePath.empty());
       universe = requestedUniverse;
       requestedUniverse.reset();
+      universePath = requestedUniversePath;
+      requestedUniversePath = "";
       String reason = settings->changeRequest(
-          "game:universe:name", universe->getInternalName(), this
+          "game:universe:name", universePath, this
         );
       assert(reason == "");
       reason = settings->changeRequest(
           "game:universe:hash", universe->getHash(), this
         );
       assert(reason == "");
-      game_to_advertise->setUniverse(universe->getInternalName());
+      game_to_advertise->setUniverse(universePath);
 #ifndef DISABLE_AVAHI
       publisher.game_changed();
 #endif
     }
     
     if (requestedMap != NULL) {
+      assert(!requestedMapPath.empty());
       map = requestedMap;
       requestedMap.reset();
+      mapPath = requestedMapPath;
+      requestedMapPath = "";
       String reason = settings->changeRequest(
-          "game:map", map->getInternalName(), this
+          "game:map", mapPath, this
         );
       assert(reason == "");
       setMapPlayMode(0);
 
-      game_to_advertise->setMap(map->getInternalName());
+      game_to_advertise->setMap(mapPath);
 #ifndef DISABLE_AVAHI
       publisher.game_changed();
 #endif
@@ -1066,18 +1072,20 @@ String Server::stringSettingAlteringCallback(
       fullName.pop_front();
       assert(!fullName.empty());
       if (fullName.front() == "name") {
-        if (universe != NULL && newValue == universe->getInternalName()) {
+        if (universe != NULL && newValue == universePath) {
           return "";
         }
         ResourceSearchResult result;
-        Universe::Ptr u = resourceInterface->search<Universe>(
-            newValue, &result
-          );
+        Universe::Ptr u;
+        String uPath;
+        tie(u, result, uPath) =
+          resourceInterface->search<Universe>(newValue);
         switch(result) {
           case resourceSearchResult_success:
             assert(u);
             requestedUniverse = u; /* File an asynchronous request to use the
                                       universe */
+            requestedUniversePath = uPath;
             return "";
           case resourceSearchResult_ambiguous:
             return "specified universe name ambiguous";
@@ -1098,17 +1106,19 @@ String Server::stringSettingAlteringCallback(
       if (universe == NULL) {
         return "must specify a universe before map";
       }
-      if (map != NULL && newValue == map->getInternalName()) {
+      if (map != NULL && newValue == mapPath) {
         return "";
       }
       ResourceSearchResult result;
-      MapTemplate::Ptr m = resourceInterface->search<MapTemplate>(
-          newValue, &result, universe
-        );
+      MapTemplate::Ptr m;
+      String mPath;
+      boost::tie(m, result, mPath) =
+        resourceInterface->search<MapTemplate>(newValue, universe);
       switch(result) {
         case resourceSearchResult_success:
           assert(m);
           requestedMap = m; /* File an asynchronous request to use the map */
+          requestedMapPath = mPath;
           return "";
         case resourceSearchResult_ambiguous:
           return "specified map template name ambiguous";

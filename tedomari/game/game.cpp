@@ -34,11 +34,11 @@ Game::~Game()
  *
  * \param name Internal name of the Universe
  * \param hash Hash of the Universe (as hex string) */
-void Game::setUniverse(const String& name, const String& hash)
+void Game::setUniverse(const String& path, const String& hash)
 {
   ResourceSearchResult result;
-  universe =
-    resourceInterface->search<Universe>(name + "." + hash, &result);
+  boost::tie(universe, result, boost::tuples::ignore) =
+    resourceInterface->search<Universe>(path, hash);
   switch (result) {
     case resourceSearchResult_success:
       return;
@@ -47,7 +47,7 @@ void Game::setUniverse(const String& name, const String& hash)
     case resourceSearchResult_error:
     case resourceSearchResult_notSupported:
       /** \todo Better error handling */
-      Fatal("problem loading universe");
+      Fatal("problem loading universe '"<<path<<"': "<<result);
     default:
       Fatal("unexpected enum value: " << result);
   }

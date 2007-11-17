@@ -156,7 +156,7 @@ String ServerInterface::flushIncoming()
              * */
             ExtensionMessageData data = message.getExtensionData();
             if (data.getExtension() == "talk" && data.getVersion() == 0) {
-              IArchive subData = data.getData();
+              IArchive subData(data.getData());
               String message;
               try {
                 subData >> message;
