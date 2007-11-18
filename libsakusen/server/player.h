@@ -22,14 +22,14 @@ class LIBSAKUSEN_SERVER_API Player {
   private:
     Player();
   public:
-    Player(const PlayerTemplate& t);
+    Player(const PlayerTemplate& t, const PlayerId id);
     Player(const Player& copy);
     Player& operator=(const Player&);
     ~Player();
   private:
     bool noClients;
     bool raceFixed;
-    PlayerId playerId; /**< Id of player is assigned by the World constructor */
+    PlayerId playerId;
     String name;
     std::list<Client*> clients;
     
@@ -58,7 +58,6 @@ class LIBSAKUSEN_SERVER_API Player {
     /** \name Accessors. */
     //@{
     PlayerId getId() const { return playerId; }
-    void setPlayerId(const PlayerId& id);
     inline const String& getName(void) const { return name; }
     inline void setName(const String& n) { name = n; }
     inline uint16 getNumClients(void) const {

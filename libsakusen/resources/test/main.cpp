@@ -399,17 +399,43 @@ int main(/*int argc, char** argv*/)
     return EXIT_FAILURE;
   }
 
-  /* As an afterthought, we test the image stuff */
-  /** \todo This would be better in the Perl tests or something similar */
-  /** \bug Doesn't work when in an alternate build dir */
+  /* Now another map, but this time using a heightfield built from an image */
   cout<< "Loading Image"<<endl;
-  try{
-      PngImage image("../../../data/maptemplate/test-heightfield0.png");
-      Heightfield hf(1, 1, image);
-  }catch(sakusen::resources::FileIOExn){
-      cout<<"Could not open \"../../../data/maptemplate/test-heightfield0.png\""<<endl;
+  Image::Ptr image;
+  String imagePath;
+  boost::tie(image, imagePath) =
+    resourceInterface->imageSearch("test/heightfield1");
+  if (!image) {
+    cout << "Failed to load image" << endl;
+    return EXIT_FAILURE;
   }
+  heightfield = Heightfield(2*MAP_WIDTH/100, 2, imagePath, image);
+  t.reset(new MapTemplate(
+        universe, "immap", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
+        Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
+        heightfield, 1000 /* gravity */, playModes
+      ));
   
+  cout << "Saving image-based map" << endl;
+  if (resourceInterface->save(t, "test")) {
+    cout << resourceInterface->getError() << endl;
+    return EXIT_FAILURE;
+  }
+
+  cout << "Reloading image-based map" << endl;
+  boost::tie(reloadedTemplate, result, boost::tuples::ignore) =
+    resourceInterface->search<MapTemplate>("test/immap", reloadedUniverse);
+  cout << "Result of reload was " << result << endl;
+  
+  switch(result) {
+    case resourceSearchResult_error:
+      cout << "Error was: " << resourceInterface->getError() << endl;
+    case resourceSearchResult_notFound:
+    case resourceSearchResult_ambiguous:
+      return EXIT_FAILURE;
+    default:
+      break;
+  }
   return EXIT_SUCCESS;
 }
 

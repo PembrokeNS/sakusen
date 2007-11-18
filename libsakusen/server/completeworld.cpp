@@ -49,16 +49,18 @@ CompleteWorld::CompleteWorld(
   if (!playMode->acceptableNumberOfPlayers(numPlayers)) {
     Fatal("Number of players not acceptable for this map and mode");
   }
-  /** \todo More sanity checks */
   
-  /* assign player ids */
-  
+  /* check player ids */
   for (PlayerId i; i < numPlayers; ++i) {
     if (!i.valid()) {
       Fatal("too many players");
     }
-    players[i].setPlayerId(i);
+    if (players[i].getId() != i) {
+      Fatal("player id mismatch");
+    }
   }
+
+  /** \todo More sanity checks */
 
   /* register the spatial index so that it gets filled with units and effects
    * */

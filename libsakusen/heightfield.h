@@ -42,29 +42,34 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
   protected:
     typedef boost::multi_array<sint16, 2> hf_type;
     Heightfield(
-        uint32 horizontalResolution,
-        uint32 verticalResolution,
+        uint32 xyResolution,
+        uint32 zResolution,
         uint32 width,
         uint32 height,
         const hf_type& heightfield
       );
   public:
     Heightfield(
-        uint32 horizontalResolution,
-        uint32 verticalResolution,
+        uint32 xyResolution,
+        uint32 zResolution,
         uint32 width,
         uint32 height
       );
     Heightfield(
-        uint32 horizontalResolution,
-        uint32 verticalResolution,
-        const Image& image
+        uint32 xyResolution,
+        uint32 zResolution,
+        const String& imagePath,
+        const Image::ConstPtr& image
       );
+    Heightfield& operator=(const Heightfield&);
   private:
+    /** \brief If loaded from an image, the (probably relative) sakusen path
+     * to it */
+    String imagePath;
     /** Dex between adjacent height samples in the heightfield */
-    uint32 horizontalResolution;
+    uint32 xyResolution;
     /** Dex represented by each vertical unit of the heightfield */
-    uint32 verticalResolution;
+    uint32 zResolution;
     /** \brief The number of samples across the width of the heightfield.
      *
      * This should be 1 + map.width()/horizontalResolution */
@@ -90,7 +95,7 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     inline sint32 getHeightAtSample(uint32 x, uint32 y) const {
       assert(x < width);
       assert(y < height);
-      return heightfield[x][y] * verticalResolution;
+      return heightfield[x][y] * zResolution;
     }
 
     double intersectRayInCell(
@@ -103,8 +108,8 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
   public:
     /** \name accessors */
     //@{
-    uint32 getHorizontalResolution() const { return horizontalResolution; }
-    uint32 getVerticalResolution() const { return verticalResolution; }
+    uint32 getXYResolution() const { return xyResolution; }
+    uint32 getZResolution() const { return zResolution; }
     uint32 getWidth() const { return width; }
     uint32 getHeight() const { return height; }
     //@}
@@ -124,7 +129,7 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     double intersectRay(const Ray&, double extent) const;
     
     void store(OArchive&) const;
-    static Heightfield load(IArchive&);
+    static Heightfield load(IArchive&, const DeserializationContext&);
 };
 
 }

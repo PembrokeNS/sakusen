@@ -4,14 +4,18 @@
 #include "libsakusen-global.h"
 
 #include <boost/multi_array.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace sakusen {
 
 /** \brief Base class for images.
  */
-class Image {
+class Image : boost::noncopyable {
   public:
-    virtual ~Image() {}
+    typedef boost::shared_ptr<Image> Ptr;
+    typedef boost::shared_ptr<const Image> ConstPtr;
+
+    virtual ~Image() = 0;
 
     /** \brief Copies content of image into an array.
      *
@@ -21,6 +25,8 @@ class Image {
      */
     virtual void read(boost::multi_array<uint16, 2>& out) const = 0;
 };
+
+inline Image::~Image() {}
 
 }
 

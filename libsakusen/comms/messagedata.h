@@ -186,8 +186,8 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 horizontalHeightfieldRes,
-        uint32 verticalHeightfieldRes
+        uint32 xyHeightfieldRes,
+        uint32 zHeightfieldRes
       );
     GameStartMessageData(IArchive& in);
     ~GameStartMessageData() {}
@@ -197,8 +197,8 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
     uint16 gravity;
-    uint32 horizontalHeightfieldRes;
-    uint32 verticalHeightfieldRes;
+    uint32 xyHeightfieldRes;
+    uint32 zHeightfieldRes;
   protected:
     void fillArchive(OArchive& archive) const;
   public:
@@ -208,11 +208,11 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
     inline uint16 getGravity() const { return gravity; }
-    inline uint32 getHorizontalHeightfieldResolution() const {
-      return horizontalHeightfieldRes;
+    inline uint32 getXYHeightfieldResolution() const {
+      return xyHeightfieldRes;
     }
-    inline uint32 getVerticalHeightfieldResolution() const {
-      return verticalHeightfieldRes;
+    inline uint32 getZHeightfieldResolution() const {
+      return zHeightfieldRes;
     }
 };
 

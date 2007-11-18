@@ -148,8 +148,8 @@ class LIBSAKUSEN_API Map {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 horizontalHeightfieldRes,
-        uint32 verticalHeightfieldRes
+        uint32 xyHeightfieldRes,
+        uint32 zHeightfieldRes
       );
 };
 

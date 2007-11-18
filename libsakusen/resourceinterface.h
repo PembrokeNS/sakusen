@@ -9,6 +9,7 @@
 #include "resourcesearchresult.h"
 #include "resourcetype.h"
 #include "writer.h"
+#include "image.h"
 
 namespace sakusen {
 
@@ -89,9 +90,9 @@ class LIBSAKUSEN_API ResourceInterface {
      *
      * \param      moduleName Name (or prefix thereof) of module to search for
      * \param      symbolName Name of symbol to search for within the module
-     * \param[out] result     Result of search returned through this value
      * \return The pointer to the symbol, cast to type T (probably a function
-     *         pointer type); or NULL if there was an error.
+     *         pointer type); or NULL if there was an error.  Also a
+     *         ResourceSearchResult indicating the result.
      */
     template<typename T>
     boost::tuple<T, ResourceSearchResult> symbolSearch(
@@ -103,6 +104,13 @@ class LIBSAKUSEN_API ResourceInterface {
       boost::tie(p, result) = internalSymbolSearch(moduleName, symbolName);
       return boost::make_tuple(reinterpret_cast<T>(p), result);
     }
+
+    /** \brief Open image at given sakusen path.
+     *
+     * \return If found, a pointer to an image and the exact sakusen path
+     * where it was found. */
+    virtual boost::tuple<Image::Ptr, String>
+    imageSearch(const String& path) = 0;
     
     template<typename T>
     inline bool save(
@@ -112,7 +120,7 @@ class LIBSAKUSEN_API ResourceInterface {
 
     /** \brief Open a Writer appropriate to this ResourceInterface.
      *
-     * \p path is a full path to the desired destination.  If the writer
+     * \p path is a full sakusen path to the desired destination.  If the writer
      * cannot be created for some reason, then a NULL pointer is returned.
      */
     virtual Writer::Ptr openWriter(

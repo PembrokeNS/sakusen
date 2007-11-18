@@ -149,8 +149,10 @@ int main(/* int argc, char** argv */)
   /* For our toy example we create two players: the neutral player with no
    * client, and a "real" player with a debugging client */
   const MapPlayMode& mode = mapTemplate->getPlayModes()[0];
-  Player neutralPlayer = Player(mode.getPlayer(PlayerId::fromInteger(0)));
-  Player realPlayer = Player(mode.getPlayer(PlayerId::fromInteger(1)));
+  Player neutralPlayer =
+    Player(mode.getPlayer(PlayerId::fromInteger(0)), PlayerId::fromInteger(0));
+  Player realPlayer =
+    Player(mode.getPlayer(PlayerId::fromInteger(1)), PlayerId::fromInteger(1));
   realPlayer.attachClient(&client);
   vector<Player> players;
   players.push_back(neutralPlayer);

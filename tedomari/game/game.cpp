@@ -67,8 +67,8 @@ void Game::start(
       data.getTopRight(),
       data.getBottomLeft(),
       data.getGravity(),
-      data.getHorizontalHeightfieldResolution(),
-      data.getVerticalHeightfieldResolution()
+      data.getXYHeightfieldResolution(),
+      data.getZHeightfieldResolution()
     );
 }
 

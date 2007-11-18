@@ -11,10 +11,10 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
-Player::Player(const PlayerTemplate& t) :
+Player::Player(const PlayerTemplate& t, const PlayerId i) :
   noClients(t.isNoClients()),
   raceFixed(t.isRaceFixed()),
-  playerId(),
+  playerId(i),
   name(""),
   clients(),
   units(),
@@ -76,15 +76,6 @@ Player& Player::operator=(const Player& copy)
 Player::~Player()
 {
   sensorReturnsById.clear();
-}
-
-void Player::setPlayerId(const PlayerId& id)
-{
-  playerId = id;
-  for (std::list<Client*>::iterator client = clients.begin();
-      client != clients.end(); client++) {
-    (*client)->setPlayerId(id);
-  }
 }
 
 void Player::attachClient(Client* client)

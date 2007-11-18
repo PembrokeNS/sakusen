@@ -9,6 +9,7 @@
 #include "filewriter.h"
 #include "fileutils.h"
 #include "fileioexn.h"
+#include "pngimage.h"
 #include "vfs/directorybranch.h"
 #include "vfs/unionbranch.h"
 
@@ -171,6 +172,27 @@ FileResourceInterface::internalSearch(
   return boost::make_tuple(
       resourcePtr, resourceSearchResult_success, resource.getSakusenPath()
     );
+}
+
+boost::tuple<Image::Ptr, String>
+FileResourceInterface::imageSearch(const String& path)
+{
+  ResourceSearchResult result;
+  vfs::Resource resource;
+  boost::tie(resource, result) =
+    vfsRoot->search(path, "");
+
+  if (result != resourceSearchResult_success) {
+    return boost::make_tuple(Image::Ptr(), "");
+  }
+
+  boost::filesystem::path realPath = resource.asPath();
+  if (boost::algorithm::ends_with(realPath.leaf(), ".png")) {
+    Image::Ptr image(new PngImage(realPath));
+    return boost::make_tuple(image, resource.getSakusenPath());
+  } else {
+    return boost::make_tuple(Image::Ptr(), "");
+  }
 }
     
 boost::tuple<void*, ResourceSearchResult>

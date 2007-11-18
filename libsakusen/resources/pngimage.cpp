@@ -11,10 +11,10 @@ namespace resources {
  *
  * PNG loading is fairly long and complex, and this class helps make it RAII.
  * It also makes it unnecessary to #include <png.h> in pngimage.h. */
-class PngImage_impl {
+class PngImageImpl {
   public:
-    PngImage_impl(const String& fileName);
-    ~PngImage_impl();
+    PngImageImpl(const boost::filesystem::path& fileName);
+    ~PngImageImpl();
   private:
     FILE* fp;
     png_structp pngStruct;
@@ -29,7 +29,7 @@ class PngImage_impl {
     void read(boost::multi_array<uint16, 2>& out);
 };
 
-PngImage_impl::PngImage_impl(const String& fileName) :
+PngImageImpl::PngImageImpl(const boost::filesystem::path& path) :
   fp(NULL),
   pngStruct(NULL),
   info(NULL),
@@ -40,13 +40,13 @@ PngImage_impl::PngImage_impl(const String& fileName) :
   rowPointers(NULL)
 {
 #ifndef _MSC_VER
-  fp = fopen(fileName.c_str(), "rb");
+  fp = fopen(path.native_file_string().c_str(), "rb");
   if (!fp) {
     throw FileIOExn("fopen");
   }
 #else
-  if (fopen_s(&fp, fileName.c_str(), "rb"))
-        throw FileIOExn("fopen");
+  if (fopen_s(&fp, path.native_file_string().c_str(), "rb"))
+    throw FileIOExn("fopen");
 #endif
 
 #define SIG_BYTES 8
@@ -77,7 +77,7 @@ PngImage_impl::PngImage_impl(const String& fileName) :
   }
 }
 
-PngImage_impl::~PngImage_impl()
+PngImageImpl::~PngImageImpl()
 {
   png_destroy_read_struct(&pngStruct, &info, &endInfo);
   if (fp != NULL) {
@@ -85,7 +85,7 @@ PngImage_impl::~PngImage_impl()
   }
 }
 
-void PngImage_impl::load()
+void PngImageImpl::load()
 {
   /* libpng error handling uses setjmp (No, really!!) */
   if (setjmp(png_jmpbuf(pngStruct))) {
@@ -140,7 +140,7 @@ void PngImage_impl::load()
   }
 }
 
-void PngImage_impl::read(boost::multi_array<uint16, 2>& out)
+void PngImageImpl::read(boost::multi_array<uint16, 2>& out)
 {
   out.resize(boost::extents[width][height]);
   if (bitDepth == 16) {
@@ -161,19 +161,19 @@ void PngImage_impl::read(boost::multi_array<uint16, 2>& out)
 
 /** \brief Opens a PNG image and loads it into memory.
  *
- * \param fileName Location of PNG image on disk
+ * \param path Location of PNG image on disk
  *
  * Throws a FileIOExn if anything goes wrong (such as the PNG being corrupted).
  */
-PngImage::PngImage(const String& fileName) :
-  impl(new PngImage_impl(fileName))
+PngImage::PngImage(const boost::filesystem::path& path) :
+  impl(new PngImageImpl(path))
 {
   impl->load();
 }
 
 /** \brief Destructor.
  *
- * \note The default constructor won't do because PngImage_impl needs to be a
+ * \note The default constructor won't do because PngImageImpl needs to be a
  * complete type at destruction time.
  */
 PngImage::~PngImage() {}

@@ -372,7 +372,7 @@ void Server::createPlayersFor(const MapPlayMode& mode)
   assert(players.empty());
   for (PlayerId i; i<mode.getMaxPlayers(); ++i) {
     const PlayerTemplate& player = mode.getPlayer(i);
-    players.push_back(Player(player));
+    players.push_back(Player(player, i));
     settings->getPlayersBranch()->addPlayer(i, player);
   }
 }
@@ -781,8 +781,8 @@ void Server::serve()
       client->send(new GameStartMessageData(
             client->getPlayerId(), map->getTopology(),
             map->getTopRight(), map->getBottomLeft(),
-            map->getGravity(), map->getHeightfield().getHorizontalResolution(),
-            map->getHeightfield().getVerticalResolution()
+            map->getGravity(), map->getHeightfield().getXYResolution(),
+            map->getHeightfield().getZResolution()
           ));
       bool wasAdmin = client->hasGroup("admin");
       client->clearGroups();

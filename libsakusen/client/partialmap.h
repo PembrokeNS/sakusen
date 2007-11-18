@@ -29,15 +29,15 @@ class LIBSAKUSEN_CLIENT_API PartialMap : public Map {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 horizontalHeightfieldRes,
-        uint32 verticalHeightfieldRes
+        uint32 xyHeightfieldRes,
+        uint32 zHeightfieldRes
       ) :
       Map(topRight, bottomLeft, gravity),
       heightfield(
-          horizontalHeightfieldRes,
-          verticalHeightfieldRes,
-          1 + width() / horizontalHeightfieldRes,
-          1 + height() / verticalHeightfieldRes
+          xyHeightfieldRes,
+          zHeightfieldRes,
+          1 + width() / xyHeightfieldRes,
+          1 + height() / xyHeightfieldRes
         )
     {
       sanityCheck();

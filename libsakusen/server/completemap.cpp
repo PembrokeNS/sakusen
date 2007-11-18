@@ -25,11 +25,11 @@ CompleteMap::CompleteMap(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
     uint16 gravity,
-    uint32 horizontalHeightfieldRes,
-    uint32 verticalHeightfieldRes
+    uint32 xyHeightfieldRes,
+    uint32 zHeightfieldRes
     ) :
   Map(topRight, bottomLeft, gravity),
-  heightfield(horizontalHeightfieldRes, verticalHeightfieldRes, 1, 1)
+  heightfield(xyHeightfieldRes, zHeightfieldRes, 1, 1)
 {
   Fatal("this method should not be called");
 }
@@ -48,16 +48,16 @@ CompleteMap::CompleteMap(
 
 void CompleteMap::sanityCheck()
 {
-  if (0 != width() % heightfield.getHorizontalResolution() ||
-      0 != height() % heightfield.getHorizontalResolution()) {
-    Fatal("heightfield resolution not eact factor of map dimensions");
+  if (0 != width() % heightfield.getXYResolution() ||
+      0 != height() % heightfield.getXYResolution()) {
+    Fatal("heightfield resolution not exact factor of map dimensions");
   }
   if (heightfield.getWidth() !=
-      1+width()/heightfield.getHorizontalResolution()) {
+      1+width()/heightfield.getXYResolution()) {
     Fatal("heightfield width incorrect");
   }
   if (heightfield.getHeight() !=
-      1+height()/heightfield.getHorizontalResolution()) {
+      1+height()/heightfield.getXYResolution()) {
     Fatal("heightfield height incorrect");
   }
 }

@@ -8,14 +8,14 @@ using namespace boost;
 using namespace sakusen;
 
 Heightfield::Heightfield(
-    uint32 hR,
-    uint32 vR,
+    uint32 xyR,
+    uint32 zR,
     uint32 w,
     uint32 h,
     const hf_type& hf
   ) :
-  horizontalResolution(hR),
-  verticalResolution(vR),
+  xyResolution(xyR),
+  zResolution(zR),
   width(w),
   height(h),
   heightfield(hf)
@@ -24,13 +24,13 @@ Heightfield::Heightfield(
 }
 
 Heightfield::Heightfield(
-    uint32 hR,
-    uint32 vR,
+    uint32 xyR,
+    uint32 zR,
     uint32 w,
     uint32 h
   ) :
-  horizontalResolution(hR),
-  verticalResolution(vR),
+  xyResolution(xyR),
+  zResolution(zR),
   width(w),
   height(h),
   heightfield(boost::extents[width][height])
@@ -40,15 +40,17 @@ Heightfield::Heightfield(
 
 /** \brief Construct heightfield by taking data from an image. */
 Heightfield::Heightfield(
-    uint32 hR,
-    uint32 vR,
-    const Image& image
+    uint32 xyR,
+    uint32 zR,
+    const String& iP,
+    const Image::ConstPtr& image
   ) :
-  horizontalResolution(hR),
-  verticalResolution(vR)
+  imagePath(iP),
+  xyResolution(xyR),
+  zResolution(zR)
 {
   boost::multi_array<uint16, 2> imageData;
-  image.read(imageData);
+  image->read(imageData);
   width = imageData.shape()[0];
   height = imageData.shape()[1];
   heightfield.resize(boost::extents[width][height]);
@@ -60,6 +62,28 @@ Heightfield::Heightfield(
     }
   }
   sanityCheck();
+}
+
+/** \brief Assignment operator 
+ *
+ * \note This has to exist because the boost::multi_array assignment operator
+ * won't assign arrays of different dimensions.*/
+Heightfield& Heightfield::operator=(const Heightfield& copy)
+{
+  if (this == &copy) {
+    return *this;
+  }
+
+  imagePath = copy.imagePath;
+  xyResolution = copy.xyResolution;
+  zResolution = copy.zResolution;
+  width = copy.width;
+  height = copy.height;
+
+  heightfield.resize(boost::extents[width][height]);
+  heightfield = copy.heightfield;
+
+  return *this;
 }
 
 void Heightfield::sanityCheck() const
@@ -74,13 +98,13 @@ void Heightfield::sanityCheck() const
     Fatal("heightfield contains too much data");
   }
   /* Check that all possible height values fit into the proper range */
-  if (verticalResolution == 0 || horizontalResolution == 0) {
+  if (zResolution == 0 || xyResolution == 0) {
     Fatal("heightfield resolution 0");
   }
-  if (numeric_limits<sint32>::max() / verticalResolution <
+  if (numeric_limits<sint32>::max() / zResolution <
       uint32(numeric_limits<sint16>::max())) {
     Fatal(
-        "heights could overflow (vertical res is " << verticalResolution <<
+        "heights could overflow (zres is " << zResolution <<
         ")"
       );
   }
@@ -118,15 +142,15 @@ double Heightfield::intersectRayInCell(
   /* We also need to get the ray-origin in coordinates normalised to be [0,1]^2
    * in the cell */
   const double ox =
-    double(ray.origin.x - world->getMap()->left())/horizontalResolution;
+    double(ray.origin.x - world->getMap()->left())/xyResolution;
   const double oy =
-    double(ray.origin.y - world->getMap()->bottom())/horizontalResolution;
-  const double oz = double(ray.origin.z)/verticalResolution;
+    double(ray.origin.y - world->getMap()->bottom())/xyResolution;
+  const double oz = double(ray.origin.z)/zResolution;
 
   /* And same for ray direction */
-  const double dx = double(ray.d.x)/horizontalResolution;
-  const double dy = double(ray.d.y)/horizontalResolution;
-  const double dz = double(ray.d.z)/verticalResolution;
+  const double dx = double(ray.d.x)/xyResolution;
+  const double dy = double(ray.d.y)/xyResolution;
+  const double dz = double(ray.d.z)/zResolution;
 
   /* Compute a useful difference */
   const double hdiff = h00 + h11 - h01 - h10;
@@ -172,10 +196,10 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
 
   /* We get the quotient and remainder when dividing each of xoff and yoff by
    * horizontalResolution */
-  uint32 xq = xoff / horizontalResolution;
-  uint32 xr = xoff % horizontalResolution;
-  uint32 yq = yoff / horizontalResolution;
-  uint32 yr = yoff % horizontalResolution;
+  uint32 xq = xoff / xyResolution;
+  uint32 xr = xoff % xyResolution;
+  uint32 yq = yoff / xyResolution;
+  uint32 yr = yoff % xyResolution;
   
   /** \bug There is a risk of overflow in various places
    * here.  Maybe we should cast up to sint64s */
@@ -195,19 +219,19 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
     upperHeight = getHeightAtSample(xq, yq+1);
   } else {
     lowerHeight = (xr * getHeightAtSample(xq+1, yq) +
-        (horizontalResolution - xr) * getHeightAtSample(xq, yq)) /
-      horizontalResolution;
+        (xyResolution - xr) * getHeightAtSample(xq, yq)) /
+      xyResolution;
     if (yr == 0) {
       return lowerHeight;
     }
     upperHeight = (xr * getHeightAtSample(xq+1, yq+1) +
-        (horizontalResolution - xr) * getHeightAtSample(xq, yq+1)) /
-      horizontalResolution;
+        (xyResolution - xr) * getHeightAtSample(xq, yq+1)) /
+      xyResolution;
   }
   /* And finally the interpolation in the y direction (the two are done
    * seperately for my sanity, and to reduce risk of overflow). */
-  return (yr * upperHeight + (horizontalResolution - yr) * lowerHeight) /
-    horizontalResolution;
+  return (yr * upperHeight + (xyResolution - yr) * lowerHeight) /
+    xyResolution;
 }
 
 /** \brief Finds the greatest height in a rectangular area
@@ -304,11 +328,11 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
   if (ray.d.x > 0) {
     stepX = 1;
     tMaxX = double(sampleToDexX(X+1)-ray.origin.x)/ray.d.x;
-    tDeltaX = double(horizontalResolution)/ray.d.x;
+    tDeltaX = double(xyResolution)/ray.d.x;
   } else if (ray.d.x < 0) {
     stepX = -1;
     tMaxX = double(sampleToDexX(X)-ray.origin.x)/ray.d.x;
-    tDeltaX = double(horizontalResolution)/-ray.d.x;
+    tDeltaX = double(xyResolution)/-ray.d.x;
   } else {
     stepX = 0;
     tMaxX = inf;
@@ -318,11 +342,11 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
   if (ray.d.y > 0) {
     stepY = 1;
     tMaxY = double(sampleToDexY(Y+1)-ray.origin.y)/ray.d.y;
-    tDeltaY = double(horizontalResolution)/ray.d.y;
+    tDeltaY = double(xyResolution)/ray.d.y;
   } else if (ray.d.y < 0) {
     stepY = -1;
     tMaxY = double(sampleToDexY(Y)-ray.origin.y)/ray.d.y;
-    tDeltaY = double(horizontalResolution)/-ray.d.y;
+    tDeltaY = double(xyResolution)/-ray.d.y;
   } else {
     stepY = 0;
     tMaxY = inf;
@@ -367,23 +391,51 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
 
 void Heightfield::store(OArchive& out) const
 {
-  out << horizontalResolution << verticalResolution << width << height;
-  out.insert<sint16, 2>(heightfield);
+  out << xyResolution << zResolution;
+  if (imagePath.empty()) {
+    out << false << width << height;
+    out.insert<sint16, 2>(heightfield);
+  } else {
+    /** \bug It would be nice if this path were made relative in some way */
+    out << true << imagePath;
+  }
 }
 
-Heightfield Heightfield::load(IArchive& in)
+Heightfield Heightfield::load(
+    IArchive& in,
+    const DeserializationContext& context
+  )
 {
-  uint32 horizontalResolution;
-  uint32 verticalResolution;
-  uint32 width;
-  uint32 height;
-  boost::multi_array<sint16,2> heightfield;
+  uint32 xyResolution;
+  uint32 zResolution;
+  bool useImage;
   
-  in >> horizontalResolution >> verticalResolution >> width >> height;
-  in.extract<sint16,2>(heightfield);
+  in >> xyResolution >> zResolution >> useImage;
+  if (useImage) {
+    String givenImagePath;
+    in >> givenImagePath;
+    Image::Ptr image;
+    boost::tie(image, boost::tuples::ignore) =
+      context.getResourceInterface()->imageSearch(givenImagePath);
+    if (!image) {
+      throw ResourceDeserializationExn(
+          givenImagePath, resourceSearchResult_notFound, ""
+        );
+    }
+    return Heightfield(
+        xyResolution, zResolution,
+        givenImagePath, image
+      );
+  } else {
+    uint32 width;
+    uint32 height;
+    boost::multi_array<sint16,2> heightfield;
+    in >> width >> height;
+    in.extract<sint16,2>(heightfield);
   
-  return Heightfield(
-      horizontalResolution, verticalResolution, width, height, heightfield
-    );
+    return Heightfield(
+        xyResolution, zResolution, width, height, heightfield
+      );
+  }
 }
 

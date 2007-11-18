@@ -8,12 +8,12 @@ namespace sakusen {
 
 inline uint32 Heightfield::dexToSampleFloorX(sint32 x) const {
   return static_cast<uint32>(x - world->getMap()->left()) /
-    horizontalResolution;
+    xyResolution;
 }
 
 inline uint32 Heightfield::dexToSampleFloorY(sint32 y) const {
   return static_cast<uint32>(y - world->getMap()->bottom()) /
-    horizontalResolution;
+    xyResolution;
 }
 
 inline uint32 Heightfield::dexToSampleCeilX(sint32 x) const {
@@ -21,7 +21,7 @@ inline uint32 Heightfield::dexToSampleCeilX(sint32 x) const {
   if (0 == offset) {
     return 0;
   } else {
-    return (offset-1)/horizontalResolution + 1;
+    return (offset-1)/xyResolution + 1;
   }
 }
 
@@ -30,16 +30,16 @@ inline uint32 Heightfield::dexToSampleCeilY(sint32 y) const {
   if (0 == offset) {
     return 0;
   } else {
-    return (offset-1)/horizontalResolution + 1;
+    return (offset-1)/xyResolution + 1;
   }
 }
 
 inline sint32 Heightfield::sampleToDexX(uint32 x) const {
-  return world->getMap()->left() + x * horizontalResolution;
+  return world->getMap()->left() + x * xyResolution;
 }
 
 inline sint32 Heightfield::sampleToDexY(uint32 y) const {
-  return world->getMap()->bottom() + y * horizontalResolution;
+  return world->getMap()->bottom() + y * xyResolution;
 }
 
 }

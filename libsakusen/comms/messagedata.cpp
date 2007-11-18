@@ -219,8 +219,8 @@ GameStartMessageData::GameStartMessageData(
     const Point<sint32>& tR,
     const Point<sint32>& bL,
     uint16 g,
-    uint32 hHR,
-    uint32 vHR
+    uint32 xyHR,
+    uint32 zHR
   ) :
   MessageData(),
   playerId(pI),
@@ -228,8 +228,8 @@ GameStartMessageData::GameStartMessageData(
   topRight(tR),
   bottomLeft(bL),
   gravity(g),
-  horizontalHeightfieldRes(hHR),
-  verticalHeightfieldRes(vHR)
+  xyHeightfieldRes(xyHR),
+  zHeightfieldRes(zHR)
 {
 }
 
@@ -237,13 +237,13 @@ GameStartMessageData::GameStartMessageData(IArchive& in) :
   MessageData()
 {
   (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >>
-    gravity >> horizontalHeightfieldRes >> verticalHeightfieldRes;
+    gravity >> xyHeightfieldRes >> zHeightfieldRes;
 }
 
 void GameStartMessageData::fillArchive(OArchive& archive) const
 {
   (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
-    gravity << horizontalHeightfieldRes << verticalHeightfieldRes;
+    gravity << xyHeightfieldRes << zHeightfieldRes;
 }
 
 MessageType GameStartMessageData::getType() const

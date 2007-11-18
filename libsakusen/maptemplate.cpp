@@ -62,7 +62,7 @@ MapTemplate MapTemplate::load(
   Point<sint32> topRight;
   Point<sint32> bottomLeft;
   archive.extractEnum(topology) >> internalName >> topRight >> bottomLeft;
-  Heightfield heightfield = Heightfield::load(archive);
+  Heightfield heightfield = Heightfield::load(archive, context);
   uint16 gravity;
   vector<MapPlayMode> playModes;
   archive >> gravity;
