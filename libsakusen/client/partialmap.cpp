@@ -14,7 +14,11 @@ void PartialMap::sanityCheck()
   }
   if (heightfield.getWidth() !=
       1+width()/heightfield.getXYResolution()) {
-    Fatal("heightfield width incorrect");
+    Fatal(
+        "heightfield width (" << heightfield.getWidth() <<
+        ") incorrect; it should be " <<
+        1+width()/heightfield.getXYResolution()
+      );
   }
   if (heightfield.getHeight() !=
       1+height()/heightfield.getXYResolution()) {
