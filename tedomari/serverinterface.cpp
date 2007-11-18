@@ -96,7 +96,9 @@ void ServerInterface::settingAlteration(
 /** \brief Deal with all pending messages from server.
  *
  * \return Output that should be given to the user. */
-String ServerInterface::flushIncoming()
+String ServerInterface::flushIncoming(
+    const ResourceInterface::Ptr& resourceInterface
+  )
 {
   if (!joined) {
     return "";
@@ -115,7 +117,7 @@ String ServerInterface::flushIncoming()
         ( NULL == client::world ?
           PlayerId::invalid() : client::world->getPlayerId() );
       IArchive messageArchive(buf, messageLength);
-      Message message(messageArchive, playerId);
+      Message message(messageArchive, playerId, resourceInterface);
       switch (message.getType()) {
         case messageType_kick:
           {

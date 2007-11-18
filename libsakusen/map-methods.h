@@ -32,15 +32,13 @@ MapType* Map::newMap(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
     uint16 gravity,
-    uint32 xyHeightfieldRes,
-    uint32 zHeightfieldRes
+    const Heightfield& hf
   )
 {
   switch (topology) {
     case topology_plane:
       return new PlaneMap<MapType>(
-          topRight, bottomLeft, gravity,
-          xyHeightfieldRes, zHeightfieldRes
+          topRight, bottomLeft, gravity, hf
         );
     /** \todo All the other topologies */
     default:

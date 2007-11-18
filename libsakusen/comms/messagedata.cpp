@@ -219,8 +219,7 @@ GameStartMessageData::GameStartMessageData(
     const Point<sint32>& tR,
     const Point<sint32>& bL,
     uint16 g,
-    uint32 xyHR,
-    uint32 zHR
+    const Heightfield& hf
   ) :
   MessageData(),
   playerId(pI),
@@ -228,22 +227,28 @@ GameStartMessageData::GameStartMessageData(
   topRight(tR),
   bottomLeft(bL),
   gravity(g),
-  xyHeightfieldRes(xyHR),
-  zHeightfieldRes(zHR)
+  heightfield(hf)
 {
 }
 
-GameStartMessageData::GameStartMessageData(IArchive& in) :
-  MessageData()
+GameStartMessageData::GameStartMessageData(
+    IArchive& in,
+    const DeserializationContext& context
+  ) :
+  MessageData(),
+  /* Dummy call because there's no default constructor for Heightfield */
+  heightfield(1, 1, 2, 2) 
 {
   (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >>
-    gravity >> xyHeightfieldRes >> zHeightfieldRes;
+    gravity;
+  heightfield = Heightfield::load(in, context);
 }
 
 void GameStartMessageData::fillArchive(OArchive& archive) const
 {
   (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
-    gravity << xyHeightfieldRes << zHeightfieldRes;
+    gravity;
+  heightfield.store(archive);
 }
 
 MessageType GameStartMessageData::getType() const

@@ -28,12 +28,10 @@ class PlaneMap : public MapType {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 xyHeightfieldRes,
-        uint32 zHeightfieldRes
+        const Heightfield& hf
       ) :
       MapType(
-          topRight, bottomLeft, gravity,
-          xyHeightfieldRes, zHeightfieldRes
+          topRight, bottomLeft, gravity, hf
         )
     {}
 

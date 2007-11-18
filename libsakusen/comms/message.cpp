@@ -17,7 +17,8 @@ Message::Message(
     /*const uint8* buffer,
     size_t bufferLength,*/
     IArchive& in,
-    PlayerId p /*= static_cast<PlayerId>(-1) (default in header)*/
+    const PlayerId p, /*= static_cast<PlayerId>(-1) (default in header)*/
+    const ResourceInterface::Ptr& resourceInterface
   ) :
   player(p),
   data()
@@ -28,6 +29,10 @@ Message::Message(
   /* Extract the protocol version and message type */
   uint8 version;
   MessageType type;
+  DeserializationContext context(
+      player, ( world ? world->getUniverse() : Universe::ConstPtr() ),
+      resourceInterface
+    );
 
   (in >> version).extractEnum(type);
 
@@ -64,7 +69,7 @@ Message::Message(
       data.reset(new NotifySettingMessageData(in));
       break;
     case messageType_gameStart:
-      data.reset(new GameStartMessageData(in));
+      data.reset(new GameStartMessageData(in, context));
       break;
     case messageType_order:
       if (!player.valid()) {
@@ -72,17 +77,13 @@ Message::Message(
          * starts */
         throw NoWorldDeserializationExn();
       }
-      data.reset(new OrderMessageData(
-            in, DeserializationContext(player, world->getUniverse())
-          ));
+      data.reset(new OrderMessageData(in, context));
       break;
     case messageType_update:
       if (world == NULL || !player.valid()) {
         throw NoWorldDeserializationExn();
       }
-      data.reset(new UpdateMessageData(
-            in, DeserializationContext(player, world->getUniverse())
-          ));
+      data.reset(new UpdateMessageData(in, context));
       break;
     case messageType_extension:
       data.reset(new ExtensionMessageData(in));
@@ -116,6 +117,10 @@ Message Message::load(IArchive& archive)
 {
   PlayerId player;
   Buffer subBuffer;
+  /* It's OK to extract the player id from the archive here, because this
+   * method is used, e.g., for loading messages out of a replay.  It should
+   * *not* be used for loading messages off the wire; that's what the
+   * constructor is for. */
   archive >> player >> subBuffer;
   IArchive subArchive(subBuffer);
   return Message(subArchive, player);

@@ -24,9 +24,10 @@ namespace comms {
 class LIBSAKUSEN_COMMS_API Message {
   public:
     explicit Message(const MessageData* data);
-    Message(
+    explicit Message(
         IArchive& archive,
-        PlayerId player = PlayerId::invalid()
+        const PlayerId player = PlayerId::invalid(),
+        const ResourceInterface::Ptr& = ResourceInterface::Ptr()
       );
   private:
     /** \brief Source of this message.

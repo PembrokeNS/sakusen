@@ -34,8 +34,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 xyHeightfieldRes,
-        uint32 zHeightfieldRes
+        const Heightfield&
       );
     ~PartialWorld();
     

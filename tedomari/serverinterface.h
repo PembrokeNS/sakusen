@@ -67,7 +67,7 @@ class ServerInterface {
     inline sakusen::ClientId getId() const { return id; }
     //@}
     
-    String flushIncoming();
+    String flushIncoming(const sakusen::ResourceInterface::Ptr&);
     String join();
     bool leave(bool sendMessage);
     bool send(const sakusen::comms::MessageData* message);

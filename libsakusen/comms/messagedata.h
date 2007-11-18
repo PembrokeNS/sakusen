@@ -174,11 +174,10 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
 /** \brief Message providing data needed by client to initialize the game
  *
  * \todo We don't want to actually pass this much information (in particular,
- * we do not wish to reveal the map bounds in advance), but for the moment we
+ * we do not wish to reveal the map
+ * bounds & heighfield in advance), but for the moment we
  * do so, because it makes writing the client much easier. */
 class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
-  private:
-    GameStartMessageData();
   public:
     GameStartMessageData(
         PlayerId playerId,
@@ -186,10 +185,9 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
         uint16 gravity,
-        uint32 xyHeightfieldRes,
-        uint32 zHeightfieldRes
+        const Heightfield& hf
       );
-    GameStartMessageData(IArchive& in);
+    GameStartMessageData(IArchive& in, const DeserializationContext&);
     ~GameStartMessageData() {}
   private:
     PlayerId playerId;
@@ -197,8 +195,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
     uint16 gravity;
-    uint32 xyHeightfieldRes;
-    uint32 zHeightfieldRes;
+    Heightfield heightfield;
   protected:
     void fillArchive(OArchive& archive) const;
   public:
@@ -208,11 +205,8 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
     inline uint16 getGravity() const { return gravity; }
-    inline uint32 getXYHeightfieldResolution() const {
-      return xyHeightfieldRes;
-    }
-    inline uint32 getZHeightfieldResolution() const {
-      return zHeightfieldRes;
+    inline const Heightfield& getHeightfield() const {
+      return heightfield;
     }
 };
 

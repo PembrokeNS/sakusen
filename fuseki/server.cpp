@@ -781,8 +781,7 @@ void Server::serve()
       client->send(new GameStartMessageData(
             client->getPlayerId(), map->getTopology(),
             map->getTopRight(), map->getBottomLeft(),
-            map->getGravity(), map->getHeightfield().getXYResolution(),
-            map->getHeightfield().getZResolution()
+            map->getGravity(), map->getHeightfield()
           ));
       bool wasAdmin = client->hasGroup("admin");
       client->clearGroups();

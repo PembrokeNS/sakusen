@@ -520,7 +520,7 @@ void runClient(
         finished = true;
       }
       /* Process messages from server */
-      if ("" != (message = serverInterface.flushIncoming())) {
+      if ("" != (message = serverInterface.flushIncoming(resourceInterface))) {
         ioHandler.message(message);
       }
       /* Open or close UI appropriately */

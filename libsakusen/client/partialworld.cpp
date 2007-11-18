@@ -16,14 +16,12 @@ PartialWorld::PartialWorld(
     const Point<sint32>& topRight,
     const Point<sint32>& bottomLeft,
     uint16 gravity,
-    uint32 xyHeightfieldRes,
-    uint32 zHeightfieldRes
+    const Heightfield& hf
   ) :
   World(universe),
   playerId(pI),
   map(Map::newMap<PartialMap>(
-        topology, topRight, bottomLeft, gravity,
-        xyHeightfieldRes, zHeightfieldRes
+        topology, topRight, bottomLeft, gravity, hf
       )),
   units()
 {
