@@ -120,12 +120,12 @@ would have to promote them ourselves.
 Now we can set the universe like we wanted to before:
 
 \verbatim
-> s game:universe:name u
+> s game:universe:name test/u
 >
 Server reported that value of ':game:universe:name' was:
-u
+tset/u
 Server reported that value of ':game:universe:name' was:
-universe
+test/universe
 Server reported that value of ':game:universe:hash' was:
 812ecb88359476b9c163cea45a720cfd1226e824081dd1d3817201a76ab26a2c
 \endverbatim
@@ -137,20 +137,21 @@ universe, then your version is probably out of date (the file format changes
 quite frequently) &mdash; this problem should also be solved by running
 libsakusen-resources-test.
 
-Note that the server auto-completed the short name "u" to the full name
-"universe", since that was the only universe with that prefix.  Also, the
+Note that the server auto-completed the short name "test/u" to the full name
+"test/universe", since that was the only
+universe with that prefix.  Also, the
 server provides the hash of the universe so our client can check it has exactly
 the right version.
 
 Next we can set the map:
 
 \verbatim
-> s game:map m
+> s game:map test/m
 >
 Server reported that value of ':game:map' was:
-m
+test/m
 Server reported that value of ':game:map' was:
-map
+test/map
 \endverbatim
 
 This works in much the same way, but now we don't need the hash, since the
@@ -206,7 +207,7 @@ You can automate this whole process by putting a line like this one in your
 ~/.sakusen/tedomari/config file:
 
 \verbatim
-commands=cs neveradmin 0;z 10000;s game:universe:name u;z 1000000;s game:map m;z 2000000;cs player 1;cs ready 1
+commands=cs neveradmin 0;z 10000;s game:universe:name test/u;z 1000000;s game:map test/m;z 2000000;cs player 1;cs ready 1
 \endverbatim
 
 That queues all of the command's we've just discussed that start the game,
