@@ -3,7 +3,7 @@ BIN = libsakusen.la
 LIBS = -lstdc++ -lm -lmhash
 INCLUDE =
 
-all-recurse-resources: all-recurse-comms
+all-recurse-resources all-recurse-server: all-recurse-comms
 
-test-recurse-resources: test-recurse-comms
+test-recurse-resources test-recurse-server: test-recurse-comms
 
