@@ -1,7 +1,7 @@
-#ifndef _MDNS_H
-#define _MDNS_H
+#ifndef LIBSAKUSEN_SERVER__MDNS_H
+#define LIBSAKUSEN_SERVER__MDNS_H
 
-#include "libsakusen-global.h"
+#include "libsakusen-server-global.h"
 #include "servedgame.h"
 #include <boost/utility.hpp> // for noncopyable
 #include <boost/shared_ptr.hpp> // for shared_ptr
@@ -38,7 +38,7 @@ namespace server {
  * \todo Pass the AVAHI_PUBLISH_UPDATE flag to avahi_entry_group_add_service()
  * when the portno is updated.
  */
-class MdnsPublisher : public boost::noncopyable {
+class LIBSAKUSEN_SERVER_API MdnsPublisher : public boost::noncopyable {
   public:
     MdnsPublisher(boost::shared_ptr<ServedGame const>);
     ~MdnsPublisher();
@@ -65,4 +65,5 @@ class MdnsPublisher : public boost::noncopyable {
 
 }}
 
-#endif //_MDNS_H
+#endif // LIBSAKUSEN_SERVER__MDNS_H
+
