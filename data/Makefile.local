@@ -12,6 +12,7 @@ sources: $(SAKUSNSOURCES)
 include $(DIR_MAKEFRAGS)
 
 $(SAKUSNSOURCES): %.sakusensource: .makefrags/%.makefrag
+	mkdir -p $(dir $@)
 	ORIG_DIR=`pwd` && \
 	cd $(this_srcdir)$*.dir && \
 	tar -cjf $${ORIG_DIR}/$@ $(notdir $(filter $(this_srcdir)$*.dir/%,$^))
