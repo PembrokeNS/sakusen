@@ -290,8 +290,10 @@ MdnsPublisher::~MdnsPublisher() {
  * Does all the real work.
  */
 MdnsPublisher::Implementation::~Implementation() {
-  if (poll)
+  if (poll) {
+    avahi_threaded_poll_lock(poll);
     avahi_threaded_poll_stop(poll);
+  }
 
   if (game_name) {
     avahi_free(game_name);
