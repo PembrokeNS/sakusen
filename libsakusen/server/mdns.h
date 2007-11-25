@@ -37,6 +37,11 @@ namespace server {
  *
  * \todo Pass the AVAHI_PUBLISH_UPDATE flag to avahi_entry_group_add_service()
  * when the portno is updated.
+ *
+ * \bug There are some things that appear to be memory leaks in avahi (see
+ * tools/valgrind/sakusen.supp).  They may be our fault or avahi's.
+ * It would be nice to track them down at some
+ * point, but that probably requires understanding the avahi source.
  */
 class LIBSAKUSEN_SERVER_API MdnsPublisher : public boost::noncopyable {
   public:

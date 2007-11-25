@@ -205,7 +205,73 @@
    obj:/lib/ld-2.6.so
    obj:/lib/ld-2.6.so
 }
-
-
-
+{
+   lt_dlopen
+   Memcheck:Addr4
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   fun:dlopen
+}
+{
+   lt_dlopen
+   Memcheck:Addr4
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   fun:dlopen
+}
+{
+   libdl leak
+   Memcheck:Leak
+   fun:calloc
+   obj:/lib/libdl-2.6.1.so
+   fun:dlopen
+   fun:sys_dl_open
+   fun:tryall_dlopen
+   fun:find_module
+   fun:try_dlopen
+   fun:lt_dlopen
+}
+{
+   pthread leak
+   Memcheck:Leak
+   fun:calloc
+   obj:/lib/ld-2.6.1.so
+   fun:_dl_allocate_tls
+   fun:pthread_create
+}
+{
+   avahi / dbus leak?
+   Memcheck:Leak
+   fun:malloc
+   fun:dbus_malloc
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   fun:avahi_client_new
+}
+{
+   dbus leak?
+   Memcheck:Leak
+   fun:realloc
+   fun:dbus_realloc
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   obj:/usr/lib/libdbus-1.so.3.2.0
+   fun:dbus_message_iter_append_basic
+   fun:dbus_message_new_error
+   obj:/usr/lib/libdbus-1.so.3.2.0
+}
 
