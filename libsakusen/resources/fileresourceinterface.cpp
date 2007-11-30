@@ -305,7 +305,7 @@ FileResourceInterface::internalSymbolSearch(
   {
     char buffer[33];
     _itoa_s(GetLastError(), buffer, 33,2);
-    error = "GetProcAddress() on "+symbolName+" in " + modulePath +
+    error = "GetProcAddress() on "+symbolName+" in " + modulePath.directory_string() +
       " failed. Error value: " + String(buffer);
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }

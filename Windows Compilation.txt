@@ -11,7 +11,7 @@ C:\GTK\include\glib-2.0
 C:\GTK\lib\glib-2.0\include
 C:\GTK\include\cairo
 and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
-6. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
+6. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here). 
 7. To actually "play" Sakusen you must:
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
      i)Moves the requisite dlls into the same directory as your binaries.
@@ -20,4 +20,5 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
    b) Compress (either zip or tar will do) data\universe\testsrc.dir\cannon.cpp and cannon.h into one file, rename it testsrc.sakusensource and move it to %AppData%\.sakusen\data\universe
    c) Run fuseki.
    d) Invoke tedomari with tedomari -j "tcp|localhost"
+   e) If something bad happens, contact me. It's almost certainly a bug.
 8. Sing "Rule Britannia!"

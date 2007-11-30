@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Stlport\stlport"
-				PreprocessorDefinitions="HAVE_CONFIG_H"
+				PreprocessorDefinitions="HAVE_CONFIG_H;_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

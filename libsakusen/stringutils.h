@@ -32,7 +32,7 @@ struct hash_map_string {
 
 /** \brief Split the string splitee at characters contained in spliton */
 template<typename Container>
-LIBSAKUSEN_API Container stringUtils_split(
+Container stringUtils_split(
     const String& splitee,
     const String& spliton
   ) {

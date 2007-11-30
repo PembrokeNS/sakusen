@@ -21,14 +21,18 @@
    * imported back into libraries */
   #ifdef LIBSAKUSEN_RESOURCES_EXPORTS
     #define LIBSAKUSEN_RESOURCES_API   __declspec(dllexport)
+    #define LIBSAKUSEN_RESOURCES_EXIMP extern
   #else
     #define LIBSAKUSEN_RESOURCES_API   __declspec(dllimport)
+    #define LIBSAKUSEN_RESOURCES_EXIMP 
   #endif
 #else
   #if defined(__GNUC__) && (__GNUC__ >= 4)
     #define LIBSAKUSEN_RESOURCES_API __attribute__ ((visibility ("default")))
+    #define LIBSAKUSEN_RESOURCES_EXIMP extern
   #else
     #define LIBSAKUSEN_RESOURCES_API
+    #define LIBSAKUSEN_RESOURCES_EXIMP extern
   #endif
 #endif
 
@@ -38,13 +42,13 @@ namespace resources {
 /** \brief Defines a regex which must be matched by filenames.
  *
  * \warning Do not expect this to be initialised during static constructors. */
-extern pcrecpp::RE filenameRegex;
+LIBSAKUSEN_RESOURCES_EXIMP pcrecpp::RE filenameRegex;
 
 /** Defines a regex which must be matched by paths in the Skusen
  * VFS
  *
  * \warning Do not expect this to be initialised during static constructors. */
-extern pcrecpp::RE pathRegex;
+LIBSAKUSEN_RESOURCES_EXIMP pcrecpp::RE pathRegex;
 
 }}
 

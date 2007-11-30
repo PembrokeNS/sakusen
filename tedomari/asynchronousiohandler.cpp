@@ -34,7 +34,7 @@ using namespace tedomari;
 AsynchronousIOHandler::AsynchronousIOHandler(
     FILE* in,
     ostream& o,
-    String hf,
+    const boost::filesystem::path& hf,
     int hl
   ) :
   infd(NativeFileno(in)),

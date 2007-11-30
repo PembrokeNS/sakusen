@@ -6,6 +6,10 @@
 #include <list>
 #include <boost/filesystem/path.hpp>
 
+#ifdef _MSC_VER
+#define NativeFileno _fileno
+#endif
+
 namespace sakusen {
 namespace resources {
 

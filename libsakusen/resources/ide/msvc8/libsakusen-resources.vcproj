@@ -84,7 +84,7 @@
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(ConfigurationName)&quot;;..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;..\..\..\..\externals\boost"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\Release/libsakusen.pdb"
 				OptimizeReferences="2"
@@ -155,7 +155,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;..\..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;_STLP_DEBUG=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -188,7 +188,7 @@
 				Version="0.001"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;..\..\..\..\externals\boost"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)/$(ProjectName).pdb"
 				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
@@ -225,6 +225,38 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="vfs"
+			>
+			<File
+				RelativePath="..\..\vfs\branch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\branch.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\directorybranch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\directorybranch.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\unionbranch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\vfs\unionbranch.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\file.cpp"
 			>

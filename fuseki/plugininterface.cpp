@@ -102,7 +102,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,2);
-            String error = "GetProcAddress() on "+symbolName+" in " + module+
+            String error = "GetProcAddress() on "+symbolName+" in " + module.directory_string()+
               " failed. Error value: " + String(buffer);
             throw PluginExn(error);
           }

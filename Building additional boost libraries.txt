@@ -1,0 +1,6 @@
+1. Download bjam.exe
+2. Edit stlport.jam line 139 from   "name += .$(self.version.5) ;" to   "name += .$(self.version.5).lib ;"
+3. Edit user-config.jam and add "using stlport : 5.1.3 : C:\Programming\t3hgame\cpp\trunk\externals\Stlport\stlport . ;"   to the right place
+4. Move the stlport libs to the directory where bjam is 
+5. Run bjam --build-dir=(place to put the libs) --toolset=msvc stdlib=stlport --with-filesystem
+6. This should hopefully be all. 
