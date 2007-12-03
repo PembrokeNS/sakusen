@@ -3,3 +3,6 @@ THIS_LDFLAGS = -module
 LIB_DEP_NAMES = libsakusen libsakusen-server
 INCLUDE =
 
+install-nonrecursive: $(BIN)
+	install -d $(PLUGINDIR)
+	libtool --mode=install install -m 644 $< $(PLUGINDIR)/$(notdir $<)

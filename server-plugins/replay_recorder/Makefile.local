@@ -4,3 +4,6 @@ LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources \
 								libsakusen-server libsakusen-server-plugins
 INCLUDE =
 
+install-nonrecursive: $(BIN)
+	install -d $(PLUGINDIR)
+	libtool --mode=install install -m 644 $< $(PLUGINDIR)/$<

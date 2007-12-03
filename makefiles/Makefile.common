@@ -28,6 +28,12 @@
 # PREFIX - the installation prefix, e.g. "/usr/local" (to which it defaults).
 #   Expected to be set by the user in the environment, not by the including
 #   Makefile
+# DESTDIR - The prefix where files will be placed, not where they are
+#   configured for. PREFIX is where you eventually want to use the files.
+#   DESTDIR prefixes prefix when the Makefile is decided where to put files.
+#   Probably wants to be "debian/build" or something similar if you are
+#   building a package rather than doing a make install directly. Don't give it
+#   a trailing slash.
 # NO_AUTO_COMPILING - if set to yes, will entirely disable all the cleverness
 #   in this file to do with C and C++, but does not affect the support for more
 #   general targets like all, clean, etc.
@@ -53,6 +59,7 @@ CXX ?= g++
 CC ?= gcc
 
 PREFIX ?= /usr/local
+DESTDIR ?=
 
 # Determine whether we're compiling a library or an executable
 
@@ -111,6 +118,14 @@ ALL_CXXFLAGS := \
 	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(INCLUDE) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
 	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(INCLUDE) $(THIS_CFLAGS)
+
+GAMESDIR := $(DESTDIR)$(PREFIX)/games
+BINDIR := $(DESTDIR)$(PREFIX)/bin
+LIBDIR := $(DESTDIR)$(PREFIX)/lib
+PLUGINDIR := $(LIBDIR)/sakusen
+MANDIR := $(DESTDIR)$(PREFIX)/man
+DATADIR := $(DESTDIR)$(PREFIX)/share/games/sakusen
+INCLUDEDIR := $(DESTDIR)$(PREFIX)/include/sakusen
 
 #####################################################
 #
@@ -186,6 +201,13 @@ clean-nonrecursive: remove-empty-subdirs
 	-rm -rf .libs .obj .makefrags
 	-rm -f $(BIN) revision.h
 
+# Same stuff for install
+INSTALL_RECURSIONS := $(addprefix install-recurse-,$(SUBDIRS))
+$(INSTALL_RECURSIONS): install-recurse-%: %/Makefile all-nonrecursive
+	@$(MAKE) -C $* install
+
+install: $(INSTALL_RECURSIONS) install-nonrecursive
+
 #####################################################
 #
 #  Alternate build dir generation
@@ -228,6 +250,7 @@ $(BUILTIN_CONFIGS): %: %/Makefile %/config.mk
 # The compile/link commands depend of whether we're building a library or an
 # executable
 
+ifneq ($(BIN),)
 ifneq ($(IS_LIB),)
 # When it is a library:
 
@@ -253,6 +276,12 @@ $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	libtool --tag=CC --mode=compile $(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
+
+# install the lib
+install-nonrecursive: $(BIN)
+	install -d $(LIBDIR)
+	libtool --mode=install install -m 644 $< $(LIBDIR)/$(notdir $<)
+
 else
 # When it is an executable
 
@@ -275,8 +304,15 @@ $(C_OBJS): .obj/%.o:
 	$(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
+# install the binary
+install-nonrecursive: $(BIN)
+	install -d $(GAMESDIR)
+	libtool --mode=install install -m 755 $< $(GAMESDIR)/$(notdir $<)
 endif
+else # $(BIN) is empty
+install-nonrecursive:
 
+endif # $(BIN) non-empty
 #####################################################
 #
 #  Dependency generation
@@ -337,6 +373,7 @@ revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/i
 		all all-nonrecursive all-post-recurse $(ALL_RECURSIONS) \
 		test test-nonrecursive $(TEST_RECURSIONS) \
 		clean clean-nonrecursive remove-empty-subdirs $(CLEAN_RESURSIONS) \
+		install install-nonrecursive $(CLEAN_RECURSIONS) \
 		$(BUILTIN_CONFIGS)
 
 .DELETE_ON_ERROR:

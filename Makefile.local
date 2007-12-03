@@ -32,6 +32,8 @@ test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
 
 test-recurse-libsakusen: test-recurse-libltdl_hacked
 
+install-nonrecursive:
+	libtool --mode=finish $(LIBDIR)
 else
 
 all-nonrecursive:
