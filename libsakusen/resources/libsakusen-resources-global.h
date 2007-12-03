@@ -42,13 +42,13 @@ namespace resources {
 /** \brief Defines a regex which must be matched by filenames.
  *
  * \warning Do not expect this to be initialised during static constructors. */
-LIBSAKUSEN_RESOURCES_EXIMP pcrecpp::RE filenameRegex;
+LIBSAKUSEN_RESOURCES_API extern pcrecpp::RE filenameRegex;
 
 /** Defines a regex which must be matched by paths in the Skusen
  * VFS
  *
  * \warning Do not expect this to be initialised during static constructors. */
-LIBSAKUSEN_RESOURCES_EXIMP pcrecpp::RE pathRegex;
+LIBSAKUSEN_RESOURCES_API extern pcrecpp::RE pathRegex;
 
 }}
 

@@ -8,6 +8,8 @@ using namespace sakusen::comms;
 using namespace tedomari;
 
 #ifdef DISABLE_CONVERSION
+/** \bug Make this go on windows.
+ */
 Converter::Converter() {}
 Converter::~Converter() {}
 #else

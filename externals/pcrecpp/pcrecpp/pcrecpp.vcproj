@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\STLport\STLport;..;..\pcre"
+				AdditionalIncludeDirectories="..\..\stlport\stlport;..;..\pcre"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PCRECPP_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\STLport\STLport;..;..\pcre"
+				AdditionalIncludeDirectories="..\..\stlport\stlport;..;..\pcre"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PCRECPP_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

@@ -79,7 +79,7 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
          * game started */
         this->removeGroup(String("player")+playerId.toString());
       }
-    } catch (InvalidPlayerId& e) {
+    } catch (InvalidPlayerId&) {
       /* The last player id was invalid. Continue anyway, o/w we can never
        * recover.
        */
@@ -90,7 +90,7 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
     try {
       server->getPlayerPtr(id)->attachClient(this);
       addGroup(String("player")+id.toString());
-    } catch (InvalidPlayerId& e) {
+    } catch (InvalidPlayerId&) {
       Debug("RemoteClient::setPlayerId was given an invalid id");
       throw;
     }

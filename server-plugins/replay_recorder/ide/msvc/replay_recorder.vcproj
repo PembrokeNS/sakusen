@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -112,7 +112,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
 				RuntimeLibrary="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"

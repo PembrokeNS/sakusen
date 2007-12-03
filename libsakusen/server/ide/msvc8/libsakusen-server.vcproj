@@ -232,10 +232,6 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\ballistic-methods.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\ballistic.cpp"
 			>
 		</File>

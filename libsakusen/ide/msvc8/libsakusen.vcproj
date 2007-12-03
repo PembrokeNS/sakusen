@@ -53,7 +53,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;"
+				AdditionalIncludeDirectories="&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;;..\..\..\externals\Stlport\stlport"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="2"

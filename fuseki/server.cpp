@@ -1244,7 +1244,7 @@ void Server::settingAlteredCallback(Leaf* altered)
         if (client->isAutoUnready() && !isReadinessChange) {
           changeInClientBranch(client, "ready", "false");
         }
-      } catch (SocketExn& e) {
+      } catch (SocketExn&) {
         client->setDead();
       }
     }

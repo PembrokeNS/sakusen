@@ -46,12 +46,14 @@
  * of "Safe STL". Very useful for debugging. Thread-safe.
  * Please do not forget to link proper STLport library flavor
  * (e.g libstlportstlg.so or libstlportstlg.a) when you set this flag
- * in STLport iostreams mode, namespace customization guaranty that you
+ * in STLport iostreams mode, namespace customization guarantee that you
  * link to the right library.
  */
-/*
-#define _STLP_DEBUG 1
-*/
+
+#ifdef _DEBUG
+    #define _STLP_DEBUG 1
+#endif
+
 /*
  * You can also choose the debug level:
  * STLport debug level: Default value
@@ -280,7 +282,7 @@
 
 /*
  * To reduce the famous code bloat trouble due to the use of templates STLport grant
- * a specialization of some containers for pointer types. So all instanciations
+ * a specialization of some containers for pointer types. So all instantiations
  * of those containers with a pointer type will use the same implementation based on
  * a container of void*. This feature has show very good result on object files size
  * but after link phase and optimization you will only experiment benefit if you use

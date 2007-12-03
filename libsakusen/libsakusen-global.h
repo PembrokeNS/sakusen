@@ -157,6 +157,10 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   //isnan -> _isnan for MSVC
 #define isnan _isnan
 
+    #ifdef _DEBUG
+        #pragma warning(disable: 4503)
+    //Decorated function name limit exceeded. Does not affect correctness of the program.
+    #endif
 
 #endif
 
