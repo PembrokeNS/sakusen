@@ -32,7 +32,8 @@ enum BuiltinCommand {
   /* action-related commands */
   builtinCommand_initializeaction,
   builtinCommand_abortaction,
-  builtinCommand_supplyarg
+  builtinCommand_supplyarg,
+  builtinCommand_supplyregex
 };
 
 void executeBuiltinCommand(

@@ -218,6 +218,13 @@ void executeBuiltinCommand(
       }
       ui->supplyActionArg(args.front());
       break;
+    case builtinCommand_supplyregex:
+      if (args.size() != 1) {
+        wrongNumberArgs(name, args, 1, ui);
+        break;
+      }
+      ui->executeRegex(args.front());
+      break;
     default:
       Fatal("Unknown builtin command: " << cmd);
   }

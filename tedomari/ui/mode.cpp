@@ -111,6 +111,7 @@ Mode Mode::getCommon(UI* ui)
   ADD_COMMAND(initializeaction);
   ADD_COMMAND(abortaction);
   ADD_COMMAND(supplyarg);
+  ADD_COMMAND(supplyregex);
 
   return m;
 }
