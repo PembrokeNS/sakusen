@@ -359,7 +359,7 @@ void UI::executeRegex(const String& regex)
     }
     //alert(Alert("No option matched regex"));
     //Please stop writing lines like this. They are silly.
-    alert("No option matched regex");
+    alert("No option matched regex '"+regex+"'");
   }
 }
 
