@@ -117,7 +117,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 /* Define macros for debug and error output.  They're inside loops to absorb
  * the semicolon that should be used after calling them. */
 
-#ifndef NDEBUG
+//#ifndef NDEBUG
   #define Debug(msg) \
     do { \
       debugStream << __FILE__ << ":" << __LINE__ << ":" << \
@@ -128,10 +128,10 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
     do { \
       debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << std::endl; \
     } while(false)
-#else
-  #define Debug(msg)
-  #define QDebug(msg)
-#endif
+//#else
+//  #define Debug(msg)
+//  #define QDebug(msg)
+//#endif
 
 #define Fatal(msg) \
   do { \
@@ -155,13 +155,12 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   }
 
   //isnan -> _isnan for MSVC
-#define isnan _isnan
+  #define isnan _isnan
 
-    #ifdef _DEBUG
-        #pragma warning(disable: 4503)
+  #ifdef _DEBUG
+    #pragma warning(disable: 4503)
     //Decorated function name limit exceeded. Does not affect correctness of the program.
-    #endif
-
+  #endif
 #endif
 
 /* end platform-dependent code */
