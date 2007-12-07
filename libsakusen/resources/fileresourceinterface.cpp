@@ -241,8 +241,7 @@ FileResourceInterface::internalSymbolSearch(
   vfs::Resource moduleResource;
   boost::tie(moduleResource, result) =
     topModuleDir->search(moduleSakPath, getExtension(resourceType_module));
-  boost::filesystem::path modulePath = moduleResource.asPath();
-  if (modulePath.empty()) {
+  if (!moduleResource) {
     if (result == resourceSearchResult_notFound) {
       result = resourceSearchResult_error;
       /** \todo runtime compilation of modules */
@@ -257,6 +256,7 @@ FileResourceInterface::internalSymbolSearch(
     }
     return boost::make_tuple<void*>(NULL, result);
   }
+  boost::filesystem::path modulePath = moduleResource.asPath();
   /*Debug("modulePath='" << modulePath << "'");*/
 
 #ifdef __GNUC__
