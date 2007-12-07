@@ -90,9 +90,15 @@ String FileResourceInterface::getExtension(ResourceType type) const
     case resourceType_mapTemplate:
       return ".sakusenmaptemplate";
     case resourceType_module:
-      /* Can't know the extension here because it might end in ".la" or ".dll"
-       * or ".so" */
-      return "";
+#ifdef _MSC_VER
+      /* Have to provide an extension under Windows to disambiguate against
+       * debugging info files */
+      return ".dll";
+#else
+      /* Otherwise assume we're looking for a libtool library.  This may not
+       * be sufficiently general */
+      return ".la";
+#endif
     case resourceType_replay:
       return ".sakusenreplay";
     case resourceType_replayIndex:
