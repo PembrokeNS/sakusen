@@ -262,7 +262,7 @@ class ParalyzingLayer : public UnitMask, public Fuse {
     }
 
     void incrementWeaponsState() {
-      /* Weapons do nothing when unit under construction */
+      /* Weapons do nothing when unit paralyzed */
     }
 
     /* Remove self whe fuse expires */
