@@ -181,7 +181,7 @@ typedef struct _DIR
 
 #endif /* LT_USE_WINDOWS_DIRENT_EMULATION */
 
-
+
 /* --- MANIFEST CONSTANTS --- */
 
 
@@ -2585,6 +2585,13 @@ find_module (handle, dir, libdir, dlname, old_name, installed)
           printf("[find_module] dlname=%s\n", dlname);*/
           if (tryall_dlopen_module (handle, dir, objdir, dlname) == 0)
             return 0;
+          /* If we found it, stop searching -- whether we were able to
+             load the file as a module or not.  If the file exists but loading
+             failed, it is better to return an error message here than to
+             report FILE_NOT_FOUND when the alternatives directory is tried
+             below.  */
+          if (!file_not_found())
+            return 1;
         }
 
       /* maybe it was moved to another directory */
