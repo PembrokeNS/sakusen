@@ -269,7 +269,7 @@ FileResourceInterface::internalSymbolSearch(
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
   lt_dlhandle moduleHandle =
-    lt_dlopenext(modulePath.native_file_string().c_str());
+    lt_dlopen(modulePath.native_file_string().c_str());
   if (moduleHandle == NULL) {
     error = String("lt_dlopen() failed: ") + lt_dlerror();
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
