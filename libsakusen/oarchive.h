@@ -29,7 +29,7 @@ struct Storer {
  *
  * \see IArchive
  */
-class LIBSAKUSEN_API OArchive : boost::noncopyable {
+class LIBSAKUSEN_API OArchive : private boost::noncopyable {
   public:
     OArchive();
     OArchive(size_t startCapacity);

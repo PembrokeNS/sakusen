@@ -71,7 +71,7 @@ struct Extracter {
  *
  * \note The name IArchive follows the istream/ostream convention.
  */
-class LIBSAKUSEN_API IArchive : boost::noncopyable {
+class LIBSAKUSEN_API IArchive : private boost::noncopyable {
   friend class OArchive;
   public:
     IArchive();
