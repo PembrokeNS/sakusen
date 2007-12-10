@@ -316,10 +316,13 @@ $(C_OBJS): .obj/%.o:
 	$(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
-# install the binary
+# install the binary unless it was linked with -no-install
+ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
 install-nonrecursive: $(BIN)
 	install -d $(GAMESDIR)$(INSTALL_SUBDIR)
 	libtool --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+endif
+
 endif
 else # $(BIN) is empty
 install-nonrecursive:
