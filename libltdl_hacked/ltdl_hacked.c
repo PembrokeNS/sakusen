@@ -2588,7 +2588,7 @@ find_module (handle, dir, libdir, dlname, old_name, installed)
           /* If we found it, stop searching -- whether we were able to
              load the file as a module or not.  If the file exists but loading
              failed, it is better to return an error message here than to
-             report FILE_NOT_FOUND when the alternatives directory is tried
+             report FILE_NOT_FOUND when the alternative directory is tried
              below.  */
           if (!file_not_found())
             return 1;
