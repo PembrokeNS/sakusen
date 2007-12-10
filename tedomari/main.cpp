@@ -188,6 +188,13 @@ int main(int argc, char const* const* argv)
     cout << endl;
     exit(EXIT_SUCCESS);
   }
+
+#ifndef DISABLE_SDL
+  if (options.sdlOptions.help) {
+    SDLUI::Options::usage(cout);
+    exit(EXIT_SUCCESS);
+  }
+#endif
   
   cout << "*******************************\n"
           "* tedomari (a Sakusen client) *\n"
@@ -547,27 +554,31 @@ void runClient(
 }
 
 void usage() {
-  cout << "tedomari\n"
-          "\n"
-          "Usage: tedomari [OPTIONS]\n"
-          "\n"
+  cout <<
+"tedomari\n"
+"\n"
+"Usage: tedomari [OPTIONS]\n"
+"\n"
 #ifndef DISABLE_UNIX_SOCKETS
-          " -a-, --no-abstract,     do not use the abstract unix socket namespace\n"
-          " -u-, --no-unix,         do not use any unix sockets\n"
+" -a-, --no-abstract     Do not use the abstract unix socket namespace.\n"
+" -u-, --no-unix         Do not use any unix sockets.\n"
 #endif
-          " -e,  --evil,            try for a higher framerate\n"
-          " -l,  --history-length LENGTH, store LENGTH commands in the command history\n"
-          "                         upon exiting\n"
-          " -t,  --test,            don't try to connect to a server, just test the UI\n"
+" -e,  --evil            Try for a higher framerate.\n"
+" -l,  --history-length LENGTH\n"
+"                        Store LENGTH commands in the command history upon\n"
+"                        exiting.\n"
+" -t,  --test            Don't try to connect to a server, just test the UI.\n"
 #ifndef DISABLE_SDL
-          "      --sdlopts OPTIONS, pass OPTIONS to the SDL UI\n"
+"      --sdlopts OPTIONS Pass OPTIONS to the SDL UI.\n"
+"                        Use --sdlopts help=yes for more info.\n"
 #endif
-          " -j,  --join ADDRESS,    join server at sakusen-style address ADDRESS\n"
-          " -o-, --no-autojoin,     do not automatically try to join server\n"
-          " -c,  --commands COMMAND;..., execute each COMMAND upon joining\n"
-          " -h,  --help,            display help and exit\n"
-          " -V,  --version,         display version information and exit\n"
-          "" << endl;
+" -j,  --join ADDRESS    Join server at sakusen-style address ADDRESS.\n"
+" -o-, --no-autojoin     Do not automatically try to join server.\n"
+" -c,  --commands COMMAND;...\n"
+"                        Execute each COMMAND upon joining.\n"
+" -h,  --help            Display help and exit.\n"
+" -V,  --version         Display version information and exit.\n"
+<< endl;
 }
 
 /* Function to parse the command line */
@@ -601,7 +612,7 @@ Options getOptions(
   if (parser.parse(optionsFile, argc, argv)) {
     /* There was a problem */
     cout << "error(s) processing options:\n" <<
-      stringUtils_join(parser.getErrors(), "\n");
+      stringUtils_join(parser.getErrors(), "\n") << '\n' << endl;
     usage();
     exit(EXIT_FAILURE);
   }

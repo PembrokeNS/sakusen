@@ -21,14 +21,18 @@ class SDLUI : public UI {
   public:
     struct Options {
       Options() :
-        width(640), height(480), fullscreen(false), hwSurface(true),
-        doubleBuffer(true), debug(false) {}
+        width(640), height(480), help(false), fullscreen(false),
+        hwSurface(true), doubleBuffer(true), debug(false)
+      {}
       int width;
       int height;
+      bool help;
       bool fullscreen;
       bool hwSurface;
       bool doubleBuffer;
       bool debug;
+
+      static void usage(std::ostream&);
     };
   private:
     SDLUI();
@@ -55,7 +59,7 @@ class SDLUI : public UI {
     void setTitle(const String& title);
     void update();
 
-    uint32 getSDLColour(const Colour&);
+    uint32 getSDLColour(const Colour&) const;
 };
 
 }}}

@@ -40,6 +40,20 @@ using namespace tedomari::ui::sdl;
 #endif
 */
 
+void SDLUI::Options::usage(std::ostream& out)
+{
+  out <<
+"SDL UI options:\n"
+" help=yes          Display this message.\n"
+" w=WIDTH           Set display width.\n"
+" h=HEIGHT          Set display height.\n"
+" fs=yes            Use fullscreen mode.\n"
+" hw-surface=no     Don't try to use a hardware surface for rendering.\n"
+" double-buffer=no  Don't try to use a double buffer for rendering.\n"
+" debug=yes         Output extra debugging info.\n"
+<< endl;
+}
+
 SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   UI(new DummyRegion(options.width, options.height), uiConf, game),
   doubleBuffer(false)
@@ -128,6 +142,7 @@ OptionsParser SDLUI::getParser(Options* options)
   
   parser.addOption("w",             '\0', &options->width);
   parser.addOption("h",             '\0', &options->height);
+  parser.addOption("help",          '\0', &options->help);
   parser.addOption("fs",            '\0', &options->fullscreen);
   parser.addOption("hw-surface",    '\0', &options->hwSurface);
   parser.addOption("double-buffer", '\0', &options->doubleBuffer);
@@ -220,7 +235,7 @@ void SDLUI::update()
   }
 }
 
-uint32 SDLUI::getSDLColour(const Colour& c)
+uint32 SDLUI::getSDLColour(const Colour& c) const
 {
   return SDL_MapRGBA(sdlBuffer->format, c.ir(), c.ig(), c.ib(), c.ia());
 }
