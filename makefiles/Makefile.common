@@ -34,6 +34,11 @@
 #   Probably wants to be "debian/build" or something similar if you are
 #   building a package rather than doing a make install directly. Don't give it
 #   a trailing slash.
+# INSTALL_SUBDIR - A subdirectory of the default install directory into which
+#   to put the compiled binary.  e.g. if PREFIX=/usr/local and
+#   DESTDIR=debian/build and INSTALL_SUBDIR=foo then libraries will be linked
+#   as if to be installed into /usr/local/lib/foo/ and 'make install' will put
+#   them libraries in debian/build/usr/local/lib/foo.
 # NO_AUTO_COMPILING - if set to yes, will entirely disable all the cleverness
 #   in this file to do with C and C++, but does not affect the support for more
 #   general targets like all, clean, etc.
@@ -60,6 +65,12 @@ CC ?= gcc
 
 PREFIX ?= /usr/local
 DESTDIR ?=
+INSTALL_SUBDIR ?=
+
+# We must put a leading slash onto INSTALL_SUBDIR when non-empty
+ifneq ($(INSTALL_SUBDIR),)
+INSTALL_SUBDIR := /$(INSTALL_SUBDIR)
+endif
 
 # Determine whether we're compiling a library or an executable
 
@@ -206,7 +217,7 @@ INSTALL_RECURSIONS := $(addprefix install-recurse-,$(SUBDIRS))
 $(INSTALL_RECURSIONS): install-recurse-%: %/Makefile all-nonrecursive
 	@$(MAKE) -C $* install
 
-install: $(INSTALL_RECURSIONS) install-nonrecursive
+install: install-nonrecursive $(INSTALL_RECURSIONS)
 
 #####################################################
 #
@@ -243,7 +254,7 @@ $(BUILTIN_CONFIGS): %: %/Makefile %/config.mk
 
 #####################################################
 #
-#  Compilation and linking
+#  Compilation and linking and installing
 #
 #####################################################
 
@@ -257,7 +268,8 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
-	libtool --mode=link --tag=CXX $(CXX) $(THIS_LDFLAGS) -rpath $(PREFIX)/lib \
+	libtool --mode=link --tag=CXX $(CXX) $(THIS_LDFLAGS) \
+		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
 		-g3 -o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
 # Libtool objects are made when normal objects are
@@ -279,8 +291,8 @@ $(C_OBJS): .obj/%.o:
 
 # install the lib
 install-nonrecursive: $(BIN)
-	install -d $(LIBDIR)
-	libtool --mode=install install -m 644 $< $(LIBDIR)/$(notdir $<)
+	install -d $(LIBDIR)$(INSTALL_SUBDIR)
+	libtool --mode=install install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 
 else
 # When it is an executable
@@ -306,8 +318,8 @@ $(C_OBJS): .obj/%.o:
 
 # install the binary
 install-nonrecursive: $(BIN)
-	install -d $(GAMESDIR)
-	libtool --mode=install install -m 755 $< $(GAMESDIR)/$(notdir $<)
+	install -d $(GAMESDIR)$(INSTALL_SUBDIR)
+	libtool --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 endif
 else # $(BIN) is empty
 install-nonrecursive:

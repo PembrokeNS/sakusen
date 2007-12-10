@@ -32,7 +32,7 @@ test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
 
 test-recurse-libsakusen: test-recurse-libltdl_hacked
 
-install-nonrecursive:
+install-nonrecursive: $(addprefix install-recurse-,$(SUBDIRS))
 	libtool --mode=finish $(LIBDIR)
 else
 
