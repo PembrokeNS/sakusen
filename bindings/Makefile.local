@@ -8,6 +8,10 @@ ifeq ($(ENABLE_DOTNET_BINDINGS),yes)
 SUBDIRS := $(SUBDIRS) dotNET
 endif
 
+ifeq ($(ENABLE_PYTHON_BINDINGS),yes)
+SUBDIRS := $(SUBDIRS) python
+endif
+
 
 ifeq ($(BUILD_ARCH),x86)
 SWIGWORDSIZE := -DSWIGWORDSIZE32

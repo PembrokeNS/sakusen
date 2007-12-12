@@ -11,11 +11,17 @@ TARGET=config.mk
 function check_for_prog
 {
   prog="$1"
+  name="$prog"
+  if test $# -gt 1
+  then
+    prog="$2"
+  fi
+
   if which "${prog}" > /dev/null 2>&1
   then
-    eval ${prog}_exists=yes
+    eval ${name}_exists=yes
   else
-    eval ${prog}_exists=no
+    eval ${name}_exists=no
     printf "Couldn't find program '%s'\n" "${prog}"
   fi
 }
@@ -95,6 +101,7 @@ printf "BUILD_CFLAGS :=\n" > "${TARGET}"
 
 check_for_prog swig
 check_for_prog perl
+check_for_prog python python-config
 check_for_prog mcs
 #check_for_prog something_that_doesnt_exist
 check_for_lib readline readline readline/readline.h
@@ -121,6 +128,7 @@ fi
 enable_component BINDINGS swig
 enable_component PERL_BINDINGS swig perl
 enable_component DOTNET_BINDINGS swig mcs
+enable_component PYTHON_BINDINGS swig python
 enable_component UNIX_SOCKETS
 enable_component READLINE readline
 enable_component SDL SDL

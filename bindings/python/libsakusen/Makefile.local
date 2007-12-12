@@ -1,0 +1,34 @@
+SWIG ?= swig
+PREFIX ?= /usr/local
+INCLUDE := -I$(top_srcdir)libsakusen `python-config --cflags`
+
+# Ask that Makefile.common not try to do things for us
+NO_AUTO_COMPILING := yes
+
+all-nonrecursive: _sakusen.la
+
+clean:
+	-rm -rf *.o *.so *.py *.cpp *.lo *.la .libs *.dll
+
+_sakusen.la: sakusen.o
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
+		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
+
+# FIXME: We're not taking account of the various CXX_FLAGS to which we have
+# access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
+# etc.)
+sakusen.o: sakusen.cpp
+	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o sakusen.o \
+		-Wall sakusen.cpp
+
+# There's no easy way to know what header files libsakusen.i is including, so
+# we just assume it's including all of them
+sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
+		$(wildcard $(top_srcdir)libsakusen/*.h)
+	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen $<
+
+
+.PHONY: all test clean
+
+.DELETE_ON_ERROR:
+
