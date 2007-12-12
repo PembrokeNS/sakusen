@@ -170,7 +170,6 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   while (nl != inputBuffer.end()){
     /*QDebug("[updateBuffer] found command");*/
     commandBuffer.push(String(inputBuffer.begin(), nl));
-    commandHistory.push(String(inputBuffer.begin(), nl));
     inputBuffer.erase(inputBuffer.begin(), nl+1);
     nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
   } 
