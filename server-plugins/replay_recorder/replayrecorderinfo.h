@@ -18,7 +18,7 @@ class ReplayRecorderInfo : public PluginInfo {
 };
 
 extern "C" {
-  PluginInfo* get_replay_recorder_info();
+  REPLAY_RECORDER_API PluginInfo* get_replay_recorder_info();
 }
 
 }}}}

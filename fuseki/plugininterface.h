@@ -4,7 +4,7 @@
 #include "libsakusen-global.h"
 
 #include <vector>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 
 #include "plugin.h"
 

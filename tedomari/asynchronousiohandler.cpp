@@ -63,7 +63,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     return;
   }
 
-  fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT); 
+  fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT); 
   if (! SetConsoleMode(hStdin, fdwMode)) 
   {
     Fatal("SetConsoleMode Console Error"); 
@@ -137,7 +137,9 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     /*QDebug("[updateBuffer] got char " << chr);*/
     /* If a backspace is pressed, we want to remove a character from the buffer 
      * and then move the cursor back one.*/
-    if (buf[0] == '\b'){
+    switch(buf[0])
+    {
+    case '\b':
       CONSOLE_SCREEN_BUFFER_INFO ScreenBufferInfo;
       GetConsoleScreenBufferInfo(hStdout, &ScreenBufferInfo);
       if(ScreenBufferInfo.dwCursorPosition.X>=2)
@@ -152,9 +154,8 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
         ScreenBufferInfo.dwCursorPosition.X+=1;
         SetConsoleCursorPosition(hStdout, ScreenBufferInfo.dwCursorPosition);
       }
-    }
-    else
-    {
+      break;
+    default:
       inputBuffer += buf[0];
       if ((buf[0] == '\n') || (buf[0] == '\r')) {
         out << "\n> " << flush;
@@ -169,6 +170,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   while (nl != inputBuffer.end()){
     /*QDebug("[updateBuffer] found command");*/
     commandBuffer.push(String(inputBuffer.begin(), nl));
+    commandHistory.push(String(inputBuffer.begin(), nl));
     inputBuffer.erase(inputBuffer.begin(), nl+1);
     nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
   } 

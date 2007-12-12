@@ -37,7 +37,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
       path != pluginPaths.end(); ++path) {
     Debug(
         "Looking for plugin " << pluginName << " in " <<
-        path->native_directory_string()
+        path->directory_string()
       );
     list<boost::filesystem::path> candidates =
       fileUtils_findMatches(*path, pluginName);
@@ -49,7 +49,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           // We should have found a directory, and we want to open the module
           // therein
           boost::filesystem::path& candidate = candidates.front();
-          String fullPluginName = candidate.leaf();
+          String fullPluginName = boost::filesystem::basename(candidate.leaf());
 #ifdef __GNUC__
           boost::filesystem::path module =
             candidate / (fullPluginName + ".la");
@@ -79,18 +79,18 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           }
 #else
           //Opens the plugin.
-          boost::filesystem::path module =
-            candidate / (fullPluginName + ".dll");
+          boost::filesystem::path module = candidate;
           //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
           /** \bug This should work for UNICODE filenames. */
           HMODULE moduleHandle =
-            LoadLibraryA(module.native_file_string().c_str());
+            LoadLibraryA(module.file_string().c_str());
           //Error handling for the above.
           if(moduleHandle == NULL) {
             char buffer[33];
-            _itoa_s(GetLastError(), buffer, 33,2);
+            _itoa_s(GetLastError(), buffer, 33,10);
             String error =
-              "LoadLibrary() failed. Error value: " + String(buffer);
+              "LoadLibrary() failed. Error value: " + String(buffer)+
+              "\nString Searched for: "+module.file_string();
             throw PluginExn(error);
           }
           
@@ -101,8 +101,8 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           if(symbol==NULL)
           {
             char buffer[33];
-            _itoa_s(GetLastError(), buffer, 33,2);
-            String error = "GetProcAddress() on "+symbolName+" in " + module.directory_string()+
+            _itoa_s(GetLastError(), buffer, 33,10);
+            String error = "GetProcAddress() on "+symbolName+" in " + candidate.directory_string()+
               " failed. Error value: " + String(buffer);
             throw PluginExn(error);
           }

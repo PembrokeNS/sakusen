@@ -536,9 +536,9 @@ void Server::serve()
         newConnection->setNonBlocking(true);
         timeval timeout;
         timeUtils_getTime(&timeout);
-        /** \todo We use a straight one second timeout.  It should be
+        /** \todo We use a straight five second timeout.  It should be
          * user-specifiable */
-        timeout += MICRO;
+        timeout += 5*MICRO;
         newConnections.push_back(
             pair<Socket::Ptr, timeval>(newConnection, timeout)
           );

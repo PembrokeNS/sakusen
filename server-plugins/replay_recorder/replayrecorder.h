@@ -6,6 +6,13 @@
 #include "optioncallback.h"
 #include "clientid.h"
 
+//Exporting functions. This should never be an import library, so I do not use dllimport.
+#ifdef _MSC_VER
+    #define REPLAY_RECORDER_API __declspec(dllexport)
+#else
+    #define REPLAY_RECORDER_API
+#endif 
+
 namespace sakusen {
 namespace server {
 namespace plugins {
