@@ -30,7 +30,9 @@ class OArchive;
  */
 template<typename TInteger, typename TDerived>
 class IdBase {
+#ifndef SWIG
   BOOST_STATIC_ASSERT((std::numeric_limits<TInteger>::is_integer));
+#endif
   friend class IArchive;
   friend class OArchive;
   public:

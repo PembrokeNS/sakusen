@@ -3,6 +3,7 @@
 %include "std_string.i"
 %include "std_vector.i"
 %include "stdint.i"
+%include "std_except.i"
 
 #ifdef SWIGPERL
 #define BINDING_NOOVERLOAD
@@ -177,4 +178,141 @@ typedef uint8 PlayerID;
 /* we shouldn't need to call any of the functions herein */
 %import "playertemplate.h"
 %import "ordertype.h"
+
+
+/* dependencies of libsakusen-comms */
+%include "buffer.h"
+%{
+#include "buffer.h"
+%}
+%include "idbase.h"
+%{
+#include "idbase.h"
+%}
+namespace sakusen{
+class ClientId;
+%template(ClientIdBase) IdBase<uint8, ClientId >;
+class PlayerId;
+%template(PlayerIdBase) IdBase<uint8, PlayerId >;
+class UnitId;
+%template(UnitIdBase) IdBase<uint32, UnitId >;
+class SensorReturnsId;
+%template(SensorReturnsIdBase) IdBase<uint32, SensorReturnsId >;
+class ClientBallisticId;
+%template(ClientBallisticIdBase) IdBase<uint32, ClientBallisticId >;
+}
+%include "clientid.h"
+%{
+#include "clientid.h"
+%}
+
+%include "playerid.h"
+%{
+#include "playerid.h"
+%}
+%include "image.h"
+%{
+#include "image.h"
+%}
+%include "writer.h"
+%{
+#include "writer.h"
+%}
+%include "resourceinterface.h"
+%{
+#include "resourceinterface.h"
+%}
+%include "deserializationcontext.h"
+%{
+#include "deserializationcontext.h"
+%}
+%include "iheightfield.h"
+%{
+#include "iheightfield.h"
+%}
+%include "heightfield.h"
+%{
+#include "heightfield.h"
+%}
+%include "updatetype.h"
+%{
+#include "updatetype.h"
+%}
+%include "unitid.h"
+%{
+#include "unitid.h"
+%}
+%include "changeownerreason.h"
+%{
+#include "changeownerreason.h"
+%}
+%include "iunittypedata.h"
+%{
+#include "iunittypedata.h"
+%}
+%include "unittypedata.h"
+%{
+#include "unittypedata.h"
+%}
+%include "weapontype.h"
+%{
+#include "weapontype.h"
+%}
+%include "unittype.h"
+%{
+#include "unittype.h"
+%}
+%include "orientation.h"
+%{
+#include "orientation.h"
+%}
+%include "weapontargettype.h"
+%{
+#include "weapontargettype.h"
+%}
+%include "weaponstatus.h"
+%{
+#include "weaponstatus.h"
+%}
+%include "iunitstatus.h"
+%{
+#include "iunitstatus.h"
+%}
+%include "unitstatus.h"
+%{
+#include "unitstatus.h"
+%}
+%include "icompleteunit.h"
+%{
+#include "icompleteunit.h"
+%}
+%include "completeunit.h"
+%{
+#include "completeunit.h"
+%}
+%include "sensorreturnsid.h"
+%{
+#include "sensorreturnsid.h"
+%}
+%include "sensorreturns.h"
+%{
+#include "sensorreturns.h"
+%}
+%include "clientballisticid.h"
+%{
+#include "clientballisticid.h"
+%}
+%include "updatedata.h"
+%{
+#include "updatedata.h"
+%}
+%include "update.h"
+%{
+#include "update.h"
+%}
+%include "ordermessage.h"
+%{
+#include "ordermessage.h"
+%}
+
 
