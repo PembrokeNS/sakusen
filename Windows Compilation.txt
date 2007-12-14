@@ -2,16 +2,20 @@ To Compile and Run Sakusen for windows, do the following:
 
 0. Download an svn copy. I assume you have already done this to be reading this file.
 1. Download and install VC 2005 (Express or otherwise), the Platform SDK and the DirectX SDK (note: depending on the state of the source code, the last two may or may not be necessary. DirectX is probably not necessary at this point). The file "Installing VC Express" in this directory may be useful here.
-2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost library and include directories to your VC++ include and library paths. These can be altered in the Projects and Solutions section in the Options dialog box.
-3. Compile and install STLPort. This can be done by running "externals\STLport\build\lib\configure.bat -c msvc8" and then following the instructions. You must execute *both* commands it instructs you to. The version of STLPort used should be at least 5. You do not need the STLport IOStreams library. You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
-4. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 Place libpng in externals\libpng and zlib in externals\zlib
-5. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here: http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
+2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost library and include directories to your VC++ include and library paths. These can be altered in the Projects and Solutions section in the Options dialog box. TODO: The Boost filesystem library is currently cockeyed.
+3. Download, Compile and install STLPort. First, go to stlport.sourceforge.net and download the source. STlport 5.1 or greater is recommended. Extract the source to "externals\stlport".
+Run "C:\program files\microsoft visual studio 8\VC\bin\vcvars32.bat" to set the visual studio variables.
+Run "externals\STLport\build\lib\configure.bat -c msvc8" and then following the instructions, which will be "nmake /fmsvc.mak" and "nmake /fmsvc.mak install"You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
+4. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 sources.
+Place libpng in externals\libpng and zlib in externals\zlib
+5. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
+http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
 C:\GTK\include\pango-1.0
 C:\GTK\include\glib-2.0
 C:\GTK\lib\glib-2.0\include
 C:\GTK\include\cairo
 and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
-6. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here). 
+6. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
 7. To actually "play" Sakusen you must:
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
      i)Moves the requisite dlls into the same directory as your binaries.
