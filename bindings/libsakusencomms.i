@@ -1,9 +1,10 @@
 %module sakusencomms
 %naturalvar;
+%feature("autodoc","1");
 %include "cmalloc.i"
 %include "cdata.i"
 %import "libsakusen.i"
-%malloc(void)
+%malloc(void);
 #define LIBSAKUSEN_API
 
 /* libsakusen-comms */
@@ -12,6 +13,7 @@
 #include "libsakusen-comms-global.h"
 %}
 
+%ignore sakusen::comms::operator<<(std::ostream& output, MessageType type);
 %include "messagetype.h"
 %{
 #include "messagetype.h"
@@ -32,13 +34,13 @@
 #include "timeutils.h"
 %}
 
-namespace boost {
+/*namespace boost {
 template<class T> class shared_ptr{
 public:
 T* get() const;
 T* operator-> () const;
 };
-}
+}*/
 namespace sakusen{
 namespace comms{
 class Socket;

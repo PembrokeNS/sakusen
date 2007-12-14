@@ -41,7 +41,7 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(wildcard $(top_srcdir)libsakusen/*.h)
 	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusencomms.cpp: $(top_srcdir)/bindings/libsakusencomms.i \
+sakusencomms.cpp: $(top_srcdir)/bindings/libsakusencomms.i $(top_srcdir)/bindings/libsakusen.i \
 		$(wildcard $(top_srcdir)libsakusen/comms/*.h)
 	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
 

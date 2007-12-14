@@ -1,9 +1,11 @@
 %module sakusen
 %naturalvar;
+%feature("autodoc","1");
 %include "std_string.i"
 %include "std_vector.i"
 %include "stdint.i"
 %include "std_except.i"
+%include "carrays.i"
 namespace boost {
 template<class T> class shared_ptr{
 public:
@@ -72,6 +74,7 @@ $VERSION = 0.01;
 #include "libsakusen-global.h"
 %}
 %include "intmunger.h"
+%array_functions(uint8,uint8);
 /* tiny files */
 %include "angle.h"
 %include "revision.h"
