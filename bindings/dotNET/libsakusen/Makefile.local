@@ -25,7 +25,7 @@ sakusen.o: sakusen.cpp
 # we just assume it's including all of them
 sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(wildcard $(top_srcdir)libsakusen/*.h)
-	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen $<
+	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
 sakusen.dll: sakusen.cpp $(wildcard *.cs)
 	mcs -checked+ -out:$@ -recurse:'*.cs' -target:library

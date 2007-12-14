@@ -1,6 +1,9 @@
 %module sakusencomms
 %naturalvar;
+%include "cmalloc.i"
+%include "cdata.i"
 %import "libsakusen.i"
+%malloc(void)
 #define LIBSAKUSEN_API
 
 /* libsakusen-comms */
@@ -29,6 +32,19 @@
 #include "timeutils.h"
 %}
 
+namespace boost {
+template<class T> class shared_ptr{
+public:
+T* get() const;
+T* operator-> () const;
+};
+}
+namespace sakusen{
+namespace comms{
+class Socket;
+%template(Ptr) ::boost::shared_ptr<Socket>;
+}
+}
 %include "socket.h"
 %{
 #include "socket.h"

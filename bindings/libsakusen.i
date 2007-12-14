@@ -4,6 +4,13 @@
 %include "std_vector.i"
 %include "stdint.i"
 %include "std_except.i"
+namespace boost {
+template<class T> class shared_ptr{
+public:
+T* get() const;
+T* operator-> () const;
+};
+}
 
 #ifdef SWIGPERL
 #define BINDING_NOOVERLOAD
@@ -58,7 +65,12 @@ $VERSION = 0.01;
 
 #define LIBSAKUSEN_API
 
-%import "libsakusen-global.h"
+%ignore debugStream;
+%ignore errorStream;
+%include "libsakusen-global.h"
+%{
+#include "libsakusen-global.h"
+%}
 %include "intmunger.h"
 /* tiny files */
 %include "angle.h"
@@ -107,7 +119,15 @@ namespace sakusen {
 
 /* temporary */
 %import "iarchive.h"
-%import "oarchive.h"
+%import "boost/shared_array.hpp"
+%include "buffer.h"
+%{
+#include "buffer.h"
+%}
+%include "oarchive.h"
+%{
+#include "oarchive.h"
+%}
 %import "ref.h"
 %import "bounded.h"
 %{
@@ -181,10 +201,6 @@ typedef uint8 PlayerID;
 
 
 /* dependencies of libsakusen-comms */
-%include "buffer.h"
-%{
-#include "buffer.h"
-%}
 %include "idbase.h"
 %{
 #include "idbase.h"
