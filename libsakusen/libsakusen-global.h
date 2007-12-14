@@ -36,6 +36,11 @@
   /*4275: This warning is about exported classes having non-exported classes as a base.
    * Mostly to do with boost libraries. */
   #pragma warning(disable: 4715 4345 4275 4251)
+  #ifdef _DEBUG
+        #pragma warning(disable:4503)  
+   //This warning is about exceeding the limit of decorated name lengths. 
+   //Checked iterator Stlport does this a lot.
+  #endif
   /* 4345 is a warning about a change from VS 2003. We don't care. 
    * 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */
