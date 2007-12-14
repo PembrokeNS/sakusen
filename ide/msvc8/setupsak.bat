@@ -3,17 +3,12 @@ echo USAGE: To setup a debug build use "setupsak D"
 if /I "%1" EQU "D" (set folder=Debug) else (set folder=Release)
 if /I "%1" EQU "D" set d=d 
 
-REM Copy dlls across.
-if EXIST ".\%folder%\pcre3.dll" (echo pcre3.dll already exists) else copy "C:\Program Files\GNUWin32\bin\pcre3.dll" ".\%folder%\pcre3.dll"
-if EXIST ".\%folder%\pcre3.dll" (echo SDL.dll already exists) else copy "..\..\externals\SDL\bin\SDL.dll" ".\%folder%\SDL.dll"
-
-REM Some shenanigans since two versions of STLPort seem to be around.
 if EXIST "..\..\externals\STlport\bin\stlport%d%.5.1.dll" if EXIST ".\%folder%\stlport%d%.5.1.dll" (echo stlport%d%.5.1.dll already exists) else copy "..\..\externals\STlport\bin\stlport%d%.5.1.dll" ".\%folder%\stlport%d%.5.1.dll"
-if EXIST "..\..\externals\STlport\bin\stlport%d%.5.0.dll" if EXIST ".\%folder%\stlport%d%.5.0.dll" (echo stlport%d%.5.0.dll already exists) else copy "..\..\externals\STlport\bin\stlport%d%.5.0.dll" ".\%folder%\stlport%d%.5.0.dll"
 
 if /I "%d%" EQU "d" set e=gd
 REM Boost Filesystem libs.
-if EXIST "..\..\externals\boost\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" if EXIST ".\%folder%\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" (echo boost_filesystem-vc80-mt-%e%p-1_34_1.dll already exists) else copy "..\..\externals\boost\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" ".\%folder%\boost_filesystem-vc80-mt-%e%p-1_34_1.dll"
+REM Not necessary. I think. This is all buggered up at the moment anyway.
+REM if EXIST "..\..\externals\boost\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" if EXIST ".\%folder%\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" (echo boost_filesystem-vc80-mt-%e%p-1_34_1.dll already exists) else copy "..\..\externals\boost\boost_filesystem-vc80-mt-%e%p-1_34_1.dll" ".\%folder%\boost_filesystem-vc80-mt-%e%p-1_34_1.dll"
 
 REM Execute libsak-res-test if not already.
 if EXIST "%AppData%\.sakusen\data\universe" (echo libsak-res-test already run) else ".\%folder%\libsakusen-resources-test"

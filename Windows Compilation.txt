@@ -4,8 +4,7 @@ To Compile and Run Sakusen for windows, do the following:
 1. Download and install VC 2005 (Express or otherwise), the Platform SDK and the DirectX SDK (note: depending on the state of the source code, the last two may or may not be necessary. DirectX is probably not necessary at this point). The file "Installing VC Express" in this directory may be useful here.
 2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost library and include directories to your VC++ include and library paths. These can be altered in the Projects and Solutions section in the Options dialog box. TODO: The Boost filesystem library is currently cockeyed.
 3. Download, Compile and install STLPort. First, go to stlport.sourceforge.net and download the source. STlport 5.1 or greater is recommended. Extract the source to "externals\stlport".
-Run "C:\program files\microsoft visual studio 8\VC\bin\vcvars32.bat" to set the visual studio variables.
-Run "externals\STLport\build\lib\configure.bat -c msvc8" and then following the instructions, which will be "nmake /fmsvc.mak" and "nmake /fmsvc.mak install"You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
+Run "externals\stlport\buildstlport.bat" You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
 4. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 sources.
 Place libpng in externals\libpng and zlib in externals\zlib
 5. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
@@ -21,7 +20,7 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
      i)Moves the requisite dlls into the same directory as your binaries.
      ii)Runs libsakusen-resources-test to generate the universe if this hasn't already been done.
      iii)Moves tedomari\doc\user\ui.conf and config into %AppData%\.sakusen\tedomari\
-   b) Compress (either zip or tar will do) data\universe\testsrc.dir\cannon.cpp and cannon.h into one file, rename it testsrc.sakusensource and move it to %AppData%\.sakusen\data\universe
+   b) Compress (either zip or tar will do) data\universe\testsrc.dir\cannon.cpp and cannon.h into one file, rename it testsrc.sakusensource and move it to %AppData%\.sakusen\data\universe\test
    c) Run fuseki.
    d) Invoke tedomari with tedomari -j "tcp|localhost"
    e) If something bad happens, contact me. It's almost certainly a bug.
