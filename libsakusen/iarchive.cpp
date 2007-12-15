@@ -95,17 +95,18 @@ IArchive& IArchive::operator>>(sint32& i)
 
 IArchive& IArchive::operator>>(uint64& i)
 {
-  assertLength(sizeof(uint64));
-  i = ntohl(*reinterpret_cast<const uint64*>(pos));
-  advance(sizeof(uint64));
+  uint32 top;
+  uint32 bottom;
+  *this >> top >> bottom;
+  i = (uint64(top) << 32) | bottom;
   return *this;
 }
 
 IArchive& IArchive::operator>>(sint64& i)
 {
-  assertLength(sizeof(sint64));
-  i = ntohl(*reinterpret_cast<const sint64*>(pos));
-  advance(sizeof(sint64));
+  uint64 j;
+  *this >> j;
+  i=j;
   return *this;
 }
 
