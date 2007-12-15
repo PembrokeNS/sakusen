@@ -254,18 +254,18 @@ void runClient(
   /** \todo Allow for connecting elsewhere, or not connecting at all at once */
   String socketAddress;
   
-#ifdef DISABLE_UNIX_SOCKETS
   socketAddress = options.joinAddress;
   if (socketAddress.empty()) {
+#ifdef DISABLE_UNIX_SOCKETS
     cout << "You must provide an address for joining with --join" << endl;
     exit(EXIT_FAILURE);
-  }
 #else
-  /* Use default socket */
-  socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
-    (homePath / CONFIG_SUBDIR / SOCKET_SUBDIR / "fuseki-socket").
-    native_file_string();
+    /* Use default socket */
+    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
+      (homePath / CONFIG_SUBDIR / SOCKET_SUBDIR / "fuseki-socket").
+      native_file_string();
 #endif
+  }
 
   /* Construct the path to the history file */
   boost::filesystem::path historyPath = configPath / "history";
