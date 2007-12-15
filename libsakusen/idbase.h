@@ -1,8 +1,6 @@
 #ifndef IDBASE_H
 #define IDBASE_H
 
-#include <boost/static_assert.hpp>
-
 #include "gnu_extensions.h"
 #include "stringutils.h"
 
@@ -30,9 +28,7 @@ class OArchive;
  */
 template<typename TInteger, typename TDerived>
 class IdBase {
-#ifndef SWIG
-  BOOST_STATIC_ASSERT((std::numeric_limits<TInteger>::is_integer));
-#endif
+  SAKUSEN_STATIC_ASSERT((std::numeric_limits<TInteger>::is_integer));
   friend class IArchive;
   friend class OArchive;
   public:
