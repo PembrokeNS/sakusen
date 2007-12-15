@@ -104,6 +104,7 @@ check_for_prog perl
 check_for_prog python python-config
 check_for_prog mcs
 #check_for_prog something_that_doesnt_exist
+check_for_lib boost boost_filesystem boost/filesystem/path.hpp
 check_for_lib readline readline readline/readline.h
 check_for_lib SDL SDL SDL/SDL.h
 # Would like to check for pangocairo library relly, but don't know what
@@ -118,7 +119,7 @@ check_for_lib png png png.h
 check_for_lib avahiclient avahi-client avahi-client/client.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
-if ! enable_component EVERYTHING pcrecpp mhash png
+if ! enable_component EVERYTHING pcrecpp mhash png boost
 then
   printf 'Sorry, that component is critical.  Aborting.\n'
   rm "${TARGET}"
