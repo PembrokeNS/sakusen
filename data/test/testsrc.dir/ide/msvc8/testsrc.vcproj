@@ -27,7 +27,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Moving dll to .sakusen"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;&#x0D;&#x0A;"
 				Outputs="testsrc.sakusenmodule"
 			/>
 			<Tool
@@ -105,7 +105,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Moving dll to .sakusen"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;&#x0D;&#x0A;"
 				Outputs="testsrc.sakusenmodule"
 			/>
 			<Tool

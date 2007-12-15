@@ -253,12 +253,12 @@ FileResourceInterface::internalSymbolSearch(
       /** \todo runtime compilation of modules */
       error = "Source file "+sourceSakPath+
         " found.\nCorresponding "
-        "module "+moduleSakPath+"*"
+        "module "+moduleSakPath+".dll/.la"
         " not found; runtime compiling not yet implemented.\n"
         "If you have already compiled this module from the source, try moving "
         "it to the right place.  If the source is at "
         "$dataroot/foo/bar.sakusensource then the module shoule be at "
-        "$dataroot/module/foo/bar.sakusenmodule.la";
+        "$dataroot/module/foo/bar.sakusenmodule.dll/.la";
     }
     return boost::make_tuple<void*>(NULL, result);
   }
