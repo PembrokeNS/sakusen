@@ -121,89 +121,29 @@ namespace sakusen {
 }
 
 /* temporary */
-%import "iarchive.h"
 %import "boost/shared_array.hpp"
+%template(sharedarrayuint8) boost::shared_array<uint8>;
 %include "buffer.h"
 %{
 #include "buffer.h"
+%}
+%include "iarchive.h"
+%{
+#include "iarchive.h"
 %}
 %include "oarchive.h"
 %{
 #include "oarchive.h"
 %}
 %import "ref.h"
-%import "bounded.h"
-%{
-#include "isensorreturns.h"
-%}
-%import "isensorreturns.h"
-
-%include "hitpoints.h"
-%{
-#include "hitpoints.h"
-%}
-
-%include "rectangle.h"
-%{
-#include "rectangle.h"
-%}
-namespace sakusen {
-  %extend Rectangle {
-    %template(contains) contains<sint32>;
-  }
-  %template(SRectangle32) Rectangle<sint32>;
-}
-
 %include "box.h"
 %{
 #include "box.h"
 %}
-%template(SBox32) sakusen::Box<sint32>;
-
-%include "ray.h"
+%include "bounded.h"
 %{
-#include "ray.h"
+#include "bounded.h"
 %}
-
-%include "quadratic.h"
-%{
-#include "quadratic.h"
-%}
-
-/* in lieu of including playerid.h */
-typedef uint8 PlayerID;
-
-%include "regiontype.h"
-%include "region.h"
-%include "sphereregion.h"
-%include "rectangleregion.h"
-%{
-#include "region.h"
-#include "region-methods.h"
-#include "sphereregion.h"
-#include "rectangleregion.h"
-%}
-%template(SRegion32) sakusen::Region<sint32>;
-%template(SSphereRegion32) sakusen::SphereRegion<sint32>;
-%template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
-
-/* we shouldn't need to call any of the functions herein */
-%import "perception.h"
-%import "sensorreturn.h"
-%import "eachsensorreturn.h"
-
-%include "visibility.h"
-#{
-#include "perception.h"
-#include "visibility.h"
-#}
-
-/* we shouldn't need to call any of the functions herein */
-%import "playertemplate.h"
-%import "ordertype.h"
-
-
-/* dependencies of libsakusen-comms */
 %include "idbase.h"
 %{
 #include "idbase.h"
@@ -220,14 +160,43 @@ class SensorReturnsId;
 class ClientBallisticId;
 %template(ClientBallisticIdBase) IdBase<uint32, ClientBallisticId >;
 }
-%include "clientid.h"
+%include "sensorreturnsid.h"
 %{
-#include "clientid.h"
+#include "sensorreturnsid.h"
+%}
+%include "perception.h"
+%{
+#include "perception.h"
+%}
+%include "regiontype.h"
+%include "region.h"
+%include "sphereregion.h"
+%include "rectangleregion.h"
+%{
+#include "region.h"
+#include "region-methods.h"
+#include "sphereregion.h"
+#include "rectangleregion.h"
 %}
 
-%include "playerid.h"
+%include "rectangle.h"
 %{
-#include "playerid.h"
+#include "rectangle.h"
+%}
+namespace sakusen {
+  %extend Rectangle {
+    %template(contains) contains<sint32>;
+  }
+  %template(SRectangle32) Rectangle<sint32>;
+}
+
+%include "hitpoints.h"
+%{
+#include "hitpoints.h"
+%}
+%include "isensorreturns.h"
+%{
+#include "isensorreturns.h"
 %}
 %include "image.h"
 %{
@@ -244,6 +213,68 @@ class ClientBallisticId;
 %include "deserializationcontext.h"
 %{
 #include "deserializationcontext.h"
+%}
+%include "sensorreturns.h"
+%{
+#include "sensorreturns.h"
+%}
+%include "sensorreturn.h"
+%{
+#include "sensorreturn.h"
+%}
+%include "eachsensorreturn.h"
+%{
+#include "eachsensorreturn.h"
+%}
+%include "visibility.h"
+#{
+#include "visibility.h"
+#}
+
+%include "iunittypedata.h"
+%{
+#include "iunittypedata.h"
+%}
+%include "unittypedata.h"
+%{
+#include "unittypedata.h"
+%}
+%include "icompleteunit.h"
+%{
+#include "icompleteunit.h"
+%}
+
+
+%template(SBox32) sakusen::Box<sint32>;
+
+%include "ray.h"
+%{
+#include "ray.h"
+%}
+
+%include "quadratic.h"
+%{
+#include "quadratic.h"
+%}
+
+%template(SRegion32) sakusen::Region<sint32>;
+%template(SSphereRegion32) sakusen::SphereRegion<sint32>;
+%template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
+
+/* we shouldn't need to call any of the functions herein */
+%import "playertemplate.h"
+%import "ordertype.h"
+
+
+/* dependencies of libsakusen-comms */
+%include "clientid.h"
+%{
+#include "clientid.h"
+%}
+
+%include "playerid.h"
+%{
+#include "playerid.h"
 %}
 %include "iheightfield.h"
 %{
@@ -264,14 +295,6 @@ class ClientBallisticId;
 %include "changeownerreason.h"
 %{
 #include "changeownerreason.h"
-%}
-%include "iunittypedata.h"
-%{
-#include "iunittypedata.h"
-%}
-%include "unittypedata.h"
-%{
-#include "unittypedata.h"
 %}
 %include "weapontype.h"
 %{
@@ -301,21 +324,9 @@ class ClientBallisticId;
 %{
 #include "unitstatus.h"
 %}
-%include "icompleteunit.h"
-%{
-#include "icompleteunit.h"
-%}
 %include "completeunit.h"
 %{
 #include "completeunit.h"
-%}
-%include "sensorreturnsid.h"
-%{
-#include "sensorreturnsid.h"
-%}
-%include "sensorreturns.h"
-%{
-#include "sensorreturns.h"
 %}
 %include "clientballisticid.h"
 %{

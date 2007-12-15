@@ -93,6 +93,22 @@ IArchive& IArchive::operator>>(sint32& i)
   return *this;
 }
 
+IArchive& IArchive::operator>>(uint64& i)
+{
+  assertLength(sizeof(uint64));
+  i = ntohl(*reinterpret_cast<const uint64*>(pos));
+  advance(sizeof(uint64));
+  return *this;
+}
+
+IArchive& IArchive::operator>>(sint64& i)
+{
+  assertLength(sizeof(sint64));
+  i = ntohl(*reinterpret_cast<const sint64*>(pos));
+  advance(sizeof(sint64));
+  return *this;
+}
+
 IArchive& IArchive::operator>>(double& d)
 {
   /** \bug There's no platform-independent way to
