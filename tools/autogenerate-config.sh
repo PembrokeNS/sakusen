@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script to check for existence of a few executables, and disable components as
 # necessary.  Note that this is *not* trying to aid portability.  Reinventing
