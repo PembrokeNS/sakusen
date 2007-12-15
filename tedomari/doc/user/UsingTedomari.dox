@@ -123,7 +123,7 @@ Now we can set the universe like we wanted to before:
 > s game:universe:name test/u
 >
 Server reported that value of ':game:universe:name' was:
-tset/u
+test/u
 Server reported that value of ':game:universe:name' was:
 test/universe
 Server reported that value of ':game:universe:hash' was:
