@@ -106,6 +106,14 @@
 
 #endif
 
+/* Make our own static assert macro so that it can do nothing for swig */
+#ifdef SWIG
+  #define SAKUSEN_STATIC_ASSERT(a)
+#else
+  #include <boost/static_assert.hpp>
+  #define SAKUSEN_STATIC_ASSERT(a) BOOST_STATIC_ASSERT(a)
+#endif
+
 /* CONFIG_SUBDIR is the subdirectory of the users home directory where general
  * sakusen stuff happens. */
 #define CONFIG_SUBDIR ".sakusen"

@@ -6,11 +6,16 @@
 #include "optioncallback.h"
 #include "clientid.h"
 
-//Exporting functions. This should never be an import library, so I do not use dllimport.
+/* Exporting functions. This should never be an import library,
+ * so need not use dllimport. */
 #ifdef _MSC_VER
-    #define REPLAY_RECORDER_API __declspec(dllexport)
+  #define REPLAY_RECORDER_API __declspec(dllexport)
 #else
+  #if (__GNUC__ >= 4)
+    #define REPLAY_RECORDER_API __attribute__ ((visibility ("default")))
+  #else
     #define REPLAY_RECORDER_API
+  #endif
 #endif 
 
 namespace sakusen {
