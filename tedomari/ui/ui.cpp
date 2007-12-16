@@ -268,9 +268,8 @@ void UI::executeCommand(std::list<String>& tokens)
 {
   for (list<String>::iterator token = tokens.begin(); token != tokens.end();
       ++token) {
-    assert(!token->empty());
     /* Strip quotes from token */
-    if ((*token)[0] == '\'') {
+    if (!token->empty() && (*token)[0] == '\'') {
       token->erase(token->begin());
       assert(!token->empty());
       assert(*(token->end()-1) == '\'');
