@@ -19,6 +19,12 @@ While making, you will probably see warnings like this one:
 Don't worry about them.  They should be fixed automatically, and not appear
 next time you make.
 
+If you build all or part of sakusen and then edit config.mk then to be sure of
+the changes affecting everything they should you must 'make clean' before you
+'make' again.  The equivalent thing does not happen by default because with
+inside knowledge you can save yourself a lot of time by only 'make clean'ing
+the parts of the build that are affected by the change to config.mk.
+
 'make test' will run some tests which should help to ensure that everything is
 working properly.  As part of these tests, it will generate some sample game
 data.  At time of writing, this is the only game data that has been created, so
