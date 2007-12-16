@@ -1,6 +1,7 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
 INCLUDE := -I$(top_srcdir)libsakusen
+#SUBDIRS := comms
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
