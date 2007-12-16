@@ -72,6 +72,7 @@ struct Options {
     test(false),
     joinAddress(),
     autoJoin(true),
+    uiConfig(),
     help(false),
     version(false)
   {}
@@ -98,6 +99,8 @@ struct Options {
   String joinAddress;
   /** Whether to join automatically on startup */
   bool autoJoin;
+  /** File to read for UI config */
+  String uiConfig;
   /** Commands to be executed automatically upon joining */
   list<String> autoCommands;
   /** When set, tedomari prints a help message and exits */
@@ -218,7 +221,12 @@ void runTest(
     const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   ) {
-  boost::filesystem::path uiConfFilePath = configPath / "ui.conf";
+  boost::filesystem::path uiConfFilePath;
+  if (options.uiConfig.empty()) {
+    uiConfFilePath = configPath / "ui.conf";
+  } else {
+    uiConfFilePath = options.uiConfig;
+  }
   ResourceInterface::Ptr resourceInterface = FileResourceInterface::create(
       homePath / CONFIG_SUBDIR / DATA_SUBDIR, false
     );
@@ -247,7 +255,12 @@ void runClient(
     const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   ) {
-  boost::filesystem::path uiConfFilename = configPath / "ui.conf";
+  boost::filesystem::path uiConfFilePath;
+  if (options.uiConfig.empty()) {
+    uiConfFilePath = configPath / "ui.conf";
+  } else {
+    uiConfFilePath = options.uiConfig;
+  }
 
   /* For the moment we simply attempt to connect to a socket where fuseki puts
    * it. */
@@ -489,7 +502,7 @@ void runClient(
                 break;
               case command_resetUI:
                 if (ui != NULL) {
-                  ui = newUI(options, uiConfFilename, game);
+                  ui = newUI(options, uiConfFilePath, game);
                 }
                 break;
               case command_sleep:
@@ -532,7 +545,7 @@ void runClient(
       }
       /* Open or close UI appropriately */
       if (game->isStarted() && ui == NULL) {
-        ui = newUI(options, uiConfFilename, game);
+        ui = newUI(options, uiConfFilePath, game);
       }
       if (!game->isStarted() && ui != NULL) {
         ui.reset();
@@ -561,7 +574,7 @@ void usage() {
 "\n"
 #ifndef DISABLE_UNIX_SOCKETS
 " -a-, --no-abstract     Do not use the abstract unix socket namespace.\n"
-" -u-, --no-unix         Do not use any unix sockets.\n"
+" -x-, --no-unix         Do not use any unix sockets.\n"
 #endif
 " -e,  --evil            Try for a higher framerate.\n"
 " -l,  --history-length LENGTH\n"
@@ -574,6 +587,8 @@ void usage() {
 #endif
 " -j,  --join ADDRESS    Join server at sakusen-style address ADDRESS.\n"
 " -o-, --no-autojoin     Do not automatically try to join server.\n"
+" -u,  --ui-config FILE  Use FILE for UI configuration, instead of\n"
+"                        ~/.sakusen/tedomari/ui.conf\n"
 " -c,  --commands COMMAND;...\n"
 "                        Execute each COMMAND upon joining.\n"
 " -h,  --help            Display help and exit.\n"
@@ -595,7 +610,7 @@ Options getOptions(
 
 #ifndef DISABLE_UNIX_SOCKETS
   parser.addOption("abstract",       'a',  &results.abstract);
-  parser.addOption("unix",           'u',  &results.unixSockets);
+  parser.addOption("unix",           'x',  &results.unixSockets);
 #endif
   parser.addOption("evil",           'e',  &results.evil);
   parser.addOption("history-length", 'l',  &results.historyLength);
@@ -605,6 +620,7 @@ Options getOptions(
 #endif
   parser.addOption("join",           'j',  &results.joinAddress);
   parser.addOption("autojoin",       'o',  &results.autoJoin);
+  parser.addOption("ui-config",      'u',  &results.uiConfig);
   parser.addOption("commands",       'c',  &results.autoCommands, ';');
   parser.addOption("help",           'h',  &results.help);
   parser.addOption("version",        'V',  &results.version);
