@@ -28,7 +28,7 @@ sakusencomms.cpp: $(top_srcdir)bindings/libsakusencomms.i \
 	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
 
 sakusencomms.dll: sakusencomms.cpp $(wildcard *.cs) $(wildcard $(top_builddir)bindings/dotNet/libsakusen/*.cs)
-	mcs -checked+ -out:$@ -recurse:'*.cs' -recurse:'$(top_builddir)bindings/dotNet/libsakusen/*.cs' -target:library
+	mcs -checked+ -out:$@ -recurse:'*.cs' -lib:$(top_builddir)bindings/dotNET/libsakusen -r:sakusen -target:library
 
 .PHONY: all test clean
 
