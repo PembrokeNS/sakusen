@@ -103,6 +103,7 @@ check_for_prog swig
 check_for_prog perl
 check_for_prog python python-config
 check_for_prog mcs
+check_for_prog tcl tclsh
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost_filesystem boost/filesystem/path.hpp
 check_for_lib readline readline readline/readline.h
@@ -130,6 +131,7 @@ enable_component BINDINGS swig
 enable_component PERL_BINDINGS swig perl
 enable_component DOTNET_BINDINGS swig mcs
 enable_component PYTHON_BINDINGS swig python
+enable_component TCL_BINDINGS swig tcl
 enable_component UNIX_SOCKETS
 enable_component READLINE readline
 enable_component SDL SDL
