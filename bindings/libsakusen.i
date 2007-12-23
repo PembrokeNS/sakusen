@@ -24,18 +24,22 @@ $VERSION = 0.01;
 %rename(numify) *::operator uint32;
 #endif
 
+
+/*Make derived classes in different packages from their base classes work*/
+%typemap(csbody) SWIGTYPE %{
+  private HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal $csclassname(IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new HandleRef(this, cPtr);
+  }
+
+  public static HandleRef getCPtr($csclassname obj) {
+    return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
+  }
+%}
 #ifdef SWIGCSHARP
-/* Ignore load & store methods until Archive classes bound */
-%ignore *::load;
-%ignore *::loadNew;
-%ignore *::store;
-/* And some more ignores due to other unbound classes.  Hope to be gone in due
- * course */
-%ignore sakusen::SensorCapability::SensorCapability(IArchive&);
-%ignore sakusen::SensorCapability::updateReturn;
-%ignore sakusen::Sensors::Sensors(IArchive&);
-%ignore sakusen::Sensors::updateReturns;
-%ignore sakusen::Visibility::Visibility(IArchive&);
 
 /* Renames for wrapped operators.  Although C# does support operator
  * overloading, it doesn't work in the same way as C++'s, so for now we don't
@@ -59,6 +63,7 @@ $VERSION = 0.01;
 %ignore *::operator=;
 
 %ignore operator|(const GameObject&, const GameObject&);
+
 #endif
 
 /* General ignores to resolve ambiguities caused by SWIG's collapsing of types

@@ -7,6 +7,19 @@
 %malloc(void);
 #define LIBSAKUSEN_API
 
+#ifdef SWIGCSHARP
+/*This was broken in C# - no idea why. John? They're all the same error - I suspect pinvoke lulz */
+%ignore sakusen::comms::MessageData::getBuffer;
+%ignore sakusen::comms::AcceptMessageData::getId;
+%ignore sakusen::comms::ExtensionMessageData::getData;
+%ignore sakusen::comms::GameStartMessageData::getPlayerId;
+%ignore sakusen::comms::GameStartMessageData::getTopRight;
+%ignore sakusen::comms::GameStartMessageData::getBottomLeft;
+%ignore sakusen::comms::GameStartMessageData::getHeightfield;
+%ignore sakusen::comms::Message::getBuffer;
+%ignore sakusen::comms::OrderMessageData::getOrderMessage;
+#endif
+
 /* libsakusen-comms */
 %include "libsakusen-comms-global.h"
 %{
