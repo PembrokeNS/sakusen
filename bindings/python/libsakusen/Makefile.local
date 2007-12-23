@@ -23,11 +23,11 @@ clean:
 	cp .libs/$@ $@
 
 _sakusen.la: sakusen.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
 _sakusencomms.la: sakusencomms.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
                 sakusencomms.lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
 
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have

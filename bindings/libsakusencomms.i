@@ -34,13 +34,6 @@
 #include "timeutils.h"
 %}
 
-/*namespace boost {
-template<class T> class shared_ptr{
-public:
-T* get() const;
-T* operator-> () const;
-};
-}*/
 namespace sakusen{
 namespace comms{
 class Socket;
@@ -51,3 +44,12 @@ class Socket;
 %{
 #include "socket.h"
 %}
+%include "unixdatagramsocket.h"
+%{
+#include "unixdatagramsocket.h"
+%}
+%include "unixdatagramlisteningsocket.h"
+%{
+#include "unixdatagramlisteningsocket.h"
+%}
+

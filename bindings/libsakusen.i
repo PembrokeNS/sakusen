@@ -9,6 +9,7 @@
 namespace boost {
 template<class T> class shared_ptr{
 public:
+shared_ptr(shared_ptr<T> const &);
 T* get() const;
 T* operator-> () const;
 };
