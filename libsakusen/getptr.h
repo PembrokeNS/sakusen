@@ -9,7 +9,7 @@ namespace sakusen {
 template<typename T>
 struct GetPtr : boost::static_visitor<T*> {
   template<typename P>
-  T* operator()(const P& p) const { return boost::get_pointer(p); }
+  T* operator()(const P& p) const { return /*boost::*/get_pointer(p); }
 
   T* operator()(T* p) const { return p; }
 };

@@ -1,6 +1,10 @@
 #ifndef PTRHASH_H
 #define PTRHASH_H
 
+//need definition of size_t
+#include <cstring>
+
+
 namespace sakusen {
 
 template<typename T>

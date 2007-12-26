@@ -1,6 +1,8 @@
 #ifndef CLIENTBALLISTICID_H
 #define CLIENTBALLISTICID_H
 
+#include "idbase.h"
+
 namespace sakusen {
 
 /** \brief Id for a particular player's perspective of a ballictic.

@@ -2,6 +2,7 @@
 #define HITPOINTS_H
 
 #include "oarchive.h"
+#include "iarchive.h"
 
 namespace sakusen {
 
