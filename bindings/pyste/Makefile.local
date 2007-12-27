@@ -1,0 +1,27 @@
+NO_AUTO_COMPILING := yes
+INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
+LIBS := -lboost_python
+
+all-nonrecursive: libsakusen.so libsakusencomms.so
+
+%.so: %.la
+	cp .libs/$@ $@
+
+libsakusencomms.la: libsakusencomms.lo
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib $(LIBS) \
+		$< $(top_builddir)libsakusen/libsakusen.la $(top_builddir)libsakusen/comms/libsakusen-comms.la
+
+libsakusen.la: libsakusen.lo
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib $(LIBS) \
+        	$< $(top_builddir)libsakusen/libsakusen.la
+
+%.lo: %.cpp
+	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ -Wall $<
+
+libsakusen.cpp: libsakusencomms.cpp
+
+libsakusencomms.cpp: $(wildcard $(top_srcdir)libsakusen/*.h) $(wildcard $(top_srcdir)libsakusen/comms/*.h)
+	python generate_code.py
+
+clean: 
+	-rm -rf .libs *.cpp *.lo *.la *.o named_tuple.py *.so

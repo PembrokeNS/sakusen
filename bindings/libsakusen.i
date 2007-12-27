@@ -83,7 +83,7 @@ $VERSION = 0.01;
 %array_functions(uint8,uint8);
 /* tiny files */
 %include "angle.h"
-%include "revision.h"
+/* Causes make clean to fail, though this is probably due to problems in makefiles %include "revision.h"*/
 %include "gameobject.h"
 %include "topology.h"
 %{

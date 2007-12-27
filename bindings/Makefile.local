@@ -12,6 +12,10 @@ ifeq ($(ENABLE_PYTHON_BINDINGS),yes)
 SUBDIRS := $(SUBDIRS) python
 endif
 
+ifeq ($(ENABLE_PYSTE_BINDINGS),yes)
+SUBDIRS :=$(SUBDIRS) pyste
+endif
+
 ifeq ($(ENABLE_TCL_BINDINGS),yes)
 SUBDIRS := $(SUBDIRS) tcl
 endif
