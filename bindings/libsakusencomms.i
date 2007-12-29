@@ -65,4 +65,20 @@ class Socket;
 %{
 #include "unixdatagramlisteningsocket.h"
 %}
+%{
+#include "time.h"
+%}
+struct timeval {
+     time_t      tv_sec;     /* seconds */
+     suseconds_t tv_usec;    /* microseconds */
+     };
+%extend timeval {
+        timeval(long s,long m){
+                timeval *t;
+                t=(timeval *)malloc(sizeof(timeval));
+                t->tv_sec=s;
+                t->tv_usec=m;
+                return t;
+                }
+        }
 
