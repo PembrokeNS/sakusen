@@ -26,9 +26,9 @@ mb.constructor(name="Message",arg_types=["::sakusen::IArchive &","::sakusen::Pla
 #mb.class_("IArchive").exclude()
 mb.namespace("sakusen").namespace("comms").exclude()
 
-mb.build_code_creator(module_name='libsakusen')
+mb.build_code_creator(module_name='sakusen')
 
-mb.write_module(os.path.join(os.path.abspath('.'),'libsakusen.cpp'))
+mb.write_module(os.path.join(os.path.abspath('.'),'sakusen.cpp'))
 
 mb=module_builder.module_builder_t(files=a,include_paths=["../../libsakusen","../../libsakusen/comms"],cache=c,cflags="-fxml-start=sakusen")
 
@@ -40,7 +40,7 @@ mb.member_function(name="accept",header_file=os.path.abspath("../../libsakusen/c
 #mb.class_("IArchive").exclude()
 mb.namespace("sakusen").already_exposed = True
 
-mb.build_code_creator(module_name='libsakusencomms')
+mb.build_code_creator(module_name='sakusencomms')
 
-mb.write_module(os.path.join(os.path.abspath('.'),'libsakusencomms.cpp'))
+mb.write_module(os.path.join(os.path.abspath('.'),'sakusencomms.cpp'))
 

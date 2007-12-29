@@ -1,0 +1,6 @@
+cache
+*.cpp
+*.lo
+*.o
+*.so
+named_tuple.py
