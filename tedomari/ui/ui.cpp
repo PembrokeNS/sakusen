@@ -30,6 +30,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
   currentModifiers(),
   expectingChars(false),
   commandEntry(false),
+  regexEntry(false),
   quit(false)
 {
   modes["normal"] = Mode::getNormal(this);
