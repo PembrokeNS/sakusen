@@ -206,7 +206,7 @@
    obj:/lib/ld-2.6.so
 }
 {
-   lt_dlopen
+   dlopen
    Memcheck:Addr4
    obj:/lib/ld-2.6.1.so
    obj:/lib/ld-2.6.1.so
@@ -217,7 +217,7 @@
    fun:dlopen
 }
 {
-   lt_dlopen
+   dlopen
    Memcheck:Addr4
    obj:/lib/ld-2.6.1.so
    obj:/lib/ld-2.6.1.so
@@ -228,6 +228,49 @@
    obj:/lib/ld-2.6.1.so
    obj:/lib/libdl-2.6.1.so
    fun:dlopen
+}
+{
+   dlopen
+   Memcheck:Addr4
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   fun:dlopen
+}
+{
+   dlsym
+   Memcheck:Addr4
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libc-2.6.1.so
+   fun:_dl_sym
+   obj:/lib/libdl-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   fun:dlsym
+}
+{
+   More libld nonsense
+   Memcheck:Addr4
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libc-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libc-2.6.1.so
 }
 {
    libdl leak
@@ -273,5 +316,19 @@
    fun:dbus_message_iter_append_basic
    fun:dbus_message_new_error
    obj:/usr/lib/libdbus-1.so.3.2.0
+}
+{
+   Writing uninitialized values to video memory?
+   Memcheck:Param
+   write(buf)
+   obj:/lib/ld-2.6.1.so
+   fun:_X11TransWrite
+   obj:/usr/lib/libX11.so.6.2.0
+   fun:_XReply
+   fun:XSync
+   obj:/usr/lib/libSDL-1.2.so.0.11.0
+   obj:/usr/lib/libSDL-1.2.so.0.11.0
+   obj:/usr/lib/libSDL-1.2.so.0.11.0
+   fun:SDL_SetVideoMode
 }
 
