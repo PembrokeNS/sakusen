@@ -14,6 +14,8 @@ sakusencomms.la: sakusencomms.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
 		sakusencomms.lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
 
+%.cs: sakusencomms.cpp
+
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have
 # access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
 # etc.)
@@ -25,6 +27,7 @@ sakusencomms.o: sakusencomms.cpp
 # we just assume it's including all of them except revision.h
 sakusencomms.cpp: $(top_srcdir)bindings/libsakusencomms.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
+	-rm *.cs
 	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
 
 sakusencomms.dll: sakusencomms.cpp $(wildcard *.cs) $(wildcard $(top_builddir)bindings/dotNet/libsakusen/*.cs)
