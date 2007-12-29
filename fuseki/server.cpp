@@ -579,7 +579,8 @@ void Server::serve()
         } else {
           /* If we've reached the timeout for this connection, then delete it
            * */
-          if (conn->second > timeNow) {
+          if (conn->second < timeNow) {
+	    out << "Connection timed out, dropping\n";
             conn = newConnections.erase(conn);
           } else {
             ++conn;
