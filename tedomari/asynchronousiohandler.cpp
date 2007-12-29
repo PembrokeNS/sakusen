@@ -99,7 +99,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
           char buf[INPUT_BUFFER_LEN];
           /* Read what we can from the input file descriptor */
           try {
-            size_t bytesRead = fileUtils_read(infd, buf, INPUT_BUFFER_LEN);
+            size_t bytesRead = read(infd, buf, INPUT_BUFFER_LEN);
             /* Append what we've read to the input buffer */
             inputBuffer.append(buf, bytesRead);
           } catch (FileIOExn&) {
