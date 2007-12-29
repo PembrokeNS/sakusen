@@ -17,7 +17,8 @@ class TextBox : public Label {
         uint16 x, uint16 y, DockStyle ds, Region* region,
         const String& t, const Colour& foreCol, const Colour& backCol
       ) :
-      Label(x, y, ds, region, t, foreCol, backCol)
+      Label(x, y, ds, region, t, foreCol, backCol),
+      visible(false)
     {}
   private:
     bool visible;
