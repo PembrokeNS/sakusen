@@ -1,2 +1,5 @@
 SUBDIRS = libsakusen libsakusencomms
 
+all-recurse-libsakusencomms: all-recurse-libsakusen
+test-recurse-libsakusencomms: test-recurse-libsakusen
+
