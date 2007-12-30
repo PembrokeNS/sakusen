@@ -42,6 +42,26 @@ inline sint32 Heightfield::sampleToDexY(uint32 y) const {
   return world->getMap()->bottom() + y * xyResolution;
 }
 
+inline sint32 Heightfield::getApproxHeightAt(sint32 x, sint32 y) const {
+  return getHeightAtSample(
+      dexToSampleFloorX(x), dexToSampleFloorY(y)
+    );
+}
+
+/** \brief Get an approximation to the height of the heightfield at a
+ * given position.
+ *
+ * Given a position in space, returns an approximation to the
+ * height on the vertical line through that position, in dex.  This
+ * version is fast at the cost of accuracy; to get the exact height use
+ * getHeightAt.
+ *
+ * \note \c p.z is irrelevant.
+ */
+inline sint32 Heightfield::getApproxHeightAt(const Position& p) const {
+  return getApproxHeightAt(p.x, p.y);
+}
+
 }
 
 #endif // HEIGHTFIELD_METHODS_H
