@@ -218,20 +218,20 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
     }
     upperHeight = getHeightAtSample(xq, yq+1);
   } else {
-    lowerHeight = (xr * getHeightAtSample(xq+1, yq) +
-        (xyResolution - xr) * getHeightAtSample(xq, yq)) /
-      xyResolution;
+    lowerHeight = (sint32(xr) * getHeightAtSample(xq+1, yq) +
+        sint32(xyResolution - xr) * getHeightAtSample(xq, yq)) /
+      sint32(xyResolution);
     if (yr == 0) {
       return lowerHeight;
     }
-    upperHeight = (xr * getHeightAtSample(xq+1, yq+1) +
-        (xyResolution - xr) * getHeightAtSample(xq, yq+1)) /
-      xyResolution;
+    upperHeight = (sint32(xr) * getHeightAtSample(xq+1, yq+1) +
+        sint32(xyResolution - xr) * getHeightAtSample(xq, yq+1)) /
+      sint32(xyResolution);
   }
   /* And finally the interpolation in the y direction (the two are done
    * seperately for my sanity, and to reduce risk of overflow). */
-  return (yr * upperHeight + (xyResolution - yr) * lowerHeight) /
-    xyResolution;
+  return (sint32(yr) * upperHeight + sint32(xyResolution - yr) * lowerHeight) /
+    sint32(xyResolution);
 }
 
 /** \brief Finds the greatest height in a rectangular area
