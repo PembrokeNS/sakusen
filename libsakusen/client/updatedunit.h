@@ -1,6 +1,8 @@
 #ifndef UPDATEDUNIT_H
 #define UPDATEDUNIT_H
 
+#include "libsakusen-client-global.h"
+
 #include "completeunit.h"
 #include "updatedata.h"
 #include "unitorders.h"
@@ -8,10 +10,10 @@
 namespace sakusen {
 namespace client {
 
-/** \brief A player-owned ::Unit that can accept information about its orders
+/** \brief A player-owned Unit that can accept information about its orders
  * and status when they arrive over the network.
  */
-class UpdatedUnit : public CompleteUnit {
+class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
   private:
     UpdatedUnit();
   public:

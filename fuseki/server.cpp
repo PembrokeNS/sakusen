@@ -720,6 +720,8 @@ void Server::serve()
       if (map == NULL) {
         out << "Not ready because no map selected" << endl;
       } else {
+        /** \bug Can't cope with using fewer players than the maximum number
+         * */
         bool allPlayersReady = true;
         for (vector<Player>::iterator player = players.begin();
             player != players.end(); player++) {

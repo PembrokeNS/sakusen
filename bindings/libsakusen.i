@@ -290,6 +290,7 @@ namespace sakusen {
 %include "heightfield.h"
 %{
 #include "heightfield.h"
+#include "heightfield-methods.h"
 %}
 %include "updatetype.h"
 %{
@@ -330,6 +331,7 @@ namespace sakusen {
 %include "unitstatus.h"
 %{
 #include "unitstatus.h"
+#include "unitstatus-methods.h"
 %}
 %include "completeunit.h"
 %{

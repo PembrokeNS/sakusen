@@ -399,7 +399,13 @@ int main(/*int argc, char** argv*/)
     return EXIT_FAILURE;
   }
 
-  /* Now another map, but this time using a heightfield built from an image */
+  /* Now another one-or-two player map, but this time using a heightfield
+   * built from an image */
+  playerTemplates.pop_back();
+  playMode = MapPlayMode(2, 2, playerTemplates);
+  playModes.clear();
+  playModes.push_back(playMode);
+
   cout<< "Loading Image"<<endl;
   Image::Ptr image;
   String imagePath;

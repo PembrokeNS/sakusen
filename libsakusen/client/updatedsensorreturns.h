@@ -1,6 +1,8 @@
 #ifndef UPDATEDSENSORRETURNS_H
 #define UPDATEDSENSORRETURNS_H
 
+#include "libsakusen-client-global.h"
+
 namespace sakusen {
 namespace client {
 
@@ -11,7 +13,7 @@ namespace client {
  * sensors, but it also provides for updating that information as new
  * information is received from the server.
  */
-class UpdatedSensorReturns : public SensorReturns {
+class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
   private:
     UpdatedSensorReturns();
   public:
