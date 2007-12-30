@@ -21,6 +21,19 @@ class settingsItem:
 		else:
 			self.children=[]
 			self.data=self.value
+def receiveMessageOfType(socket, mtype):
+	while(True):
+		buf=uint8(BUFFER_LEN)
+		l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
+		i=IArchive(buf,l)
+		r=Message(i)
+		t=r.getType()
+		if(t==mtype):
+			return r
+		else:
+			unexpectedMessage(r)
+def unexpectedMessage(m):
+	print "Got unexpected message of type %d"%m.getType()
 
 def getSetting(s,setting):
 	d=GetSettingMessageData(str(setting))
@@ -28,14 +41,15 @@ def getSetting(s,setting):
 	d.thisown=False
 	s.send(m)
 	buf=uint8(BUFFER_LEN)
-	l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
-	i=IArchive(buf,l)
-	r=Message(i)
-	t=r.getType()
-	if(t==messageType_notifySetting):
-		return r.getNotifySettingData()
-	else:
-		raise Exception()
+	while(True):
+		l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
+		i=IArchive(buf,l)
+		r=Message(i)
+		t=r.getType()
+		if(t==messageType_notifySetting):
+			return r.getNotifySettingData()
+		else:
+			unexpectedMessage(r)
 
 class settingsTreeModel(QtCore.QAbstractItemModel):
 	def __init__(self,socket):
@@ -66,16 +80,17 @@ def join(addr):
 	d.thisown=False #m now owns d
 	s=Socket_newConnectionToAddress(addr)
 	s.send(m)
-	buf=uint8(BUFFER_LEN)
-	l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
-	i=IArchive(buf,l)
-	r=Message(i)
-	t=r.getType()
-	if(t==messageType_accept):
-#		print "about to return"
-		return s
-	else:
-		raise Exception()
+	while(True):
+		buf=uint8(BUFFER_LEN)
+		l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
+		i=IArchive(buf,l)
+		r=Message(i)
+		t=r.getType()
+		if(t==messageType_accept):
+#			print "about to return"
+			return s
+		else:
+			unexpectedMessage(r)
 app = QtGui.QApplication(sys.argv)
 window = QtGui.QDialog()
 uiold = Ui_connectDialog()
