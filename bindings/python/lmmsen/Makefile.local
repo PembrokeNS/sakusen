@@ -1,4 +1,0 @@
-NO_AUTO_COMPILING=yes
-all: settingsDialog.py connectDialog.py
-%.py: %.ui
-	pyuic4 $< -o $@

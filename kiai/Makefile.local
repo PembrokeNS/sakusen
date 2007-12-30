@@ -1,0 +1,10 @@
+NO_AUTO_COMPILING=yes
+all: settingsDialog.py connectDialog.py run-kiai-from-builddir.sh
+%.py: %.ui
+	pyuic4 $< -o $@
+run-kiai-from-builddir.sh:
+	echo '#!/bin/sh' > $@
+	echo "PYTHONPATH=$(top_builddir)bindings/python/libsakusen python kiai.py $$@" >> $@
+	-chmod a+x $@
+clean:
+	-rm -f settingsDialog.py connectDialog.py *.pyc run-kiai-from-builddir.sh

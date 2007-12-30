@@ -114,6 +114,7 @@ check_for_prog python python-config
 check_for_pyplusplus
 check_for_prog mcs
 check_for_prog tcl tclsh
+check_for_prog pyqt4 pyuic4
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost_filesystem boost/filesystem/path.hpp
 check_for_lib readline readline readline/readline.h
@@ -149,6 +150,7 @@ enable_component SDL SDL
 enable_component CAIRO cairo
 enable_component CONVERSION unicode
 enable_component AVAHI avahiclient
+enable_component KIAI pyqt4
 #enable_component IMPOSSIBLE_COMPONENT something_that_doesnt_exist
 
 printf 'BUILD_CXXFLAGS := $(BUILD_CFLAGS)\n' >> "${TARGET}"

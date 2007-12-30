@@ -17,6 +17,9 @@ SUBDIRS = \
 ifeq ($(ENABLE_BINDINGS),yes)
 SUBDIRS := $(SUBDIRS) bindings
 endif
+ifeq ($(ENABLE_KIAI),yes)
+SUBDIRS := $(SUBDIRS) kiai
+endif
 
 all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings: all-recurse-libsakusen
 
