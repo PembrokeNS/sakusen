@@ -56,9 +56,9 @@ function check_for_pyplusplus
 {
   if python -c "import pyplusplus"
   then
-    eval pyplusplus_exists=yes
+    pyplusplus_exists=yes
   else
-    eval pyplusplus_exists=no
+    pyplusplus_exists=no
   fi
 }
 
