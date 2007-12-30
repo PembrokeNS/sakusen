@@ -32,6 +32,13 @@
 #include "messagetype.h"
 %}
 
+namespace sakusen{
+namespace comms{
+class MessageData;
+%template(mPtr) ::boost::shared_ptr<MessageData>;
+%template(mConstPtr) ::boost::shared_ptr<const MessageData>;
+}
+}
 %include "messagedata.h"
 %{
 #include "messagedata.h"
@@ -50,7 +57,7 @@
 namespace sakusen{
 namespace comms{
 class Socket;
-%template(Ptr) ::boost::shared_ptr<Socket>;
+%template(sPtr) ::boost::shared_ptr<Socket>;
 }
 }
 %include "socket.h"
