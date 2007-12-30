@@ -12,6 +12,11 @@ namespace std {
 %template(pairDoubleDouble) pair<double, double>;
 }
 
+/* Declare struct hash to quiet SWIG's warning messages */
+namespace __gnu_cxx {
+template<typename T> struct hash;
+}
+
 namespace boost {
 template<class T> class shared_ptr{
   public:
@@ -33,11 +38,27 @@ $VERSION = 0.01;
 
 /*Make derived classes in different packages from their base classes work*/
 %typemap(csbody) SWIGTYPE %{
-  private HandleRef swigCPtr;
+  private System.Runtime.InteropServices.HandleRef swigCPtr;
   protected bool swigCMemOwn;
 
-  internal $csclassname(IntPtr cPtr, bool cMemoryOwn) {
+  /* This was internal but is now public because it is called from
+   * libsakusen-comms bindings */
+  public $csclassname(IntPtr cPtr, bool cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
+    swigCPtr = new HandleRef(this, cPtr);
+  }
+
+  public static System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj) {
+    return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
+  }
+%}
+
+/* The analagous typemap for derived classes */
+%typemap(csbody_derived) SWIGTYPE %{
+  private HandleRef swigCPtr;
+
+  public $csclassname(IntPtr cPtr, bool cMemoryOwn) :
+      base($modulePINVOKE.$csclassnameUpcast(cPtr), cMemoryOwn) {
     swigCPtr = new HandleRef(this, cPtr);
   }
 
@@ -69,6 +90,9 @@ $VERSION = 0.01;
 %ignore *::operator=;
 
 %ignore operator|(const GameObject&, const GameObject&);
+
+/* We have to rename Buffer because the name clashes with System.Buffer */
+%rename(SakusenBuffer) Buffer;
 
 #endif
 

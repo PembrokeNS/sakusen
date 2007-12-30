@@ -8,17 +8,53 @@
 #define LIBSAKUSEN_API
 
 #ifdef SWIGCSHARP
-/*This was broken in C# - no idea why. John? They're all the same error - I suspect pinvoke lulz */
-%ignore sakusen::comms::MessageData::getBuffer;
-%ignore sakusen::comms::AcceptMessageData::getId;
-%ignore sakusen::comms::ExtensionMessageData::getData;
-%ignore sakusen::comms::GameStartMessageData::getPlayerId;
-%ignore sakusen::comms::GameStartMessageData::getTopRight;
-%ignore sakusen::comms::GameStartMessageData::getBottomLeft;
-%ignore sakusen::comms::GameStartMessageData::getHeightfield;
-%ignore sakusen::comms::Message::getBuffer;
-%ignore sakusen::comms::OrderMessageData::getOrderMessage;
+%rename(Item) *::operator[];
+%rename(Or) *::operator|;
+%rename(Minus) *::operator-;
+%rename(MinusEquals) *::operator-=;
+%rename(Times) *::operator*;
+%rename(TimesEquals) *::operator*=;
+%rename(Over) *::operator/;
+%rename(OverEquals) *::operator/=;
+%rename(Plus) *::operator+;
+%rename(PlusEquals) *::operator+=;
+%rename(Equals) *::operator==;
+%ignore *::operator!=;
+%rename(Leq) *::operator<=;
+%rename(Geq) *::operator>=;
+%rename(Less) *::operator<;
+%rename(Greater) *::operator>;
+%ignore *::operator=;
+
+%ignore operator+(timeval tv, sint32 usec);
+%ignore operator+=(timeval& tv, sint32 usec);
+%ignore operator+=(timeval& tv, const timeval& uv);
+%ignore operator-(const timeval& tv, const timeval& uv);
+%ignore operator>(const timeval& tv, const timeval& uv);
+%ignore operator<(const timeval& tv, const timeval& uv);
+
+/* We have to rename Buffer because the name clashes with System.Buffer */
+%rename(SakusenBuffer) Buffer;
 #endif
+
+%typemap (csimports) SWIGTYPE "
+using System;
+using System.Runtime.InteropServices;
+using Sakusen;
+"
+
+%typemap(csbody_derived) SWIGTYPE %{
+  private HandleRef swigCPtr;
+
+  public $csclassname(IntPtr cPtr, bool cMemoryOwn) :
+      base($modulePINVOKE.$csclassnameUpcast(cPtr), cMemoryOwn) {
+    swigCPtr = new HandleRef(this, cPtr);
+  }
+
+  public static HandleRef getCPtr($csclassname obj) {
+    return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
+  }
+%}
 
 /* libsakusen-comms */
 %include "libsakusen-comms-global.h"
