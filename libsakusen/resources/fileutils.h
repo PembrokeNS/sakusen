@@ -8,6 +8,8 @@
 
 #ifdef _MSC_VER
 #define NativeFileno _fileno
+#else
+#define NativeFileno fileno
 #endif
 
 namespace sakusen {

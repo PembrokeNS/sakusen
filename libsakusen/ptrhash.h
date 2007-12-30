@@ -1,9 +1,7 @@
 #ifndef PTRHASH_H
 #define PTRHASH_H
 
-//need definition of size_t
-#include <cstring>
-
+#include "libsakusen-global.h"
 
 namespace sakusen {
 

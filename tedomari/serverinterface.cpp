@@ -191,8 +191,8 @@ String ServerInterface::join()
   if (joined) {
     Fatal("attempted to join when already joined");
   }
-  assert(incomingSocket == NULL);
-  assert(outgoingSocket == NULL);
+  assert(!incomingSocket);
+  assert(!outgoingSocket);
   try {
 #ifndef DISABLE_UNIX_SOCKETS
     if (unixSockets) {
@@ -228,6 +228,8 @@ String ServerInterface::join()
   } catch (SocketExn& e) {
     String ret = String("Error while sending join message to server: '") +
       e.message + "'.\n";
+    incomingSocket.reset();
+    outgoingSocket.reset();
     return ret;
   }
   
@@ -236,6 +238,8 @@ String ServerInterface::join()
 
   if (0 == (messageLength =
         incomingSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
+    incomingSocket.reset();
+    outgoingSocket.reset();
     return "Timed out while waiting for response to join request.\n";
   }
 
@@ -257,14 +261,20 @@ String ServerInterface::join()
     case messageType_reject:
       {
         RejectMessageData data = message.getRejectData();
+        incomingSocket.reset();
+        outgoingSocket.reset();
         return String("Join request rejected for reason: '") + data.getReason()
           + "'.";
       }
     default:
-      ostringstream ret;
-      ret << "Unexpected response from server (message type was" <<
-        message.getType() << ").";
-      return ret.str();
+      {
+        ostringstream ret;
+        ret << "Unexpected response from server (message type was" <<
+          message.getType() << ").";
+        incomingSocket.reset();
+        outgoingSocket.reset();
+        return ret.str();
+      }
   }
 }
 

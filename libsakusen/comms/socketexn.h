@@ -7,21 +7,21 @@
 namespace sakusen {
 namespace comms {
 
-class SocketExn : public Exn {
+class LIBSAKUSEN_COMMS_API SocketExn : public Exn {
   public:
     SocketExn(const String& message) :
       Exn(message) { }
     virtual ~SocketExn() throw() { }
 };
 
-class SocketClosedExn : public SocketExn {
+class LIBSAKUSEN_COMMS_API SocketClosedExn : public SocketExn {
   public:
     SocketClosedExn() :
       SocketExn("Socket was never connected or was closed remotely") { }
     virtual ~SocketClosedExn() throw() { }
 };
 
-class HostNotFoundExn : public SocketExn {
+class LIBSAKUSEN_COMMS_API HostNotFoundExn : public SocketExn {
   public:
     HostNotFoundExn(const String& hostname) :
       SocketExn("Host '"+hostname+"' not found") { }

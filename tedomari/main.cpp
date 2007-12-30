@@ -561,6 +561,10 @@ void runClient(
     }
     
     cout << endl;
+    /* Must leave before deleting game object */
+    if (serverInterface.isJoined()) {
+      serverInterface.leave(true);
+    }
     delete game;
     game = NULL;
   } while (reconnect);
