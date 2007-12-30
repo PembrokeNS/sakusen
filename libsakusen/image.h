@@ -10,7 +10,7 @@ namespace sakusen {
 
 /** \brief Base class for images.
  */
-class Image : boost::noncopyable {
+class Image : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Image> Ptr;
     typedef boost::shared_ptr<const Image> ConstPtr;

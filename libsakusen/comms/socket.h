@@ -18,7 +18,7 @@ namespace comms {
  * The static function Socket::socketsInit must be called before anything is
  * done with sockets.
  */
-class LIBSAKUSEN_COMMS_API Socket : boost::noncopyable {
+class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Socket> Ptr;
     /** \brief Creates a new Socket object connected to the given address.

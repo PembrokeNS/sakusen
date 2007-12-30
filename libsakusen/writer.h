@@ -14,7 +14,7 @@ namespace sakusen {
  * The target of the Writer need not be seekable (it might be a network socket,
  * for example) but it does have to keep track of its position.
  */
-class Writer : boost::noncopyable {
+class Writer : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Writer> Ptr;
     typedef boost::shared_ptr<const Writer> ConstPtr;
