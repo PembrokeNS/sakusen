@@ -135,6 +135,9 @@ class UI : protected Control {
     virtual void setTitle(const String& title) = 0;
     /** \brief Process all user input and redraw the screen as necessary */
     virtual void update();
+
+    /** \brief Construct and return a surface for drawing into memory */
+    virtual Surface::Ptr createSurface(uint16 width, uint16 height) = 0;
     
     /** \brief Execute the given command
      *

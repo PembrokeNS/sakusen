@@ -3,6 +3,11 @@
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl::cairo;
 
+void CairoRegion::blit(const Surface::ConstPtr& s)
+{
+  ui->blit(x, y, boost::dynamic_pointer_cast<const SDLSurface>(s));
+}
+
 void CairoRegion::setClip()
 {
   ui->setClipRect(x, y, getWidth(), getHeight());

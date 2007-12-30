@@ -29,6 +29,7 @@ class DummyRegion : public Region {
       Fatal("not implemented"); 
       return 0; //Make VC happy
     }
+    void blit(const Surface::ConstPtr&) {}
     void setClip() {}
     void unsetClip() {}
     void fill(const Colour&) {}

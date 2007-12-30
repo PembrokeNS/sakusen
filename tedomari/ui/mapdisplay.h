@@ -4,6 +4,7 @@
 #include "point.h"
 #include "game/game.h"
 #include "ui/control.h"
+#include "ui/surface.h"
 
 namespace tedomari {
 namespace ui {
@@ -39,6 +40,9 @@ class MapDisplay : public Control {
     sakusen::Point<double> mousePos;
     bool dragging;
     sakusen::Point<sint32> dragStart;
+    /** \brief A surface to be the ground beneath any units, cached because it
+     * doesn't change much */
+    Surface::Ptr groundImage;
 
     /* Methods to convert between coordinate systems */
     inline sakusen::Rectangle<double> dexToPixel(
@@ -57,6 +61,8 @@ class MapDisplay : public Control {
         const sakusen::Point<double>&
       ) const;
 
+    void redrawGround();
+    
     template<typename UnitRef>
     void drawUnit(const UnitRef& unit, const Colour&);
     void drawUnitOrders(

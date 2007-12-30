@@ -8,6 +8,7 @@
 #include "rectangle.h"
 #include "ui/colour.h"
 #include "ui/layout.h"
+#include "ui/surface.h"
 
 namespace tedomari {
 namespace ui {
@@ -46,6 +47,7 @@ class Region {
     virtual Layout* newLayout() const = 0;
 
     /* Drawing functions */
+    virtual void blit(const Surface::ConstPtr&) = 0;
     virtual void setClip() = 0;
     virtual void unsetClip() = 0;
     virtual void fill(const Colour&) = 0;

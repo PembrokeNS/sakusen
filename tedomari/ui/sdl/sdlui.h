@@ -4,6 +4,7 @@
 #include <optionsparser.h>
 
 #include "ui/ui.h"
+#include "ui/sdl/sdlsurface.h"
 
 #ifdef NDEBUG
   #define SDLDebug(msg)
@@ -58,6 +59,8 @@ class SDLUI : public UI {
     static optimal::OptionsParser getParser(Options* options);
     void setTitle(const String& title);
     void update();
+    Surface::Ptr createSurface(uint16 width, uint16 height);
+    void blit(uint16 x, uint16 y, const SDLSurface::ConstPtr&);
 
     uint32 getSDLColour(const Colour&) const;
 };

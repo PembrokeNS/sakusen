@@ -50,6 +50,7 @@ class CairoRegion : public Region {
       return p + sakusen::Point<double>(x, y, 0);
     }
     inline Layout* newLayout() const { return new CairoLayout(ui); }
+    void blit(const Surface::ConstPtr&);
     void setClip();
     void unsetClip();
     void fill(const Colour&);

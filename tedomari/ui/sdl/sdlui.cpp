@@ -3,6 +3,7 @@
 #include "libsakusen-global.h"
 #include "ui/dummyregion.h"
 #include "ui/sdl/sdlutils.h"
+#include "ui/sdl/masks.h"
 
 #include <SDL/SDL.h>
 
@@ -14,31 +15,6 @@ using namespace optimal;
 using namespace tedomari::game;
 using namespace tedomari::ui;
 using namespace tedomari::ui::sdl;
-
-#define BYTES_PER_PIXEL (4)
-#define BITS_PER_PIXEL (8*BYTES_PER_PIXEL)
-
-/* These mask choices are needed to share the buffer between SDL and cairo */
-#define AMASK 0xff000000
-#define RMASK 0x00ff0000
-#define GMASK 0x0000ff00
-#define BMASK 0x000000ff
-/*
- * The following mask choices would supposedly be required to share the buffer
- * between SDL and OpenGL.  Given that the first one goes R,B,G, I find this
- * most implausible
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-  #define RMASK 0xff000000
-  #define BMASK 0x00ff0000
-  #define GMASK 0x0000ff00
-  #define AMASK 0x000000ff
-#else
-  #define RMASK 0x000000ff
-  #define GMASK 0x0000ff00
-  #define BMASK 0x00ff0000
-  #define AMASK 0xff000000
-#endif
-*/
 
 void SDLUI::Options::usage(std::ostream& out)
 {
@@ -231,6 +207,21 @@ void SDLUI::update()
     Debug("SDL_BlitSurface failed: " << SDL_GetError());
   }
   if (SDL_Flip(screen)) {
+    Fatal(SDL_GetError());
+  }
+}
+
+Surface::Ptr SDLUI::createSurface(uint16 width, uint16 height)
+{
+  return Surface::Ptr(new SDLSurface(width, height));
+}
+
+void SDLUI::blit(uint16 x, uint16 y, const SDLSurface::ConstPtr& surface)
+{
+  SDL_Surface* src = surface->sdlSurface;
+  /* The destination rectangle width and height do not matter */
+  SDL_Rect destRect = { /*.x=*/x, /*.y=*/y, /*.w=*/0, /*.h=*/0 };
+  if (SDL_BlitSurface(src, NULL, sdlBuffer, &destRect)) {
     Fatal(SDL_GetError());
   }
 }

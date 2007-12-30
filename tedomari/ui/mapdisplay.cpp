@@ -1,5 +1,6 @@
 #include "ui/mapdisplay.h"
 
+#include "heightfield-methods.h"
 #include "ui/ui.h"
 
 using namespace std;
@@ -8,6 +9,62 @@ using namespace sakusen;
 using namespace sakusen::client;
 
 using namespace tedomari::ui;
+
+/** \brief Refresh the cached image of the ground. */
+void MapDisplay::redrawGround()
+{
+  Surface& g = *groundImage;
+  const Map* m = client::world->getMap();
+  const sint32 left = m->left();
+  const sint32 right = m->right();
+  const sint32 bottom = m->bottom();
+  const sint32 top = m->top();
+  const Heightfield& heightfield =
+    dynamic_cast<const Heightfield&>(m->getHeightfield());
+  const uint16 width = getWidth();
+  const uint16 height = getHeight();
+  assert(width == g.getWidth());
+  assert(height == g.getHeight());
+  const boost::tuple<uint8, uint8, uint8> red(255, 0, 0);
+
+  Point<uint16> pixel(0,0,0);
+  Point<double> ddex;
+
+  /** \todo The following loop is a serious CPU bottleneck, so it's been
+   * somewhat hand-optimized.  In the long run we want to do something
+   * sensible like actually use the capabilities of the graphics card. */
+  for (pixel.x=0; pixel.x<width; ++pixel.x) {
+    pixel.y=0;
+    ddex = pixelToDex(pixel);
+    if (ddex.x < left || ddex.x >= right) {
+      for (; pixel.y<height; ++pixel.y) {
+        g(pixel.x,pixel.y) = red;
+      }
+      continue;
+    }
+    for (; pixel.y<height; ++pixel.y, ddex.y-=dexPerPixelY) {
+      if (ddex.y < bottom || ddex.y >= top) {
+        g(pixel.x,pixel.y) = red;
+      } else {
+        sint32 height = heightfield.getApproxHeightAt(Point<sint32>(ddex));
+        //QDebug("height("<<dex.x<<", "<<dex.y<<")="<<height);
+        /** \bug A host of arbitrary constants. */
+        /* crop */
+        if (height >= (1<<16)) {
+          height = (1<<16)-1;
+        }
+        if (height < -(1<<16)) {
+          height = -(1<<16);
+        }
+        /* convert this height into the range [0,256) */
+        height += (1<<16);
+        height /= (1<<9);
+        g(pixel.x,pixel.y) =
+          boost::make_tuple(uint8(0), uint8(255-height), uint8(height));
+      }
+    }
+  }
+}
 
 /** \brief Draw a unit.
  * \param[in] unit The unit to draw. Must not be NULL.
@@ -81,11 +138,20 @@ void MapDisplay::paint()
     r->setClip();
     /* Red background */
     r->fill(Colour::red);
-    Map* m = sakusen::world->getMap();
-    /* Green map ('ground') */
+    /*Map* m = sakusen::world->getMap();*/
+    /* Update the ground image if we've been resized */
+    if (!groundImage ||
+        groundImage->getWidth() != getWidth() ||
+        groundImage->getHeight() != getHeight()) {
+      groundImage = ui->createSurface(getWidth(), getHeight());
+      redrawGround();
+    }
+    r->blit(groundImage);
+    /*
     r->fillRect(dexToPixel(
           Rectangle<sint32>(m->left(), m->bottom(), m->right(), m->top())
         ), Colour::green);
+        */
     Rectangle<sint32> displayRect = pixelToDex(
         Rectangle<double>(0, 0, getWidth(), getHeight())
       );
@@ -166,6 +232,7 @@ void MapDisplay::translate(const Point<sint32>& d)
 {
   posOfDisplayZero =
     sakusen::world->getMap()->addToPosition(posOfDisplayZero, d);
+  redrawGround();
   getRegion()->paint();
   /*Debug("posOfDisplayZero=" << posOfDisplayZero);*/
 }
