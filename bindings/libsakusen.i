@@ -3,15 +3,21 @@
 %feature("autodoc","1");
 %include "std_string.i"
 %include "std_vector.i"
+%include "std_pair.i"
 %include "stdint.i"
 %include "std_except.i"
 %include "carrays.i"
+
+namespace std {
+%template(pairDoubleDouble) pair<double, double>;
+}
+
 namespace boost {
 template<class T> class shared_ptr{
-public:
-shared_ptr(shared_ptr<T> const &);
-T* get() const;
-T* operator-> () const;
+  public:
+    shared_ptr(shared_ptr<T> const &);
+    T* get() const;
+    T* operator-> () const;
 };
 }
 
@@ -282,6 +288,10 @@ namespace sakusen {
 %include "playerid.h"
 %{
 #include "playerid.h"
+%}
+%include "mathsutils.h"
+%{
+#include "mathsutils.h"
 %}
 %include "iheightfield.h"
 %{
