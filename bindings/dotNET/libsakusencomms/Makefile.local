@@ -25,13 +25,15 @@ sakusencomms.o: sakusencomms.cpp
 
 # There's no easy way to know what header files libsakusencomms.i is including, so
 # we just assume it's including all of them except revision.h
-sakusencomms.cpp: $(top_srcdir)bindings/libsakusencomms.i \
-		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
-	-rm *.cs
-	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
+sakusencomms.cpp sakusencomms.cs: $(top_srcdir)bindings/libsakusencomms.i \
+		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h)) \
+		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
+	-rm -f *.cs
+	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen.Comms -c++ -o sakusencomms.cpp -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
 
-sakusencomms.dll: sakusencomms.cpp $(wildcard *.cs) $(wildcard $(top_builddir)bindings/dotNet/libsakusen/*.cs)
-	mcs -checked+ -out:$@ -recurse:'*.cs' -lib:$(top_builddir)bindings/dotNET/libsakusen -r:sakusen -target:library
+sakusencomms.dll: sakusencomms.cpp sakusencomms.cs \
+	$(wildcard *.cs) $(wildcard $(top_builddir)bindings/dotNet/libsakusen/*.cs)
+	mcs -checked+ -debug+ -out:$@ -recurse:'*.cs' -lib:$(top_builddir)bindings/dotNET/libsakusen -r:sakusen -target:library
 
 .PHONY: all test clean
 
