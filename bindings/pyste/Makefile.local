@@ -20,7 +20,7 @@ sakusen.la: sakusen.lo
 
 sakusen.cpp: sakusencomms.cpp
 
-sakusencomms.cpp: $(wildcard $(top_srcdir)libsakusen/*.h) $(wildcard $(top_srcdir)libsakusen/comms/*.h)
+sakusencomms.cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
 	python generate_code.py
 
 clean: 

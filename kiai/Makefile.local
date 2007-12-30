@@ -4,7 +4,7 @@ all: settingsDialog.py connectDialog.py run-kiai-from-builddir.sh
 	pyuic4 $< -o $@
 run-kiai-from-builddir.sh:
 	echo '#!/bin/sh' > $@
-	echo "PYTHONPATH=$(top_builddir)bindings/python/libsakusen python kiai.py $$@" >> $@
+	echo "PYTHONPATH=$(top_builddir)bindings/python/libsakusen:$(top_builddir)bindings/python/libsakusen/.libs python kiai.py $$@" >> $@
 	-chmod a+x $@
 clean:
 	-rm -f settingsDialog.py connectDialog.py *.pyc run-kiai-from-builddir.sh
