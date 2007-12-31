@@ -4,7 +4,6 @@
 #include "mathsutils.h"
 
 using namespace std;
-using namespace boost;
 using namespace sakusen;
 
 Heightfield::Heightfield(
@@ -162,7 +161,7 @@ double Heightfield::intersectRayInCell(
 
   double r1, r2;
 
-  tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
+  boost::tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
 
   if (isnan(r1) || (!isnan(r2) && r2 < minimum)) {
     /* Something's gone wrong... */

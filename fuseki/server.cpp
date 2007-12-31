@@ -21,7 +21,7 @@
 #ifndef _MSC_VER
 	#include "revision.h"
 #else
-    #define REVISION "0.1"
+  #define REVISION "0.1"
 #endif
 
 #ifndef DISABLE_AVAHI
@@ -37,7 +37,6 @@
 
 using namespace std;
 using namespace __gnu_cxx;
-using namespace boost;
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -469,7 +468,9 @@ void Server::serve()
   uint8 buf[BUFFER_LEN];
   struct timeval sleepTime = {0, MICRO/10};
   /** \todo Get the TCP port number and game name to the publisher. */
-  shared_ptr<ServedGame> game_to_advertise(new ServedGame("Game name", 1723));
+  boost::shared_ptr<ServedGame> game_to_advertise(
+      new ServedGame("Game name", 1723)
+    );
   /** \bug signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);

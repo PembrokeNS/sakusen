@@ -19,11 +19,6 @@ using std::make_pair;
 using std::list;
 using std::equal_to;
 using __gnu_cxx::hash_map;
-using boost::trim;
-using boost::split;
-using boost::bind1st;
-using boost::format;
-using boost::str;
 
 using namespace optimal;
 
@@ -174,7 +169,7 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
     if (string::npos != (commentPos = line.find('#', 0))) {
       line = line.substr(0, commentPos);
     }
-    trim(line);
+    boost::trim(line);
     if (line.length() > 0) {
       string::size_type equalsPos = line.find(assignment, 0);
       if (equalsPos == string::npos) {
@@ -184,8 +179,8 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
       } else {
         string optionName = line.substr(0, equalsPos);
         string optionValue = line.substr(equalsPos + 1);
-        trim(optionName);
-        trim(optionValue);
+        boost::trim(optionName);
+        boost::trim(optionValue);
         if (longOptionTypes.count(optionName)) {
           switch(longOptionTypes[optionName]) {
             case optionType_bool:
@@ -420,7 +415,10 @@ bool OptionsParser::parse(
                 }
                 break;
               default:
-                errors.push_back(str(format("internal error: unexpected OptionType %1%") % shortOptionTypes[*optionChar]));
+                errors.push_back(str(
+                    boost::format("internal error: unexpected OptionType %1%")%
+                    shortOptionTypes[*optionChar]
+                  ));
             }
           } else {
             errors.push_back(

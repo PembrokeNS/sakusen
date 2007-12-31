@@ -6,8 +6,6 @@
 #include <boost/algorithm/minmax.hpp>
 
 using namespace std;
-using boost::minmax;
-using boost::tie;
 
 namespace sakusen {
 
@@ -72,7 +70,7 @@ double Ray::intersectBox(const Box<sint32>& box) const
    * for which the ray is between the planes.
    */
   if (d.x != 0) {
-    tie(t_near_x, t_far_x) = minmax(
+    boost::tie(t_near_x, t_far_x) = boost::minmax(
         double(box.getMin().x - origin.x) / d.x,
         double(box.getMax().x - origin.x) / d.x
       );
@@ -87,7 +85,7 @@ double Ray::intersectBox(const Box<sint32>& box) const
   /* ^ the ray misses the box entirely */
 
   if (d.y != 0) {
-    tie(t_near_y, t_far_y) = minmax(
+    boost::tie(t_near_y, t_far_y) = boost::minmax(
         double(box.getMin().y - origin.y) / d.y,
         double(box.getMax().y - origin.y) / d.y
       );
@@ -97,7 +95,7 @@ double Ray::intersectBox(const Box<sint32>& box) const
     return inf;
 
   if (d.z != 0) {
-    tie(t_near_z, t_far_z) = minmax(
+    boost::tie(t_near_z, t_far_z) = boost::minmax(
         double(box.getMin().z - origin.z) / d.z,
         double(box.getMax().z - origin.z) / d.z
       );

@@ -2,7 +2,6 @@
 
 #include "mathsutils.h"
 
-using namespace boost;
 using namespace sakusen;
 using namespace sakusen::server;
 
@@ -64,7 +63,8 @@ bool Weapon::aim(
   double tanTheta;
   /* We want the smaller root for a shorter path time.  This is
    * always first return value. */
-  tie(tanTheta, tuples::ignore) = mathsUtils_solveQuadratic(a, b, c);
+  boost::tie(tanTheta, boost::tuples::ignore) =
+    mathsUtils_solveQuadratic(a, b, c);
 
   if (isnan(tanTheta)) {
     return false;

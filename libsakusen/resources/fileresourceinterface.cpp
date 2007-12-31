@@ -26,9 +26,6 @@
 using namespace std;
 using namespace __gnu_cxx;
 
-using boost::shared_ptr;
-using boost::shared_array;
-
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::resources;
@@ -38,7 +35,7 @@ ResourceInterface::Ptr FileResourceInterface::create(
     bool loadModules
   )
 {
-  shared_ptr<FileResourceInterface>
+  boost::shared_ptr<FileResourceInterface>
     result(new FileResourceInterface(directory, loadModules));
   result->ptrToThis = result;
   return result;
@@ -49,7 +46,7 @@ ResourceInterface::Ptr FileResourceInterface::create(
     bool loadModules
   )
 {
-  shared_ptr<FileResourceInterface>
+  boost::shared_ptr<FileResourceInterface>
     result(new FileResourceInterface(directories, loadModules));
   result->ptrToThis = result;
   return result;
@@ -123,7 +120,7 @@ FileResourceInterface::internalSearch(
   Reader::Ptr reader = resource.getReader();
 
   if (!reader)
-    return boost::make_tuple(shared_ptr<void>(), result, "");
+    return boost::make_tuple(boost::shared_ptr<void>(), result, "");
 
   Buffer asBuffer;
 
@@ -134,17 +131,21 @@ FileResourceInterface::internalSearch(
     error = String("error getting file '") +
       resource.getSakusenPath() + "': " +
       e.message;
-    return boost::make_tuple(shared_ptr<void>(),resourceSearchResult_error,"");
+    return boost::make_tuple(
+        boost::shared_ptr<void>(),resourceSearchResult_error,""
+      );
   }
 
   /** Check the hash of the data to ensure that there's been no
    * corruption or foul play */
   if (!hash.empty() && hash != asBuffer.getSecureHashAsString()) {
     error = "Hash mismatch!";
-    return boost::make_tuple(shared_ptr<void>(),resourceSearchResult_error,"");
+    return boost::make_tuple(
+        boost::shared_ptr<void>(),resourceSearchResult_error,""
+      );
   }
   IArchive fileAsArchive(asBuffer);
-  shared_ptr<void> resourcePtr;
+  boost::shared_ptr<void> resourcePtr;
 
   try {
     switch (type) {
@@ -166,13 +167,17 @@ FileResourceInterface::internalSearch(
     }
   } catch (DeserializationExn& e) {
     error = String("exception: ") + e.message;
-    return boost::make_tuple(shared_ptr<void>(),resourceSearchResult_error,"");
+    return boost::make_tuple(
+        boost::shared_ptr<void>(), resourceSearchResult_error, ""
+      );
   }
   
   if (!fileAsArchive.isFinished()) {
     error = "archive was not exhausted by deserialization - could it be "
       "corrupted?";
-    return boost::make_tuple(shared_ptr<void>(),resourceSearchResult_error,"");
+    return boost::make_tuple(
+        boost::shared_ptr<void>(), resourceSearchResult_error, ""
+      );
   }
   
   return boost::make_tuple(
