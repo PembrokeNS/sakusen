@@ -14,7 +14,7 @@ class settingsItem:
 	def __init__(self,d):
 		#d.thisown=False #?
 		self.pathstr=d.getSetting()
-		self.path=tuple(d.getSetting().split(':'))
+		self.path=tuple(self.pathstr.split(':'))
 		self.value=d.getValue()
 		self.name=self.path[-1]
 		#if(self.name): self.parent=string.join(self.path[:-2],':')
@@ -53,7 +53,9 @@ def getSetting(s,setting):
 		t=r.getType()
 		if(t==messageType_notifySetting):
 			#r.thisown=False #we are going to use the data from r, so we don't want it to be GCed
-			return r.getNotifySettingData()
+			d=r.getNotifySettingData()
+			#d.thisown=False #d will be handled when r goes, I think
+			return d
 		else:
 			unexpectedMessage(r)
 
