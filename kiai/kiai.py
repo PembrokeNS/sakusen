@@ -6,11 +6,13 @@ from connectDialog import Ui_connectDialog
 from settingsDialog import Ui_settingsDialog
 from PyQt4 import QtGui,QtCore#,Qt
 from modeltest import ModelTest
+import sip
 Socket_socketsInit()
 timeout=timeval(5,0)
 #@tCore.pyqtSignature("join(QString)")
 class settingsItem:
 	def __init__(self,d):
+		#d.thisown=False #?
 		self.pathstr=d.getSetting()
 		self.path=tuple(d.getSetting().split(':'))
 		self.value=d.getValue()
@@ -22,6 +24,7 @@ class settingsItem:
 		else:
 			self.children=[]
 			self.data=self.value
+		#self.d=d
 def receiveMessageOfType(socket, mtype):
 	while(True):
 		buf=uint8(BUFFER_LEN)
@@ -39,15 +42,17 @@ def unexpectedMessage(m):
 def getSetting(s,setting):
 	d=GetSettingMessageData(str(setting))
 	m=Message(d)
-	d.thisown=False
+	d.thisown=False #this is definitely correct - m now owns d
 	s.send(m)
 	buf=uint8(BUFFER_LEN)
 	while(True):
 		l=s.receiveTimeout(buf,BUFFER_LEN,timeout)
 		i=IArchive(buf,l)
+		#buf.thisown=False #is this right?
 		r=Message(i)
 		t=r.getType()
 		if(t==messageType_notifySetting):
+			#r.thisown=False #we are going to use the data from r, so we don't want it to be GCed
 			return r.getNotifySettingData()
 		else:
 			unexpectedMessage(r)
@@ -55,58 +60,90 @@ def getSetting(s,setting):
 class settingsTreeModel(QtCore.QAbstractItemModel):
 	"""A Model class for viewing the Sakusen settings tree using the Qt Model/View paradigm. Stores the settings internally as a dictionary d whose keys are tuples ('a','b','c') for 'a:b:c' and values are corresponding settingsItems.
 	
-	These tuples are passed around as QModelIndex.internalPointers. But python will garbage-collect them. Current hack: use d[tuple].path rather than tuple - that way the pointer should stay valid as long as the model exists"""
+	These tuples are passed around as QModelIndex.internalIds. But python will garbage-collect them. Current hack: use d[tuple].path rather than tuple - that way the pointer should stay valid as long as the model exists"""
+	#current method: l is a list, pointers are indexes into l; l stores objects for the 0th column and strings for the 1st column
 	def __init__(self,socket,parent=None):
 		QtCore.QAbstractItemModel.__init__(self,parent) #I am a tard
 		#print "called m.__init__"
 		self.socket=socket
 		self.d={('',):settingsItem(getSetting(socket,':'))}
+		self.l=[('',),(('',),'')]
 		#print "did m.__init__"
 	def data(self,index,role):
 		#print "called m.data"
 		if((not index.isValid()) or role!=QtCore.Qt.DisplayRole): return QtCore.QVariant()
-		#print "about to return some data from "+repr(index.internalPointer())+" column "+repr(index.column)
+		#print "about to return some data from "+repr(index.internalId())+" column "+repr(index.column())
 		if(index.column()==0):
-		#	print "going to return name:"+self.d[index.internalPointer()].name
-			return QtCore.QVariant(self.d[index.internalPointer()].name)
-		else:
-		#	print "going to return data:"+self.d[index.internalPointer()].data
-			return QtCore.QVariant(self.d[index.internalPointer()].data)
+		#	print "going to return name:"+self.d[index.internalId()].name
+			return QtCore.QVariant(self.d[self.l[index.internalId()]].name)
+		elif(index.column()==1):
+			#print "going to return data from:"+repr(self.l[index.internalId()])
+			return QtCore.QVariant(self.l[index.internalId()][1])
+		else: return QtCore.QVariant()
 	def columnCount(self,parent):
-		#if(not parent.isValid()): print "called m.columnCount on invalid index"
-		#else: print "called m.columnCount on node "+repr(parent.internalPointer())
-		return 2
+		#if(not parent.isValid()): #print "called m.columnCount on invalid index"
+		#	return 1
+		#else: print "called m.columnCount on node "+repr(parent.internalId())
+		#if(parent.isValid()):
+		#	if(parent.column()>0): return 1 #finally right?
+		return 2# really
 	def rowCount(self,parent):
 		#if(not parent.isValid()): print "called m.rowCount on invalid index"
-		#else: print "called m.rowCount on node "+repr(parent.internalPointer())
+		#else: print "called m.rowCount on node "+repr(parent.internalId())
 		if(not parent.isValid()): return 1
 		if(parent.column()>0): return 0
-		return len(self.d[parent.internalPointer()].children)
+		l=len(self.d[self.l[parent.internalId()]].children)
+		#print "about to return from rowCount"
+		return l
 	def parent(self,index):
 		#print "called m.parent"
-		if((not index.isValid()) or index.internalPointer()==('',)): return QtCore.QModelIndex()
-		#print "trying to find parent for "+repr(index.internalPointer())
-		#print "searching "+repr(self.d[tuple(index.internalPointer()[:-1])].children)+" for entry"
+		if((not index.isValid()) or index.internalId()==self.l.index(('',)) or index.internalId()==self.l.index((('',),''))): return QtCore.QModelIndex()
+		#print "trying to find parent for "+repr(self.l[index.internalId()])
+		#print "searching "+repr(self.d[tuple(index.internalId()[:-1])].children)+" for entry"
 		#print "returning from m.parent"
-		return self.createIndex(self.d[tuple(index.internalPointer()[:-1])].children.index(index.internalPointer()[-1]),0,self.d[tuple(index.internalPointer()[:-1])].path)
+		if(index.column()==0): p=self.l[index.internalId()]
+		else: p=self.l[index.internalId()][0]
+		r=self.createIndex(self.d[p[:-1]].children.index(p[-1]),0,self.l.index(tuple(p[:-1])))
+		#print "about to return "+repr(r)+", assertion will be "+repr(r.model()==self)
+		return r
 	def index(self,row,column,parent):
 		#print "called m.index"
-		#if(not self.hasIndex(row,column,parent)):
+		if(not self.hasIndex(row,column,parent)):
 		#	print "some craziness ocurring"
-		#	return QtCore.QModelIndex()
+			return QtCore.QModelIndex()
 		#print "craziness didn't happen"
 		#print "did that segfault?"
 		if(not parent.isValid()):
 			#arrgh arrgh surely this cannot be the right way to do this
-			if(row==0 and 0<=column and 2>column): return self.createIndex(row,column,self.d[('',)].path)
+			if(row==0 and 0==column):#1 or 2 columns? Arrgh
+				#print "about to create an index with "+self.l.index(('',)
+				r=self.createIndex(row,column,self.l.index(('',)))
+				#print "about to return "+repr(r)+", assertion will be "+repr(r.model()==self)
+				return r
+			elif(row==0 and column==1):
+				return self.createIndex(row,column,self.l.index((('',),'')))
 			else: return self.root()
-		#print "halfway through m.index"
-		p=tuple(self.d[parent.internalPointer()].path+(self.d[parent.internalPointer()].children[row],))
+		#print "halfway through m.index, internal pointer is "+parent.internalId()
+		#if(parent.column()>0): return QtCore.QModelIndex()
+		p=tuple(self.d[self.l[parent.internalId()]].path+(self.d[self.l[parent.internalId()]].children[row],))
 		if(not p in self.d):
 		#	print "about to add to dictionary: "+repr(p)
 			self.d[p]=settingsItem(getSetting(self.socket,string.join(p,':')))
+			self.l.append(p)
+		#	print "added to dictionary"
+		#	print "list is now "+repr(self.l)
 		#print "returning from m.index"
-		return self.createIndex(row,column,self.d[p].path)
+		
+		if(column>0):
+		#	print "arrgh arrgh arrgh"
+			d=self.d[p].data
+			self.l.append((p,d))
+			#print "added a non-zero column, list is now "+repr(self.l)
+			return self.createIndex(row,column,self.l.index((p,d)))
+		#	return QtCore.QModelIndex()
+		r=self.createIndex(row,column,self.l.index(p))
+		#print "about to return "+repr(r)+", assertion will be "+repr(r.model()==self)
+		return r
 	def root(self):
 		#print "called m.root"
 		#return self.createIndex(0,0,self.d[('',)].path)
@@ -158,7 +195,7 @@ def connecttoserver():
 	ui.setupUi(nwindow)
 	#settingsTree=QtGui.QListView(nwindow)
 	m=settingsTreeModel(s,nwindow)
-	#mt=ModelTest(m,nwindow)
+	mt=ModelTest(m,nwindow) #should only do this when debugging
 	ui.settingsTree.setModel(m)
 	ui.settingsTree.setRootIndex(m.root())
 	#for now, will just go through the entire settings tree
