@@ -587,7 +587,7 @@ void usage() {
 " -t,  --test            Don't try to connect to a server, just test the UI.\n"
 #ifndef DISABLE_SDL
 "      --sdlopts OPTIONS Pass OPTIONS to the SDL UI.\n"
-"                        Use --sdlopts help=yes for more info.\n"
+"                        Use --sdlopts help for more info.\n"
 #endif
 " -j,  --join ADDRESS    Join server at sakusen-style address ADDRESS.\n"
 " -o-, --no-autojoin     Do not automatically try to join server.\n"
