@@ -40,6 +40,7 @@ void ClientChangeSettingAction::act(Server& server) const
 
 void EnsureAdminExistsAction::act(Server& server) const
 {
+  assert(!server.isGameStarted());
   server.out << "Checking for existence of an admin\n";
   RemoteClient* adminCandidate = NULL;
   bool needAdmin = true;
@@ -63,6 +64,7 @@ void EnsureAdminExistsAction::act(Server& server) const
 
 void RequestUniverseAction::act(Server& server) const
 {
+  assert(!server.isGameStarted());
   assert(universe);
   assert(!path.empty());
   server.universe = universe;
@@ -81,6 +83,7 @@ void RequestUniverseAction::act(Server& server) const
 
 void RequestMapAction::act(Server& server) const
 {
+  assert(!server.isGameStarted());
   assert(map);
   assert(!path.empty());
   server.map = map;
@@ -97,6 +100,7 @@ void RequestMapAction::act(Server& server) const
 
 void SetMapPlayModeAction::act(Server& server) const
 {
+  assert(!server.isGameStarted());
   server.mapPlayMode = mode;
   server.clearPlayers();
   server.createPlayersFor(server.map->getPlayModes()[mode]);
