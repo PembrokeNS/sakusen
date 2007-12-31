@@ -47,8 +47,9 @@ ResourceInterface::search(
  *
  * Saves a resource, automatically determining the appropriate place and name.
  *
- * \param resource Resource to save
- * \return true iff a problem occurs
+ * \param resource Resource to save.
+ * \param path Sakusen oath at which to save it.
+ * \return true iff a problem occurs.
  */
 template<typename T>
 inline bool ResourceInterface::save(
