@@ -44,18 +44,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
    <item>
-    <widget class="QTreeWidget" name="settingsTree" >
-     <column>
-      <property name="text" >
-       <string>Setting</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>Value</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QTreeView" name="settingsTree" />
    </item>
   </layout>
  </widget>
