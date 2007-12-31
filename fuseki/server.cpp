@@ -9,7 +9,7 @@
 #include "resourceinterface-methods.h"
 #include "completeworld.h"
 #include "servedgame.h"
-#include "fuseki-global.h"
+#include "serveraction.h"
 #include "settingstree/stringsetleaf.h"
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
@@ -70,14 +70,11 @@ Server::Server(
   universe(),
   map(),
   mapPlayMode(0),
+  gameToAdvertiseChanged(false),
+  startGame(false),
   players(),
   settings(new SettingsTree(this)),
   allowObservers(false),
-  checkForGameStartNextTime(false),
-  ensureAdminExistsNextTime(false),
-  requestedUniverse(),
-  requestedMap(),
-  mapPlayModeChanged(false),
   gameStarted(false),
   gameSpeed(DEFAULT_GAME_SPEED)
 {
@@ -222,8 +219,9 @@ void Server::handleClientMessages()
            * processing might result in the client being removed) */
           /** \todo Forward only to interested listeners */
           GetPtr<Listener> gp;
-          for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
-              listeners.begin(); listener != listeners.end(); ++listener) {
+          for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator
+              listener = listeners.begin();
+              listener != listeners.end(); ++listener) {
             listener->second.apply_visitor(gp)->clientMessage(
                 client, message
               );
@@ -249,8 +247,8 @@ void Server::handleClientMessages()
                   out << "Request rejected (" << reason << ")\n";
                   client->send(new RejectMessageData(reason));
                 } else {
-                  /* We send back node->getFullName() rather than just setting to
-                   * ensure that it is in canonical form */
+                  /* We send back node->getFullName() rather than just setting
+                   * to ensure that it is in canonical form */
                   client->send(
                       new NotifySettingMessageData(node->getFullName(), value)
                     );
@@ -259,18 +257,12 @@ void Server::handleClientMessages()
               break;
             case messageType_changeSetting:
               {
-                ChangeSettingMessageData data = message.getChangeSettingData();
-                out << "Client asked to change setting " << data.getSetting() <<
-                  "\n";
-                String reason;
-                if (!(reason = settings->changeRequest(
-                      data.getSetting(), data.getValue(), client
-                    )).empty()) {
-                  /* That a non-empty string was returned implies that a problem
-                   * occured.  We tell the client as much */
-                  out << "Request rejected (" << reason << ")\n";
-                  client->send(new RejectMessageData(reason));
-                }
+                /* This has to be submitted asynchronously so that changes due
+                 * to the each setting change have a chance to take effect
+                 * before later settings changes are processed. */
+                pendingActions.push_back(new ClientChangeSettingAction(
+                      client->getClientId(), message.getChangeSettingData()
+                    ));
               }
               break;
             case messageType_order:
@@ -412,7 +404,7 @@ void Server::checkPlugins(const std::set<String>& newList)
   for (set<String>::const_iterator newPlugin = newList.begin();
       newPlugin != newList.end(); ++newPlugin) {
     if (!plugins.count(*newPlugin)) {
-      pluginsToAdd.push(*newPlugin);
+      pendingActions.push_front(new AddPluginAction(*newPlugin));
     }
   }
 
@@ -420,7 +412,7 @@ void Server::checkPlugins(const std::set<String>& newList)
   for (hash_map_string<Plugin::Ptr>::type::iterator oldPlugin =
       plugins.begin(); oldPlugin != plugins.end(); ++oldPlugin) {
     if (!newList.count(oldPlugin->first)) {
-      pluginsToRemove.insert(oldPlugin->first);
+      pendingActions.push_front(new RemovePluginAction(oldPlugin->first));
     }
   }
 }
@@ -468,9 +460,7 @@ void Server::serve()
   uint8 buf[BUFFER_LEN];
   struct timeval sleepTime = {0, MICRO/10};
   /** \todo Get the TCP port number and game name to the publisher. */
-  boost::shared_ptr<ServedGame> game_to_advertise(
-      new ServedGame("Game name", 1723)
-    );
+  gameToAdvertise.reset(new ServedGame("Game name", DEFAULT_PORT));
   /** \bug signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
@@ -487,12 +477,9 @@ void Server::serve()
    * messages from prospective clients */
   list<pair<Socket::Ptr, timeval> > newConnections;
   
-  /* A bool to get us out of the loop when it is time to start the game */
-  bool startGame = false;
-  
 #ifndef DISABLE_AVAHI
   /* Start up the mDNS publisher. */
-  MdnsPublisher publisher(game_to_advertise);
+  MdnsPublisher publisher(gameToAdvertise);
 #endif
 
   /* To begin with we have the game init loop */
@@ -581,7 +568,7 @@ void Server::serve()
           /* If we've reached the timeout for this connection, then delete it
            * */
           if (conn->second < timeNow) {
-	    out << "Connection timed out, dropping\n";
+            out << "Connection timed out, dropping\n";
             conn = newConnections.erase(conn);
           } else {
             ++conn;
@@ -593,167 +580,20 @@ void Server::serve()
     /* Process client messages */
     handleClientMessages();
 
-    if (ensureAdminExistsNextTime) {
-      out << "Checking for existence of an admin\n";
-      RemoteClient* adminCandidate = NULL;
-      bool needAdmin = true;
-
-      for (hash_map<ClientId, RemoteClient*>::iterator client = clients.begin();
-          client != clients.end(); client++) {
-        if (client->second->isAdmin()) {
-          needAdmin = false;
-          break;
-        }
-        if (adminCandidate == NULL && !client->second->isNeverAdmin()) {
-          adminCandidate = client->second;
-        }
-      }
-
-      if (needAdmin && adminCandidate != NULL) {
-        out << "Promoting a client to admin status\n";
-        changeInClientBranch(adminCandidate, "admin", "true");
-      }
-      
-      ensureAdminExistsNextTime = false;
+    /* Process server actions */
+    while (!pendingActions.empty()) {
+      boost::ptr_list<ServerAction>::iterator begin = pendingActions.begin();
+      begin->act(*this);
+      /* Can't use pop_front because more things might have been prepended
+       * during the call to act */
+      pendingActions.erase(begin);
     }
 
-    if (requestedUniverse != NULL) {
-      assert(!requestedUniversePath.empty());
-      universe = requestedUniverse;
-      requestedUniverse.reset();
-      universePath = requestedUniversePath;
-      requestedUniversePath = "";
-      String reason = settings->changeRequest(
-          "game:universe:name", universePath, this
-        );
-      assert(reason == "");
-      reason = settings->changeRequest(
-          "game:universe:hash", universe->getHash(), this
-        );
-      assert(reason == "");
-      game_to_advertise->setUniverse(universePath);
+    if (gameToAdvertiseChanged) {
 #ifndef DISABLE_AVAHI
       publisher.game_changed();
 #endif
-    }
-    
-    if (requestedMap != NULL) {
-      assert(!requestedMapPath.empty());
-      map = requestedMap;
-      requestedMap.reset();
-      mapPath = requestedMapPath;
-      requestedMapPath = "";
-      String reason = settings->changeRequest(
-          "game:map", mapPath, this
-        );
-      assert(reason == "");
-      setMapPlayMode(0);
-
-      game_to_advertise->setMap(mapPath);
-#ifndef DISABLE_AVAHI
-      publisher.game_changed();
-#endif
-    }
-
-    if (!pluginsToRemove.empty()) {
-      String pluginToRemove = *pluginsToRemove.begin();
-      pluginsToRemove.erase(pluginsToRemove.begin());
-      hash_map_string<Plugin::Ptr>::type::iterator p =
-        plugins.find(pluginToRemove);
-      if (p == plugins.end()) {
-        continue;
-      }
-      plugins.erase(p);
-    }
-
-    while (!pluginsToAdd.empty()) {
-      String pluginToAdd = pluginsToAdd.front();
-      pluginsToAdd.pop();
-      if (plugins.count(pluginToAdd)) {
-        continue;
-      }
-      try {
-        Plugin::Ptr plugin(pluginInterface.load(pluginToAdd));
-        plugins.insert(make_pair(plugin->getName(), plugin));
-        if (plugin->getName() != pluginToAdd) {
-          /* Correct the name as listed in the settings tree. */
-          String reason = settings->changeRequest(
-              "server:plugins", "-"+pluginToAdd, this
-            );
-          assert(reason == "");
-          /* At this point, the plugin we've just loaded will have been
-           * flagged for removal, so we must remove it, lest this recently
-           * loaded plugin be immediately unloaded again. */
-          pluginsToRemove.erase(plugin->getName());
-          /* And then add it in so the same thing doesn't happen again */
-          reason = settings->changeRequest(
-              "server:plugins", "+"+plugin->getName(), this
-            );
-          assert(reason == "");
-        }
-      } catch (PluginExn& e) {
-        Debug("plugin load failed: " + e.message);
-        String reason = settings->changeRequest(
-            "server:plugins", "-"+pluginToAdd, this
-          );
-        assert(reason == "");
-      }
-    }
-
-    if (mapPlayModeChanged) {
-      clearPlayers();
-      createPlayersFor(map->getPlayModes()[mapPlayMode]);
-      checkForGameStart();
-      
-      mapPlayModeChanged = false;
-    }
-
-    /* If we asked ourselves to, then check whether the game can start now */
-    if (checkForGameStartNextTime) {
-      out << "Checking for game start\n";
-      /* Check that we have:
-       * - A map and mapplaymode selected
-       * - Races selected for all players
-       * - A client for all players that need one
-       * - All clients ready
-       * - All clients either observers or else assigned to some player
-       */
-      if (map == NULL) {
-        out << "Not ready because no map selected" << endl;
-      } else {
-        /** \bug Can't cope with using fewer players than the maximum number
-         * */
-        bool allPlayersReady = true;
-        for (vector<Player>::iterator player = players.begin();
-            player != players.end(); player++) {
-          if (!player->isReadyForGameStart()) {
-            allPlayersReady = false;
-            out << "Not ready because player ";
-            if (player->getName() == "") {
-              out << (player - players.begin());
-            } else {
-              out << "'" << player->getName() << "'";
-            }
-            out << " not ready\n";
-            break;
-          }
-        }
-        if (allPlayersReady) {
-          bool allClientsReady = true;
-          for (hash_map<ClientId, RemoteClient*>::iterator client =
-              clients.begin(); client != clients.end(); client++) {
-            if (!client->second->isReadyForGameStart()) {
-              allClientsReady = false;
-              out << "Not ready because client '" <<
-                client->second->getClientId().toString() <<
-                "' not ready\n";
-              break;
-            }
-          }
-          startGame = allClientsReady;
-        }
-      }
-      checkForGameStartNextTime = false;
+      gameToAdvertiseChanged = false;
     }
     
     timeUtils_sleep(sleepTime);
@@ -915,7 +755,7 @@ void Server::serve()
  * their ready flag). */
 void Server::checkForGameStart()
 {
-  checkForGameStartNextTime = true;
+  pendingActions.push_back(new CheckForGameStartAction());
 }
 
 /** \brief Requests an (asynchronous) check to see whether an admin exists
@@ -929,7 +769,7 @@ void Server::checkForGameStart()
  * status. */
 void Server::ensureAdminExists()
 {
-  ensureAdminExistsNextTime = true;
+  pendingActions.push_front(new EnsureAdminExistsAction());
 }
 
 /** \brief Add a listener that intercepts some fraction of server-client
@@ -1086,9 +926,8 @@ String Server::stringSettingAlteringCallback(
         switch(result) {
           case resourceSearchResult_success:
             assert(u);
-            requestedUniverse = u; /* File an asynchronous request to use the
-                                      universe */
-            requestedUniversePath = uPath;
+            /* File an asynchronous request to use the universe */
+            pendingActions.push_front(new RequestUniverseAction(u, uPath));
             return "";
           case resourceSearchResult_ambiguous:
             return "specified universe name ambiguous";
@@ -1120,8 +959,8 @@ String Server::stringSettingAlteringCallback(
       switch(result) {
         case resourceSearchResult_success:
           assert(m);
-          requestedMap = m; /* File an asynchronous request to use the map */
-          requestedMapPath = mPath;
+          /* File an asynchronous request to use the map */
+          pendingActions.push_front(new RequestMapAction(m, mPath));
           return "";
         case resourceSearchResult_ambiguous:
           return "specified map template name ambiguous";

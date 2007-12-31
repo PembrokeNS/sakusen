@@ -38,7 +38,7 @@ Plugin::~Plugin()
 
 bool Plugin::isGameStarted() const
 {
-  return server->getGameStarted();
+  return server->isGameStarted();
 }
 
 ResourceInterface::Ptr Plugin::getResourceInterface() const

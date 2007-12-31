@@ -21,7 +21,6 @@ namespace resources {
 /** \brief Make a directory, creating parent directories as necessary.
  *
  * \param path Directory to create.
- * \param mode Mode to use for all directories created.
  */
 void fileUtils_mkdirRecursive(const boost::filesystem::path& path)
 {

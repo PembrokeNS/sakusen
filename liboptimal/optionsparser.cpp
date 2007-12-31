@@ -173,9 +173,26 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
     if (line.length() > 0) {
       string::size_type equalsPos = line.find(assignment, 0);
       if (equalsPos == string::npos) {
-        errors.push_back(
-            errorPrefix+": no '"+assignment+"' character found on line"
-          );
+        /* We assume this should be a boolean option which is being set to
+         * true */
+        string optionName = line;
+        if (longOptionTypes.count(optionName)) {
+          optionType type = longOptionTypes[optionName];
+          if (type == optionType_bool) {
+            assert(longBoolOptions.count(optionName));
+            *longBoolOptions[optionName] = true;
+          } else {
+            errors.push_back(
+                errorPrefix+": no '"+assignment+"' character found on line "
+                "and option not a boolean option"
+              );
+          }
+        } else {
+          errors.push_back(
+              errorPrefix+": no '"+assignment+"' character found on line "
+              "and not an option name"
+            );
+        }
       } else {
         string optionName = line.substr(0, equalsPos);
         string optionValue = line.substr(equalsPos + 1);

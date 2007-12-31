@@ -97,7 +97,7 @@ void ServerInterface::settingAlteration(
  *
  * \return Output that should be given to the user. */
 String ServerInterface::flushIncoming(
-    const ResourceInterface::Ptr& resourceInterface
+    const sakusen::ResourceInterface::Ptr& resourceInterface
   )
 {
   if (!joined) {

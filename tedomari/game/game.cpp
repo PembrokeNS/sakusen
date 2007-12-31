@@ -30,10 +30,10 @@ Game::~Game()
   }
 }
 
-/** \brief Loads the specified Universe and stores it for later use
+/** \brief Loads the specified Universe and stores it for later use.
  *
- * \param name Internal name of the Universe
- * \param hash Hash of the Universe (as hex string) */
+ * \param path Salusen path to the Universe.
+ * \param hash Hash of the Universe (as hex string). */
 void Game::setUniverse(const String& path, const String& hash)
 {
   ResourceSearchResult result;

@@ -1,7 +1,11 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "fuseki-global.h"
+
 #include <iosfwd>
+
+#include <boost/ptr_container/ptr_list.hpp>
 
 #include "gnu_extensions.h"
 #include "player.h"
@@ -11,10 +15,13 @@
 #include "remoteclient.h"
 #include "plugin.h"
 #include "plugininterface.h"
+#include "servedgame.h"
 #include "settingstree/settingstree.h"
 #include "settingstree/leaf.h"
 
 namespace fuseki {
+
+class ServerAction;
 
 /** \brief Represents a server.
  *
@@ -22,6 +29,14 @@ namespace fuseki {
  * clients, maintainance of the settings tree and game initialization and
  * shutdown. */
 class Server : public SettingsUser, private boost::noncopyable {
+  friend class ClientChangeSettingAction;
+  friend class EnsureAdminExistsAction;
+  friend class RequestUniverseAction;
+  friend class RequestMapAction;
+  friend class SetMapPlayModeAction;
+  friend class AddPluginAction;
+  friend class RemovePluginAction;
+  friend class CheckForGameStartAction;
   public:
     /** \brief Standard constructor
      *
@@ -82,6 +97,10 @@ class Server : public SettingsUser, private boost::noncopyable {
      */
     uint32 mapPlayMode;
 
+    boost::shared_ptr<sakusen::ServedGame> gameToAdvertise;
+    bool gameToAdvertiseChanged;
+    bool startGame;
+
     /** Players.  Note that this vector *becomes obsolete* as soon as the game
      * is started, because World makes a copy of it and works with that */
     std::vector<sakusen::server::Player> players;
@@ -95,20 +114,8 @@ class Server : public SettingsUser, private boost::noncopyable {
         sakusen::MaskedPtr<sakusen::server::plugins::Listener>,
         sakusen::server::plugins::Listener::VPtr
       > listeners;
-    
-    bool checkForGameStartNextTime; /* Indicate that a check for whether the
-                                       game can start is in order */
-    bool ensureAdminExistsNextTime; /* Indicate that a check for whether an
-                                       admin exists is in order */
-    sakusen::Universe::ConstPtr requestedUniverse;
-    String requestedUniversePath;
-      /* Put a universe & path here to be promoted to universe when possible */
-    sakusen::MapTemplate::ConstPtr requestedMap;
-    String requestedMapPath;
-      /* Put a map & path here to be promoted to map when possible */
-    std::queue<String> pluginsToAdd;
-    sakusen::hash_set_string pluginsToRemove;
-    bool mapPlayModeChanged;
+
+    boost::ptr_list<ServerAction> pendingActions;
 
     bool gameStarted;
     uint32 gameSpeed; /* Desired game speed in microseconds per tick */
@@ -127,10 +134,6 @@ class Server : public SettingsUser, private boost::noncopyable {
     void clearPlayers();
     void createPlayersFor(const sakusen::MapPlayMode& mode);
     void setAllowObservers(bool value);
-    inline void setMapPlayMode(uint32 mode) {
-      mapPlayMode = mode;
-      mapPlayModeChanged = true;
-    }
     void changeInClientBranch(
         RemoteClient* client,
         const String& node,
@@ -150,7 +153,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     /** \return true iff the server is currently allowing observers */
     inline bool getAllowObservers() const { return allowObservers; }
     /** \brief Determine if the game hosted by the Server has yet started */
-    inline bool getGameStarted() const { return gameStarted; }
+    inline bool isGameStarted() const { return gameStarted; }
     
     void serve();
     void checkForGameStart();

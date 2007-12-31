@@ -207,12 +207,11 @@ You can automate this whole process by putting a line like this one in your
 ~/.sakusen/tedomari/config file:
 
 \verbatim
-commands=cs neveradmin 0;z 10000;s game:universe:name test/u;z 1000000;s game:map test/m;z 2000000;cs player 1;cs ready 1
+commands=cs neveradmin 0;s game:universe:name test/u;s game:map test/m;cs player 1;cs ready 1
 \endverbatim
 
 That queues all of the command's we've just discussed that start the game,
-interspersed with some instructions to sleep to ensure that the server can keep
-up, to be executed automatically as soon as tedomari joins the server.  Note
+to be executed automatically as soon as tedomari joins the server.  Note
 that it uses \c cs, rather than \c s (where appropriate), and also that it
 abbreviates \c true to \c 1 and \c false to \c 0.
 

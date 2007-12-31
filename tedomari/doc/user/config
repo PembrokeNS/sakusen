@@ -1,1 +1,1 @@
-commands=cs neveradmin 0;z 10000;s game:universe:name test/u;z 1000000;s game:map test/m;z 2000000;cs player 1;cs ready 1
+commands=cs neveradmin 0;s game:universe:name test/u;s game:map test/m;cs player 1;cs ready 1
