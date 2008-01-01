@@ -3,6 +3,7 @@
 %feature("autodoc","1");
 %include "cmalloc.i"
 %include "cdata.i"
+
 %import "libsakusen.i"
 %malloc(void);
 #define LIBSAKUSEN_API
@@ -75,6 +76,14 @@ class MessageData;
 %template(mConstPtr) ::boost::shared_ptr<const MessageData>;
 }
 }
+#ifdef SWIGPYTHON
+%include "std_set.i"
+namespace saksen{
+namespace comms{
+%template(stringSet) ::std::set<String>;
+}
+}
+#endif
 %include "messagedata.h"
 %{
 #include "messagedata.h"
