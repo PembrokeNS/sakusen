@@ -21,7 +21,7 @@ class StringLeaf : public Leaf {
     String value;
 
     virtual String setValue(const String& v);
-    virtual String getValue() const;
+    virtual std::set<String> getValue() const;
 };
 
 }}

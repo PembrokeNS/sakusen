@@ -72,13 +72,14 @@ void ServerInterface::initialSettingsSetup()
 
 void ServerInterface::settingAlteration(
     const String& setting,
-    const String& value
+    const set<String>& value
   )
 {
   if (setting == ":game:universe:name") {
     /* Store the universe name for use when the hash arrives */
     /*QDebug("storing universe name");*/
-    universeName = value;
+    assert(value.size() == 1);
+    universeName = *value.begin();
   }
   else if (setting == ":game:universe:hash") {
     /* If the universe name is not set, then we must have caught the tail end
@@ -89,7 +90,8 @@ void ServerInterface::settingAlteration(
       return;
     }
     /* When the universe is set we need to let game know */
-    game->setUniverse(universeName, value);
+    assert(value.size() == 1);
+    game->setUniverse(universeName, *value.begin());
   }
 }
 
@@ -135,8 +137,14 @@ String ServerInterface::flushIncoming(
         case messageType_notifySetting:
           {
             NotifySettingMessageData data = message.getNotifySettingData();
-            out << "Server reported that value of '" << data.getSetting() <<
-              "' was:\n" << data.getValue() << "\n";
+            if (data.isLeaf()) {
+              out << "Server reported that value of '" << data.getSetting() <<
+                "' was:\n" << stringUtils_join(data.getValue(), "\n") << "\n";
+            } else {
+              out << "Server reported that '" << data.getSetting() <<
+                "' contained the following nodes:\n" <<
+                stringUtils_join(data.getValue(), "\n") << "\n";
+            }
             settingAlteration(data.getSetting(), data.getValue());
           }
           break;

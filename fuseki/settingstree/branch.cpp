@@ -64,39 +64,38 @@ String Branch::changeRequestListRef(
   return child->changeRequestListRef(setting, value, user);
 }
 
-String Branch::getRequestListRef(
-    list<String>& setting,
-    String& value,
-    Node::ConstPtr& node,
-    const SettingsUser* user) const
+boost::tuple<String, std::set<String>, Node::ConstPtr>
+Branch::getRequestListRef(
+    std::list<String>& nodeAddress,
+    const SettingsUser* user
+  ) const
 {
   if (!user->hasReadPermissionFor(this)) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
   
-  if (setting.empty()) {
-    ostringstream out;
-    out << static_cast<uint32>(children.size()) << " items";
+  if (nodeAddress.empty()) {
+    set<String> out;
     for (hash_map_string<Node::Ptr>::type::const_iterator
         child = children.begin(); child != children.end(); child++) {
-      out << "\n" << child->second->getName();
+      out.insert(child->second->getName());
     }
-    value = out.str();
-    node = ptrToThis();
-    return "";
+    return boost::make_tuple("", out, ptrToThis());
   }
 
-  Node::ConstPtr child = getChild(setting.front());
+  Node::ConstPtr child = getChild(nodeAddress.front());
 
   if (!child) {
-    return String("node '") + setting.front() + "' not found in '" +
-      getFullName() + "'";
+    return boost::make_tuple(
+        String("node '") + nodeAddress.front() + "' not found in '" +
+        getFullName() + "'", set<String>(), Ptr()
+      );
   }
 
-  setting.pop_front();
+  nodeAddress.pop_front();
   
-  return child->getRequestListRef(setting, value, node, user);
+  return child->getRequestListRef(nodeAddress, user);
 }
 
 Node::Ptr Branch::getChild(String name)

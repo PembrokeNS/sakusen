@@ -48,12 +48,14 @@ String BoolLeaf::setValue(const String& v)
   return "invalid value for boolean leaf";
 }
 
-String BoolLeaf::getValue() const
+std::set<String> BoolLeaf::getValue() const
 {
+  std::set<String> result;
   if (value) {
-    return "true";
+    result.insert("true");
   } else {
-    return "false";
+    result.insert("false");
   }
+  return result;
 }
 

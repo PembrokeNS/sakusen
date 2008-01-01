@@ -26,7 +26,7 @@ class StringSetLeaf : public Leaf {
     std::set<String> value;
   protected:
     virtual String setValue(const String& v);
-    virtual String getValue() const;
+    virtual std::set<String> getValue() const;
   public:
     inline const std::set<String>& getValueAsSet() const {
       return value;

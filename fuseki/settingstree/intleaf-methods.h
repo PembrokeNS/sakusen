@@ -39,9 +39,11 @@ String IntLeaf<T>::setValue(const String& s)
 }
 
 template<typename T>
-String IntLeaf<T>::getValue() const
+std::set<String> IntLeaf<T>::getValue() const
 {
-  return sakusen::numToString(value);
+  std::set<String> result;
+  result.insert(sakusen::numToString(value));
+  return result;
 }
 
 }}

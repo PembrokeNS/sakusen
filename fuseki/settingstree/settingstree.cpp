@@ -55,14 +55,12 @@ String SettingsTree::changeRequest(
     );
 }
 
-String SettingsTree::getRequest(
+boost::tuple<String, std::set<String>, Node::ConstPtr>
+SettingsTree::getRequest(
     const String& nodeAddress,
-    String& value,
-    Node::ConstPtr& node,
-    const SettingsUser* user) const
+    const SettingsUser* user
+  ) const
 {
-  return getRequestList(
-      stringNodeAddressToList(nodeAddress), value, node, user
-    );
+  return getRequestList(stringNodeAddressToList(nodeAddress), user);
 }
 

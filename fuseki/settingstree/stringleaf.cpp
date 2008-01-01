@@ -28,8 +28,10 @@ String StringLeaf::setValue(const String& v)
   return "";
 }
 
-String StringLeaf::getValue() const
+std::set<String> StringLeaf::getValue() const
 {
-  return value;
+  std::set<String> result;
+  result.insert(value);
+  return result;
 }
 

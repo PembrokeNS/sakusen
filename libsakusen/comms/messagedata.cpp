@@ -187,10 +187,12 @@ MessageType ChangeSettingMessageData::getType() const
 
 NotifySettingMessageData::NotifySettingMessageData(
     const String& s,
-    const String& v
+    bool l,
+    const set<String>& v
   ) :
   MessageData(),
   setting(s),
+  leaf(l),
   value(v)
 {
 }
@@ -198,14 +200,12 @@ NotifySettingMessageData::NotifySettingMessageData(
 NotifySettingMessageData::NotifySettingMessageData(IArchive& in) :
   MessageData()
 {
-  in >> setting;
-  in >> value;
+  in >> setting >> leaf >> value;
 }
 
 void NotifySettingMessageData::fillArchive(OArchive& archive) const
 {
-  archive << setting;
-  archive << value;
+  archive << setting << leaf << value;
 }
 
 MessageType NotifySettingMessageData::getType() const

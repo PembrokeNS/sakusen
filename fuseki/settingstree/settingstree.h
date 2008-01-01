@@ -28,10 +28,8 @@ class SettingsTree : public Branch {
         const String& value,
         const SettingsUser* user
       );
-    String getRequest(
+    boost::tuple<String, std::set<String>, Node::ConstPtr> getRequest(
         const String& nodeAddress,
-        String& value,
-        Node::ConstPtr& node,
         const SettingsUser* user
       ) const;
     Node::Ptr getNode(const String& nodeAddress);

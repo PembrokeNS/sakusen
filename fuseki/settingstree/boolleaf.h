@@ -21,7 +21,7 @@ class BoolLeaf : public Leaf {
     bool value;
   protected:
     virtual String setValue(const String& v);
-    virtual String getValue() const;
+    virtual std::set<String> getValue() const;
   public:
     inline bool getValueAsBool() const { return value; }
 };

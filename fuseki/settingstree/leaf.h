@@ -26,15 +26,15 @@ class Leaf : public Node {
         const String& value,
         const SettingsUser* client
       );
-    virtual String getRequestListRef(
+    virtual boost::tuple<String, std::set<String>, Node::ConstPtr>
+      getRequestListRef(
         std::list<String>& nodeAddress,
-        String& value,
-        Node::ConstPtr& node,
         const SettingsUser* client
       ) const;
     virtual String setValue(const String& v) = 0;
   public:
-    virtual String getValue() const = 0;
+    bool isLeaf() const { return true; }
+    virtual std::set<String> getValue() const = 0;
 };
 
 }}

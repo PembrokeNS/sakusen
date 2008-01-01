@@ -184,6 +184,19 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
       return *this;
     }
 
+    template<typename T>
+    OArchive& operator<<(const std::set<T>& toStore) {
+      *this << uint32(toStore.size());
+      Storer<T> storer;
+  
+      for(typename std::set<T>::const_iterator i = toStore.begin();
+          i != toStore.end(); ++i) {
+        storer(*this, *i);
+      }
+
+      return *this;
+    }
+
     template<typename T, typename U, typename THash>
     OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore) {
       *this << uint32(toStore.size());

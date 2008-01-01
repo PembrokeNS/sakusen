@@ -11,26 +11,6 @@
 
 using namespace std;
 
-String sakusen::stringUtils_join(
-    const list<String>& strings,
-    const String& delim
-  )
-{
-  if (strings.empty()) {
-    return "";
-  }
-  list<String>::const_iterator s = strings.begin();
-  String result = *s;
-  ++s;
-  
-  for (; s != strings.end(); ++s) {
-    result += delim;
-    result += *s;
-  }
-  
-  return result;
-}
-
 String sakusen::stringUtils_makePrintable(const String& s)
 {
   /* Note that this is UTF-8 safe */

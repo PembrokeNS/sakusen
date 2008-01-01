@@ -61,11 +61,11 @@ String Leaf::changeRequestListRef(
   return reason;
 }
 
-String Leaf::getRequestListRef(
-    list<String>& nodeAddress,
-    String& value,
-    Node::ConstPtr& node,
-    const SettingsUser* user) const
+boost::tuple<String, std::set<String>, Node::ConstPtr>
+Leaf::getRequestListRef(
+    std::list<String>& nodeAddress,
+    const SettingsUser* user
+  ) const
 {
   if (!user->hasReadPermissionFor(this)) {
     return String("cannot read node '") + getFullName() +
@@ -76,8 +76,6 @@ String Leaf::getRequestListRef(
     return String("node '") + getFullName() + "' is a leaf and has no child";
   }
 
-  value = getValue();
-  node = ptrToThis();
-  return "";
+  return boost::make_tuple("", getValue(), ptrToThis());
 }
 

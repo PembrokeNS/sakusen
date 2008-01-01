@@ -72,14 +72,8 @@ String StringSetLeaf::setValue(const String& v)
   return "";
 }
 
-String StringSetLeaf::getValue() const
+set<String> StringSetLeaf::getValue() const
 {
-  String result = "";
-  for (set<String>::const_iterator
-      v = value.begin(); v != value.end(); v++) {
-    result += "\n";
-    result += *v;
-  }
-  return result;
+  return value;
 }
 

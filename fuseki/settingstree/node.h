@@ -6,6 +6,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/utility.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include "libsakusen-global.h"
 #include "clientid.h"
@@ -48,6 +49,7 @@ class Node : boost::noncopyable {
     virtual Node::ConstPtr ptrToThis() const;
   public:
     inline const String& getName() const { return name; }
+    virtual bool isLeaf() const = 0;
     inline const std::set<String>& getReadingGroups() const {
       return readingGroups;
     }
@@ -74,18 +76,16 @@ class Node : boost::noncopyable {
         const String& value,
         const SettingsUser* user
       ) { return changeRequestListRef(nodeAddress, value, user); }
-    virtual String getRequestListRef(
+    virtual boost::tuple<String, std::set<String>, Node::ConstPtr>
+      getRequestListRef(
         std::list<String>& nodeAddress,
-        String& value,
-        Node::ConstPtr& node,
         const SettingsUser* user
-      ) const = 0; /* Note: alters its arguments nodeAddress, value */
-    inline String getRequestList(
+      ) const = 0; /* Note: alters its argument nodeAddress */
+    inline boost::tuple<String, std::set<String>, Node::ConstPtr>
+      getRequestList(
         std::list<String> nodeAddress,
-        String& value,
-        Node::ConstPtr& node,
         const SettingsUser* user
-      ) const { return getRequestListRef(nodeAddress, value, node, user); }
+      ) const { return getRequestListRef(nodeAddress, user); }
 };
 
 }}

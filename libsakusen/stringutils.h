@@ -44,10 +44,26 @@ Container stringUtils_split(
 }
 
 /** \brief Join the list of strings together, joining them with delim */
+template<typename Container>
 LIBSAKUSEN_API String stringUtils_join(
-    const std::list<String>& strings,
+    const Container& strings,
     const String& delim
-  );
+  )
+{
+  if (strings.empty()) {
+    return "";
+  }
+  typename Container::const_iterator s = strings.begin();
+  String result = *s;
+  ++s;
+  
+  for (; s != strings.end(); ++s) {
+    result += delim;
+    result += *s;
+  }
+  
+  return result;
+}
 
 /** \brief Convert all characters of the argument into printable characters */
 String LIBSAKUSEN_API stringUtils_makePrintable(const String&);

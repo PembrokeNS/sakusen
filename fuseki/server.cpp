@@ -240,18 +240,19 @@ void Server::handleClientMessages()
                 String setting = data.getSetting();
                 out << "Client requested setting " << setting << "\n";
                 String reason;
-                String value;
+                set<String> value;
                 Node::ConstPtr node;
-                reason = settings->getRequest(setting, value, node, client);
+                boost::tie(reason, value, node) =
+                  settings->getRequest(setting, client);
                 if (reason != "") {
                   out << "Request rejected (" << reason << ")\n";
                   client->send(new RejectMessageData(reason));
                 } else {
                   /* We send back node->getFullName() rather than just setting
                    * to ensure that it is in canonical form */
-                  client->send(
-                      new NotifySettingMessageData(node->getFullName(), value)
-                    );
+                  client->send(new NotifySettingMessageData(
+                        node->getFullName(), node->isLeaf(), value
+                      ));
                 }
               }
               break;
@@ -338,6 +339,17 @@ void Server::handleClientMessages()
       clientsToRemove.pop();
     }
     extensionMessages.pop();
+  }
+}
+
+void Server::handlePendingActions()
+{
+  while (!pendingActions.empty()) {
+    boost::ptr_list<ServerAction>::iterator begin = pendingActions.begin();
+    begin->act(*this);
+    /* Can't use pop_front because more things might have been prepended
+     * during the call to act */
+    pendingActions.erase(begin);
   }
 }
 
@@ -581,13 +593,7 @@ void Server::serve()
     handleClientMessages();
 
     /* Process server actions */
-    while (!pendingActions.empty()) {
-      boost::ptr_list<ServerAction>::iterator begin = pendingActions.begin();
-      begin->act(*this);
-      /* Can't use pop_front because more things might have been prepended
-       * during the call to act */
-      pendingActions.erase(begin);
-    }
+    handlePendingActions();
 
     if (gameToAdvertiseChanged) {
 #ifndef DISABLE_AVAHI
@@ -667,6 +673,8 @@ void Server::serve()
       /* Handle client messages (including accepting incoming orders into
        * players' order queues) */
       handleClientMessages();
+
+      handlePendingActions();
 
       /* Tell listeners that this is all the messages we'll be receiving for
        * this tick */
@@ -1073,7 +1081,7 @@ void Server::settingAlteredCallback(Leaf* altered)
   String fullName = altered->getFullName();
   bool isReadinessChange =
     pcrecpp::RE(":clients:[0-9]+:ready").FullMatch(fullName);
-  NotifySettingMessageData data(fullName, altered->getValue());
+  NotifySettingMessageData data(fullName, true, altered->getValue());
   
   /* Inform everyone with read permission that the setting was altered */
   for (__gnu_cxx::hash_map<ClientId, RemoteClient*>::iterator

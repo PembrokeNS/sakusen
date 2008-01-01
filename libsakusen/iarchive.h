@@ -271,6 +271,20 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
       return *this;
     }
 
+    template<typename T>
+    IArchive& operator>>(std::set<T>& result) {
+      assert(result.empty());
+      uint32 size;
+      *this >> size;
+      Extracter<T> extracter;
+
+      while (size--) {
+        result.insert(extracter(*this));
+      }
+
+      return *this;
+    }
+
     template<typename T, typename U, typename THash>
     IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result) {
       assert(result.empty());

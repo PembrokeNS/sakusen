@@ -59,7 +59,10 @@ class ServerInterface {
     String universeName;
 
     void initialSettingsSetup();
-    void settingAlteration(const String& setting, const String& value);
+    void settingAlteration(
+        const String& setting,
+        const std::set<String>& value
+      );
   public:
     /** \name Accessors */
     //@{

@@ -157,18 +157,31 @@ class LIBSAKUSEN_COMMS_API NotifySettingMessageData : public MessageData {
   private:
     NotifySettingMessageData();
   public:
-    NotifySettingMessageData(const String& setting, const String& value);
+    NotifySettingMessageData(
+        const String& setting,
+        bool leaf,
+        const std::set<String>& value
+      );
     NotifySettingMessageData(IArchive& in);
     ~NotifySettingMessageData() {}
   private:
     String setting; /* The full path of the setting being sent */
-    String value; /* The value of the setting */
+    bool leaf;
+    std::set<String> value; /* The value of the setting */
   protected:
     void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
     inline const String& getSetting() const { return setting; }
-    inline const String& getValue() const { return value; }
+    inline bool isLeaf() const { return leaf; }
+    /** \brief The value of the setting.
+     *
+     * If the setting is a branch, a set of names of its children.
+     * If the setting is a string set leaf, the set of its values.
+     * Otherwise, a singleton set containing a string representation of the
+     * value of the setting.
+     * */
+    inline const std::set<String>& getValue() const { return value; }
 };
 
 /** \brief Message providing data needed by client to initialize the game

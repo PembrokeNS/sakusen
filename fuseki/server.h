@@ -131,6 +131,7 @@ class Server : public SettingsUser, private boost::noncopyable {
       );
     void removeClient(RemoteClient* client);
     void handleClientMessages();
+    void handlePendingActions();
     void clearPlayers();
     void createPlayersFor(const sakusen::MapPlayMode& mode);
     void setAllowObservers(bool value);

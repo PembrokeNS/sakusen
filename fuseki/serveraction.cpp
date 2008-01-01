@@ -40,7 +40,9 @@ void ClientChangeSettingAction::act(Server& server) const
 
 void EnsureAdminExistsAction::act(Server& server) const
 {
-  assert(!server.isGameStarted());
+  if (server.isGameStarted()) {
+    return;
+  }
   server.out << "Checking for existence of an admin\n";
   RemoteClient* adminCandidate = NULL;
   bool needAdmin = true;

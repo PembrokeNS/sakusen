@@ -24,7 +24,7 @@ class IntLeaf : public Leaf {
     T value;
   protected:
     virtual String setValue(const String& v);
-    virtual String getValue() const;
+    virtual std::set<String> getValue() const;
   public:
     inline T getValueAsInt() const { return value; }
 };

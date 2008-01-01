@@ -38,13 +38,13 @@ class Branch : public Node {
         const String& value,
         const SettingsUser* user
       );
-    virtual String getRequestListRef(
-        std::list<String>& setting,
-        String& value,
-        Node::ConstPtr& node,
+    virtual boost::tuple<String, std::set<String>, Node::ConstPtr>
+      getRequestListRef(
+        std::list<String>& nodeAddress,
         const SettingsUser* user
       ) const;
   public:
+    bool isLeaf() const { return false; }
     Node::Ptr getChild(String name);
       /* Returns Node::Ptr() if no such child */
     Node::ConstPtr getChild(String name) const;
