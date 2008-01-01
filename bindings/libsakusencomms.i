@@ -127,7 +127,7 @@ struct timeval {
 %extend timeval {
         timeval(long s,long m){
                 timeval *t;
-                t=(timeval *)malloc(sizeof(timeval));
+                t=new timeval;
                 t->tv_sec=s;
                 t->tv_usec=m;
                 return t;
