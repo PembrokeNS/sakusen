@@ -3,3 +3,4 @@ settingsDialog.py
 *.pyc
 run-kiai-from-builddir.sh
 *~
+Kiai.e4?

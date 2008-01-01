@@ -2,7 +2,7 @@
 from PyQt4 import QtCore
 from sakusen import *
 from sakusencomms import *
-def debug(x): print x
+def debug(x): pass
 class listener(QtCore.QObject):
 	"""A class to handle sockets and emit signals when messages are received"""
 	def __init__(self):

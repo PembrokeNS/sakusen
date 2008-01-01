@@ -16,7 +16,8 @@ class connectDialog(QtGui.QDialog):
 		debug("called openConnection")
 		self.emit(QtCore.SIGNAL("openConnection(QString)"),self.ui.address.text())
 a=QtGui.QApplication(sys.argv)
-a.quitOnLastWindowClosed=False #may want to change this when main window is implemented
+a.setQuitOnLastWindowClosed(False) #may want to change this when main window is implemented
+assert(not a.quitOnLastWindowClosed())
 w=connectDialog()
 s=settingsDialog()
 j=joiner()
