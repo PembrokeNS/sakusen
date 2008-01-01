@@ -73,12 +73,17 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
     }
     /** \brief receives a binary stream from the network
      * \param[out] buf Must not be NULL, and should point to a buffer into
-     * which \p len bytes can be written.
+     * which \p len bytes can be written.  Whether this call blocks or not can
+     * be set with setNonBlocking.
      * \param len The maximum number of bytes you are willing to see.
      * \return The number of bytes actually read.
      */
     virtual size_t receive(void* buf, size_t len) = 0;
-    /** \brief receives a binary stream from the network, with a timeout
+    /** \brief receives a binary stream from the network, with a timeout.
+     *
+     * \note If you have not set the socket to be non-blocking with a call to
+     * setNonBlocking, then this function may block until data is received,
+     * regardless of the timeout.
      * \param[out] buf Must not be NULL, and should point to a buffer into
      * which \p len bytes can be written.
      * \param len The maximum number of bytes you are willing to see.
