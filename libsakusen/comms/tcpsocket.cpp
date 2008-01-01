@@ -84,6 +84,9 @@ void TCPSocket::send(const void* buf, size_t len)
       case ECONNABORTED:
         throw SocketClosedExn();
         break;
+      case EPIPE:
+        throw SocketExn("Socket has been closed locally");
+        break;
       default:
         Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;

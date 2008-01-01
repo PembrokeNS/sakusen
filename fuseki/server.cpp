@@ -1096,6 +1096,8 @@ void Server::settingAlteredCallback(Leaf* altered)
           changeInClientBranch(client, "ready", "false");
         }
       } catch (SocketExn&) {
+        out << "Marking client " << client->getClientId().toString() <<
+          " as dead due to causing SocketExn\n";
         client->setDead();
       }
     }
