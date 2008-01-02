@@ -1,6 +1,6 @@
 #include "settingstree/boolleaf.h"
 
-#include "server.h"
+#include "server-methods.h"
 
 using namespace fuseki;
 using namespace fuseki::settingsTree;
@@ -25,7 +25,7 @@ String BoolLeaf::setValue(const String& v)
       return "setting already has that value";
     } else {
       String reason;
-      if ("" != (reason = server->boolSettingAlteringCallback(this, true))) {
+      if ("" != (reason = server->settingAlteringCallback<bool>(this, true))) {
         return reason;
       }
       
@@ -37,7 +37,7 @@ String BoolLeaf::setValue(const String& v)
       return "setting already has that value";
     } else {
       String reason;
-      if ("" != (reason = server->boolSettingAlteringCallback(this, false))) {
+      if ("" != (reason = server->settingAlteringCallback<bool>(this, false))) {
         return reason;
       }
       

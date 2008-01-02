@@ -1,6 +1,6 @@
 #include "settingstree/stringsetleaf.h"
 
-#include "server.h"
+#include "server-methods.h"
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -64,7 +64,7 @@ String StringSetLeaf::setValue(const String& v)
 
   String reason;
   if ("" != 
-      (reason = server->stringSetSettingAlteringCallback(this, newValue))
+      (reason = server->settingAlteringCallback(this, newValue))
     ) {
     return reason;
   }

@@ -3,6 +3,7 @@
 
 #include "remoteclient.h"
 #include "server.h"
+#include "null_cast.h"
 #ifdef _MSC_VER
 #pragma warning (disable:4101)
 #endif //This is about unreferenced local variables. 
@@ -11,19 +12,69 @@
 namespace fuseki {
 
 template<typename T>
-String RemoteClient::performIntMagic(
+String RemoteClient::performMagic(
     const std::list<String>& name,
     T newValue
   )
 {
   assert(!name.empty());
   if (name.front() == "observer") {
-    Fatal("observer not an int setting");
+    bool newValueBool = null_cast<bool>(newValue);
+    if (newValueBool == observer) {
+      Debug("unexpectedly asked to confirm a non-change");
+      return "";
+    }
+    if (newValueBool) {
+      if (!server->getAllowObservers()) {
+        return "server does not allow observers";
+      }
+      if (playerId != 0) {
+        return "cannot be an observer when assigned to a player";
+      }
+    }
+    observer = newValueBool;
+    if (observer) {
+      /* A client becoming an observer can be enough to trigger a game start */
+      server->checkForGameStart();
+    }
+    return "";
   } else if (name.front() == "application") {
     /* Do nothing */
     return "";
+  } else if (name.front() == "neveradmin") {
+    bool newValueBool = null_cast<bool>(newValue);
+    if (newValueBool == neverAdmin) {
+      Debug("unexpectedly asked to confirm non-change");
+      return "";
+    }
+
+    neverAdmin = newValueBool;
+    if (!newValueBool) {
+      server->ensureAdminExists();
+    }
+    return "";
+  } else if (name.front() == "admin") {
+    bool newValueBool = null_cast<bool>(newValue);
+    if (newValueBool == admin) {
+      Debug("unexpectedly asked to confirm non-change");
+      return "";
+    }
+    
+    if (newValueBool) {
+      if (neverAdmin) {
+        return "cannot make admin when neveradmin is set";
+      }
+      admin = newValueBool;
+      addGroup("admin");
+    } else {
+      admin = newValueBool;
+      server->ensureAdminExists();
+    }
+    return "";
   } else if (name.front() == "player") {
-    if (newValue == playerId) {
+    sakusen::PlayerId::internal_type newValueInt =
+      null_cast<sakusen::PlayerId::internal_type>(newValue);
+    if (newValueInt == playerId) {
       Debug("unexpectedly asked to confirm a non-change");
       return "";
     }
@@ -33,9 +84,22 @@ String RemoteClient::performIntMagic(
     }
 
     try {
-      setPlayerId(sakusen::PlayerId::fromInteger(newValue));
+      setPlayerId(sakusen::PlayerId::fromInteger(newValueInt));
     } catch (sakusen::InvalidPlayerId& e) {
       return "the given player id does not exist in this map";
+    }
+    return "";
+  } else if (name.front() == "ready") {
+    bool newValueBool = null_cast<bool>(newValue);
+    if (newValueBool == ready) {
+      Debug("Unexpectedly asked to confirm non-change");
+      return "";
+    }
+
+    ready = newValueBool;
+
+    if (newValueBool) {
+      server->checkForGameStart();
     }
     return "";
   } else {
