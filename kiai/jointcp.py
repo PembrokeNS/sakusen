@@ -2,6 +2,7 @@
 from sakusen import *
 from sakusencomms import *
 from PyQt4 import QtCore
+from settingsDialog import Ui_settingsDialog
 def debug(x): print x
 Socket_socketsInit()
 class joiner(QtCore.QObject):

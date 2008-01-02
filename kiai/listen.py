@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import string
 from PyQt4 import QtCore
 from sakusen import *
 from sakusencomms import *
@@ -9,6 +10,7 @@ class listener(QtCore.QObject):
 		QtCore.QObject.__init__(self)
 		self.activeSockets=[]
 	def addSocket(self,s):
+		debug("Adding a socket")
 		self.activeSockets.append(s)
 	def checkPendingSockets(self):
 		debug("Checking pending sockets")
@@ -20,5 +22,17 @@ class listener(QtCore.QObject):
 			if(l):
 				i=IArchive(b,l)
 				m=Message(i)
-				print "Received unexpected message of type %d"%m.getType()
+				t=m.getType()
+				if(t==messageType_notifySetting):
+					d=m.getNotifySettingData()
+					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
+				else:
+					print "Received unexpected message of type %d"%m.getType()
 			debug("checked socket "+`s`)
+	def requestSetting(self,path):
+		s=string.join(path,':')
+		d=GetSettingMessageData(s)
+		m=Message(d)
+		d.thisown=0 #m now owns d
+		for socket in self.activeSockets:
+			socket.send(m)
