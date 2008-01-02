@@ -165,37 +165,11 @@ class Server : public SettingsUser, private boost::noncopyable {
         const sakusen::MaskedPtr<sakusen::server::plugins::Listener>&
       );
 
-    /** \name Settings tree callbacks
-     *
-     * These methods are called by leaves of the settings tree to advise the
-     * server that the setting on the given
-     * leaf wants to be altered.  These methods do not themselves perform any
-     * alteration of the settings tree, but they do execute the associated
-     * magic.
-     *
-     * \param altering The leaf being altered.
-     * \param newValue The new value of the leaf.
-     * \return Empty string if the alteration may be performed, or a reason why
-     * it cannot be performed otherwise. */
-    //@{
-    String boolSettingAlteringCallback(
-        settingsTree::Leaf* altering,
-        bool newValue
-      );
     template<typename T>
-    String intSettingAlteringCallback(
+    String settingAlteringCallback(
         settingsTree::Leaf* altering,
         T newValue
       );
-    String stringSettingAlteringCallback(
-        settingsTree::Leaf* altering,
-        const String& newValue
-      );
-    String stringSetSettingAlteringCallback(
-        settingsTree::Leaf* altering,
-        const std::set<String>& newValue
-      );
-    //@}
 
     void settingAlteredCallback(settingsTree::Leaf* altered);
 };

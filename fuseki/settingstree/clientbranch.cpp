@@ -27,7 +27,7 @@ ClientBranch::ClientBranch(ClientId id, Branch* parent, Server* server) :
   addChild(Node::Ptr(
         new BoolLeaf("ready", "world", clientGroup, this, server, false)
       ));
-  addChild(Node::Ptr(new IntLeaf<uint8>(
+  addChild(Node::Ptr(new IntLeaf<PlayerId::internal_type>(
           "player", "world", clientGroup+",admin", this, server, 0
         )));
 }

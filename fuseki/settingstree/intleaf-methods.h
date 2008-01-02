@@ -30,7 +30,7 @@ String IntLeaf<T>::setValue(const String& s)
     return "setting already has that value";
   }
   String reason;
-  if ("" != (reason = server->intSettingAlteringCallback(this, v))) {
+  if ("" != (reason = server->settingAlteringCallback<T>(this, v))) {
     return reason;
   }
 

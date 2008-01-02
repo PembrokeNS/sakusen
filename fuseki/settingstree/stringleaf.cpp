@@ -1,6 +1,6 @@
 #include "settingstree/stringleaf.h"
 
-#include "server.h"
+#include "server-methods.h"
 
 using namespace fuseki;
 using namespace fuseki::settingsTree;
@@ -21,7 +21,7 @@ StringLeaf::StringLeaf(
 String StringLeaf::setValue(const String& v)
 {
   String reason;
-  if ("" != (reason = server->stringSettingAlteringCallback(this, v))) {
+  if ("" != (reason = server->settingAlteringCallback(this, v))) {
     return reason;
   }
   value = v;

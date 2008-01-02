@@ -10,6 +10,8 @@ namespace settingsTree {
  * integer type */
 template <typename T>
 class IntLeaf : public Leaf {
+  SAKUSEN_STATIC_ASSERT((boost::is_integral<T>::value));
+  SAKUSEN_STATIC_ASSERT((!boost::is_same<T, bool>::value));
   public:
     IntLeaf(
         const String& name,

@@ -10,7 +10,7 @@
 
 namespace fuseki {
 
-/** \brief Interfaces witha client via one or more Sockets
+/** \brief Interfaces with a client via one or more Sockets
  *
  * Represents a client which is contacted via a socket of some kind (this could
  * be a TCP socket to another machine, or a Unix socket to another process on
@@ -104,29 +104,15 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       outgoingUpdateQueue.push_back(update);
     }
 
-    /** \name Perform magic related to the changing value of a client setting
+    /** \brief Perform magic related to the changing value of a client setting
      *
      * See \ref settingstree for more details
      * */
-    //@{
-    String performBoolMagic(
-        const std::list<String>& name,
-        bool newValue
-      );
     template<typename T>
-    String performIntMagic(
+    String performMagic(
         const std::list<String>& name,
         T newValue
       );
-    String performStringMagic(
-        const std::list<String>& name,
-        const String& newValue
-      );
-    String performStringSetMagic(
-        const std::list<String>& name,
-        const std::set<String>& newValue
-      );
-    //@}
 };
 
 }
