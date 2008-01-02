@@ -40,15 +40,13 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else: return QtCore.QVariant(self.l[index.internalId()].data)
 	def parent(self,index):
 		if(not index.isValid()): return QtCore.QModelIndex()
-		else:	
-			debug("returning index "+`self.l[index.internalId()].parent`+" from parent()")
+		else:
 			return self.l[index.internalId()].parent
 	def rowCount(self,index):
 		if(not index.isValid()): return 1
 		else: return self.l[index.internalId()].rowCount()
 	def columnCount(self,index): return 2
 	def index(self,row,column,index):
-		debug("settingsModel.index called with (parent) index "+`index`+", row %s, column %s"%(`row`,`column`))
 		if(index<=0 or not index.isValid()): #remove the index<=0 once it's understood
 			if(row==0 and column==0):
 				return self.l[0].selfindex #creating index again might be a bad idea
@@ -72,7 +70,11 @@ class settingsModel(QtCore.QAbstractItemModel):
 		self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
 		path=tuple(d.getSetting().split(':'))
 		debug("working on path "+`path`)
-		n=self.indexof(path,0)
+		try:
+			n=self.indexof(path,0)
+		except Exception:
+			print "Got unexpected update to setting "+`path`+", ignoring"
+			return
 		if(not d.isLeaf()):
 			#this is ugly, but I don't know any way to be sure the set of children hasn't changed - and it certainly does sometimes. Thankfully the Qt class is designed to handle this sort of thing - but it leaves a lot of exceptions on the console.
 			self.beginRemoveRows(self.l[n].selfindex,0,len(self.l[n].children)-1)
@@ -84,7 +86,8 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else:
 			try:
 				m=self.indexof(path,1)
-				m.data=d.getValue()[0]
+				debug("about to update setting "+`path`+" with value "+d.getValue()[0])
+				self.l[m].data=d.getValue()[0]
 				self.emit(QtCore.SIGNAL("dataChanged(const QModelIndex &,const QModelIndex &)"),self.l[m].selfindex,self.l[m].selfindex)
 			except Exception:
 				self.beginInsertColumns(self.l[self.indexof(path[:-1],0)].selfindex,1,1)
