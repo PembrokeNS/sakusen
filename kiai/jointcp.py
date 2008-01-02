@@ -3,7 +3,7 @@ from sakusen import *
 from sakusencomms import *
 from PyQt4 import QtCore
 from settingsDialog import Ui_settingsDialog
-def debug(x): print x
+def debug(x): pass
 Socket_socketsInit()
 class joiner(QtCore.QObject):
 	"""A class to open new connections"""

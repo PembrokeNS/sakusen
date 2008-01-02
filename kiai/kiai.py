@@ -7,7 +7,7 @@ from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
 import sys
-def debug(x): print x
+def debug(x): pass
 a=QtGui.QApplication(sys.argv)
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):
