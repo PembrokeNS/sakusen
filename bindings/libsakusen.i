@@ -243,6 +243,10 @@ namespace sakusen {
 %{
 #include "writer.h"
 %}
+namespace sakusen{
+class ResourceInterface;
+%template(rPtr) ::boost::shared_ptr<ResourceInterface>;
+}
 %include "resourceinterface.h"
 %{
 #include "resourceinterface.h"

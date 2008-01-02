@@ -1,0 +1,17 @@
+Kiai requires a working install of python (probably needs to be version 2.5),
+with the PyQt4 python bindings for Qt4 installed (available from 
+http://www.riverbankcomputing.co.uk/pyqt/, and
+in turn depending on Qt itself; a windows binary package of all of these is available at
+http://www.riverbankcomputing.com/Downloads/PyQt4/GPL/PyQt-Py2.5-gpl-4.3.3-2.exe).
+It also requires the python bindings for sakusen to be installed; these should
+be built automaticly if your config.mk is set appropriately (they require only
+python (with its development files) and SWIG (from http://www.swig.org/;
+windows binary of version 1.3.31 is probably
+http://prdownloads.sourceforge.net/swig/swigwin-1.3.31.zip). Note that swig
+versions 1.3.32 and 1.3.33 appear to be broken.
+To use, simply run "kiai.py". The convenience script
+"run-kiai-from-builddir.sh" is made to allow running kiai without having
+installed the python bindings for sakusen.
+
+Good luck
+Michael

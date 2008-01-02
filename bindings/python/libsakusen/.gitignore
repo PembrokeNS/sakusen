@@ -5,9 +5,12 @@ _sakusencomms.so
 _sakusen.so
 sakusencomms.lo
 sakusen.lo
+sakusenresources.lo
 sakusencomms.cpp
 sakusencomms.o
 sakusen.o
 sakusencomms.py
 sakusen.pyc
 sakusencomms.pyc
+sakusenresources.py
+*.pyc

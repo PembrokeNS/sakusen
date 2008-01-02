@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
+INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources `python-config --cflags`
 define PYLIBDIR
 `echo -e "import distutils.sysconfig\nprint distutils.sysconfig.get_python_lib(plat_specific=1)"|python`
 endef
@@ -8,13 +8,15 @@ endef
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
 
-all-nonrecursive: _sakusen.la _sakusencomms.la
+all-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la
 
-install-nonrecursive: _sakusen.so _sakusencomms.so
+install-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la
 	install sakusen.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusen.so $(PYLIBDIR)
 	install sakusencomms.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusencomms.so $(PYLIBDIR)
+	install sakusenresources.py $(PYLIBDIR)
+	libtool --mode=install --tag=CXX install _sakusenresources.so $(PYLIBDIR)
 
 clean:
 	-rm -rf *.o *.so *.py *.cpp *.lo *.la .libs *.pyc
@@ -26,9 +28,9 @@ _sakusen.la: sakusen.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
-_sakusencomms.la: sakusencomms.o
+_sakusen%.la: sakusen%.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
-                sakusencomms.lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
+                sakusen$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have
 # access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
@@ -43,9 +45,9 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusencomms.cpp: $(top_srcdir)/bindings/libsakusencomms.i $(top_srcdir)/bindings/libsakusen.i \
-		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
-	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
+sakusen%.cpp: $(top_srcdir)/bindings/libsakusen%.i $(top_srcdir)/bindings/libsakusen.i \
+		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/%/*.h))
+	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
 
 
 .PHONY: all test clean
