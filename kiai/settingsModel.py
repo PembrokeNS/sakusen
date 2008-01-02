@@ -15,7 +15,7 @@ class settingItem:
 		self.column=column
 	def rowCount(self): return len(self.children)
 	def index(self,row,column):
-		if(row<0 or row>len(self.children) or column <0 or column >1): return QtCore.QModelIndex()
+		if(row<0 or row>=len(self.children) or column <0 or column >1): return QtCore.QModelIndex()
 		else:
 			path=self.path+(self.children[row],)
 			try:
