@@ -18,15 +18,17 @@ class connectDialog(QtGui.QDialog):
 		global debug
 		debug("called openConnection")
 		self.emit(QtCore.SIGNAL("openConnection(QString)"),self.ui.address.text())
-def openSettingsDialog(socket):
+def openSettingsDialog(socket,clientid):
 	global a,l,s,m #otherwise s and m will get hilariously garbage-collected
-	l.addSocket(socket)
+	l.addSocket(socket,clientid)
+	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),l.leave)
 	debug("going to open settings dialog") 
 	s=settingsDialog()
 	QtCore.QObject.connect(s,QtCore.SIGNAL("rejected()"),a,QtCore.SLOT("quit()")) #this may need to be reconsidered in the final version
 	m=settingsModel(s)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
 	QtCore.QObject.connect(l,QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),m.processUpdate)
+	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
 	#mt=ModelTest(s,m)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
@@ -44,7 +46,7 @@ QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),j.join)
 #QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),l.addSocket) #needs to be synchronised with settingsDialog
 QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
-QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),openSettingsDialog)
+QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
 t.start(1000) #1 seconds - will want to make this less for the actual release
 w.show()
 r=a.exec_()

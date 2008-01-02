@@ -9,9 +9,12 @@ class listener(QtCore.QObject):
 	def __init__(self):
 		QtCore.QObject.__init__(self)
 		self.activeSockets=[]
-	def addSocket(self,s):
+		self.clientids=[]
+	def addSocket(self,s,clientid=0):
 		debug("Adding a socket")
 		self.activeSockets.append(s)
+		self.clientids.append(clientid)
+		self.setSetting(('clients',str(clientid),'application','name'),'Kiai')
 	def checkPendingSockets(self):
 		debug("Checking pending sockets")
 		b=uint8(BUFFER_LEN)
@@ -32,6 +35,19 @@ class listener(QtCore.QObject):
 	def requestSetting(self,path):
 		s=string.join(path,':')
 		d=GetSettingMessageData(s)
+		m=Message(d)
+		d.thisown=0 #m now owns d
+		for socket in self.activeSockets:
+			socket.send(m)
+	def leave(self):
+		d=LeaveMessageData()
+		m=Message(d)
+		d.thisown=0 #m now owns d
+		for socket in self.activeSockets:
+			socket.send(m)
+	def setSetting(self,path,value):
+		s=string.join(path,':')
+		d=ChangeSettingMessageData(s,value)
 		m=Message(d)
 		d.thisown=0 #m now owns d
 		for socket in self.activeSockets:

@@ -28,7 +28,8 @@ class joiner(QtCore.QObject):
 		t=r.getType()
 		debug("about to send signal from joiner")
 		if(t==messageType_accept):
-			self.emit(QtCore.SIGNAL("newConnection(PyQt_PyObject)"),s)
+			d=r.getAcceptData()
+			self.emit(QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),s,d.getId().toString())
 			debug("signal sent")
 		else:
 			debug("Got unexpected message type, dying")

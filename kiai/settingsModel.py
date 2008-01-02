@@ -74,17 +74,32 @@ class settingsModel(QtCore.QAbstractItemModel):
 		debug("working on path "+`path`)
 		n=self.indexof(path,0)
 		if(not d.isLeaf()):
+			#this is ugly, but I don't know any way to be sure the set of children hasn't changed - and it certainly does sometimes. Thankfully the Qt class is designed to handle this sort of thing - but it leaves a lot of exceptions on the console.
+			self.beginRemoveRows(self.l[n].selfindex,0,len(self.l[n].children)-1)
+			self.l[n].children=[]
+			self.endRemoveRows()
 			self.beginInsertRows(self.l[self.indexof(path,0)].selfindex,0,len(d.getValue())-1)
 			self.l[n].children=d.getValue()
 			self.endInsertRows()
 		else:
 			try:
 				m=self.indexof(path,1)
+				m.data=d.getValue()[0]
+				self.emit(QtCore.SIGNAL("dataChanged(const QModelIndex &,const QModelIndex &)"),self.l[m].selfindex,self.l[m].selfindex)
 			except Exception:
 				self.beginInsertColumns(self.l[self.indexof(path[:-1],0)].selfindex,1,1)
-				self.l.append(settingItem(path,None,self.l[n].parent,d.getValue()[0],1))
+				self.l.append(settingItem(path,None,self.l[n].parent,(d.getValue() or ('',))[0],1)) #aparrently we sometimes get an empty set even for a leaf node.
 				i=self.indexof(path,1)
 				self.l[i].selfindex=self.createIndex(self.l[n].selfindex.row(),1,i)
 				self.endInsertColumns()
 		self.emit(QtCore.SIGNAL("layoutChanged()"))
+	def flags(self,index):
+		if(index.isValid() and index.column()==1): return QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
+		else: return QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
+	def setData(self,index,value,role):
+		if(index.isValid()): 
+			self.emit(QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),self.l[index.internalId()].path,str(value.toString()))
+			return True
+		else:
+			return False
 
