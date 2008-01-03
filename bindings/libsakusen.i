@@ -391,5 +391,9 @@ class ResourceInterface;
 %{
 #include "ordermessage.h"
 %}
+%include "world.h"
+%{
+#include "world.h"
+%}
 
 

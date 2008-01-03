@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags`
+INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags` $(SWIGWORDSIZE)
 define PYLIBDIR
 `echo -e "import distutils.sysconfig\nprint distutils.sysconfig.get_python_lib(plat_specific=1)"|python`
 endef
@@ -47,7 +47,7 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusen%.cpp: $(top_srcdir)/bindings/libsakusen%.i $(top_srcdir)/bindings/libsakusen.i \
+sakusen%.cpp: $(top_srcdir)bindings/libsakusen%.i $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/%/*.h))
 	$(SWIG) $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
 
@@ -56,3 +56,4 @@ sakusen%.cpp: $(top_srcdir)/bindings/libsakusen%.i $(top_srcdir)/bindings/libsak
 
 .DELETE_ON_ERROR:
 
+.PRECIOUS: sakusenresources.cpp

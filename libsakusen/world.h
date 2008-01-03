@@ -39,8 +39,8 @@ class LIBSAKUSEN_API World : boost::noncopyable {
     /** \name Accessors. */
     //@{
     inline const Universe::ConstPtr& getUniverse() const { return universe; }
-    virtual Map* getMap() = 0;
-    virtual const Map* getMap() const = 0;
+    virtual sakusen::Map* getMap() = 0;
+    virtual const sakusen::Map* getMap() const = 0;
     inline const Time& getTimeNow() { return timeNow; }
     //@}
 
@@ -59,7 +59,7 @@ class LIBSAKUSEN_API World : boost::noncopyable {
         PlayerId player, UnitId unitId
       ) = 0;
     /** \brief Get a spatial index for the objects in the World */
-    virtual ISpatial::ConstPtr getSpatialIndex() const = 0;
+    virtual sakusen::ISpatial::ConstPtr getSpatialIndex() const = 0;
 };
 
 /** \brief Pointer to the game world.
