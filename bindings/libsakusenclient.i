@@ -1,4 +1,4 @@
-%module sakusenresources
+%module sakusenclient
 %naturalvar;
 %feature("autodoc","1");
 %import "libsakusen.i"

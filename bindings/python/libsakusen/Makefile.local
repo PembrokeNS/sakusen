@@ -56,4 +56,3 @@ sakusen%.cpp: $(top_srcdir)bindings/libsakusen%.i $(top_srcdir)bindings/libsakus
 
 .DELETE_ON_ERROR:
 
-.PRECIOUS: sakusenresources.cpp
