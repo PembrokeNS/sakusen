@@ -25,7 +25,7 @@ class ISensorReturns;
  * World itself is fairly simple, but its subclasses in the client and server
  * libraries add the functionality needed in their respective contexts.
  */
-class LIBSAKUSEN_API World : boost::noncopyable {
+class LIBSAKUSEN_API World : private boost::noncopyable {
   protected:
     World(const Universe::ConstPtr& universe);
   public:
