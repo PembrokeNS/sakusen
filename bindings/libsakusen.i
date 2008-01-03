@@ -243,6 +243,10 @@ namespace sakusen {
 %{
 #include "writer.h"
 %}
+%include "resourcesearchresult.h"
+%{
+#include "resourcesearchresult.h"
+%}
 namespace sakusen{
 class ResourceInterface;
 %template(rPtr) ::boost::shared_ptr<ResourceInterface>;
@@ -251,6 +255,18 @@ class ResourceInterface;
 %{
 #include "resourceinterface.h"
 %}
+/*%import "boost/tuple/detail/tuple_basic.hpp" //might be broken under MSVC
+%include "boost/tuple/tuple.hpp"
+%{
+#include "boost/tuple/tuple.hpp"
+%}
+namespace sakusen{
+%template(uPtr) ::boost::shared_ptr<Universe>;
+%template(uPtrRSRStringtuple) ::boost::tuple<::boost::shared_ptr<Universe>, ResourceSearchResult, String>;
+%extend ResourceInterface {
+%template(searchUniverse) search<Universe>;
+};
+}*/
 %include "deserializationcontext.h"
 %{
 #include "deserializationcontext.h"
