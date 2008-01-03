@@ -7,9 +7,9 @@ plan tests => 3+3*5*5*5;
 
 my $result = Sakusen::mathsUtils_solveQuadratic(0, 0, 0);
 
-isa_ok($result, 'Sakusen::pairDoubleDouble');
-ok(defined $result->{first}, "Can get first of pair");
-ok(defined $result->{second}, "Can get second of pair");
+isa_ok($result, 'Sakusen::tupleDoubleDouble');
+ok(defined $result->get_head(), "Can get first of pair");
+ok(defined $result->get_tail()->get_head(), "Can get second of pair");
 
 my @values_to_try = ( -2, -1, 0, 1, 1E100 );
 
@@ -17,8 +17,8 @@ foreach $a (@values_to_try) {
   foreach $b (@values_to_try) {
     foreach $c (@values_to_try) {
       $result = Sakusen::mathsUtils_solveQuadratic($a, $b, $c);
-      my $root1 = $result->{first};
-      my $root2 = $result->{second};
+      my $root1 = $result->get_head();
+      my $root2 = $result->get_tail()->get_head();
       ok(!($root2 < $root1), "roots in correct order");
       if ($a == 0) {
         # Test for NaN

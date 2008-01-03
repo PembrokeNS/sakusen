@@ -24,6 +24,41 @@ template<class T> class shared_ptr{
     T* get() const;
     T* operator-> () const;
 };
+
+template<
+    typename T0,
+    typename T1 = boost::tuples::null_type,
+    typename T2 = boost::tuples::null_type,
+    typename T3 = boost::tuples::null_type,
+    typename T4 = boost::tuples::null_type,
+    typename T5 = boost::tuples::null_type,
+    typename T6 = boost::tuples::null_type
+  >
+class tuple {
+  public:
+    T0 get_head();
+    tuple<T1, T2, T3, T4, T5, T6> get_tail();
+};
+
+template<typename T0>
+class tuple<
+    T0,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type
+  >
+{
+  public:
+    T0 get_head();
+    boost::tuples::null_type get_tail();
+};
+
+%template(tupleDouble) tuple<double>;
+%template(tupleDoubleDouble) tuple<double, double>;
+
 }
 
 #ifdef SWIGPERL
@@ -71,6 +106,9 @@ $VERSION = 0.01;
 /* Renames for wrapped operators.  Although C# does support operator
  * overloading, it doesn't work in the same way as C++'s, so for now we don't
  * try to make use of it */
+%rename(Numify) *::operator unsigned char;
+%rename(Numify) *::operator unsigned int;
+%rename(Numify) *::operator uint32;
 %rename(Item) *::operator[];
 %rename(Or) *::operator|;
 %rename(Minus) *::operator-;
@@ -88,8 +126,16 @@ $VERSION = 0.01;
 %rename(Less) *::operator<;
 %rename(Greater) *::operator>;
 %ignore *::operator=;
-
-%ignore operator|(const GameObject&, const GameObject&);
+%ignore *::operator!;
+%ignore *::operator>>;
+%ignore *::operator<<;
+%ignore operator++;
+%ignore operator==;
+%ignore operator!=;
+%ignore operator>>;
+%ignore operator<<;
+%ignore operator|;
+%ignore operator|=;
 
 /* We have to rename Buffer because the name clashes with System.Buffer */
 %rename(SakusenBuffer) Buffer;
@@ -100,6 +146,7 @@ $VERSION = 0.01;
  * */
 
 %ignore sakusen::Point::operator[](int const) const;
+%ignore sakusen::UnitStatus::getWeaponsStatus(void) const;
 
 #define LIBSAKUSEN_API
 
@@ -255,18 +302,6 @@ class ResourceInterface;
 %{
 #include "resourceinterface.h"
 %}
-/*%import "boost/tuple/detail/tuple_basic.hpp" //might be broken under MSVC
-%include "boost/tuple/tuple.hpp"
-%{
-#include "boost/tuple/tuple.hpp"
-%}
-namespace sakusen{
-%template(uPtr) ::boost::shared_ptr<Universe>;
-%template(uPtrRSRStringtuple) ::boost::tuple<::boost::shared_ptr<Universe>, ResourceSearchResult, String>;
-%extend ResourceInterface {
-%template(searchUniverse) search<Universe>;
-};
-}*/
 %include "deserializationcontext.h"
 %{
 #include "deserializationcontext.h"

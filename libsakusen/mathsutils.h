@@ -8,7 +8,7 @@
 
 namespace sakusen {
 
-std::pair<double,double> mathsUtils_solveQuadratic(
+boost::tuple<double,double> mathsUtils_solveQuadratic(
     const double a,
     const double b,
     const double c
