@@ -72,14 +72,14 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     //@{
     inline PlayerId getPlayerId() const { return playerId; }
     inline sakusen::Map* getMap() { return map; }
-    inline const Map* getMap() const { return map; }
+    inline const sakusen::Map* getMap() const { return map; }
     inline UnitIdIndex::ConstPtr getUnitsById() const {
       return unitsById;
     }
     inline SensorReturnsIdIndex::ConstPtr getSensorReturnsById() const {
       return sensorReturnsById;
     }
-    inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
+    inline sakusen::ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
     //@}
 
     void applyUpdate(const Update&);
