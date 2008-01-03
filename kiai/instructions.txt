@@ -9,6 +9,9 @@ python (with its development files) and SWIG (from http://www.swig.org/;
 windows binary of version 1.3.31 is probably
 http://prdownloads.sourceforge.net/swig/swigwin-1.3.31.zip). Note that swig
 versions 1.3.32 and 1.3.33 appear to be broken.
+With these installed, appropriate config.mk settings should lead to the .ui
+files herein being compiled into .py files in the course of a normal "make";
+this is the only compilation necessary.
 To use, simply run "kiai.py". The convenience script
 "run-kiai-from-builddir.sh" is made to allow running kiai without having
 installed the python bindings for sakusen.
