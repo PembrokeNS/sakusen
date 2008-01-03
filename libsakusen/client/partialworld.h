@@ -71,7 +71,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     /** \name Accessors. */
     //@{
     inline PlayerId getPlayerId() const { return playerId; }
-    inline Map* getMap() { return map; }
+    inline sakusen::Map* getMap() { return map; }
     inline const Map* getMap() const { return map; }
     inline UnitIdIndex::ConstPtr getUnitsById() const {
       return unitsById;

@@ -2,9 +2,6 @@
 %naturalvar;
 %feature("autodoc","1");
 %import "libsakusen.i"
-%{
-#include "playerid.h"
-%}
 %include "libsakusen-resources-global.h"
 %{
 #include "libsakusen-resources-global.h"

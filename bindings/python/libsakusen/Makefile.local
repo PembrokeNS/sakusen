@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources `python-config --cflags`
+INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags`
 define PYLIBDIR
 `echo -e "import distutils.sysconfig\nprint distutils.sysconfig.get_python_lib(plat_specific=1)"|python`
 endef
@@ -8,15 +8,17 @@ endef
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
 
-all-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la
+all-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la _sakusenclient.la
 
-install-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la
+install-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la _sakusenclient.la
 	install sakusen.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusen.so $(PYLIBDIR)
 	install sakusencomms.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusencomms.so $(PYLIBDIR)
 	install sakusenresources.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusenresources.so $(PYLIBDIR)
+	install sakusenclient.py $(PYLIBDIR)
+	libtool --mode=install --tag=CXX install _sakusenclient.so $(PYLIBDIR)
 
 clean:
 	-rm -rf *.o *.so *.py *.cpp *.lo *.la .libs *.pyc

@@ -14,3 +14,4 @@ sakusen.pyc
 sakusencomms.pyc
 sakusenresources.py
 *.pyc
+*.lo

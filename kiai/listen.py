@@ -4,7 +4,7 @@ from PyQt4 import QtCore
 from sakusen import *
 from sakusencomms import *
 from gameModel import gameModel
-def debug(x): pass
+def debug(x): print x
 class listener(QtCore.QObject):
 	"""A class to handle sockets and emit signals when messages are received"""
 	def __init__(self):
@@ -32,6 +32,10 @@ class listener(QtCore.QObject):
 				t=m.getType()
 				if(t==messageType_notifySetting):
 					d=m.getNotifySettingData()
+					debug("comparing setting %s with %s"%(d.getSetting(),'clients:%s:player'%self.clientid))
+					if(d.getSetting()==':clients:%s:player'%self.clientid):
+						debug("changing player id to %s"%d.getValue())
+						#self.game.playerid=PlayerId(d.getValue())
 					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
 				#elif(t==messageType_gameStart):
 				#	d=m.getGameStartData()
