@@ -37,12 +37,12 @@ bool SettingsUser::hasGroupIn(const std::set<String>& groupsToCheck) const
   }
 }
 
-bool SettingsUser::hasReadPermissionFor(const Node* node) const
+bool SettingsUser::hasReadPermissionFor(Node::ConstPtr node) const
 {
   return hasGroupIn(node->getReadingGroups());
 }
 
-bool SettingsUser::hasWritePermissionFor(const Node* node) const
+bool SettingsUser::hasWritePermissionFor(Node::ConstPtr node) const
 {
   return hasGroupIn(node->getWritingGroups());
 }

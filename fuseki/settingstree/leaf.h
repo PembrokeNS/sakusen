@@ -9,6 +9,8 @@ namespace settingsTree {
 
 class Leaf : public Node {
   public:
+    typedef boost::shared_ptr<Leaf> Ptr;
+    typedef boost::shared_ptr<const Leaf> ConstPtr;
     Leaf(
         const String& name,
         const String& readers,

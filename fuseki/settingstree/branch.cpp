@@ -43,7 +43,7 @@ String Branch::changeRequestListRef(
     const String& value,
     const SettingsUser* user)
 {
-  if (!user->hasReadPermissionFor(this)) {
+  if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
@@ -70,18 +70,13 @@ Branch::getRequestListRef(
     const SettingsUser* user
   ) const
 {
-  if (!user->hasReadPermissionFor(this)) {
+  if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
   
   if (nodeAddress.empty()) {
-    set<String> out;
-    for (hash_map_string<Node::Ptr>::type::const_iterator
-        child = children.begin(); child != children.end(); child++) {
-      out.insert(child->second->getName());
-    }
-    return boost::make_tuple("", out, ptrToThis());
+    return boost::make_tuple("", getChildNames(), ptrToThis());
   }
 
   Node::ConstPtr child = getChild(nodeAddress.front());
@@ -96,6 +91,16 @@ Branch::getRequestListRef(
   nodeAddress.pop_front();
   
   return child->getRequestListRef(nodeAddress, user);
+}
+
+set<String> Branch::getChildNames() const
+{
+  set<String> childNames;
+  for (hash_map_string<Node::Ptr>::type::const_iterator
+      child = children.begin(); child != children.end(); child++) {
+    childNames.insert(child->second->getName());
+  }
+  return childNames;
 }
 
 Node::Ptr Branch::getChild(String name)

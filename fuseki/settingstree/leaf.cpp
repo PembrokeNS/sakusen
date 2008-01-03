@@ -38,7 +38,7 @@ String Leaf::changeRequestListRef(
 {
   //Debug("checking permissions for node " << getFullName());
   
-  if (!user->hasReadPermissionFor(this)) {
+  if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
@@ -47,7 +47,7 @@ String Leaf::changeRequestListRef(
     return String("node '") + getFullName() + "' is a leaf and has no child";
   }
   
-  if (!user->hasWritePermissionFor(this)) {
+  if (!user->hasWritePermissionFor(ptrToThis())) {
     return String("cannot write to node '") + getFullName() +
       "': permission denied";
   }
@@ -55,7 +55,7 @@ String Leaf::changeRequestListRef(
   String reason = setValue(value);
 
   if (reason == "") {
-    server->settingAlteredCallback(this);
+    server->settingAlteredCallback(ptrToThis());
   }
 
   return reason;
@@ -67,7 +67,7 @@ Leaf::getRequestListRef(
     const SettingsUser* user
   ) const
 {
-  if (!user->hasReadPermissionFor(this)) {
+  if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }

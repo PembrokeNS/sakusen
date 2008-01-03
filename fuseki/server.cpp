@@ -375,6 +375,7 @@ void Server::createPlayersFor(const MapPlayMode& mode)
     players.push_back(Player(player, i));
     settings->getPlayersBranch()->addPlayer(i, player);
   }
+  settingAlteredCallback(settings->getPlayersBranch());
 }
 
 void Server::setAllowObservers(bool value)
@@ -799,12 +800,21 @@ void Server::unregisterListener(
  * This method informs all clients of the change to the settings tree and also
  * clears the readiness flag on any clients who had requested that it be
  * automatically cleared when a setting was changed. */
-void Server::settingAlteredCallback(Leaf* altered)
+void Server::settingAlteredCallback(Node::Ptr altered)
 {
   String fullName = altered->getFullName();
   bool isReadinessChange =
     pcrecpp::RE(":clients:[0-9]+:ready").FullMatch(fullName);
-  NotifySettingMessageData data(fullName, true, altered->getValue());
+  std::set<String> value;
+  if (Leaf::Ptr l = boost::dynamic_pointer_cast<Leaf>(altered)) {
+    value = l->getValue();
+  } else if (Branch::Ptr b = boost::dynamic_pointer_cast<Branch>(altered)) {
+    value = b->getChildNames();
+  } else {
+    Fatal("unexpected node type");
+  }
+  
+  NotifySettingMessageData data(fullName, altered->isLeaf(), value);
   
   /* Inform everyone with read permission that the setting was altered */
   for (__gnu_cxx::hash_map<ClientId, RemoteClient*>::iterator

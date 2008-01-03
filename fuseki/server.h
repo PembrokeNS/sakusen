@@ -171,7 +171,7 @@ class Server : public SettingsUser, private boost::noncopyable {
         T newValue
       );
 
-    void settingAlteredCallback(settingsTree::Leaf* altered);
+    void settingAlteredCallback(settingsTree::Node::Ptr altered);
 };
 
 }

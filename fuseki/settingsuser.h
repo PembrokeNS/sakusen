@@ -1,9 +1,11 @@
 #ifndef SETTINGSUSER_H
 #define SETTINGSUSER_H
 
+#include "fuseki-global.h"
+
 #include <set>
 
-#include "libsakusen-global.h"
+#include <boost/shared_ptr.hpp>
 
 namespace fuseki {
 namespace settingsTree {
@@ -50,9 +52,13 @@ class SettingsUser {
     /** \brief Clears all groups of which this user is a member */
     inline void clearGroups() { groups.clear(); }
     /** \return true iff this user has permission to read \a node */
-    bool hasReadPermissionFor(const fuseki::settingsTree::Node* node) const;
+    bool hasReadPermissionFor(
+        boost::shared_ptr<const settingsTree::Node> node
+      ) const;
     /** \return true iff this user has permission to write \a node */
-    bool hasWritePermissionFor(const fuseki::settingsTree::Node* node) const;
+    bool hasWritePermissionFor(
+        boost::shared_ptr<const settingsTree::Node> node
+      ) const;
 };
 
 }
