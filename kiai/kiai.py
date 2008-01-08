@@ -43,11 +43,12 @@ j=joiner()
 l=listener()
 t=QtCore.QTimer()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
+QtCore.QObject.connect(w,QtCore.SIGNAL("rejected()"),a,QtCore.SLOT("quit()"))
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),j.join)
 #QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),l.addSocket) #needs to be synchronised with settingsDialog
 QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
 QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
-t.start(1000) #1 seconds - will want to make this less for the actual release
+t.start(10) #0.01 seconds - might want to make this less for the actual release, and more when debugging
 w.show()
 r=a.exec_()
 debug("Event loop terminated with status %d, dying"%r)

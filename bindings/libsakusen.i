@@ -60,6 +60,9 @@ class tuple<
 %template(tupleDoubleDouble) tuple<double, double>;
 
 }
+%{
+#include "boost/shared_ptr.hpp"
+%}
 
 #ifdef SWIGPERL
 #define BINDING_NOOVERLOAD
@@ -296,11 +299,14 @@ namespace sakusen {
 %}
 namespace sakusen{
 class ResourceInterface;
-%template(rPtr) ::boost::shared_ptr<ResourceInterface>;
+class Universe;
+/*%template(rPtr) ::boost::shared_ptr<ResourceInterface>;*/
+%template(cUniversePtr) ::boost::shared_ptr<const Universe>;
 }
 %include "resourceinterface.h"
 %{
 #include "resourceinterface.h"
+#include "resourceinterface-methods.h"
 %}
 %include "deserializationcontext.h"
 %{
@@ -401,6 +407,15 @@ class ResourceInterface;
 %{
 #include "unittype.h"
 %}
+%include "universe.h"
+%{
+#include "universe.h"
+%}
+namespace sakusen{
+%extend ResourceInterface {
+%template(universeSearch) search<Universe>;
+}
+}
 %include "orientation.h"
 %{
 #include "orientation.h"
