@@ -60,9 +60,6 @@ class tuple<
 %template(tupleDoubleDouble) tuple<double, double>;
 
 }
-%{
-#include "boost/shared_ptr.hpp"
-%}
 
 #ifdef SWIGPERL
 #define BINDING_NOOVERLOAD
@@ -297,12 +294,6 @@ namespace sakusen {
 %{
 #include "resourcesearchresult.h"
 %}
-namespace sakusen{
-class ResourceInterface;
-class Universe;
-/*%template(rPtr) ::boost::shared_ptr<ResourceInterface>;*/
-%template(cUniversePtr) ::boost::shared_ptr<const Universe>;
-}
 %include "resourceinterface.h"
 %{
 #include "resourceinterface.h"
@@ -413,8 +404,16 @@ class Universe;
 %}
 namespace sakusen{
 %extend ResourceInterface {
-%template(universeSearch) search<Universe>;
-}
+/*This should be a %template, but as of swig-1.3.31 that broke for reasons unknown*/
+    boost::tuple<sakusen::Universe::Ptr, ResourceSearchResult, String>
+    searchUniverse(
+        const String& name,
+        sakusen::Universe::ConstPtr u = sakusen::Universe::ConstPtr()
+      ) {
+      return $self->search<sakusen::Universe>(name, u);
+    }
+  }
+  %template(resourceInterfacePtr) ::boost::shared_ptr<ResourceInterface>;
 }
 %include "orientation.h"
 %{
