@@ -111,6 +111,63 @@ namespace boost
       // on the native platform.
 
   } // namespace filesystem
+
+
+template<class T> class shared_ptr{
+  public:
+    shared_ptr(shared_ptr<T> const &);
+    T* get() const;
+    T* operator-> () const;
+};
+
+template<
+    typename T0,
+    typename T1 = boost::tuples::null_type,
+    typename T2 = boost::tuples::null_type,
+    typename T3 = boost::tuples::null_type,
+    typename T4 = boost::tuples::null_type,
+    typename T5 = boost::tuples::null_type,
+    typename T6 = boost::tuples::null_type
+  >
+class tuple {
+  public:
+    T0 get_head();
+    tuple<T1, T2, T3, T4, T5, T6> get_tail();
+};
+
+template<typename T0>
+class tuple<
+    T0,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type,
+    boost::tuples::null_type
+  >
+{
+  public:
+    T0 get_head();
+    boost::tuples::null_type get_tail();
+};
+
+%pythoncode %{
+def g(self,key):
+	"""Helper function to get item from a tuple"""
+	w=self
+	for i in range(key):
+		w=w.get_tail()
+		if(not 'get_head' in dir(w)):
+			raise IndexError()
+	return w.get_head()
+%}
+
+
+%template(tupleUniversePtrResourceSearchResultString) tuple<sakusen::Universe::Ptr,sakusen::ResourceSearchResult,String>;
+%template(tupleResourceSearchResultString) tuple<sakusen::ResourceSearchResult,String>;
+%template(tupleString) tuple<String>;
+
+
 } // namespace boost
 %{
 #include "boost/filesystem/path.hpp"
