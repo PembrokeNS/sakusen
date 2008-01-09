@@ -3,6 +3,15 @@
 %feature("autodoc","1");
 %include "cmalloc.i"
 %include "cdata.i"
+#ifndef SWIGCSHARP
+#ifndef SWIGTCL
+/*support for std::list<sakusen::Update*/
+%include "std_list.i"
+%{
+#include "update.h"
+%}
+#endif
+#endif
 
 %import "libsakusen.i"
 %malloc(void);

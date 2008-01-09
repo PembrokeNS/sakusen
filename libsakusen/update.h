@@ -14,6 +14,10 @@ class LIBSAKUSEN_API Update {
      *
      * Calling this transfers ownership of \p data to this */
     explicit Update(const UpdateData* data);
+
+    /** \brief Fake constructor to make python bindings happy
+     * */
+    inline Update() { throw new std::runtime_error("Called the fake constructor"); }
   private:
     UpdateData::ConstPtr data;
   public:

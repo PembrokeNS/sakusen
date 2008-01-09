@@ -6,6 +6,12 @@
 %include "std_pair.i"
 %include "stdint.i"
 %include "std_except.i"
+#ifndef SWIGCSHARP
+#ifndef SWIGTCL
+/*SWIG doesn't support this in C# or TCL yet*/
+%include "std_list.i"
+#endif
+#endif
 %include "carrays.i"
 
 namespace std {
@@ -457,6 +463,14 @@ namespace sakusen{
 %{
 #include "update.h"
 %}
+#ifndef SWIGCSHARP
+#ifndef SWIGTCL
+/*SWIG doesn't support std::list in C# or TCL yet*/
+namespace sakusen{
+%template(listUpdate) ::std::list<Update>;
+}
+#endif
+#endif
 %include "ordermessage.h"
 %{
 #include "ordermessage.h"

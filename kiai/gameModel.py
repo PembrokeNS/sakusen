@@ -4,7 +4,7 @@ from sakusenresources import *
 from sakusenclient import *
 import sakusenclient
 from PyQt4 import QtCore
-def debug(x): print x
+def debug(x): pass
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
@@ -30,4 +30,13 @@ class gameModel(QtCore.QObject):
 		w.thisown=False #we can't keep w, it's got to make it on its own; it'd go out of scope and die very fast if we left it here. TODO: check that it gets deleted sometime.
 		debug("Created partial world %s"%w)
 		debug("Global variable world is now %s"%`sakusenclient.cvar.world`)
-		
+	def pushUpdates(self,d):
+		debug("Received updates to game state")
+		while(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
+			sakusenclient.cvar.world.endTick()
+		if(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
+			print "Got updates in wrong order"
+		l=d.getUpdates()
+		debug("Update list is "+`l`)
+		for u in l:
+			sakusenclient.cvar.world.applyUpdate(u)

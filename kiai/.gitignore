@@ -1,5 +1,6 @@
 connectDialog.py
 settingsDialog.py
+mainWindow.py
 *.pyc
 run-kiai-from-builddir.sh
 *~

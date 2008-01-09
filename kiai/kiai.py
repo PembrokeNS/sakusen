@@ -29,13 +29,17 @@ def openSettingsDialog(socket,clientid):
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
 	QtCore.QObject.connect(l,QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),m.processUpdate)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
+	QtCore.QObject.connect(l,QtCore.SIGNAL("gameStart(PyQt_PyObject)"),startGame)
 	#mt=ModelTest(s,m)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
 	s.show()
 	debug("opened a settings dialog")
-a.setQuitOnLastWindowClosed(False) #may want to change this when main window is implemented
+def startGame():
+	global a
+	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
+a.setQuitOnLastWindowClosed(False)
 assert(not a.quitOnLastWindowClosed())
 w=connectDialog()
 #s=settingsDialog()
