@@ -20,30 +20,36 @@ class listener(QtCore.QObject):
 		self.game=gameModel(clientid)
 		self.setSetting(('clients',str(clientid),'application','name'),'Kiai')
 	def checkPendingSockets(self):
-		debug("Checking pending sockets")
 		b=uint8(BUFFER_LEN)
 		if(self.activeSocket):
 			s=self.activeSocket
-			debug("checking socket "+`s`)
 			l=s.receive(b,BUFFER_LEN)
-			debug("received %d bytes from socket"%l)
 			if(l):
+				debug("Received %d bytes from socket"%l)
 				i=IArchive(b,l)
 				if(sakusenclient.cvar.world):
 					playerid=sakusenclient.cvar.world.getPlayerId()
 				else:
 					playerid=PlayerId.invalid()
+				debug("Deserializing message")
 				m=Message(i,playerid,self.game.resourceinterface)
+				debug("Getting message type")
 				t=m.getType()
+				debug("Message is of type %d"%t)
 				if(t==messageType_notifySetting):
 					d=m.getNotifySettingData()
+					if(d.getSetting()==":game:universe:name"):
+						try:
+							self.game.setUniverse(d.getValue()[0])
+						except Exception:
+							#should do some sort of error handling here
+							print "Unable to find universe \"%s\""%d.getValue()[0]
 					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
-				#elif(t==messageType_gameStart):
-				#	d=m.getGameStartData()
-				#	print "Server wants us to start a game, our id is %d, topology %s, corners %s and %s, gravity %d, heightfield %s"%(d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+				elif(t==messageType_gameStart):
+					d=m.getGameStartData()
+					print "Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`)
 				else:
 					print "Received unexpected message of type %d"%m.getType()
-			debug("checked socket "+`s`)
 	def requestSetting(self,path):
 		s=string.join(path,':')
 		d=GetSettingMessageData(s)
