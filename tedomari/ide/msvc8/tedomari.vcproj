@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CACA;DISABLE_CAIRO"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -126,7 +126,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_CACA;DISABLE_UNIX_SOCKETS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_UNIX_SOCKETS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -206,7 +206,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CACA"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -232,7 +232,8 @@
 				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\boost"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -292,7 +293,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CACA;DISABLE_UNIX_SOCKETS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -314,7 +315,7 @@
 				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\boost"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -507,6 +508,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\ui\surface.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\ui\surface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\ui\textbox.cpp"
 				>
 			</File>
@@ -529,6 +538,18 @@
 			<Filter
 				Name="sdl"
 				>
+				<File
+					RelativePath="..\..\ui\sdl\masks.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ui\sdl\sdlsurface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ui\sdl\sdlsurface.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\ui\sdl\sdlui.cpp"
 					>

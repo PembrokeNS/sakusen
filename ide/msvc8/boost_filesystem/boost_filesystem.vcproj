@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="liboptimal"
-	ProjectGUID="{BF0D6147-4B74-4105-9105-8613E0B9067C}"
-	Keyword="Win32Proj"
+	Name="boost_filesystem"
+	ProjectGUID="{2E5B34E0-4959-4742-B088-39EA175701CE}"
+	RootNamespace="boost_filesystem"
 	>
 	<Platforms>
 		<Platform
@@ -17,8 +17,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="Debug"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -38,15 +39,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBOPTIMAL_EXPORTS;BOOST_FILESYSTEM_DYN_LINK=1"
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;"
+				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -60,12 +59,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
+				OutputFile="$(OutDir)\boost_filesystem-vc80-mt-gdp-1_34_1.dll"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -96,8 +92,10 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="Release"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -116,16 +114,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BOOST_FILESYSTEM_DYN_LINK=1;LIBOPTIMAL_EXPORTS"
-				MinimalRebuild="true"
+				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;"
+				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -141,15 +132,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
-				LinkIncremental="0"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\boost"
+				OutputFile="$(OutDir)\boost_filesystem-vc80-mt-p-1_34_1.dll"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				LinkTimeCodeGeneration="1"
-				ImportLibrary="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -182,11 +169,27 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\optionsparser.cpp"
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\exception.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\optionsparser.h"
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\operations.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\path.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\portability.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\utf8_codecvt_facet.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\utf8_codecvt_facet.hpp"
 			>
 		</File>
 	</Files>

@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\boost"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -124,7 +124,7 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_FILESYSTEM_DYN_LINK=1;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -144,9 +144,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\boost"
-				IgnoreDefaultLibraryNames="stlportd.5.0.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -384,6 +384,14 @@
 		</File>
 		<File
 			RelativePath="..\..\server.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\serveraction.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\serveraction.h"
 			>
 		</File>
 		<File

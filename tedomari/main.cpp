@@ -155,8 +155,7 @@ UI::Ptr newUI(
   );
 
 void usage();
-
-int main(int argc, char const* const* argv)
+int main(int argc, char* argv[])
 {
   if (NULL == setlocale(LC_CTYPE, "")) {
     Fatal("error setting locale");

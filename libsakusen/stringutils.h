@@ -45,7 +45,7 @@ Container stringUtils_split(
 
 /** \brief Join the list of strings together, joining them with delim */
 template<typename Container>
-LIBSAKUSEN_API String stringUtils_join(
+ String stringUtils_join(
     const Container& strings,
     const String& delim
   )

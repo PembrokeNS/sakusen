@@ -23,12 +23,14 @@ namespace sakusen {
  */
 
 /* Apparently MSVC is on the ball in this case, but because it has reduced the 
- * answer to a constant, generates a warning about the now unreferenced local variable.
+ * answer to a constant, generates a warning (4101) about the now unreferenced local variable.
  * This is slightly mystifying for a few seconds, and clutters things up, so I have disabled
  * it.
+ * 4146 is a warning telling me that when I apply a unary minus to an unsigned operator, 
+ * nothing happens. Thanks MSVC.
  */
 #ifdef _MSC_VER 
-	#pragma warning (disable:4101)
+	#pragma warning (disable:4101 4146)
 #endif
 
 template<typename T>
@@ -64,10 +66,6 @@ inline T topNumber() {
   else
     return limits.max();
 }
-#ifdef _MSC_VER //Re-enable warning disabled above, in case it is useful later.
-#pragma warning (default:4101)
-#endif
-
 /** \brief point in 3-space
  *
  * Point represents a vector in some three-dimensional space. This vector could
@@ -355,14 +353,18 @@ typedef Point<sint16> Velocity;
 typedef Point<sint32> Position;
 //@}
 
-
-/* For this to be necessary, libsakusen must be a dll. */
 #ifdef _MSC_VER
 template class LIBSAKUSEN_API Point<sint16>;
+template class LIBSAKUSEN_API Point<uint16>;
 template class LIBSAKUSEN_API Point<sint32>;
+template class LIBSAKUSEN_API Point<uint32>;
 template class LIBSAKUSEN_API Point<double>;
 #endif
 }
+
+#ifdef _MSC_VER //Re-enable warnings disabled above, in case it is useful later.
+#pragma warning (default:4101 4146)
+#endif
 
 #endif // POINT_H
 

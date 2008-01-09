@@ -15,7 +15,7 @@ namespace sakusen {
  * If a!=0 and there are distinct roots x and y then returns (x,y) where x is
  * guaranteed to be less than y.
  */
-boost::tuple<double,double> mathsUtils_solveQuadratic(
+boost::tuple<double,double> LIBSAKUSEN_API mathsUtils_solveQuadratic(
     const double a,
     const double b,
     const double c

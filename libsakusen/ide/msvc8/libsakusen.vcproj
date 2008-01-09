@@ -402,6 +402,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\mathsutils.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\mathsutils.h"
 			>
 		</File>

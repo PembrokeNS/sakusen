@@ -1,6 +1,6 @@
 #include "serveraction.h"
 
-#include "pluginexn.h"
+#include "plugins/pluginexn.h"
 
 using namespace std;
 using namespace __gnu_cxx;

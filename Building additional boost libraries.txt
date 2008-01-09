@@ -1,5 +1,9 @@
+THIS IS OBSELETE AND SHOULD NOT BE NECESSARY.
+
+I leave it here in case it becomes necessary for some reason in the future. Do not follow these instructions. They didn't really work in any case.
+
 1. Download bjam.exe
 2. Edit user-config.jam and add "using stlport : : (sakusendir)\externals\Stlport\stlport (sakusendir)\externals\Stlport\lib ;"   to the right place
-3. Edit vsvars32.bat to add the stlport include directory to the set INCLUDE= line *before* the MSVC directories. 
+3. Edit vsvars32.bat to add the stlport include directory to the set INCLUDE= line *before* the MSVC directories.
 4. Run bjam --build-dir=(place to put the libs) --toolset=msvc stdlib=stlport This will take forever.
-To check it is working, #define _STLP_VERBOSE_AUTO_LINK 1 in user_config.h and see if you get "auto-linking" messages. 
+To check it is working, #define _STLP_VERBOSE_AUTO_LINK 1 in user_config.h and see if you get "auto-linking" messages.
