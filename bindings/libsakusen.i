@@ -405,7 +405,8 @@ namespace sakusen {
 namespace sakusen{
 %extend ResourceInterface {
 /*This should be a %template, but as of swig-1.3.31 that broke for reasons unknown*/
-    boost::tuple<sakusen::Universe::Ptr, ResourceSearchResult, String>
+/*Returning a ConstPtr rather than a Ptr is very useful to me - Lmm*/
+    boost::tuple<sakusen::Universe::ConstPtr, ResourceSearchResult, String>
     searchUniverse(
         const String& name,
         sakusen::Universe::ConstPtr u = sakusen::Universe::ConstPtr()

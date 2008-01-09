@@ -162,7 +162,7 @@ def g(self,key):
 	return w.get_head()
 %}
 
-
+%template(tupleUniverseConstPtrResourceSearchResultString) tuple<sakusen::Universe::ConstPtr,sakusen::ResourceSearchResult,String>;
 %template(tupleUniversePtrResourceSearchResultString) tuple<sakusen::Universe::Ptr,sakusen::ResourceSearchResult,String>;
 %template(tupleResourceSearchResultString) tuple<sakusen::ResourceSearchResult,String>;
 %template(tupleString) tuple<String>;
