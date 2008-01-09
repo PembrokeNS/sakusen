@@ -6,6 +6,7 @@ from settingsModel import settingsModel
 from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
+from mainWindowImpl import mainWindow
 import sys
 def debug(x): pass
 a=QtGui.QApplication(sys.argv)
@@ -37,7 +38,10 @@ def openSettingsDialog(socket,clientid):
 	s.show()
 	debug("opened a settings dialog")
 def startGame():
-	global a
+	global a,mainwindow
+	#TODO: disconnect s.rejected() and a.quit()
+	mainwindow=mainWindow()
+	mainwindow.show()
 	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
 a.setQuitOnLastWindowClosed(False)
 assert(not a.quitOnLastWindowClosed())
