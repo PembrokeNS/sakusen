@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from sakusen import *
 from sakusenresources import *
+from sakusenclient import *
 from PyQt4 import QtCore
 def debug(x): print x
 class gameModel(QtCore.QObject):
@@ -17,3 +18,11 @@ class gameModel(QtCore.QObject):
 		result=self.resourceinterface.searchUniverse(universe)
 		if(g(result,1)!=resourceSearchResult_success):
 			raise Exception()
+		self.universe=g(result,0)
+		debug("Set universe to "+`self.universe`)
+	def createWorld(self,d):
+		#TODO: currently, better hope the player looked up the universe beforehand
+		debug("Game started, creating world")
+		PartialWorld(self.universe,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+		debug("Successfully created world")
+		

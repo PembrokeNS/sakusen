@@ -414,6 +414,10 @@ namespace sakusen{
     }
   }
   %template(resourceInterfacePtr) ::boost::shared_ptr<ResourceInterface>;
+/*%extend Universe{*/
+%template(UniverseConstPtr) ::boost::shared_ptr<const Universe>;
+%template(UniversePtr) ::boost::shared_ptr<Universe>;
+/*}*/
 }
 %include "orientation.h"
 %{

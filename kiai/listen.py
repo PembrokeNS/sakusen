@@ -19,6 +19,7 @@ class listener(QtCore.QObject):
 		self.clientid=clientid
 		self.game=gameModel(clientid)
 		self.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+		QtCore.QObject.connect(self,QtCore.SIGNAL("gameStart(PyQt_PyObject)"),self.game.createWorld)
 	def checkPendingSockets(self):
 		b=uint8(BUFFER_LEN)
 		if(self.activeSocket):
@@ -47,7 +48,8 @@ class listener(QtCore.QObject):
 					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
 				elif(t==messageType_gameStart):
 					d=m.getGameStartData()
-					print "Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`)
+					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
+					self.emit(QtCore.SIGNAL("gameStart(PyQt_PyObject)"),d)
 				else:
 					print "Received unexpected message of type %d"%m.getType()
 	def requestSetting(self,path):
