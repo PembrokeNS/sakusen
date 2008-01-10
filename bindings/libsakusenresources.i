@@ -6,6 +6,7 @@
 %{
 #include "libsakusen-resources-global.h"
 %}
+/*The following code snippet is GPLed*/
 /* This software is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation. */
@@ -114,6 +115,8 @@ namespace boost
       // on the native platform.
 
   } // namespace filesystem
+
+/*GPL code ends here (apart from the line with the closing brace for namespace boost) */
 
 
 template<class T> class shared_ptr{
