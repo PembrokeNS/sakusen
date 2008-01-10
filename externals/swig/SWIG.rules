@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="SWIG"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="SWIG"
+			DisplayName="SWIG"
+			CommandLine="swig -Fmicrosoft [SWIGWORDSIZE] [Preprocessor] [language] -c++ [output] [Include] [inputs]"
+			Outputs="$(InputName).cpp"
+			FileExtensions="*.i"
+			ExecutionDescription="SWIGging $(InputName)"
+			>
+			<Properties>
+				<StringProperty
+					Name="Include"
+					DisplayName="Include"
+					Category="Include"
+					Description="Include Directories"
+					Switch="-I&quot;[value]&quot;"
+					Delimited="true"
+				/>
+				<IntegerProperty
+					Name="SWIGWORDSIZE"
+					DisplayName="SWIGWORDSIZE"
+					Category="Defines"
+					Description="SWIGWORDSIZE"
+					Switch="-DSWIGWORDSIZE[value]"
+					DefaultValue="32"
+				/>
+				<StringProperty
+					Name="language"
+					DisplayName="Language"
+					Category="Output"
+					Switch="-[value]"
+				/>
+				<StringProperty
+					Name="Output"
+					DisplayName="Output"
+					Category="Output"
+					Switch="-o [value]"
+					DefaultValue="($InputName)"
+				/>
+				<StringProperty
+					Name="Preprocessor"
+					DisplayName="Preprocessor"
+					Category="Defines"
+					Description="Preprocessor Defines"
+					Switch="-D[value]"
+					Delimited="true"
+				/>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>
