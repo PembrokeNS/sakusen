@@ -169,27 +169,27 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\exception.cpp"
+			RelativePath=".\src\exception.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\operations.cpp"
+			RelativePath=".\src\operations.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\path.cpp"
+			RelativePath=".\src\path.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\portability.cpp"
+			RelativePath=".\src\portability.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\utf8_codecvt_facet.cpp"
+			RelativePath=".\src\utf8_codecvt_facet.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\..\..\Program Files\boost\boost_1_34_1\libs\filesystem\src\utf8_codecvt_facet.hpp"
+			RelativePath=".\src\utf8_codecvt_facet.hpp"
 			>
 		</File>
 	</Files>

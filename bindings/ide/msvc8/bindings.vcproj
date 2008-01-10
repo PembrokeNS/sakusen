@@ -13,7 +13,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\..\..\..\..\..\..\Program Files\Microsoft Visual Studio 8\Common7\IDE\SWIG\SWIG.rules"
+			RelativePath="..\..\..\externals\swig\SWIG.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -180,6 +180,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Move .py files around"
+				CommandLine="for %i in ($(ProjectDir)*.py) do copy %i &quot;$(SolutionDir)&quot;"
 			/>
 		</Configuration>
 	</Configurations>

@@ -2,7 +2,7 @@ To Compile and Run Sakusen for windows, do the following:
 
 0. Download an svn copy. I assume you have already done this to be reading this file.
 1. Download and install VC 2005 (Express or otherwise), the Platform SDK and the DirectX SDK (note: depending on the state of the source code, the last two may or may not be necessary. DirectX is probably not necessary at this point). The file "Installing VC Express" in this directory may be useful here.
-2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost include directories to your VC++ include path. This can be altered in the Projects and Solutions section in the Options dialog box. Note if you install to any other place than C:\program files\boost\boost_1_34_1 you will have re-add the files in VC's boost_filesystem project, because they will have moved.
+2. Download and install Boost. http://sourceforge.net/project/showfiles.php?group_id=7586 (version 1.34.1 is known to work). You must also add the boost include directories to your VC++ include path. This can be done in the Projects and Solutions section in the Options dialog box. You will need to copy the contents of C:\Program Files\boost\boost_1_34_1\libs\filesystem\src (or wherever the equivalent place is if you installed boost elsewhere; not recommended, as you will have to adjust SWIG's paths) into trunk\ide\msvc8\boost_filesystem\src\ so that VC can find them.
 3. Download, Compile and install STLPort. First, go to stlport.sourceforge.net and download the source. STlport 5.1 or greater is recommended. Extract the source to "externals\stlport".
 Run "externals\stlport\buildstlport.bat" You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
 4. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 sources.
@@ -28,4 +28,4 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
 9. Sing "Rule Britannia!"
 
 Appendix: Bindings.
-If you want to build the language bindings, you will need SWIG. Place it in externals\swig. Place swig.exe somewhere in your PATH (ie, where MSVC can find it: C:\Program Files\Microsoft Visual Studio 8\VC\bin works fine). Place the SWIG.rules file in C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\SWIG and build as usual. You will need python 2.5 installed to build the python bindings, similarly for other languages, which I have yet to test.
+If you want to build the language bindings, you will need SWIG. Place it in externals\swig. Place swig.exe somewhere in your PATH (ie, where MSVC can find it: C:\Program Files\Microsoft Visual Studio 8\VC\bin works fine). You will need python 2.5 installed to build the python bindings, similarly for other languages, which I have yet to test.

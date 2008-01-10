@@ -18,3 +18,13 @@ installed the python bindings for sakusen.
 
 Good luck
 Michael
+
+
+For windows: 
+Install binary package mentioned above. Edit C:\program files\python25\pyuic4.bat so that it refers to where your python directory actually is. Go to: cpp\trunk\kiai 
+Run: "for %i in (*.ui) do "C:\Program files\python25\pyuic4.bat" -o %~ni.py %i"
+Which does it for all *.ui files.
+Move bindings/sakusen*.p into the kiai directory. 
+Move python-bindings.dll into the kiai directory four times, renaming it to _sakusen.pyd,_sakusencomms.pyd,_sakusenresources.pyd,_sakusenclient.pyd.
+Run python kiai.py
+Fail to load universe?
