@@ -1,6 +1,9 @@
 %module sakusenclient
 %naturalvar;
 %feature("autodoc","1");
+%{
+#include <string>
+%}
 %import "libsakusen.i"
 %include "libsakusen-client-global.h"
 %{

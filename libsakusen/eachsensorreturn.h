@@ -5,7 +5,7 @@
 
 namespace sakusen {
 
-struct EachSensorReturn {
+struct LIBSAKUSEN_API EachSensorReturn {
   EachSensorReturn() {}
   EachSensorReturn(
       const SensorReturn& o,

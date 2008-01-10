@@ -1,10 +1,23 @@
 %module sakusen
 %naturalvar;
 %feature("autodoc","1");
+%{
+#include <string>
+%}
 %include "std_string.i"
 %include "std_vector.i"
 %include "std_pair.i"
-%include "stdint.i"
+
+/* We can't just define _MSC_VER, because that picks up a 
+ * whole load of template stuff that blows SWIG's tiny mind.*/
+#ifdef _WIN32
+	%include <windows.i>
+	#define LIBSAKUSEN_API  __declspec(dllimport)
+#else
+	#define LIBSAKUSEN_API
+	%include "stdint.i"
+#endif
+
 %include "std_except.i"
 #ifndef SWIGCSHARP
 #ifndef SWIGTCL
@@ -153,8 +166,6 @@ $VERSION = 0.01;
 
 %ignore sakusen::Point::operator[](int const) const;
 %ignore sakusen::UnitStatus::getWeaponsStatus(void) const;
-
-#define LIBSAKUSEN_API
 
 %ignore debugStream;
 %ignore errorStream;

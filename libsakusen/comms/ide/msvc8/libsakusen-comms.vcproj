@@ -208,6 +208,13 @@
 		<File
 			RelativePath="..\..\libsakusen-comms-global.h"
 			>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\..\message.cpp"

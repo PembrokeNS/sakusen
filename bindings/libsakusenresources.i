@@ -1,6 +1,14 @@
 %module sakusenresources
 %naturalvar;
+#ifdef _WIN32
+	%include <windows.i>
+	#define LIBSAKUSEN_RESOURCES_API  __declspec(dllimport)
+#endif
+
 %feature("autodoc","1");
+%{
+#include <string>
+%}
 %import "libsakusen.i"
 %include "libsakusen-resources-global.h"
 %{
@@ -12,7 +20,6 @@ it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation. */
 /* We have to include our own version of boost/filesystem/path.hpp
  because the included definition has a nested class.*/
-
 
 namespace boost
 {

@@ -14,7 +14,7 @@ namespace sakusen {
  * particular target to a particular sensor of a particular unit.  It indicates
  * how well that senser can observe that unit.
  */
-struct SensorReturn {
+struct LIBSAKUSEN_API SensorReturn {
   public:
     SensorReturn() :
       perception(perception_none)

@@ -1,5 +1,8 @@
 %module sakusencomms
 %naturalvar;
+%{
+#include <string>
+%}
 %feature("autodoc","1");
 %include "cmalloc.i"
 %include "cdata.i"
@@ -15,7 +18,6 @@
 
 %import "libsakusen.i"
 %malloc(void);
-#define LIBSAKUSEN_API
 
 #ifdef SWIGCSHARP
 %rename(Item) *::operator[];
@@ -129,10 +131,18 @@ class Socket;
 %{
 #include "time.h"
 %}
-struct timeval {
-     time_t      tv_sec;     /* seconds */
-     suseconds_t tv_usec;    /* microseconds */
-     };
+#ifndef _WIN32
+	struct timeval {
+		 time_t      tv_sec;     /* seconds */
+		 suseconds_t tv_usec;    /* microseconds */
+		 };
+#else
+	struct timeval {
+			long    tv_sec;         /* seconds */
+			long    tv_usec;        /* and microseconds */
+	};
+#endif
+
 %extend timeval {
         timeval(long s,long m){
                 timeval *t;

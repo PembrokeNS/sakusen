@@ -26,3 +26,6 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
    d) Invoke tedomari with tedomari -j "tcp|localhost"
    e) If something bad happens, contact me. It's almost certainly a bug.
 9. Sing "Rule Britannia!"
+
+Appendix: Bindings.
+If you want to build the language bindings, you will need SWIG. Place it in externals\swig. Place swig.exe somewhere in your PATH (ie, where MSVC can find it: C:\Program Files\Microsoft Visual Studio 8\VC\bin works fine). Place the SWIG.rules file in C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\SWIG and build as usual. You will need python 2.5 installed to build the python bindings, similarly for other languages, which I have yet to test.

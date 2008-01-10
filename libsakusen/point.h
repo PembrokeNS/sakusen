@@ -358,6 +358,7 @@ template class LIBSAKUSEN_API Point<sint16>;
 template class LIBSAKUSEN_API Point<uint16>;
 template class LIBSAKUSEN_API Point<sint32>;
 template class LIBSAKUSEN_API Point<uint32>;
+template class LIBSAKUSEN_API Point<sint64>;
 template class LIBSAKUSEN_API Point<double>;
 #endif
 }

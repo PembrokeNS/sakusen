@@ -159,6 +159,7 @@ inline double SphereRegion<T>::intersect(const Ray& r) const
 
 #ifdef _MSC_VER
 template LIBSAKUSEN_API SphereRegion<sint16>;
+template LIBSAKUSEN_API SphereRegion<sint32>;
 #endif
 
 }
