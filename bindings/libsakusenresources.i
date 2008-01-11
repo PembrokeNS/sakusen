@@ -2,7 +2,6 @@
 %naturalvar;
 #ifdef _WIN32
   %include <windows.i>
-  #define LIBSAKUSEN_RESOURCES_API  __declspec(dllimport)
 #endif
 
 %feature("autodoc","1");
