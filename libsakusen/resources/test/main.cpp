@@ -172,11 +172,7 @@ int main(/*int argc, char** argv*/)
         ),
         100 /* energyCost */,
         100 /* metalCost */,
-        false /* fixed */,
-        true /* ground */,
-        false /* surface */,
-        true /* gravity */,
-        true /* seabed */,
+        "ground" /* motionType */,
         commanderWeapons /* weapons */,
         "" /* corpseUnitType name */
       );
@@ -204,11 +200,7 @@ int main(/*int argc, char** argv*/)
         ),
         100 /* energyCost */,
         100 /* metalCost */,
-        true /* fixed */,
-        true /* ground */,
-        false /* surface */,
-        true /* gravity */,
-        false /* seabed */,
+        "fixed" /* motionType */,
         factoryWeapons /* weapons */,
         "" /* corpseUnitType name */
       );
@@ -234,11 +226,7 @@ int main(/*int argc, char** argv*/)
         ),
         100 /* energyCost */,
         100 /* metalCost */,
-        false /* fixed */,
-        true /* ground */,
-        false /* surface */,
-        true /* gravity */,
-        false /* seabed */,
+        "ground" /* motionType */,
         gruntWeapons /* weapons */,
         "" /* corpseUnitType name */
       );
@@ -264,11 +252,7 @@ int main(/*int argc, char** argv*/)
         ),
         100 /* energyCost */,
         100 /* metalCost */,
-        false /* fixed */,
-        true /* ground */,
-        false /* surface */,
-        true /* gravity */,
-        false /* seabed */,
+        "ground" /* motionType */,
         spiderWeapons /* weapons */,
         "" /* corpseUnitType name */
       );

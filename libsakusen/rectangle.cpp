@@ -13,7 +13,7 @@ namespace sakusen {
 template<>
 bool Rectangle<sint32>::fastIntersects(const ICompleteUnit* unit) const
 {
-  if (contains(unit->getIStatus()->getPosition())) {
+  if (contains(unit->getIStatus().getPosition())) {
     return true;
   }
   return intersects(unit->getBoundingRectangle());

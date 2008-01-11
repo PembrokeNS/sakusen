@@ -28,7 +28,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
         const Visibility& visib,
         const Sensors& visio
       );
-    UnitTypeData(const IUnitTypeData* copy);
+    UnitTypeData(const IUnitTypeData& copy);
 
     HitPoints maxHitPoints;
     uint8 mass;

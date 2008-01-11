@@ -14,7 +14,7 @@ namespace sakusen {
  */
 class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
   public:
-    UnitStatus(const IUnitStatus* copy);
+    UnitStatus(const IUnitStatus& copy);
     UnitStatus(
       UnitTypeId startType,
       const Point<sint32>& startPosition,

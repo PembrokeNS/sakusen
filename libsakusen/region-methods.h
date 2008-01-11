@@ -10,9 +10,9 @@
 namespace sakusen {
 
 template<typename T>
-inline bool Region<T>::contains(const IUnitStatus *unit) const
+inline bool Region<T>::contains(const IUnitStatus& unit) const
 {
-  return contains(unit->getPosition());
+  return contains(unit.getPosition());
 }
 
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS

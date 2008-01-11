@@ -33,7 +33,7 @@ bool Creater::aim(
   )
 {
   Position displacement =
-    orders.getTargetPosition() - source->getStatus()->getPosition();
+    orders.getTargetPosition() - source->getStatus().getPosition();
   if (displacement.squareLength() <= squareRange()) {
     status.setTarget(orders.getTargetPosition(), orders.getTargetOrientation());
     return true;
@@ -79,7 +79,7 @@ bool Builder::aim(
   }
   Ref<LayeredUnit> target = orders.getTargetUnit().dynamicCast<LayeredUnit>();
   Position displacement =
-    target->getStatus()->getPosition() - source->getStatus()->getPosition();
+    target->getStatus().getPosition() - source->getStatus().getPosition();
   if (displacement.squareLength() <= squareRange()) {
     /** \todo Find and set the appropriate building layer */
     setTarget(target, status);
@@ -107,7 +107,11 @@ void Builder::onFire(
           if (!(bL && operator==(bL->getOuterUnit(), targetUnit))) {
             bL = targetUnit->getLayer<BuildingLayer>();
             if (!bL) {
-              Debug("building target not being built");
+              Debug(
+                  "building target (" <<
+                  targetUnit->getStatus().getType()->getInternalName() <<
+                  ") not being built"
+                );
               orders.clear();
               return;
             }
@@ -138,7 +142,7 @@ Shell::Shell(const Ref<LayeredUnit>& source, const WeaponStatus& status) :
   Ballistic(
       source,
       server::world->getTimeNow(),
-      source->getIStatus()->getPosition() /* start position */,
+      source->getIStatus().getPosition() /* start position */,
       status.getTargetDirection() /* start velocity */
     )
 {
@@ -163,7 +167,7 @@ bool Paralyzer::aim(
   )
 {
   Point<sint32> displacement =
-    orders.getTargetPosition() - firer->getStatus()->getPosition() +
+    orders.getTargetPosition() - firer->getStatus().getPosition() +
     Point<sint32>(0, 0, 0);
   /* test whether target is within range */
   if (displacement.squareLength() < 100000000) {
@@ -191,7 +195,7 @@ ParalyzationBeam::ParalyzationBeam(
     const WeaponStatus& status
   ) :
   Beam(
-      source->getStatus()->getPosition(),
+      source->getStatus().getPosition(),
       status.getTargetDirection(), source,
       server::world->getTimeNow(), 3 /* duration */
     )

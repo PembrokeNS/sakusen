@@ -58,10 +58,10 @@ Point<sint32> WeaponOrders::getTargetPosition() const
     case weaponTargetType_positionOrientation:
       return targetPosition;
     case weaponTargetType_unit:
-      return targetUnit->getIStatus()->getPosition();
+      return targetUnit->getIStatus().getPosition();
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
-        return targetSensorReturns->getUnit()->getIStatus()->getPosition();
+        return targetSensorReturns->getUnit()->getIStatus().getPosition();
       } else {
         return targetSensorReturns->getRegion()->getBestPosition();
       }
@@ -85,10 +85,10 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
     case weaponTargetType_positionOrientation:
       return Point<sint16>();
     case weaponTargetType_unit:
-      return targetUnit->getIStatus()->getVelocity();
+      return targetUnit->getIStatus().getVelocity();
     case weaponTargetType_sensorReturns:
       if (0 != (targetSensorReturns->getPerception() | perception_unit)) {
-        return targetSensorReturns->getUnit()->getIStatus()->getVelocity();
+        return targetSensorReturns->getUnit()->getIStatus().getVelocity();
       } else {
         return Point<sint16>();
       }

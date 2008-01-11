@@ -47,7 +47,7 @@ bool Weapon::aim(
   const Point<sint32>& pos = orders.getTargetPosition();
   /** \bug For now we ignore the target velocity and we ignore the fact that
    * the weapon is not actually at the firer unit position */
-  Point<sint32> displacement = pos - firer->getStatus()->getPosition();
+  Point<sint32> displacement = pos - firer->getStatus().getPosition();
   /** \bug Using floating point arithmetic */
   double height = displacement.z;
   displacement.z = 0;
@@ -94,9 +94,9 @@ bool Weapon::aim(
 void Weapon::incrementState(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
 {
   /* Obtain the status */
-  UnitStatus* unitStatus = firer->getStatus();
-  assert(weaponIndex < unitStatus->getWeaponsStatus().size());
-  WeaponStatus& status = unitStatus->getWeaponsStatus()[weaponIndex];
+  UnitStatus& unitStatus = firer->getStatus();
+  assert(weaponIndex < unitStatus.getWeaponsStatus().size());
+  WeaponStatus& status = unitStatus.getWeaponsStatus()[weaponIndex];
   
   /* Obtain the orders */
   WeaponOrders& orders =

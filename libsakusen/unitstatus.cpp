@@ -5,15 +5,15 @@
 using namespace std;
 using namespace sakusen;
 
-UnitStatus::UnitStatus(const IUnitStatus* copy) :
-  type(copy->getType()),
-  position(copy->getPosition()),
-  orientation(copy->getOrientation()),
-  velocity(copy->getVelocity()),
-  hitPoints(copy->getHitPoints()),
-  radarIsActive(copy->isRadarActive()),
-  sonarIsActive(copy->isSonarActive()),
-  weaponsStatus(copy->getWeaponsStatus())
+UnitStatus::UnitStatus(const IUnitStatus& copy) :
+  type(copy.getType()),
+  position(copy.getPosition()),
+  orientation(copy.getOrientation()),
+  velocity(copy.getVelocity()),
+  hitPoints(copy.getHitPoints()),
+  radarIsActive(copy.isRadarActive()),
+  sonarIsActive(copy.isSonarActive()),
+  weaponsStatus(copy.getWeaponsStatus())
 {
   assert(getTypePtr()->getWeapons().size() == weaponsStatus.size());
 }

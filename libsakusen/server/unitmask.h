@@ -45,7 +45,7 @@ class UnitMask : public UnitLayer {
     const Sensors& getVision() const { return nextLayer->getVision(); }
     //@}
 
-    UnitCore* getCore() { return nextLayer->getCore(); }
+    UnitCore& getCore() { return nextLayer->getCore(); }
     UnitLayer::Ptr getLayer(const std::type_info& typeInfo) {
       if (typeInfo == typeid(*nextLayer)) {
         return nextLayer;

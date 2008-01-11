@@ -78,7 +78,7 @@ void MapDisplay::drawUnit(
 {
   list< Point<double> > corners;
 
-  Point<sint32> corner(unit->getITypeData()->getSize());
+  Point<sint32> corner(unit->getITypeData().getSize());
   const UnitStatus& status = unit->getIStatus();
   corners.push_back(dexToPixel(status.localToGlobal(corner)));
   corner.x *= -1;
@@ -105,7 +105,7 @@ void MapDisplay::drawUnitOrders(
 
   if (uo.getLinearTarget() == linearTargetType_position) {
     targetPosition = dexToPixel(uo.getTargetPosition());
-    currentPosition = dexToPixel(unit->getIStatus()->getPosition());
+    currentPosition = dexToPixel(unit->getIStatus().getPosition());
     getRegion()->stroke(currentPosition.x, currentPosition.y,
         targetPosition.x, targetPosition.y, colour);
   }

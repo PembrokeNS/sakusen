@@ -49,7 +49,7 @@ void WeaponStatus::setTarget(const Ref<ICompleteUnit>& u)
 {
   targetType = weaponTargetType_unit;
   targetDirection = Point<sint32>();
-  targetPosition = u->getIStatus()->getPosition();
+  targetPosition = u->getIStatus().getPosition();
   targetOrientation = Orientation();
 }
 

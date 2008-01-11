@@ -68,7 +68,8 @@ LayeredUnit::LayeredUnit(
   owner(),
   topLayer(new UnitCore(this, t.getStatus())),
   status(topLayer->getCore()),
-  orders(static_cast<uint16>(t.getStatus()->getWeaponsStatus().size())),
+  motion(UnitMotion::create(t.getStatus().getType()->getMotionType())),
+  orders(static_cast<uint16>(t.getStatus().getWeaponsStatus().size())),
   sensorReturns(10),
   dirty(false)
 {
@@ -87,6 +88,7 @@ LayeredUnit::LayeredUnit(
         startHP
       )),
   status(topLayer->getCore()),
+  motion(UnitMotion::create(startType->getMotionType())),
   orders(static_cast<uint16>(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size())),
   sensorReturns(10),
   dirty(false)
@@ -104,6 +106,7 @@ LayeredUnit::LayeredUnit(
         this, startType, startPosition, startOrientation, startVelocity
       )),
   status(topLayer->getCore()),
+  motion(UnitMotion::create(startType->getMotionType())),
   orders(static_cast<uint16>(world->getUniverse()->getUnitTypePtr(startType)->getWeapons().size())),
   sensorReturns(10),
   dirty(false)
@@ -118,7 +121,6 @@ LayeredUnit::~LayeredUnit()
     sensorReturns.erase(sensorReturns.begin());
   }
 
-  status = NULL;
   assert(topLayer.unique());
 }
 
@@ -186,12 +188,12 @@ Ref<const LayeredUnit> LayeredUnit::getRefToThis() const
  * by this change is taken. */
 void LayeredUnit::setPosition(const Point<sint32>& pos)
 {
-  if (pos == status->position)
+  if (pos == status.position)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(getRefToThis(), status->position, pos);
-  status->position = pos;
+  world->applyEntryExitEffects(getRefToThis(), status.position, pos);
+  status.position = pos;
 }
 
 /** \brief Allow simultaneous update of the unit's position, orientation and
@@ -219,16 +221,16 @@ void LayeredUnit::setPhysics(
 {
   setPosition(newPosition);
   if (orientationIsRelative) {
-    status->orientation = newOrientation * status->orientation;
+    status.orientation = newOrientation * status.orientation;
     if (zeroVelocity) {
-      status->velocity.zero();
+      status.velocity.zero();
     } else {
-      status->velocity = newOrientation * status->velocity;
+      status.velocity = newOrientation * status.velocity;
     }
   } else {
-    status->orientation = newOrientation;
+    status.orientation = newOrientation;
     if (zeroVelocity) {
-      status->velocity.zero();
+      status.velocity.zero();
     }
   }
   setDirty();
@@ -244,99 +246,7 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
 {
   /** \todo Rethink this function for subunits */
 
-  /* Note that with this order system each unit can accept only one new order
-   * per game cycle - if two arrive from the clients in the same game cycle
-   * then things might get overwritten or lost - clients will need to be aware
-   * of this and pay attention to the reports from the server about the unit's
-   * orders' changes */
-
-  Point<sint16> expectedVelocity(status->velocity);
-  
-  /* compute the expected velocity based on the unit's orders */
-  switch (orders.getLinearTarget()) {
-    case linearTargetType_none:
-      break;
-    case linearTargetType_velocity:
-      if (topLayer->getPossibleVelocities()->contains(
-            orders.getTargetVelocity()
-          )) {
-        Point<sint16> desiredVelocity = orders.getTargetVelocity();
-        Point<sint16> acceleration = desiredVelocity - status->velocity;
-        acceleration =
-          topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
-        expectedVelocity += acceleration;
-      }
-      break;
-    case linearTargetType_position:
-      {
-        Point<sint32> desiredDirection = world->getMap()->getShortestDifference(
-            orders.getTargetPosition(), status->position);
-        Point<sint16> desiredVelocity(
-            topLayer->getPossibleVelocities()->truncateToFit(desiredDirection)
-          );
-        Point<sint16> acceleration = desiredVelocity - status->velocity;
-        acceleration =
-          topLayer->getPossibleAccelerations()->truncateToFit(acceleration);
-        
-        /*if (owner == 1 && unitId == 0) {
-          Debug("[1] desiredVel=" << desiredVelocity <<
-              ", acc=" << acceleration);
-        }*/
-        
-        expectedVelocity += acceleration;
-      }
-      break;
-    default:
-      Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
-      break;
-  }
-
-  /* Update the expected velocity to take account of gravity and the ground. */
-  /** \todo Replace this extremely crude collision detection with the ground
-   * with something more sane */
-  Box<sint32> boundingBox(getBoundingBox());
-  sint32 groundHeight = world->getCompleteMap()->getHeightfield().
-    getMaxHeightIn(boundingBox.rectangle());
-  sint32 heightAboveGround = boundingBox.getMin().z - groundHeight;
-  if (heightAboveGround + expectedVelocity.z < 0) {
-    /* The unit will end up below the ground, so we need to raise it. */
-    /** \bug The
-     * way this is done at pesent is quite silly and could easily result in
-     * exceptionally high velocities. (This is the same bug that lots of
-     * speedruns exploit in other games to achieve high speeds) */
-    expectedVelocity.z = -heightAboveGround;
-  } else if (heightAboveGround > 0 && status->getTypePtr()->getGravity()) {
-    /* The unit is in the air above the ground, so we need to apply gravity
-     * */
-    expectedVelocity.z -= world->getMap()->getGravity();
-    /* But at the same time ensure that we don't push the unit underground */
-    if (expectedVelocity.z < -heightAboveGround) {
-      expectedVelocity.z = -heightAboveGround;
-    }
-  }
-
-  /*if (owner == 1 && unitId == 0) {
-    Debug("[2] heightAboveGround=" << heightAboveGround <<
-        ", expectedVelocity=" << expectedVelocity);
-  }*/
-
-  /* Now set the velocity to this newly computed value */
-  if (expectedVelocity != status->velocity) {
-    status->velocity = expectedVelocity;
-    setDirty();
-  }
-  
-  /** \todo Do collision detection. */
-  Orientation mapOrientationChange;
-  setPosition(world->getMap()->addToPosition(
-        status->position, status->velocity, &mapOrientationChange
-      ));
-  /* If the movement caused us to rotate/reflect (due to moving over a map
-   * edge) then update orientation and velocity appropriately */
-  if (mapOrientationChange != Orientation()) {
-    status->velocity = mapOrientationChange * status->velocity;
-    status->orientation = mapOrientationChange * status->orientation;
-  }
+  motion->incrementState(*this);
 
   /* Process the weapons */
   topLayer->incrementWeaponsState();
@@ -357,7 +267,7 @@ void LayeredUnit::insertLayer(const sakusen::server::UnitMask::Ptr& layer)
  */
 bool LayeredUnit::setRadar(bool active) {
   if (topLayer->getVision().radarActive.capable) {
-    status->radarIsActive = active;
+    status.radarIsActive = active;
     setDirty();
     return active;
   } else return false;
@@ -371,7 +281,7 @@ bool LayeredUnit::setRadar(bool active) {
  */
 bool LayeredUnit::setSonar(bool active) {
   if (topLayer->getVision().sonarActive.capable) {
-    status->sonarIsActive = active;
+    status.sonarIsActive = active;
     setDirty();
     return active;
   } else return false;

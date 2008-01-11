@@ -1,16 +1,17 @@
 #ifndef LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 #define LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 
-#include "libsakusen-global.h"
 #include "libsakusen-server-global.h"
 
 #include <list>
+#include <boost/scoped_ptr.hpp>
 
 #include "icompleteunit.h"
 #include "unitlayer.h"
 #include "unittemplate.h"
 #include "dynamicsensorreturns.h"
 #include "unitorders.h"
+#include "unitmotion.h"
 
 namespace sakusen {
 namespace server {
@@ -87,7 +88,12 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     /** \brief Shortcut pointer to the UnitStatus at the heart
      *
      * Not owned by this (except insofar as it may be equal to topLayer) */
-    UnitStatus* status;
+    UnitStatus& status;
+
+    /** \brief Object that controlls the way this unit moves around.
+     *
+     * This includes the  import of gravity, water, etc. */
+    boost::scoped_ptr<UnitMotion> motion;
 
     UnitOrders orders;
     
@@ -106,12 +112,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     inline PlayerId getOwner(void) const {return owner;}
     inline UnitId getId(void) const { return unitId; }
     inline void setId(UnitId id) { unitId = id; }
-    inline const IUnitTypeData* getITypeData(void) const {
-      /** \bug Using get() to save time; probably shouldn't really */
-      return topLayer.get();
-    }
-    inline UnitStatus* getStatus(void) const { return status; }
-    inline const IUnitStatus* getIStatus(void) const { return status; }
+    inline const IUnitTypeData& getITypeData(void) const { return *topLayer; }
+    inline UnitStatus& getStatus(void) const { return status; }
+    inline const IUnitStatus& getIStatus(void) const { return status; }
     inline const UnitOrders& getOrders(void) const { return orders; }
     inline UnitOrders& getOrders(void) { return orders; }
     inline __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef>&

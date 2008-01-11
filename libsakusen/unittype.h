@@ -24,15 +24,11 @@ class LIBSAKUSEN_API UnitType {
   public:
     /** Constructs from all required data */
     UnitType(
-      String internalName,
+      const String& internalName,
       const UnitTypeData& dynamicData,
       uint32 energyCost,
       uint32 metalCost,
-      bool fixed,
-      bool ground,
-      bool surface,
-      bool gravity,
-      bool seabed,
+      const String& motionType,
       const std::vector<WeaponTypeId>& weapons,
       const UnitTypeId& corpseUnitType
     );
@@ -47,15 +43,11 @@ class LIBSAKUSEN_API UnitType {
      * the initilaization.
      */
     UnitType(
-      String internalName,
+      const String& internalName,
       const UnitTypeData& dynamicData,
       uint32 energyCost,
       uint32 metalCost,
-      bool fixed,
-      bool ground,
-      bool surface,
-      bool gravity,
-      bool seabed,
+      const String& motionType,
       const std::list<String>& weapons,
       const String& corpseUnitType
     );
@@ -65,14 +57,7 @@ class LIBSAKUSEN_API UnitType {
     UnitTypeData dynamicData;
     uint32 energyCost;
     uint32 metalCost;
-    bool fixed:1; /* true for buildings, mines */
-    bool ground:1; /* true for buildings, ground units, planes that can land
-                      without a runway, hovercraft */
-    bool surface:1; /* true for ships and floating buildings */
-    bool gravity:1; /* false for planes, missiles, and such things which are
-                       not affected by gravity */
-    bool seabed:1; /* true for underwater metal mines, tanks that can drive on
-                      the seabed */
+    String motionType;
     std::list<String> weaponNames;
     std::vector<WeaponTypeId> weapons;
     String corpseUnitTypeName;
@@ -86,7 +71,7 @@ class LIBSAKUSEN_API UnitType {
     inline const UnitTypeData& getDynamicData() const { return dynamicData; }
     inline const uint32& getEnergyCost() const { return energyCost; }
     inline const uint32& getMetalCost() const { return metalCost; }
-    inline bool getGravity() const { return gravity; }
+    inline const String& getMotionType() const { return motionType; }
     inline const std::vector<WeaponTypeId>& getWeapons() const {
       return weapons;
     }

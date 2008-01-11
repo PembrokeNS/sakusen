@@ -143,7 +143,7 @@ void DynamicSensorReturns::update()
       returns = &returnsIt->second;
     }
     Perception thisPerception;
-    unitIt->second->getITypeData()->getVision().updateReturns(
+    unitIt->second->getITypeData().getVision().updateReturns(
         *returns, &dirty, &thisPerception, &bestRadius
       );
     if (returnsIt != sensers.end() && thisPerception == perception_none) {
@@ -163,7 +163,7 @@ void DynamicSensorReturns::update()
     /* \todo Add some randomness to the position of the centre of the region,
      * otherwise it might as well just be a point */
     region.reset(new SphereRegion<sint32>(
-          sensee->getIStatus()->getPosition(), bestRadius
+          sensee->getIStatus().getPosition(), bestRadius
         ));
   } else {
     region.reset();

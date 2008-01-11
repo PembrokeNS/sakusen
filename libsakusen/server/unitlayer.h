@@ -30,7 +30,7 @@ class UnitLayer : public IUnitTypeData, boost::noncopyable {
     /* methods to do with the layering */
     /** \brief Get the UnitCore at the bottom of the sequence of layers of
      * which this is a part. */
-    virtual UnitCore* getCore() = 0;
+    virtual UnitCore& getCore() = 0;
     /** \brief Search for a layer of a given type.
      *
      * Examines the layers below this one (but not this one itself) for the

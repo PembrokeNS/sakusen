@@ -47,7 +47,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
 
     void initializeWeapons();
   public:
-    inline UnitCore* getCore() { return this; }
+    inline UnitCore& getCore() { return *this; }
     inline UnitLayer::Ptr getLayer(const std::type_info&) {
       return UnitLayer::Ptr();
     }

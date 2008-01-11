@@ -32,7 +32,7 @@ class LIBSAKUSEN_API UnitTemplate {
     /** \brief Initial state of the unit */
     UnitStatus status;
   public:
-    const IUnitStatus* getStatus(void) const { return &status; }
+    const IUnitStatus& getStatus(void) const { return status; }
     
     void store(OArchive&) const;
     static UnitTemplate load(IArchive&, const DeserializationContext&);

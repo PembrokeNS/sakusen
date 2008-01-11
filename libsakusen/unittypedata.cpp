@@ -25,15 +25,15 @@ UnitTypeData::UnitTypeData(
 {
 }
 
-UnitTypeData::UnitTypeData(const IUnitTypeData* copy) :
-  maxHitPoints(copy->getMaxHitPoints()),
-  mass(copy->getMass()),
-  size(copy->getSize()),
-  possibleAccelerations(copy->getPossibleAccelerations()),
-  possibleVelocities(copy->getPossibleVelocities()),
-  possibleAngularVelocities(copy->getPossibleAngularVelocities()),
-  visibility(copy->getVisibility()),
-  vision(copy->getVision())
+UnitTypeData::UnitTypeData(const IUnitTypeData& copy) :
+  maxHitPoints(copy.getMaxHitPoints()),
+  mass(copy.getMass()),
+  size(copy.getSize()),
+  possibleAccelerations(copy.getPossibleAccelerations()),
+  possibleVelocities(copy.getPossibleVelocities()),
+  possibleAngularVelocities(copy.getPossibleAngularVelocities()),
+  visibility(copy.getVisibility()),
+  vision(copy.getVision())
 {
 }
 

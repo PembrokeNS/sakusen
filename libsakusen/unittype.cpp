@@ -6,52 +6,36 @@
 using namespace sakusen;
 
 UnitType::UnitType(
-    String iN,
+    const String& iN,
     const UnitTypeData& dD,
     uint32 eC,
     uint32 mC,
-    bool f,
-    bool gro,
-    bool su,
-    bool gra,
-    bool se,
+    const String& mT,
     const std::vector<WeaponTypeId>& w,
     const UnitTypeId& cUT) :
   internalName(iN),
   dynamicData(dD),
   energyCost(eC),
   metalCost(mC),
-  fixed(f),
-  ground(gro),
-  surface(su),
-  gravity(gra),
-  seabed(se),
+  motionType(mT),
   weapons(w),
   corpseUnitType(cUT)
 {
 }
 
 UnitType::UnitType(
-    String iN,
+    const String& iN,
     const UnitTypeData& dD,
     uint32 eC,
     uint32 mC,
-    bool f,
-    bool gro,
-    bool su,
-    bool gra,
-    bool se,
+    const String& mT,
     const std::list<String>& w,
     const String& cUT) :
   internalName(iN),
   dynamicData(dD),
   energyCost(eC),
   metalCost(mC),
-  fixed(f),
-  ground(gro),
-  surface(su),
-  gravity(gra),
-  seabed(se),
+  motionType(mT),
   weaponNames(w),
   corpseUnitTypeName(cUT),
   corpseUnitType(NULL)
@@ -93,7 +77,7 @@ void UnitType::store(OArchive& archive) const
   archive << internalName;
   dynamicData.store(archive);
   archive << energyCost << metalCost;
-  archive << fixed << ground << surface << gravity << seabed << weapons <<
+  archive << motionType << weapons <<
     (corpseUnitType == NULL ? String("") : corpseUnitType->getInternalName());
     /** \bug assumes UnitTypeId is UnitType* */
 }
@@ -106,19 +90,14 @@ UnitType UnitType::load(IArchive& archive)
   uint32 energyCost;
   uint32 metalCost;
   archive >> energyCost >> metalCost;
-  bool fixed;
-  bool ground;
-  bool surface;
-  bool gravity;
-  bool seabed;
+  String motionType;
   std::list<String> weapons;
   String corpseUnitType;
-  archive >> fixed >> ground >> surface >> gravity >> seabed >> weapons >>
-    corpseUnitType;
+  archive >> motionType >> weapons >> corpseUnitType;
 
   return UnitType(
-      internalName, dynamicData, energyCost, metalCost, fixed,
-      ground, surface, gravity, seabed, weapons, corpseUnitType
+      internalName, dynamicData, energyCost, metalCost, motionType,
+      weapons, corpseUnitType
     );
 }
 

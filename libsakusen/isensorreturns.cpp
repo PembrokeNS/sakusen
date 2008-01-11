@@ -14,7 +14,7 @@ using namespace sakusen;
 Point<sint32> ISensorReturns::getBestPosition() const
 {
   if (0 != (getPerception() & perception_unit)) {
-    return getUnit()->getIStatus()->getPosition();
+    return getUnit()->getIStatus().getPosition();
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->getBestPosition();
   } else {

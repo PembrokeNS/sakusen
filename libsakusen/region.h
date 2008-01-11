@@ -56,7 +56,7 @@ class LIBSAKUSEN_API Region {
      * RegionData, otherwise it might be impossible to do things like damage
      * large units with area-of-effect weapons.
      */
-    inline bool contains(const IUnitStatus* unit) const;
+    inline bool contains(const IUnitStatus& unit) const;
 
     /** \name Truncation methods
      *
