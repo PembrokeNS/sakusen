@@ -221,6 +221,7 @@ void UI::setModeFor(ActionParameterType type)
       setMode(&modes["targetpo"]);
       break;
     case actionParameterType_unit:
+    case actionParameterType_unitSet:
       setMode(&modes["targetunit"]);
       break;
     default:
@@ -231,9 +232,11 @@ void UI::setModeFor(ActionParameterType type)
 vector<Ref<UpdatedUnit> > UI::getUnitsAtCursor() {
   vector<Ref<UpdatedUnit> > result;
 
+  Point<sint32> cursorPos = activeMapDisplay->getMousePos();
+  Rectangle<sint32> cursorRect(cursorPos, cursorPos);
   ISpatial::Result units =
-    client::world->getSpatialIndex()->findContaining(
-        activeMapDisplay->getMousePos(), gameObject_unit
+    client::world->getSpatialIndex()->findIntersecting(
+        cursorRect, gameObject_unit
       );
 
   for (ISpatial::Result::iterator unitIt = units.begin();
@@ -537,6 +540,14 @@ void UI::supplyActionArg(const String& actionArg)
           vector<Ref<UpdatedUnit> > units = getUnitsAtCursor();
           if (!units.empty()) {
             supplyActionArg(units.back());
+          }
+        }
+        break;
+      case actionParameterType_unitSet:
+        {
+          vector<Ref<UpdatedUnit> > units = getUnitsAtCursor();
+          if (!units.empty()) {
+            supplyActionArg(units);
           }
         }
         break;

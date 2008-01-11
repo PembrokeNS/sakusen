@@ -218,7 +218,7 @@ void CreateAction::internalExecute(UI* ui) {
 class BuildAction : public Action {
   public:
     BuildAction(const set<UnitId>& selection) :
-      Action(actionParameterType_unit),
+      Action(actionParameterType_unitSet),
       builders(selection),
       target()
     {
@@ -231,8 +231,16 @@ class BuildAction : public Action {
     Ref<UpdatedUnit> target;
 
     void internalSupplyArgument(const ActionArgument& arg) {
-      target = boost::get<Ref<UpdatedUnit> >(arg);
-      nextParameterType = actionParameterType_none;
+      vector<Ref<UpdatedUnit> > potentialTargets =
+        boost::get<vector<Ref<UpdatedUnit> > >(arg);
+      while (!potentialTargets.empty() &&
+          builders.count(potentialTargets.back()->getId())) {
+          potentialTargets.pop_back();
+      }
+      if (!potentialTargets.empty()) {
+        target = potentialTargets.back();
+        nextParameterType = actionParameterType_none;
+      }
     }
 
     void internalExecute(UI* ui) {
