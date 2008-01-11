@@ -1,8 +1,8 @@
 %module sakusenresources
 %naturalvar;
 #ifdef _WIN32
-	%include <windows.i>
-	#define LIBSAKUSEN_RESOURCES_API  __declspec(dllimport)
+  %include <windows.i>
+  #define LIBSAKUSEN_RESOURCES_API  __declspec(dllimport)
 #endif
 
 %feature("autodoc","1");
@@ -125,60 +125,21 @@ namespace boost
 
 /*GPL code ends here (apart from the line with the closing brace for namespace boost) */
 
-
-template<class T> class shared_ptr{
-  public:
-    shared_ptr(shared_ptr<T> const &);
-    T* get() const;
-    T* operator-> () const;
-};
-
-template<
-    typename T0,
-    typename T1 = boost::tuples::null_type,
-    typename T2 = boost::tuples::null_type,
-    typename T3 = boost::tuples::null_type,
-    typename T4 = boost::tuples::null_type,
-    typename T5 = boost::tuples::null_type,
-    typename T6 = boost::tuples::null_type
-  >
-class tuple {
-  public:
-    T0 get_head();
-    tuple<T1, T2, T3, T4, T5, T6> get_tail();
-};
-
-template<typename T0>
-class tuple<
-    T0,
-    boost::tuples::null_type,
-    boost::tuples::null_type,
-    boost::tuples::null_type,
-    boost::tuples::null_type,
-    boost::tuples::null_type,
-    boost::tuples::null_type
-  >
-{
-  public:
-    T0 get_head();
-    boost::tuples::null_type get_tail();
-};
-
 %pythoncode %{
 def g(self,key):
-	"""Helper function to get item from a tuple"""
-	w=self
-	for i in range(key):
-		w=w.get_tail()
-		if(not 'get_head' in dir(w)):
-			raise IndexError()
-	return w.get_head()
+  """Helper function to get item from a tuple"""
+  w=self
+  for i in range(key):
+    w=w.get_tail()
+    if(not 'get_head' in dir(w)):
+      raise IndexError()
+  return w.get_head()
 %}
 
-%template(tupleUniverseConstPtrResourceSearchResultString) tuple<sakusen::Universe::ConstPtr,sakusen::ResourceSearchResult,String>;
-%template(tupleUniversePtrResourceSearchResultString) tuple<sakusen::Universe::Ptr,sakusen::ResourceSearchResult,String>;
-%template(tupleResourceSearchResultString) tuple<sakusen::ResourceSearchResult,String>;
-%template(tupleString) tuple<String>;
+  %template(tupleUniverseConstPtrResourceSearchResultString) tuple<sakusen::Universe::ConstPtr,sakusen::ResourceSearchResult,String>;
+  %template(tupleUniversePtrResourceSearchResultString) tuple<sakusen::Universe::Ptr,sakusen::ResourceSearchResult,String>;
+  %template(tupleResourceSearchResultString) tuple<sakusen::ResourceSearchResult,String>;
+  %template(tupleString) tuple<String>;
 
 
 } // namespace boost
@@ -193,3 +154,4 @@ def g(self,key):
 %{
 #include "fileresourceinterface.h"
 %}
+
