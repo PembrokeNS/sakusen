@@ -20,7 +20,7 @@ namespace sakusen {
  * This class contains the information you need before making a Map - things
  * such as what UnitTypes, WeaponTypes, etc exist.
  */
-class LIBSAKUSEN_API Universe : boost::noncopyable {
+class LIBSAKUSEN_API Universe : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Universe> Ptr;
     typedef boost::shared_ptr<const Universe> ConstPtr;
