@@ -2,10 +2,12 @@ revision.h
 Makefile
 *.la
 *.exe
-config.mk
 .*.swp
 .libs
 .makefrags
 .obj
 tags
-doc
+/config.mk
+/doc
+/optimised
+/release
