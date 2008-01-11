@@ -1,7 +1,7 @@
 #ifndef UI__LAYOUT_H
 #define UI__LAYOUT_H
 
-#include "libsakusen-global.h"
+#include "tedomari-global.h"
 
 #include "ui/colour.h"
 

@@ -11,7 +11,9 @@
 
 using namespace std;
 
-String sakusen::stringUtils_makePrintable(const String& s)
+namespace sakusen {
+
+String stringUtils_makePrintable(const String& s)
 {
   /* Note that this is UTF-8 safe */
   String result(s);
@@ -23,7 +25,7 @@ String sakusen::stringUtils_makePrintable(const String& s)
   return result;
 }
 
-String sakusen::stringUtils_charToUtf8(uint16 c)
+String stringUtils_charToUtf8(uint16 c)
 {
   if (c<0x0080) {
     return String(1, static_cast<char>(c));
@@ -41,7 +43,7 @@ String sakusen::stringUtils_charToUtf8(uint16 c)
   }
 }
 
-String::iterator sakusen::stringUtils_findPreviousCharStart(
+String::iterator stringUtils_findPreviousCharStart(
     String::iterator i,
     const String::iterator& bound
   )
@@ -56,7 +58,7 @@ String::iterator sakusen::stringUtils_findPreviousCharStart(
 }
 
 /** \brief Returns hex string version of buffer */
-String LIBSAKUSEN_API sakusen::stringUtils_bufferToHex(
+String LIBSAKUSEN_API stringUtils_bufferToHex(
     const uint8* buffer, size_t length
   )
 {
@@ -71,7 +73,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_bufferToHex(
 /** \brief Computes a secure hash of the buffer and returns it as a hex string.
  *
  * The hash used is SHA-256. */
-String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
+String LIBSAKUSEN_API stringUtils_getSecureHashAsString(
     const uint8* buffer,
     size_t length
   )
@@ -92,5 +94,7 @@ String LIBSAKUSEN_API sakusen::stringUtils_getSecureHashAsString(
   mhash_deinit(thread, hash);
   
   return sakusen::stringUtils_bufferToHex(hash, 32);
+}
+
 }
 

@@ -12,7 +12,7 @@ class TCPConnectingSocket : public TCPSocket {
     TCPConnectingSocket(const TCPConnectingSocket& copy);
   protected:
     /** The name of the host we are connecting/ed to. */
-    ::String remoteHost;
+    String remoteHost;
   public:
     /** Connect to given host and port */
     TCPConnectingSocket(const String host, uint16 myPort);

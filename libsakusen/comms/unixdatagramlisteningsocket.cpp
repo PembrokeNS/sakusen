@@ -9,7 +9,8 @@
 #include <cerrno>
 #include <sstream>
 
-using namespace sakusen::comms;
+namespace sakusen {
+namespace comms {
 
 UnixDatagramListeningSocket::UnixDatagramListeningSocket(bool abstract) :
   UnixDatagramSocket(makeRandomPath(abstract), abstract)
@@ -61,6 +62,8 @@ String UnixDatagramListeningSocket::makeRandomPath(bool abstract)
   os << "sakusen-" << getpid() << "-" << tv.tv_sec << "-" << tv.tv_usec;
   return os.str();
 }
+
+}}
 
 #endif // DISABLE_UNIX_SOCKETS
 

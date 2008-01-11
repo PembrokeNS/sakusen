@@ -1,11 +1,16 @@
 #ifndef UI__ACTIONARGUMET_H
 #define UI__ACTIONARGUMET_H
 
+#include "tedomari-global.h"
+
 #include "point.h"
 #include "orientation.h"
 #include "ref.h"
 #include "updatedunit.h"
 #include "ui/actiontarget.h"
+
+namespace tedomari {
+namespace ui {
 
 /* Note that it's critical that the order of the types in the variant
  * correspond to the order of the values in the enum, so that variant::which()
@@ -27,6 +32,8 @@ enum ActionParameterType {
   actionParameterType_unit,
   actionParameterType_unitSet
 };
+
+}}
 
 #endif // UI__ACTIONARGUMET_H
 

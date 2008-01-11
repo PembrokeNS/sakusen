@@ -12,7 +12,7 @@ class UDPConnectingSocket : public UDPSocket {
     UDPConnectingSocket(const UDPConnectingSocket& copy);
   protected:
     /** The name of the host we are connecting/ed to. */
-    ::String remoteHost;
+    String remoteHost;
   public:
     UDPConnectingSocket(const String host, uint16 myPort);
     ~UDPConnectingSocket() {}

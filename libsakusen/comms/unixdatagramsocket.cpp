@@ -15,7 +15,8 @@
 
 using namespace std;
 
-using namespace sakusen::comms;
+namespace sakusen {
+namespace comms {
 
 void UnixDatagramSocket::interpretAddress(
     list<String>& address,
@@ -232,6 +233,8 @@ String UnixDatagramSocket::getAddress() const {
     return String("unix"ADDR_DELIM"concrete"ADDR_DELIM) + path;
   }
 }
+
+}}
 
 #endif // DISABLE_UNIX_SOCKETS
 

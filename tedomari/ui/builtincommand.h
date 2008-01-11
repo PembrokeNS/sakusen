@@ -1,7 +1,7 @@
 #ifndef UI__BUILTINCOMMAND_H
 #define UI__BUILTINCOMMAND_H
 
-#include "libsakusen-global.h"
+#include "tedomari-global.h"
 
 #include <list>
 

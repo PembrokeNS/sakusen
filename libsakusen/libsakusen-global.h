@@ -137,8 +137,12 @@
 
 #include <ostream>
 
+namespace sakusen {
+
 extern LIBSAKUSEN_API std::ostream& debugStream;
 extern LIBSAKUSEN_API std::ostream& errorStream;
+
+}
 
 /* Define macros for debug and error output.  They're inside loops to absorb
  * the semicolon that should be used after calling them. */
@@ -146,13 +150,14 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 //#ifndef NDEBUG
   #define Debug(msg) \
     do { \
-      debugStream << __FILE__ << ":" << __LINE__ << ":" << \
+      sakusen::debugStream << __FILE__ << ":" << __LINE__ << ":" << \
         __PRETTY_FUNCTION__ <<  ": " << msg << std::endl; \
     } while(false)
 
   #define QDebug(msg) \
     do { \
-      debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << std::endl; \
+      sakusen::debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << \
+        std::endl; \
     } while(false)
 //#else
 //  #define Debug(msg)
@@ -161,7 +166,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 
 #define Fatal(msg) \
   do { \
-    errorStream << __FILE__ << ":" << __LINE__ << ":" << \
+    sakusen::errorStream << __FILE__ << ":" << __LINE__ << ":" << \
       __PRETTY_FUNCTION__ <<  ": fatal error: " << msg << std::endl; \
     abort(); \
   } while(false)
@@ -195,9 +200,10 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 
 #include <stdexcept>
 #include <string>
-typedef std::string String;
 
 namespace sakusen {
+
+typedef std::string String;
 
 /** \brief Typedef for Times, primarily to make it clear when Times are
  * being manipulated */

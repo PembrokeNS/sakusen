@@ -4,7 +4,10 @@
 #include <sstream>
 #include "libsakusen-comms-global.h"
 
-String sakusen::comms::errorUtils_parseErrno(int num)
+namespace sakusen {
+namespace comms {
+
+String errorUtils_parseErrno(int num)
 {
   switch(num) {
 #define CASE(name) case name: return #name;
@@ -42,7 +45,7 @@ String sakusen::comms::errorUtils_parseErrno(int num)
 
 #define MESSAGE_BUFFER_LEN 256
 
-String sakusen::comms::errorUtils_errorMessage(int num)
+String errorUtils_errorMessage(int num)
 {
 #if defined (_MSC_VER)
   char message[MESSAGE_BUFFER_LEN];
@@ -67,4 +70,6 @@ String sakusen::comms::errorUtils_errorMessage(int num)
   return String(strerror(num));
 #endif //_MSC_VER
 }
+
+}}
 

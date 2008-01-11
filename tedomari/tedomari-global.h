@@ -11,5 +11,11 @@
  #define REVISION "0.1"
 #endif
 
+namespace tedomari {
+
+using sakusen::String;
+
+}
+
 #endif // TEDOMARI_GLOBAL_H
 

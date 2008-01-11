@@ -1,7 +1,7 @@
 #ifndef UI__FUNCTION_H
 #define UI__FUNCTION_H
 
-#include "libsakusen-global.h"
+#include "tedomari-global.h"
 
 #include <list>
 

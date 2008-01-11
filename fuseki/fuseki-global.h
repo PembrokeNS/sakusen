@@ -8,5 +8,11 @@
 
 #define DEFAULT_GAME_SPEED 20000
 
+namespace fuseki {
+
+using sakusen::String;
+
+}
+
 #endif // FUSEKI_GLOBAL_H
 
