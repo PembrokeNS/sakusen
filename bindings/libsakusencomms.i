@@ -91,7 +91,7 @@ class MessageData;
 %include "std_set.i"
 namespace saksen{
 namespace comms{
-%template(stringSet) ::std::set<String>;
+%template(stringSet) ::std::set<::sakusen::String>;
 }
 }
 #endif
