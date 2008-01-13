@@ -375,7 +375,6 @@ void Server::createPlayersFor(const MapPlayMode& mode)
     players.push_back(Player(player, i));
     settings->getPlayersBranch()->addPlayer(i, player);
   }
-  settingAlteredCallback(settings->getPlayersBranch());
 }
 
 void Server::setAllowObservers(bool value)

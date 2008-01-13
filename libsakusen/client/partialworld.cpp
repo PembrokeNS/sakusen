@@ -11,6 +11,7 @@ using namespace sakusen::client;
 
 PartialWorld::PartialWorld(
     const Universe::ConstPtr& universe,
+    const UnitFactory* uF,
     PlayerId pI,
     Topology topology,
     const Point<sint32>& topRight,
@@ -19,6 +20,7 @@ PartialWorld::PartialWorld(
     const Heightfield& hf
   ) :
   World(universe),
+  unitFactory(uF),
   playerId(pI),
   map(Map::newMap<PartialMap>(
         topology, topRight, bottomLeft, gravity, hf
@@ -63,7 +65,7 @@ void PartialWorld::applyUpdate(const Update& update)
           Debug("adding unit of existing id");
           units.erase(unit);
         }
-        units.push_back(new UpdatedUnit(data.getUnit()));
+        units.push_back(unitFactory->create(data.getUnit()));
       }
       break;
     case updateType_unitRemoved:

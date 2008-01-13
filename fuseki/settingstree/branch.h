@@ -28,13 +28,8 @@ class Branch : public Node {
     sakusen::hash_map_string<Node::Ptr>::type children;
 
   protected:
-    inline Node::Ptr addChild(Node::Ptr child) {
-      return children[child->getName()] = child;
-    }
-    inline void removeChild(String name) {
-      assert(children.count(name));
-      children.erase(name);
-    }
+    Node::Ptr addChild(Node::Ptr child);
+    void removeChild(String name);
     virtual Node::Ptr getNodeByListRef(std::list<String>& nodeAddress);
     virtual String changeRequestListRef(
         std::list<String>& setting,

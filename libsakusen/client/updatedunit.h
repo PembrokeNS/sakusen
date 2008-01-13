@@ -14,16 +14,19 @@ namespace client {
  * and status when they arrive over the network.
  */
 class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
+  public:
+    typedef boost::shared_ptr<UpdatedUnit> Ptr;
+    typedef boost::shared_ptr<const UpdatedUnit> ConstPtr;
   private:
     UpdatedUnit();
-  public:
+  protected:
     UpdatedUnit(const CompleteUnit& copy) :
       CompleteUnit(copy),
-	  orders(static_cast<uint16>(copy.getStatus().getWeaponsStatus().size())),
-	  
+      orders(static_cast<uint16>(copy.getStatus().getWeaponsStatus().size())),
       altered(false)
     {}
-    virtual ~UpdatedUnit() {}
+  public:
+    virtual inline ~UpdatedUnit() = 0;
   private:
     /** This Unit's current order status. */
     UnitOrders orders;
@@ -36,10 +39,13 @@ class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
       return orders;
     }
     /*@}*/
-    void orderAccepted(const OrderAcceptedUpdateData& data);
+    virtual void orderAccepted(const OrderAcceptedUpdateData& data);
     void alter(const CompleteUnit&);
-    void incrementState();
+    virtual void incrementState();
 };
+
+UpdatedUnit::~UpdatedUnit() {
+}
 
 /** \brief function object to extract the id from an UpdatedUnit */
 struct UpdatedUnitIder {

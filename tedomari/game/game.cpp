@@ -3,6 +3,7 @@
 #include "resourceinterface-methods.h"
 #include "messagedata.h"
 #include "serverinterface.h"
+#include "smartunitfactory.h"
 
 using namespace std;
 
@@ -62,6 +63,7 @@ void Game::start(
   serverInterface = sI;
   new PartialWorld(
       universe,
+      new SmartUnitFactory(),
       data.getPlayerId(),
       data.getTopology(),
       data.getTopRight(),

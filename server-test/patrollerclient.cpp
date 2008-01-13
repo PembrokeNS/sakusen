@@ -26,7 +26,7 @@ void PatrollerClient::queueUpdate(const Update& update)
           patrolFrom = data.getUnit().getStatus().getPosition();
           patrolFrom.z = patrolTo.z;
           /*Debug("sending move order");*/
-          QDebug("Patrolling to " << patrolTo);
+          Debug("Patrolling to " << patrolTo);
           orderMessageQueue.push(
               OrderMessage(UnitId(),
                 Order(new MoveOrderData(patrolTo))

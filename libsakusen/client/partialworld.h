@@ -1,12 +1,15 @@
 #ifndef PARTIALWORLD_H
 #define PARTIALWORLD_H
 
+#include <boost/scoped_ptr.hpp>
+
 #include "gnu_extensions.h"
 #include "hash_list.h"
 #include "idindex.h"
 #include "world.h"
 #include "partialmap.h"
 #include "updatedunit.h"
+#include "unitfactory.h"
 #include "updatedsensorreturns.h"
 #include "updatedballistic.h"
 #include "update.h"
@@ -29,6 +32,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
   public:
     PartialWorld(
         const Universe::ConstPtr& universe,
+        const UnitFactory*,
         PlayerId playerId,
         Topology topology,
         const Point<sint32>& topRight,
@@ -45,6 +49,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     typedef IdIndex<ClientBallisticId, UpdatedBallistic, UpdatedBallisticIder>
       BallisticIdIndex;
   private:
+    boost::scoped_ptr<const UnitFactory> unitFactory;
     PlayerId playerId;
     PartialMap* map;
     hash_list<UpdatedUnit, Bounded, UpdatedUnit> units;

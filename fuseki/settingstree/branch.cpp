@@ -1,5 +1,8 @@
 #include "settingstree/branch.h"
 
+#include "server.h"
+#include "null_deleter.h"
+
 using namespace std;
 using namespace __gnu_cxx;
 
@@ -16,6 +19,19 @@ Branch::Branch(
   ) :
   Node(name, readers, writers, parent, server)
 {
+}
+
+Node::Ptr Branch::addChild(Node::Ptr child) {
+  children[child->getName()] = child;
+  /* Can't use ptrToThis() because might still be constructing Server */
+  server->settingAlteredCallback(Node::Ptr(this, null_deleter()));
+  return child;
+}
+
+void Branch::removeChild(String name) {
+  assert(children.count(name));
+  children.erase(name);
+  server->settingAlteredCallback(ptrToThis());
 }
 
 Node::Ptr Branch::getNodeByListRef(
