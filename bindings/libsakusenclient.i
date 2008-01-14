@@ -14,6 +14,11 @@
 %{
 #include "updatedunit.h"
 %}
+namespace sakusen{
+namespace client{
+%template(UpdatedUnitPtr) ::boost::shared_ptr<UpdatedUnit>;
+}
+}
 %include "unitfactory.h"
 %{
 #include "unitfactory.h"
