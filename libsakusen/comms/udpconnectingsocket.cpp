@@ -9,7 +9,7 @@
 using namespace sakusen::comms;
 
 UDPConnectingSocket::UDPConnectingSocket(
-    const String hostname, uint16 port
+    const sakusen::String hostname, uint16 port
   ) :
   UDPSocket(port),
   remoteHost(hostname)

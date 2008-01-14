@@ -20,8 +20,8 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
      i)Moves the requisite dlls into the same directory as your binaries.
      ii)Runs libsakusen-resources-test to generate the universe if this hasn't already been done.
-     iii)Moves tedomari\doc\user\ui.conf and config into %AppData%\.sakusen\tedomari\
-   b) Compress (either zip or tar will do) data\universe\testsrc.dir\cannon.cpp and cannon.h into one file, rename it testsrc.sakusensource and move it to %AppData%\.sakusen\data\universe\test
+     iii) Creates testsrc.sakusensource in %AppData%\sakusen\data\test
+     iii)Moves tedomari\doc\user\ui.conf and config into %AppData%\sakusen\tedomari\
    c) Run fuseki.
    d) Invoke tedomari with tedomari -j "tcp|localhost"
    e) If something bad happens, contact me. It's almost certainly a bug.

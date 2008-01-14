@@ -77,7 +77,7 @@ void CairoRegion::drawRect(
 void CairoRegion::drawText(
     double xoff,
     double yoff,
-    const String& text,
+    const sakusen::String& text,
     const Colour& c
   )
 {

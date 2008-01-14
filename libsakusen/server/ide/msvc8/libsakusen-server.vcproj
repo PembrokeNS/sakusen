@@ -292,7 +292,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\fixedmotion.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\fixedmotion.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\fuse.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\groundmotion.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\groundmotion.h"
 			>
 		</File>
 		<File
@@ -337,6 +353,14 @@
 		</File>
 		<File
 			RelativePath="..\..\unitlayer.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitmotion.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\unitmotion.h"
 			>
 		</File>
 		<File

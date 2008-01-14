@@ -9,7 +9,7 @@ using namespace std;
 using namespace fuseki::settingsTree;
 
 PluginBranch::PluginBranch(
-    const String& name,
+    const sakusen::String& name,
 	fuseki::Plugin* p,
 	Branch* parent,
 	fuseki::Server* server

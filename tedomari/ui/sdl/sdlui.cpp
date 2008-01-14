@@ -127,7 +127,7 @@ OptionsParser SDLUI::getParser(Options* options)
   return parser;
 }
 
-void SDLUI::setTitle(const String& title)
+void SDLUI::setTitle(const sakusen::String& title)
 {
   SDL_WM_SetCaption(title.c_str(), NULL);
 }

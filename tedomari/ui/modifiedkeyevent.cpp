@@ -2,7 +2,7 @@
 
 using namespace tedomari::ui;
 
-ModifiedKeyEvent::ModifiedKeyEvent(const String& name)
+ModifiedKeyEvent::ModifiedKeyEvent(const sakusen::String& name)
 {
   assert(!name.empty());
   down = true;

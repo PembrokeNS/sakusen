@@ -136,7 +136,7 @@ void CairoUI::drawRect(double x, double y, double w, double h, const Colour& c)
   cairo_stroke(cairoContext);
 }
 
-void CairoUI::drawText(double x, double y, const String& text, const Colour& c)
+void CairoUI::drawText(double x, double y, const sakusen::String& text, const Colour& c)
 {
   cairoSetSource(c);
   PangoLayout* layout = pango_cairo_create_layout(cairoContext);

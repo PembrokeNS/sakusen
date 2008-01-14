@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;"
-				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1"
+				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -115,7 +115,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;"
-				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1"
+				PreprocessorDefinitions="BOOST_FILESYSTEM_DYN_LINK=1;WIN32"
 				RuntimeLibrary="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"

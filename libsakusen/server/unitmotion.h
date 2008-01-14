@@ -16,7 +16,7 @@ namespace server {
  *
  * This class can be specialized for each different mode of movement: air
  * units, ground units, boats, submarines, and more exotic things. */
-class UnitMotion : boost::noncopyable {
+class LIBSAKUSEN_SERVER_API UnitMotion : boost::noncopyable {
   public:
     static UnitMotion* create(const String& type);
   protected:

@@ -418,6 +418,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\null_deleter.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\oarchive-methods.h"
 			>
 		</File>

@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="&#x0D;&#x0A;"
-				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib"
+				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\boost"
 				GenerateDebugInformation="true"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib"
+				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\boost"
 				IgnoreDefaultLibraryNames=""
@@ -229,7 +229,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="&#x0D;&#x0A;"
-				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
+				AdditionalDependencies=" ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
@@ -312,7 +312,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
+				AdditionalDependencies=" ..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib"
@@ -701,6 +701,18 @@
 			</File>
 			<File
 				RelativePath="..\..\game\game.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\game\smartunit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\game\smartunitfactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\game\smartunitfactory.h"
 				>
 			</File>
 		</Filter>

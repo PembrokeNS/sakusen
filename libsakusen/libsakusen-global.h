@@ -129,7 +129,11 @@
 
 /* CONFIG_SUBDIR is the subdirectory of the users home directory where general
  * sakusen stuff happens. */
-#define CONFIG_SUBDIR ".sakusen"
+#ifdef WIN32
+  #define CONFIG_SUBDIR "sakusen"
+#else
+  #define CONFIG_SUBDIR ".sakusen"
+#endif
 
 #include <cassert>
 

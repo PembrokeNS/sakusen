@@ -1,5 +1,6 @@
 #include "tcpconnectingsocket.h"
 #include "socketexn.h"
+#include "errorutils.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -9,7 +10,7 @@
 using namespace sakusen::comms;
 
 TCPConnectingSocket::TCPConnectingSocket(
-    const String hostname, uint16 port
+    const sakusen::String hostname, uint16 port
   ) :
   TCPSocket(port),
   remoteHost(hostname)
@@ -27,7 +28,7 @@ TCPConnectingSocket::TCPConnectingSocket(
   memcpy(&addr.sin_addr.s_addr, endpoint->h_addr, endpoint->h_length);
   addr.sin_port = htons(port);
   if (-1 == connect(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr))) {
-    Fatal("Error connecting socket");
+    throw SocketExn("Error connecting TCP socket: "+errorUtils_errorMessage(socket_errno));
   }
 }
 

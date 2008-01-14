@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
 				GenerateDebugInformation="true"
@@ -143,7 +142,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
 				IgnoreDefaultLibraryNames=""

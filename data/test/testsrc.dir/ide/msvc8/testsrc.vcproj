@@ -26,9 +26,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Moving dll to .sakusen"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;&#x0D;&#x0A;"
-				Outputs="testsrc.sakusenmodule"
+				Description="Moving dll to %AppData%\sakusen"
+				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
+				Outputs=""
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -43,6 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\externals\STLport\stlport;..\..\..\..\..\libsakusen\;..\..\..\..\..\libsakusen\server"
+				PreprocessorDefinitions="WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,6 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib"
+				OutputFile="$(OutDir)\$(ProjectName).sakusenmodule.dll"
 				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib;&quot;$(SolutionDir)$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
@@ -104,9 +106,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Moving dll to .sakusen"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;%AppData%\.sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;&#x0D;&#x0A;"
-				Outputs="testsrc.sakusenmodule"
+				Description="Moving dll to %AppData%\sakusen"
+				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
+				Outputs="$(OutDir)\$(ProjectName).sakusenmodule.dll"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -120,7 +122,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\..\externals\STLport\stlport;..\..\..\..\..\libsakusen\;..\..\..\..\..\libsakusen\server"
-				PreprocessorDefinitions="NDEBUG"
+				PreprocessorDefinitions="NDEBUG;WIN32"
 				RuntimeLibrary="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -138,6 +140,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib"
+				OutputFile="$(OutDir)\$(ProjectName).sakusenmodule.dll"
 				AdditionalLibraryDirectories="..\..\..\..\..\externals\STLport\bin;..\..\..\..\..\externals\STLport\lib;&quot;$(SolutionDir)$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"

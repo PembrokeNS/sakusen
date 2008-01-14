@@ -7,7 +7,7 @@ using namespace std;
 
 using namespace tedomari::ui;
 
-void Command::execute(std::list<String>& args, UI* ui) const
+void Command::execute(std::list<sakusen::String>& args, UI* ui) const
 {
   switch (type) {
     case commandType_ambiguous:

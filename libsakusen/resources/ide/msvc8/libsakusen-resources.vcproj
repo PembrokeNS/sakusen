@@ -80,7 +80,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -183,7 +182,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.001"
 				LinkIncremental="2"

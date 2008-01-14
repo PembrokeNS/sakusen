@@ -57,8 +57,16 @@ int main(/*int argc, char** argv*/)
 
   if (boost::filesystem::exists(testDir)) {
     cout << "Cleaning out existing test files" << endl;
+    //Be a bit less zealous in deletion, and notably leave heightfields around.
     list<boost::filesystem::path> files =
-      fileUtils_findMatches(testDir, "");
+      fileUtils_findMatches(testDir, ".sakusenmaptemplate");
+    while (!files.empty()) {
+      boost::filesystem::remove(files.front());
+      files.pop_front();
+    }
+    //Why am I doing it like this? Because the + operator is not defined for list<path>
+    files =
+      fileUtils_findMatches(testDir, ".sakusenuniverse");
     while (!files.empty()) {
       boost::filesystem::remove(files.front());
       files.pop_front();

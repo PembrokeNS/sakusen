@@ -303,7 +303,14 @@ FileResourceInterface::internalSymbolSearch(
   //Error handling for the above.
   if(moduleHandle == NULL) {
     char buffer[33];
-    _itoa_s(GetLastError(), buffer, 33,2);
+//    _itoa_s(GetLastError(), buffer, 33,2);
+    FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_FROM_SYSTEM,
+        NULL,
+        GetLastError(),
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),buffer,
+        33, NULL );
     error = "LoadLibrary() failed on "+modulePath.native_file_string()+
       ".\n Error value: " + String(buffer);
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
@@ -315,7 +322,14 @@ FileResourceInterface::internalSymbolSearch(
   if(symbol==NULL)
   {
     char buffer[33];
-    _itoa_s(GetLastError(), buffer, 33,2);
+ //   _itoa_s(GetLastError(), buffer, 33,2);
+     FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_FROM_SYSTEM,
+        NULL,
+        GetLastError(),
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),buffer,
+        33, NULL );
     error = "GetProcAddress() on "+symbolName+" in " + modulePath.directory_string() +
       " failed. Error value: " + String(buffer);
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);

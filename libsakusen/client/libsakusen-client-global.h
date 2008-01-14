@@ -9,9 +9,6 @@
   //#pragma warning(disable:4251)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
-     #define LIBSAKUSEN_CLIENT_API
-     #define LIBSAKUSEN_CLIENT_EXIMP
-  #if 0 
     #ifdef LIBSAKUSEN_CLIENT_EXPORTS
       #define LIBSAKUSEN_CLIENT_API   __declspec(dllexport)
       #define LIBSAKUSEN_CLIENT_EXIMP extern
@@ -19,7 +16,6 @@
       #define LIBSAKUSEN_CLIENT_API   __declspec(dllimport)
       #define LIBSAKUSEN_CLIENT_EXIMP
     #endif
-  #endif
 #else
   #if defined(__GNUC__) && (__GNUC__ >= 4)
     #define LIBSAKUSEN_CLIENT_API __attribute__ ((visibility ("default")))

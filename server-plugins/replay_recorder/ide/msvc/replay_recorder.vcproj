@@ -40,6 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -113,6 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"

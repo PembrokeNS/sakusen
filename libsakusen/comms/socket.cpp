@@ -26,7 +26,7 @@ void Socket::socketsInit(void)
 #endif
 }
 
-Socket::Ptr Socket::newConnectionToAddress(const String& address)
+Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address)
 {
   list<String> addressComponents =
     stringUtils_split<list<String> >(address, ADDR_DELIM);
@@ -51,7 +51,7 @@ Socket::Ptr Socket::newConnectionToAddress(const String& address)
   }
 }
 
-Socket::Ptr Socket::newBindingToAddress(const String& address)
+Socket::Ptr Socket::newBindingToAddress(const sakusen::String& address)
 {
   list<String> addressComponents =
     stringUtils_split<list<String> >(address, ADDR_DELIM);

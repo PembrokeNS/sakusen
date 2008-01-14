@@ -82,6 +82,7 @@ void TCPSocket::send(const void* buf, size_t len)
       case ENOTCONN:
       case ECONNREFUSED:
       case ECONNABORTED:
+      case ECONNRESET:
         throw SocketClosedExn();
         break;
       case EPIPE:
