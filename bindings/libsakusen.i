@@ -1,6 +1,8 @@
 %module(directors="1") sakusen
 %naturalvar;
 %feature("autodoc","1");
+/*We need directors in a subclass of this*/
+%feature("director") sakusen::CompleteUnit;
 %{
 #include <string>
 %}
@@ -38,6 +40,7 @@ namespace boost {
 template<class T> class shared_ptr{
   public:
     shared_ptr(shared_ptr<T> const &);
+    template<class Y> explicit shared_ptr(Y * p);
     T* get() const;
     T* operator-> () const;
 };

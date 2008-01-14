@@ -8,8 +8,13 @@ def debug(x): print x
 
 class eventUnitFactory(UnitFactory):
 	def create(self,u):
-		debug("Creating eventUpdatedUnit")
-		return eventUpdatedUnit(u)
+		e=eventUpdatedUnit(u)
+		debug("Creating eventUpdatedUnit "+`e`)
+		e.__disown__() #the C++ code will look after it. TODO: see if return eventUpdatedUnit().__disown__() is a nicer ideom
+		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
+		debug("Returning pointer "+`p`)
+		p.thisown=0 #I don't even know any more - TODO: CHECK THIS
+		return p
 class eventUpdatedUnit(UpdatedUnit):
 	pass
 class gameModel(QtCore.QObject):
@@ -34,19 +39,19 @@ class gameModel(QtCore.QObject):
 		#TODO: currently, better hope the player looked up the universe beforehand
 		debug("Game started, creating world")
 		e=eventUnitFactory()
+		e.__disown__() #w takes ownership of e; we have to do thisl differently because it is a director class, *sigh*
 		w=PartialWorld(self.universe,e,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 		w.thisown=False #we can't keep w, it's got to make it on its own; it'd go out of scope and die very fast if we left it here. It'll be deleted when the universe gets destroyed, I think
-		e.thisown=0 #w takes ownership of e
 		debug("Created partial world %s"%w)
 		debug("Global variable world is now %s"%`sakusenclient.cvar.world`)
 	def pushUpdates(self,d):
-		debug("Received updates to game state")
 		while(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
 			sakusenclient.cvar.world.endTick()
 		if(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
 			print "Got updates in wrong order"
 		l=d.getUpdates()
-		debug("Update list is "+`l`)
 		for u in l:
+			debug("pushing update "+`u`)
 			sakusenclient.cvar.world.applyUpdate(u)
+			debug("Applied an update")
 		debug("Updates successfully applied")
