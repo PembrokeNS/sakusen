@@ -18,9 +18,9 @@ sakusen.la: sakusen.lo
 %.lo: %.cpp
 	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ -Wall $<
 
-sakusen.cpp: sakusencomms.cpp
+sakusencomms.cpp: sakusen.cpp
 
-sakusencomms.cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
+sakusen.cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
 	python generate_code.py
 
 clean: 
