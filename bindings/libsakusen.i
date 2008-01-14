@@ -1,4 +1,4 @@
-%module sakusen
+%module(directors="1") sakusen
 %naturalvar;
 %feature("autodoc","1");
 %{
@@ -488,5 +488,16 @@ namespace sakusen{
 %{
 #include "world.h"
 %}
-
+%include "targettype.h"
+%{
+#include "targettype.h"
+%}
+%include "weaponorders.h"
+%{
+#include "weaponorders.h"
+%}
+%include "unitorders.h"
+%{
+#include "unitorders.h"
+%}
 

@@ -16,3 +16,4 @@ sakusenresources.py
 *.pyc
 *.lo
 sakusenclient.py
+*.h
