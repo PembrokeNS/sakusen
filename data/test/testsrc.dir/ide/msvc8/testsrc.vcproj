@@ -26,8 +26,8 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Moving dll to %AppData%\sakusen"
-				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
+				Description=""
+				CommandLine=""
 				Outputs=""
 			/>
 			<Tool
@@ -91,6 +91,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Moving dll to %AppData%\sakusen"
+				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -106,9 +108,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Moving dll to %AppData%\sakusen"
-				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
-				Outputs="$(OutDir)\$(ProjectName).sakusenmodule.dll"
+				Description=""
+				CommandLine=""
+				Outputs="1.sakusenmodule.dll"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -170,6 +172,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Moving dll to %AppData%\sakusen"
+				CommandLine="if NOT EXIST &quot;%AppData%\sakusen\data\module\test&quot; ( mkdir &quot;%AppData%\sakusen\data\module\test&quot; )&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%AppData%\sakusen\data\module\test\testsrc.sakusenmodule.dll&quot;"
 			/>
 		</Configuration>
 	</Configurations>
