@@ -7,8 +7,21 @@ from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
 from mainWindowImpl import mainWindow
-import sys
+import sys,imp
+from sakusenresources import fileUtils_getHome,path
+from sakusen import CONFIG_SUBDIR
 def debug(x): pass
+
+KIAI_SUBDIR="kiai"
+configpath=fileUtils_getHome()
+configpath/=path(CONFIG_SUBDIR)
+configpath/=path(KIAI_SUBDIR)
+try:
+	_r=imp.find_module("startup",[configpath.string()]) #arrrgh, I hate this way of doing it
+	imp.load_module("startup",_r[0],_r[1],_r[2])
+except ImportError:
+	print "No custom startup file \"startup.py\" in path \"%s\" found"%configpath.string()
+
 a=QtGui.QApplication(sys.argv)
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):
