@@ -13,15 +13,19 @@ from sakusen import CONFIG_SUBDIR
 def debug(x): pass
 
 KIAI_SUBDIR="kiai"
-configpath=fileUtils_getHome()
-configpath/=path(CONFIG_SUBDIR)
-configpath/=path(KIAI_SUBDIR)
-try:
-	_r=imp.find_module("startup",[configpath.string()]) #arrrgh, I hate this way of doing it
-	imp.load_module("startup",_r[0],_r[1],_r[2])
-except ImportError:
-	print "No custom startup file \"startup.py\" in path \"%s\" found"%configpath.string()
 
+def userconfig(s):
+	configpath=fileUtils_getHome()
+	configpath/=path(CONFIG_SUBDIR)
+	configpath/=path(KIAI_SUBDIR)
+	configpath/=path(s+".py")
+	try:
+		execfile(configpath.string())
+	except IOError:
+		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
+
+
+userconfig("startup")
 a=QtGui.QApplication(sys.argv)
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):
@@ -49,6 +53,7 @@ def openSettingsDialog(socket,clientid):
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
 	s.show()
+	userconfig("onconnect")
 	debug("opened a settings dialog")
 def startGame():
 	global a,mainwindow
@@ -69,7 +74,7 @@ QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),j.join)
 #QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),l.addSocket) #needs to be synchronised with settingsDialog
 QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
 QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
-t.start(1000) #value in miliseconds - might want to make this less for the actual release, and more when debugging
+t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 w.show()
 r=a.exec_()
 debug("Event loop terminated with status %d, dying"%r)
