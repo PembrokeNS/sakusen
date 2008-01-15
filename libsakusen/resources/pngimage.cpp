@@ -4,6 +4,8 @@
 
 #include <png.h>
 
+using namespace std;
+
 namespace sakusen {
 namespace resources {
 
@@ -153,9 +155,10 @@ void PngImageImpl::read(boost::multi_array<uint16, 2>& out)
   } else {
     for (size_t i=0; i<height; ++i) {
       for (size_t j=0; j<width; ++j) {
-        /* We scale up 8- (and 4- and 2-) bit values to be on the same scale
-         * as the 16-bit ones */
-        out[j][i] = rowPointers[i][j]<<8;
+        /* We add a constant to low-bit-depth values to get them nearer a sane
+         * range once they've been renormalised */
+        out[j][i] = rowPointers[i][j] +
+          uint16(numeric_limits<sint8>::min() - numeric_limits<sint16>::min());
       }
     }
   }

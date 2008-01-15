@@ -407,7 +407,7 @@ int main(/*int argc, char** argv*/)
     cout << "Failed to load image" << endl;
     return EXIT_FAILURE;
   }
-  heightfield = Heightfield(2*MAP_WIDTH/100, 2, imagePath, image);
+  heightfield = Heightfield(2*MAP_WIDTH/100, 256, imagePath, image);
   t.reset(new MapTemplate(
         universe, "immap", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
