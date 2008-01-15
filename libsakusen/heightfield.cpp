@@ -133,17 +133,17 @@ double Heightfield::intersectRayInCell(
   /** \todo Test this code */
   
   /* First we extract some heights */
-  const double h00 = getHeightAtSample(x,   y);
-  const double h01 = getHeightAtSample(x,   y+1);
-  const double h10 = getHeightAtSample(x+1, y);
-  const double h11 = getHeightAtSample(x+1, y+1);
+  const double h00 = heightfield[x  ][y  ];
+  const double h01 = heightfield[x  ][y+1];
+  const double h10 = heightfield[x+1][y  ];
+  const double h11 = heightfield[x+1][y+1];
 
   /* We also need to get the ray-origin in coordinates normalised to be [0,1]^2
    * in the cell */
   const double ox =
-    double(ray.origin.x - world->getMap()->left())/xyResolution;
+    double(ray.origin.x - world->getMap()->left())/xyResolution - x;
   const double oy =
-    double(ray.origin.y - world->getMap()->bottom())/xyResolution;
+    double(ray.origin.y - world->getMap()->bottom())/xyResolution - y;
   const double oz = double(ray.origin.z)/zResolution;
 
   /* And same for ray direction */
