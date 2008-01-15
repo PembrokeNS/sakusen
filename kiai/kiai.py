@@ -55,6 +55,9 @@ def openSettingsDialog(socket,clientid):
 	s.show()
 	userconfig("onconnect")
 	debug("opened a settings dialog")
+def connectionfailed():
+	print "Failed to connect to server - check the server is running"
+	a.quit()
 def startGame():
 	global a,mainwindow
 	#TODO: disconnect s.rejected() and a.quit()
@@ -71,6 +74,7 @@ t=QtCore.QTimer()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("rejected()"),a,QtCore.SLOT("quit()"))
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),j.join)
+QtCore.QObject.connect(j,QtCore.SIGNAL("failure()"),connectionfailed)
 #QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),l.addSocket) #needs to be synchronised with settingsDialog
 QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
 QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
