@@ -3,6 +3,8 @@
 %feature("autodoc","1");
 %feature("director") sakusen::client::UnitFactory;
 %feature("director") sakusen::client::UpdatedUnit;
+/*If this has a director then when one tries to call it one gets an infinite loop, no idea why - maybe because it's inline?*/
+%feature("nodirector") sakusen::client::UpdatedUnit::getId;
 %feature("director:except") {
     if ($error != NULL) {
         throw Swig::DirectorMethodException();

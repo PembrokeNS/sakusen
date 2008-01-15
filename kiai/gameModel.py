@@ -4,7 +4,7 @@ from sakusenresources import *
 from sakusenclient import *
 import sakusenclient
 from PyQt4 import QtCore
-def debug(x): print x
+def debug(x): pass
 
 class eventUnitFactory(UnitFactory):
 	def create(self,u):

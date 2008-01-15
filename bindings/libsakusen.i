@@ -1,8 +1,6 @@
 %module(directors="1") sakusen
 %naturalvar;
 %feature("autodoc","1");
-/*We need directors in a subclass of this*/
-%feature("director") sakusen::CompleteUnit;
 %{
 #include <string>
 %}
