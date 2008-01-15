@@ -232,7 +232,7 @@ void UI::setModeFor(ActionParameterType type)
 vector<Ref<UpdatedUnit> > UI::getUnitsAtCursor() {
   vector<Ref<UpdatedUnit> > result;
 
-  Point<sint32> cursorPos = activeMapDisplay->getMousePos();
+  Point<sint32> cursorPos = activeMapDisplay->getMousePosAtZero();
   Rectangle<sint32> cursorRect(cursorPos, cursorPos);
   ISpatial::Result units =
     client::world->getSpatialIndex()->findIntersecting(
@@ -520,6 +520,7 @@ void UI::initializeAction(const String& actionName)
 void UI::abortAction()
 {
   pendingAction.reset();
+  setModeFor(actionParameterType_none);
 }
 
 void UI::supplyActionArg(const String& actionArg)
@@ -528,11 +529,11 @@ void UI::supplyActionArg(const String& actionArg)
   if (actionArg == "cursor") {
     switch (pendingAction->getNextParameterType()) {
       case actionParameterType_target:
-        supplyActionArg(activeMapDisplay->getMousePos());
+        supplyActionArg(activeMapDisplay->getMousePosAtGround());
         break;
       case actionParameterType_positionOrientation:
         supplyActionArg(make_pair(
-              activeMapDisplay->getMousePos(), Orientation()
+              activeMapDisplay->getMousePosAtGround(), Orientation()
             ));
         break;
       case actionParameterType_unit:

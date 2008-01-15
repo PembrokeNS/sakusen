@@ -79,7 +79,12 @@ class MapDisplay : public Control {
   public:
     inline double getDexWidth() const { return dexPerPixelX*getWidth(); }
     inline double getDexHeight() const { return dexPerPixelY*getHeight(); }
-    inline sakusen::Position getMousePos() const {
+    inline sakusen::Position getMousePosAtGround() const {
+      sakusen::Point<sint32> pos = pixelToDex(mousePos);
+      pos.z = sakusen::world->getMap()->getHeightfield().getHeightAt(pos);
+      return pos;
+    }
+    inline sakusen::Position getMousePosAtZero() const {
       return pixelToDex(mousePos);
     }
     void update();
