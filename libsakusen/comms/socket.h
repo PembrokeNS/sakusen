@@ -6,6 +6,7 @@
 
 #include "message.h"
 #include "timeutils.h"
+#include "socketexn.h"
 
 namespace sakusen {
 namespace comms {
@@ -25,7 +26,7 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      * \param address Sakusen-format address to connect to.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
-    static Ptr newConnectionToAddress(const String& address);
+    static Ptr newConnectionToAddress(const String& address) throw (SocketExn);
     /** \brief Creates a new Socket object bound to the given address.
      * \param address Sakusen-format address to bind socket at.
      * \return Pointer to a new Socket object, which must be deleted by the

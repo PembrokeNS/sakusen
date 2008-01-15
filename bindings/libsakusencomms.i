@@ -110,6 +110,11 @@ namespace comms{
 #include "timeutils.h"
 %}
 
+%include "socketexn.h"
+%{
+#include "socketexn.h"
+%}
+
 namespace sakusen{
 namespace comms{
 class Socket;

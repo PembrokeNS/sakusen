@@ -16,7 +16,11 @@ class joiner(QtCore.QObject):
 		d.thisown=False #m now owns d
 		debug("created message")
 		debug("address is "+str(address))
-		s=Socket_newConnectionToAddress(str(address))
+		try:
+			s=Socket_newConnectionToAddress(str(address))
+		except SocketExn:
+			self.emit(QtCore.SIGNAL("failure()"))
+			return
 		s.setNonBlocking(True)
 		debug("opened connection")
 		s.send(m)

@@ -26,7 +26,7 @@ void Socket::socketsInit(void)
 #endif
 }
 
-Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address)
+Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address) throw (SocketExn)
 {
   list<String> addressComponents =
     stringUtils_split<list<String> >(address, ADDR_DELIM);
