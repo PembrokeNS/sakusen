@@ -40,10 +40,10 @@ class gameModel(QtCore.QObject):
 		#TODO: currently, better hope the player looked up the universe beforehand
 		debug("Game started, creating world")
 		e=eventUnitFactory()
-		e.__disown__() #w takes ownership of e; we have to do thisl differently because it is a director class, *sigh*
-		w=PartialWorld(self.universe,e,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
-		w.thisown=False #we can't keep w, it's got to make it on its own; it'd go out of scope and die very fast if we left it here. It'll be deleted when the universe gets destroyed, I think
-		debug("Created partial world %s"%w)
+		e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
+		self.w=PartialWorld(self.universe,e,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+		#w should now get deleted at the correct time, I think
+		debug("Created partial world %s"%self.w)
 		debug("Global variable world is now %s"%`sakusenclient.cvar.world`)
 	def pushUpdates(self,d):
 		while(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
