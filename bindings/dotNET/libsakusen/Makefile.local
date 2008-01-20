@@ -24,12 +24,12 @@ sakusen.o: sakusen.cpp
 
 # There's no easy way to know what header files libsakusen.i is including, so
 # we just assume it's including all of them except revision.h
-sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
+sakusen.cpp sakusen.cs: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	-rm -f *.cs
 	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusen.dll: sakusen.cpp $(wildcard *.cs)
+sakusen.dll: sakusen.cpp sakusen.cs
 	mcs -checked+ -debug+ -out:$@ -recurse:'*.cs' -target:library
 
 .PHONY: all test clean
