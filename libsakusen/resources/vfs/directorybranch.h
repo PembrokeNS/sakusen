@@ -32,7 +32,7 @@ class DirectoryBranch : public Branch {
   public:
     virtual Branch::Ptr getSubBranch(const String& name);
     virtual Branch::Ptr createSubBranch(const String& name);
-    virtual boost::tuple<Resource, ResourceSearchResult> getResource(
+    virtual std::list<Resource> getResources(
         const String& name,
         const String& extension
       );

@@ -48,9 +48,9 @@ class Branch : boost::noncopyable {
      * 
      * If no such sub-branch exists, create it. */
     virtual Ptr createSubBranch(const String& name) = 0;
-    /** \brief Get a reader in this branch with name starting \p name and
+    /** \brief Get all resources in this branch with name starting \p name and
      * ending \p extension. */
-    virtual boost::tuple<Resource, ResourceSearchResult> getResource(
+    virtual std::list<Resource> getResources(
         const String& name,
         const String& extension
       ) = 0;

@@ -1,6 +1,7 @@
 #include "vfs/branch.h"
 
 #include <deque>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -100,7 +101,29 @@ boost::tuple<Resource, ResourceSearchResult> Branch::search(
 
   String next = splitPath.front();
   splitPath.pop_front();
-  return currentBranch->getResource(next, extension);
+  std::list<Resource> candidates = currentBranch->getResources(next, extension);
+  
+  /* See if we found nothing at all */
+  if (candidates.empty()) {
+    return boost::make_tuple(Resource(), resourceSearchResult_notFound);
+  }
+
+  /* Check for ambiguity */
+  String firstPath = candidates.front().getSakusenPath();
+
+  BOOST_FOREACH (const Resource& candidate, candidates) {
+    assert(candidate);
+    if (candidate.getSakusenPath() != firstPath) {
+      QDebug(
+          "Ambiguous result because '" << candidate.getSakusenPath() <<
+          "' != '" << firstPath << "'"
+        );
+      return boost::make_tuple(Resource(), resourceSearchResult_ambiguous);
+    }
+  }
+
+  return
+    boost::make_tuple(candidates.front(), resourceSearchResult_success);
 }
 
 }}}

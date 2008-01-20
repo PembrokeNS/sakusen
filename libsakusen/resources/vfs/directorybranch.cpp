@@ -5,6 +5,7 @@
 #include "filewriter.h"
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <pcrecpp.h>
 
@@ -73,60 +74,31 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
   return create(subBranchName, potential, ptrToThis.lock());
 }
 
-boost::tuple<Resource, ResourceSearchResult> DirectoryBranch::getResource(
+list<Resource> DirectoryBranch::getResources(
     const String& resourceName,
     const String& extension
   )
 {
   if (!boost::filesystem::exists(directory)) {
-    return Resource();
+    return list<Resource>();
   }
-  /* This hash map will contain as keys the filenames, and as values the paths
-   * to those files.  We store the names also so that we don't consider it an
-   * ambiguous result if there are two files of the same name in different
-   * places; we rather assume that they are identical. */
-  hash_map_string<boost::filesystem::path>::type matchingFiles(10);
 
   /*QDebug("Searching "<<directory.native_directory_string());*/
-  list<boost::filesystem::path> newMatches =
+  list<boost::filesystem::path> matches =
     fileUtils_findMatches(directory, resourceName);
-  while (!newMatches.empty()) {
-    boost::filesystem::path path = newMatches.front();
-    newMatches.pop_front();
-    /*QDebug("Found "<<path.string());*/
-    String fileName = path.leaf();
-    /* check that the file has the correct extension */
-    if (!boost::algorithm::ends_with(fileName, extension)) {
+  list<Resource> result;
+
+  BOOST_FOREACH(const boost::filesystem::path& match, matches) {
+    String filename = match.leaf();
+    if (!boost::algorithm::ends_with(filename, extension)) {
         /*QDebug("Looking for extension to "<<name<<" "<<extension);*/
       continue;
     }
-    if (0 == matchingFiles.count(fileName)) {
-      /*QDebug("Adding " << fileName << " at " << path);*/
-      matchingFiles[fileName] = path;
-    }
+    Reader::Ptr reader(new FileReader(match));
+    result.push_back(Resource(getSakusenPath()+"/"+filename, reader, match));
   }
 
-  /* Check how many results we found */
-  switch (matchingFiles.size()) {
-    case 0:
-      return boost::make_tuple(Resource(), resourceSearchResult_notFound);
-    case 1:
-      break;
-    default:
-      return boost::make_tuple(Resource(), resourceSearchResult_ambiguous);
-  }
-
-  /* We have found exactly one matching file, so we try to open it */
-  assert(!matchingFiles.begin()->second.empty());
-  /*QDebug("found it right");*/
-  pair<String, boost::filesystem::path> matchingFile = *matchingFiles.begin();
-  Reader::Ptr reader(new FileReader(matchingFile.second));
-  return boost::make_tuple(
-      Resource(
-        getSakusenPath()+"/"+matchingFile.first, reader, matchingFile.second
-      ),
-      resourceSearchResult_success
-    );
+  return result;
 }
 
 Writer::Ptr DirectoryBranch::getWriter(const String& writerName)

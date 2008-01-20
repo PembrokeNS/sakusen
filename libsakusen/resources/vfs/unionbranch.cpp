@@ -1,5 +1,7 @@
 #include "vfs/unionbranch.h"
 
+#include <boost/foreach.hpp>
+
 using namespace std;
 
 namespace sakusen {
@@ -57,7 +59,7 @@ Branch::Ptr UnionBranch::createSubBranch(const String& name)
   return create(name, subBranches, ptrToThis.lock());
 }
 
-boost::tuple<Resource, ResourceSearchResult> UnionBranch::getResource(
+list<Resource> UnionBranch::getResources(
     const String& name,
     const String& extension
   )
@@ -65,42 +67,17 @@ boost::tuple<Resource, ResourceSearchResult> UnionBranch::getResource(
   assert(!name.empty());
   /** \todo memoize? */
   if (name == ".." || name == ".") {
-    return boost::make_tuple(Resource(), resourceSearchResult_error);
+    throw DeserializationExn("Invalid resource name '"+name+"'");
   }
-  Resource candidate;
+  list<Resource> candidates;
   /** \bug Doesn't resolve ambiguity properly (e.g. when exactly the same file
    * is in multiple branches, that's reported as ambiguous) */
-  for (vector<Branch::Ptr>::const_iterator i=branches.begin();
-      i!= branches.end(); ++i) {
-    ResourceSearchResult result;
-    Resource r;
-    boost::tie(r, result) = (*i)->getResource(name, extension);
-    switch (result) {
-      case resourceSearchResult_success:
-        if (candidate.getReader()) {
-          return boost::make_tuple(Resource(), resourceSearchResult_ambiguous);
-        } else {
-          /*QDebug("got candidate");*/
-          candidate = r;
-        }
-        break;
-      case resourceSearchResult_ambiguous:
-      case resourceSearchResult_notSupported:
-        /* In these cases we propogate the result */
-        return boost::make_tuple(Resource(), result);
-        break;
-      case resourceSearchResult_notFound:
-      case resourceSearchResult_error:
-        /* In these cases we try again elsewhere */
-        break;
-    }
+  BOOST_FOREACH (Branch::Ptr branch, branches) {
+    list<Resource> branchCandidates = branch->getResources(name, extension);
+    candidates.splice(candidates.end(), branchCandidates);
   }
   
-  if (candidate.getReader()) {
-    return boost::make_tuple(candidate, resourceSearchResult_success);
-  }
-  
-  return boost::make_tuple(Resource(), resourceSearchResult_notFound);
+  return candidates;
 }
 
 Writer::Ptr UnionBranch::getWriter(const String& name)
