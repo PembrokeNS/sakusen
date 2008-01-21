@@ -15,7 +15,7 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QVBoxLayout" >
     <item>
-     <widget class="QGraphicsView" name="graphicsView" />
+     <widget class="QGraphicsView" name="gameview" />
     </item>
    </layout>
   </widget>

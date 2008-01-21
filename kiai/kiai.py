@@ -59,9 +59,11 @@ def connectionfailed():
 	print "Failed to connect to server - check the server is running"
 	a.quit()
 def startGame():
-	global a,mainwindow
+	global a,mainwindow,gamescene
 	#TODO: disconnect s.rejected() and a.quit()
+	gamescene=QtGui.QGraphicsScene()
 	mainwindow=mainWindow()
+	mainwindow.ui.gameview.setScene(gamescene)
 	mainwindow.show()
 	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
 a.setQuitOnLastWindowClosed(False)
