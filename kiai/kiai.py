@@ -65,7 +65,7 @@ def startGame(d,w):
 	gamescene=QtGui.QGraphicsScene()
 	debug("Instantiating model of map "+`w.getMap()`)
 	mapmodel=mapModel(w.getMap())
-	gamescene.addPixmap(mapmodel.i)
+	gamescene.addItem(mapmodel.i)
 	mainwindow=mainWindow()
 	mainwindow.ui.gameview.setScene(gamescene)
 	mainwindow.show()
