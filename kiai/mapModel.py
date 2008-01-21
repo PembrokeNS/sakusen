@@ -17,7 +17,7 @@ class mapModel():
 		debug("Looping from %d to %d"%(m.left(),m.right()))
 		for x in range(m.left(),m.right(),100):
 			for y in range(m.bottom(),m.top(),100):
-				c=h.getHeightAt(SPoint32(x,y,0)) #TODO: use getApproxHeightAt - probably requires casting, ololol
+				c=h.getApproxHeightAt(SPoint32(x,y,0)) #TODO: use getApproxHeightAt - probably requires casting, ololol
 				assert(c<2**16 and c>-2**16)
 				c+=2**16
 				c/=2**9

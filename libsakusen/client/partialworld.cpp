@@ -2,6 +2,7 @@
 
 #include "map-methods.h"
 #include "naivespatial.h"
+#include "heightfield-methods.h"
 
 using namespace std;
 using namespace __gnu_cxx;

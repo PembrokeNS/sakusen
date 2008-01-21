@@ -1,4 +1,5 @@
 #include "ui/builtincommand.h"
+#include "heightfield-methods.h"
 
 #include "stringutils.h"
 #include "ui/ui.h"

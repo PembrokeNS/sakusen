@@ -1,4 +1,5 @@
 #include "partialmap.h"
+#include "heightfield-methods.h"
 
 using namespace sakusen::client;
 

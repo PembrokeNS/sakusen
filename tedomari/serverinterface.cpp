@@ -7,6 +7,7 @@
 #include "socketexn.h"
 #include "tedomari-global.h"
 #include "revision.h"
+#include "heightfield-methods.h"
 
 #include <ostream>
 #include <sstream>

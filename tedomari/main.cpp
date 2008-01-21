@@ -10,6 +10,7 @@
 #include "libsakusen-resources-global.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
+#include "heightfield-methods.h"
 
 #include "asynchronousiohandler.h"
 #include "revision.h"

@@ -19,6 +19,7 @@
 #include "ui/function.h"
 #include "ui/actiontarget.h"
 #include "ui/action.h"
+#include "heightfield-methods.h"
 
 namespace tedomari {
 namespace ui {

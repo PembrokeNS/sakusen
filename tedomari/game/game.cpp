@@ -4,6 +4,7 @@
 #include "messagedata.h"
 #include "serverinterface.h"
 #include "smartunitfactory.h"
+#include "heightfield-methods.h"
 
 using namespace std;
 
