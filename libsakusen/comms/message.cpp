@@ -19,7 +19,7 @@ Message::Message(
     IArchive& in,
     const PlayerId p, /*= static_cast<PlayerId>(-1) (default in header)*/
     const ResourceInterface::Ptr& resourceInterface
-  ) :
+  ) throw (ResourceDeserializationExn) :
   player(p),
   data()
 {

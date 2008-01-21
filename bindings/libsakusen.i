@@ -501,4 +501,8 @@ namespace sakusen{
 %{
 #include "unitorders.h"
 %}
+%include "exceptions.h"
+%{
+#include "exceptions.h"
+%}
 

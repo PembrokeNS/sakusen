@@ -26,6 +26,7 @@ sakusencomms.o: sakusencomms.cpp
 # There's no easy way to know what header files libsakusencomms.i is including, so
 # we just assume it's including all of them except revision.h
 sakusencomms.cpp sakusencomms.cs: $(top_srcdir)bindings/libsakusencomms.i \
+		$(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h)) \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	-rm -f *.cs

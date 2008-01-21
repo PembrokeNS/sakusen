@@ -28,7 +28,7 @@ class LIBSAKUSEN_COMMS_API Message {
         IArchive& archive,
         const PlayerId player = PlayerId::invalid(),
         const ResourceInterface::Ptr& = ResourceInterface::Ptr()
-      );
+      ) throw (ResourceDeserializationExn);
   private:
     /** \brief Source of this message.
      *
