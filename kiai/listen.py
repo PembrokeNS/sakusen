@@ -19,7 +19,6 @@ class listener(QtCore.QObject):
 		self.clientid=clientid
 		self.game=gameModel(clientid)
 		self.setSetting(('clients',str(clientid),'application','name'),'Kiai')
-		QtCore.QObject.connect(self,QtCore.SIGNAL("gameStart(PyQt_PyObject)"),self.game.createWorld)
 	def checkPendingSockets(self):
 		b=uint8(BUFFER_LEN)
 		if(self.activeSocket):
@@ -49,7 +48,8 @@ class listener(QtCore.QObject):
 				elif(t==messageType_gameStart):
 					d=m.getGameStartData()
 					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
-					self.emit(QtCore.SIGNAL("gameStart(PyQt_PyObject)"),d)
+					self.game.createWorld(d)
+					self.emit(QtCore.SIGNAL("gameStart(PyQt_PyObject,PyQt_PyObject)"),d,self.game.w)
 					QtCore.QObject.connect(self,QtCore.SIGNAL("update(PyQt_PyObject)"),self.game.pushUpdates)
 				elif(t==messageType_update):
 					d=m.getUpdateData()

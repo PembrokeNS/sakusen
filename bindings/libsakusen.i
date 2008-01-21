@@ -505,4 +505,8 @@ namespace sakusen{
 %{
 #include "exceptions.h"
 %}
+%include "map.h"
+%{
+#include "map.h"
+%}	
 

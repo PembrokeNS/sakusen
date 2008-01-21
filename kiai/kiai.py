@@ -7,6 +7,7 @@ from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
 from mainWindowImpl import mainWindow
+from mapModel import mapModel
 import sys,imp
 from sakusenresources import fileUtils_getHome,path
 from sakusen import CONFIG_SUBDIR
@@ -47,7 +48,7 @@ def openSettingsDialog(socket,clientid):
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
 	QtCore.QObject.connect(l,QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),m.processUpdate)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
-	QtCore.QObject.connect(l,QtCore.SIGNAL("gameStart(PyQt_PyObject)"),startGame)
+	QtCore.QObject.connect(l,QtCore.SIGNAL("gameStart(PyQt_PyObject,PyQt_PyObject)"),startGame)
 	#mt=ModelTest(s,m)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
@@ -58,10 +59,13 @@ def openSettingsDialog(socket,clientid):
 def connectionfailed():
 	print "Failed to connect to server - check the server is running"
 	a.quit()
-def startGame():
-	global a,mainwindow,gamescene
+def startGame(d,w):
+	global a,mainwindow,gamescene,mapmodel
 	#TODO: disconnect s.rejected() and a.quit()
 	gamescene=QtGui.QGraphicsScene()
+	debug("Instantiating model of map "+`w.getMap()`)
+	mapmodel=mapModel(w.getMap())
+	gamescene.addPixmap(mapmodel.i)
 	mainwindow=mainWindow()
 	mainwindow.ui.gameview.setScene(gamescene)
 	mainwindow.show()
