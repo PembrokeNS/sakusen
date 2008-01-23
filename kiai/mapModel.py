@@ -17,7 +17,7 @@ class mapModel():
 		debug("Looping from %d to %d"%(m.left(),m.right()))
 		d=QtGui.QProgressDialog("Rendering map...","This button should not exist, but PyQt insists on it",0,w)
 		for x in range(m.left(),m.right(),100):
-			d.setValue(x/100)
+			d.setValue((x-l)/100)
 			for y in range(m.bottom(),m.top(),100):
 				c=h.getApproxHeightAt(SPoint32(x,y,0)) #TODO: use getApproxHeightAt - probably requires casting, ololol
 				assert(c<2**16 and c>-2**16)
