@@ -8,16 +8,24 @@ import imp
 def debug(x): pass
 
 class eventUnitFactory(UnitFactory):
+	def __init__(self,interface=None): #TODO: remove default for second argument once we're actually using it
+		UnitFactory.__init__(self)
+		self.interface=interface
 	def create(self,u):
 		e=eventUpdatedUnit(u)
 		debug("Creating eventUpdatedUnit "+`e`)
-		e.__disown__() #the C++ code will look after it. TODO: see if return eventUpdatedUnit().__disown__() is a nicer ideom
+		e.__disown__() #the C++ code will look after it.
 		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
 		debug("Returning pointer "+`p`)
 		p.thisown=0 #I don't even know any more - TODO: CHECK THIS
 		return p
-class eventUpdatedUnit(UpdatedUnit):
-	pass
+class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from UpdatedUnit *last*, otherwise swig directors fail. No idea whether signals will fail this way around, though.
+	def __init__(self,u):
+		UpdatedUnit.__init__(self,u)
+		QtCore.QObject.__init__(self)
+		utypedata=self.getTypeData()
+		ustatus=self.getStatus()
+		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
@@ -37,7 +45,6 @@ class gameModel(QtCore.QObject):
 		self.universe=g(result,0)
 		debug("Set universe to "+`self.universe`)
 	def createWorld(self,d):
-		#TODO: currently, better hope the player looked up the universe beforehand
 		debug("Game started, creating world")
 		e=eventUnitFactory()
 		e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
