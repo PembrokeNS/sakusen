@@ -10,13 +10,14 @@
 
 namespace sakusen {
 
-class LIBSAKUSEN_API Exn {
+class LIBSAKUSEN_API Exn : public std::exception {
   public:
     Exn(const String& m) :
       errorNum(errno), message(m) { }
     virtual ~Exn() throw() { }
     int errorNum;
     const String message;
+    const char* what() const throw() { return message.c_str(); }
 };
 
 class LIBSAKUSEN_API DeserializationExn : public Exn {
