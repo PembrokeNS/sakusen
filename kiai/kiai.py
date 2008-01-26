@@ -8,6 +8,7 @@ from listen import listener
 from modeltest import ModelTest
 from mainWindowImpl import mainWindow
 from mapModel import mapModel
+from sceneModel import sceneModel
 import sys,imp
 from sakusenresources import fileUtils_getHome,path
 from sakusen import CONFIG_SUBDIR
@@ -60,14 +61,15 @@ def connectionfailed():
 	print "Failed to connect to server - check the server is running"
 	a.quit()
 def startGame(d,w):
-	global a,mainwindow,gamescene,mapmodel
+	global a,mainwindow,gamescene,mapmodel,l
 	#TODO: disconnect s.rejected() and a.quit()
-	gamescene=QtGui.QGraphicsScene()
+	gamescene=sceneModel()
 	debug("Instantiating model of map "+`w.getMap()`)
 	mapmodel=mapModel(w.getMap())
-	gamescene.addItem(mapmodel.i)
+	gamescene.s.addItem(mapmodel.i)
 	mainwindow=mainWindow()
-	mainwindow.ui.gameview.setScene(gamescene)
+	mainwindow.ui.gameview.setScene(gamescene.s)
+	QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
 	mainwindow.show()
 	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
 a.setQuitOnLastWindowClosed(False)
