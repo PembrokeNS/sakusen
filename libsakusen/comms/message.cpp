@@ -19,14 +19,7 @@ Message::Message(
     IArchive& in,
     const PlayerId p, /*= static_cast<PlayerId>(-1) (default in header)*/
     const ResourceInterface::Ptr& resourceInterface
-#if defined(_MSC_VER) && (_MSC_VER<1450) 
-//This is a rather silly way of avoiding a warning on VC.
-//Essentially, specifying the exception type is ignored by the compiler, and this generates warnings. 
-//These warnings are not critical in any way, but I feel aspergic.
-  ) throw (...):
-#else
-  ) throw (ResourceDeserializationExn) :
-#endif
+  ) SAKUSEN_THROW_SPEC (ResourceDeserializationExn) :
   player(p),
   data()
 {

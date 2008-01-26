@@ -25,14 +25,9 @@ void Socket::socketsInit(void)
     Fatal("Error at WSAStartup()");
 #endif
 }
-#if defined(_MSC_VER) && (_MSC_VER<1450) 
-//This is a rather silly way of avoiding a warning on VC.
-//Essentially, specifying the exception type is ignored by the compiler, and this generates warnings. 
-//These warnings are not critical in any way, but I feel aspergic.
-  Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address) throw (...)
-#else
-  Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address) throw (SocketExn)
-#endif
+
+Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address)
+  SAKUSEN_THROW_SPEC (SocketExn)
 {
   list<String> addressComponents =
     stringUtils_split<list<String> >(address, ADDR_DELIM);

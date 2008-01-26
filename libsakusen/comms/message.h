@@ -28,14 +28,7 @@ class LIBSAKUSEN_COMMS_API Message {
         IArchive& archive,
         const PlayerId player = PlayerId::invalid(),
         const ResourceInterface::Ptr& = ResourceInterface::Ptr()
-#if defined(_MSC_VER) && (_MSC_VER<1450) 
-//This is a rather silly way of avoiding a warning on VC.
-//Essentially, specifying the exception type is ignored by the compiler, and this generates warnings. 
-//These warnings are not critical in any way, but I feel aspergic.
-      ) throw (...);
-#else
-      ) throw (ResourceDeserializationExn);
-#endif
+      ) SAKUSEN_THROW_SPEC (ResourceDeserializationExn);
   private:
     /** \brief Source of this message.
      *

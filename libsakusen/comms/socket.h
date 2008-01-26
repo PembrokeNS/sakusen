@@ -26,14 +26,8 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      * \param address Sakusen-format address to connect to.
      * \return Pointer to a new Socket object, which must be deleted by the
      * caller. */
-#if defined(_MSC_VER) && (_MSC_VER<1450) 
-//This is a rather silly way of avoiding a warning on VC.
-//Essentially, specifying the exception type is ignored by the compiler, and generates warnings. 
-//These warnings are not critical in any way, but I feel aspergic.
-    static Ptr newConnectionToAddress(const String& address) throw (...);
-#else
-    static Ptr newConnectionToAddress(const String& address) throw (SocketExn);
-#endif
+    static Ptr newConnectionToAddress(const String& address)
+      SAKUSEN_THROW_SPEC(SocketExn);
     /** \brief Creates a new Socket object bound to the given address.
      * \param address Sakusen-format address to bind socket at.
      * \return Pointer to a new Socket object, which must be deleted by the

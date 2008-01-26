@@ -13,7 +13,15 @@
     /*1310 is VC2003. None of this will work with earlier compilers, and later 
     ones are free, so there is really no reason to not upgrade */
     #error Need at least MSVC 7.1 to work.
-  #endif 
+  #endif
+
+  #if (_MSC_VER<1450)
+    /* This is a rather silly way of avoiding a warning on VC.
+     * Essentially, specifying the exception type is ignored by the compiler,
+     * and generates warnings. 
+     * These warnings are not critical in any way, but I feel aspergic. */
+    #define SAKUSEN_THROW_SPEC(a) throw(...)
+  #endif
 
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
@@ -133,6 +141,10 @@
   #define CONFIG_SUBDIR "sakusen"
 #else
   #define CONFIG_SUBDIR ".sakusen"
+#endif
+
+#ifndef SAKUSEN_THROW_SPEC
+  #define SAKUSEN_THROW_SPEC(a) throw(a)
 #endif
 
 #include <cassert>
