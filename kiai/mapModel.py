@@ -3,7 +3,7 @@ from PyQt4 import QtGui,QtCore
 from sakusen import *
 def debug(x): pass
 
-class mapModel():
+class mapModel:
 	def __init__(self,m):
 		#todo: lose this lame granularity
 		w=m.width()/100
