@@ -67,6 +67,7 @@
 				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\boost"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

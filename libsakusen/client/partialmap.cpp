@@ -3,7 +3,7 @@
 
 using namespace sakusen::client;
 
-void PartialMap::sanityCheck()
+void LIBSAKUSEN_CLIENT_API PartialMap::sanityCheck()
 {
   if (0 != width() % heightfield.getXYResolution() ||
       0 != height() % heightfield.getXYResolution()) {

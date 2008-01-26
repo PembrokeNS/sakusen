@@ -144,7 +144,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_CLIENT_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -173,6 +173,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				EnableCOMDATFolding="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
