@@ -36,7 +36,7 @@ class LIBSAKUSEN_API ISensorReturns : public Bounded {
     virtual Point<sint32> getBestPosition() const;
     virtual Rectangle<sint32> getBoundingRectangle() const;
     virtual Box<sint32> getBoundingBox() const;
-    double intersect(const Ray& r) const;
+    boost::tuple<double,double> intersect(const Ray& r) const;
     bool contains(const Position& p) const;
 };
 

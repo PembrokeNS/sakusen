@@ -61,8 +61,12 @@ class LIBSAKUSEN_SERVER_API Beam : protected Ray {
     //@{
     virtual void onInteractLand(double /*position*/) {}
     virtual void onInteractWater(double /*position*/) {}
-    virtual void onInteractUnit(double /*position*/, const Ref<LayeredUnit>&) {}
-    virtual void onInteractEffect(double /*position*/, const Ref<Effect>&) {}
+    virtual void onInteractUnit(
+        double /*position*/, const Ref<LayeredUnit>&, bool /*leaving*/
+      ) {}
+    virtual void onInteractEffect(
+        double /*position*/, const Ref<Effect>&, bool /*leaving*/
+      ) {}
     //@}
     virtual bool onRemovalTest();
     /** \name mechanics

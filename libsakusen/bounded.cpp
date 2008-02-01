@@ -2,9 +2,11 @@
 
 #include "ray.h"
 
+using namespace std;
+
 namespace sakusen {
 
-double Bounded::fastIntersect(const Ray& r) const {
+boost::tuple<double,double> Bounded::fastIntersect(const Ray& r) const {
   return r.intersectBox(getBoundingBox());
 }
 

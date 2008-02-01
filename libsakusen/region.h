@@ -115,7 +115,7 @@ class LIBSAKUSEN_API Region {
      * the region, or +Inf if there is no intersection. If the ray starts inside
      * the region, you still get the first intersection with the boundary.
      */
-    virtual double intersect(const Ray& r) const = 0;
+    virtual boost::tuple<double,double> intersect(const Ray& r) const = 0;
     
     /** \brief Get the type of Region
      *

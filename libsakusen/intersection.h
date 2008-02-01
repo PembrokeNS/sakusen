@@ -20,7 +20,8 @@ class Intersection {
     Intersection(GameObject t, double p) :
       type(t),
       position(p),
-      ref()
+      ref(),
+      leaving(false)
     {
       assert(type == gameObject_land || type == gameObject_water);
     }
@@ -28,10 +29,11 @@ class Intersection {
      *
      * \param b The object intersected.  Must be either a unit or Effect
      * \param p Ray parameter of the intersection */
-    Intersection(const Ref<Bounded>& b, double p) :
+    Intersection(const Ref<Bounded>& b, double p, bool l) :
       type(b->getObjectType()),
       position(p),
-      ref(b)
+      ref(b),
+      leaving(l)
     {
       assert(type == gameObject_unit || type == gameObject_effect);
     }
@@ -39,6 +41,7 @@ class Intersection {
     GameObject type;
     double position;
     Ref<Bounded> ref;
+    bool leaving;
   public:
     /** \brief Get the ray parameter of this Intersection */
     double getPosition() const { return position; }
@@ -51,6 +54,10 @@ class Intersection {
      */
     template<typename T>
     Ref<T> getRef() const { return ref.dynamicCast<T>(); }
+
+    /** \brief True iff the intersection is where the Ray is leaving the
+     * object, rather than where the Ray is entering it. */
+    bool isLeaving() const { return leaving; }
 };
 
 class LessThanIntersectionPosition {

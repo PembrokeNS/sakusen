@@ -228,7 +228,7 @@ class ParalyzationBeam : public Beam {
       return gameObject_unit | gameObject_land;
     }
     void onInteractLand(double position);
-    void onInteractUnit(double position, const Ref<LayeredUnit>&);
+    void onInteractUnit(double position, const Ref<LayeredUnit>&, bool leaving);
 };
 
 class ParalyzingLayer : public UnitMask, public Fuse {

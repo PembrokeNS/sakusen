@@ -54,7 +54,7 @@ Box<sint32> ISensorReturns::getBoundingBox() const
   }
 }
 
-double ISensorReturns::intersect(const Ray& r) const
+boost::tuple<double,double> ISensorReturns::intersect(const Ray& r) const
 {
   if (0 != (getPerception() & perception_unit)) {
     return getUnit()->intersect(r);

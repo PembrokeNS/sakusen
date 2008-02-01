@@ -4,6 +4,7 @@
 #include "world.h"
 
 #include <boost/algorithm/minmax.hpp>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -56,14 +57,17 @@ double Ray::intersectWater() const {
 /** \brief Intersect this Ray with a Box
  *
  * \param box Box with which to intersect
- * \return Ray parameter of first intersection or infinity if no intersection
+ * \return Ray parameters of the first and second intersections or (inf,inf)
+ * if no intersection.
  *
- * \todo It might be nice to be able to get both intersections, when there are
- * two of them.
+ * One or both of the returned values may be negative.
+ *
+ * If the ray just clips the edge of the box then the two returned values may
+ * be equal.
  */
-double Ray::intersectBox(const Box<sint32>& box) const
+boost::tuple<double,double> Ray::intersectBox(const Box<sint32>& box) const
 {
-  double t_near_x, t_far_x, t_near_y, t_far_y, t_near_z, t_far_z, t_near;
+  double t_near_x, t_far_x, t_near_y, t_far_y, t_near_z, t_far_z, t_near, t_far;
   const double inf = std::numeric_limits<double>::infinity();
 
   /* First off, take each pair of parallel planes, and find the interval of t
@@ -81,7 +85,7 @@ double Ray::intersectBox(const Box<sint32>& box) const
     /* the ray is between the planes for all t */
     t_near_x = -inf; t_far_x = inf;
   } else
-    return inf;
+    return boost::make_tuple(inf, inf);
   /* ^ the ray misses the box entirely */
 
   if (d.y != 0) {
@@ -92,7 +96,7 @@ double Ray::intersectBox(const Box<sint32>& box) const
   } else if (origin.y <= box.getMax().y && origin.y >= box.getMin().y) {
     t_near_y = -inf; t_far_y = inf;
   } else
-    return inf;
+    return boost::make_tuple(inf, inf);
 
   if (d.z != 0) {
     boost::tie(t_near_z, t_far_z) = boost::minmax(
@@ -102,31 +106,21 @@ double Ray::intersectBox(const Box<sint32>& box) const
   } else if (origin.z <= box.getMax().z && origin.z >= box.getMin().z) {
     t_near_z = -inf; t_far_z = inf;
   } else
-    return inf;
+    return boost::make_tuple(inf, inf);
 
   /* now we know the interval for each, check that all three overlap */
   if (t_near_x > t_far_y || t_near_y > t_far_z || t_near_z > t_far_x
       || t_near_x > t_far_z || t_near_y > t_far_x || t_near_z > t_far_y)
-    return inf;
+    return boost::make_tuple(inf, inf);
 
   /* The entry intersection is the farthest one, i.e. the point where we enter
    * the intersection of all three ray segments.
    */
   t_near = std::max(t_near_x, std::max(t_near_y, t_near_z));
+  /* Conversely for the exit intersection */
+  t_far = std::min(t_far_x, std::min(t_far_y, t_far_z));
 
-  /* If the entry point is behind the origin, we must be inside the box, so use
-   * the exit point.
-   */
-  if (t_near > 0.0)
-    return t_near;
-  else {
-    const double t_far = std::min(t_far_x, std::min(t_far_y, t_far_z));
-    if (t_far > 0.0) {
-      return t_far;
-    }
-  }
-
-  return inf;
+  return boost::make_tuple(t_near, t_far);
 }
 
 /** \brief Find and return all interactions of this ray to a given extent.
@@ -184,23 +178,19 @@ void Ray::getAllInteractionsTo(
   }
   
   /* Intersections with units and Effects */
-  map<double, Ref<Bounded> > otherIntersections =
+  set<Intersection, LessThanIntersectionPosition> otherIntersections =
     world->getSpatialIndex()->findIntersections(*this, extent, interesting);
 
-  for (map<double, Ref<Bounded> >::iterator intersection =
-      otherIntersections.begin(); intersection != otherIntersections.end();
-      ++intersection) {
-    if (intersection->first > extent) {
+  BOOST_FOREACH(const Intersection& intersection, otherIntersections) {
+    if (intersection.getPosition() > extent) {
       break;
     }
-    if (operator==(intersection->second, cannotHit)) {
+    if (intersection.getRef<Bounded>() == cannotHit) {
       continue;
     }
-    interactions.insert(
-        Intersection(intersection->second, intersection->first)
-      );
-    if (stop & intersection->second->getObjectType()) {
-      extent = intersection->first;
+    interactions.insert(intersection);
+    if (stop & intersection.getRef<Bounded>()->getObjectType()) {
+      extent = intersection.getPosition();
     }
   }
 

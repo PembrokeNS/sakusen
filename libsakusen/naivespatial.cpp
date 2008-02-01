@@ -73,19 +73,26 @@ ISpatial::Result NaiveSpatial::findContaining(
   return result;
 }
 
-std::map<double, Ref<Bounded> > NaiveSpatial::findIntersections(
+std::set<Intersection, LessThanIntersectionPosition>
+NaiveSpatial::findIntersections(
     const Ray& ray,
     const double extent,
     const GameObject filter
   ) const
 {
-  std::map<double, Ref<Bounded> > result;
+  std::set<Intersection, LessThanIntersectionPosition> result;
 
   for (List::const_iterator i=list.begin(); i != list.end(); ++i) {
     if (((*i)->getObjectType() & filter)) {
-      double parameter = (*i)->intersect(ray);
-      if (extent >= parameter) {
-        result.insert(make_pair(parameter, *i));
+      double p1, p2;
+      boost::tie(p1,p2) = (*i)->intersect(ray);
+      if (extent >= p1) {
+        if (p1 > 0) {
+          result.insert(Intersection(*i, p1, false));
+        }
+        if (extent >= p2 && p2 > 0) {
+          result.insert(Intersection(*i, p2, true));
+        }
       }
     }
   }

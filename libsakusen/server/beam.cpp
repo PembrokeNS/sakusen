@@ -39,10 +39,10 @@ void Beam::onInteract(const Intersection& in)
       onInteractWater(in.getPosition());
       break;
     case gameObject_unit:
-      onInteractUnit(in.getPosition(), in.getRef<LayeredUnit>());
+      onInteractUnit(in.getPosition(), in.getRef<LayeredUnit>(),in.isLeaving());
       break;
     case gameObject_effect:
-      onInteractEffect(in.getPosition(), in.getRef<Effect>());
+      onInteractEffect(in.getPosition(), in.getRef<Effect>(), in.isLeaving());
       break;
     default:
       Fatal("unexpected interaction type: "<<in.getType());

@@ -29,7 +29,7 @@ class RectangleRegion : public Region<T> {
     inline Point<T> getBestPosition() const;
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     inline Box<T> getBoundingBox() const;
-    inline double intersect(const Ray& r) const;
+    inline boost::tuple<double,double> intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_rectangle; }
 };
@@ -102,7 +102,7 @@ inline Box<T> RectangleRegion<T>::getBoundingBox() const
 }
 
 template<typename T>
-double RectangleRegion<T>::intersect(const Ray& r) const
+boost::tuple<double,double> RectangleRegion<T>::intersect(const Ray& r) const
 {
   /** \todo It might be worth writing a proper ray-rectangle intersection
    * routine, but probably not */

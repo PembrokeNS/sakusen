@@ -6,6 +6,7 @@
 #include "iindex.h"
 #include "bounded.h"
 #include "box.h"
+#include "intersection.h"
 
 namespace sakusen {
 
@@ -81,7 +82,8 @@ class ISpatial : public IIndex<Bounded> {
      * \p extent.  Note that this should be the intersection with the actual
      * object, not its bounding box.
      */
-    virtual std::map<double, Ref<Bounded> > findIntersections(
+    virtual std::set<Intersection, LessThanIntersectionPosition>
+    findIntersections(
         const Ray&,
         const double extent,
         const GameObject filter

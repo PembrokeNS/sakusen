@@ -54,11 +54,11 @@ class LIBSAKUSEN_API Bounded {
      * intersection test, as for spheres).
      *
      * \param[in] r The Ray to trace.
-     * \return The distance parameter for the ray when it hits the boundary of
-     * the bbox, or +Inf if there is no intersection. If the ray starts inside
-     * the bbox, you still get the first intersection with the boundary.
+     * \return The distance parameters for the ray when it hits the boundary of
+     * the bbox, or (+Inf,+Inf) if there are no intersections. One or both
+     * values may be negative.
      */
-    virtual double fastIntersect(const Ray& r) const;
+    virtual boost::tuple<double,double> fastIntersect(const Ray& r) const;
 
     /** \brief Intersect a Ray with the actual object.
      *
@@ -67,12 +67,14 @@ class LIBSAKUSEN_API Bounded {
      * actual object bounded by the box.
      *
      * \param[in] r The Ray to trace.
-     * \return The distance parameter for the ray when it hits the boundary of
-     * the object, or +Inf if there is no intersection. If the ray starts
-     * inside the object, you still get the first intersection with the
-     * boundary.
+     * \return The distance parameters for the ray when it hits the boundary of
+     * the object, or (+Inf,+Inf) if there are no intersections.  If the only
+     * intersections are for negative distance parameters, then it is
+     * permissible to return (+Inf,+Inf).  If the first would be negative then
+     * it is permissible to replace it with -Inf (e.g. if that is faster than
+     * calculating it exactly).
      */
-    virtual double intersect(const Ray& r) const = 0;
+    virtual boost::tuple<double,double> intersect(const Ray& r) const = 0;
 
     /** \brief Determine whether the bbox contains a given point.
      *

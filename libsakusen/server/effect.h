@@ -80,10 +80,12 @@ class Effect : public Bounded {
      * containment against the bounding box
      * for the region.  If we get more complicated sorts of region, then may
      * have to be rethought */
-    double fastIntersect(const Ray& r) const {
+    boost::tuple<double,double> fastIntersect(const Ray& r) const {
       return region->intersect(r);
     }
-    double intersect(const Ray& r) const { return region->intersect(r); }
+    boost::tuple<double,double> intersect(const Ray& r) const {
+      return region->intersect(r);
+    }
     bool fastContains(const Position& p) const { return region->contains(p); }
     bool contains(const Position& p) const { return region->contains(p); }
 };

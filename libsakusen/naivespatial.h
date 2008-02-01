@@ -30,7 +30,7 @@ class LIBSAKUSEN_API NaiveSpatial : public ISpatial {
         const Position&,
         const GameObject filter
       ) const;
-    std::map<double, Ref<Bounded> > findIntersections(
+    std::set<Intersection, LessThanIntersectionPosition> findIntersections(
         const Ray&,
         const double extent,
         const GameObject filter

@@ -48,7 +48,7 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
   return Box<sint32>(pos-pExtents, pos+pExtents);
 }
 
-double ICompleteUnit::intersect(const Ray& r) const
+boost::tuple<double,double> ICompleteUnit::intersect(const Ray& r) const
 {
   const IUnitStatus& status = getIStatus();
   const Point<sint32> size(getITypeData().getSize());

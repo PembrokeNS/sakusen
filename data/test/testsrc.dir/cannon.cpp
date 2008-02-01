@@ -209,9 +209,13 @@ void ParalyzationBeam::onInteractLand(double position)
 
 void ParalyzationBeam::onInteractUnit(
     double position,
-    const Ref<LayeredUnit>& unit
+    const Ref<LayeredUnit>& unit,
+    bool leaving
   )
 {
+  if (leaving) {
+    return;
+  }
   cout << "ParalyzationBeam::onInteractUnit at " << evaluate(position) <<
     "(unitId=" << unit->getId() << ", sourceId=" << getSource()->getId() <<
     ")" << endl;

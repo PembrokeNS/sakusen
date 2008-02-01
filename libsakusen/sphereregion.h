@@ -53,7 +53,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     inline Point<T> getBestPosition() const { return centre; }
     inline Rectangle<T> getBoundingRectangle() const;
     inline Box<T> getBoundingBox() const;
-    inline double intersect(const Ray& r) const;
+    inline boost::tuple<double,double> intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_sphere; }
 };
@@ -135,7 +135,9 @@ inline Box<T> SphereRegion<T>::getBoundingBox() const
 }
 
 template<typename T>
-inline double SphereRegion<T>::intersect(const Ray& r) const
+inline boost::tuple<double,double> SphereRegion<T>::intersect(
+    const Ray& r
+  ) const
 {
   const Position relativeOrigin = r.origin - centre;
   // Set up a quadratic to solve for the distance parameter
@@ -143,18 +145,11 @@ inline double SphereRegion<T>::intersect(const Ray& r) const
   double b = 2*r.d.innerProduct(relativeOrigin);
   double c = relativeOrigin.squareLength();
 
-  double r1, r2;
-  boost::tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
-  if (isnan(r1)) {
-    return std::numeric_limits<double>::infinity();
+  boost::tuple<double,double> result = mathsUtils_solveQuadratic(a, b, c);
+  if (isnan(result.get<0>())) {
+    result.get<0>() = result.get<1>() = std::numeric_limits<double>::infinity();
   }
-  if (r1 > 0) {
-    return r1;
-  }
-  if (r2 > 0) {
-    return r2;
-  }
-  return std::numeric_limits<double>::infinity();
+  return result;
 }
 
 #ifdef _MSC_VER

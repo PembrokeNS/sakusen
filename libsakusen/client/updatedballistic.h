@@ -28,8 +28,11 @@ class UpdatedBallistic : public Bounded {
       Position pos = path.evaluate(world->getTimeNow());
       return Box<sint32>(pos, pos);
     }
-    double intersect(const Ray&) const {
-      return std::numeric_limits<double>::infinity();
+    boost::tuple<double,double> intersect(const Ray&) const {
+      return boost::make_tuple(
+          std::numeric_limits<double>::infinity(),
+          std::numeric_limits<double>::infinity()
+        );
     }
     bool fastContains(const Position& p) const {
       return p == path.evaluate(world->getTimeNow());

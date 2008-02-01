@@ -33,8 +33,10 @@ class LIBSAKUSEN_API ICompleteUnit : public Bounded {
     GameObject getObjectType() const { return gameObject_unit; }
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
     virtual Box<sint32> getBoundingBox(void) const;
-    double fastIntersect(const Ray& r) const { return intersect(r); }
-    double intersect(const Ray& r) const;
+    boost::tuple<double,double> fastIntersect(const Ray& r) const {
+      return intersect(r);
+    }
+    boost::tuple<double,double> intersect(const Ray& r) const;
     bool fastContains(const Position& p) const { return contains(p); }
     bool contains(const Position& p) const;
 };

@@ -47,7 +47,7 @@ class LIBSAKUSEN_API Ray {
     Point<sint32> evaluate(double t) const;
     double distance(double t) const;
     double intersectWater() const;
-    double intersectBox(const Box<sint32>&) const;
+    boost::tuple<double,double> intersectBox(const Box<sint32>&) const;
 
     /** \brief Typedef to aid those calling getAllInteractionsTo */
     typedef std::set<Intersection, LessThanIntersectionPosition>
