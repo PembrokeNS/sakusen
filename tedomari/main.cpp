@@ -34,6 +34,7 @@
 #include <iostream>
 #include <fstream>
 #include <list>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <optionsparser.h>
@@ -66,7 +67,7 @@ struct Options {
   Options() :
 #ifndef DISABLE_UNIX_SOCKETS
     abstract(true),
-    unixSockets(true),
+    unixSockets(boost::logic::indeterminate),
 #endif
     evil(false),
     historyLength(100),
@@ -81,7 +82,7 @@ struct Options {
   /** Whether to use the abstract unix socket namespace where possible */
   bool abstract;
   /** Whether to use unix sockets where possible */
-  bool unixSockets;
+  boost::logic::tribool unixSockets;
 #endif
   /** When set, tedomari will sleep less */
   bool evil;
@@ -280,6 +281,13 @@ void runClient(
 #endif
   }
 
+  boost::logic::tribool unixSockets = options.unixSockets;
+  /* If the unix sockets option was not specified then default to true iff
+   * a unix join address was specified */
+  if (boost::logic::indeterminate(unixSockets)) {
+    unixSockets = boost::algorithm::starts_with(socketAddress, "unix");
+  }
+
   /* Construct the path to the history file */
   boost::filesystem::path historyPath = configPath / "history";
   cout << "Using history file at " << historyPath.native_file_string() << "\n";
@@ -306,7 +314,7 @@ void runClient(
     ServerInterface serverInterface(
         socketAddress,
 #ifndef DISABLE_UNIX_SOCKETS
-        options.unixSockets, options.abstract,
+        unixSockets, options.abstract,
 #endif
         game
       );
