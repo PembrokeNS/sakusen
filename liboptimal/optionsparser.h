@@ -4,6 +4,8 @@
 #include <string>
 #include <list>
 #include <boost/filesystem/path.hpp>
+#include <boost/logic/tribool.hpp>
+#include <boost/variant.hpp>
 
 #if defined(_MSC_VER)
   #include <hash_map>
@@ -76,13 +78,13 @@ class LIBOPTIMAL_API OptionsParser {
     __gnu_cxx::hash_map<std::string, optionType, StringHash> longOptionTypes;
     __gnu_cxx::hash_map<char, optionType> shortOptionTypes;
     
-    __gnu_cxx::hash_map<std::string, bool*, StringHash> longBoolOptions;
+    __gnu_cxx::hash_map<std::string, boost::variant<bool*,boost::logic::tribool*>, StringHash> longBoolOptions;
     __gnu_cxx::hash_map<std::string, int*, StringHash> longIntOptions;
     __gnu_cxx::hash_map<std::string, std::string*, StringHash> longStringOptions;
     __gnu_cxx::hash_map<std::string, std::pair<char,std::list<std::string>*>, StringHash> longStringListOptions;
     __gnu_cxx::hash_map<std::string, OptionsParser*, StringHash> longSuboptsOptions;
     
-    __gnu_cxx::hash_map<char, bool*> shortBoolOptions;
+    __gnu_cxx::hash_map<char, boost::variant<bool*,boost::logic::tribool*> > shortBoolOptions;
     __gnu_cxx::hash_map<char, int*> shortIntOptions;
     __gnu_cxx::hash_map<char, std::string*> shortStringOptions;
     __gnu_cxx::hash_map<char, std::pair<char,std::list<std::string>*> > shortStringListOptions;
@@ -110,7 +112,7 @@ class LIBOPTIMAL_API OptionsParser {
      * ensure that this pointer remains valid until all parsing is complete.
      */
     //@{
-    void addOption(const std::string& longName, char shortName, bool* value);
+    void addOption(const std::string& longName, char shortName, boost::variant<bool*,boost::logic::tribool*> value);
     void addOption(const std::string& longName, char shortName, int* value);
     void addOption(const std::string& longName, char shortName, std::string* value);
     void addOption(const std::string& longName, char shortName, std::list<std::string>* value, char separator);

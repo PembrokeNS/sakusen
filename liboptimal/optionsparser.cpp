@@ -20,7 +20,20 @@ using std::list;
 using std::equal_to;
 using __gnu_cxx::hash_map;
 
-using namespace optimal;
+namespace optimal {
+
+/** \brief Helper class to assign to variant pointer */
+class DereferenceAssignVisitor : public boost::static_visitor<void> {
+  public:
+    DereferenceAssignVisitor(bool v) : value(v) {}
+
+    template<typename T>
+    void operator()(T* p) const {
+      *p = value;
+    }
+  private:
+    bool value;
+};
 
 OptionsParser::OptionsParser(char nl) :
   newLine(nl),
@@ -43,7 +56,7 @@ OptionsParser::OptionsParser(char nl) :
 void OptionsParser::addOption(
     const std::string& longName,
     char shortName,
-    bool* value
+    boost::variant<bool*,boost::logic::tribool*> value
   )
 {
   assert(0 == longOptionTypes.count(longName));
@@ -180,7 +193,8 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
           optionType type = longOptionTypes[optionName];
           if (type == optionType_bool) {
             assert(longBoolOptions.count(optionName));
-            *longBoolOptions[optionName] = true;
+            DereferenceAssignVisitor v(true);
+            longBoolOptions[optionName].apply_visitor(v);
           } else {
             errors.push_back(
                 errorPrefix+": no '"+assignment+"' character found on line "
@@ -206,10 +220,12 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
               assert(longBoolOptions.count(optionName));
               if (optionValue == "yes" || optionValue == "true" ||
                   optionValue == "1" || optionValue == "y") {
-                *longBoolOptions[optionName] = true;
+                DereferenceAssignVisitor v(true);
+                longBoolOptions[optionName].apply_visitor(v);
               } else if (optionValue == "no" || optionValue == "false" ||
                   optionValue == "0" || optionValue == "f") {
-                *longBoolOptions[optionName] = false;
+                DereferenceAssignVisitor v(false);
+                longBoolOptions[optionName].apply_visitor(v);
               } else {
                 errors.push_back(
                     errorPrefix+": option value '"+optionValue+
@@ -293,7 +309,8 @@ bool OptionsParser::parse(
           /* negated boolean option */
           string optionName(arg+5);
           if (longBoolOptions.count(optionName)) {
-            *longBoolOptions[optionName] = false;
+            DereferenceAssignVisitor v(false);
+            longBoolOptions[optionName].apply_visitor(v);
           } else {
             errors.push_back(
                 string("unrecognized boolean long option: '")+optionName+"'"
@@ -304,8 +321,11 @@ bool OptionsParser::parse(
           if (longOptionTypes.count(optionName)) {
             switch (longOptionTypes[optionName]) {
               case optionType_bool:
-                assert(longBoolOptions.count(optionName));
-                *longBoolOptions[optionName] = true;
+                {
+                  assert(longBoolOptions.count(optionName));
+                  DereferenceAssignVisitor v(true);
+                  longBoolOptions[optionName].apply_visitor(v);
+                }
                 break;
               case optionType_int:
                 assert(longIntOptions.count(optionName));
@@ -384,10 +404,12 @@ bool OptionsParser::parse(
               case optionType_bool:
                 assert(shortBoolOptions.count(*optionChar));
                 if (optionChar[1] == '-') {
-                  *shortBoolOptions[*optionChar] = false;
+                  DereferenceAssignVisitor v(false);
+                  shortBoolOptions[*optionChar].apply_visitor(v);
                   ++optionChar;
                 } else {
-                  *shortBoolOptions[*optionChar] = true;
+                  DereferenceAssignVisitor v(true);
+                  shortBoolOptions[*optionChar].apply_visitor(v);
                 }
                 break;
               case optionType_int:
@@ -450,5 +472,7 @@ bool OptionsParser::parse(
   }
 
   return !errors.empty();
+}
+
 }
 
