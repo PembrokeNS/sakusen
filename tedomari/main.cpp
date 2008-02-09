@@ -271,8 +271,7 @@ void runClient(
   socketAddress = options.joinAddress;
   if (socketAddress.empty()) {
 #ifdef DISABLE_UNIX_SOCKETS
-    cout << "You must provide an address for joining with --join" << endl;
-    exit(EXIT_FAILURE);
+    socketAddress = "tcp"ADDR_DELIM"localhost";
 #else
     /* Use default socket */
     socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
@@ -281,12 +280,14 @@ void runClient(
 #endif
   }
 
+#ifndef DISABLE_UNIX_SOCKETS
   boost::logic::tribool unixSockets = options.unixSockets;
   /* If the unix sockets option was not specified then default to true iff
    * a unix join address was specified */
   if (boost::logic::indeterminate(unixSockets)) {
     unixSockets = boost::algorithm::starts_with(socketAddress, "unix");
   }
+#endif
 
   /* Construct the path to the history file */
   boost::filesystem::path historyPath = configPath / "history";
