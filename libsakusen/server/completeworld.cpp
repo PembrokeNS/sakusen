@@ -8,6 +8,7 @@
 
 #include <list>
 #include <vector>
+#include <iterator>
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -229,8 +230,11 @@ void CompleteWorld::incrementGameState(void)
   timeNow++;
   
   /* process units */
-  for (hash_list<LayeredUnit, Bounded>::iterator j=units.begin();
-      j!=units.end(); ++j) {
+  /* The two iterators are needed because units can die while being updated */
+  /** \bug What if both *j and *k die while j is being updated? */
+  for (hash_list<LayeredUnit, Bounded>::iterator
+      j=units.begin(), k=boost::next(j);
+      j!=units.end(); j=k, ++k) {
     /* this moves the unit according to its
      * current speed.  This method also responsible for
      * ensuring that all appropriate client messages caused by the things
