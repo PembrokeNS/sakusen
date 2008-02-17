@@ -163,8 +163,12 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     }
     void removeLayer(const UnitMask*);
     
-    /** \brief Kills the unit unconditionally. */
-    inline bool kill(HitPoints excessDamage) {
+    /** \brief Kills the unit unconditionally.
+     *
+     * \return true iff the unit is gone (as
+     * opposed to, e.g., surviving because of
+     * some special property or being turned into a corpse). */
+    inline bool kill(HitPoints excessDamage = HitPoints(0)) {
       return topLayer->kill(excessDamage);
     }
     /** \brief Damages the unit and kills if HP <= 0 */
