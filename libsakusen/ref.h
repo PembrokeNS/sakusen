@@ -49,6 +49,15 @@ class Ref {
     
     inline bool isRefTo(const T* t) const { return referee.lock().get() == t; }
     
+    /** \brief Standard dereferencing operator 
+     *
+     * \warning If you store a reference obtained via this function, then you
+     * risk accessing it after it has been deleted.
+     */
+    inline typename boost::shared_ptr<T>::reference operator*() const {
+      return *referee.lock();
+    }
+    
     inline boost::shared_ptr<T> operator->() const {
       return referee.lock();
     }
