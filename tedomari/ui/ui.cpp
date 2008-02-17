@@ -532,9 +532,11 @@ void UI::supplyActionArg(const String& actionArg)
         supplyActionArg(activeMapDisplay->getMousePosAtGround());
         break;
       case actionParameterType_positionOrientation:
-        supplyActionArg(make_pair(
-              activeMapDisplay->getMousePosAtGround(), Orientation()
-            ));
+        {
+          Position pos = activeMapDisplay->getMousePosAtGround();
+          pos.z += pendingAction->getSize().z;
+          supplyActionArg(make_pair(pos, Orientation()));
+        }
         break;
       case actionParameterType_unit:
         {

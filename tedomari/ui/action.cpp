@@ -181,6 +181,10 @@ class CreateAction : public Action {
     const set<String>& internalGetStringSet() const {
       return possibleCreations;
     }
+    Point<uint32> internalGetSize() const {
+      return sakusen::world->getUniverse()->getUnitTypePtr(creation)->
+        getDynamicData().getSize();
+    }
 };
 
 void CreateAction::internalExecute(UI* ui) {

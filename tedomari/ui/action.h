@@ -36,7 +36,14 @@ class Action : boost::noncopyable {
     virtual void internalSupplyArgument(const ActionArgument&) = 0;
     virtual void internalExecute(UI*) = 0;
     virtual const std::set<String>& internalGetStringSet() const {
-      throw sakusen::Exn("tedomari::ui::Action::internalGetStringSet() not supported");
+      throw sakusen::Exn(
+          "tedomari::ui::Action::internalGetStringSet() not supported"
+        );
+    }
+    virtual sakusen::Point<uint32> internalGetSize() const {
+      throw sakusen::Exn(
+          "tedomari::ui::Action::internalGetSize() not supported"
+        );
     }
 
   public:
@@ -63,6 +70,12 @@ class Action : boost::noncopyable {
         Fatal("invalid call");
       }
       return internalGetStringSet();
+    }
+    sakusen::Point<uint32> getSize() const {
+      if (nextParameterType != actionParameterType_positionOrientation) {
+        Fatal("invalid call");
+      }
+      return internalGetSize();
     }
 };
 
