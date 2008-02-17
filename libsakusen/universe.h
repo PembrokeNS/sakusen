@@ -66,11 +66,13 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
       return id;
     }
     WeaponTypeId getWeaponTypeId(String weaponTypeName) const;
+    
     inline const UnitTypeId getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
       return &unitTypes[i];
     }
+    UnitTypeId getUnitTypeId(String unitTypeName) const;
     inline const UnitType* getUnitTypePtr(const UnitTypeId id) const
     {
       return id;
@@ -79,7 +81,10 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     {
       return getUnitTypePtr(getUnitTypeId(i));
     }
-    UnitTypeId getUnitTypeId(String unitTypeName) const;
+    inline const UnitType* getUnitTypePtr(String unitTypeName) const
+    {
+      return getUnitTypePtr(getUnitTypeId(unitTypeName));
+    }
     //@}
     
     /** \brief Determine whether the Universe contains a given UnitTypeId */
