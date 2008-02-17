@@ -1,6 +1,7 @@
 #include "ui/mapdisplay.h"
 
 #include "heightfield-methods.h"
+#include "unitcorneriterator.h"
 #include "ui/ui.h"
 
 using namespace std;
@@ -78,15 +79,10 @@ void MapDisplay::drawUnit(
 {
   list< Point<double> > corners;
 
-  Point<sint32> corner(unit->getITypeData().getSize());
-  const UnitStatus& status = unit->getIStatus();
-  corners.push_back(dexToPixel(status.localToGlobal(corner)));
-  corner.x *= -1;
-  corners.push_back(dexToPixel(status.localToGlobal(corner)));
-  corner.y *= -1;
-  corners.push_back(dexToPixel(status.localToGlobal(corner)));
-  corner.x *= -1;
-  corners.push_back(dexToPixel(status.localToGlobal(corner)));
+  for (UnitCornerIterator corner(*unit, true), end; corner != end; ++corner) {
+    corners.push_back(dexToPixel(*corner));
+  }
+  assert(unit.isValid());
   getRegion()->fillPolygon(corners, colour);
 }
 
