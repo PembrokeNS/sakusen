@@ -189,7 +189,7 @@ class LIBOPTIMAL_API OptionsParser {
             *value = boost::lexical_cast<T>(s);
           } catch (boost::bad_lexical_cast&) {
             errors.push_back(
-                "couldn't interpret '"+s+"' as an integer of the required type"
+                "couldn't interpret '"+s+"' as a value of the required type"
               );
           }
           return errors;
