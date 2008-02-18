@@ -10,7 +10,9 @@ void FixedMotion::incrementState(LayeredUnit& unit)
 {
   /* Ensure at ground level. */
   /** \bug This only really needs to be done when the unit first appears and
-   * when the ground level changes, not every tick */
+   * when the ground level changes, not every tick.
+   *
+   * \bug This allows the unit to exist upside-down and underground. */
   const IHeightfield& hf = world->getMap()->getHeightfield();
   bool okay = true;
 
