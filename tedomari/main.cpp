@@ -634,7 +634,7 @@ Options getOptions(
   parser.addOption("join",           'j',  &results.joinAddress);
   parser.addOption("autojoin",       'o',  &results.autoJoin);
   parser.addOption("ui-config",      'u',  &results.uiConfig);
-  parser.addOption("commands",       'c',  &results.autoCommands, ';');
+  parser.addOption("commands",       'c',  &results.autoCommands, ";");
   parser.addOption("help",           'h',  &results.help);
   parser.addOption("version",        'V',  &results.version);
 

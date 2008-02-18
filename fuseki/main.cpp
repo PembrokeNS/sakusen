@@ -169,7 +169,7 @@ Options getOptions(
     parser.addOption("force-socket", 'f', &results.forceSocket);
   #endif
   parser.addOption("tcp",          't', &results.tcpAddress);
-  parser.addOption("plugins",      'p', &results.pluginPaths, ':');
+  parser.addOption("plugins",      'p', &results.pluginPaths, ":");
   parser.addOption("dots",         'd', &results.dots);
   parser.addOption("help",         'h', &results.help);
   parser.addOption("version",      'V', &results.version);

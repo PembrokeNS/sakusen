@@ -1,156 +1,44 @@
 #include "optionsparser.h"
 
-#include <cassert>
-
-#include <fstream>
-#include <sstream>
-#include <boost/functional.hpp>
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/format.hpp>
+#include <algorithm>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
-using std::string;
-using std::istream;
-using std::istringstream;
-using std::pair;
-using std::make_pair;
-using std::list;
-using std::equal_to;
-using __gnu_cxx::hash_map;
+using namespace std;
 
 namespace optimal {
 
-/** \brief Helper class to assign to variant pointer */
-class DereferenceAssignVisitor : public boost::static_visitor<void> {
-  public:
-    DereferenceAssignVisitor(bool v) : value(v) {}
-
-    template<typename T>
-    void operator()(T* p) const {
-      *p = value;
-    }
-  private:
-    bool value;
-};
-
-OptionsParser::OptionsParser(char nl) :
+OptionsParser::OptionsParser(char nl, char a, char c) :
   newLine(nl),
-  assignment('='),
-  /* Initialize hash_maps with few buckets because we are unlikely to need many
-   * */
-  longOptionTypes(10),
-  shortOptionTypes(10),
-  longBoolOptions(10),
-  longIntOptions(10),
-  longStringOptions(10),
-  longStringListOptions(10),
-  shortBoolOptions(10),
-  shortIntOptions(10),
-  shortStringOptions(10),
-  shortStringListOptions(10)
+  assignment(a),
+  comment(c)
 {
 }
 
-void OptionsParser::addOption(
+void OptionsParser::checkOptionNamesSanity(
     const std::string& longName,
-    char shortName,
-    boost::variant<bool*,boost::logic::tribool*> value
-  )
+    char shortName
+  ) const
 {
-  assert(0 == longOptionTypes.count(longName));
-  assert(0 == shortOptionTypes.count(shortName));
-
   if (longName != "") {
-    longOptionTypes[longName] = optionType_bool;
-    longBoolOptions[longName] = value;
+    if (options.count(longName)) {
+      throw std::logic_error("repeated long option name '"+longName+"'");
+    }
+
+    if (boost::algorithm::starts_with(longName, "no-")) {
+      throw std::invalid_argument("long option name cannot start 'no-'");
+    }
   }
-  
+
   if (shortName != '\0') {
-    shortOptionTypes[shortName] = optionType_bool;
-    shortBoolOptions[shortName] = value;
-  }
-}
+    if (options.get<1>().count(shortName)) {
+      throw std::logic_error("repeated long option name '"+longName+"'");
+    }
 
-void OptionsParser::addOption(
-    const string& longName,
-    char shortName,
-    int* value
-  )
-{
-  assert(0 == longOptionTypes.count(longName));
-  assert(0 == shortOptionTypes.count(shortName));
-
-  if (longName != "") {
-    longOptionTypes[longName] = optionType_int;
-    longIntOptions[longName] = value;
-  }
-  
-  if (shortName != '\0') {
-    shortIntOptions[shortName] = value;
-    shortOptionTypes[shortName] = optionType_int;
-  }
-}
-
-void OptionsParser::addOption(
-    const string& longName,
-    char shortName,
-    string* value
-  )
-{
-  assert(0 == longOptionTypes.count(longName));
-  assert(0 == shortOptionTypes.count(shortName));
-
-  if (longName != "") {
-    longOptionTypes[longName] = optionType_string;
-    longStringOptions[longName] = value;
-  }
-  
-  if (shortName != '\0') {
-    shortOptionTypes[shortName] = optionType_string;
-    shortStringOptions[shortName] = value;
-  }
-}
-
-void OptionsParser::addOption(
-    const string& longName,
-    char shortName,
-    list<std::string>* value,
-    char separator
-  )
-{
-  assert(0 == longOptionTypes.count(longName));
-  assert(0 == shortOptionTypes.count(shortName));
-
-  if (longName != "") {
-    longOptionTypes[longName] = optionType_stringList;
-    longStringListOptions[longName] = make_pair(separator, value);
-  }
-  
-  if (shortName != '\0') {
-    shortOptionTypes[shortName] = optionType_stringList;
-    shortStringListOptions[shortName] = make_pair(separator, value);
-  }
-}
-
-void OptionsParser::addOption(
-    const string& longName,
-    char shortName,
-    OptionsParser* value
-  )
-{
-  assert(0 == longOptionTypes.count(longName));
-  assert(0 == shortOptionTypes.count(shortName));
-
-  if (longName != "") {
-    longOptionTypes[longName] = optionType_subopts;
-    longSuboptsOptions[longName] = value;
-  }
-  
-  if (shortName != '\0') {
-    shortOptionTypes[shortName] = optionType_subopts;
-    shortSuboptsOptions[shortName] = value;
+    if (shortName == '-') {
+      throw std::invalid_argument("short option name cannot be '-'");
+    }
   }
 }
 
@@ -173,13 +61,11 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
 {
   string line;
 
-  while (!stream.eof()) {
+  while (getline(stream, line, newLine)) {
     /** \todo Line numbers in error messages */
-    /** \todo Replace atoi with strtol and do error checking */
-    getline(stream, line, newLine);
     /*printf("parser processing line: %s\n", line.c_str());*/
     string::size_type commentPos;
-    if (string::npos != (commentPos = line.find('#', 0))) {
+    if (string::npos != (commentPos = line.find(comment, 0))) {
       line = line.substr(0, commentPos);
     }
     boost::trim(line);
@@ -189,12 +75,10 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
         /* We assume this should be a boolean option which is being set to
          * true */
         string optionName = line;
-        if (longOptionTypes.count(optionName)) {
-          optionType type = longOptionTypes[optionName];
-          if (type == optionType_bool) {
-            assert(longBoolOptions.count(optionName));
-            DereferenceAssignVisitor v(true);
-            longBoolOptions[optionName].apply_visitor(v);
+        OptionContainer::iterator optionIt = options.find(optionName);
+        if (optionIt != options.end()) {
+          if ((*optionIt)->isBoolean()) {
+            (*optionIt)->setBoolean(true);
           } else {
             errors.push_back(
                 errorPrefix+": no '"+assignment+"' character found on line "
@@ -212,71 +96,45 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
         string optionValue = line.substr(equalsPos + 1);
         boost::trim(optionName);
         boost::trim(optionValue);
-        if (longOptionTypes.count(optionName)) {
-          switch(longOptionTypes[optionName]) {
-            case optionType_bool:
-              /*printf("bool option %s, value %s\n", optionName.c_str(),
-                  optionValue.c_str());*/
-              assert(longBoolOptions.count(optionName));
+        if (optionName.empty()) {
+          errors.push_back(
+              errorPrefix+": no option name found before '"+assignment+
+              "' character"
+            );
+        } else {
+          OptionContainer::iterator optionIt = options.find(optionName);
+
+          if (optionIt != options.end()) {
+            if ((*optionIt)->isBoolean()) {
               if (optionValue == "yes" || optionValue == "true" ||
                   optionValue == "1" || optionValue == "y") {
-                DereferenceAssignVisitor v(true);
-                longBoolOptions[optionName].apply_visitor(v);
+                (*optionIt)->setBoolean(true);
               } else if (optionValue == "no" || optionValue == "false" ||
                   optionValue == "0" || optionValue == "f") {
-                DereferenceAssignVisitor v(false);
-                longBoolOptions[optionName].apply_visitor(v);
+                (*optionIt)->setBoolean(false);
               } else {
                 errors.push_back(
                     errorPrefix+": option value '"+optionValue+
                     "' not recognised as a boolean value"
                   );
               }
-              break;
-            case optionType_int:
-              assert(longIntOptions.count(optionName));
-              *longIntOptions[optionName] = atoi(optionValue.c_str());
-              break;
-            case optionType_string:
-              assert(longStringOptions.count(optionName));
-              *longStringOptions[optionName] = optionValue;
-              break;
-            case optionType_stringList:
-              {
-                /*printf("stringList option %s, value %s\n", optionName.c_str(),
-                    optionValue.c_str());*/
-                hash_map<string, pair<char, list<string>*>, StringHash>::
-                  const_iterator it = longStringListOptions.find(optionName);
-                assert(it != longStringListOptions.end());
-                split(
-                    *it->second.second,
-                    optionValue,
-                    boost::bind1st(equal_to<char>(), it->second.first)
-                  );
-                /*printf("got %zd values out\n", it->second.second->size());*/
-              }
-              break;
-            case optionType_subopts:
-              {
-                assert(longSuboptsOptions.count(optionName));
-                OptionsParser* subParser = longSuboptsOptions[optionName];
-                istringstream s(optionValue);
-                if (subParser->parseStream(s, errorPrefix)) {
-                  /* Append the errors from the subparser to this one */
-                  errors.splice(errors.end(), subParser->getErrors());
-                }
-              }
-              break;
-            default:
-              assert(false);
+            } else {
+              list<string> subErrors =
+                (*optionIt)->setString(optionValue, errorPrefix);
+              errors.splice(errors.end(), subErrors);
+            }
+          } else {
+            errors.push_back(
+                errorPrefix+": unrecognized option: '"+optionName+"'"
+              );
           }
-        } else {
-          errors.push_back(
-              errorPrefix+": unrecognized option: '"+optionName+"'"
-            );
         }
       }
     }
+  }
+
+  if (!stream.eof()) {
+    errors.push_back(errorPrefix+": error reading stream");
   }
   return !errors.empty();
 }
@@ -284,8 +142,8 @@ bool OptionsParser::parseStream(istream& stream, const string& errorPrefix)
 /** \brief Parse the given file (if it exists - ignore otherwise), and
  * command line.
  *
- * Return true if a problem occurs (which can be investigated
- * through errors) */
+ * \return true if a problem occurs (which can be investigated
+ * through getErrors) */
 bool OptionsParser::parse(
     const boost::filesystem::path& configFilePath,
     int argc,
@@ -308,156 +166,102 @@ bool OptionsParser::parse(
         if (boost::algorithm::starts_with(arg+2, "no-")) {
           /* negated boolean option */
           string optionName(arg+5);
-          if (longBoolOptions.count(optionName)) {
-            DereferenceAssignVisitor v(false);
-            longBoolOptions[optionName].apply_visitor(v);
+          if (optionName.empty()) {
+            errors.push_back("no option name after '--no-'");
           } else {
-            errors.push_back(
-                string("unrecognized boolean long option: '")+optionName+"'"
-              );
+            OptionContainer::iterator optionIt = options.find(optionName);
+            
+            if (optionIt != options.end() && (*optionIt)->isBoolean()) {
+              (*optionIt)->setBoolean(false);
+            } else {
+              errors.push_back(
+                  "unrecognized boolean long option: '"+optionName+"'"
+                );
+            }
           }
         } else {
           string optionName(arg+2);
-          if (longOptionTypes.count(optionName)) {
-            switch (longOptionTypes[optionName]) {
-              case optionType_bool:
-                {
-                  assert(longBoolOptions.count(optionName));
-                  DereferenceAssignVisitor v(true);
-                  longBoolOptions[optionName].apply_visitor(v);
-                }
-                break;
-              case optionType_int:
-                assert(longIntOptions.count(optionName));
+          if (optionName.empty()) {
+            /** \todo this indicates non-option arguments */
+            errors.push_back("no option name after '--'");
+          } else {
+            OptionContainer::iterator optionIt = options.find(optionName);
+
+            if (optionIt != options.end()) {
+              if ((*optionIt)->isBoolean()) {
+                (*optionIt)->setBoolean(true);
+              } else {
                 if (++i < argc) {
-                  *longIntOptions[optionName] = atoi(argv[i]);
+                  list<string> subErrors = (*optionIt)->setString(
+                      argv[i], "<command line>: --" + optionName
+                    );
+                  errors.splice(errors.end(), subErrors);
                 } else {
                   errors.push_back(
                       string("trailing long option '")+optionName+
                       "' requires argument"
                     );
                 }
-                break;
-              case optionType_string:
-                assert(longStringOptions.count(optionName));
-                if (++i < argc) {
-                  *longStringOptions[optionName] = argv[i];
-                } else {
-                  errors.push_back(
-                      string("trailing long option '")+optionName+
-                      "' requires argument"
-                    );
-                }
-                break;
-              case optionType_stringList:
-                {
-                  hash_map<string, pair<char, list<string>*>, StringHash>::
-                    iterator it = longStringListOptions.find(optionName);
-                  assert(it != longStringListOptions.end());
-                  if (++i < argc) {
-                    split(
-                        *it->second.second,
-                        argv[i],
-                        boost::bind1st(equal_to<char>(), it->second.first)
+              }
+            } else {
+              /* See if it's of the form --option=value */
+              string::iterator assignIt =
+                find(optionName.begin(), optionName.end(), assignment);
+
+              if (assignIt == optionName.end()) {
+                errors.push_back(
+                    string("unrecognized long option: '")+optionName+"'"
+                  );
+              } else {
+                string optionValue(assignIt+1, optionName.end());
+                optionName.erase(assignIt, optionName.end());
+                optionIt = options.find(optionName);
+
+                if (optionIt != options.end()) {
+                  if ((*optionIt)->isBoolean()) {
+                    errors.push_back(
+                        "boolean option '"+optionName+"'given argument"
                       );
                   } else {
-                    errors.push_back(
-                      string("trailing long option '")+optionName+
-                      "' requires argument"
-                    );
-                  }
-                }
-                break;
-              case optionType_subopts:
-                assert(longSuboptsOptions.count(optionName));
-                if (++i < argc) {
-                  /*printf("subopts option %s, value %s\n", optionName.c_str(),
-                      argv[i]);*/
-                  string optionValue(argv[i]);
-                  istringstream s(optionValue);
-                  OptionsParser* subParser = longSuboptsOptions[optionName];
-                  if (subParser->parseStream(s, "<command line>")) {
-                    /* Append the errors from the subparser to this one */
-                    errors.splice(errors.end(), subParser->getErrors());
+                    list<string> subErrors = (*optionIt)->setString(
+                        optionValue, "<command line>: --" + optionName
+                      );
+                    errors.splice(errors.end(), subErrors);
                   }
                 } else {
                   errors.push_back(
-                      string("trailing option '")+optionName+
-                      "' requires argument for suboptions"
+                      string("unrecognized long option: '")+optionName+"'"
                     );
                 }
-                break;
-              default:
-                assert(false);
+              }
             }
-          } else {
-            errors.push_back(
-                string("unrecognized long option: '")+optionName+"'"
-              );
           }
         }
       } else {
         /* short options */
         for (const char* optionChar=arg+1; *optionChar; optionChar++) {
-          if (shortOptionTypes.count(*optionChar)) {
-            switch (shortOptionTypes[*optionChar]) {
-              case optionType_bool:
-                assert(shortBoolOptions.count(*optionChar));
-                if (optionChar[1] == '-') {
-                  DereferenceAssignVisitor v(false);
-                  shortBoolOptions[*optionChar].apply_visitor(v);
-                  ++optionChar;
-                } else {
-                  DereferenceAssignVisitor v(true);
-                  shortBoolOptions[*optionChar].apply_visitor(v);
-                }
-                break;
-              case optionType_int:
-                assert(shortIntOptions.count(*optionChar));
-                if (optionChar[1] == '\0' && ++i < argc) {
-                  *shortIntOptions[*optionChar] = atoi(argv[i]);
-                } else {
-                  errors.push_back(
-                      string("short option '")+*optionChar+
-                      "' requires argument"
-                    );
-                }
-                break;
-              case optionType_string:
-                assert(shortStringOptions.count(*optionChar));
-                if (optionChar[1] == '\0' && ++i < argc) {
-                  *shortStringOptions[*optionChar] = argv[i];
-                } else {
-                  errors.push_back(
-                      string("short option '")+*optionChar+
-                      "' requires argument"
-                    );
-                }
-                break;
-              case optionType_stringList:
-                {
-                  hash_map<char, pair<char, list<string>*> >::
-                    iterator it = shortStringListOptions.find(*optionChar);
-                  assert(it != shortStringListOptions.end());
-                  if (optionChar[1] == '\0' && ++i < argc) {
-                    split(
-                        *it->second.second,
-                        argv[i],
-                        boost::bind1st(equal_to<char>(), it->second.first)
-                      );
-                  } else {
-                    errors.push_back(
-                      string("short option '")+*optionChar+
-                      "' requires argument"
-                    );
-                  }
-                }
-                break;
-              default:
-                errors.push_back(str(
-                    boost::format("internal error: unexpected OptionType %1%")%
-                    shortOptionTypes[*optionChar]
-                  ));
+          OptionContainer::index_iterator<ShortNameTag>::type optionIt =
+            options.get<ShortNameTag>().find(*optionChar);
+          if (optionIt != options.get<ShortNameTag>().end()) {
+            if ((*optionIt)->isBoolean()) {
+              if (optionChar[1] == '-') {
+                (*optionIt)->setBoolean(false);
+                ++optionChar;
+              } else {
+                (*optionIt)->setBoolean(true);
+              }
+            } else {
+              if (optionChar[1] == '\0' && ++i < argc) {
+                list<string> subErrors = (*optionIt)->setString(
+                    argv[i], "<command line>: -" + *optionChar
+                  );
+                errors.splice(errors.end(), subErrors);
+              } else {
+                errors.push_back(
+                    string("short option '")+*optionChar+
+                    "' requires argument"
+                  );
+              }
             }
           } else {
             errors.push_back(
