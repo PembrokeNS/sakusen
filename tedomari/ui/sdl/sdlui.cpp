@@ -19,14 +19,14 @@ using namespace tedomari::ui::sdl;
 void SDLUI::Options::usage(std::ostream& out)
 {
   out <<
-"SDL UI options:\n"
-" help=yes          Display this message.\n"
+"SDL UI options (comma separated):\n"
+" help              Display this message.\n"
 " w=WIDTH           Set display width.\n"
 " h=HEIGHT          Set display height.\n"
-" fs=yes            Use fullscreen mode.\n"
+" fs                Use fullscreen mode.\n"
 " hw-surface=no     Don't try to use a hardware surface for rendering.\n"
 " double-buffer=no  Don't try to use a double buffer for rendering.\n"
-" debug=yes         Output extra debugging info.\n"
+" debug             Output extra debugging info.\n"
 << endl;
 }
 
