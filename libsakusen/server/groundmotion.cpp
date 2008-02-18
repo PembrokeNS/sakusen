@@ -1,7 +1,10 @@
 #include "groundmotion.h"
 
 #include "unitstatus-methods.h"
+#include "unitcorneriterator.h"
 #include "completeworld.h"
+
+using namespace std;
 
 namespace sakusen {
 namespace server {
@@ -11,6 +14,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   UnitStatus& status = unit.getStatus();
   const UnitOrders& orders = unit.getOrders();
   const IUnitTypeData& typeData = unit.getITypeData();
+  const IHeightfield& hf = world->getMap()->getHeightfield();
 
   Point<sint16> expectedVelocity(status.velocity);
   
@@ -56,12 +60,16 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   }
 
   /* Update the expected velocity to take account of gravity and the ground. */
-  /** \todo Replace this extremely crude collision detection with the ground
-   * with something more sane */
-  Box<sint32> boundingBox(unit.getBoundingBox());
-  sint32 groundHeight = world->getCompleteMap()->getHeightfield().
-    getMaxHeightIn(boundingBox.rectangle());
-  sint32 heightAboveGround = boundingBox.getMin().z - groundHeight;
+  /** \todo Cause the unit to rotate appropriately when it's supported only on
+   * one side. */
+  sint32 heightAboveGround = numeric_limits<sint32>::max();
+  for (UnitCornerIterator corner(unit), end; corner != end; ++corner) {
+    Position cornerPos = *corner;
+    heightAboveGround = min(
+        heightAboveGround, cornerPos.z - hf.getHeightAt(cornerPos)
+      );
+  }
+  
   if (heightAboveGround + expectedVelocity.z < 0) {
     /* The unit will end up below the ground, so we need to raise it. */
     /** \bug The
