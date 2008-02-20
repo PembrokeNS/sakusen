@@ -83,6 +83,13 @@ class LIBSAKUSEN_API Box {
       return (min > max);
     }
 
+    inline Box& operator+=(const Point<T>& p);
+    
+    /** \brief Create a new Box, which is a translation of this one by \a p */
+    inline Box operator+(const Point<T>& p) {
+      return Box(*this) += p;
+    }
+
     bool contains(const Point<T>& p) const;
     bool operator<=(const Box<T>& b) const;
     bool intersects(const Box<T>& b) const;
@@ -105,7 +112,16 @@ template class LIBSAKUSEN_API Box<sint32>;
 
 #ifdef LIBSAKUSEN_METHOD_DEFINITIONS
 
-/** \brief Tests whether \p p is inside this ::Box.
+/** \brief Translate this box by displacement \a p */
+template<typename T>
+inline Box<T>& Box<T>::operator+=(const Point<T>& p) {
+  if (!isEmpty()) {
+    min += p; max += p; assert(min <= max);
+  }
+  return *this;
+}
+
+/** \brief Tests whether \p p is inside this Box.
  */
 template<typename T>
 bool Box<T>::contains(const Point<T>& p) const {
@@ -118,12 +134,12 @@ bool Box<T>::contains(const Point<T>& p) const {
   * Obviously, for the empty Box it returns the empty Rectangle.
   */
 template<typename T>
-Rectangle<T> Box<T>::rectangle() const {
+inline Rectangle<T> Box<T>::rectangle() const {
   return Rectangle<T>(min.x, min.y, max.x, max.y);
 }
 
 
-/** \brief Tests whether \p b is entirely inside this ::Box.
+/** \brief Tests whether \p b is entirely inside this Box.
  */
 template<typename T>
 bool Box<T>::operator<=(const Box<T>& b) const {
@@ -142,11 +158,11 @@ bool Box<T>::intersects(const Box<T>& b) const {
   return (min <= b.max && max >= b.min && !isEmpty());
 }
 
-/** \brief Returns the ::Box containing all the points inside both this
+/** \brief Returns the Box containing all the points inside both this
  * and \p b.
  *
  * If this does not intersect \p b, then the result will be empty, but
- * it is not defined \b which empty ::Box it will be. This method commutes.
+ * it is not defined \b which empty Box it will be. This method commutes.
  * 
  * \todo Use fewer branches.
  */
