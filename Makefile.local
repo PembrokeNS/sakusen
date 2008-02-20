@@ -35,6 +35,13 @@ test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
 
 test-recurse-libsakusen: test-recurse-libltdl_hacked
 
+# If we're installing to a relative DESTDIR, then we have to make it absolute
+# before we recurse because otherwise it ends up pointing at different places
+# in each subdirectory.  Also, install needs its argument to be absolute
+ifneq (,$(filter-out /%,$(DESTDIR)))
+export DESTDIR := $(shell pwd)/$(DESTDIR)
+endif
+
 install-nonrecursive: $(addprefix install-recurse-,$(SUBDIRS))
 	libtool --mode=finish $(LIBDIR)
 else
