@@ -4,6 +4,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 #include "point.h"
+#include "icompleteunit.h"
 
 namespace sakusen {
 
@@ -21,7 +22,8 @@ class UnitCornerIterator :
   friend class boost::iterator_core_access;
   public:
     /** \brief Constructs a past-the-end iterator. */
-    UnitCornerIterator() : status(NULL), index(8) {}
+    UnitCornerIterator() : frame(NULL), index(8) {}
+    
     /** \brief Constructs an iterator pointing at a corner of the given unit.
      *
      * If the second optional parameter is false (the default) then all 8
@@ -31,7 +33,7 @@ class UnitCornerIterator :
      * If it is true, then only the four bottom corners will be visited.
      */
     explicit UnitCornerIterator(const ICompleteUnit& u, bool bottom = false) :
-      status(&u.getIStatus()),
+      frame(&u.getIStatus().getFrame()),
       localPosition(u.getITypeData().getSize()),
       index(0)
     {
@@ -40,10 +42,41 @@ class UnitCornerIterator :
         localPosition.y *= -1;
         localPosition.z *= -1;
       }
-      globalPosition = status->localToGlobal(localPosition);
+      globalPosition = frame->localToGlobal(localPosition);
+    }
+
+    /** \brief Constructs an iterator pointing at a corner of a box of the
+     * given size in the given frame.
+     *
+     * In this case, 'size' refers to the extent of the box in every axial
+     * direction away from the origin.  So, for example, a size of (1,2,3)
+     * means a box [-1,1]x[-2,2]x[-3,3].  This is the same convention used by
+     * units.
+     *
+     * If the third optional parameter is false (the default) then all 8
+     * corners will be visited as this iterator is incremented until it becomes
+     * past-the-end.
+     *
+     * If it is true, then only the four bottom corners will be visited.
+     */
+    explicit UnitCornerIterator(
+        const Frame& f,
+        const Point<uint32>& size,
+        bool bottom = false
+      ) :
+      frame(&f),
+      localPosition(size),
+      index(0)
+    {
+      if (bottom) {
+        index = 4;
+        localPosition.y *= -1;
+        localPosition.z *= -1;
+      }
+      globalPosition = frame->localToGlobal(localPosition);
     }
   private:
-    const IUnitStatus* status;
+    const Frame* frame;
     Position localPosition;
     Position globalPosition;
     unsigned int index;
@@ -87,7 +120,7 @@ class UnitCornerIterator :
         default:
           Fatal("incrementing iterator beyond end");
       }
-      globalPosition = status->localToGlobal(localPosition);
+      globalPosition = frame->localToGlobal(localPosition);
     }
 
     void decrement() {

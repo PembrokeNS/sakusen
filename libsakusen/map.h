@@ -126,6 +126,25 @@ class LIBSAKUSEN_API Map {
       resolvePosition(pos+inc, &p, orientation);
       return p;
     }
+
+    /** \brief Translates the given frame by the given position, resolving it
+     * over map boundaries and rotating as appropriate.
+     *
+     * Also rotates the given velocity */
+    inline Frame translateFrame(
+        Frame frame, Velocity& vel, const Point<sint32>& inc
+      ) {
+      /* We have to take care, because we need to support the case &vel==&inc
+       * */
+      Orientation mapOrientationChange;
+      frame.getPosition() =
+        addToPosition(frame.getPosition(), inc, &mapOrientationChange);
+      if (mapOrientationChange != Orientation::identity) {
+        vel = mapOrientationChange * vel;
+        frame.getOrientation() = mapOrientationChange * frame.getOrientation();
+      }
+      return frame;
+    }
     
     /** \brief Finds the shortest vector from op2 to op1
      *

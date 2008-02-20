@@ -308,8 +308,7 @@ int main(/*int argc, char** argv*/)
         UnitStatus(
           universe,
           universe->getUnitTypeId(0),
-          Point<sint32>(5000,-5000,0),
-          Orientation(),
+          Frame(Point<sint32>(5000,-5000,0), Orientation()),
           Point<sint16>()
         )
       )
@@ -320,8 +319,7 @@ int main(/*int argc, char** argv*/)
         UnitStatus(
           universe,
           universe->getUnitTypeId(0),
-          Point<sint32>(0,0,0),
-          Orientation(),
+          Frame(Point<sint32>(0,0,0), Orientation()),
           Point<sint16>()
         )
       )
@@ -369,8 +367,7 @@ int main(/*int argc, char** argv*/)
         UnitStatus(
           universe,
           universe->getUnitTypeId(0),
-          Point<sint32>(10000,-10000,0),
-          Orientation(),
+          Frame(Point<sint32>(10000,-10000,0), Orientation()),
           Point<sint16>()
         )
       )

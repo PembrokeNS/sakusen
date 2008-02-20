@@ -25,6 +25,11 @@ class LIBSAKUSEN_API Order {
       return getType() != orderType_none;
     }
     inline OrderType getType(void) const { return type; }
+
+    /* To remind that update here is needed by causing a compile error when a
+     * new enum value is added. */
+    SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+    
     #define GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
       return dynamic_cast<const type##OrderData&>(*data); \
@@ -33,7 +38,7 @@ class LIBSAKUSEN_API Order {
     GET_DATA(SetVelocity)
     GET_DATA(TargetWeapon)
     GET_DATA(TargetPosition)
-    GET_DATA(TargetPositionOrientation)
+    GET_DATA(TargetFrame)
     GET_DATA(TargetUnit)
     GET_DATA(TargetSensorReturns)
     #undef GET_DATA

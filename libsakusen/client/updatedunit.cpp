@@ -26,16 +26,9 @@ void UpdatedUnit::incrementState()
   if (altered) {
     altered = false;
   } else {
-    Orientation mapOrientationChange;
-    status.position = world->getMap()->addToPosition(
-          status.position, status.velocity, &mapOrientationChange
+    status.frame = world->getMap()->translateFrame(
+          status.frame, status.velocity, status.velocity
         );
-    /* If the movement caused us to rotate/reflect (due to moving over a map
-     * edge) then update orientation and velocity appropriately */
-    if (mapOrientationChange != Orientation::identity) {
-      status.velocity = mapOrientationChange * status.velocity;
-      status.orientation = mapOrientationChange * status.orientation;
-    }
   }
 }
 

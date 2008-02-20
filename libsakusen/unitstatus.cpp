@@ -7,8 +7,7 @@ using namespace sakusen;
 
 UnitStatus::UnitStatus(const IUnitStatus& copy) :
   type(copy.getType()),
-  position(copy.getPosition()),
-  orientation(copy.getOrientation()),
+  frame(copy.getFrame()),
   velocity(copy.getVelocity()),
   hitPoints(copy.getHitPoints()),
   radarIsActive(copy.isRadarActive()),
@@ -20,8 +19,7 @@ UnitStatus::UnitStatus(const IUnitStatus& copy) :
 
 UnitStatus::UnitStatus(
     UnitTypeId startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity,
     HitPoints startHitPoints,
     bool startRadarActive,
@@ -29,8 +27,7 @@ UnitStatus::UnitStatus(
     const std::vector<WeaponStatus>& startWeaponsStatus
   ) :
   type(startType),
-  position(startPosition),
-  orientation(startOrientation),
+  frame(startFrame),
   velocity(startVelocity),
   hitPoints(startHitPoints),
   radarIsActive(startRadarActive),
@@ -42,14 +39,12 @@ UnitStatus::UnitStatus(
 
 UnitStatus::UnitStatus(
     UnitTypeId startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity,
     const HitPoints startHP
   ) :
   type(startType),
-  position(startPosition),
-  orientation(startOrientation),
+  frame(startFrame),
   velocity(startVelocity),
   hitPoints(startHP),
   radarIsActive(false),
@@ -62,13 +57,11 @@ UnitStatus::UnitStatus(
 
 UnitStatus::UnitStatus(
     UnitTypeId startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity
   ) :
   type(startType),
-  position(startPosition),
-  orientation(startOrientation),
+  frame(startFrame),
   velocity(startVelocity),
   radarIsActive(false),
   sonarIsActive(false),
@@ -82,13 +75,11 @@ UnitStatus::UnitStatus(
 UnitStatus::UnitStatus(
     const Universe::ConstPtr& universe,
     UnitTypeId startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity
   ) :
   type(startType),
-  position(startPosition),
-  orientation(startOrientation),
+  frame(startFrame),
   velocity(startVelocity),
   hitPoints(universe->getUnitTypePtr(type)->getDynamicData().getMaxHitPoints()),
   radarIsActive(false),
@@ -109,8 +100,7 @@ void UnitStatus::initializeWeapons(const UnitType* typePtr)
 void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
 {
   out << universe->getUnitTypePtr(type)->getInternalName();
-  out << position;
-  orientation.store(out);
+  frame.store(out);
   out << velocity << hitPoints << radarIsActive << sonarIsActive <<
     weaponsStatus;
 }
@@ -122,8 +112,6 @@ UnitStatus UnitStatus::load(
 {
   String typeName;
   UnitTypeId type;
-  Point<sint32> position;
-  Orientation orientation;
   Point<sint16> velocity;
   
   /* status stuff */
@@ -134,13 +122,12 @@ UnitStatus UnitStatus::load(
   
   in >> typeName;
   type = context.getUniverse()->getUnitTypeId(typeName);
-  in >> position;
-  orientation = Orientation::load(in);
+  Frame frame = Frame::load(in);
   in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive;
   in >> weaponsStatus;
 
   return UnitStatus(
-      type, position, orientation, velocity,
+      type, frame, velocity,
       hitPoints, radarIsActive, sonarIsActive,
       weaponsStatus
     );

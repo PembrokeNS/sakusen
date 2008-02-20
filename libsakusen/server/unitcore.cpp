@@ -12,12 +12,11 @@ namespace server{
 UnitCore::UnitCore(
     LayeredUnit* o,
     const UnitTypeId& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity,
     const HitPoints startHP
   ) :
-  UnitStatus(startType, startPosition, startOrientation, startVelocity, startHP),
+  UnitStatus(startType, startFrame, startVelocity, startHP),
   outerUnit(o),
   owner()
 {
@@ -27,11 +26,10 @@ UnitCore::UnitCore(
 UnitCore::UnitCore(
     LayeredUnit* o,
     const UnitTypeId& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity
   ) :
-  UnitStatus(startType, startPosition, startOrientation, startVelocity),
+  UnitStatus(startType, startFrame, startVelocity),
   outerUnit(o),
   owner()
 {

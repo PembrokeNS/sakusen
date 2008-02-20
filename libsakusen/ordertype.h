@@ -18,14 +18,16 @@ enum OrderType {
   orderType_move,
   /** Target a weapon at a Position */
   orderType_targetPosition,
-  /** Target a weapon at a Position & Orientation (e.g. for creating a
-   * building with that Position and Orientation) */
-  orderType_targetPositionOrientation,
+  /** Target a weapon at a Frame (e.g. for creating a
+   * building with the Position and Orientation of the frame) */
+  orderType_targetFrame,
   /** Target a weapon at a unit.  Note that this will always be a friendly unit;
    * enemy units are always SensorReturns */
   orderType_targetUnit,
   /** Target a weapon at a SensorReturns */
-  orderType_targetSensorReturns
+  orderType_targetSensorReturns,
+  /** Must be the last value */
+  orderType_max
 };
 
 LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, OrderType);

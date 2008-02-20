@@ -23,8 +23,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     UnitCore(
         LayeredUnit* outerUnit,
         const UnitTypeId& startType,
-        const Point<sint32>& startPosition,
-        const Orientation& startOrientation,
+        const Frame& startFrame,
         const Point<sint16>& startVelocity,
         const HitPoints startHP
       );
@@ -33,8 +32,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     UnitCore(
         LayeredUnit* outerUnit,
         const UnitTypeId& startType,
-        const Point<sint32>& startPosition,
-        const Orientation& startOrientation,
+        const Frame& startFrame,
         const Point<sint16>& startVelocity
       );
 

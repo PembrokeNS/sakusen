@@ -7,6 +7,15 @@
 
 namespace sakusen {
 
+/** \brief Encapsulates orders for a particular weapon.
+ *
+ * Each weapon can be individually targeted in a handful of ways; this class
+ * keeps track of the way and the specific target data.  e.g., if it is
+ * targeted at a position, then the position is stored.
+ *
+ * \todo We could use a boost::variant to collapse the private members and save
+ * memory (possible because each member after targetType is valid only for a
+ * particular value of targetType). */
 class LIBSAKUSEN_API WeaponOrders {
   public:
     WeaponOrders();
@@ -14,14 +23,14 @@ class LIBSAKUSEN_API WeaponOrders {
     WeaponOrders(
         WeaponTargetType targetType,
         const Position& targetPoint,
-        const Orientation& targetOrientation,
+        const Frame& targetFrame,
         const Ref<ICompleteUnit>& targetUnit,
         const Ref<ISensorReturns>& targetSensorReturns
       );
     
     WeaponTargetType targetType;
     Position targetPosition;
-    Orientation targetOrientation;
+    Frame targetFrame;
     Ref<ICompleteUnit> targetUnit;
     Ref<ISensorReturns> targetSensorReturns;
   public:
@@ -30,7 +39,7 @@ class LIBSAKUSEN_API WeaponOrders {
     WeaponTargetType getTargetType() const { return targetType; }
     bool isTargetValid() const;
     Point<sint32> getTargetPosition() const;
-    Orientation getTargetOrientation() const { return targetOrientation; }
+    const Frame& getTargetFrame() const { return targetFrame; }
     Ref<ICompleteUnit> getTargetUnit() const { return targetUnit; }
     Point<sint16> getTargetVelocity() const;
     /*@}*/

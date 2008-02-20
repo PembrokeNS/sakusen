@@ -32,6 +32,10 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
   OrderType type;
   in.extractEnum(type);
   
+  /* To remind that update here is needed by causing a compile error when a
+   * new enum value is added. */
+  SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+
   switch (type) {
     case orderType_none:
       return Order();
@@ -41,8 +45,8 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
       return Order(new SetVelocityOrderData(in));
     case orderType_targetPosition:
       return Order(new TargetPositionOrderData(in));
-    case orderType_targetPositionOrientation:
-      return Order(new TargetPositionOrientationOrderData(in));
+    case orderType_targetFrame:
+      return Order(new TargetFrameOrderData(in));
     case orderType_targetUnit:
       return Order(new TargetUnitOrderData(in, context));
     case orderType_targetSensorReturns:

@@ -8,6 +8,7 @@ using namespace sakusen;
 WeaponStatus::WeaponStatus() :
   targetType(weaponTargetType_none),
   targetDirection(),
+  targetFrame(),
   energyCharge(0),
   metalCharge(0),
   active(false)
@@ -23,6 +24,7 @@ WeaponStatus::WeaponStatus(
   ) :
   targetType(tT),
   targetDirection(tD),
+  targetFrame(),
   energyCharge(eC),
   metalCharge(mC),
   active(a)
@@ -34,15 +36,15 @@ void WeaponStatus::setTargetDirection(const Point<sint32>& d)
   targetType = weaponTargetType_direction;
   targetDirection = d;
   targetPosition = Position();
-  targetOrientation = Orientation();
+  targetFrame = Frame();
 }
 
-void WeaponStatus::setTarget(const Position& p, const Orientation& o)
+void WeaponStatus::setTarget(const Frame& f)
 {
-  targetType = weaponTargetType_positionOrientation;
+  targetType = weaponTargetType_frame;
   targetDirection = Point<sint32>();
-  targetPosition = p;
-  targetOrientation = o;
+  targetPosition = Position();
+  targetFrame = f;
 }
 
 void WeaponStatus::setTarget(const Ref<ICompleteUnit>& u)
@@ -50,7 +52,7 @@ void WeaponStatus::setTarget(const Ref<ICompleteUnit>& u)
   targetType = weaponTargetType_unit;
   targetDirection = Point<sint32>();
   targetPosition = u->getIStatus().getPosition();
-  targetOrientation = Orientation();
+  targetFrame = Frame();
 }
 
 void WeaponStatus::activate(void) {active = true;}

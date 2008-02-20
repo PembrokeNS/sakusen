@@ -12,8 +12,9 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
 {
   double dExtents[2];
   uint32 iExtents[2];
-  const Point<sint32>& pos = getIStatus().getPosition();
-  const Orientation& orientation = getIStatus().getOrientation();
+  const Frame& frame = getIStatus().getFrame();
+  const Point<sint32>& pos = frame.getPosition();
+  const Orientation& orientation = frame.getOrientation();
   const Point<uint32>& size = getITypeData().getSize();
   
   for (int i=0; i<2; i++) {
@@ -33,8 +34,9 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
 {
   double dExtents[3];
   Point<sint32> pExtents;
-  const Point<sint32>& pos = getIStatus().getPosition();
-  const Orientation& orientation = getIStatus().getOrientation();
+  const Frame& frame = getIStatus().getFrame();
+  const Point<sint32>& pos = frame.getPosition();
+  const Orientation& orientation = frame.getOrientation();
   const Point<uint32>& size = getITypeData().getSize();
   
   for (int i=0; i<3; i++) {
@@ -50,13 +52,13 @@ Box<sint32> ICompleteUnit::getBoundingBox(void) const
 
 boost::tuple<double,double> ICompleteUnit::intersect(const Ray& r) const
 {
-  const IUnitStatus& status = getIStatus();
+  const Frame& frame = getIStatus().getFrame();
   const Point<sint32> size(getITypeData().getSize());
 
   /* We transform the ray into local coordinates */
   Ray localRay(
-      status.globalToLocal(r.origin),
-      status.globalToLocalRelative(r.d)
+      frame.globalToLocal(r.origin),
+      frame.globalToLocalRelative(r.d)
     );
   /* Now we can intersect this transformed ray with our box */
   return localRay.intersectBox(Box<sint32>(-size, size));
@@ -64,11 +66,11 @@ boost::tuple<double,double> ICompleteUnit::intersect(const Ray& r) const
 
 bool ICompleteUnit::contains(const Position& p) const
 {
-  const IUnitStatus& status = getIStatus();
+  const Frame& frame = getIStatus().getFrame();
   const Point<sint32> size(getITypeData().getSize());
 
   /* We transform the position into local coordinates */
-  Position localPos(status.globalToLocal(p));
+  Position localPos(frame.globalToLocal(p));
   /* Now we can check this transformed point against our box */
   return Box<sint32>(-size, size).contains(localPos);
 }

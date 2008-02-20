@@ -15,16 +15,15 @@ namespace server{
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerId owner,
     const UnitTypeId type,
-    const Point<sint32>& startNear,
-    const Orientation& startOrientation,
+    const Frame& startNear,
     const Point<sint16>& startVelocity,
     const HitPoints startHP
   )
 {
   assert(type);
-  Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
+  Frame startFrame = startNear; /** \bug Find empty spot to start */
   Ptr unit(new LayeredUnit(
-        type, startPosition, startOrientation, startVelocity, startHP
+        type, startFrame, startVelocity, startHP
       ));
   return world->addUnit(unit, owner);
 }
@@ -36,15 +35,14 @@ Ref<LayeredUnit> LayeredUnit::spawn(
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerId owner,
     const UnitTypeId type,
-    const Point<sint32>& startNear,
-    const Orientation& startOrientation,
+    const Frame& startNear,
     const Point<sint16>& startVelocity
   )
 {
   assert(type);
-  Point<sint32> startPosition = startNear; /** \bug Find empty spot to start */
+  Frame startFrame = startNear; /** \bug Find empty spot to start */
   Ptr unit(new LayeredUnit(
-        type, startPosition, startOrientation, startVelocity
+        type, startFrame, startVelocity
       ));
   return world->addUnit(unit, owner);
 }
@@ -77,14 +75,13 @@ LayeredUnit::LayeredUnit(
 
 LayeredUnit::LayeredUnit(
     const UnitTypeId& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity,
     HitPoints startHP
   ) :
   owner(),
   topLayer(new UnitCore(
-        this, startType, startPosition, startOrientation, startVelocity,
+        this, startType, startFrame, startVelocity,
         startHP
       )),
   status(topLayer->getCore()),
@@ -97,13 +94,12 @@ LayeredUnit::LayeredUnit(
 
 LayeredUnit::LayeredUnit(
     const UnitTypeId& startType,
-    const Point<sint32>& startPosition,
-    const Orientation& startOrientation,
+    const Frame& startFrame,
     const Point<sint16>& startVelocity
   ) :
   owner(),
   topLayer(new UnitCore(
-        this, startType, startPosition, startOrientation, startVelocity
+        this, startType, startFrame, startVelocity
       )),
   status(topLayer->getCore()),
   motion(UnitMotion::create(startType->getMotionType())),
@@ -186,54 +182,30 @@ Ref<const LayeredUnit> LayeredUnit::getRefToThis() const
 
 /** \brief Alters the unit's position, ensuring all appropriate action caused
  * by this change is taken. */
-void LayeredUnit::setPosition(const Point<sint32>& pos)
+void LayeredUnit::setPosition(const Point<sint32>& newPos)
 {
-  if (pos == status.position)
+  Position& position = status.getFrame().getPosition();
+  if (newPos == position)
     return;
   /* Whenever a unit position changes, we need to check
    * whether it has entered/exited the region of some effect */
-  world->applyEntryExitEffects(getRefToThis(), status.position, pos);
-  status.position = pos;
+  world->applyEntryExitEffects(getRefToThis(), position, newPos);
+  position = newPos;
 }
 
-/** \brief Allow simultaneous update of the unit's position, orientation and
- * velocity.
- *
- * \param newPosition           New position for the unit.
- * \param newOrientation        New orientation of the unit, or transformation
- *                              to be performed to the unit's orientation,
- *                              according to the value of
- *                              orientationIsRelative.
- * \param orientationIsRelative If true, the unit's orientation is
- *                              premultiplied by newOrientation.  If false, the
- *                              unit's orientation is set to newOrientation.
- * \param zeroVelocity          If true, the unit's velocity is set to zero.
- *                              If false, the unit's velocity is unchanged.
- *
- * The intended purpose of this function is to allow easy implementation of
- * things such as teleportation from module code.
- */
-void LayeredUnit::setPhysics(
-      const Point<sint32>& newPosition,
-      const Orientation& newOrientation,
-      bool orientationIsRelative,
-      bool zeroVelocity)
+/** \brief Alters the unit's position and orientation, ensuring all
+ * appropriate action caused by this change is taken. */
+void LayeredUnit::setFrame(const Frame& newFrame)
 {
-  setPosition(newPosition);
-  if (orientationIsRelative) {
-    status.orientation = newOrientation * status.orientation;
-    if (zeroVelocity) {
-      status.velocity.zero();
-    } else {
-      status.velocity = newOrientation * status.velocity;
-    }
-  } else {
-    status.orientation = newOrientation;
-    if (zeroVelocity) {
-      status.velocity.zero();
-    }
+  Frame& frame = status.getFrame();
+  if (frame.getPosition() != newFrame.getPosition()) {
+    /* Whenever a unit position changes, we need to check
+     * whether it has entered/exited the region of some effect */
+    world->applyEntryExitEffects(
+        getRefToThis(), frame.getPosition(), newFrame.getPosition()
+      );
   }
-  setDirty();
+  frame = newFrame;
 }
 
 /** \brief Update the unit's state for the new tick.

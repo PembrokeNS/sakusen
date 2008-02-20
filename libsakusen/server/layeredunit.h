@@ -43,8 +43,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     static Ref<LayeredUnit> spawn(
       const PlayerId owner,
       const UnitTypeId type,
-      const Point<sint32>& startNear,
-      const Orientation& startOrientation,
+      const Frame& startNear,
       const Point<sint16>& startVelocity,
       const HitPoints startHP = HitPoints(-1)
     );
@@ -52,8 +51,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     static Ref<LayeredUnit> spawn(
       const PlayerId owner,
       const UnitTypeId type,
-      const Point<sint32>& startNear,
-      const Orientation& startOrientation,
+      const Frame& startNear,
       const Point<sint16>& startVelocity
     );
     static Ref<LayeredUnit> spawn(const PlayerId owner, const UnitTemplate& t);
@@ -67,16 +65,15 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * be set until *after* the Unit has been added to the World. */
     LayeredUnit(
       const UnitTypeId& startType,
-      const Point<sint32>& startPosition,
-      const Orientation& startOrientation,
+      const Frame& startFrame,
       const Point<sint16>& startVelocity,
       const HitPoints startHP
     );
-    /** Another version of the same constructor for the other LayeredUnit::spawn. */
+    /** Another version of the constructor for the other
+     * LayeredUnit::spawn. */
     LayeredUnit(
       const UnitTypeId& startType,
-      const Point<sint32>& startPosition,
-      const Orientation& startOrientation,
+      const Frame& startFrame,
       const Point<sint16>& startVelocity
     );
   public:
@@ -129,17 +126,11 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     Ref<LayeredUnit> getRefToThis();
     Ref<const LayeredUnit> getRefToThis() const;
     
-    void setPosition(const Point<sint32>& pos);
+    void setPosition(const Position&);
+    void setFrame(const Frame&);
     bool setRadar(bool active);
     bool setSonar(bool active);
-    
-    /* game mechanics methods */
-    void setPhysics(
-        const Point<sint32>& newPosition,
-        const Orientation& newOrientation,
-        bool orientationIsRelative,
-        bool zeroVelocity
-      );
+
     void incrementState(const Time& timeNow);
 
     /** Accept a new order from the queue */
@@ -206,6 +197,10 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
      * entirely removed frm the game (rather than simply killed). */
     inline void onRemoval() { topLayer->onRemoval(); }
 };
+
+inline bool operator==(const LayeredUnit& left, const LayeredUnit& right) {
+  return &left == &right;
+}
 
 }}
 

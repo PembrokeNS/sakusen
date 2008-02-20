@@ -381,6 +381,14 @@ namespace sakusen {
 %{
 #include "playerid.h"
 %}
+%include "orientation.h"
+%{
+#include "orientation.h"
+%}
+%include "frame.h"
+%{
+#include "frame.h"
+%}
 %include "mathsutils.h"
 %{
 #include "mathsutils.h"
@@ -436,10 +444,6 @@ namespace sakusen{
 %template(UniversePtr) ::boost::shared_ptr<Universe>;
 /*}*/
 }
-%include "orientation.h"
-%{
-#include "orientation.h"
-%}
 %include "weapontargettype.h"
 %{
 #include "weapontargettype.h"

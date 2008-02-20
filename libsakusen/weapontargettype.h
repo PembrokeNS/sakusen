@@ -10,9 +10,10 @@ enum WeaponTargetType {
   weaponTargetType_none,
   weaponTargetType_direction,
   weaponTargetType_position,
-  weaponTargetType_positionOrientation,
+  weaponTargetType_frame,
   weaponTargetType_unit,
-  weaponTargetType_sensorReturns
+  weaponTargetType_sensorReturns,
+  weaponTargetType_max /* Must be last */
 };
 
 }

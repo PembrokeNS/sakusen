@@ -35,7 +35,7 @@ bool Creater::aim(
   Position displacement =
     orders.getTargetPosition() - source->getStatus().getPosition();
   if (displacement.squareLength() <= squareRange()) {
-    status.setTarget(orders.getTargetPosition(), orders.getTargetOrientation());
+    status.setTarget(orders.getTargetFrame());
     return true;
   }
   return false;
@@ -49,13 +49,12 @@ void Creater::onFire(
   )
 {
   switch (status.getTargetType()) {
-    case weaponTargetType_positionOrientation:
+    case weaponTargetType_frame:
       {
         Ref<LayeredUnit> newUnit = LayeredUnit::spawn(
             firer->getOwner(),
             getTypeCreated(),
-            status.getTargetPosition(),
-            status.getTargetOrientation(),
+            status.getTargetFrame(),
             Velocity(),
             HitPoints(1)
           );

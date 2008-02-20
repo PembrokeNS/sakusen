@@ -72,7 +72,7 @@ class Action : boost::noncopyable {
       return internalGetStringSet();
     }
     sakusen::Point<uint32> getSize() const {
-      if (nextParameterType != actionParameterType_positionOrientation) {
+      if (nextParameterType != actionParameterType_frame) {
         Fatal("invalid call");
       }
       return internalGetSize();

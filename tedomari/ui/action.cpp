@@ -116,7 +116,8 @@ class CreateAction : public Action {
   public:
     CreateAction(const set<UnitId>& selection) :
       Action(actionParameterType_stringFromSet),
-      creaters(selection)
+      creaters(selection),
+      target()
     {
       /* Extract the set of all unit types represented in the selection */
       set<UnitTypeId> unitTypes;
@@ -147,7 +148,7 @@ class CreateAction : public Action {
     set<UnitId> creaters;
     set<String> possibleCreations;
     String creation;
-    pair<Position,Orientation> target;
+    Frame target;
 
     void internalSupplyArgument(const ActionArgument& arg) {
       switch (nextParameterType) {
@@ -161,13 +162,13 @@ class CreateAction : public Action {
                 );
             } else {
               creation = c;
-              nextParameterType = actionParameterType_positionOrientation;
+              nextParameterType = actionParameterType_frame;
             }
           }
           break;
-        case actionParameterType_positionOrientation:
+        case actionParameterType_frame:
           {
-            target = boost::get<pair<Position, Orientation> >(arg);
+            target = boost::get<Frame>(arg);
             nextParameterType = actionParameterType_none;
           }
           break;
@@ -204,7 +205,7 @@ void CreateAction::internalExecute(UI* ui) {
       const WeaponType* weaponType =
         client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
       if (weaponType->getClientHint() == "c:"+creation) {
-        Order order(new TargetPositionOrientationOrderData(
+        Order order(new TargetFrameOrderData(
               weaponTypeId-weapons.begin(), target
             ));
         ui->getGame()->order(OrderMessage(*createrId, order));

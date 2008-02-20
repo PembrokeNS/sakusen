@@ -40,6 +40,10 @@ UnitOrders::UnitOrders(uint16 numWeapons) :
  */
 void UnitOrders::acceptOrder(const Order& order)
 {
+  /* To remind that update here is needed by causing a compile error when a
+   * new enum value is added. */
+  SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+
   /* Alter the Unit's state appropriately for the order */
   switch (order.getType()) {
     case orderType_setVelocity:
@@ -51,7 +55,7 @@ void UnitOrders::acceptOrder(const Order& order)
       targetPosition = order.getMoveData().getTarget();
       break;
     case orderType_targetPosition:
-    case orderType_targetPositionOrientation:
+    case orderType_targetFrame:
     case orderType_targetUnit:
     case orderType_targetSensorReturns:
       {

@@ -1,5 +1,10 @@
 #include "mathsutils.h"
 
+#include "box.h"
+#include "unitcorneriterator.h"
+
+#include <boost/algorithm/minmax.hpp>
+
 namespace sakusen {
 
 /** \brief Solves a quadratic and returns all available roots
@@ -49,6 +54,43 @@ boost::tuple<double,double> LIBSAKUSEN_API mathsUtils_solveQuadratic(
 
   /* The roots are q/a and c/q. */
   return boost::minmax(c/q, q/a);
+}
+
+/** \brief Return true iff the given boxes intersect.
+ *
+ * Each box is defined by a frame of reference and a size; it is centred on the
+ * origin and axis aligned in the frame of reference and the distance from the
+ * origin along each axis is given by the size.
+ *
+ * To 'intersect' here means that one box contains either a corner or the
+ * centre of the other, so there is plenty of space for false negatives.
+ */
+bool LIBSAKUSEN_API mathsUtils_boxesIntersect(
+    const Frame& frame1, const Point<uint32>& size1,
+    const Frame& frame2, const Point<uint32>& size2
+  )
+{
+  const Box<sint32> box1(-Point<sint32>(size1), Point<sint32>(size1));
+  const Box<sint32> box2(-Point<sint32>(size2), Point<sint32>(size2));
+
+  if (box1.contains(frame1.globalToLocal(frame2.getPosition()))) {
+    return true;
+  }
+  if (box2.contains(frame2.globalToLocal(frame1.getPosition()))) {
+    return true;
+  }
+
+  for (UnitCornerIterator corner(frame2, size2), end; corner != end; ++corner) {
+    if (box1.contains(frame1.globalToLocal(*corner))) {
+      return true;
+    }
+  }
+  for (UnitCornerIterator corner(frame1, size1), end; corner != end; ++corner) {
+    if (box2.contains(frame2.globalToLocal(*corner))) {
+      return true;
+    }
+  }
+  return false;
 }
 
 }

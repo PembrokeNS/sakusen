@@ -37,7 +37,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
   modes["unit"] =   Mode::getUnit(this);
   modes["target"] = Mode::getTarget(this);
   modes["string"] = Mode::getDefault("string", this);
-  modes["targetpo"] = Mode::getDefault("targetpo", this);
+  modes["targetframe"] = Mode::getDefault("targetframe", this);
   modes["targetunit"] = Mode::getDefault("targetunit", this);
   mode = &modes["normal"];
 
@@ -217,8 +217,8 @@ void UI::setModeFor(ActionParameterType type)
     case actionParameterType_stringFromSet:
       setMode(&modes["string"]);
       break;
-    case actionParameterType_positionOrientation:
-      setMode(&modes["targetpo"]);
+    case actionParameterType_frame:
+      setMode(&modes["targetframe"]);
       break;
     case actionParameterType_unit:
     case actionParameterType_unitSet:
@@ -531,11 +531,12 @@ void UI::supplyActionArg(const String& actionArg)
       case actionParameterType_target:
         supplyActionArg(activeMapDisplay->getMousePosAtGround());
         break;
-      case actionParameterType_positionOrientation:
+      case actionParameterType_frame:
         {
           Position pos = activeMapDisplay->getMousePosAtGround();
           pos.z += pendingAction->getSize().z;
-          supplyActionArg(make_pair(pos, Orientation()));
+          /** \todo Support other orientations */
+          supplyActionArg(Frame(pos, Orientation()));
         }
         break;
       case actionParameterType_unit:

@@ -19,7 +19,7 @@ typedef boost::variant<
     boost::blank,
     ActionTarget,
     String,
-    std::pair<sakusen::Position, sakusen::Orientation>,
+    sakusen::Frame,
     sakusen::Ref<sakusen::client::UpdatedUnit>,
     std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> >
   > ActionArgument;
@@ -28,7 +28,7 @@ enum ActionParameterType {
   actionParameterType_none,
   actionParameterType_target,
   actionParameterType_stringFromSet,
-  actionParameterType_positionOrientation,
+  actionParameterType_frame,
   actionParameterType_unit,
   actionParameterType_unitSet
 };

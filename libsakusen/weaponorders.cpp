@@ -7,6 +7,7 @@ using namespace sakusen;
 WeaponOrders::WeaponOrders() :
   targetType(weaponTargetType_none),
   targetPosition(),
+  targetFrame(Position(), Orientation()),
   targetSensorReturns()
 {
 }
@@ -14,13 +15,13 @@ WeaponOrders::WeaponOrders() :
 WeaponOrders::WeaponOrders(
     WeaponTargetType tT,
     const Point<sint32>& tP,
-    const Orientation& tO,
+    const Frame& tF,
     const Ref<ICompleteUnit>& tU,
     const Ref<ISensorReturns>& tSR
   ) :
   targetType(tT),
   targetPosition(tP),
-  targetOrientation(tO),
+  targetFrame(tF),
   targetUnit(tU),
   targetSensorReturns(tSR)
 {
@@ -28,11 +29,16 @@ WeaponOrders::WeaponOrders(
 
 bool WeaponOrders::isTargetValid() const
 {
+  /* To cause a compile error when a new enum value is added.  If you get this,
+   * update all of the (several) switch statements in this file and then
+   * adjust the value appropriately. */
+  SAKUSEN_STATIC_ASSERT(weaponTargetType_max == 6);
+
   switch (targetType) {
     case weaponTargetType_none:
       return false;
     case weaponTargetType_position:
-    case weaponTargetType_positionOrientation:
+    case weaponTargetType_frame:
       return true;
     case weaponTargetType_unit:
       return targetUnit.isValid();
@@ -55,8 +61,9 @@ Point<sint32> WeaponOrders::getTargetPosition() const
     case weaponTargetType_none:
       Fatal("no target to get position of");
     case weaponTargetType_position:
-    case weaponTargetType_positionOrientation:
       return targetPosition;
+    case weaponTargetType_frame:
+      return targetFrame.getPosition();
     case weaponTargetType_unit:
       return targetUnit->getIStatus().getPosition();
     case weaponTargetType_sensorReturns:
@@ -82,7 +89,7 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
     case weaponTargetType_none:
       Fatal("no target to get velocity of");
     case weaponTargetType_position:
-    case weaponTargetType_positionOrientation:
+    case weaponTargetType_frame:
       return Point<sint16>();
     case weaponTargetType_unit:
       return targetUnit->getIStatus().getVelocity();
@@ -108,6 +115,10 @@ void WeaponOrders::clear()
 
 void WeaponOrders::update(const Order& order)
 {
+  /* To remind that update here is needed by causing a compile error when a
+   * new enum value is added. */
+  SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+
   switch (order.getType()) {
     case orderType_move:
     case orderType_setVelocity:
@@ -116,10 +127,9 @@ void WeaponOrders::update(const Order& order)
       targetType = weaponTargetType_position;
       targetPosition = order.getTargetPositionData().getTarget();
       break;
-    case orderType_targetPositionOrientation:
-      targetType = weaponTargetType_positionOrientation;
-      boost::tie(targetPosition, targetOrientation) =
-        order.getTargetPositionOrientationData().getTarget();
+    case orderType_targetFrame:
+      targetType = weaponTargetType_frame;
+      targetFrame = order.getTargetFrameData().getTarget();
       break;
     case orderType_targetUnit:
       targetType = weaponTargetType_unit;
@@ -137,7 +147,7 @@ void WeaponOrders::update(const Order& order)
 void WeaponOrders::store(OArchive& archive) const
 {
   archive.insertEnum(targetType) << targetPosition;
-  targetOrientation.store(archive);
+  targetFrame.store(archive);
   targetUnit.store(archive);
   targetSensorReturns.store(archive);
 }
@@ -149,17 +159,16 @@ WeaponOrders WeaponOrders::load(
 {
   WeaponTargetType targetType;
   Point<sint32> targetPosition;
-  Orientation targetOrientation;
   Ref<ICompleteUnit> targetUnit;
   Ref<ISensorReturns> targetSensorReturns;
 
   archive.extractEnum(targetType) >> targetPosition;
-  targetOrientation = Orientation::load(archive);
+  Frame targetFrame = Frame::load(archive);
   targetUnit = Ref<ICompleteUnit>::load(archive, context);
   targetSensorReturns = Ref<ISensorReturns>::load(archive, context);
   
   return WeaponOrders(
-      targetType, targetPosition, targetOrientation, targetUnit,
+      targetType, targetPosition, targetFrame, targetUnit,
       targetSensorReturns
     );
 }

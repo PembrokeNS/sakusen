@@ -3,6 +3,9 @@
 #include "unitstatus-methods.h"
 #include "unitcorneriterator.h"
 #include "completeworld.h"
+#include "mathsutils.h"
+
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -15,6 +18,9 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   const UnitOrders& orders = unit.getOrders();
   const IUnitTypeData& typeData = unit.getITypeData();
   const IHeightfield& hf = world->getMap()->getHeightfield();
+  ISpatial::ConstPtr spatialIndex = world->getSpatialIndex();
+
+  /** \todo Everything to do with rotation */
 
   Point<sint16> expectedVelocity(status.velocity);
   
@@ -37,7 +43,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       {
         Point<sint32> desiredDirection =
           world->getMap()->getShortestDifference(
-              orders.getTargetPosition(), status.position
+              orders.getTargetPosition(), status.getFrame().getPosition()
             );
         Point<sint16> desiredVelocity(
             typeData.getPossibleVelocities()->truncateToFit(desiredDirection)
@@ -92,23 +98,59 @@ void GroundMotion::incrementState(LayeredUnit& unit)
         ", expectedVelocity=" << expectedVelocity);
   }*/
 
+  /* Next we need to detect potential collisions with other units */
+  /** \bug At the moment if we forsee a collision we stop the unit dead;
+   * obviously we would rather do some physics.
+   * \bug We move each unit in order, so it is possible to determine which was
+   * built first from the physics, which leaks information. */
+  Box<sint32> newBounds = unit.getBoundingBox() + expectedVelocity;
+  ISpatial::Result potentialCollisions =
+    spatialIndex->findIntersecting(newBounds, gameObject_unit);
+
+  bool collision = false;
+  BOOST_FOREACH (const Ref<Bounded>& boundedCollision, potentialCollisions) {
+    Ref<LayeredUnit> otherUnit = boundedCollision.dynamicCast<LayeredUnit>();
+    /* Skip it if it's me */
+    if (*otherUnit == unit) {
+      continue;
+    }
+    /** \todo Skip if there is a subunit relationship */
+    
+    const UnitStatus& otherStatus = otherUnit->getStatus();
+    const Point<uint32> otherSize = otherUnit->getITypeData().getSize();
+
+    if (mathsUtils_boxesIntersect(
+          otherStatus.getFrame(), otherSize,
+          status.getFrame()+expectedVelocity, typeData.getSize()
+      )) {
+      /* We've found a non-trivial intersection, but we don't care about it if
+       * there was already an intersection before the move happened (otherwise
+       * it would be impossible to prise apart units that have become entagled)
+       * */
+      if (mathsUtils_boxesIntersect(
+            otherStatus.getFrame(), otherSize,
+            status.getFrame(), typeData.getSize()
+        )) {
+        continue;
+      }
+      collision = true;
+      break;
+    }
+  }
+
+  if (collision) {
+    expectedVelocity.zero();
+  }
+  
   /* Now set the velocity to this newly computed value */
   if (expectedVelocity != status.velocity) {
     status.velocity = expectedVelocity;
     unit.setDirty();
   }
   
-  /** \todo Do collision detection. */
-  Orientation mapOrientationChange;
-  unit.setPosition(world->getMap()->addToPosition(
-        status.position, status.velocity, &mapOrientationChange
+  unit.setFrame(world->getMap()->translateFrame(
+        status.frame, status.velocity, status.velocity
       ));
-  /* If the movement caused us to rotate/reflect (due to moving over a map
-   * edge) then update orientation and velocity appropriately */
-  if (mapOrientationChange != Orientation()) {
-    status.velocity = mapOrientationChange * status.velocity;
-    status.orientation = mapOrientationChange * status.orientation;
-  }
 }
 
 }}

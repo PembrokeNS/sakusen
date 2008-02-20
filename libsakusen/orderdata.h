@@ -90,31 +90,34 @@ class LIBSAKUSEN_API TargetPositionOrderData : public TargetWeaponOrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API TargetPositionOrientationOrderData :
+class LIBSAKUSEN_API TargetFrameOrderData :
   public TargetWeaponOrderData {
   private:
-    TargetPositionOrientationOrderData();
+    TargetFrameOrderData();
   public:
-    TargetPositionOrientationOrderData(
+    TargetFrameOrderData(
         uint16 wI,
-        const std::pair<Position, Orientation>& t
+        const Frame& t
       ) :
       TargetWeaponOrderData(),
-      weaponIndex(wI),
-      target(t)
+      target(t),
+      weaponIndex(wI)
     {}
-    TargetPositionOrientationOrderData(IArchive& in) : TargetWeaponOrderData() {
-      in >> weaponIndex >> target;
+    TargetFrameOrderData(IArchive& in) :
+      TargetWeaponOrderData(),
+      target(Frame::load(in))
+    {
+      in >> weaponIndex;
     }
-    ~TargetPositionOrientationOrderData() {};
+    ~TargetFrameOrderData() {};
   private:
+    Frame target;
     uint16 weaponIndex;
-    std::pair<Position, Orientation> target;
   public:
     uint16 getWeaponIndex(void) const { return weaponIndex; }
-    const std::pair<Position, Orientation>& getTarget() const { return target; }
+    const Frame& getTarget() const { return target; }
     OrderType getType(void) const {
-      return orderType_targetPositionOrientation;
+      return orderType_targetFrame;
     }
     void store(OArchive&) const;
 };

@@ -6,7 +6,7 @@
 #include "weapontype.h"
 #include "weapontargettype.h"
 #include "ref.h"
-#include "orientation.h"
+#include "frame.h"
 #include "serializationhandler.h"
 
 namespace sakusen {
@@ -38,7 +38,7 @@ class LIBSAKUSEN_API WeaponStatus {
     WeaponTargetType targetType;
     Point<sint32> targetDirection;
     Position targetPosition;
-    Orientation targetOrientation;
+    Frame targetFrame;
     /* There was a targetUnit here for a while, which would have been nice,
      * but it can't be, because this object has to be serialised as part of a
      * SensorReturns which is in turn sent to a player other than the owner,
@@ -55,9 +55,9 @@ class LIBSAKUSEN_API WeaponStatus {
     WeaponTargetType getTargetType() const { return targetType; }
     const Point<sint32>& getTargetDirection() const { return targetDirection; }
     const Position& getTargetPosition() const { return targetPosition; }
-    const Orientation& getTargetOrientation() const {return targetOrientation; }
+    const Frame& getTargetFrame() const {return targetFrame; }
     void setTargetDirection(const Point<sint32>& d);
-    void setTarget(const Position&, const Orientation&);
+    void setTarget(const Frame&);
     void setTarget(const Ref<ICompleteUnit>&);
     uint16 getEnergy(void) const {return energyCharge;}
     uint16 getMetal(void) const {return metalCharge;}

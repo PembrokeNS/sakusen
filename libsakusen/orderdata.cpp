@@ -27,9 +27,10 @@ void TargetPositionOrderData::store(OArchive& out) const
   out << weaponIndex << target;
 }
 
-void TargetPositionOrientationOrderData::store(OArchive& out) const
+void TargetFrameOrderData::store(OArchive& out) const
 {
-  out << weaponIndex << target;
+  target.store(out);
+  out << weaponIndex;
 }
 
 void TargetUnitOrderData::store(OArchive& out) const
