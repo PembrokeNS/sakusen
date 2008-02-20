@@ -12,18 +12,14 @@ SHORT_NAMES := comms resources client
 SOURCES := $(foreach name,$(SHORT_NAMES),sakusen$(name).cpp)
 OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen$(name).o)
 LIBRARIES := $(foreach name,$(SHORT_NAMES),_sakusen$(name).la)
+PY_FILES := $(foreach name,$(SHORT_NAMES),sakusen$(name).py)
 
 all-nonrecursive: _sakusen.la $(LIBRARIES)
 
 install-nonrecursive: _sakusen.la $(LIBRARIES)
-	install sakusen.py $(PYLIBDIR)
-	libtool --mode=install --tag=CXX install _sakusen.so $(PYLIBDIR)
-	install sakusencomms.py $(PYLIBDIR)
-	libtool --mode=install --tag=CXX install _sakusencomms.so $(PYLIBDIR)
-	install sakusenresources.py $(PYLIBDIR)
-	libtool --mode=install --tag=CXX install _sakusenresources.so $(PYLIBDIR)
-	install sakusenclient.py $(PYLIBDIR)
-	libtool --mode=install --tag=CXX install _sakusenclient.so $(PYLIBDIR)
+	install -d $(DESTDIR)$(PYLIBDIR)
+	install sakusen.py $(PY_FILES) $(DESTDIR)$(PYLIBDIR)
+	libtool --mode=install install -m644 _sakusen.la $(LIBRARIES) $(DESTDIR)$(PYLIBDIR)
 
 clean:
 	-rm -rf *.o *.so *.py *.cpp *.lo *.loT *.la .libs *.pyc *.h
@@ -32,11 +28,11 @@ clean:
 	cp .libs/$@ $@
 
 _sakusen.la: sakusen.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
 $(LIBRARIES): _sakusen%.la: sakusen%.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
+	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
                 sakusen$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have
