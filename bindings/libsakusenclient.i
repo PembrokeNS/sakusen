@@ -40,9 +40,17 @@ static boost::shared_ptr<sakusen::client::UpdatedUnit> CreateUpdatedUnitPtr(saku
 }
 }
 }
+%include "updatedsensorreturns.h"
+%{
+#include "updatedsensorreturns.h"
+%}
 %include "unitfactory.h"
 %{
 #include "unitfactory.h"
+%}
+%include "sensorreturnsfactory.h"
+%{
+#include "sensorreturnsfactory.h"
 %}
 %include "partialworld.h"
 %{
