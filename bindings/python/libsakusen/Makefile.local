@@ -8,9 +8,14 @@ endef
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
 
-all-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la _sakusenclient.la
+SHORT_NAMES := comms resources client
+SOURCES := $(foreach name,$(SHORT_NAMES),sakusen$(name).cpp)
+OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen$(name).o)
+LIBRARIES := $(foreach name,$(SHORT_NAMES),_sakusen$(name).la)
 
-install-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la _sakusenclient.la
+all-nonrecursive: _sakusen.la $(LIBRARIES)
+
+install-nonrecursive: _sakusen.la $(LIBRARIES)
 	install sakusen.py $(PYLIBDIR)
 	libtool --mode=install --tag=CXX install _sakusen.so $(PYLIBDIR)
 	install sakusencomms.py $(PYLIBDIR)
@@ -21,7 +26,7 @@ install-nonrecursive: _sakusen.la _sakusencomms.la _sakusenresources.la _sakusen
 	libtool --mode=install --tag=CXX install _sakusenclient.so $(PYLIBDIR)
 
 clean:
-	-rm -rf *.o *.so *.py *.cpp *.lo *.la .libs *.pyc
+	-rm -rf *.o *.so *.py *.cpp *.lo *.loT *.la .libs *.pyc *.h
 
 %.so: %.la
 	cp .libs/$@ $@
@@ -30,14 +35,14 @@ _sakusen.la: sakusen.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
-_sakusen%.la: sakusen%.o
+$(LIBRARIES): _sakusen%.la: sakusen%.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PREFIX)/lib \
                 sakusen$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have
 # access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
 # etc.)
-%.o: %.cpp
+$(OBJECTS) sakusen.o: %.o: %.cpp
 	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ \
 		-Wall $<
 
@@ -47,10 +52,15 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusen%.cpp: $(top_srcdir)bindings/libsakusen%.i $(top_srcdir)bindings/libsakusen.i \
-		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/%/*.h))
+$(SOURCES): sakusen%.cpp: $(top_srcdir)bindings/libsakusen%.i \
+		$(top_srcdir)bindings/libsakusen.i
 	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
 
+define source_dependencies
+sakusen$(1).cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/$(1)/*.h))
+endef
+
+$(foreach name,$(SHORT_NAMES),$(eval $(call source_dependencies,$(name))))
 
 .PHONY: all test clean
 
