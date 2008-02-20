@@ -38,7 +38,7 @@
 #   to put the compiled binary.  e.g. if PREFIX=/usr/local and
 #   DESTDIR=debian/build and INSTALL_SUBDIR=foo then libraries will be linked
 #   as if to be installed into /usr/local/lib/foo/ and 'make install' will put
-#   them libraries in debian/build/usr/local/lib/foo.
+#   the libraries in debian/build/usr/local/lib/foo.
 # NO_AUTO_COMPILING - if set to yes, will entirely disable all the cleverness
 #   in this file to do with C and C++, but does not affect the support for more
 #   general targets like all, clean, etc.
@@ -118,7 +118,7 @@ GLOBAL_CFLAGS := -Werror -O0 -g3
 LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
 		$(top_builddir)$(subst -,/,$(lib))/$(lib).la \
 	)
-INCLUDE := -I$(this_srcdir) $(foreach lib,\
+INCLUDE := -I$(this_srcdir) -I. $(foreach lib,\
 		$(patsubst $(top_builddir)%,$(top_srcdir)%,$(LIB_DEP)),\
 		-I$(dir $(lib))\
 	) $(INCLUDE)
@@ -162,7 +162,11 @@ $(SUBDIR_MAKEFILES): %/Makefile: $(top_srcdir)makefiles/Makefile.common
 	@echo 'all:' >> $@
 	@echo >> $@
 	@echo 'include $$(top_builddir)config.mk' >> $@
-	@echo 'include $$(this_srcdir)Makefile.local' >> $@
+	@echo 'ifneq (,$$(wildcard Makefile.local))' >> $@
+	@echo '  include Makefile.local' >> $@
+	@echo 'else' >> $@
+	@echo '  include $$(this_srcdir)Makefile.local' >> $@
+	@echo 'endif' >> $@
 	@echo 'include $$(top_srcdir)makefiles/Makefile.common' >> $@
 
 remove-empty-subdirs:
@@ -381,7 +385,7 @@ revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/i
 	then \
 		echo "#define REVISION \"$$REVISION\"" > $@; \
 	else \
-	echo '' > $@; \
+		echo '' > $@; \
 	fi;
 
 .PHONY: \
