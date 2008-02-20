@@ -3,7 +3,8 @@
 #include "resourceinterface-methods.h"
 #include "messagedata.h"
 #include "serverinterface.h"
-#include "smartunitfactory.h"
+#include "game/smartunitfactory.h"
+#include "game/smartsensorreturnsfactory.h"
 #include "heightfield-methods.h"
 
 using namespace std;
@@ -65,6 +66,7 @@ void Game::start(
   new PartialWorld(
       universe,
       new SmartUnitFactory(),
+      new SmartSensorReturnsFactory(),
       data.getPlayerId(),
       data.getTopology(),
       data.getTopRight(),

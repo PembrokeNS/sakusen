@@ -1,6 +1,6 @@
 #include "game/smartunitfactory.h"
 
-#include "smartunit.h"
+#include "game/smartunit.h"
 
 using namespace sakusen;
 using namespace sakusen::client;

@@ -1,5 +1,5 @@
-#ifndef TEDOMARI_GAME__SMARTUNIT_H
-#define TEDOMARI_GAME__SMARTUNIT_H
+#ifndef TEDOMARI__GAME__SMARTUNIT_H
+#define TEDOMARI__GAME__SMARTUNIT_H
 
 namespace tedomari {
 namespace game {
@@ -13,5 +13,5 @@ class SmartUnit : public sakusen::client::UpdatedUnit {
 
 }}
 
-#endif // TEDOMARI_GAME__SMARTUNIT_H
+#endif // TEDOMARI__GAME__SMARTUNIT_H
 

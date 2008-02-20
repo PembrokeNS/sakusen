@@ -13,6 +13,7 @@ using namespace sakusen::client;
 PartialWorld::PartialWorld(
     const Universe::ConstPtr& universe,
     const UnitFactory* uF,
+    const SensorReturnsFactory* sRF,
     PlayerId pI,
     Topology topology,
     const Point<sint32>& topRight,
@@ -22,6 +23,7 @@ PartialWorld::PartialWorld(
   ) :
   World(universe),
   unitFactory(uF),
+  sensorReturnsFactory(sRF),
   playerId(pI),
   map(Map::newMap<PartialMap>(
         topology, topRight, bottomLeft, gravity, hf
@@ -112,7 +114,7 @@ void PartialWorld::applyUpdate(const Update& update)
           sensorReturns.erase(sensorReturnsIt);
         }
         sensorReturns.push_back(
-            new UpdatedSensorReturns(data.getSensorReturns())
+            sensorReturnsFactory->create(data.getSensorReturns())
           );
       }
       break;

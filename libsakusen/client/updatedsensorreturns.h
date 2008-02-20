@@ -3,6 +3,8 @@
 
 #include "libsakusen-client-global.h"
 
+#include "sensorreturns.h"
+
 namespace sakusen {
 namespace client {
 
@@ -14,6 +16,9 @@ namespace client {
  * information is received from the server.
  */
 class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
+  public:
+    typedef boost::shared_ptr<UpdatedSensorReturns> Ptr;
+    typedef boost::shared_ptr<const UpdatedSensorReturns> ConstPtr;
   private:
     UpdatedSensorReturns();
   public:

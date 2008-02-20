@@ -10,6 +10,7 @@
 #include "partialmap.h"
 #include "updatedunit.h"
 #include "unitfactory.h"
+#include "sensorreturnsfactory.h"
 #include "updatedsensorreturns.h"
 #include "updatedballistic.h"
 #include "update.h"
@@ -33,6 +34,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     PartialWorld(
         const Universe::ConstPtr& universe,
         const UnitFactory*,
+        const SensorReturnsFactory*,
         PlayerId playerId,
         Topology topology,
         const Point<sint32>& topRight,
@@ -50,6 +52,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       BallisticIdIndex;
   private:
     boost::scoped_ptr<const UnitFactory> unitFactory;
+    boost::scoped_ptr<const SensorReturnsFactory> sensorReturnsFactory;
     PlayerId playerId;
     PartialMap* map;
     hash_list<UpdatedUnit, Bounded, UpdatedUnit> units;
@@ -84,7 +87,9 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     inline SensorReturnsIdIndex::ConstPtr getSensorReturnsById() const {
       return sensorReturnsById;
     }
-    inline sakusen::ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
+    inline sakusen::ISpatial::ConstPtr getSpatialIndex() const {
+      return spatialIndex;
+    }
     //@}
 
     void applyUpdate(const Update&);
