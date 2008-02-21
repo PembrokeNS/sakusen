@@ -1,9 +1,10 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
 INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags` $(SWIGWORDSIZE)
-define PYLIBDIR
-`echo -e "import distutils.sysconfig\nprint distutils.sysconfig.get_python_lib(plat_specific=1)"|python`
+define PYTHON_VERSION
+`printf "import distutils.sysconfig\nprint distutils.sysconfig.get_python_version()\n"|python`
 endef
+PYLIBDIR := $(PREFIX)/lib/python$(PYTHON_VERSION)/site-packages
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
