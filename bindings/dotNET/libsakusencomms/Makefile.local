@@ -8,7 +8,7 @@ NO_AUTO_COMPILING := yes
 all-nonrecursive: sakusencomms.la sakusencomms.dll
 
 clean:
-	-rm -rf *.o *.so *.cs *.cpp *.lo *.la .libs *.dll
+	-rm -rf *.o *.so *.cs *.cpp *.h *.lo *.la .libs *.dll *.mdb
 
 sakusencomms.la: sakusencomms.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
