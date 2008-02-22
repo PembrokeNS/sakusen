@@ -37,17 +37,6 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
     }
 };
 
-} /* back into namespace sakusen */
-
-namespace client {
-
-/** \brief Function object to extract the id from an UpdatedSensorReturns */ 
-struct UpdatedSensorReturnsIder {
-  SensorReturnsId operator()(const Ref<UpdatedSensorReturns>& s) const {
-    return s->getId();
-  }
-};
-
 }}
 
 #endif // UPDATEDSENSORRETURNS_H

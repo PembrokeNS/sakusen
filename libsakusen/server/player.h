@@ -9,9 +9,10 @@
 #include "updatetype.h"
 #include "changeownerreason.h"
 #include "playertemplate.h"
+#include "maskedptr.h"
+#include "idindex.h"
 #include "dynamicsensorreturns.h"
 #include "ballistic.h"
-#include "maskedptr.h"
 
 namespace sakusen {
 namespace server {
@@ -26,6 +27,10 @@ class LIBSAKUSEN_SERVER_API Player {
     Player(const Player& copy);
     Player& operator=(const Player&);
     ~Player();
+
+    typedef IdIndex<
+        SensorReturnsId, DynamicSensorReturns, DynamicSensorReturnsIder
+      > SensorReturnsIdIndex;
   private:
     bool noClients;
     bool raceFixed;
@@ -39,10 +44,9 @@ class LIBSAKUSEN_SERVER_API Player {
     /* The id of the next unit to be added for this player */
     UnitId nextUnitId;
     
-    hash_list<DynamicSensorReturns> sensorReturns;
-    
-    __gnu_cxx::hash_map<SensorReturnsId, Ref<DynamicSensorReturns> >
-      sensorReturnsById;
+    hash_list<DynamicSensorReturns, DynamicSensorReturns> sensorReturns;
+    /* Index into sensorReturns giving access by Id */
+    SensorReturnsIdIndex::Ptr sensorReturnsById;
     SensorReturnsId nextSensorReturnsId;
 
     /* A container of Refs to the Ballistics visible to this player.  The key
@@ -69,11 +73,7 @@ class LIBSAKUSEN_SERVER_API Player {
       return units;
     }
     Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsId id) {
-      DynamicSensorReturnsRef it = sensorReturnsById.find(id);
-      if (it == sensorReturnsById.end()) {
-        return Ref<DynamicSensorReturns>();
-      }
-      return it->second;
+      return sensorReturnsById->find(id);
     }
 
     inline bool isReadyForGameStart(void) const {

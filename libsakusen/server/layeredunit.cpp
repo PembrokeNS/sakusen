@@ -113,7 +113,7 @@ LayeredUnit::~LayeredUnit()
 {
   /* Inform all returns from this unit that it is being removed */
   while (!sensorReturns.empty()) {
-    sensorReturns.begin()->second->second->senseeDestroyed();
+    (*sensorReturns.begin()->second)->senseeDestroyed();
     sensorReturns.erase(sensorReturns.begin());
   }
 
@@ -144,7 +144,7 @@ void LayeredUnit::setDirty()
     dirty = true;
     for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
         sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
-      const Ref<DynamicSensorReturns>& r = returns->second->second;
+      const Ref<DynamicSensorReturns>& r = *returns->second;
       if (0 != (r->getPerception() & perception_unit)) {
         r->setDirty();
       }

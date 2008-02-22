@@ -2,7 +2,7 @@
 #define DYNAMICSENSORRETURNS_H
 
 #include "libsakusen-global.h"
-#include <list>
+#include "hash_list.h"
 #include "visibility.h"
 #include "isensorreturns.h"
 #include "serializationhandler.h"
@@ -52,10 +52,25 @@ class DynamicSensorReturns : public ISensorReturns {
     void update();
 };
 
-typedef __gnu_cxx::hash_map<
-    SensorReturnsId,
-    Ref<DynamicSensorReturns>
-  >::iterator DynamicSensorReturnsRef;
+/** \brief Function object to extract the id from an SensorReturns */
+struct DynamicSensorReturnsIder {
+  SensorReturnsId operator()(const Ref<DynamicSensorReturns>& s) const {
+    return s->getId();
+  }
+};
+
+/** \brief Typedef for an iterator type stored often to refer to a
+ * DynamicSensorReturns.
+ *
+ * It is this type because this is an iterator into the container stored by a
+ * Player.  The typedef exists because the type name is so long.
+ *
+ * \todo I beleive that this is not in fact necessary any more, and could be
+ * replaced everywhere by a Ref<DynamicSensorReturns.  It may
+ * conceivably be faster to stick with this method, but that may not be reason
+ * enough for the complication. */
+typedef hash_list<DynamicSensorReturns, DynamicSensorReturns>::iterator
+  DynamicSensorReturnsRef;
 
 }}
 

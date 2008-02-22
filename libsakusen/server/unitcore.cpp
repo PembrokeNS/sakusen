@@ -203,7 +203,7 @@ void UnitCore::changeOwner(PlayerId to, enum changeOwnerReason why) {
     for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
         outerUnit->getSensorReturns().begin();
         returns != outerUnit->getSensorReturns().end(); ++returns) {
-      Ref<DynamicSensorReturns> r = returns->second->second;
+      Ref<DynamicSensorReturns> r = *returns->second;
       if (0 != (r->getPerception() & (perception_unit | perception_owner))) {
         r->setDirty();
       }

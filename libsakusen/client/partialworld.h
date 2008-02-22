@@ -46,7 +46,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     
     typedef IdIndex<UnitId, UpdatedUnit, UpdatedUnitIder> UnitIdIndex;
     typedef IdIndex<
-        SensorReturnsId, UpdatedSensorReturns, UpdatedSensorReturnsIder
+        SensorReturnsId, UpdatedSensorReturns, SensorReturnsIder
       > SensorReturnsIdIndex;
     typedef IdIndex<ClientBallisticId, UpdatedBallistic, UpdatedBallisticIder>
       BallisticIdIndex;
