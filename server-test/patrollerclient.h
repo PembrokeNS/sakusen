@@ -1,6 +1,8 @@
 #ifndef PATROLLERCLIENT_H
 #define PATROLLERCLIENT_H
 
+#include <boost/scoped_ptr.hpp>
+
 #include "client.h"
 
 namespace sakusen {
@@ -18,7 +20,7 @@ class PatrollerClient : public Client {
     Point<sint32> patrolTo;
     Point<sint32> patrolFrom;
     bool headedOutward;
-    SensorReturns* otherUnit;
+    boost::scoped_ptr<SensorReturns> otherUnit;
   public:
     void flushOutgoing(Time) {}
     void queueUpdate(const Update& update);

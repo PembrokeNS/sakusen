@@ -11,7 +11,7 @@ PatrollerClient::PatrollerClient(ClientId i, Point<sint32> p) :
   patrolTo(p),
   patrolFrom(),
   headedOutward(false),
-  otherUnit(NULL)
+  otherUnit()
 {
 }
 
@@ -65,7 +65,7 @@ void PatrollerClient::queueUpdate(const Update& update)
       {
         const SensorReturnsAddedUpdateData& data =
           update.getSensorReturnsAddedData();
-        otherUnit = new SensorReturns(data.getSensorReturns());
+        otherUnit.reset(new SensorReturns(data.getSensorReturns()));
         QDebug("otherUnit at " <<
             otherUnit->getUnit()->getIStatus().getPosition());
         /* throw in a weapon targeting orders */
