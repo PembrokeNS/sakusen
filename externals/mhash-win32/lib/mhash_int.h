@@ -21,7 +21,7 @@ MHASH mhash_init_int(hashid type);
 
 /* update prototype */
 
-mutils_boolean mhash(MHASH thread, __const void *plaintext, mutils_word32 size);
+WIN32DLL_DEFINE mutils_boolean mhash(MHASH thread, __const void *plaintext, mutils_word32 size);
 
 /* finalizing prototype */
 
