@@ -2,24 +2,33 @@
 #define VISIBILITY_H
 
 #include "libsakusen-global.h"
+
+#include <boost/integer_traits.hpp>
+
 #include "angle.h"
 #include "iarchive.h"
 #include "oarchive.h"
 #include "eachsensorreturn.h"
+#include "ref.h"
 
 namespace sakusen {
+
+class ICompleteUnit;
 
 /** \file
  * This file holds various sensor-related things. They are all in the
  * same file because it is expected that you will probably not want to use only
  * one of them in any given place -- they all interdepend quite heavily.
  *
- * A visibility of 127 (the largest sint8) for any sensor means the object is
- * always visible to that sensor (but see the todo below). A Visibility of -127
+ * A visibility of Visibility::max (that is 255,
+ * the largest uint8) for any sensor means the object is
+ * always visible to that sensor (but see the todo below). A Visibility of
+ * Visibility::min
  * means the object is never visible to that sensor. Similarly, for
  * SensorCapability, a range of 0 means the object can detect only objects of
- * Visibility 255.  If you wish the object not to be able to detect even Visibility
- * 255 objects, then you must clear \c capable.  A range of the
+ * Visibility::max.  If you wish the object
+ * not to be able to detect even Visibility::max
+ * objects, then you must clear \c capable.  A range of the
  * largest uint32 means the object can see everything on that sensor except
  * things of Visibility 0.
  * 
@@ -30,7 +39,7 @@ namespace sakusen {
  * environment. Does an object with max. seismar visibility only appear if it is
  * on the ground, and only to other ground-based objects? Does an object with
  * max. sonar visibility only appear if it is in the water, and only to other
- * water-borne objects? If not, we may need to reserve 126 to mean almost-always
+ * water-borne objects? If not, we may need to reserve 254 to mean almost-always
  * visible.
  *
  * \warning Just because you do not expect an object to ever be underwater does
@@ -84,19 +93,44 @@ class LIBSAKUSEN_API Visibility {
      * future versions.
      */
     ~Visibility() {}
+
+    typedef uint8 type;
+    static const type min = boost::integer_traits<type>::const_min;
+    static const type max = boost::integer_traits<type>::const_max;
+    static const type default_ = (min+max)/2+1;
+    
     /** \name Specific visibilities */
     //@{
-    sint8 optical;
-    sint8 infraRed;
-    sint8 radar;
-    sint8 passiveRadar;
-    sint8 sonar;
-    sint8 passiveSonar;
-    sint8 seismar;
+    type optical;
+    type infraRed;
+    type radarPassive;
+    type radarActive;
+    type sonarPassive;
+    type sonarActive;
+    type seismar;
     //@}
+
+    type get(SensorType sensorType) const {
+      switch (sensorType) {
+#define CASE(t) \
+        case sakusen::t: \
+          return t
+        CASE(optical);
+        CASE(infraRed);
+        CASE(radarPassive);
+        CASE(radarActive);
+        CASE(sonarPassive);
+        CASE(sonarActive);
+        CASE(seismar);
+#undef CASE
+        default:
+          Fatal("unexpected SensorType " << sensorType);
+      }
+    }
+
     void store(OArchive& archive) const {
-      archive << optical << infraRed << radar << passiveRadar << sonar <<
-        passiveSonar << seismar;
+      archive << optical << infraRed << radarPassive << radarActive <<
+        sonarPassive << sonarActive << seismar;
     }
 };
 
@@ -118,6 +152,8 @@ struct LIBSAKUSEN_API SensorCapability {
                    ahead */
 
   void updateReturn(
+      const Ref<const ICompleteUnit>& senser,
+      const Ref<const ICompleteUnit>& sensee,
       SensorReturn& retrn,
       SensorType type,
       bool* changed,
@@ -167,6 +203,8 @@ struct  LIBSAKUSEN_API Sensors {
   //@}
 
   void updateReturns(
+      const Ref<const ICompleteUnit>& senser,
+      const Ref<const ICompleteUnit>& sensee,
       EachSensorReturn& returns,
       bool* changed,
       Perception* maxPerception,

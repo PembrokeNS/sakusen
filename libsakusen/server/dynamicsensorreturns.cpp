@@ -144,7 +144,7 @@ void DynamicSensorReturns::update()
     }
     Perception thisPerception;
     unitIt->second->getITypeData().getVision().updateReturns(
-        *returns, &dirty, &thisPerception, &bestRadius
+        unitIt->second, sensee, *returns, &dirty, &thisPerception, &bestRadius
       );
     if (returnsIt != sensers.end() && thisPerception == perception_none) {
       sensers.erase(returnsIt);
