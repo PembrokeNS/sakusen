@@ -26,6 +26,17 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		utypedata=self.getTypeData()
 		ustatus=self.getStatus()
 		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
+class eventSensorReturnsFactory(SensorReturnsFactory):
+	def create(self,u):
+		e=eventSensorReturns(u)
+		debug("Created eventSensorReturns "+`e`)
+		e.thisown=0 # will probably need to be e.__disown__() once eventSensorReturns gets any code
+		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
+		debug("Returning pointer "+`p`)
+		p.thisown=0 #TODO: check, as in eventUnitFactory above
+		return p
+class eventSensorReturns(UpdatedSensorReturns):
+	pass
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
@@ -48,7 +59,9 @@ class gameModel(QtCore.QObject):
 		debug("Game started, creating world")
 		e=eventUnitFactory()
 		e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
-		self.w=PartialWorld(self.universe,e,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+		sf=eventSensorReturnsFactory()
+		sf.__disown__() #ditto, I assume
+		self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 		#w should now get deleted at the correct time, I think
 		debug("Created partial world %s"%self.w)
 		debug("Global variable world is now %s"%`sakusenclient.cvar.world`)
@@ -62,4 +75,3 @@ class gameModel(QtCore.QObject):
 			debug("pushing update "+`u`)
 			sakusenclient.cvar.world.applyUpdate(u)
 			debug("Applied an update")
-		debug("Updates successfully applied")

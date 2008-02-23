@@ -16,6 +16,8 @@
       #define LIBSAKUSEN_CLIENT_API   __declspec(dllimport)
       #define LIBSAKUSEN_CLIENT_EXIMP
     #endif
+#elif defined(SWIG)
+  #define LIBSAKUSEN_CLIENT_API
 #else
   #if defined(__GNUC__) && (__GNUC__ >= 4)
     #define LIBSAKUSEN_CLIENT_API __attribute__ ((visibility ("default")))
