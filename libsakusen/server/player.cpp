@@ -164,8 +164,8 @@ void Player::checkSensorReturns()
 
   /* First we deal with other players' units */
   for (hash_list<LayeredUnit, Bounded>::iterator unit =
-      world->getUnits().begin();
-      unit != world->getUnits().end(); ++unit) {
+      world->getUnits().begin(), end = world->getUnits().end();
+      unit != end; ++unit) {
     /* check whether this unit already has a return to this player */
     hash_map<PlayerId, DynamicSensorReturnsRef>::iterator it =
       (*unit)->getSensorReturns().find(playerId);
