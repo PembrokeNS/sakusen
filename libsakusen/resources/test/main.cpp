@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
 
@@ -56,19 +57,20 @@ int main(/*int argc, char** argv*/)
     FileResourceInterface::create(dataDirs, false);
 
   if (boost::filesystem::exists(testDir)) {
-    cout << "Cleaning out existing test files" << endl;
-    //Be a bit less zealous in deletion, and notably leave heightfields around.
+    cout << "Cleaning out existing test files from " << testDir << endl;
     list<boost::filesystem::path> files =
-      fileUtils_findMatches(testDir, ".sakusenmaptemplate");
+      fileUtils_findMatches(testDir, "");
+
     while (!files.empty()) {
-      boost::filesystem::remove(files.front());
-      files.pop_front();
-    }
-    //Why am I doing it like this? Because the + operator is not defined for list<path>
-    files =
-      fileUtils_findMatches(testDir, ".sakusenuniverse");
-    while (!files.empty()) {
-      boost::filesystem::remove(files.front());
+      if (boost::algorithm::ends_with(
+            files.front().leaf(), ".sakusenmaptemplate"
+          ) ||
+          boost::algorithm::ends_with(
+            files.front().leaf(), ".sakusenuniverse"
+          )
+        ) {
+        boost::filesystem::remove(files.front());
+      }
       files.pop_front();
     }
   }
@@ -153,6 +155,10 @@ int main(/*int argc, char** argv*/)
     return EXIT_FAILURE;
   }
 
+  Sensors opticalSensors;
+  opticalSensors.optical.capable = true;
+  opticalSensors.optical.range = 30000;
+
   vector<UnitType> unitTypes;
   list<String> commanderWeapons;
   commanderWeapons.push_back("cannon");
@@ -176,7 +182,7 @@ int main(/*int argc, char** argv*/)
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 1000))
             /* possibleAngularVelocities */,
           Visibility(),
-          Sensors()
+          opticalSensors
         ),
         100 /* energyCost */,
         100 /* metalCost */,
@@ -230,7 +236,7 @@ int main(/*int argc, char** argv*/)
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
             /* possibleAngularVelocities */,
           Visibility(),
-          Sensors()
+          opticalSensors
         ),
         100 /* energyCost */,
         100 /* metalCost */,
@@ -256,7 +262,7 @@ int main(/*int argc, char** argv*/)
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
             /* possibleAngularVelocities */,
           Visibility(),
-          Sensors()
+          opticalSensors
         ),
         100 /* energyCost */,
         100 /* metalCost */,
