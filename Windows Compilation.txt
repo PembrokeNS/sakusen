@@ -7,16 +7,17 @@ To Compile and Run Sakusen for windows, do the following:
 Run "externals\stlport\buildstlport.bat" You should end up with a bunch of dlls in STLport\bin and a bunch of libraries in STLport\lib .
 4. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 sources.
 Place libpng in externals\libpng and zlib in externals\zlib
-5. IF you are using tedomari, get SDL from http://www.libsdl.org/download-1.2.php (you want SDL-devel-1.2.*-VC8.zip) and unzip it to "externals\SDL". Move the files in externals\SDL\include into externals\SDL.
-6. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
+5. Download mhash from http://sourceforge.net/project/showfiles.php?group_id=4286 Place it in externals\mhash-win32. Make sure you do not overwrite mutils.h, mhash_int.h and mhash_config.h, which were modified for our purposes. svn revert on the directory will fix it if you do.
+6. IF you are using tedomari, get SDL from http://www.libsdl.org/download-1.2.php (you want SDL-devel-1.2.*-VC8.zip) and unzip it to "externals\SDL". Move the files in externals\SDL\include into externals\SDL.
+7. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
 http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
 C:\GTK\include\pango-1.0
 C:\GTK\include\glib-2.0
 C:\GTK\lib\glib-2.0\include
 C:\GTK\include\cairo
 and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
-7. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
-8. To actually "play" Sakusen you must:
+8. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
+9. To actually "play" Sakusen you must:
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
      i)Moves the requisite dlls into the same directory as your binaries.
      ii)Runs libsakusen-resources-test to generate the universe if this hasn't already been done.
@@ -25,7 +26,7 @@ and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may s
    c) Run fuseki.
    d) Invoke tedomari with tedomari -j "tcp|localhost"
    e) If something bad happens, contact me. It's almost certainly a bug.
-9. Sing "Rule Britannia!"
+10. Sing "Rule Britannia!"
 
 Appendix: Bindings.
-If you want to build the language bindings, you will need SWIG. Place it in externals\swig. Place swig.exe somewhere in your PATH (ie, where MSVC can find it: C:\Program Files\Microsoft Visual Studio 8\VC\bin works fine). You will need python 2.5 installed to build the python bindings, similarly for other languages, which I have yet to test.
+If you want to build the language bindings, you will need SWIG. Place it in externals\swig. Place swig.exe somewhere in your PATH (ie, where MSVC can find it: C:\Program Files\Microsoft Visual Studio 8\VC\bin works fine). You will need python 2.5 installed to build the python bindings, similarly for other languages, which I have yet to test (presently broken due to an stlport bug).
