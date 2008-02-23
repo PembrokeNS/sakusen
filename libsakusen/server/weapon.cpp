@@ -37,7 +37,11 @@ Weapon::Weapon(const WeaponType* t) :
  *
  * \todo Maybe this implementation should be moved to a subclass
  * BallisticWeapon, and other similar be created to aid the creation of
- * modules. */
+ * modules.
+ *
+ * \bug Observations suggest that this method doesn't actually work properly
+ * (it tends to aim short).  It needs unit testing.
+ */
 bool Weapon::aim(
     const Ref<LayeredUnit>& firer,
     WeaponStatus& status,
