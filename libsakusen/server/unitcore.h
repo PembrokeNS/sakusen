@@ -87,6 +87,8 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return getTypePtr()->getDynamicData().getVision();
     }
     //@}
+    
+    virtual void incrementState() {}
 
     /** \name Game mechanics.
      *

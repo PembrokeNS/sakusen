@@ -218,6 +218,13 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
 {
   /** \todo Rethink this function for subunits */
 
+  /* Allow layers to do every-tick stuff (e.g. generate some resources)
+   *
+   * \bug This breaks things if the unit is killed during the call.  Is this an
+   * issue?
+   */
+  topLayer->incrementState();
+
   motion->incrementState(*this);
 
   /* Process the weapons */

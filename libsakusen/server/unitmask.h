@@ -67,6 +67,7 @@ class UnitMask : public UnitLayer {
       return nextLayer->getOuterUnit();
     }
     PlayerId getOwner() const { return nextLayer->getOwner(); }
+    void incrementState() { nextLayer->incrementState(); }
 
     /** \name Game mechanics.
      *

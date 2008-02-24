@@ -50,6 +50,13 @@ class UnitLayer : public IUnitTypeData, boost::noncopyable {
     /* accessors (more accessors are inherited from IUnitTypeData) */
     virtual PlayerId getOwner() const = 0;
 
+    /** \brief Allows layers to do things every tick
+     *
+     * This method is subject to abuse.  Note that multiple-inheriting from
+     * Fuse is a better choice when the layer wants to do something more rarely
+     * than every tick or two. */
+    virtual void incrementState() = 0;
+
     /** \name Game mechanics.
      *
      * See similarly named methods in LayeredUnit for more details. */
