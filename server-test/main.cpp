@@ -162,7 +162,8 @@ int main(/* int argc, char** argv */)
   cout << "Performing test with one unit each..." << endl;
   
   /* Create the world */
-  World* w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);
+  World* w =
+    new CompleteWorld(*mapTemplate, 0 /* mode */, players, resourceInterface);
   
   doLoadTest(cout);
   delete w;
@@ -176,7 +177,7 @@ int main(/* int argc, char** argv */)
     );
   players.back().attachClient(&patrollerClient);
   
-  w = new CompleteWorld(*mapTemplate, 0 /* mode */, players);
+  w = new CompleteWorld(*mapTemplate, 0 /* mode */, players, resourceInterface);
   doLoadTest(cout);
   delete w;
   w = NULL;

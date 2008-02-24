@@ -9,11 +9,15 @@ using namespace sakusen;
 Universe::Universe(
     const String& in,
     const String& h,
+    const String& sM,
+    const String& sF,
     const std::vector<WeaponType>& w,
     const std::vector<UnitType>& u
   ) :
   internalName(in),
   hash(h),
+  scriptModule(sM),
+  scriptFunction(sF),
   weaponTypes(w),
   unitTypes(u)
 {
@@ -88,7 +92,8 @@ bool Universe::containsUnitType(const UnitTypeId id) const
 
 void Universe::store(OArchive& archive) const
 {
-  archive << internalName << weaponTypes << unitTypes;
+  archive << internalName << scriptModule << scriptFunction << weaponTypes <<
+    unitTypes;
 }
 
 Universe* Universe::loadNew(
@@ -97,12 +102,15 @@ Universe* Universe::loadNew(
   )
 {
   String internalName;
+  String scriptModule;
+  String scriptFunction;
   vector<WeaponType> weaponTypes;
   vector<UnitType> unitTypes;
-  (archive >> internalName).extract(weaponTypes, context) >>
-    unitTypes;
+  archive >> internalName >> scriptModule >> scriptFunction;
+  archive.extract(weaponTypes, context) >> unitTypes;
   Universe* u = new Universe(
-      internalName, archive.getSecureHashAsString(), weaponTypes, unitTypes
+      internalName, archive.getSecureHashAsString(),
+      scriptModule, scriptFunction, weaponTypes, unitTypes
     );
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {

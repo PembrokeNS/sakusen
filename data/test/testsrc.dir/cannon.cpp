@@ -239,6 +239,11 @@ void ParalyzingLayer::onRemoval() {
 
 extern "C" {
 
+MODULE_API Script* create_script()
+{
+  return new TestScript();
+}
+
 MODULE_API Weapon* spawn_cannon(const WeaponType* type)
 {
   return new Cannon(type);

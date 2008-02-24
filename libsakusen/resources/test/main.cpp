@@ -272,7 +272,9 @@ int main(/*int argc, char** argv*/)
       );
   unitTypes.push_back(spiderType);
 
-  Universe::Ptr universe(new Universe("universe", "", weaponTypes, unitTypes));
+  Universe::Ptr universe(new Universe(
+        "universe", "", "test/testsrc", "create_script", weaponTypes, unitTypes
+      ));
   String name = universe->resolveNames();
   if (name != "") {
     cout << "Error resolving name '" << name << "'" << endl;

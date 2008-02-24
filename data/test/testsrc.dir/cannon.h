@@ -9,6 +9,7 @@
 #include "beam.h"
 #include "unitmask.h"
 #include "fuse.h"
+#include "script.h"
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -29,6 +30,9 @@ using namespace sakusen;
 using namespace sakusen::server;
 
 namespace testsrc {
+
+class TestScript : public Script {
+};
 
 class BuildingLayer : public UnitMask {
   public:

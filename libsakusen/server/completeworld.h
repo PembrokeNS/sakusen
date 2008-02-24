@@ -8,6 +8,7 @@
 #include "completemap.h"
 #include "layeredunit.h"
 #include "fuse.h"
+#include "script.h"
 #include "ballistic.h"
 #include "beam.h"
 #include "effect.h"
@@ -33,7 +34,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     CompleteWorld(
         const MapTemplate& map,
         uint32 playMode, /* what mode of the map we are using */
-        const std::vector<Player>& players
+        const std::vector<Player>& players,
+        const ResourceInterface::Ptr&
       );
     ~CompleteWorld();
   private:
@@ -58,6 +60,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
     __gnu_cxx::hash_map<FuseToken, Fuse::Ptr> fuseMap;
     __gnu_cxx::hash_set<FuseToken> removedFuses;
+
+    std::vector<Script::Ptr> scripts;
 
     std::vector<Player> players;
 

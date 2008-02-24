@@ -644,7 +644,7 @@ void Server::serve()
     gameStarted = true;
 
     /* Now we have the real game loop */
-    new CompleteWorld(*map, mapPlayMode, players);
+    new CompleteWorld(*map, mapPlayMode, players, resourceInterface);
       /* constructor assigns itself to global variable, so no need for
        * assignment here */
 

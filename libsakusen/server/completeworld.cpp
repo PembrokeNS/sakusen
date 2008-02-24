@@ -19,7 +19,8 @@ namespace server{
 CompleteWorld::CompleteWorld(
     const MapTemplate& m,
     uint32 mode,
-    const std::vector<Player>& p
+    const std::vector<Player>& p,
+    const ResourceInterface::Ptr& resourceInterface
   ) :
   World(m.getUniverse()),
   map(Map::newMap<CompleteMap>(m)),
@@ -77,6 +78,28 @@ CompleteWorld::CompleteWorld(
         unit != playersUnits.end(); unit++) {
       LayeredUnit::spawn(i, *unit);
     }
+  }
+
+  /* Register the scipt of the Universe */
+  Script* (*universeScriptFunction)();
+  ResourceSearchResult result;
+  boost::tie(universeScriptFunction, result) =
+    resourceInterface->symbolSearch<Script* (*)()>(
+        universe->getScriptModule(), universe->getScriptFunction()
+      );
+  switch (result) {
+    case resourceSearchResult_success:
+      {
+        /* Everything is OK */
+        Script::Ptr universeScript(universeScriptFunction());
+        scripts.push_back(universeScript);
+      }
+      break;
+    default:
+      /* There is a problem */
+      throw ResourceDeserializationExn(
+          universe->getScriptModule(), result, resourceInterface->getError()
+        );
   }
 }
 
