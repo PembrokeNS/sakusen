@@ -81,6 +81,9 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     uint64 getAvailableEnergy() const { return availableEnergy; }
     uint64 getAvailableMetal() const { return availableMetal; }
 
+    void addEnergy(uint32 amount) { availableEnergy += amount; }
+    void addMetal(uint32 amount) { availableMetal += amount; }
+
     inline bool isReadyForGameStart(void) const {
       /** \bug Should check that a race is selected. */
       return (clients.size() > 0 || noClients);

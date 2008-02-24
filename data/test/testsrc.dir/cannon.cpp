@@ -8,6 +8,24 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace testsrc;
 
+void TestScript::unitAdded(const Ref<LayeredUnit>& unit) {
+  const UnitStatus& status = unit->getStatus();
+  const UnitType* type = status.getTypePtr();
+  QDebug("Testing unit addition");
+  if (type->getInternalName() == "commander") {
+    UnitMask::Ptr materielCreater(new MaterielCreater());
+    unit->insertLayer(materielCreater);
+  }
+}
+
+void MaterielCreater::incrementState()
+{
+  UnitMask::incrementState();
+  Player* owner = server::world->getPlayerPtr(getOuterUnit()->getOwner());
+  owner->addEnergy(energyPerTick);
+  owner->addMetal(metalPerTick);
+}
+
 HitPoints BuildingLayer::build(HitPoints amount)
 {
   if (builtHitPoints >= nextLayer->getMaxHitPoints()) {
@@ -156,7 +174,7 @@ void Shell::onCollision(const Point<sint32>& pos)
 void Explosion::onUnitPresent(const Ref<LayeredUnit>& victim)
 {
   cout << "Explosion engulfed someone" << endl;
-  victim->damage(HitPoints(100));
+  victim->damage(HitPoints(10));
 }
 
 bool Paralyzer::aim(

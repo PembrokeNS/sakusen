@@ -78,7 +78,8 @@ list<String> UI::tokenise(const String& s)
 {
   pcrecpp::StringPiece piece(s);
   pcrecpp::RE re(
-      "\\s*([+-]?[a-zA-Z_]+|-?[0-9\\.]+|'[^']*'|{|}|;)", pcrecpp::UTF8()
+      "\\s*([+-]?[a-zA-Z_][a-zA-Z_0-9]*|-?[0-9\\.]+|'[^']*'|{|}|;)",
+      pcrecpp::UTF8()
     );
   list<String> tokens;
   String token;

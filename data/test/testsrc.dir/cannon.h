@@ -32,6 +32,22 @@ using namespace sakusen::server;
 namespace testsrc {
 
 class TestScript : public Script {
+  public:
+    void unitAdded(const Ref<LayeredUnit>&);
+};
+
+class MaterielCreater : public UnitMask {
+  public:
+    MaterielCreater() :
+      UnitMask(),
+      energyPerTick(10),
+      metalPerTick(2)
+    {}
+  private:
+    uint32 energyPerTick;
+    uint32 metalPerTick;
+  public:
+    void incrementState();
 };
 
 class BuildingLayer : public UnitMask {

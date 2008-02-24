@@ -3,6 +3,7 @@
 #include "world.h"
 #include "icompleteunit.h"
 
+using namespace std;
 using namespace sakusen;
 
 WeaponStatus::WeaponStatus() :
@@ -82,9 +83,17 @@ bool WeaponStatus::incrementState(WeaponTypeId type, MaterielProvider& provider)
   /** \todo inform clients about all this stuff */
   const WeaponType* typePtr = world->getUniverse()->getWeaponTypePtr(type);
 
+  /** \todo Do we need a separate cap for charge?  For now we use the cost. */
+  const uint32 energyCap = typePtr->getEnergyCost();
+  const uint32 metalCap = typePtr->getMetalCost();
+
   /** \bug The resources should not appear from thin air */
-  energyCharge += provider.requestEnergy(typePtr->getEnergyRate());
-  metalCharge += provider.requestMetal(typePtr->getMetalRate());
+  energyCharge += provider.requestEnergy(
+      min<uint32>(energyCap-energyCharge, typePtr->getEnergyRate())
+    );
+  metalCharge += provider.requestMetal(
+      min<uint32>(metalCap-metalCharge, typePtr->getMetalRate())
+    );
 
   bool fired = false;
 
@@ -95,12 +104,11 @@ bool WeaponStatus::incrementState(WeaponTypeId type, MaterielProvider& provider)
     metalCharge -=typePtr->getMetalCost();
   }
 
-  /** \todo Do we need a separate cap for charge?  For now we use the cost. */
-  if (energyCharge > typePtr->getEnergyCost()) {
-    energyCharge = typePtr->getEnergyCost();
+  if (energyCharge > energyCap) {
+    energyCharge = energyCap;
   }
-  if (metalCharge > typePtr->getMetalCost()) {
-    metalCharge = typePtr->getMetalCost();
+  if (metalCharge > metalCap) {
+    metalCharge = metalCap;
   }
 
   return fired;

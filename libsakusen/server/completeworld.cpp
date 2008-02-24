@@ -9,6 +9,7 @@
 #include <list>
 #include <vector>
 #include <iterator>
+#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -69,16 +70,6 @@ CompleteWorld::CompleteWorld(
   spatialIndex.reset(new NaiveSpatial());/** \todo Support other choices */
   effects.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
   units.registerIndex(IIndex<Bounded>::Ptr(spatialIndex));
-  
-  /* put units on the map as specified in MapPlayMode */
-  for (PlayerId i; i < numPlayers; ++i) {
-    std::vector<UnitTemplate> playersUnits =
-      playMode->getPlayer(i).getUnits();
-    for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
-        unit != playersUnits.end(); unit++) {
-      LayeredUnit::spawn(i, *unit);
-    }
-  }
 
   /* Register the scipt of the Universe */
   Script* (*universeScriptFunction)();
@@ -100,6 +91,16 @@ CompleteWorld::CompleteWorld(
       throw ResourceDeserializationExn(
           universe->getScriptModule(), result, resourceInterface->getError()
         );
+  }
+  
+  /* put units on the map as specified in MapPlayMode */
+  for (PlayerId i; i < numPlayers; ++i) {
+    std::vector<UnitTemplate> playersUnits =
+      playMode->getPlayer(i).getUnits();
+    for (std::vector<UnitTemplate>::iterator unit = playersUnits.begin();
+        unit != playersUnits.end(); unit++) {
+      LayeredUnit::spawn(i, *unit);
+    }
   }
 }
 
@@ -189,6 +190,9 @@ Ref<LayeredUnit> CompleteWorld::addUnit(
   ) {
   units.push_back(unit);
   units.back()->changeOwner(owner, changeOwnerReason_created);
+  BOOST_FOREACH(const Script::Ptr& script, scripts) {
+    script->unitAdded(units.back());
+  }
   return units.back();
 }
 

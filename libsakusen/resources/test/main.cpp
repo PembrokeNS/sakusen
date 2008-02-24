@@ -143,10 +143,10 @@ int main(/*int argc, char** argv*/)
           "builder",
           "test/testsrc",
           "b" /* clientHint */,
-          10 /* energyCost */,
-          10 /* metalCost */,
-          1 /* energyRate */,
-          1 /* metalRate */,
+          100 /* energyCost */,
+          100 /* metalCost */,
+          10 /* energyRate */,
+          10 /* metalRate */,
           resourceInterface
         );
     weaponTypes.push_back(builderType);
@@ -226,7 +226,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "grunt" /* name */,
         UnitTypeData(
-          HitPoints(10) /* maxHitPoints */,
+          HitPoints(30) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(500,500,500) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
@@ -252,7 +252,7 @@ int main(/*int argc, char** argv*/)
     UnitType(
         "spider" /* name */,
         UnitTypeData(
-          HitPoints(10) /* maxHitPoints */,
+          HitPoints(50) /* maxHitPoints */,
           10 /* mass */,
           Point<uint32>(2000,2000,250) /* size */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))

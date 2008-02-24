@@ -12,7 +12,15 @@ namespace server {
 class Script : boost::noncopyable {
   public:
     typedef boost::shared_ptr<Script> Ptr;
+  protected:
+    Script() {}
+  public:
+    virtual inline ~Script() = 0;
+
+    virtual void unitAdded(const Ref<LayeredUnit>&) {}
 };
+
+inline Script::~Script() {}
 
 }}
 
