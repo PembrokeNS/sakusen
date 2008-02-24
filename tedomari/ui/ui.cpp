@@ -23,6 +23,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
   game(g),
   activeMapDisplay(NULL),
   commandEntryBox(NULL),
+  statusSummary(NULL),
   alertDisplay(NULL),
   modes(),
   pendingMode(NULL),
@@ -134,8 +135,14 @@ void UI::initializeControls()
   addSubControl(modeIndicator);
   addSubControl(activeMapDisplay);
   addLayer();
+  statusSummary = new Label(
+      /** \bug 20 should be appropriate height for font size */
+      0, 0, dockStyle_top, newRegion(0, 0, getWidth(), 20),
+      "", Colour::white, Colour(1, 0.5, 0.5, 0.5)
+    );
   alertDisplay =
     new AlertDisplay(0, 0, dockStyle_top, newRegion(0, 0, getWidth(), 0));
+  addSubControl(statusSummary);
   addSubControl(alertDisplay);
   alignSubControls();
 }
@@ -249,7 +256,15 @@ vector<Ref<UpdatedUnit> > UI::getUnitsAtCursor() {
 void UI::update()
 {
   /** \todo Should call all MapDisplays, once there can be more than one */
-  activeMapDisplay->update();
+  if (game->isDirty()) {
+    game->clearDirty();
+    activeMapDisplay->update();
+    ostringstream status;
+    status <<
+      "E: " << game->getAvailableEnergy() <<
+      " M: " << game->getAvailableMetal();
+    statusSummary->setText(status.str());
+  }
 }
 
 void UI::executeCommand(const String& cmdName, std::list<String>& args)

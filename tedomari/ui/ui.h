@@ -40,6 +40,7 @@ class UI : protected Control {
     CommandEntryBox* commandEntryBox;
     RegexEntryBox* regexEntryBox;
     Label* modeIndicator;
+    Label* statusSummary;
     AlertDisplay* alertDisplay;
     sakusen::hash_map_string<Mode>::type modes;
     /** \brief Mode we intend to revert to when the current action executes

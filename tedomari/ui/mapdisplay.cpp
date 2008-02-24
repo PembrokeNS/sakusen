@@ -210,10 +210,7 @@ void MapDisplay::paint()
 
 void MapDisplay::update()
 {
-  if (game->isDirty()) {
-    game->clearDirty();
-    getRegion()->paint();
-  }
+  getRegion()->paint();
 }
 
 void MapDisplay::mouseMove(const sakusen::Point<double>& p)

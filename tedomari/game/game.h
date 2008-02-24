@@ -36,9 +36,15 @@ class Game {
     sakusen::ResourceInterface::Ptr resourceInterface; /* not owned by this */
     ServerInterface* serverInterface; /* not owned by this */
     sakusen::Universe::Ptr universe; /* owned by this */
+
+    uint64 availableEnergy;
+    uint64 availableMetal;
     
     bool dirty;
   public:
+    uint64 getAvailableEnergy() const { return availableEnergy; }
+    uint64 getAvailableMetal() const { return availableMetal; }
+
     /** \brief Checks for changes to game state
      *
      * \return true iff there have been changes to the game state which have

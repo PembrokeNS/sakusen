@@ -1,6 +1,8 @@
 #ifndef UI__ALERTDISPLAY_H
 #define UI__ALERTDISPLAY_H
 
+#include <boost/scoped_ptr.hpp>
+
 #include "ui/layout.h"
 #include "ui/control.h"
 #include "ui/alert.h"
@@ -25,15 +27,11 @@ class AlertDisplay : public Control {
       Control(x, y, ds, r), nextSlot(1), lastOnDisplay(1),
       layout(r->newLayout())
     {}
-    /** \brief Destructor */
-    ~AlertDisplay() {
-      delete layout;
-    }
   private:
     Alert alerts[9];
     int nextSlot;
     int lastOnDisplay;
-    Layout* layout; /* Owned by this */
+    boost::scoped_ptr<Layout> layout; /* Owned by this */
 
     void refreshText();
     void replaceRegion(Region* region);

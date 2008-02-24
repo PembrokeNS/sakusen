@@ -18,7 +18,10 @@ using namespace tedomari::game;
 Game::Game(const sakusen::ResourceInterface::Ptr& rI) :
   resourceInterface(rI),
   serverInterface(NULL),
-  universe()
+  universe(),
+  availableEnergy(0),
+  availableMetal(0),
+  dirty(false)
 {
 }
 
@@ -82,6 +85,8 @@ void Game::start(
  * sets dirty flag. */
 void Game::pushUpdates(const UpdateMessageData& data) {
   dirty = true;
+  availableEnergy = data.getEnergy();
+  availableMetal = data.getMetal();
   while (data.getTime() > sakusen::client::world->getTimeNow()) {
     sakusen::client::world->endTick();
   }

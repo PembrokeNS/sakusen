@@ -46,7 +46,7 @@ void AlertDisplay::add(const Alert& alert)
 void AlertDisplay::paint()
 {
   getRegion()->fill(Colour(0.5, 0.5, 0.5, 0.5));
-  getRegion()->drawText(0, 0, layout);
+  getRegion()->drawText(0, 0, layout.get());
   Control::paint();
 }
 
