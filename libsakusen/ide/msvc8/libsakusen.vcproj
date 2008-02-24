@@ -266,6 +266,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\frame.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\frame.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\gameobject.h"
 			>
 		</File>

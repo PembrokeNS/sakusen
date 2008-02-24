@@ -243,6 +243,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\sensorreturnsfactory.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\unitfactory.h"
 			>
 		</File>

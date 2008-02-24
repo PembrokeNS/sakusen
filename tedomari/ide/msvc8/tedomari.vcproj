@@ -705,6 +705,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\game\smartsensorreturns.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\game\smartsensorreturnsfactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\game\smartsensorreturnsfactory.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\game\smartunit.h"
 				>
 			</File>
