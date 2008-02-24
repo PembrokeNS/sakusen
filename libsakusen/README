@@ -1,5 +1,0 @@
-Compilation requires the following libraries (their corresponding
-Debian package names are also given):
-
-mhash  libmhash-dev
-
