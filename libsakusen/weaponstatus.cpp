@@ -66,8 +66,12 @@ void WeaponStatus::deactivate(void) {active = false;}
  * (subject to constraints of charging speed and availability).  If it is fully
  * charged, then remove firing cost from energy and weapon charges and return
  * true (in this case the Weapon should be fired), otherwise return false.
+ *
+ * \param type     Type id of this weapon.
+ * \param provider ResourceProvider from which requests for resources should be
+ *                 made.
  */
-bool WeaponStatus::incrementState(WeaponTypeId type)
+bool WeaponStatus::incrementState(WeaponTypeId type, MaterielProvider& provider)
 {
   /** \todo Worry about what state weapons can be left in when inactive.  Can
    * they be charged, for example? */
@@ -79,8 +83,8 @@ bool WeaponStatus::incrementState(WeaponTypeId type)
   const WeaponType* typePtr = world->getUniverse()->getWeaponTypePtr(type);
 
   /** \bug The resources should not appear from thin air */
-  energyCharge += typePtr->getEnergyRate();
-  metalCharge += typePtr->getMetalRate();
+  energyCharge += provider.requestEnergy(typePtr->getEnergyRate());
+  metalCharge += provider.requestMetal(typePtr->getMetalRate());
 
   bool fired = false;
 

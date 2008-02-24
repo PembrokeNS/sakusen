@@ -8,6 +8,7 @@
 #include "ref.h"
 #include "frame.h"
 #include "serializationhandler.h"
+#include "materielprovider.h"
 
 namespace sakusen {
 
@@ -68,7 +69,7 @@ class LIBSAKUSEN_API WeaponStatus {
     void deactivate(void);
     //@}
 
-    bool incrementState(WeaponTypeId type);
+    bool incrementState(WeaponTypeId type, MaterielProvider& provider);
 
     void store(OArchive&) const;
     static WeaponStatus load(IArchive&);

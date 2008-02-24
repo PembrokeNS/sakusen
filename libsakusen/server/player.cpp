@@ -12,6 +12,7 @@ namespace sakusen{
 namespace server{
 
 Player::Player(const PlayerTemplate& t, const PlayerId i) :
+  MaterielProvider(),
   noClients(t.isNoClients()),
   raceFixed(t.isRaceFixed()),
   playerId(i),
@@ -23,13 +24,16 @@ Player::Player(const PlayerTemplate& t, const PlayerId i) :
   sensorReturnsById(new SensorReturnsIdIndex()),
   nextSensorReturnsId(),
   visibleBallistics(),
-  nextClientBallisticId()
+  nextClientBallisticId(),
+  availableEnergy(0),
+  availableMetal(0)
 {
   assert(raceFixed || !noClients);
   sensorReturns.registerIndex<DynamicSensorReturns>(sensorReturnsById);
 }
 
 Player::Player(const Player& copy) :
+  MaterielProvider(copy),
   noClients(copy.noClients),
   raceFixed(copy.raceFixed),
   playerId(copy.playerId),
@@ -41,7 +45,9 @@ Player::Player(const Player& copy) :
   sensorReturnsById(new SensorReturnsIdIndex()),
   nextSensorReturnsId(copy.nextSensorReturnsId),
   visibleBallistics(copy.visibleBallistics),
-  nextClientBallisticId(copy.nextClientBallisticId)
+  nextClientBallisticId(copy.nextClientBallisticId),
+  availableEnergy(copy.availableEnergy),
+  availableMetal(copy.availableMetal)
 {
   if (!copy.sensorReturns.empty()) {
     /* To perform this copy we'd need to set up sensorReturnsById, which would
@@ -70,6 +76,8 @@ Player& Player::operator=(const Player& copy)
   nextSensorReturnsId = copy.nextSensorReturnsId;
   visibleBallistics = copy.visibleBallistics;
   nextClientBallisticId = copy.nextClientBallisticId;
+  availableEnergy = copy.availableEnergy;
+  availableMetal = copy.availableMetal;
 
   return *this;
 }
@@ -81,12 +89,9 @@ Player::~Player()
 void Player::attachClient(Client* client)
 {
   assert(!noClients);
-  for (std::list<Client*>::iterator c = clients.begin();
-      c != clients.end(); c++) {
-    if (*c == client) {
-      Debug("Tried to attach an already attached client");
-      return;
-    }
+  if (clients.end() != find(clients.begin(), clients.end(), client)) {
+    Debug("Tried to attach an already attached client");
+    return;
   }
   clients.push_back(client);
 }
@@ -94,15 +99,25 @@ void Player::attachClient(Client* client)
 void Player::detachClient(Client* client)
 {
   assert(!noClients);
-  for (std::list<Client*>::iterator c = clients.begin();
-      c != clients.end(); c++) {
-    if (*c == client) {
-      clients.erase(c);
-      return;
-    }
+  std::list<Client*>::iterator c = find(clients.begin(), clients.end(), client);
+  if (c != clients.end()) {
+    clients.erase(c);
+    return;
   }
   
   Debug("Tried to detach an unattached client");
+}
+
+uint32 Player::requestEnergy(uint32 amount) {
+  uint32 result = std::min<uint64>(amount, availableEnergy);
+  availableEnergy -= result;
+  return result;
+}
+
+uint32 Player::requestMetal(uint32 amount) {
+  uint32 result = std::min<uint64>(amount, availableMetal);
+  availableMetal -= result;
+  return result;
 }
 
 /** \brief Remove a unit from this player.

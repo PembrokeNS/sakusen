@@ -1,6 +1,7 @@
 #include "weapon.h"
 
 #include "mathsutils.h"
+#include "completeworld.h"
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -118,7 +119,9 @@ void Weapon::incrementState(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
     }
   }
 
-  if (status.incrementState(type)) {
+  Player* player = server::world->getPlayerPtr(firer->getOwner());
+
+  if (status.incrementState(type, *player)) {
     /* Return value of true means that there were enough resources to fire */
     onFire(firer, status, orders, weaponIndex);
   }

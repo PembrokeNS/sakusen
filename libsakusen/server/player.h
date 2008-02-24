@@ -19,7 +19,7 @@ namespace server {
 
 class LayeredUnit;
 
-class LIBSAKUSEN_SERVER_API Player {
+class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
   private:
     Player();
   public:
@@ -58,6 +58,9 @@ class LIBSAKUSEN_SERVER_API Player {
         std::pair<ClientBallisticId, Ref<const Ballistic> >
       > visibleBallistics;
     ClientBallisticId nextClientBallisticId;
+
+    uint64 availableEnergy;
+    uint64 availableMetal;
   public:
     /** \name Accessors. */
     //@{
@@ -80,6 +83,14 @@ class LIBSAKUSEN_SERVER_API Player {
       /** \bug Should check that a race is selected. */
       return (clients.size() > 0 || noClients);
     }
+    //@}
+    
+    /** \name Materiel request functions
+     *
+     * Implementation of MaterielProvider interface. */
+    //@{
+    virtual uint32 requestEnergy(uint32 amount);
+    virtual uint32 requestMetal(uint32 amount);
     //@}
 
     /* game mechanics */

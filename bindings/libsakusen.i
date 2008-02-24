@@ -448,6 +448,10 @@ namespace sakusen{
 %{
 #include "weapontargettype.h"
 %}
+%include "materielprovider.h"
+%{
+#include "materielprovider.h"
+%}
 %include "weaponstatus.h"
 %{
 #include "weaponstatus.h"
