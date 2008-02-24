@@ -2,12 +2,14 @@
 
 #include "messagedata.h"
 #include "unixdatagramlisteningsocket.h"
+#include "completeworld.h"
 #include "server.h"
 
 using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::comms;
+using namespace sakusen::server;
 using namespace fuseki;
 
 RemoteClient::RemoteClient(
@@ -116,6 +118,10 @@ void RemoteClient::flushIncoming()
 
 void RemoteClient::flushOutgoing(Time time)
 {
-  send(new UpdateMessageData(time, outgoingUpdateQueue));
+  Player* player = server::world->getPlayerPtr(playerId);
+  send(new UpdateMessageData(
+        time, player->getAvailableEnergy(), player->getAvailableMetal(),
+        outgoingUpdateQueue
+      ));
 }
 

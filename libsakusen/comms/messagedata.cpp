@@ -284,9 +284,16 @@ MessageType OrderMessageData::getType() const
 /** \brief Constructs from given time and list of updates
  *
  * The list of updates passed to this method is cleared */
-UpdateMessageData::UpdateMessageData(Time t, list<Update>& u) :
+UpdateMessageData::UpdateMessageData(
+    Time t,
+    uint64 e,
+    uint64 m,
+    list<Update>& u
+  ) :
   MessageData(),
   time(t),
+  energy(e),
+  metal(m),
   updates()
 {
   updates.swap(u);
@@ -299,13 +306,13 @@ UpdateMessageData::UpdateMessageData(
   MessageData(),
   updates()
 {
-  in >> time;
+  in >> time >> energy >> metal;
   in.extract(updates, context);
 }
 
 void UpdateMessageData::fillArchive(OArchive& archive) const
 {
-  archive << time << updates;
+  archive << time << energy << metal << updates;
 }
 
 MessageType UpdateMessageData::getType() const

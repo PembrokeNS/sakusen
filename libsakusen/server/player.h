@@ -78,6 +78,8 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsId id) {
       return sensorReturnsById->find(id);
     }
+    uint64 getAvailableEnergy() const { return availableEnergy; }
+    uint64 getAvailableMetal() const { return availableMetal; }
 
     inline bool isReadyForGameStart(void) const {
       /** \bug Should check that a race is selected. */

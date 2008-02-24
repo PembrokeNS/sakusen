@@ -243,16 +243,25 @@ class LIBSAKUSEN_COMMS_API UpdateMessageData : public MessageData {
   private:
     UpdateMessageData();
   public:
-    UpdateMessageData(Time time, std::list<Update>& update);
+    UpdateMessageData(
+        Time time,
+        uint64 energy,
+        uint64 metal,
+        std::list<Update>& update
+      );
     UpdateMessageData(IArchive&, const DeserializationContext&);
     ~UpdateMessageData() {}
   private:
     Time time; /**< The game time at which these updates apply */
+    uint64 energy; /**< Available energy */
+    uint64 metal; /**< Available metal */
     std::list<Update> updates; /**< The updates */
   protected:
     void fillArchive(OArchive& archive) const;
   public:
     MessageType getType() const;
+    uint64 getEnergy() const { return energy; }
+    uint64 getMetal() const { return metal; }
     inline Time getTime() const { return time; }
     inline const std::list<Update>& getUpdates() const { return updates; }
 };
