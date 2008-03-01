@@ -83,8 +83,8 @@ struct IntMunger<uint64> {
 
 template<>
 struct IntMunger<sint64> {
-  typedef uint32 unsign;
-  typedef sint32 sign;
+  typedef uint64 unsign;
+  typedef sint64 sign;
   typedef sint64 widest;
   typedef sint32 narrower;
   typedef sint8 narrowest;

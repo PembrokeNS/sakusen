@@ -7,7 +7,7 @@ BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 @primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
 
 # tests per templated type and per primitive type
-plan tests => (38 * scalar @types) + (3 * scalar @primitives);
+plan tests => (38 * scalar @types) + (3 * scalar @primitives) + 2;
 
 # test getting limits
 {
@@ -92,3 +92,9 @@ for $type (@types) {
   }
 
 }
+
+# test that squareLength and innerProduct work when too big to fit in 32 bits
+$p = new Sakusen::SPoint32(1<<24, 1<<24, 1<<24);
+is ($p->squareLength(), 3*(2**48), "big squareLength()");
+is ($p->innerProduct($p), 3*(2**48), "big innerProduct()");
+
