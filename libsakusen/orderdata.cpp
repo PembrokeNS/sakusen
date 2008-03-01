@@ -12,14 +12,24 @@ OrderData::OrderData(const OrderData&)
 {
 }
 
+void SetVelocityOrderData::store(OArchive& out) const
+{
+  out << target;
+}
+
 void MoveOrderData::store(OArchive& out) const
 {
   out << target;
 }
 
-void SetVelocityOrderData::store(OArchive& out) const
+void SetAngularVelocityOrderData::store(OArchive& out) const
 {
   out << target;
+}
+
+void OrientOrderData::store(OArchive& out) const
+{
+  target.store(out);
 }
 
 void TargetPositionOrderData::store(OArchive& out) const

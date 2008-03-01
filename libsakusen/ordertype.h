@@ -12,10 +12,14 @@ namespace sakusen {
  * for that order */
 enum OrderType {
   orderType_none,
-  /** Set the Unit's velocity to this value */
+  /** Set the unit's velocity to this value */
   orderType_setVelocity,
   /** Move the unit to this position */
   orderType_move,
+  /** Set the unit's angular velocity */
+  orderType_setAngularVelocity,
+  /** Rotate the unit to a given orientation */
+  orderType_orient,
   /** Target a weapon at a Position */
   orderType_targetPosition,
   /** Target a weapon at a Frame (e.g. for creating a

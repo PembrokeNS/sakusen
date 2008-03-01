@@ -28,14 +28,16 @@ class LIBSAKUSEN_API Order {
 
     /* To remind that update here is needed by causing a compile error when a
      * new enum value is added. */
-    SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+    SAKUSEN_STATIC_ASSERT(orderType_max == 9);
     
     #define GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
       return dynamic_cast<const type##OrderData&>(*data); \
     }
-    GET_DATA(Move)
     GET_DATA(SetVelocity)
+    GET_DATA(Move)
+    GET_DATA(SetAngularVelocity)
+    GET_DATA(Orient)
     GET_DATA(TargetWeapon)
     GET_DATA(TargetPosition)
     GET_DATA(TargetFrame)

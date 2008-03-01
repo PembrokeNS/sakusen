@@ -27,6 +27,21 @@ class LIBSAKUSEN_API OrderData {
     virtual void store(OArchive&) const = 0;
 };
 
+class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
+  private:
+    SetVelocityOrderData();
+  public:
+    SetVelocityOrderData(const Velocity& t) : OrderData(), target(t) {}
+    SetVelocityOrderData(IArchive& in) : OrderData() { in >> target; }
+    ~SetVelocityOrderData() {};
+  private:
+    Velocity target;
+  public:
+    const Velocity& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_setVelocity; }
+    void store(OArchive&) const;
+};
+
 class LIBSAKUSEN_API MoveOrderData : public OrderData {
   private:
     MoveOrderData();
@@ -42,18 +57,35 @@ class LIBSAKUSEN_API MoveOrderData : public OrderData {
     void store(OArchive&) const;
 };
 
-class LIBSAKUSEN_API SetVelocityOrderData : public OrderData {
+class LIBSAKUSEN_API SetAngularVelocityOrderData : public OrderData {
   private:
-    SetVelocityOrderData();
+    SetAngularVelocityOrderData();
   public:
-    SetVelocityOrderData(const Velocity& t) : OrderData(), target(t) {}
-    SetVelocityOrderData(IArchive& in) : OrderData() { in >> target; }
-    ~SetVelocityOrderData() {};
+    SetAngularVelocityOrderData(const Velocity& t) : OrderData(), target(t) {}
+    SetAngularVelocityOrderData(IArchive& in) : OrderData() { in >> target; }
+    ~SetAngularVelocityOrderData() {};
   private:
-    Velocity target;
+    AngularVelocity target;
   public:
-    const Velocity& getTarget(void) const { return target; }
-    OrderType getType(void) const { return orderType_setVelocity; }
+    const AngularVelocity& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_setAngularVelocity; }
+    void store(OArchive&) const;
+};
+
+class LIBSAKUSEN_API OrientOrderData : public OrderData {
+  private:
+    OrientOrderData();
+  public:
+    OrientOrderData(const Orientation& t) : OrderData(), target(t) {}
+    OrientOrderData(IArchive& in) : OrderData() {
+      target = Orientation::load(in);
+    }
+    ~OrientOrderData() {};
+  private:
+    Orientation target;
+  public:
+    const Orientation& getTarget(void) const { return target; }
+    OrderType getType(void) const { return orderType_orient; }
     void store(OArchive&) const;
 };
 

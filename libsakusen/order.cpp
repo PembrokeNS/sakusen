@@ -34,15 +34,19 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
   
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 7);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 9);
 
   switch (type) {
     case orderType_none:
       return Order();
-    case orderType_move:
-      return Order(new MoveOrderData(in));
     case orderType_setVelocity:
       return Order(new SetVelocityOrderData(in));
+    case orderType_move:
+      return Order(new MoveOrderData(in));
+    case orderType_setAngularVelocity:
+      return Order(new SetAngularVelocityOrderData(in));
+    case orderType_orient:
+      return Order(new OrientOrderData(in));
     case orderType_targetPosition:
       return Order(new TargetPositionOrderData(in));
     case orderType_targetFrame:
