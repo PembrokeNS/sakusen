@@ -95,10 +95,10 @@ int main(/*int argc, char** argv*/)
           "paralyzer",
           "test/testsrc",
           "o" /* clientHint */,
-          10 /* energyCost */,
-          10 /* metalCost */,
-          1 /* energyRate */,
-          1 /* metalRate */,
+          200 /* energyCost */,
+          0 /* metalCost */,
+          10 /* energyRate */,
+          0 /* metalRate */,
           resourceInterface
         );
     weaponTypes.push_back(paralyzerType);
