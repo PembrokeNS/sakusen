@@ -236,13 +236,6 @@ class LIBSAKUSEN_API Point {
     }
     //@}
 
-#if 0
-    inline uint64 squareLength(void) const {
-      /* Ugly casting here because of paranoia. */
-      return uint64(sint64(x)*x) + uint64(sint64(y)*y) + uint64(sint64(z)*z);
-    }
-#endif
-
     /* Typedefs to stop squareLength() becoming horrible, with accompanying
      * #defines because the typedefs are far too complex for SWIG's tiny mind.
      */
