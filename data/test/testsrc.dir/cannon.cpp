@@ -11,7 +11,6 @@ using namespace testsrc;
 void TestScript::unitAdded(const Ref<LayeredUnit>& unit) {
   const UnitStatus& status = unit->getStatus();
   const UnitType* type = status.getTypePtr();
-  QDebug("Testing unit addition");
   if (type->getInternalName() == "commander") {
     UnitMask::Ptr materielCreater(new MaterielCreater());
     unit->insertLayer(materielCreater);
