@@ -64,7 +64,7 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         UnitAddedUpdateData data = update.getUnitAddedData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
-        if (unit.isValid()) {
+        if (unit) {
           Debug("adding unit of existing id");
           units.erase(unit);
         }
@@ -75,7 +75,7 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         UnitRemovedUpdateData data = update.getUnitRemovedData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getId());
-        if (!unit.isValid()) {
+        if (!unit) {
           Debug("tried to remove non-existant unit");
           break;
         }
@@ -86,7 +86,7 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         UnitAlteredUpdateData data = update.getUnitAlteredData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
-        if (!unit.isValid()) {
+        if (!unit) {
           Debug("tried to alter non-existant unit");
           break;
         }
@@ -97,7 +97,7 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         OrderAcceptedUpdateData data(update.getOrderAcceptedData());
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
-        if (!unit.isValid()) {
+        if (!unit) {
           Debug("Update for non-existant unit");
           break;
         }
@@ -108,10 +108,10 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         SensorReturnsAddedUpdateData data = update.getSensorReturnsAddedData();
         SensorReturnsId id = data.getSensorReturns().getId();
-        Ref<UpdatedSensorReturns> sensorReturnsIt = sensorReturnsById->find(id);
-        if (sensorReturnsIt.isValid()) {
+        Ref<UpdatedSensorReturns> returns = sensorReturnsById->find(id);
+        if (returns) {
           Debug("adding sensor returns of existing id");
-          sensorReturns.erase(sensorReturnsIt);
+          sensorReturns.erase(returns);
         }
         sensorReturns.push_back(
             sensorReturnsFactory->create(data.getSensorReturns())
@@ -124,7 +124,7 @@ void PartialWorld::applyUpdate(const Update& update)
           update.getSensorReturnsRemovedData();
         Ref<UpdatedSensorReturns> returns =
           sensorReturnsById->find(data.getId());
-        if (!returns.isValid()) {
+        if (!returns) {
           Debug("tried to remove non-existant SensorReturns");
           break;
         }
@@ -137,7 +137,7 @@ void PartialWorld::applyUpdate(const Update& update)
           update.getSensorReturnsAlteredData();
         Ref<UpdatedSensorReturns> returns =
           sensorReturnsById->find(data.getSensorReturns().getId());
-        if (!returns.isValid()) {
+        if (!returns) {
           Debug("tried to alter non-existant SensorReturns");
           break;
         }
@@ -158,7 +158,7 @@ void PartialWorld::applyUpdate(const Update& update)
       {
         BallisticRemovedUpdateData data = update.getBallisticRemovedData();
         Ref<UpdatedBallistic> ballistic = ballisticsById->find(data.getId());
-        if (!ballistic.isValid()) {
+        if (!ballistic) {
           Debug("tried to remove non-existant Ballistic");
           break;
         }

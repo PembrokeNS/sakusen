@@ -82,7 +82,7 @@ void MapDisplay::drawUnit(
   for (UnitCornerIterator corner(*unit, true), end; corner != end; ++corner) {
     corners.push_back(dexToPixel(*corner));
   }
-  assert(unit.isValid());
+  assert(unit);
   getRegion()->fillPolygon(corners, colour);
 }
 

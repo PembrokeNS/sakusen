@@ -61,7 +61,7 @@ void Beam::onInteract(const Intersection& in)
  * with it) or replace it with a more general test. */
 bool Beam::onRemovalTest()
 {
-  return world->getTimeNow() >= endTime || !source.isValid();
+  return world->getTimeNow() >= endTime || !source;
 }
 
 /** \brief cause the Ray to be intersected with objects

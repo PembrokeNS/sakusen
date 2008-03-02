@@ -20,9 +20,8 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   const IHeightfield& hf = world->getMap()->getHeightfield();
   ISpatial::ConstPtr spatialIndex = world->getSpatialIndex();
 
-  /** \todo Everything to do with rotation */
-
-  Point<sint16> expectedVelocity(status.velocity);
+  Velocity expectedVelocity(status.velocity);
+  AngularVelocity expectedAngularVelocity(status.angularVelocity);
   
   /* compute the expected velocity based on the unit's orders */
   switch (orders.getLinearTarget()) {
@@ -58,6 +57,35 @@ void GroundMotion::incrementState(LayeredUnit& unit)
         }*/
         
         expectedVelocity += acceleration;
+      }
+      break;
+    default:
+      Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
+      break;
+  }
+  
+  /* Compute the expected angular velocity based on the unit's orders.
+   * At present we allow infinite angular acceleration.
+   */
+  switch (orders.getRotationalTarget()) {
+    case rotationalTargetType_none:
+      break;
+    case rotationalTargetType_angularVelocity:
+      if (typeData.getPossibleAngularVelocities()->contains(
+            orders.getTargetAngularVelocity()
+          )) {
+        expectedAngularVelocity = orders.getTargetAngularVelocity();
+      }
+      break;
+    case rotationalTargetType_orientation:
+      {
+        Orientation desiredOrientation = orders.getTargetOrientation();
+        Orientation desiredOrientationChange =
+          desiredOrientation*status.getFrame().getOrientation().inverse();
+        expectedAngularVelocity =
+          typeData.getPossibleAngularVelocities()->truncateToFit(
+              desiredOrientationChange.getGeneratingAngularVelocity()
+            );
       }
       break;
     default:
@@ -103,7 +131,19 @@ void GroundMotion::incrementState(LayeredUnit& unit)
    * obviously we would rather do some physics.
    * \bug We move each unit in order, so it is possible to determine which was
    * built first from the physics, which leaks information. */
-  Box<sint32> newBounds = unit.getBoundingBox() + expectedVelocity;
+
+  /* Make copies of everything so that we can simulate the move */
+  Frame newFrame = status.frame;
+  Velocity newVelocity = expectedVelocity;
+  Velocity newAngularVelocity = expectedAngularVelocity;
+  
+  /* Simulate the move (note: potentially changes all the arguments) */
+  world->getMap()->transform(newFrame, newVelocity, newAngularVelocity);
+
+  /* Find the bounding box for the prospective position */
+  Box<sint32> newBounds = newFrame.getBoundingBox(typeData.getSize());
+
+  /* Determine all possible collisions with this new position */
   ISpatial::Result potentialCollisions =
     spatialIndex->findIntersecting(newBounds, gameObject_unit);
 
@@ -140,6 +180,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
 
   if (collision) {
     expectedVelocity.zero();
+    expectedAngularVelocity.zero();
   }
   
   /* Now set the velocity to this newly computed value */
@@ -148,9 +189,11 @@ void GroundMotion::incrementState(LayeredUnit& unit)
     unit.setDirty();
   }
   
-  unit.setFrame(world->getMap()->translateFrame(
-        status.frame, status.velocity, status.velocity
-      ));
+  /* ... and the angular velocity */
+  if (expectedAngularVelocity != status.angularVelocity) {
+    status.angularVelocity = expectedAngularVelocity;
+    unit.setDirty();
+  }
 }
 
 }}

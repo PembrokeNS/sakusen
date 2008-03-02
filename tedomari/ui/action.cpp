@@ -193,7 +193,7 @@ void CreateAction::internalExecute(UI* ui) {
       createrId != creaters.end(); ++createrId) {
     Ref<UpdatedUnit> creater =
       client::world->getUnitsById()->find(*createrId);
-    if (!creater.isValid()) {
+    if (!creater) {
       continue;
     }
     const UnitType* unitType =

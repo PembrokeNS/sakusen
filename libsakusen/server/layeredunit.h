@@ -127,7 +127,6 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     Ref<const LayeredUnit> getRefToThis() const;
     
     void setPosition(const Position&);
-    void setFrame(const Frame&);
     bool setRadar(bool active);
     bool setSonar(bool active);
 

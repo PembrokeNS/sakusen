@@ -119,8 +119,8 @@ void Builder::onFire(
         if (!buildingLayer.expired()) {
           bL = buildingLayer.lock();
         }
-        if (targetUnit.isValid()) {
-          if (!(bL && operator==(bL->getOuterUnit(), targetUnit))) {
+        if (targetUnit) {
+          if (!(bL && bL->getOuterUnit() == targetUnit)) {
             bL = targetUnit->getLayer<BuildingLayer>();
             if (!bL) {
               Debug(
@@ -244,7 +244,7 @@ void ParalyzationBeam::onInteractUnit(
 
 void ParalyzingLayer::expire(FuseToken) {
   Ref<LayeredUnit> u = getOuterUnit();
-  if (u.isValid()) {
+  if (u) {
     u->removeLayer(this);
   }
 }

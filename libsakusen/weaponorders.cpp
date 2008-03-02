@@ -41,9 +41,9 @@ bool WeaponOrders::isTargetValid() const
     case weaponTargetType_frame:
       return true;
     case weaponTargetType_unit:
-      return targetUnit.isValid();
+      return bool(targetUnit);
     case weaponTargetType_sensorReturns:
-      return targetSensorReturns.isValid();
+      return bool(targetSensorReturns);
     default:
       Fatal("unexpected WeaponTargetType: " << targetType);
   }

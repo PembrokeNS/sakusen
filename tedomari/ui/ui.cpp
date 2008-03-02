@@ -6,6 +6,7 @@
 #include "ui/modifiedkeyevent.h"
 
 #include <fstream>
+#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <pcrecpp.h>
 
@@ -689,11 +690,21 @@ void UI::move(const set<sakusen::UnitId>& units, const ActionTarget& target)
 
 void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
 {
-  Order order = Order(new MoveOrderData(target));
+  Order moveOrder = Order(new MoveOrderData(target));
   
-  for (set<UnitId>::const_iterator unit = units.begin();
-      unit != units.end(); ++unit) {
-    game->order(OrderMessage(*unit, order));
+  BOOST_FOREACH (UnitId unitId, units) {
+    Ref<UpdatedUnit> unit = client::world->getUnitsById()->find(unitId);
+    if (unit) {
+      game->order(OrderMessage(unitId, moveOrder));
+      const Point<sint32> displacement =
+        target - unit->getStatus().getFrame().getPosition();
+      const double angle = atan2(displacement.y, displacement.x);
+      const Orientation desiredOrientation(
+          AngularVelocity(0, 0, AngularVelocity::element_type(angle*180/M_PI))
+        );
+      const Order rotationOrder(new OrientOrderData(desiredOrientation));
+      game->order(OrderMessage(unitId, rotationOrder));
+    }
   }
 }
 

@@ -228,7 +228,7 @@ void Player::checkSensorReturns()
         MaskedPtr<Ballistic>, pair<ClientBallisticId, Ref<const Ballistic> >
       >::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
-    if (!vb->second.second.isValid()) {
+    if (!vb->second.second) {
       invalidatedBallisticIds.push(vb->first);
       informClients(Update(new BallisticRemovedUpdateData(vb->second.first)));
     }

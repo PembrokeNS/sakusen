@@ -25,6 +25,9 @@ namespace sakusen {
  * Presumably there was a good reason for doing things this way but I can't
  * remember it.
  *
+ * \todo The multitudinous array of methods for translating and transforming
+ * Positions and Frames is getting silly, it should be rationalized.
+ *
  * \todo Tiles */
 class LIBSAKUSEN_API Map {
   private:
@@ -145,12 +148,30 @@ class LIBSAKUSEN_API Map {
       }
       return frame;
     }
+
+    /** \brief Transform in place the given Frame and velocities.
+     *
+     * The given Velocity and AngularVelocity define the change to be performed
+     * to the Frame, and they are also themselves changed if the translation
+     * causes a Map boundary transition. */
+    void transform(
+        Frame& frame, Velocity& velocity, AngularVelocity& angularVelocity
+      ) {
+      Orientation mapOrientationChange;
+      frame.getPosition() =
+        addToPosition(frame.getPosition(), velocity, &mapOrientationChange);
+      velocity = mapOrientationChange * velocity;
+      angularVelocity = mapOrientationChange * angularVelocity;
+      frame.getOrientation() =
+        mapOrientationChange * Orientation(angularVelocity) *
+        frame.getOrientation();
+    }
     
     /** \brief Finds the shortest vector from op2 to op1
      *
      * Intuitively, this function returns \a op1 - \a op2.
      * Technically, it returns the shortest vector \c x such that
-     * \c addToPosition(op2,x)=op1
+     * \c addToPosition(op2,x)==op1
      *
      * \todo We need to clearly define what happens in cases of ambiguity
      */

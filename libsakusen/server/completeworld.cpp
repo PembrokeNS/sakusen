@@ -146,7 +146,7 @@ void CompleteWorld::applyEffect(
   while (!affectedUnits.empty()) {
     Ref<LayeredUnit> unit = affectedUnits.front();
     affectedUnits.pop();
-    if (unit.isValid()) {
+    if (unit) {
       /* Somewhat hacky way to circumvent Ref's protection of the pointer */
       (effect.operator->().get()->*method)(unit);
     }

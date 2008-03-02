@@ -23,6 +23,21 @@ class LIBSAKUSEN_SERVER_API UnitMotion : boost::noncopyable {
     UnitMotion() {}
   public:
     virtual inline ~UnitMotion() = 0;
+
+    /** \brief Compute appropriate velocity and angular velocity.
+     *
+     * Each subclass of UnitMotion should overload this method to define the
+     * motion rules for a unit.
+     *
+     * The method should examine the unit's orders, and alter the velocity and
+     * angular velocity of the unit's status according to what the unit's
+     * orders are requesting.  It should not actually alter the unit's position
+     * or orientation &mdash; that is done in LayeredUnit::incrementState
+     * immediately after the call to this method.
+     *
+     * It is acceptable for the unit to be killed during the call to this
+     * method.
+     */
     virtual void incrementState(LayeredUnit&) = 0;
 };
 

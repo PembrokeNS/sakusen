@@ -259,7 +259,7 @@ int main(/*int argc, char** argv*/)
             /* possibleAccelerations */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 3))
             /* possibleAngularVelocities */,
           Visibility(),
           opticalSensors

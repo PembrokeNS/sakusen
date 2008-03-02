@@ -193,21 +193,6 @@ void LayeredUnit::setPosition(const Point<sint32>& newPos)
   position = newPos;
 }
 
-/** \brief Alters the unit's position and orientation, ensuring all
- * appropriate action caused by this change is taken. */
-void LayeredUnit::setFrame(const Frame& newFrame)
-{
-  Frame& frame = status.getFrame();
-  if (frame.getPosition() != newFrame.getPosition()) {
-    /* Whenever a unit position changes, we need to check
-     * whether it has entered/exited the region of some effect */
-    world->applyEntryExitEffects(
-        getRefToThis(), frame.getPosition(), newFrame.getPosition()
-      );
-  }
-  frame = newFrame;
-}
-
 /** \brief Update the unit's state for the new tick.
  *
  * This function handles all the unit's order interpretation, acceleration and
@@ -218,14 +203,30 @@ void LayeredUnit::incrementState(const Time& /*timeNow*/)
 {
   /** \todo Rethink this function for subunits */
 
-  /* Allow layers to do every-tick stuff (e.g. generate some resources)
-   *
-   * \bug This breaks things if the unit is killed during the call.  Is this an
-   * issue?
-   */
+  /* Take a reference so that we can detect ourselves being killed */
+  Ref<LayeredUnit> refToThis = getRefToThis();
+  
+  /* Allow layers to do every-tick stuff (e.g. generate some resources) */
   topLayer->incrementState();
+  if (!refToThis) { return; }
 
+  /* Call motion handler to set velocity properly */
   motion->incrementState(*this);
+  if (!refToThis) { return; }
+  
+  /* Do the actual move */
+  Position oldPos = status.frame.getPosition();
+  world->getMap()->transform(
+      status.frame, status.velocity, status.angularVelocity
+    );
+
+  if (status.frame.getPosition() != oldPos) {
+    /* Whenever a unit position changes, we need to check
+     * whether it has entered/exited the region of some effect */
+    world->applyEntryExitEffects(
+        getRefToThis(), oldPos, status.frame.getPosition()
+      );
+  }
 
   /* Process the weapons */
   topLayer->incrementWeaponsState();

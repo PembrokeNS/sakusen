@@ -45,7 +45,8 @@ class Ref {
   private:
     boost::weak_ptr<T> referee;
   public:
-    inline bool isValid() const { return !referee.expired(); }
+    inline operator bool() const { return !referee.expired(); }
+    inline bool operator!() const { return referee.expired(); }
     
     inline bool isRefTo(const T* t) const { return referee.lock().get() == t; }
     
@@ -80,8 +81,9 @@ class Ref {
     }
 
     void store(OArchive& archive) const {
-      archive << isValid();
-      if (isValid()) {
+      bool valid = !referee.expired();
+      archive << valid;
+      if (valid) {
         SHandler().insert(archive, cast<typename boost::add_const<T>::type>());
       }
     }
@@ -103,8 +105,7 @@ class Ref {
 template<typename T>
 inline bool operator==(const Ref<T>& left, const Ref<T>& right)
 {
-  return left.isValid() && right.isValid() &&
-    left.referee.lock() == right.referee.lock();
+  return left && right && left.referee.lock() == right.referee.lock();
 }
 
 }

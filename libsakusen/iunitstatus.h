@@ -25,7 +25,8 @@ class LIBSAKUSEN_API IUnitStatus {
       return getFrame().getPosition();
     }
     virtual const Frame& getFrame(void) const = 0;
-    virtual const Point<sint16>& getVelocity(void) const = 0;
+    virtual const Velocity& getVelocity(void) const = 0;
+    virtual const AngularVelocity& getAngularVelocity(void) const = 0;
     virtual HitPoints getHitPoints(void) const = 0;
     virtual bool isRadarActive(void) const = 0;
     virtual bool isSonarActive(void) const = 0;

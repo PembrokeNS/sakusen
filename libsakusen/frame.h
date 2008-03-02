@@ -3,6 +3,7 @@
 
 #include "point.h"
 #include "orientation.h"
+#include "box.h"
 
 namespace sakusen {
 
@@ -37,6 +38,8 @@ class Frame {
     Frame operator+(const Position& p) {
       return Frame(*this) += p;
     }
+
+    Box<sint32> getBoundingBox(const Point<uint32>& size) const;
 
     /** \brief Converts an position in local to absolute global coordinates.
      *

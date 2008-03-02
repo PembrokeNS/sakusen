@@ -9,6 +9,7 @@ UnitStatus::UnitStatus(const IUnitStatus& copy) :
   type(copy.getType()),
   frame(copy.getFrame()),
   velocity(copy.getVelocity()),
+  angularVelocity(copy.getAngularVelocity()),
   hitPoints(copy.getHitPoints()),
   radarIsActive(copy.isRadarActive()),
   sonarIsActive(copy.isSonarActive()),
@@ -20,7 +21,8 @@ UnitStatus::UnitStatus(const IUnitStatus& copy) :
 UnitStatus::UnitStatus(
     UnitTypeId startType,
     const Frame& startFrame,
-    const Point<sint16>& startVelocity,
+    const Velocity& startVelocity,
+    const AngularVelocity& startAngularVelocity,
     HitPoints startHitPoints,
     bool startRadarActive,
     bool startSonarActive,
@@ -29,6 +31,7 @@ UnitStatus::UnitStatus(
   type(startType),
   frame(startFrame),
   velocity(startVelocity),
+  angularVelocity(startAngularVelocity),
   hitPoints(startHitPoints),
   radarIsActive(startRadarActive),
   sonarIsActive(startSonarActive),
@@ -40,7 +43,7 @@ UnitStatus::UnitStatus(
 UnitStatus::UnitStatus(
     UnitTypeId startType,
     const Frame& startFrame,
-    const Point<sint16>& startVelocity,
+    const Velocity& startVelocity,
     const HitPoints startHP
   ) :
   type(startType),
@@ -58,7 +61,7 @@ UnitStatus::UnitStatus(
 UnitStatus::UnitStatus(
     UnitTypeId startType,
     const Frame& startFrame,
-    const Point<sint16>& startVelocity
+    const Velocity& startVelocity
   ) :
   type(startType),
   frame(startFrame),
@@ -76,7 +79,7 @@ UnitStatus::UnitStatus(
     const Universe::ConstPtr& universe,
     UnitTypeId startType,
     const Frame& startFrame,
-    const Point<sint16>& startVelocity
+    const Velocity& startVelocity
   ) :
   type(startType),
   frame(startFrame),
@@ -101,8 +104,8 @@ void UnitStatus::store(OArchive& out, const Universe::ConstPtr& universe) const
 {
   out << universe->getUnitTypePtr(type)->getInternalName();
   frame.store(out);
-  out << velocity << hitPoints << radarIsActive << sonarIsActive <<
-    weaponsStatus;
+  out << velocity << angularVelocity << hitPoints <<
+    radarIsActive << sonarIsActive << weaponsStatus;
 }
 
 UnitStatus UnitStatus::load(
@@ -113,6 +116,7 @@ UnitStatus UnitStatus::load(
   String typeName;
   UnitTypeId type;
   Point<sint16> velocity;
+  AngularVelocity angularVelocity;
   
   /* status stuff */
   HitPoints hitPoints;
@@ -123,11 +127,11 @@ UnitStatus UnitStatus::load(
   in >> typeName;
   type = context.getUniverse()->getUnitTypeId(typeName);
   Frame frame = Frame::load(in);
-  in >> velocity >> hitPoints >> radarIsActive >> sonarIsActive;
-  in >> weaponsStatus;
+  in >> velocity >> angularVelocity >> hitPoints >>
+    radarIsActive >> sonarIsActive >> weaponsStatus;
 
   return UnitStatus(
-      type, frame, velocity,
+      type, frame, velocity, angularVelocity,
       hitPoints, radarIsActive, sonarIsActive,
       weaponsStatus
     );

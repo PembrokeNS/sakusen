@@ -26,8 +26,8 @@ void UpdatedUnit::incrementState()
   if (altered) {
     altered = false;
   } else {
-    status.frame = world->getMap()->translateFrame(
-          status.frame, status.velocity, status.velocity
+    world->getMap()->transform(
+          status.frame, status.velocity, status.angularVelocity
         );
   }
 }

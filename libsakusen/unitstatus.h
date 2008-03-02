@@ -18,7 +18,8 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     UnitStatus(
       UnitTypeId startType,
       const Frame& startFrame,
-      const Point<sint16>& startVelocity,
+      const Velocity& startVelocity,
+      const AngularVelocity& startAngularVelocity,
       HitPoints startHitPoints,
       bool startRadarActive,
       bool startSonarActive,
@@ -27,21 +28,21 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     UnitStatus(
       UnitTypeId startType,
       const Frame& startFrame,
-      const Point<sint16>& startVelocity,
+      const Velocity& startVelocity,
       const HitPoints startHP
     ); /**< This is a simpler version of the above constructor for when you
          don't need to specify the extra data */
     UnitStatus(
       UnitTypeId startType,
       const Frame& startFrame,
-      const Point<sint16>& startVelocity
+      const Velocity& startVelocity
     ); /**< This is an even simpler version of the above constructor and will
          set the starting hit points from the default for that unit type. */
     UnitStatus(
       const Universe::ConstPtr& universe,
       UnitTypeId startType,
       const Frame& startFrame,
-      const Point<sint16>& startVelocity
+      const Velocity& startVelocity
     ); /**< This is a variant of the above constructor for when the world does
           not exist yet, so the universe must be provided directly */
   public:
@@ -50,6 +51,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     //@{
     Frame frame;
     Velocity velocity;
+    AngularVelocity angularVelocity;
     //@}
     
     /** \name Unit's status */
@@ -67,7 +69,10 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     inline const UnitType* getTypePtr(void) const;
     inline Frame& getFrame(void) {return frame;}
     inline const Frame& getFrame(void) const {return frame;}
-    inline const Point<sint16>& getVelocity(void) const {return velocity;}
+    inline const Velocity& getVelocity(void) const {return velocity;}
+    inline const AngularVelocity& getAngularVelocity(void) const {
+      return angularVelocity;
+    }
     inline HitPoints getHitPoints(void) const {return hitPoints;}
     inline bool isRadarActive(void) const {return radarIsActive;}
     inline bool isSonarActive(void) const {return sonarIsActive;}

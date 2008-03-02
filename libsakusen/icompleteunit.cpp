@@ -32,22 +32,7 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
 
 Box<sint32> ICompleteUnit::getBoundingBox(void) const
 {
-  double dExtents[3];
-  Point<sint32> pExtents;
-  const Frame& frame = getIStatus().getFrame();
-  const Point<sint32>& pos = frame.getPosition();
-  const Orientation& orientation = frame.getOrientation();
-  const Point<uint32>& size = getITypeData().getSize();
-  
-  for (int i=0; i<3; i++) {
-    dExtents[i] = 0;
-    for (int j=0; j<3; j++) {
-      dExtents[i] += fabs(orientation(i, j))*size[j];
-    }
-    pExtents[i] = sint32(ceil(dExtents[i]));
-  }
-
-  return Box<sint32>(pos-pExtents, pos+pExtents);
+  return getIStatus().getFrame().getBoundingBox(getITypeData().getSize());
 }
 
 boost::tuple<double,double> ICompleteUnit::intersect(const Ray& r) const

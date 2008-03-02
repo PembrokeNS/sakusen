@@ -85,7 +85,7 @@ void DynamicSensorReturns::senseeDestroyed() {
 void DynamicSensorReturns::update()
 {
   /* If the sensee has been destroyed, then we see nothing, and give up now */
-  if (!sensee.isValid()) {
+  if (!sensee) {
     assert(perception == perception_none);
     assert(sensers.empty());
     return;

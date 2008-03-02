@@ -42,8 +42,7 @@ class LIBSAKUSEN_API SensorReturns : public ISensorReturns {
       senserOwner(copy->getSenserOwner()),
       senseeOwner(copy->getSenseeOwner()),
       region(copy->getRegion()),
-      unit(copy->getUnit().isValid() ?
-          new CompleteUnit(copy->getUnit()) : NULL),
+      unit(copy->getUnit() ? new CompleteUnit(copy->getUnit()) : NULL),
       returns(copy->getSensorReturns())
     {
       assert(0 == (perception & ~perception_full));
@@ -55,8 +54,7 @@ class LIBSAKUSEN_API SensorReturns : public ISensorReturns {
       senserOwner(copy->getSenserOwner()),
       senseeOwner(copy->getSenseeOwner()),
       region(copy->getRegion()),
-      unit(copy->getUnit().isValid() ?
-          new CompleteUnit(copy->getUnit()) : NULL),
+      unit(copy->getUnit() ? new CompleteUnit(copy->getUnit()) : NULL),
       returns(copy->getSensorReturns())
     {
       assert(0 == (perception & ~perception_full));

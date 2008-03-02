@@ -76,6 +76,8 @@ inline T topNumber() {
 template<typename T>
 class LIBSAKUSEN_API Point {
   public:
+    typedef T element_type;
+
     T x;
     T y;
     T z;
@@ -231,10 +233,24 @@ class LIBSAKUSEN_API Point {
       z *= right;
     }
 
+    inline Point<T>& operator/=(const T scale) {
+      x /= scale; y /= scale; z /= scale;
+      return *this;
+    }
+
     inline Point<T> operator/(const T scale) const {
-      return Point<T>(x/scale, y/scale, z/scale);
+      return Point<T>(*this) /= scale;
     }
     //@}
+    
+    /** \brief Return the cross product of this Point with another. */
+    inline Point<T> crossProduct(const Point<T>& right) {
+      return Point<T>(
+          y*right.z-z*right.y,
+          z*right.x-x*right.z,
+          x*right.y-y*right.x
+        );
+    }
 
     /* Typedefs to stop squareLength() becoming horrible, with accompanying
      * #defines because the typedefs are far too complex for SWIG's tiny mind.
@@ -260,6 +276,14 @@ class LIBSAKUSEN_API Point {
 
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
+    }
+
+    /** \brief Rescale the Point to length 1.
+     *
+     * This is only useful on Point<double>s.  For others it should throw a
+     * compile warning. */
+    inline void normalise() {
+      *this /= length();
     }
 
     inline bool isZero(void) const {

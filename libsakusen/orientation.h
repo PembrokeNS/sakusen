@@ -27,10 +27,11 @@ class LIBSAKUSEN_API Orientation {
   public:
     Orientation();
     Orientation(Rotation rotation, Angle amount);
-      /* Constructs an orientation corresponding to specified rotation */
+    Orientation(const AngularVelocity&);
     ~Orientation() {}
   private:
-    Orientation(double[3][3]);
+    Orientation(const double[3][3]);
+    Orientation(const Point<double>[3]);
     Orientation(
         double, double, double, double, double, double, double, double, double
       );
@@ -63,6 +64,28 @@ class LIBSAKUSEN_API Orientation {
       return Point<T>(result.round());
     }
 
+#ifdef NDEBUG
+    void sanityCheck() const {}
+#else
+    void sanityCheck() const;
+#endif
+
+    /** \brief Compute the trace of this matrix */
+    double trace() const { return matrix[0][0] + matrix[1][1] + matrix[2][2]; }
+
+    /** \brief Return the inverse of this matrix.
+     *
+     * It is possible to do this operation quickly because we know the matrix
+     * is orthogonal and thus its inverse is its transpose.
+     */
+    Orientation inverse() const {
+      return Orientation(
+          matrix[0][0], matrix[1][0], matrix[2][0],
+          matrix[0][1], matrix[1][1], matrix[2][1],
+          matrix[0][2], matrix[1][2], matrix[2][2]
+        );
+    }
+
     /** \brief Multiply the inverse of this matrix by the given vector
      *
      * It is possible to do this operation quickly because we know the matrix
@@ -77,6 +100,12 @@ class LIBSAKUSEN_API Orientation {
       }
       return Point<T>(result.round());
     }
+
+    /** \brief Find angular velocity generating this Orientation.
+     *
+     * Computes and return the angular velocity which would turn the
+     * identity into this Orientation in one tick. */
+    AngularVelocity getGeneratingAngularVelocity();
 
     /** \name Some particular orientations.
      *
