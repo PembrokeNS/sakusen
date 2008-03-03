@@ -84,7 +84,9 @@ RECURSIVE              = YES
 EXCLUDE                = data \
                          bindings \
                          externals \
-                         tools
+                         tools \
+                         optimised \
+                         release
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
