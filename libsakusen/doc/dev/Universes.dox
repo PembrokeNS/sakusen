@@ -1,0 +1,105 @@
+/** \page universes Universes
+
+This page is intended to give an overview of universes.
+
+\section what-universes-are What universes are
+
+A universe defines the way a game works.  It is built on top of the core game
+engine, and thus must make use of the primitives that the core engine
+understands, but it is more fundamental than a single map (and it is imagined
+that most universes will support many maps).
+
+In short, the universe defines what tyes of units are available, and what their
+capabilities are.
+
+As an example, if StarCraft were built on sakusen, then all of the levels from
+the original game would probably be built
+on one universe, because they all have
+essentially the same set of units with the same capabilities (apart from the
+fact that the earlier levels prohibit more advanced units to the player).  The
+Brood War expansion represents a new (albeit closely related) universe with new
+types of unit and new abilities for the existing ones.
+
+\section what-universes-are-made-of What universes are made of
+
+A universe comes in two parts.  The first part is an instance of
+sakusen::Universe, which must be understood by
+both client and server.  It is data in the form of two lists: one of
+sakusen::UnitTypes and the other of sakusen::WeaponTypes.  These describe the
+properties of the units and weapons necessary for the engine to implement them.
+This part is serialized in some manner that can be loaded easily by client and
+server.  At present a custom binary serialization is used through the
+sakusen::IArchive and sakusen::OArchive classes, although this may change to a
+more human-readable format (e.g. XML) in the future.  The exact format is
+subject to change and probably the best way to use it is through libsakusen.
+See resources/test/main.cpp for a crude example.
+
+The second part is one or more modules which are loaded into the server when
+the game is in progress.  They need not be used by the client.  These modules
+are shared libraries which must provide the implementation details of all the
+particular types of game object which the universe uses \e except for units.
+See the test module defined in cannon.cpp and cannon.h for an example.
+
+\section how-universes-work How universes work
+
+Units are the most complex game object, and are managed essentially entirely by
+the server.  The universe can manipulate the behaviour of units by providing
+the UnitTypes and by adding
+sakusen::server::UnitMasks to units (see below), but otherwise units are the
+responsibility of the server (and, more specifically, of sakusen::server).
+See \ref units for the gory details of the representation of units in the core
+libraries.
+
+Weapons provide the interface between the raw data and library components of a
+universe.  Each sakusen::WeaponType defines a module and a name.  The server
+opens the specified module and tries to find a function with name \c
+spawn_<i>foo</i> where <i>foo</i> is the name of the sakusen::WeaponType.  The
+function should have C-style binding and a prototype
+\code
+sakusen::server::Weapon* spawn_foo(sakusen::WeaponTypeId)
+\endcode
+This function is called
+whenever a weapon of the WeaponType in question needs to be created.  It is
+assumed that it constructs an instance of some subclass of
+sakusen::server::Weapon defined in the module.  The methods of this subclass
+will then be called when the weapon is aimed or fired, and they in turn can
+create other game objects.
+
+The classes which a universe is expected to derive from in order to provide its
+desired functionality are as follows:
+
+\li sakusen::server::Weapon &mdash; As noted above, weapons are returned from
+functions in the module's public interface.  A subclass must define what it
+means to fire the weapon, and possibly also what it means to aim it.
+
+\li sakusen::server::Ballistic &mdash; Represents an object moving under
+gravity, which will explode on impact with anything.  A subclass must define
+what occurs when it explodes.
+
+\li sakusen::server::Beam &mdash; Represents a
+  straight line segment which can interact
+with things it contacts (e.g. a laser beam, or the path of a bullet).  A
+subclass must define what sorts of things it interacts with, and in what
+manner (e.g. whether it can penetrate water).
+
+\li sakusen::server::Effect &mdash; Represents a sakusen::Region in game space
+where 'something special' is happening (e.g. an explosion,
+or a force field).  A subclass must define what happens to
+units that enter, remain in, or leave the region.  \todo We need to cover the
+interaction of Beams with Effects and the impact of Effects on visibility also.
+
+\li sakusen::server::UnitMask &mdash; Represents some alteration to the normal
+behaviour of a unit.  A particular UnitMask affects a single unit in some way
+(e.g. halves its maximum speed, disables all its weapons, drains its hit
+points, makes it invulnerable).  A subclass can override any or all of many
+functions that impact various behaviours of the unit.
+
+\li sakusen::server::Fuse &mdash; Used to indicate that something will occur at
+some point in the future.  For example, if a UnitMask is intended to disable a
+unit, but only for a certain amount of time, then a Fuse can be set for that
+amount of time.  Indeed, the subclass of UnitMask may multiple-inherit from
+Fuse.  A subclass must define what happens when the Fuse expires.
+
+\todo Talk about sakusen::server::Script and how a universe can define one.
+
+*/

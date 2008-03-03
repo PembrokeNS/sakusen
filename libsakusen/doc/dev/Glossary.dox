@@ -7,6 +7,11 @@ class but have a slightly different meaning as well (e.g. 'universe') so the
 documentation for the class in question may not be sufficient to explain all
 uses.
 
+\li Dex &mdash; The fundamental unit of length in the sakusen game engine.
+There is no prescribed meaning in terms of in-universe distance or display
+size, but to avoid discretization problems a minimum of ~100 dex per pixel for
+display purposes is probably advisable.
+
 \li Module &mdash; A dlopenable library (or the sources for such a thing) which
 provides code for a universe.  A single module can be used for multiple
 universes, and a universe can use multiple modules.  A module would typically
@@ -18,6 +23,9 @@ with plugin (q.v.).
 \li Plugin &mdash; A dlopenable library which adds functionality to a server or
 client (possibly both) that is probably independent of any particular universe.
 See sakusen::server::plugins.
+
+\li Tick &mdash; The fundamental unit of time in the sakusen game engine.  Not
+to be confused with a \e frame, one rendering of graphics to the screen.
 
 \li Unit &mdash; Covers many possible game objects.  Anything which needs to be
 controlled by a player (soldiers, buildings), needs to move in a manner which
@@ -36,5 +44,6 @@ A Universe contains everything that needs to be added to the game engine to
 play a game short of a map on which to play.  Some parts of the universe are
 needed by both client and server (e.g. the UnitTypes), some only by the server
 (e.g. the modules) and some only by the client (e.g. the UnitRepresentations).
+See \ref universes for more details.
 
 */
