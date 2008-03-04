@@ -277,15 +277,19 @@ class LIBSAKUSEN_API Point {
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
     }
-
-    /** \brief Rescale the Point to length 1.
-     *
-     * This is only useful on Point<double>s.  For others it should throw a
-     * compile warning. */
-    inline void normalise() {
+  /** \brief Rescale the Point to length 1.
+    *
+    * This is only useful on Point<double>s.  For others it should throw a
+    * compile warning. */
+  /* Yes and no. On MSVC it *does* throw (many) compile warnings, but when the library is compiled, due to template  
+   * instantiation. */
+#ifdef _MSC_VER
+    inline void normalise(void){};
+#else
+    inline void normalise(void) {
       *this /= length();
     }
-
+#endif
     inline bool isZero(void) const {
       return x==T(0) && y==T(0) && z==T(0);
     }
@@ -301,6 +305,14 @@ class LIBSAKUSEN_API Point {
     inline Point<T> round(void) const;
 #endif
 };
+
+#ifdef _MSC_VER
+template<>
+inline void Point<double>::normalise(void) {
+      *this /= length();
+    }
+
+#endif //_MSC_VER
 
 #ifndef SWIG
 /** \brief Truncate a Point towards zero.
@@ -322,20 +334,6 @@ inline Point<double> Point<double>::truncate(void) const {
   );
 }
 
-#if defined LIBSAKUSEN_METHOD_DEFINITIONS
-
-template<typename T>
-inline Point<T> Point<T>::truncate(void) const {
-  return Point<T>(x,y,z);
-}
-
-template<typename T>
-inline Point<T> Point<T>::round(void) const {
-  return Point<T>(x,y,z);
-}
-
-#endif //LIBSAKUSEN_METHOD_DEFINITIONS
-
 /** \brief Round a Point to the nearest integer co-ordinates.
  *
  * This function is defined for all types. For Point<double> it rounds each co-ordinate
@@ -354,7 +352,21 @@ inline Point<double> Point<double>::round(void) const {
       trunc(z)
   );
 }
-#endif
+
+#if defined LIBSAKUSEN_METHOD_DEFINITIONS
+
+template<typename T>
+inline Point<T> Point<T>::truncate(void) const {
+  return Point<T>(x,y,z);
+}
+
+template<typename T>
+inline Point<T> Point<T>::round(void) const {
+  return Point<T>(x,y,z);
+}
+
+#endif //LIBSAKUSEN_METHOD_DEFINITIONS
+#endif //! SWIG
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const Point<T>& p) {

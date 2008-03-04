@@ -698,7 +698,7 @@ void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
       game->order(OrderMessage(unitId, moveOrder));
       const Point<sint32> displacement =
         target - unit->getStatus().getFrame().getPosition();
-      const double angle = atan2(displacement.y, displacement.x);
+      const double angle = atan2(static_cast<double>(displacement.y), displacement.x);
       const Orientation desiredOrientation(
           AngularVelocity(0, 0, AngularVelocity::element_type(angle*180/M_PI))
         );

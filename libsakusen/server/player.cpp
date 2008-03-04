@@ -109,13 +109,13 @@ void Player::detachClient(Client* client)
 }
 
 uint32 Player::requestEnergy(uint32 amount) {
-  uint32 result = std::min<uint64>(amount, availableEnergy);
+  uint32 result = static_cast<uint32>(std::min<uint64>(amount, availableEnergy));
   availableEnergy -= result;
   return result;
 }
 
 uint32 Player::requestMetal(uint32 amount) {
-  uint32 result = std::min<uint64>(amount, availableMetal);
+  uint32 result = static_cast<uint32>(std::min<uint64>(amount, availableMetal));
   availableMetal -= result;
   return result;
 }

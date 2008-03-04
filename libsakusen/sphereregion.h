@@ -141,9 +141,9 @@ inline boost::tuple<double,double> SphereRegion<T>::intersect(
 {
   const Position relativeOrigin = r.origin - centre;
   // Set up a quadratic to solve for the distance parameter
-  double a = r.d.squareLength();
-  double b = 2*r.d.innerProduct(relativeOrigin);
-  double c = relativeOrigin.squareLength();
+  double a = static_cast<double>(r.d.squareLength());
+  double b = static_cast<double>(2*r.d.innerProduct(relativeOrigin));
+  double c = static_cast<double>(relativeOrigin.squareLength());
 
   boost::tuple<double,double> result = mathsUtils_solveQuadratic(a, b, c);
   if (isnan(result.get<0>())) {

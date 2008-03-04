@@ -14,7 +14,7 @@ namespace sakusen {
  *
  * \todo We might want to change the internal representation to a matrix a
  * la computer graphics. */
-class Frame {
+class LIBSAKUSEN_API Frame {
   public:
     Frame() {}
     Frame(const Position& p, const Orientation& o) :
