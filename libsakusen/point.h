@@ -277,19 +277,19 @@ class LIBSAKUSEN_API Point {
     inline double length(void) const {
       return sqrt(static_cast<double>(squareLength()));
     }
-  /** \brief Rescale the Point to length 1.
-    *
-    * This is only useful on Point<double>s.  For others it should throw a
-    * compile warning. */
-  /* Yes and no. On MSVC it *does* throw (many) compile warnings, but when the library is compiled, due to template  
-   * instantiation. */
-#ifdef _MSC_VER
-    inline void normalise(void){};
-#else
+
+    /** \brief Rescale the Point to length 1.
+     *
+     * This is only useful on Point<double>s.
+     *
+     * Unfortunately, on MSVC it causes (many) compile warnings for the other
+     * types when the library is compiled, due to template instantiation.
+     * Thus we have separate implementations for double and not double.
+     * The double version is below. */
     inline void normalise(void) {
-      *this /= length();
-    }
-#endif
+      Fatal("normalise on Point<T> for T!=double");
+    };
+
     inline bool isZero(void) const {
       return x==T(0) && y==T(0) && z==T(0);
     }
@@ -306,13 +306,10 @@ class LIBSAKUSEN_API Point {
 #endif
 };
 
-#ifdef _MSC_VER
 template<>
 inline void Point<double>::normalise(void) {
-      *this /= length();
-    }
-
-#endif //_MSC_VER
+  *this /= length();
+}
 
 #ifndef SWIG
 /** \brief Truncate a Point towards zero.
