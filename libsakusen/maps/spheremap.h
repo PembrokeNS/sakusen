@@ -35,11 +35,64 @@ class SphereMap : public MapType {
     virtual Topology getTopology() const { return topology_sphere; }
 
     virtual bool resolvePosition(
-        const Point<sint32>& /*pos*/, Point<sint32>& /*resolved*/,
-        Orientation* /*orientation*/
+        const Point<sint32>& pos, Point<sint32>& p,
+        Orientation* orientation
       ) const {
-      /** \todo implement */
-      Fatal("not implemented");
+      p = pos;
+      
+      bool altered;
+      sint32 newX;
+      sint32 newY;
+      
+      do {
+        altered = false;
+
+        if (p.x<this->left()) {
+          altered = true;
+          newY = this->top() - (this->left() - p.x);
+          p.x = this->left() + (this->top() - p.y - 1);
+          p.y = newY;
+          if (orientation != NULL) {
+            *orientation =
+              Orientation(rotation_anticlockwise, 90) * *orientation;
+          }
+        }
+
+        if (p.x>=this->right()) {
+          altered = true;
+          newY = this->bottom() + (p.x - this->right());
+          p.x = this->left() + (this->top() - p.y - 1);
+          p.y = newY;
+          if (orientation != NULL) {
+            *orientation =
+              Orientation(rotation_anticlockwise,90) * *orientation;
+          }
+        }
+
+        if (p.y<this->bottom()) {
+          altered = true;
+          newX = this->right() - (this->bottom() - p.y);
+          p.y = this->bottom() + (this->right() - p.x - 1);
+          p.x = newX;
+          if (orientation != NULL) {
+            *orientation =
+              Orientation(rotation_anticlockwise, 270) * *orientation;
+          }
+        }
+
+        if (p.y>=this->top()) {
+          altered = true;
+          newX = this->left() + (p.y - this->bottom());
+          p.y = this->bottom() + (this->right() - p.x - 1);
+          p.x = newX;
+          if (orientation != NULL) {
+            *orientation =
+              Orientation(rotation_anticlockwise, 270) * *orientation;
+          }
+        }
+      } while (altered);
+
+      return false;
     }
 
     virtual Point<sint32> getShortestDifference(
