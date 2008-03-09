@@ -30,7 +30,7 @@ class KleinMap : public MapType {
         Orientation* orientation
       ) const {
       p = pos;
-        
+      
       while (p.x < this->left()) {
         p.x += this->width();
       }
