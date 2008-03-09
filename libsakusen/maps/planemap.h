@@ -1,9 +1,10 @@
-#ifndef PLANEMAP_H
-#define PLANEMAP_H
+#ifndef LIBSAKUSEN__MAPS__PLANEMAP_H
+#define LIBSAKUSEN__MAPS__PLANEMAP_H
 
 #include "map.h"
 
 namespace sakusen {
+namespace maps {
 
 /** \brief Represents a planar map
  *
@@ -20,8 +21,6 @@ namespace sakusen {
  */
 template<typename MapType>
 class PlaneMap : public MapType {
-  private:
-    PlaneMap();
   public:
     PlaneMap(const MapTemplate& t) : MapType(t) {}
     PlaneMap(
@@ -37,12 +36,11 @@ class PlaneMap : public MapType {
 
     Topology getTopology(void) const { return topology_plane; }
     bool resolvePosition(
-        const Point<sint32>& pos, Point<sint32>* resolved,
+        const Point<sint32>& pos, Point<sint32>& p,
         Orientation*
       ) const
     {
-      Point <sint32> p = pos;
-      
+      p = pos;
       bool truncated = false;
       
       if (p.x<this->left()) {
@@ -65,10 +63,6 @@ class PlaneMap : public MapType {
         truncated = true;
       }
 
-      if (resolved != NULL) {
-        *resolved = p;
-      }
-      
       return truncated;
     }
 
@@ -80,7 +74,7 @@ class PlaneMap : public MapType {
     }
 };
 
-}
+}}
 
-#endif // PLANEMAP_H
+#endif // LIBSAKUSEN__MAPS__PLANEMAP_H
 

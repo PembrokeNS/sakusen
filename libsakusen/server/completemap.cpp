@@ -64,12 +64,6 @@ void CompleteMap::sanityCheck()
 
 Map* CompleteMap::newMap(const MapTemplate& t)
 {
-  switch (t.getTopology()) {
-    case topology_plane:
-      return new PlaneMap<CompleteMap>(t);
-    /** \todo All the other topologies. */
-    default:
-      throw DeserializationExn("Invalid topology");
-  }
+  return Map::newMap<CompleteMap>(t);
 }
 

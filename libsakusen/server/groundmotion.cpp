@@ -17,7 +17,8 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   UnitStatus& status = unit.getStatus();
   const UnitOrders& orders = unit.getOrders();
   const IUnitTypeData& typeData = unit.getITypeData();
-  const IHeightfield& hf = world->getMap()->getHeightfield();
+  const Map* map = world->getMap();
+  const IHeightfield& hf = map->getHeightfield();
   ISpatial::ConstPtr spatialIndex = world->getSpatialIndex();
 
   Velocity expectedVelocity(status.velocity);
@@ -99,6 +100,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   sint32 heightAboveGround = numeric_limits<sint32>::max();
   for (UnitCornerIterator corner(unit), end; corner != end; ++corner) {
     Position cornerPos = *corner;
+    map->resolvePosition(cornerPos, cornerPos);
     heightAboveGround = min(
         heightAboveGround, cornerPos.z - hf.getHeightAt(cornerPos)
       );

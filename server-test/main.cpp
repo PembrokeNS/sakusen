@@ -6,7 +6,6 @@
 #include "sphereregion.h"
 #include "region.h"
 #include "resourceinterface-methods.h"
-#include "planemap.h"
 #include "fileutils.h"
 #include "fileresourceinterface.h"
 #include "completeworld.h"

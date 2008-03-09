@@ -14,7 +14,7 @@ Point<sint32> Quadratic::evaluate(Time tt) const
   Point<sint32> resolved;
   Point<sint32> p(s.x+d.x*(tt-t), s.y+d.y*(tt-t),
         s.z+d.z*(tt-t) - world->getMap()->getGravity()*(tt-t)*(tt-t));
-  if (world->getMap()->resolvePosition(p, &resolved)) {
+  if (world->getMap()->resolvePosition(p, resolved)) {
     /** \todo deal with the fact that the point computed is off the map (note
      * that this means completely off the map, not just wrapped onto some other
      * part of it). */

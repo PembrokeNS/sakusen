@@ -2,7 +2,7 @@
 #define PARTIALMAP_H
 
 #include "libsakusen-client-global.h"
-#include "planemap.h"
+#include "maps/planemap.h"
 #include "partialheightfield.h"
 
 namespace sakusen {

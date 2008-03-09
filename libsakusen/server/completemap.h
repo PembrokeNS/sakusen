@@ -4,7 +4,6 @@
 #include "libsakusen-server-global.h"
 #include "map.h"
 #include "heightfield.h"
-#include "planemap.h"
 
 namespace sakusen {
 namespace server {

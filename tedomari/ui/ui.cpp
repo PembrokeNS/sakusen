@@ -690,6 +690,7 @@ void UI::move(const set<sakusen::UnitId>& units, const ActionTarget& target)
 
 void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
 {
+  const Map* map = sakusen::world->getMap();
   Order moveOrder = Order(new MoveOrderData(target));
   
   BOOST_FOREACH (UnitId unitId, units) {
@@ -697,7 +698,9 @@ void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
     if (unit) {
       game->order(OrderMessage(unitId, moveOrder));
       const Point<sint32> displacement =
-        target - unit->getStatus().getFrame().getPosition();
+        map->getShortestDifference(
+            target, unit->getStatus().getFrame().getPosition()
+          );
       const double angle = atan2(static_cast<double>(displacement.y), displacement.x);
       const Orientation desiredOrientation(
           AngularVelocity(0, 0, AngularVelocity::element_type(angle*180/M_PI))

@@ -4,7 +4,6 @@
 #include "universe.h"
 #include "heightfield.h"
 #include "mapplaymode.h"
-#include "planemap.h"
 #include "sphereregion.h"
 #include "libsakusen-resources-global.h"
 #include "resourceinterface-methods.h"
@@ -403,7 +402,7 @@ int main(/*int argc, char** argv*/)
   playModes.clear();
   playModes.push_back(playMode);
 
-  cout<< "Loading Image"<<endl;
+  cout << "Loading Image" << endl;
   Image::Ptr image;
   String imagePath;
   boost::tie(image, imagePath) =
@@ -429,6 +428,20 @@ int main(/*int argc, char** argv*/)
   boost::tie(reloadedTemplate, result, boost::tuples::ignore) =
     resourceInterface->search<MapTemplate>("test/immap", reloadedUniverse);
   cout << "Result of reload was " << result << endl;
+
+  cout << "Creating mobius strip map" << endl;
+  heightfield = Heightfield(2*MAP_WIDTH/10, 2, 2, 2);
+  t.reset(new MapTemplate(
+        universe, "mobiusmap", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH)/10,
+        Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_mobius,
+        heightfield, 1000 /* gravity */, playModes
+      ));
+  
+  cout << "Saving mobius strip map" << endl;
+  if (resourceInterface->save(t, "test")) {
+    cout << resourceInterface->getError() << endl;
+    return EXIT_FAILURE;
+  }
   
   switch(result) {
     case resourceSearchResult_error:

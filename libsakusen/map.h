@@ -90,9 +90,11 @@ class LIBSAKUSEN_API Map {
      * reflections as appropriate when transitioning over map edges.
      *
      * The z-coordinate of pos is left unchanged in resolved.
+     *
+     * \note The implementation must support the case where &pos == &resolved.
      */
     virtual bool resolvePosition(
-        const Point<sint32>& pos, Point<sint32>* resolved,
+        const Point<sint32>& pos, Point<sint32>& resolved,
         Orientation* orientation
       ) const = 0;
     /** \brief Resolves any point in space into one within the bounds of the
@@ -102,7 +104,7 @@ class LIBSAKUSEN_API Map {
      * example, for use with Ballistics, which have no orientation
      */
     inline bool resolvePosition(
-        const Point<sint32>& pos, Point<sint32>* resolved) const {
+        const Point<sint32>& pos, Point<sint32>& resolved) const {
       return resolvePosition(pos, resolved, NULL);
     }
     
@@ -126,7 +128,7 @@ class LIBSAKUSEN_API Map {
         const Point<sint32>& pos, const Point<sint32>& inc,
         Orientation* orientation) const {
       Point<sint32> p;
-      resolvePosition(pos+inc, &p, orientation);
+      resolvePosition(pos+inc, p, orientation);
       return p;
     }
 

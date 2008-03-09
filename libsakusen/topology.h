@@ -36,7 +36,9 @@ enum Topology {
    * everything to go completely haywire */
   topology_sphere,
   /** Real projective plane with opposite pairs of edges identified reversed */
-  topology_crosscut
+  topology_crosscut,
+  /** Must be last enum value */
+  topology_max
 };
 
 }
