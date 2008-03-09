@@ -13,11 +13,13 @@ void FixedMotion::incrementState(LayeredUnit& unit)
    * when the ground level changes, not every tick.
    *
    * \bug This allows the unit to exist upside-down and underground. */
-  const IHeightfield& hf = world->getMap()->getHeightfield();
+  const Map* map = world->getMap();
+  const IHeightfield& hf = map->getHeightfield();
   bool okay = true;
 
   for (UnitCornerIterator corner(unit, true), end; corner != end; ++corner) {
     Position cornerPos = *corner;
+    map->resolvePosition(cornerPos, cornerPos);
     const sint32 height = hf.getHeightAt(cornerPos);
     const sint32 heightDifference = height - cornerPos.z;
     if (heightDifference > maxHeightDifference ||
