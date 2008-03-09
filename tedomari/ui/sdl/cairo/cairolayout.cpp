@@ -1,7 +1,10 @@
 #include "ui/sdl/cairo/cairolayout.h"
 #include <pango/pangocairo.h>
 
-using namespace tedomari::ui::sdl::cairo;
+namespace tedomari {
+namespace ui {
+namespace sdl {
+namespace cairo {
 
 CairoLayout::CairoLayout(CairoUI* ui)
 {
@@ -17,7 +20,7 @@ CairoLayout::~CairoLayout()
   g_object_unref(layout);
 }
 
-void CairoLayout::setText(const sakusen::String& t)
+void CairoLayout::setText(const String& t)
 {
   pango_layout_set_text(layout, t.c_str(), -1);
 }
@@ -34,3 +37,6 @@ void CairoLayout::contextChanged()
 {
   pango_layout_context_changed(layout);
 }
+
+}}}}
+

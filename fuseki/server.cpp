@@ -39,8 +39,9 @@ using namespace sakusen;
 using namespace sakusen::server;
 using namespace sakusen::server::plugins;
 using namespace sakusen::comms;
-using namespace fuseki;
 using namespace fuseki::settingsTree;
+
+namespace fuseki {
 
 Server::Server(
     std::ostream& o,
@@ -799,7 +800,7 @@ void Server::unregisterListener(
  * This method informs all clients of the change to the settings tree and also
  * clears the readiness flag on any clients who had requested that it be
  * automatically cleared when a setting was changed. */
-void Server::settingAlteredCallback(Node::Ptr altered)
+void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
 {
   String fullName = altered->getFullName();
   bool isReadinessChange =
@@ -834,5 +835,7 @@ void Server::settingAlteredCallback(Node::Ptr altered)
       }
     }
   }
+}
+
 }
 

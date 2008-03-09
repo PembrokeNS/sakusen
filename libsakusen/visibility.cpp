@@ -46,6 +46,8 @@ static const uint32 powerLookup[16] = {
 /** \brief Update the given SensorReturn for this SensorCapability for one type
  * of sensor.
  *
+ * \param[in]     senser        Unit doing the sensing.
+ * \param[in]     sensee        Unit possibly being sensed.
  * \param[in,out] retrn         SensorReturn to update.
  * \param[in]     type          Type of sensor used.
  * \param[in,out] changed       Set to true iff anything changes.  Not set to
@@ -140,13 +142,16 @@ inline void SensorCapability::updateReturn(
 /** \brief Update the given EachSensorReturn for this Sensors for all types
  * of sensor.
  *
- * \param[in,out] returns   EachSensorReturn to update.
- * \param[in,out] changed   Set to true iff anything changes.  Not set to false
- *                          if nothing changes.
+ * \param[in]     senser        Unit doing the sensing.
+ * \param[in]     sensee        Unit possibly being sensed.
+ * \param[in,out] returns       EachSensorReturn to update.
+ * \param[in,out] changed       Set to true iff anything changes.  Not set to
+ *                              false if nothing changes.
  * \param[in,out] maxPerception Updated by or-ing in all perceptions these
- *                          Sensors achieve.
- * \param[in,out] bestRadius Reduced if these sensors can detect to within a
- *                          smaller radius than the value presently indicates.
+ *                              Sensors achieve.
+ * \param[in,out] bestRadius    Reduced if these sensors can detect to within a
+ *                              smaller radius than the value presently
+ *                              indicates.
  */
 void Sensors::updateReturns(
     const Ref<const ICompleteUnit>& senser,

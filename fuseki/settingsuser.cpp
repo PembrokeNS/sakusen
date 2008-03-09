@@ -2,8 +2,9 @@
 
 #include "settingstree/node.h"
 
-using namespace fuseki;
 using namespace fuseki::settingsTree;
+
+namespace fuseki {
 
 SettingsUser::SettingsUser(const String& group) :
   groups()
@@ -45,5 +46,7 @@ bool SettingsUser::hasReadPermissionFor(Node::ConstPtr node) const
 bool SettingsUser::hasWritePermissionFor(Node::ConstPtr node) const
 {
   return hasGroupIn(node->getWritingGroups());
+}
+
 }
 

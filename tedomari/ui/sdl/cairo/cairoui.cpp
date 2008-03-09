@@ -6,8 +6,11 @@
 
 using namespace std;
 using namespace tedomari::game;
-using namespace tedomari::ui;
-using namespace tedomari::ui::sdl::cairo;
+
+namespace tedomari {
+namespace ui {
+namespace sdl {
+namespace cairo {
 
 CairoUI::CairoUI(const SDLUI::Options& options, ifstream& uiConf, Game* game) :
   SDLUI(options, uiConf, game)
@@ -136,7 +139,7 @@ void CairoUI::drawRect(double x, double y, double w, double h, const Colour& c)
   cairo_stroke(cairoContext);
 }
 
-void CairoUI::drawText(double x, double y, const sakusen::String& text, const Colour& c)
+void CairoUI::drawText(double x, double y, const String& text, const Colour& c)
 {
   cairoSetSource(c);
   PangoLayout* layout = pango_cairo_create_layout(cairoContext);
@@ -160,3 +163,6 @@ void CairoUI::drawText(double x, double y, const CairoLayout* sdlLayout)
   cairo_move_to(cairoContext, x, y);
   pango_cairo_show_layout(cairoContext, sdlLayout->getLayout());
 }
+
+}}}}
+

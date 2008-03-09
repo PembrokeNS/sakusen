@@ -14,7 +14,7 @@ class Intersection {
     /** \brief Constructs an intersection with land or water
      *
      * \param t The type of thing intersected.  Must be either gameObject_land
-     *          or gameObject_water
+     *          or gameObject_water.
      * \param p Ray parameter of intersection.
      */
     Intersection(GameObject t, double p) :
@@ -25,10 +25,13 @@ class Intersection {
     {
       assert(type == gameObject_land || type == gameObject_water);
     }
-    /** \brief Constructs an intersection with a bounded game object
+    /** \brief Constructs an intersection with a bounded game object.
      *
-     * \param b The object intersected.  Must be either a unit or Effect
-     * \param p Ray parameter of the intersection */
+     * \param b The object intersected.  Must be either a unit or Effect.
+     * \param p Ray parameter of the intersection.
+     * \param l A bool indicating whether this intersection is marking the
+     *          entry into the object (in which case false) or depature from it
+     *          (in which case true). */
     Intersection(const Ref<Bounded>& b, double p, bool l) :
       type(b->getObjectType()),
       position(p),

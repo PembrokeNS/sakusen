@@ -3,7 +3,8 @@
 #include "oarchive-methods.h"
 
 using namespace std;
-using namespace sakusen;
+
+namespace sakusen {
 
 UnitStatus::UnitStatus(const IUnitStatus& copy) :
   type(copy.getType()),
@@ -135,5 +136,7 @@ UnitStatus UnitStatus::load(
       hitPoints, radarIsActive, sonarIsActive,
       weaponsStatus
     );
+}
+
 }
 

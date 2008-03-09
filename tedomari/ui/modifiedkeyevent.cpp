@@ -1,8 +1,9 @@
 #include "modifiedkeyevent.h"
 
-using namespace tedomari::ui;
+namespace tedomari {
+namespace ui {
 
-ModifiedKeyEvent::ModifiedKeyEvent(const sakusen::String& name)
+ModifiedKeyEvent::ModifiedKeyEvent(const String& name)
 {
   assert(!name.empty());
   down = true;
@@ -17,4 +18,6 @@ ModifiedKeyEvent::ModifiedKeyEvent(const sakusen::String& name)
 
   modifiedKey = ModifiedKey(modifiedKeyName);
 }
+
+}}
 

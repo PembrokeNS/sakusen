@@ -1,7 +1,9 @@
 #include "ui/sdl/cairo/cairoregion.h"
 
-using namespace tedomari::ui;
-using namespace tedomari::ui::sdl::cairo;
+namespace tedomari {
+namespace ui {
+namespace sdl {
+namespace cairo {
 
 void CairoRegion::blit(const Surface::ConstPtr& s)
 {
@@ -77,7 +79,7 @@ void CairoRegion::drawRect(
 void CairoRegion::drawText(
     double xoff,
     double yoff,
-    const sakusen::String& text,
+    const String& text,
     const Colour& c
   )
 {
@@ -88,3 +90,7 @@ void CairoRegion::drawText(double xoff, double yoff, const Layout* layout)
 {
   ui->drawText(x+xoff, y+yoff, dynamic_cast<const CairoLayout*>(layout));
 }
+
+}}}}
+
+

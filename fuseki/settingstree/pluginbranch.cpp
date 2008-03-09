@@ -8,14 +8,18 @@ using namespace std;
 
 using namespace fuseki::settingsTree;
 
+namespace fuseki {
+
 PluginBranch::PluginBranch(
-    const sakusen::String& name,
-	fuseki::Plugin* p,
-	Branch* parent,
-	fuseki::Server* server
+    const String& name,
+    Plugin* p,
+    Branch* parent,
+    Server* server
   ) :
   Branch(name, "world", "", parent, server),
   plugin(p)
 {
+}
+
 }
 

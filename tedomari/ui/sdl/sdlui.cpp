@@ -13,8 +13,10 @@ using namespace std;
 using namespace optimal;
 
 using namespace tedomari::game;
-using namespace tedomari::ui;
-using namespace tedomari::ui::sdl;
+
+namespace tedomari {
+namespace ui {
+namespace sdl {
 
 void SDLUI::Options::usage(std::ostream& out)
 {
@@ -127,7 +129,7 @@ OptionsParser SDLUI::getParser(Options* options)
   return parser;
 }
 
-void SDLUI::setTitle(const sakusen::String& title)
+void SDLUI::setTitle(const String& title)
 {
   SDL_WM_SetCaption(title.c_str(), NULL);
 }
@@ -230,4 +232,6 @@ uint32 SDLUI::getSDLColour(const Colour& c) const
 {
   return SDL_MapRGBA(sdlBuffer->format, c.ir(), c.ig(), c.ib(), c.ia());
 }
+
+}}}
 
