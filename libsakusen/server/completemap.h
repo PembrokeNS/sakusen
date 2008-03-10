@@ -44,10 +44,6 @@ class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
     static Map* newMap(const MapTemplate& t);
 };
 
-#ifdef _MSC_VER
-template LIBSAKUSEN_SERVER_API class PlaneMap<CompleteMap>;
-#endif
-
 }}
 
 #endif // COMPLETEMAP_H

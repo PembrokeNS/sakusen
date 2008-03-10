@@ -46,10 +46,6 @@ class LIBSAKUSEN_CLIENT_API PartialMap : public Map {
     }
 };
 
-#ifdef _MSC_VER
-template LIBSAKUSEN_CLIENT_API class PlaneMap<PartialMap>;
-#endif
-
 }}
 
 #endif // PARTIALMAP_H

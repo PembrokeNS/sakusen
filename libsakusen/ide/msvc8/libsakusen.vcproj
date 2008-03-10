@@ -209,6 +209,38 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="maps"
+			>
+			<File
+				RelativePath="..\..\maps\crosscutmap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\cylindermap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\kleinmap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\mobiusmap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\planemap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\spheremap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\maps\torusmap.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\angle.h"
 			>
@@ -486,10 +518,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\planemap.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\playerid.h"
 			>
 		</File>
@@ -611,14 +639,6 @@
 		</File>
 		<File
 			RelativePath="..\..\servedgame.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\spheremap.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\spheremap.h"
 			>
 		</File>
 		<File
