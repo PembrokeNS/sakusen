@@ -39,7 +39,7 @@ class LIBSAKUSEN_API UnitType {
      * be resolved into Ids later.
      *
      * \warning After calling this constructor, and before
-     * using this UnitType, you *must* call UnitType::resolveNames to finish
+     * using this UnitType, you \e must call UnitType::resolveNames to finish
      * the initilaization.
      */
     UnitType(
