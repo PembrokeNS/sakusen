@@ -1,0 +1,6 @@
+SUBDIRS :=
+
+ifeq ($(ENABLE_UNIVERSE_BUILDER),yes)
+SUBDIRS += universe-builder
+endif
+

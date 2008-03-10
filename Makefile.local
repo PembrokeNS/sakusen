@@ -8,20 +8,22 @@ all-nonrecursive:
 else
 ifeq ($(ENABLE_EVERYTHING),yes)
 
-SUBDIRS = \
+SUBDIRS := \
 	liboptimal libltdl_hacked \
 	libsakusen \
 	data server-test server-plugins \
 	fuseki tedomari
 
 ifeq ($(ENABLE_BINDINGS),yes)
-SUBDIRS := $(SUBDIRS) bindings
+SUBDIRS += bindings
 endif
 ifeq ($(ENABLE_KIAI),yes)
-SUBDIRS := $(SUBDIRS) kiai
+SUBDIRS += kiai
 endif
 
-all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings: all-recurse-libsakusen
+SUBDIRS += tools
+
+all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings all-recurse-tools: all-recurse-libsakusen
 
 all-recurse-fuseki all-recurse-tedomari: all-recurse-liboptimal
 
@@ -29,7 +31,7 @@ all-recurse-libsakusen: all-recurse-libltdl_hacked
 
 test-recurse-server-test: test-recurse-data
 
-test-recurse-server-test test-recurse-server-plugins test-recurse-fuseki test-recurse-tedomari test-recurse-data test-recurse-bindings: test-recurse-libsakusen
+test-recurse-server-test test-recurse-server-plugins test-recurse-fuseki test-recurse-tedomari test-recurse-data test-recurse-bindings test-recurse-tools: test-recurse-libsakusen
 
 test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
 

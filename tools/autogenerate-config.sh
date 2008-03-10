@@ -129,6 +129,9 @@ check_for_lib pcrecpp pcrecpp pcrecpp.h
 check_for_lib mhash mhash mhash.h
 check_for_lib png png png.h
 check_for_lib avahiclient avahi-client avahi-client/client.h
+# I feel I should not be asking for a particular version of libglademm here,
+# but there seems to be no generic version installed
+check_for_lib glademm cairo libglademm.h `pkg-config libglademm-2.4 --cflags --libs`
 #check_for_lib something_that_doesnt_exist some_header.h
 
 if ! enable_component EVERYTHING pcrecpp mhash png boost
@@ -151,6 +154,7 @@ enable_component CAIRO cairo
 enable_component CONVERSION unicode
 enable_component AVAHI avahiclient
 enable_component KIAI pyqt4
+enable_component UNIVERSE_BUILDER glademm
 #enable_component IMPOSSIBLE_COMPONENT something_that_doesnt_exist
 
 printf 'BUILD_CXXFLAGS := $(BUILD_CFLAGS)\n' >> "${TARGET}"
