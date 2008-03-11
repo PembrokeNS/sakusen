@@ -146,10 +146,10 @@ the right version.
 Next we can set the map:
 
 \verbatim
-> s game:map test/m
+> s game:map test/ma
 >
 Server reported that value of ':game:map' was:
-test/m
+test/ma
 Server reported that value of ':game:map' was:
 test/map
 \endverbatim
@@ -207,7 +207,7 @@ You can automate this whole process by putting a line like this one in your
 ~/.sakusen/tedomari/config file:
 
 \verbatim
-commands=cs neveradmin 0;s game:universe:name test/u;s game:map test/m;cs player 1;cs ready 1
+commands=cs neveradmin 0;s game:universe:name test/u;s game:map test/ma;cs player 1;cs ready 1
 \endverbatim
 
 That queues all of the command's we've just discussed that start the game,
