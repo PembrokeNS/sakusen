@@ -233,6 +233,26 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
     sint32(xyResolution);
 }
 
+sint32 Heightfield::getApproxHeightAt(sint32 x, sint32 y) const {
+  return getHeightAtSample(
+      dexToSampleFloorX(x), dexToSampleFloorY(y)
+    );
+}
+
+/** \brief Get an approximation to the height of the heightfield at a
+ * given position.
+ *
+ * Given a position in space, returns an approximation to the
+ * height on the vertical line through that position, in dex.  This
+ * version is fast at the cost of accuracy; to get the exact height use
+ * getHeightAt.
+ *
+ * \note \c p.z is irrelevant.
+ */
+sint32 Heightfield::getApproxHeightAt(const Position& p) const {
+  return getApproxHeightAt(p.x, p.y);
+}
+
 /** \brief Finds the greatest height in a rectangular area
  *
  * Given a rectangle \p area in x-y space (in dex), returns the greatest height

@@ -126,8 +126,8 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
       return getHeightAt(p.x, p.y);
     }
 
-    inline virtual sint32 getApproxHeightAt(sint32 x, sint32 y) const;
-    inline virtual sint32 getApproxHeightAt(const Position& p) const;
+    virtual sint32 getApproxHeightAt(sint32 x, sint32 y) const;
+    virtual sint32 getApproxHeightAt(const Position& p) const;
 
     sint32 getMaxHeightIn(const Rectangle<sint32>&) const;
     double intersectRay(const Ray&, double extent) const;
