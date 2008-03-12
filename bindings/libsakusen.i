@@ -49,19 +49,17 @@ template<
     typename T2 = boost::tuples::null_type,
     typename T3 = boost::tuples::null_type,
     typename T4 = boost::tuples::null_type,
-    typename T5 = boost::tuples::null_type,
-    typename T6 = boost::tuples::null_type
+    typename T5 = boost::tuples::null_type
   >
 class tuple {
   public:
     T0 get_head();
-    tuple<T1, T2, T3, T4, T5, T6> get_tail();
+    tuple<T1, T2, T3, T4, T5> get_tail();
 };
 
 template<typename T0>
 class tuple<
     T0,
-    boost::tuples::null_type,
     boost::tuples::null_type,
     boost::tuples::null_type,
     boost::tuples::null_type,

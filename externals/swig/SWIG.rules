@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="SWIG"
 			DisplayName="SWIG"
-			CommandLine="swig -Fmicrosoft [SWIGWORDSIZE] [Preprocessor] [language] -c++ [output] [Include] [inputs]"
+			CommandLine="swig -Fmicrosoft [SWIGWORDSIZE] [Preprocessor] [language] [namespace] -c++ [output] [Include] [inputs]"
 			Outputs="$(InputName).cpp"
 			FileExtensions="*.i"
 			ExecutionDescription="SWIGging $(InputName)"
@@ -49,6 +49,15 @@
 					Description="Preprocessor Defines"
 					Switch="-D[value]"
 					Delimited="true"
+				/>
+				<StringProperty
+					Name="namespace"
+					DisplayName="Namespace"
+					Category="Output"
+					Description="Namespace option for SWIG"
+					Switch="-namespace [value]"
+					Delimited="true"
+					Inheritable="true"
 				/>
 			</Properties>
 		</CustomBuildRule>

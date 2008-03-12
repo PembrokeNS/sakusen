@@ -11,10 +11,12 @@
         throw Swig::DirectorMethodException();
     }
 }
+#ifdef SWIGPYTHON
 %exception {
     try { $action }
     catch (Swig::DirectorException &e) { SWIG_fail; }
 }
+#endif
 %{
 #include <string>
 %}
