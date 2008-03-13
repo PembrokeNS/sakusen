@@ -1,4 +1,4 @@
-%module sakusenresources
+%module sakusen_resources
 %naturalvar;
 #ifdef _WIN32
   %include <windows.i>

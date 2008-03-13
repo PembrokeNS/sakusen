@@ -34,7 +34,7 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-sakusencomms.cpp: $(top_srcdir)/bindings/libsakusencomms.i $(top_srcdir)/bindings/libsakusen.i \
+sakusencomms.cpp: $(top_srcdir)/bindings/libsakusen-comms.i $(top_srcdir)/bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
 	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
 

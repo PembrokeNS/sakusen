@@ -10,10 +10,10 @@ PYLIBDIR := $(PREFIX)/lib/python$(PYTHON_VERSION)/site-packages
 NO_AUTO_COMPILING := yes
 
 SHORT_NAMES := comms resources client
-SOURCES := $(foreach name,$(SHORT_NAMES),sakusen$(name).cpp)
-OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen$(name).o)
-LIBRARIES := $(foreach name,$(SHORT_NAMES),_sakusen$(name).la)
-PY_FILES := $(foreach name,$(SHORT_NAMES),sakusen$(name).py)
+SOURCES := $(foreach name,$(SHORT_NAMES),sakusen_$(name).cpp)
+OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen_$(name).o)
+LIBRARIES := $(foreach name,$(SHORT_NAMES),_sakusen_$(name).la)
+PY_FILES := $(foreach name,$(SHORT_NAMES),sakusen_$(name).py)
 
 all-nonrecursive: _sakusen.la $(LIBRARIES)
 
@@ -32,9 +32,9 @@ _sakusen.la: sakusen.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
-$(LIBRARIES): _sakusen%.la: sakusen%.o
+$(LIBRARIES): _sakusen_%.la: sakusen_%.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
-                sakusen$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
+                sakusen_$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of the various CXX_FLAGS to which we have
 # access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
@@ -49,7 +49,7 @@ sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
 	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
 
-$(SOURCES): sakusen%.cpp: $(top_srcdir)bindings/libsakusen%.i \
+$(SOURCES): sakusen_%.cpp: $(top_srcdir)bindings/libsakusen-%.i \
 		$(top_srcdir)bindings/libsakusen.i
 	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
 

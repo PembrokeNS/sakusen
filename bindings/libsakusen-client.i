@@ -1,4 +1,4 @@
-%module(directors="1") sakusenclient
+%module(directors="1") sakusen_client
 %naturalvar;
 %feature("autodoc","1");
 %feature("director") sakusen::client::UnitFactory;

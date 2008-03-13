@@ -1,4 +1,4 @@
-%module sakusencomms
+%module sakusen_comms
 %naturalvar;
 %{
 #include <string>

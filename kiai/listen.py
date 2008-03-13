@@ -2,8 +2,8 @@
 import string
 from PyQt4 import QtCore
 from sakusen import *
-from sakusencomms import *
-import sakusenclient
+from sakusen_comms import *
+import sakusen_client
 from gameModel import gameModel
 def debug(x): pass
 class listener(QtCore.QObject):
@@ -27,8 +27,8 @@ class listener(QtCore.QObject):
 			if(l):
 				debug("Received %d bytes from socket"%l)
 				i=IArchive(b,l)
-				if(sakusenclient.cvar.world):
-					playerid=sakusenclient.cvar.world.getPlayerId()
+				if(sakusen_client.cvar.world):
+					playerid=sakusen_client.cvar.world.getPlayerId()
 				else:
 					playerid=PlayerId.invalid()
 				debug("Deserializing message")

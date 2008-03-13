@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from sakusen import *
-from sakusenresources import *
-from sakusenclient import *
-import sakusenclient
+from sakusen_resources import *
+from sakusen_client import *
+import sakusen_client
 from PyQt4 import QtCore
 import imp
 def debug(x): pass
@@ -64,14 +64,14 @@ class gameModel(QtCore.QObject):
 		self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 		#w should now get deleted at the correct time, I think
 		debug("Created partial world %s"%self.w)
-		debug("Global variable world is now %s"%`sakusenclient.cvar.world`)
+		debug("Global variable world is now %s"%`sakusen_client.cvar.world`)
 	def pushUpdates(self,d):
-		while(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
-			sakusenclient.cvar.world.endTick()
-		if(d.getTime()>sakusenclient.cvar.world.getTimeNow()):
+		while(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
+			sakusen_client.cvar.world.endTick()
+		if(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
 			print "Got updates in wrong order"
 		l=d.getUpdates()
 		for u in l:
 			debug("pushing update "+`u`)
-			sakusenclient.cvar.world.applyUpdate(u)
+			sakusen_client.cvar.world.applyUpdate(u)
 			debug("Applied an update")

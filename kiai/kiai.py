@@ -10,7 +10,7 @@ from mainWindowImpl import mainWindow
 from mapModel import mapModel
 from sceneModel import sceneModel
 import sys,imp
-from sakusenresources import fileUtils_getHome,path
+from sakusen_resources import fileUtils_getHome,path
 from sakusen import CONFIG_SUBDIR
 def debug(x): pass
 

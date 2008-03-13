@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from sakusen import *
-from sakusencomms import *
+from sakusen_comms import *
 from PyQt4 import QtCore
 from settingsDialog import Ui_settingsDialog
 def debug(x): pass
