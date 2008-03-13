@@ -124,6 +124,7 @@ namespace boost
 
 /*GPL code ends here (apart from the line with the closing brace for namespace boost) */
 
+#ifdef SWIGPYTHON
 %pythoncode %{
 def g(self,key):
   """Helper function to get item from a tuple"""
@@ -134,6 +135,7 @@ def g(self,key):
       raise IndexError()
   return w.get_head()
 %}
+#endif
 
   %template(tupleUniverseConstPtrResourceSearchResultString) tuple<sakusen::Universe::ConstPtr,sakusen::ResourceSearchResult,sakusen::String>;
   %template(tupleUniversePtrResourceSearchResultString) tuple<sakusen::Universe::Ptr,sakusen::ResourceSearchResult,sakusen::String>;

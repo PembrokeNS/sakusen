@@ -1,0 +1,64 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B290DE8E-4809-4B3D-9075-311469FC41BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SakusenResourcesCsharp</RootNamespace>
+    <AssemblyName>SakusenResourcesCsharp</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\..\ide\msvc8\Debug</OutputPath>
+    <OutDir>Debug\</OutDir>
+    <IntermediateOutputPath>Debug\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\..\ide\msvc8\release\</OutputPath>
+    <OutDir>Release\</OutDir>
+    <IntermediateOutputPath>Release\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="FileResourceInterface.cs" />
+    <Compile Include="path.cs" />
+    <Compile Include="sakusen_resources.cs" />
+    <Compile Include="sakusen_resourcesPINVOKE.cs" />
+    <Compile Include="SWIGTYPE_p_boost__shared_ptrTsakusen__Writer_t.cs" />
+    <Compile Include="SWIGTYPE_p_boost__tuples__null_type.cs" />
+    <Compile Include="SWIGTYPE_p_f_r_q_const__std__string__bool.cs" />
+    <Compile Include="SWIGTYPE_p_pcrecpp__RE.cs" />
+    <Compile Include="SWIGTYPE_p_std__listTboost__filesystem__path_t.cs" />
+    <Compile Include="SWIGTYPE_p_std__vectorTboost__filesystem__path_t.cs" />
+    <Compile Include="tupleResourceSearchResultString.cs" />
+    <Compile Include="tupleString.cs" />
+    <Compile Include="tupleUniverseConstPtrResourceSearchResultString.cs" />
+    <Compile Include="tupleUniversePtrResourceSearchResultString.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sakusen\SakusenCsharp.csproj">
+      <Project>{D109E7D7-E798-4EDB-A458-9E8A0B67C823}</Project>
+      <Name>SakusenCsharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

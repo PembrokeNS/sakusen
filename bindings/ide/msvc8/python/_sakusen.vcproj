@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="python-bindings"
+	Name="_sakusen"
 	ProjectGUID="{D979B173-CF86-4BD8-B95B-F60F3CBD8BDD}"
 	RootNamespace="bindings"
 	>
@@ -13,14 +13,14 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\..\..\externals\swig\SWIG.rules"
+			RelativePath="..\..\..\..\externals\swig\SWIG.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -32,7 +32,7 @@
 			/>
 			<Tool
 				Name="SWIG"
-				Include="..\..\..\externals\Stlport\stlport;..\..\..\externals\swig\Lib\python;..\..\..\externals\swig\Lib;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;C:\program files\boost\boost_1_34_1;"
+				Include="..\..\..\..\externals\Stlport\stlport;..\..\..\..\externals\swig\Lib\python;..\..\..\..\externals\swig\Lib;..\..\..\..\libsakusen;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\client;C:\program files\boost\boost_1_34_1;"
 				language="python"
 				Output="python\$(InputName).cpp"
 				Preprocessor="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;"
@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;&quot;C:\Program files\Python25\include&quot;;..\..\..\libsakusen;..\..\..\libsakusen\resources;..\..\..\libsakusen\comms;..\..\..\libsakusen\client;..\..\..\libsakusen\server;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\pcrecpp"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server;..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp"
 				PreprocessorDefinitions="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;BOOST_FILESYSTEM_DYN_LINK=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -70,8 +70,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
+				OutputFile="$(OutDir)\$(ProjectName).pyd"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -103,7 +103,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -116,9 +116,9 @@
 			/>
 			<Tool
 				Name="SWIG"
-				Include="..\..\..\externals\Stlport\stlport;..\..\..\externals\swig\Lib\python;..\..\..\externals\swig\Lib;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;C:\program files\boost\boost_1_34_1;"
+				Include="..\..\..\..\externals\Stlport\stlport;..\..\..\..\externals\swig\Lib\python;..\..\..\..\externals\swig\Lib;..\..\..\..\libsakusen;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\client;C:\program files\boost\boost_1_34_1;"
 				language="python"
-				Output="python\$(InputName).cpp"
+				Output="$(ProjectName)\$(InputName).cpp"
 				Preprocessor="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;"
 			/>
 			<Tool
@@ -132,7 +132,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\pcrecpp;&quot;C:\Program files\Python25\include&quot;;..\..\..\libsakusen;..\..\..\libsakusen\resources;..\..\..\libsakusen\comms;..\..\..\libsakusen\client;..\..\..\libsakusen\server"
+				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp;&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server"
 				PreprocessorDefinitions="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;BOOST_FILESYSTEM_DYN_LINK=1"
 				RuntimeLibrary="2"
 				WarningLevel="3"
@@ -152,7 +152,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(OutDir)\$(InputName).dll"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
+				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -190,58 +190,15 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\python\libsakusen.cpp"
+			RelativePath=".\_sakusen\libsakusen.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\python\libsakusen.h"
+			RelativePath=".\_sakusen\libsakusen.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\libsakusen.i"
-			>
-		</File>
-		<File
-			RelativePath=".\python\libsakusenclient.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\python\libsakusenclient.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libsakusenclient.i"
-			>
-		</File>
-		<File
-			RelativePath=".\python\libsakusencomms.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\python\libsakusencomms.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libsakusencomms.i"
-			>
-		</File>
-		<File
-			RelativePath=".\python\libsakusenresources.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\python\libsakusenresources.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libsakusenresources.i"
+			RelativePath="..\..\..\libsakusen.i"
 			>
 		</File>
 	</Files>
