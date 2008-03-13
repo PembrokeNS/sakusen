@@ -175,6 +175,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
 				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				OptimizeReferences="1"
 				EnableCOMDATFolding="1"
 			/>
 			<Tool

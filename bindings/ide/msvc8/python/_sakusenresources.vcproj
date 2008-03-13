@@ -34,7 +34,7 @@
 				Name="SWIG"
 				Include="..\..\..\..\externals\Stlport\stlport;..\..\..\..\externals\swig\Lib\python;..\..\..\..\externals\swig\Lib;..\..\..\..\libsakusen;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\client;C:\program files\boost\boost_1_34_1;"
 				language="python"
-				Output="python\$(InputName).cpp"
+				Output="$(ProjectName)\$(InputName).cpp"
 				Preprocessor="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;"
 			/>
 			<Tool
