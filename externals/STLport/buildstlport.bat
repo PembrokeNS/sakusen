@@ -8,3 +8,5 @@ nmake /fmsvc.mak clobber
 REM We can clobber after an install and save space.
 cd "..\..\"
 copy user_config.h ".\stlport\stl\config\user_config.h"
+copy "bin\stlport.5.1.dll" "..\..\ide\msvc8\release"
+copy "bin\stlportstld.5.1.dll" "..\..\ide\msvc8\debug"

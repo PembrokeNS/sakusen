@@ -8,6 +8,9 @@
 
 #ifndef DISABLE_CONVERSION
 #include <unicode.h>
+  #ifdef _MSC_VER
+    #include "langinfo.h"
+  #endif
 #endif
 
 namespace tedomari {

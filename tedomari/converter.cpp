@@ -8,8 +8,6 @@ using namespace sakusen::comms;
 using namespace tedomari;
 
 #ifdef DISABLE_CONVERSION
-/** \bug Make this go on windows.
- */
 Converter::Converter() {}
 Converter::~Converter() {}
 #else
@@ -17,12 +15,24 @@ Converter::~Converter() {}
 /** \brief Default constructor
  *
  * Uses nl_langinfo(3) to determine native codeset for conversion */
-Converter::Converter() :
-  nativeToUTF8(unicode_iconv_open("UTF-8", nl_langinfo(CODESET))),
-  UTF8ToNative(unicode_iconv_open(nl_langinfo(CODESET), "UTF-8"))
+Converter::Converter() 
 {
+  unicode_init();
+  nativeToUTF8=unicode_iconv_open("UTF-8", nl_langinfo(CODESET));
+  UTF8ToNative=unicode_iconv_open(nl_langinfo(CODESET), "UTF-8");
   Debug("native codeset is " << nl_langinfo(CODESET));
-  /** \todo Error checking */
+  if(nativeToUTF8 == (unicode_iconv_t) -1
+      || UTF8ToNative==(unicode_iconv_t) -1)
+  {
+     Debug("Failed to find converter between "<<nl_langinfo(CODESET)<<" and UTF8");
+     Debug("Falling back to ASCII");
+     nativeToUTF8=unicode_iconv_open("UTF-8", "US-ASCII");
+     UTF8ToNative=unicode_iconv_open("US-ASCII", "UTF-8");
+     if(nativeToUTF8 == (unicode_iconv_t) -1
+      || UTF8ToNative==(unicode_iconv_t) -1)
+       Fatal("Failed to find converter between US-ASCII and UTF-8. Giving up.");
+  }
+  
 }
 
 /** \brief Destructor */
