@@ -58,9 +58,9 @@ struct TypeUnderOptional<boost::logic::tribool> {
 };
 
 template<typename T>
-struct TypeUnderPointer : TypeUnderOptional<typename T::element_type> {};
+struct TypeUnderPointer : public TypeUnderOptional<typename T::element_type> {};
 template<typename T>
-struct TypeUnderPointer<T*> : TypeUnderOptional<T> {};
+struct TypeUnderPointer<T*> : public TypeUnderOptional<T> {};
 
 } /* Back into namespace optimal */
 
@@ -108,7 +108,7 @@ class LIBOPTIMAL_API OptionsParser {
     char assignment;
     char comment;
 
-    class Option : boost::noncopyable {
+    class Option : private boost::noncopyable {
       public:
         typedef boost::shared_ptr<Option> Ptr;
 

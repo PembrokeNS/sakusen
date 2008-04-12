@@ -26,7 +26,7 @@ CompleteWorld::CompleteWorld(
   World(m.getUniverse()),
   map(Map::newMap<CompleteMap>(m)),
   units(),
-  lastFuseToken(-1),
+  lastFuseToken(static_cast<FuseToken>(-1)),
   fuseQueue(),
   players(p)
 {

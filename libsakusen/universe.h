@@ -73,7 +73,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     }
     WeaponTypeId getWeaponTypeId(String weaponTypeName) const;
     
-    inline const UnitTypeId getUnitTypeId(uint32 i) const
+    inline UnitTypeId getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
       return &unitTypes[i];

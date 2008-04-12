@@ -1,4 +1,5 @@
 SUBDIRS = test
 BIN = liboptimal.la
+LIBS = -lstdc++
 INCLUDE =
 

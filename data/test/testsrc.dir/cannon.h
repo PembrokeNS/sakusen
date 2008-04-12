@@ -260,7 +260,7 @@ class ParalyzingLayer : public UnitMask, public Fuse {
     ParalyzingLayer() :
       empty(new SphereRegion<sint16>(Point<sint16>(), 0)),
       blind(),
-      token(-1)
+      token(FuseToken(-1))
     {}
   private:
     const Region<sint16>::ConstPtr empty;

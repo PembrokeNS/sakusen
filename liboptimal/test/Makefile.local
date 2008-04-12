@@ -1,5 +1,5 @@
 BIN = liboptimal-test
-LIBS = -lboost_unit_test_framework-s
+LIBS = -lboost_unit_test_framework-s -lstdc++
 LIB_DEP_NAMES = liboptimal
 THIS_LDFLAGS = -no-install
 

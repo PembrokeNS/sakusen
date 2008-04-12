@@ -194,7 +194,8 @@ fail:
  */
 static AvahiStringList * game_to_txt_records(boost::shared_ptr<ServedGame const> game) {
   /* start with an empty list */
-  AvahiStringList *result = avahi_string_list_new("txtvers=" TXTVERS, NULL);
+  AvahiStringList *result =
+    avahi_string_list_new("txtvers=" TXTVERS, static_cast<const void*>(NULL));
   if (!result)
     throw std::bad_alloc();
 

@@ -3538,7 +3538,7 @@ lt_dlopenext (filename)
     }
 
   /* First try appending ARCHIVE_EXT.  */
-  tmp = LT_EMALLOC (char, len + LT_STRLEN (archive_ext) + 1);
+  tmp = LT_EMALLOC (char, len + strlen (archive_ext) + 1);
   if (!tmp)
     return 0;
 

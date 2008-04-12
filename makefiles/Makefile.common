@@ -109,8 +109,8 @@ MAKEFRAGS := \
 # and such things, they should be added to BUILD_CXXFLAGS in a config.mk or to
 # THIS_CXXFLAGS in a Makefile.local (depending on whether they are supposed to
 # apply to a build or a binary respectively).
-GLOBAL_CXXFLAGS := -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
-GLOBAL_CFLAGS := -Werror -O0 -g3
+GLOBAL_CXXFLAGS ?= -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
+GLOBAL_CFLAGS ?= -Werror -O0 -g3
 
 # We replace '-' with '/' in the library name when using it as a directory
 # because e.g. libsakusen-comms is in libsakusen/comms
@@ -272,9 +272,9 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
-	libtool --mode=link --tag=CXX $(CXX) $(THIS_LDFLAGS) \
+	libtool --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
-		-g3 -o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
+		-o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
 # Libtool objects are made when normal objects are
 
@@ -304,7 +304,8 @@ else
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
-	libtool --mode=link --tag=CXX $(CXX) -g3 $(THIS_LDFLAGS) -o $@ $(LIBS) $^
+	libtool --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+		-o $@ $(LIBS) $^
 
 # The actual compile commands (source dependencies will come from the makefrag
 # file).  Unlike the above, we *don't* use libtool, so as to speed up the

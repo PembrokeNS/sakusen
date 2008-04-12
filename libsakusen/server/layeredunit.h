@@ -45,14 +45,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       const UnitTypeId type,
       const Frame& startNear,
       const Point<sint16>& startVelocity,
-      const HitPoints startHP = HitPoints(-1)
-    );
-
-    static Ref<LayeredUnit> spawn(
-      const PlayerId owner,
-      const UnitTypeId type,
-      const Frame& startNear,
-      const Point<sint16>& startVelocity
+      const HitPoints startHP = HitPoints(0)
     );
     static Ref<LayeredUnit> spawn(const PlayerId owner, const UnitTemplate& t);
   private:

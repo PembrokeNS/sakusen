@@ -11,7 +11,13 @@ using namespace __gnu_cxx;
 namespace sakusen{
 namespace server{
 
-/** \brief Spawn a unit on the map, specifying the hp. */
+/** \brief Spawn a unit on the map.
+ *
+ * If the HP argument is left at the default value of 0, then the unit's
+ * default HP will be used.
+ *
+ * This is the most likely method to call from module code when creating a
+ * unit.  The other overload may also be appropriate. */
 Ref<LayeredUnit> LayeredUnit::spawn(
     const PlayerId owner,
     const UnitTypeId type,
@@ -22,28 +28,16 @@ Ref<LayeredUnit> LayeredUnit::spawn(
 {
   assert(type);
   Frame startFrame = startNear; /** \bug Find empty spot to start */
-  Ptr unit(new LayeredUnit(
-        type, startFrame, startVelocity, startHP
-      ));
-  return world->addUnit(unit, owner);
-}
-
-/** \brief Spawn a unit on the map, with default hp.
- *
- * This is the most likely method to call from module code when creating a
- * unit.  The other overload may also be appropriate. */
-Ref<LayeredUnit> LayeredUnit::spawn(
-    const PlayerId owner,
-    const UnitTypeId type,
-    const Frame& startNear,
-    const Point<sint16>& startVelocity
-  )
-{
-  assert(type);
-  Frame startFrame = startNear; /** \bug Find empty spot to start */
-  Ptr unit(new LayeredUnit(
+  Ptr unit;
+  if (startHP == 0) {
+    unit.reset(new LayeredUnit(
         type, startFrame, startVelocity
       ));
+  } else {
+    unit.reset(new LayeredUnit(
+        type, startFrame, startVelocity, startHP
+      ));
+  }
   return world->addUnit(unit, owner);
 }
 

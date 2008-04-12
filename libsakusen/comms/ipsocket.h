@@ -36,8 +36,10 @@ class IPSocket : public Socket {
     IPSocket() : closed(false) {}
     IPSocket(uint16 myPort) : closed(false), port(myPort) {}
     IPSocket(NativeSocket s, const sockaddr_in& peerAddress) :
-      closed(false), addr(peerAddress), sockfd(s), port(ntohs(addr.sin_port))
+      closed(false), addr(peerAddress), sockfd(s)
     {
+      /* icc chokes if this is used in an initializer */
+      port = ntohs(addr.sin_port);
       assert(sockfd != -1);
     }
   public:
