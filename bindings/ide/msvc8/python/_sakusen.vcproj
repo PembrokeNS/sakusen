@@ -98,6 +98,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Move .py files around"
+				CommandLine="copy &quot;$(ProjectDir)\_sakusen\sakusen.py&quot; &quot;$(SolutionDir)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -151,7 +153,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				OutputFile="$(OutDir)\$(InputName).dll"
+				OutputFile="$(OutDir)\$(ProjectName).pyd"
 				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
@@ -182,7 +184,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Move .py files around"
-				CommandLine="for %i in ($(ProjectDir)*.py) do copy %i &quot;$(SolutionDir)&quot;"
+				CommandLine="copy &quot;$(ProjectDir)\_sakusen\sakusen.py&quot; &quot;$(SolutionDir)&quot;"
 			/>
 		</Configuration>
 	</Configurations>

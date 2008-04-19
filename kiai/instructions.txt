@@ -21,10 +21,11 @@ Michael
 
 
 For windows: 
-Install binary package mentioned above. Edit C:\program files\python25\pyuic4.bat so that it refers to where your python directory actually is. Go to: cpp\trunk\kiai 
+Install binary package mentioned above (PyQT). Edit C:\program files\python25\pyuic4.bat so that it refers to where your python directory actually is. Go to: cpp\trunk\kiai 
+Try running buildkiai.bat, and then python kiai.py. If that doesn't work, try:
 Run: "for %i in (*.ui) do "C:\Program files\python25\pyuic4.bat" -o %~ni.py %i"
-Which does it for all *.ui files.
-Move bindings/sakusen*.p into the kiai directory. 
-Move python-bindings.dll into the kiai directory four times, renaming it to _sakusen.pyd,_sakusencomms.pyd,_sakusenresources.pyd,_sakusenclient.pyd.
+Which does its thing for all *.ui files.
+Move bindings/_sakusen*.py into the kiai directory. 
+Move _sakusen.pyd,_sakusen_comms.pyd,_sakusen_resources.pyd,_sakusen_client.pyd into the kiai directory.
+Move dlls from the release dir into the kiai dir until kiai stops complaining about missing dlls. You will need at least libsak, libsak-comms, libsak-res, libsak-client, pcre, pcrecpp, stlport, boost, mhash, libpng, and liboptimal.
 Run python kiai.py
-Fail to load universe?
