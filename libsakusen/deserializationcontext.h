@@ -31,7 +31,7 @@ class Universe;
  * querying world.  This can be used, for example, to look up UnitTypes
  * from their names.
  */
-class DeserializationContext {
+class LIBSAKUSEN_API DeserializationContext {
   public:
     explicit DeserializationContext(
         const ResourceInterface::Ptr& rI,

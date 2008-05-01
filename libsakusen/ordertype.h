@@ -20,6 +20,8 @@ enum OrderType {
   orderType_setAngularVelocity,
   /** Rotate the unit to a given orientation */
   orderType_orient,
+  /** Untarget a weapon */
+  orderType_targetNone,
   /** Target a weapon at a Position */
   orderType_targetPosition,
   /** Target a weapon at a Frame (e.g. for creating a

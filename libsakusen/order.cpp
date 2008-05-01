@@ -34,7 +34,7 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
   
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 9);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 10);
 
   switch (type) {
     case orderType_none:
@@ -47,6 +47,8 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
       return Order(new SetAngularVelocityOrderData(in));
     case orderType_orient:
       return Order(new OrientOrderData(in));
+    case orderType_targetNone:
+      return Order(new TargetNoneOrderData(in));
     case orderType_targetPosition:
       return Order(new TargetPositionOrderData(in));
     case orderType_targetFrame:

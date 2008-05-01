@@ -189,6 +189,8 @@ class UI : protected Control {
     void selectUnits(const String& selection);
     void selectUnitsIn(const sakusen::Rectangle<sint32>&);
 
+    void stop(const std::set<sakusen::UnitId>& units);
+
     void move(
         const std::set<sakusen::UnitId>& units,
         const ActionTarget& target

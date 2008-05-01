@@ -99,6 +99,24 @@ class LIBSAKUSEN_API TargetWeaponOrderData : public OrderData {
     virtual uint16 getWeaponIndex() const = 0;
 };
 
+class LIBSAKUSEN_API TargetNoneOrderData : public TargetWeaponOrderData {
+  public:
+    TargetNoneOrderData(uint16 wI) :
+      TargetWeaponOrderData(),
+      weaponIndex(wI)
+    {}
+    TargetNoneOrderData(IArchive& in) : TargetWeaponOrderData() {
+      in >> weaponIndex;
+    }
+    ~TargetNoneOrderData() {};
+  private:
+    uint16 weaponIndex;
+  public:
+    uint16 getWeaponIndex(void) const { return weaponIndex; }
+    OrderType getType(void) const { return orderType_targetNone; }
+    void store(OArchive&) const;
+};
+
 class LIBSAKUSEN_API TargetPositionOrderData : public TargetWeaponOrderData {
   private:
     TargetPositionOrderData();

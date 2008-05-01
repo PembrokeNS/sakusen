@@ -16,6 +16,26 @@ using namespace tedomari::game;
 namespace tedomari {
 namespace ui {
 
+class StopAction : public Action {
+  public:
+    StopAction(const set<UnitId>& selection) :
+      Action(actionParameterType_none),
+      movers(selection)
+    {
+    }
+  private:
+    /** \brief Units to move */
+    set<UnitId> movers;
+
+    void internalSupplyArgument(const ActionArgument& arg) {
+      Fatal("shouldn't call");
+    }
+
+    void internalExecute(UI* ui) {
+      ui->stop(movers);
+    }
+};
+
 class MoveAction : public Action {
   public:
     MoveAction(const set<UnitId>& selection) :
@@ -299,6 +319,8 @@ Action::Ptr initializeAction(
     return Action::Ptr(new CreateAction(selection));
   } else if (actionName == "build") {
     return Action::Ptr(new BuildAction(selection));
+  } else if (actionName == "stop") {
+    return Action::Ptr(new StopAction(selection));
   } else {
     return Action::Ptr();
   }

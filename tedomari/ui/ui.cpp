@@ -656,6 +656,30 @@ void UI::selectUnitsIn(const sakusen::Rectangle<sint32>& r)
   paint();
 }
 
+void UI::stop(const set<sakusen::UnitId>& units)
+{
+  Order stopMoveOrder = Order(new SetVelocityOrderData(Velocity()));
+  Order stopRotationOrder = Order(new SetAngularVelocityOrderData(AngularVelocity()));
+
+  BOOST_FOREACH (UnitId unitId, units) {
+    Ref<UpdatedUnit> unit = client::world->getUnitsById()->find(unitId);
+    if (unit) {
+      game->order(OrderMessage(unitId, stopMoveOrder));
+      game->order(OrderMessage(unitId, stopRotationOrder));
+
+      const UnitType* type =
+        client::world->getUniverse()->getUnitTypePtr(unit->getStatus().getType());
+      /* For every weapon, send a stop order for that weapon */
+      size_t numWeapons = type->getWeapons().size();
+
+      for (size_t i=0; i<numWeapons; ++i) {
+        Order order(new TargetNoneOrderData(i));
+        game->order(OrderMessage(unitId, order));
+      }
+    }
+  }
+}
+
 /** \internal \brief Helper class to foward move calls
  *
  * This class is constructed with the set of units to move, and then when it is

@@ -42,7 +42,7 @@ void UnitOrders::acceptOrder(const Order& order)
 {
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 9);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 10);
 
   /* Alter the Unit's state appropriately for the order */
   switch (order.getType()) {
@@ -62,6 +62,7 @@ void UnitOrders::acceptOrder(const Order& order)
       rotationalTarget = rotationalTargetType_orientation;
       targetOrientation = order.getOrientData().getTarget();
       break;
+    case orderType_targetNone:
     case orderType_targetPosition:
     case orderType_targetFrame:
     case orderType_targetUnit:
