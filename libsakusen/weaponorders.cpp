@@ -117,7 +117,7 @@ void WeaponOrders::update(const Order& order)
 {
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 9);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 10);
 
   switch (order.getType()) {
     case orderType_setVelocity:
@@ -125,6 +125,8 @@ void WeaponOrders::update(const Order& order)
     case orderType_setAngularVelocity:
     case orderType_orient:
       Fatal("Order type not appropriate for a Weapon");
+    case orderType_targetNone:
+      targetType = weaponTargetType_none;
     case orderType_targetPosition:
       targetType = weaponTargetType_position;
       targetPosition = order.getTargetPositionData().getTarget();
