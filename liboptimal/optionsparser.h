@@ -14,7 +14,6 @@
 #include <boost/tokenizer.hpp>
 
 #if defined(_MSC_VER)
-  #include <hash_map>
   #define __gnu_cxx std
   /* This warning is about members of exported classes not being exported.
    * This is mostly to do with stuff from std, but in at least one case it 
@@ -27,8 +26,6 @@
     #define LIBOPTIMAL_API _declspec(dllimport)
   #endif
 #elif defined(__GNUC__) && (__GNUC__ >= 4)
-  #include <ext/hash_map>
-
   #define LIBOPTIMAL_API __attribute__ ((visibility ("default")))
 #else
   #error Unknown compiler
