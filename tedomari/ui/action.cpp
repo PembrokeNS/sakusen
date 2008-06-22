@@ -27,7 +27,7 @@ class StopAction : public Action {
     /** \brief Units to move */
     set<UnitId> movers;
 
-    void internalSupplyArgument(const ActionArgument& arg) {
+    void internalSupplyArgument(const ActionArgument& /*arg*/) {
       Fatal("shouldn't call");
     }
 
