@@ -124,7 +124,7 @@ class hash_list : boost::noncopyable {
     };
 
     typedef std::list<boost::shared_ptr<T> > List;
-    typedef __gnu_cxx::hash_map<MaskedPtr<T>, typename List::iterator>
+    typedef typename u_map<MaskedPtr<T>, typename List::iterator>::type
       ListIteratorHash;
     
     List list;

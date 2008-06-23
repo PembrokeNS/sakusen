@@ -89,7 +89,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     
     /** \brief Sensor returns from this unit, indexed by the player doing the
      * sensing. */
-    __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef> sensorReturns;
+    u_map<PlayerId, DynamicSensorReturnsRef>::type sensorReturns;
 
     /** \brief Indicates that information must be transmitted clients.
      *
@@ -107,9 +107,9 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     inline const IUnitStatus& getIStatus(void) const { return status; }
     inline const UnitOrders& getOrders(void) const { return orders; }
     inline UnitOrders& getOrders(void) { return orders; }
-    inline __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef>&
+    inline u_map<PlayerId, DynamicSensorReturnsRef>::type&
       getSensorReturns(void) { return sensorReturns; }
-    inline const __gnu_cxx::hash_map<PlayerId, DynamicSensorReturnsRef>&
+    inline const u_map<PlayerId, DynamicSensorReturnsRef>::type&
       getSensorReturns(void) const { return sensorReturns; }
     //@}
 

@@ -1,6 +1,7 @@
 #include "errorutils.h"
 
 #include <cerrno>
+#include <cstring>
 #include <sstream>
 #include "libsakusen-comms-global.h"
 

@@ -50,9 +50,10 @@ class fifo_priority_queue {
      * value, all stored together in a hash_map keyed by their priority - and
      * then we use a priority_queue to contain all those values of
      * PriorityType for which a queue exists in the hash_map. */
-    typedef typename __gnu_cxx::hash_map
-        < PriorityType, std::queue<ValueType, std::list<ValueType> > >
-      QueueHashMap;
+    typedef typename u_map<
+        PriorityType,
+        std::queue<ValueType, std::list<ValueType> >
+      >::type QueueHashMap;
     std::priority_queue<PriorityType, std::vector<PriorityType>, Prioritize>
       priorityQueue;
     QueueHashMap fifoQueues;

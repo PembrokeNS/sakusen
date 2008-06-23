@@ -12,7 +12,7 @@ class LIBSAKUSEN_API NaiveSpatial : public ISpatial {
   private:
     typedef std::list<Ref<Bounded> > List;
     List list;
-    __gnu_cxx::hash_map<MaskedPtr<Bounded>, List::iterator> iteratorMap;
+    u_map<MaskedPtr<Bounded>, List::iterator>::type iteratorMap;
   public:
     void add(const Ref<Bounded>&);
     void remove(const Ref<Bounded>&);

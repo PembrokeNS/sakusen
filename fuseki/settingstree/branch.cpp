@@ -4,7 +4,6 @@
 #include "null_deleter.h"
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace fuseki;
@@ -112,7 +111,7 @@ Branch::getRequestListRef(
 set<String> Branch::getChildNames() const
 {
   set<String> childNames;
-  for (hash_map_string<Node::Ptr>::type::const_iterator
+  for (u_map<String, Node::Ptr>::type::const_iterator
       child = children.begin(); child != children.end(); child++) {
     childNames.insert(child->second->getName());
   }
@@ -121,7 +120,7 @@ set<String> Branch::getChildNames() const
 
 Node::Ptr Branch::getChild(String name)
 {
-  hash_map_string<Node::Ptr>::type::iterator child =
+  u_map<String, Node::Ptr>::type::iterator child =
     children.find(name);
 
   if (child == children.end()) {
@@ -133,7 +132,7 @@ Node::Ptr Branch::getChild(String name)
 
 Node::ConstPtr Branch::getChild(String name) const
 {
-  hash_map_string<Node::Ptr>::type::const_iterator child =
+  u_map<String, Node::Ptr>::type::const_iterator child =
     children.find(name);
 
   if (child == children.end()) {

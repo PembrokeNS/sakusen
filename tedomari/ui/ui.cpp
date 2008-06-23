@@ -11,7 +11,6 @@
 #include <pcrecpp.h>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::comms;
@@ -181,7 +180,7 @@ void UI::keyDown(Key k, uint16 c)
   /** \todo Process mappings */
 
   /* Process bindings */
-  hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
+  u_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::type::
     const_iterator binding =
     mode->getBindings().find(ModifiedKeyEvent(k, currentModifiers, true));
   if (binding != mode->getBindings().end()) {
@@ -198,7 +197,7 @@ void UI::keyUp(Key k)
   /** \todo Process mappings */
 
   /* process bindings */
-  hash_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::
+  u_map<ModifiedKeyEvent, list<String>, ModifiedKeyEventHash>::type::
     const_iterator binding =
     mode->getBindings().find(ModifiedKeyEvent(k, currentModifiers, false));
   if (binding != mode->getBindings().end()) {
@@ -275,7 +274,7 @@ void UI::executeCommand(const String& cmdName, std::list<String>& args)
       "executing '" << cmdName << "' with args '" <<
       stringUtils_join(args, "' '") << "'"
     );
-  hash_map_string<Command>::type::const_iterator cmd =
+  u_map<String, Command>::type::const_iterator cmd =
     mode->getCommands().find(cmdName);
   
   if (cmd != mode->getCommands().end()) {
@@ -443,7 +442,7 @@ void UI::setRegexEntry(bool on)
 
 void UI::switchMode(const String& modeName)
 {
-  hash_map_string<Mode>::type::iterator modeIt = modes.find(modeName);
+  u_map<String, Mode>::type::iterator modeIt = modes.find(modeName);
   if (modeIt == modes.end()) {
     alert(Alert("No such mode '" + modeName + "'"));
     return;
@@ -460,12 +459,12 @@ void UI::addAlias(
 {
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
+    for (u_map<String, Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addCommand(newCmd, Command(oldCmd), this);
     }
   } else {
-    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
+    u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;
@@ -489,12 +488,12 @@ void UI::addBinding(
   
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
+    for (u_map<String, Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addBinding(keyEvent, cmd);
     }
   } else {
-    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
+    u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;
@@ -507,12 +506,12 @@ void UI::addFunction(const String& mode, const Function& function)
 {
   if (mode == "all") {
     /* Special case: add to all modes */
-    for (hash_map_string<Mode>::type::iterator modeIt = modes.begin();
+    for (u_map<String, Mode>::type::iterator modeIt = modes.begin();
         modeIt != modes.end(); ++modeIt) {
       modeIt->second.addFunction(function, this);
     }
   } else {
-    hash_map_string<Mode>::type::iterator modeIt = modes.find(mode);
+    u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
       Debug("no such mode '" << mode << "'");
       return;

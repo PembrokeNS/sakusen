@@ -15,19 +15,5 @@ class ClientBallisticId : public IdBase<uint32, ClientBallisticId> {
 
 }
 
-namespace __gnu_cxx {
-
-template<>
-struct hash<sakusen::ClientBallisticId> {
-  private:
-    hash<sakusen::ClientBallisticId::internal_type> intHasher;
-  public:
-    size_t operator()(const sakusen::ClientBallisticId i) const {
-      return intHasher(i);
-    }
-};
-
-}
-
 #endif // CLIENTBALLISTICID_H
 

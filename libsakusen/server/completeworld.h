@@ -58,8 +58,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
 
     FuseToken lastFuseToken;
     FuseQueue fuseQueue; /* the FuseQueue is a FIFO priority queue */
-    __gnu_cxx::hash_map<FuseToken, Fuse::Ptr> fuseMap;
-    __gnu_cxx::hash_set<FuseToken> removedFuses;
+    u_map<FuseToken, Fuse::Ptr>::type fuseMap;
+    u_set<FuseToken>::type removedFuses;
 
     std::vector<Script::Ptr> scripts;
 
@@ -88,9 +88,9 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
         PlayerId player, UnitId unitId
       ) {
       assert(player < players.size());
-      const __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >& units =
+      const u_map<UnitId, Ref<LayeredUnit> >::type& units =
         players[player].getUnits();
-      __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::const_iterator it =
+      u_map<UnitId, Ref<LayeredUnit> >::type::const_iterator it =
         units.find(unitId);
       if (it == units.end()) {
         return Ref<ICompleteUnit>();
@@ -160,7 +160,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
      * Removes an existing fuse, bsed on its FuseToken.
      */
     inline void removeFuse(FuseToken token) {
-      __gnu_cxx::hash_map<FuseToken, Fuse::Ptr>::iterator fuseIt =
+      u_map<FuseToken, Fuse::Ptr>::type::iterator fuseIt =
         fuseMap.find(token);
       if (fuseIt == fuseMap.end()) {
         Fatal("Removing nonexistant Fuse");

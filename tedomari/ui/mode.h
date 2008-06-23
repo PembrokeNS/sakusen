@@ -18,20 +18,20 @@ namespace ui {
 class Mode {
   private:
     String name;
-    __gnu_cxx::hash_map<
+    u_map<
         ModifiedKeyEvent, std::list<String>, ModifiedKeyEventHash
-      > bindings;
-    sakusen::hash_map_string<Command>::type commands;
+      >::type bindings;
+    u_map<String, Command>::type commands;
 
   public:
     inline const String& getName() const { return name; }
-    inline const __gnu_cxx::hash_map<
+    inline const u_map<
         ModifiedKeyEvent, std::list<String>, ModifiedKeyEventHash
-      >& getBindings() const
+      >::type& getBindings() const
     {
       return bindings;
     }
-    inline const sakusen::hash_map_string<Command>::type&
+    inline const u_map<String, Command>::type&
       getCommands() const {
       return commands;
     }

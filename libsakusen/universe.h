@@ -40,9 +40,9 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     String scriptModule;
     String scriptFunction;
     std::vector<WeaponType> weaponTypes;
-    hash_map_string<WeaponTypeId>::type weaponIdLookup;
+    u_map<String, WeaponTypeId>::type weaponIdLookup;
     std::vector<UnitType> unitTypes;
-    hash_map_string<UnitTypeId>::type unitIdLookup;
+    u_map<String, UnitTypeId>::type unitIdLookup;
 
     void constructHashMaps();
   public:

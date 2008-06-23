@@ -10,10 +10,9 @@
 #include "sensorreturnsid.h"
 #include "ref.h"
 #include "world.h"
+#include "sensorreturnmap.h"
 
 namespace sakusen {
-
-typedef __gnu_cxx::hash_map<UnitId, EachSensorReturn> SensorReturnMap;
 
 /** \brief Interface to a collection of all sensor returns from a single unit
  * to a single player.

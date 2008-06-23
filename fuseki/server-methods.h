@@ -169,7 +169,7 @@ String Server::settingAlteringCallback(
   } else if (fullName.front() == "plugins") {
     fullName.pop_front();
     assert(!fullName.empty());
-    sakusen::hash_map_string<Plugin::Ptr>::type::iterator plugin =
+    u_map<String, Plugin::Ptr>::type::iterator plugin =
       plugins.find(fullName.front());
     assert(plugin != plugins.end());
     fullName.pop_front();

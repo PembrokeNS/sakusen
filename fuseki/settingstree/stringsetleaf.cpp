@@ -3,7 +3,6 @@
 #include "server-methods.h"
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace fuseki;

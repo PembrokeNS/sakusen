@@ -285,8 +285,14 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
       return *this;
     }
 
+    /* Can't use the u_map metafunction because that prevents type inference */
     template<typename T, typename U, typename THash>
-    IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result) {
+#ifdef SAKUSEN_USE_UNORDERED_MAP
+    IArchive& operator>>(std::tr1::unordered_map<T, U, THash>& result)
+#else
+    IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result)
+#endif
+    {
       assert(result.empty());
       uint32 size;
       *this >> size;

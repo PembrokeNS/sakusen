@@ -12,7 +12,6 @@
 #include <boost/foreach.hpp>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 namespace sakusen{
 namespace server{
@@ -312,14 +311,15 @@ void CompleteWorld::incrementGameState(void)
           );
       }
       /* Check to see if this fuse has been removed since it was added */
-      hash_set<FuseToken>::iterator rFuseIt =
+      u_set<FuseToken>::type::iterator rFuseIt =
         removedFuses.find(fuseEntry.token);
       if (rFuseIt != removedFuses.end()) {
         removedFuses.erase(rFuseIt);
         continue;
       }
       /* Use token to look up the fuse in the map */
-      hash_map<FuseToken, Fuse::Ptr>::iterator fuseIt = fuseMap.find(fuseEntry.token);
+      u_map<FuseToken, Fuse::Ptr>::type::iterator fuseIt =
+        fuseMap.find(fuseEntry.token);
       if (fuseIt == fuseMap.end()) {
         Fatal("Fuse missing from fuseMap");
       }

@@ -25,7 +25,7 @@ class Branch : public Node {
         Server* server
       );
   private:
-    sakusen::hash_map_string<Node::Ptr>::type children;
+    u_map<String, Node::Ptr>::type children;
 
   protected:
     Node::Ptr addChild(Node::Ptr child);

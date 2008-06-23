@@ -7,7 +7,6 @@
 #include <stack>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -130,7 +129,7 @@ void DynamicSensorReturns::update()
    * information. */
   EachSensorReturn workingCopy;
   
-  for (hash_map<UnitId, Ref<LayeredUnit> >::const_iterator unitIt =
+  for (u_map<UnitId, Ref<LayeredUnit> >::type::const_iterator unitIt =
       senserOwner->getUnits().begin(); unitIt != senserOwner->getUnits().end();
       ++unitIt) {
     /* seek out local unit/sensors corresponding to this unit */

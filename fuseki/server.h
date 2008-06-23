@@ -82,7 +82,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     sakusen::ResourceInterface::Ptr resourceInterface;
     PluginInterface pluginInterface;
     /** Client interfaces (owned by this) */
-    __gnu_cxx::hash_map<sakusen::ClientId, RemoteClient*> clients;
+    u_map<sakusen::ClientId, RemoteClient*>::type clients;
     /** The universe we plan to use to build the map.  NULL
      * if none selected yet.
      */
@@ -109,11 +109,11 @@ class Server : public SettingsUser, private boost::noncopyable {
     /** True iff we allow clients to connect as observers. */
     bool allowObservers;
 
-    sakusen::hash_map_string<Plugin::Ptr>::type plugins;
-    __gnu_cxx::hash_map<
+    u_map<String, Plugin::Ptr>::type plugins;
+    u_map<
         sakusen::MaskedPtr<sakusen::server::plugins::Listener>,
         sakusen::server::plugins::Listener::VPtr
-      > listeners;
+      >::type listeners;
 
     boost::ptr_list<ServerAction> pendingActions;
 

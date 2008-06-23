@@ -65,7 +65,7 @@ class Plugin :
         sakusen::server::plugins::OptionCallback<uint64>*,
         sakusen::server::plugins::OptionCallback<sint64>*
       > OptionCallbacks;
-    mutable sakusen::hash_map_string<OptionCallbacks>::type optionCallbacks;
+    mutable u_map<String, OptionCallbacks>::type optionCallbacks;
   protected:
     bool isGameStarted() const;
     sakusen::ResourceInterface::Ptr getResourceInterface() const;
@@ -105,7 +105,7 @@ class Plugin :
         settingsTree::Leaf* altering,
         typename boost::call_traits<T>::param_type newValue
       ) {
-      sakusen::hash_map_string<OptionCallbacks>::type::iterator optionCallback =
+      u_map<String, OptionCallbacks>::type::iterator optionCallback =
         optionCallbacks.find(altering->getName());
       assert(optionCallback != optionCallbacks.end());
       return boost::get<sakusen::server::plugins::OptionCallback<T>*>(

@@ -14,6 +14,9 @@ class MaskedPtr;
 template<typename T>
 bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
 
+template<typename T>
+inline size_t hash_value(const MaskedPtr<T>& p);
+
 /** \brief Hides a pointer so that it cannot be dereferenced, but can still be
  * used as a UID.
  *
@@ -23,7 +26,7 @@ bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
 template<typename T>
 class MaskedPtr {
   friend bool operator==<T>(const MaskedPtr& left, const MaskedPtr& right);
-  friend struct __gnu_cxx::hash < MaskedPtr<T> >;
+  friend size_t hash_value<T>(const MaskedPtr<T>& p);
   public:
     MaskedPtr(const T* p) : ptr(p) {}
     MaskedPtr(const boost::shared_ptr<T>& p) : ptr(p.get()) {}
@@ -45,17 +48,13 @@ inline bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right) {
   return left.ptr == right.ptr;
 }
 
+/* The name hash_value for this function is required for it to work with
+ * boost::hash */
+template<typename T>
+inline size_t hash_value(const MaskedPtr<T>& p)
+{
+  return reinterpret_cast<size_t>(p.ptr);
 }
-
-namespace __gnu_cxx {
-
-  template<typename T>
-  struct hash<sakusen::MaskedPtr<T> > {
-    public:
-    inline size_t operator()(const sakusen::MaskedPtr<T>& p) const {
-      return reinterpret_cast<size_t>(p.ptr);
-    }
-  };
 
 }
 

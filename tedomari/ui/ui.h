@@ -42,7 +42,7 @@ class UI : protected Control {
     Label* modeIndicator;
     Label* statusSummary;
     AlertDisplay* alertDisplay;
-    sakusen::hash_map_string<Mode>::type modes;
+    u_map<String, Mode>::type modes;
     /** \brief Mode we intend to revert to when the current action executes
      * (NULL if no Action is in progress) */
     Mode* pendingMode;

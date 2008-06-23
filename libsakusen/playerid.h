@@ -19,20 +19,6 @@ class PlayerId : public IdBase<uint8, PlayerId> {
 
 }
 
-namespace __gnu_cxx {
-
-template<>
-struct hash<sakusen::PlayerId> {
-  private:
-    hash<sakusen::PlayerId::internal_type> intHasher;
-  public:
-    size_t operator()(const sakusen::PlayerId i) const {
-      return intHasher(i);
-    }
-};
-
-}
-
 namespace sakusen {
 
 /** \brief Exception to describe the case of an invalid player Id.
@@ -46,6 +32,7 @@ class InvalidPlayerId : public std::runtime_error {
     InvalidPlayerId(): std::runtime_error("InvalidPlayerId"), id() {}
     InvalidPlayerId(PlayerId p): std::runtime_error("InvalidPlayerId"), id(p) {}
 };
+
 }
 
 #endif // PLAYERID_H

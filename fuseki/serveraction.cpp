@@ -3,7 +3,6 @@
 #include "plugins/pluginexn.h"
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::comms;
@@ -18,7 +17,7 @@ ServerAction::~ServerAction()
 
 void ClientChangeSettingAction::act(Server& server) const
 {
-  hash_map<ClientId, RemoteClient*>::iterator clientIt =
+  u_map<ClientId, RemoteClient*>::type::iterator clientIt =
     server.clients.find(clientId);
   if (clientIt == server.clients.end()) {
     server.out << "Ignoring client change setting request because client has "
@@ -47,7 +46,7 @@ void EnsureAdminExistsAction::act(Server& server) const
   RemoteClient* adminCandidate = NULL;
   bool needAdmin = true;
 
-  for (hash_map<ClientId, RemoteClient*>::iterator client =
+  for (u_map<ClientId, RemoteClient*>::type::iterator client =
       server.clients.begin(); client != server.clients.end(); client++) {
     if (client->second->isAdmin()) {
       needAdmin = false;
@@ -147,7 +146,7 @@ void AddPluginAction::act(Server& server) const
 
 void RemovePluginAction::act(Server& server) const
 {
-  hash_map_string<Plugin::Ptr>::type::iterator p = server.plugins.find(name);
+  u_map<String, Plugin::Ptr>::type::iterator p = server.plugins.find(name);
   if (p == server.plugins.end()) {
     return;
   }
@@ -205,7 +204,7 @@ void CheckForGameStartAction::act(Server& server) const
     }
     if (allPlayersReady) {
       bool allClientsReady = true;
-      for (hash_map<ClientId, RemoteClient*>::iterator client =
+      for (u_map<ClientId, RemoteClient*>::type::iterator client =
           server.clients.begin(); client != server.clients.end(); client++) {
         if (!client->second->isReadyForGameStart()) {
           allClientsReady = false;

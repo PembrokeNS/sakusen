@@ -2,8 +2,6 @@
 
 #include "ui/ui.h"
 
-using namespace __gnu_cxx;
-
 using namespace sakusen;
 using namespace tedomari::ui;
 
@@ -11,7 +9,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
 {
   assert(!name.empty());
 
-  hash_map_string<Command>::type::iterator existing =
+  u_map<String, Command>::type::iterator existing =
     commands.find(name);
   if (existing == commands.end()) {
     /* No command of that name already exists, so we can proceed */

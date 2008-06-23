@@ -14,19 +14,5 @@ class ClientId : public IdBase<uint8, ClientId> {
 
 }
 
-namespace __gnu_cxx {
-
-template<>
-struct hash<sakusen::ClientId> {
-  private:
-    hash<sakusen::ClientId::internal_type> intHasher;
-  public:
-    size_t operator()(const sakusen::ClientId i) const {
-      return intHasher(i);
-    }
-};
-
-}
-
 #endif // CLIENTID_H
 

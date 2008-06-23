@@ -40,7 +40,7 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
-    __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> > units;
+    u_map<UnitId, Ref<LayeredUnit> >::type units;
     /* The id of the next unit to be added for this player */
     UnitId nextUnitId;
     
@@ -53,10 +53,10 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
      * is a pointer which we use as a UID for the Ballistic, but it shouldn't
      * be dereferenced - use the Ref instead to avoid danglingness.  The first
      * pair entry is the client-side id */
-    __gnu_cxx::hash_map<
+    u_map<
         MaskedPtr<Ballistic>,
         std::pair<ClientBallisticId, Ref<const Ballistic> >
-      > visibleBallistics;
+      >::type visibleBallistics;
     ClientBallisticId nextClientBallisticId;
 
     uint64 availableEnergy;
@@ -72,7 +72,7 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     }
     void attachClient(Client* client);
     void detachClient(Client* client);
-    const __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >& getUnits(void) const {
+    const u_map<UnitId, Ref<LayeredUnit> >::type& getUnits(void) const {
       return units;
     }
     Ref<DynamicSensorReturns> getSensorReturns(SensorReturnsId id) {

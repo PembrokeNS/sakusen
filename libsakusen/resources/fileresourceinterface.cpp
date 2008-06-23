@@ -24,7 +24,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::comms;

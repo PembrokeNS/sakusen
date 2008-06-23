@@ -6,8 +6,6 @@
 #include "region-methods.h"
 #include "unitstatus-methods.h"
 
-using namespace __gnu_cxx;
-
 namespace sakusen{
 namespace server{
 
@@ -136,7 +134,7 @@ void LayeredUnit::setDirty()
    * assume that if we're still dirty, then so are they. */
   if (!dirty) {
     dirty = true;
-    for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
+    for (u_map<PlayerId, DynamicSensorReturnsRef>::type::iterator returns =
         sensorReturns.begin(); returns != sensorReturns.end(); ++returns) {
       const Ref<DynamicSensorReturns>& r = *returns->second;
       if (0 != (r->getPerception() & perception_unit)) {

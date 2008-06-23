@@ -3,7 +3,6 @@
 #include "serializationhandler.h"
 
 using namespace std;
-using namespace __gnu_cxx;
 
 namespace sakusen {
 
@@ -18,7 +17,7 @@ void NaiveSpatial::add(const Ref<Bounded>& b)
 
 void NaiveSpatial::remove(const Ref<Bounded>& b)
 {
-  hash_map<MaskedPtr<Bounded>, List::iterator>::iterator i =
+  u_map<MaskedPtr<Bounded>, List::iterator>::type::iterator i =
     iteratorMap.find(b);
   assert(i != iteratorMap.end());
   list.erase(i->second);

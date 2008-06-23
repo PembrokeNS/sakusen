@@ -6,7 +6,6 @@
 #include <list>
 #include <sstream>
 
-#include <boost/functional/hash/hash.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
@@ -20,15 +19,6 @@
  */
 
 namespace sakusen {
-
-/** \brief Convenience typedef for a set of strings */
-typedef __gnu_cxx::hash_set<String, boost::hash<String> > hash_set_string;
-
-/** \brief Convenience metafunction for constructing a map keyed by strings */
-template<typename T>
-struct hash_map_string {
-  typedef __gnu_cxx::hash_map<String, T, boost::hash<String> > type;
-};
 
 /** \brief Split the string splitee at characters contained in spliton */
 template<typename Container>

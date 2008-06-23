@@ -40,7 +40,6 @@
 #include <optionsparser.h>
 
 using namespace std;
-using namespace __gnu_cxx;
 using namespace optimal;
 
 using namespace sakusen;
@@ -341,7 +340,7 @@ void runClient(
     struct timeval commandSleepTime = {0, 0};
 
     /* Construct our commands */
-    hash_map_string< ::Command>::type commands;
+    u_map<String, ::Command>::type commands;
     commands["j"] = commands["join"] = command_join;
     commands["l"] = commands["leave"] = command_leave;
     commands["g"] = commands["get"] = command_get;

@@ -5,8 +5,6 @@
 #include "completeworld.h"
 #include "server.h"
 
-using namespace __gnu_cxx;
-
 using namespace sakusen;
 using namespace sakusen::comms;
 using namespace sakusen::server;

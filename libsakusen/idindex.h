@@ -25,7 +25,8 @@ class IdIndex : public IIndex<T> {
     
     IdIndex() {}
   private:
-    __gnu_cxx::hash_map<TId, Ref<T> > idHash;
+    typedef typename u_map<TId, Ref<T> >::type IdHashType;
+    IdHashType idHash;
   public:
     void add(const Ref<T>&);
     void remove(const Ref<T>&);
@@ -46,7 +47,7 @@ template<typename TId, typename T, typename Ider>
 void IdIndex<TId, T, Ider>::remove(const Ref<T>& t)
 {
   TId id = Ider()(t);
-  typename __gnu_cxx::hash_map<TId, Ref<T> >::iterator it = idHash.find(id);
+  typename IdHashType::iterator it = idHash.find(id);
   assert(it != idHash.end());
   idHash.erase(it);
 }
@@ -61,8 +62,7 @@ Ref<T> IdIndex<TId, T, Ider>::find(
     typename boost::call_traits<TId>::param_type id
   ) const
 {
-  typename __gnu_cxx::hash_map<TId, Ref<T> >::const_iterator it =
-    idHash.find(id);
+  typename IdHashType::const_iterator it = idHash.find(id);
   if (it == idHash.end()) {
     return Ref<T>();
   } else {

@@ -18,8 +18,8 @@ class OArchive;
  * IdBase adds as much appropriate functionality as it can to the derived
  * class through the use of friend function definitions and static methods.
  * 
- * One thing that cannot be added here is a specialization of hash for the
- * derived class.  Such must be added manually if desired.
+ * Thanks to the way boost::hash works we can also have hashes work
+ * automatically for all derived classes.
  *
  * It is guaranteed that if an instance is default-constructed and then
  * incremented, all values obtained will be distinct until an invalid value is
@@ -95,6 +95,15 @@ class IdBase {
     }
     friend bool operator==(TDerived l, TDerived r) { return l.val == r.val; }
     friend bool operator!=(TDerived l, TDerived r) { return l.val != r.val; }
+};
+
+/* The name hash_value for this function is required for it to work with
+ * boost::hash */
+template<typename TInteger, typename TDerived>
+inline size_t hash_value(const IdBase<TInteger, TDerived>& id)
+{
+  boost::hash<TInteger> intHasher;
+  return intHasher(id);
 };
 
 }

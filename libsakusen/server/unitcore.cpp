@@ -4,8 +4,6 @@
 #include "player.h"
 #include "unitstatus-methods.h"
 
-using namespace __gnu_cxx;
-
 namespace sakusen{
 namespace server{
 
@@ -200,7 +198,7 @@ void UnitCore::changeOwner(PlayerId to, enum changeOwnerReason why) {
     
     /* We also need to ensure that sensor returns from this unit are flagged so
      * that the change of ownership is transmitted. */
-    for (hash_map<PlayerId, DynamicSensorReturnsRef>::iterator returns =
+    for (u_map<PlayerId, DynamicSensorReturnsRef>::type::iterator returns =
         outerUnit->getSensorReturns().begin();
         returns != outerUnit->getSensorReturns().end(); ++returns) {
       Ref<DynamicSensorReturns> r = *returns->second;

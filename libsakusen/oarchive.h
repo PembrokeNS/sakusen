@@ -197,12 +197,18 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
       return *this;
     }
 
+    /* Can't use the u_map metafunction because that prevents type inference */
     template<typename T, typename U, typename THash>
-    OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore) {
+#ifdef SAKUSEN_USE_UNORDERED_MAP
+    OArchive& operator<<(const std::tr1::unordered_map<T, U, THash>& toStore)
+#else
+    OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore)
+#endif
+    {
       *this << uint32(toStore.size());
       Storer<std::pair<T, U> > storer;
   
-      for(typename __gnu_cxx::hash_map<T, U, THash>::const_iterator i =
+      for(typename u_map<T, U, THash>::type::const_iterator i =
           toStore.begin(); i != toStore.end(); ++i) {
         storer(*this, *i);
       }

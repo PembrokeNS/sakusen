@@ -6,7 +6,6 @@
 #include <stack>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 namespace sakusen{
 namespace server{
@@ -128,7 +127,7 @@ uint32 Player::requestMetal(uint32 amount) {
  * another player, otherwise the unit will end up in limbo. */
 void Player::removeUnit(const UnitId id, enum changeOwnerReason why)
 {
-  __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::iterator unit =
+  u_map<UnitId, Ref<LayeredUnit> >::type::iterator unit =
     units.find(id);
   if (unit == units.end()) {
     Fatal("tried to remove a unit which wasn't there");
@@ -182,7 +181,7 @@ void Player::checkSensorReturns()
       world->getUnits().begin(), end = world->getUnits().end();
       unit != end; ++unit) {
     /* check whether this unit already has a return to this player */
-    hash_map<PlayerId, DynamicSensorReturnsRef>::iterator it =
+    u_map<PlayerId, DynamicSensorReturnsRef>::type::iterator it =
       (*unit)->getSensorReturns().find(playerId);
     if (it != (*unit)->getSensorReturns().end()) {
       /* we have a sensor return, so we update it */
@@ -224,9 +223,9 @@ void Player::checkSensorReturns()
   /* First we check over the existing visible Ballistics to remove the ones
    * that have invalidated */
   stack<MaskedPtr<Ballistic> > invalidatedBallisticIds;
-  for (__gnu_cxx::hash_map<
+  for (u_map<
         MaskedPtr<Ballistic>, pair<ClientBallisticId, Ref<const Ballistic> >
-      >::iterator
+      >::type::iterator
       vb = visibleBallistics.begin(); vb != visibleBallistics.end(); ++vb) {
     if (!vb->second.second) {
       invalidatedBallisticIds.push(vb->first);
@@ -274,7 +273,7 @@ void Player::applyIncomingOrders(void)
       client != clients.end(); client++) {
     while (!(*client)->orderMessageQueueEmpty()) {
       const OrderMessage message = (*client)->orderMessageQueuePopFront();
-      __gnu_cxx::hash_map<UnitId, Ref<LayeredUnit> >::iterator orderee =
+      u_map<UnitId, Ref<LayeredUnit> >::type::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
         Debug("Order for non-existent unit id " << message.getOrderee() <<

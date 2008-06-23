@@ -2,6 +2,7 @@
 #define FUSEKI_GLOBAL_H
 
 #include "libsakusen-comms-global.h"
+#include "gnu_extensions.h"
 
 #define APPLICATION_NAME "fuseki"
 #define APPLICATION_VERSION "0.1"
@@ -11,6 +12,7 @@
 namespace fuseki {
 
 using sakusen::String;
+using sakusen::u_map;
 
 }
 

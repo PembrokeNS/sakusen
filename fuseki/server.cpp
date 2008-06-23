@@ -33,7 +33,6 @@
 #include <pcrecpp.h>
 
 using namespace std;
-using namespace __gnu_cxx;
 
 using namespace sakusen;
 using namespace sakusen::server;
@@ -194,7 +193,7 @@ void Server::handleClientMessages()
 {
   queue<ExtensionMessageData> extensionMessages;
 
-  for (hash_map<ClientId, RemoteClient*>::iterator clientIt=clients.begin();
+  for (u_map<ClientId, RemoteClient*>::type::iterator clientIt=clients.begin();
       clientIt!=clients.end(); ) {
     RemoteClient* client = clientIt->second;
 
@@ -217,7 +216,7 @@ void Server::handleClientMessages()
            * processing might result in the client being removed) */
           /** \todo Forward only to interested listeners */
           GetPtr<Listener> gp;
-          for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator
+          for (u_map<MaskedPtr<Listener>, Listener::VPtr>::type::iterator
               listener = listeners.begin();
               listener != listeners.end(); ++listener) {
             listener->second.apply_visitor(gp)->clientMessage(
@@ -321,7 +320,7 @@ void Server::handleClientMessages()
      * only to allies) */
     /** \todo Send to other listeners who want it */
     stack<ClientId> clientsToRemove;
-    for (hash_map<ClientId, RemoteClient*>::iterator dest =
+    for (u_map<ClientId, RemoteClient*>::type::iterator dest =
         clients.begin(); dest!=clients.end(); ++dest) {
       try {
         dest->second->send(new ExtensionMessageData(data));
@@ -353,8 +352,8 @@ void Server::handlePendingActions()
 
 void Server::clearPlayers()
 {
-  for (hash_map<ClientId, RemoteClient*>::iterator clientIt = clients.begin();
-      clientIt != clients.end(); ++clientIt) {
+  for (u_map<ClientId, RemoteClient*>::type::iterator clientIt =
+      clients.begin(); clientIt != clients.end(); ++clientIt) {
     RemoteClient* client = clientIt->second;
     if (client->getPlayerId() != 0) {
       changeInClientBranch(client, "player", "0");
@@ -383,8 +382,8 @@ void Server::setAllowObservers(bool value)
   if (allowObservers && !value) {
     /* In this case, we may have to dump some clients who have themselves
      * registered as observers */
-    for (hash_map<ClientId, RemoteClient*>::iterator client = clients.begin();
-        client != clients.end(); ++client) {
+    for (u_map<ClientId, RemoteClient*>::type::iterator client =
+        clients.begin(); client != clients.end(); ++client) {
       if (client->second->isObserver()) {
         changeInClientBranch(client->second, "observer", "false");
       }
@@ -419,7 +418,7 @@ void Server::checkPlugins(const std::set<String>& newList)
   }
 
   /* Check for plugins to unload */
-  for (hash_map_string<Plugin::Ptr>::type::iterator oldPlugin =
+  for (u_map<String, Plugin::Ptr>::type::iterator oldPlugin =
       plugins.begin(); oldPlugin != plugins.end(); ++oldPlugin) {
     if (!newList.count(oldPlugin->first)) {
       pendingActions.push_front(new RemovePluginAction(oldPlugin->first));
@@ -623,7 +622,7 @@ void Server::serve()
     /* Remove settings tree manipulation permissions from all clients, except
      * for some which remain in the 'playtime' group so that they can do such
      * things as pause the game */
-    for (hash_map<ClientId, RemoteClient*>::iterator clientIt =
+    for (u_map<ClientId, RemoteClient*>::type::iterator clientIt =
         clients.begin(); clientIt != clients.end(); ++clientIt) {
       RemoteClient* client = clientIt->second;
       client->send(new GameStartMessageData(
@@ -652,7 +651,7 @@ void Server::serve()
     /* Indicate game start to listeners (Don't need to pass any arguments
      * because they can just use sakusen::server::world) */
     GetPtr<Listener> gp;
-    for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+    for (u_map<MaskedPtr<Listener>, Listener::VPtr>::type::iterator listener =
         listeners.begin(); listener != listeners.end(); ++listener) {
       listener->second.apply_visitor(gp)->gameStart();
     }
@@ -676,7 +675,7 @@ void Server::serve()
 
       /* Tell listeners that this is all the messages we'll be receiving for
        * this tick */
-      for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+      for (u_map<MaskedPtr<Listener>, Listener::VPtr>::type::iterator listener =
           listeners.begin(); listener != listeners.end(); ++listener) {
         listener->second.apply_visitor(gp)->ticksMessagesDone();
       }
@@ -685,8 +684,8 @@ void Server::serve()
       sakusen::server::world->incrementGameState();
 
       /* Send out updates */
-      for (hash_map<ClientId, RemoteClient*>::iterator clientIt=clients.begin();
-          clientIt!=clients.end(); ) {
+      for (u_map<ClientId, RemoteClient*>::type::iterator clientIt =
+          clients.begin(); clientIt!=clients.end(); ) {
         RemoteClient* client = clientIt->second;
         bool clientRemoved = false;
         
@@ -708,7 +707,7 @@ void Server::serve()
       }
 
       /* Tell listeners that this is the end of this tick */
-      for (hash_map<MaskedPtr<Listener>, Listener::VPtr>::iterator listener =
+      for (u_map<MaskedPtr<Listener>, Listener::VPtr>::type::iterator listener =
           listeners.begin(); listener != listeners.end(); ++listener) {
         listener->second.apply_visitor(gp)->tickDone();
       }
@@ -817,8 +816,8 @@ void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
   NotifySettingMessageData data(fullName, altered->isLeaf(), value);
   
   /* Inform everyone with read permission that the setting was altered */
-  for (__gnu_cxx::hash_map<ClientId, RemoteClient*>::iterator
-      clientIt = clients.begin(); clientIt != clients.end(); ++clientIt) {
+  for (u_map<ClientId, RemoteClient*>::type::iterator clientIt =
+      clients.begin(); clientIt != clients.end(); ++clientIt) {
     RemoteClient* client = clientIt->second;
     if (client->hasReadPermissionFor(altered)) {
       try {

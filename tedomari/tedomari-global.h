@@ -2,6 +2,7 @@
 #define TEDOMARI_GLOBAL_H
 
 #include "libsakusen-global.h"
+#include "gnu_extensions.h"
 
 #define APPLICATION_NAME "tedomari"
 #define APPLICATION_VERSION "0.1"
@@ -14,6 +15,7 @@
 namespace tedomari {
 
 using sakusen::String;
+using sakusen::u_map;
 
 }
 

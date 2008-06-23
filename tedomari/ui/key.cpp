@@ -4,16 +4,15 @@
 #include "stringutils.h"
 
 using namespace sakusen;
-using namespace __gnu_cxx;
 
 namespace tedomari {
 namespace ui {
 
 /** \brief Generates a hash table for looking up key values from their names.
  * */
-hash_map_string<Key>::type initializeKeyLookup()
+u_map<String, Key>::type initializeKeyLookup()
 {
-  hash_map_string<Key>::type l;
+  u_map<String, Key>::type l;
   for (int i=0; i<K_Unknown; ++i) {
     l[getName(static_cast<Key>(i))] = static_cast<Key>(i);
   }
@@ -26,11 +25,11 @@ hash_map_string<Key>::type initializeKeyLookup()
 }
 
 /** \brief Hash table of keys indexed by name */
-hash_map_string<Key>::type keyLookup = initializeKeyLookup();
+u_map<String, Key>::type keyLookup = initializeKeyLookup();
 
 Key getKey(const String& name)
 {
-  hash_map_string<Key>::type::iterator key = keyLookup.find(name);
+  u_map<String, Key>::type::iterator key = keyLookup.find(name);
   if (key == keyLookup.end()) {
     return K_Unknown;
   } else {

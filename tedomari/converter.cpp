@@ -2,6 +2,8 @@
 
 #include "errorutils.h"
 
+#include <langinfo.h>
+
 #define CONVERT_BUFFER_LEN 4096
 
 using namespace sakusen::comms;
