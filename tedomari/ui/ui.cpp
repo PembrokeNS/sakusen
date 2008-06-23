@@ -530,6 +530,9 @@ void UI::initializeAction(const String& actionName)
   if (pendingMode == NULL) {
     pendingMode = mode;
   }
+  if (pendingAction->getNextParameterType() == actionParameterType_none) {
+    pendingAction->execute(this);
+  }
   setModeFor(pendingAction->getNextParameterType());
 }
 

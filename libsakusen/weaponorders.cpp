@@ -127,6 +127,7 @@ void WeaponOrders::update(const Order& order)
       Fatal("Order type not appropriate for a Weapon");
     case orderType_targetNone:
       targetType = weaponTargetType_none;
+      break;
     case orderType_targetPosition:
       targetType = weaponTargetType_position;
       targetPosition = order.getTargetPositionData().getTarget();
