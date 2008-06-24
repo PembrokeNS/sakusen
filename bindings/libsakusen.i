@@ -292,6 +292,10 @@ namespace sakusen {
 %{
 #include "hitpoints.h"
 %}
+%include "sensorreturnmap.h"
+%{
+#include "sensorreturnmap.h"
+%}
 %include "isensorreturns.h"
 %{
 #include "isensorreturns.h"
