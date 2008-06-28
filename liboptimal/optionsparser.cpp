@@ -23,21 +23,21 @@ void OptionsParser::checkOptionNamesSanity(
 {
   if (longName != "") {
     if (options.count(longName)) {
-      throw std::logic_error("repeated long option name '"+longName+"'");
+      throw std::logic_error(string("repeated long option name '"+longName+"'"));
     }
 
     if (boost::algorithm::starts_with(longName, "no-")) {
-      throw std::invalid_argument("long option name cannot start 'no-'");
+      throw std::invalid_argument(string("long option name cannot start 'no-'"));
     }
   }
 
   if (shortName != '\0') {
     if (options.get<1>().count(shortName)) {
-      throw std::logic_error("repeated long option name '"+longName+"'");
+      throw std::logic_error(string("repeated long option name '"+longName+"'"));
     }
 
     if (shortName == '-') {
-      throw std::invalid_argument("short option name cannot be '-'");
+      throw std::invalid_argument(string("short option name cannot be '-'"));
     }
   }
 }
