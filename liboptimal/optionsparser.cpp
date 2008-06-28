@@ -33,7 +33,9 @@ void OptionsParser::checkOptionNamesSanity(
 
   if (shortName != '\0') {
     if (options.get<1>().count(shortName)) {
-      throw std::logic_error(string("repeated long option name '"+longName+"'"));
+      throw std::logic_error(
+          string("repeated short option name '")+shortName+"'"
+        );
     }
 
     if (shortName == '-') {
