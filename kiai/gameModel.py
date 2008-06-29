@@ -27,8 +27,11 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		ustatus=self.getStatus()
 		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
 class eventSensorReturnsFactory(SensorReturnsFactory):
+	def __init__(self,scene):
+		SensorReturnsFactory.__init__(self)
+		self.scene = scene
 	def create(self,u):
-		e=eventSensorReturns(u)
+		e=eventSensorReturns(u,self.scene)
 		debug("Created eventSensorReturns "+`e`)
 		e.thisown=0 # will probably need to be e.__disown__() once eventSensorReturns gets any code
 		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
@@ -36,7 +39,8 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		p.thisown=0 #TODO: check, as in eventUnitFactory above
 		return p
 class eventSensorReturns(UpdatedSensorReturns):
-	pass
+	def __init__(self,scene):
+		pass
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
@@ -46,6 +50,7 @@ class gameModel(QtCore.QObject):
 		d/=path(CONFIG_SUBDIR)
 		d/=path(DATA_SUBDIR)
 		self.resourceinterface=FileResourceInterface_create(d,False)
+		self.scene = 0 #arrgh, need to fix this
 	def setUniverse(self,universe): #TODO: check hash
 		debug("Universe name changed, setting")
 		result=self.resourceinterface.searchUniverse(universe)
@@ -59,7 +64,7 @@ class gameModel(QtCore.QObject):
 		debug("Game started, creating world")
 		e=eventUnitFactory()
 		e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
-		sf=eventSensorReturnsFactory()
+		sf=eventSensorReturnsFactory(self.scene)
 		sf.__disown__() #ditto, I assume
 		self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 		#w should now get deleted at the correct time, I think
@@ -75,3 +80,5 @@ class gameModel(QtCore.QObject):
 			debug("pushing update "+`u`)
 			sakusen_client.cvar.world.applyUpdate(u)
 			debug("Applied an update")
+	def setScene(self,scene):
+		self.scene = scene
