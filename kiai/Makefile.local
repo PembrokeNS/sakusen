@@ -1,6 +1,6 @@
 NO_AUTO_COMPILING=yes
 
-all: settingsDialog.py connectDialog.py mainWindow.py run-kiai-from-builddir.sh
+all-nonrecursive: settingsDialog.py connectDialog.py mainWindow.py run-kiai-from-builddir.sh
 
 %.py: $(this_srcdir)%.ui
 	pyuic4 $< -o $@
