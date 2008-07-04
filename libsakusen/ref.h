@@ -27,7 +27,9 @@ bool operator==(const Ref<T>& left, const Ref<T>& right);
  * track of the objects removal, and invalidate itself when that happens */
 template<class T>
 class Ref {
+#ifndef SWIG
   friend bool operator==<T>(const Ref<T>&, const Ref<T>&);
+#endif
   private:
     typedef
       SerializationHandler<typename boost::remove_const<T>::type> SHandler;

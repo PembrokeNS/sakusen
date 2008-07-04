@@ -210,7 +210,7 @@ namespace sakusen {
     %template("operator!=") operator!=<T>;
     %template("operator<=") operator<=<T>;
     %template("operator>=") operator>=<T>;
-    %template("operator<") operator<<T>;
+    %template("operator<") operator< <T>;
     %template("operator>") operator><T>;
   }
   %template(SPoint16) Point<sint16>;
