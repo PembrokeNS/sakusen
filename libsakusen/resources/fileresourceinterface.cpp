@@ -114,8 +114,17 @@ FileResourceInterface::internalSearch(
 {
   ResourceSearchResult result;
   vfs::Resource resource;
-  boost::tie(resource, result) =
-    vfsRoot->search(sakusenPath, getExtension(type));
+  try {
+    boost::tie(resource, result) =
+      vfsRoot->search(sakusenPath, getExtension(type));
+  } catch (DeserializationExn& e) {
+    /* Indicates error while searching */
+    error = String("error searching resources for '") +
+      sakusenPath + "': " + e.message;
+    return boost::make_tuple(
+        boost::shared_ptr<void>(),resourceSearchResult_error,""
+      );
+  }
   Reader::Ptr reader = resource.getReader();
 
   if (!reader)

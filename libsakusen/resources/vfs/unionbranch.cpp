@@ -10,7 +10,10 @@ namespace vfs {
 
 Branch::Ptr UnionBranch::getSubBranch(const String& name)
 {
-  assert(!name.empty());
+  if (name.empty()) {
+    return Branch::Ptr();
+  }
+
   /** \todo memoize? */
   if (name == "..") {
     return parent.lock();
@@ -64,9 +67,8 @@ list<Resource> UnionBranch::getResources(
     const String& extension
   )
 {
-  assert(!name.empty());
   /** \todo memoize? */
-  if (name == ".." || name == ".") {
+  if (name.empty() || name == ".." || name == ".") {
     throw DeserializationExn("Invalid resource name '"+name+"'");
   }
   list<Resource> candidates;
