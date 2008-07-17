@@ -307,6 +307,10 @@ class LIBOPTIMAL_API OptionsParser {
         int argc,
         char const* const* argv
       );
+
+    bool parse(int argc, char const* const* argv) {
+      return parse(boost::filesystem::path(), argc, argv);
+    }
 };
 
 template<typename StoragePointer>
