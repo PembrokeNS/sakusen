@@ -118,7 +118,7 @@ check_for_lib boost_filesystem boost/filesystem/path.hpp -lboost_filesystem
 check_for_lib readline readline/readline.h -lreadline
 check_for_lib SDL SDL/SDL.h -lSDL
 check_for_lib pangocairo pango/pangocairo.h `pkg-config pangocairo --cflags --libs`
-check_for_lib unicode unicode.h -lunicode
+check_for_lib unicode unicode/ucnv.h -licuuc
 check_for_lib pcrecpp pcrecpp.h -lpcrecpp
 check_for_lib mhash mhash.h -lmhash
 check_for_lib png png.h -lpng

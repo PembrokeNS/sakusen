@@ -11,6 +11,6 @@ libsakusen-resources: libpng
 
 Tedomari:
 		readline5  (linux only)
-		unicode (linux only)
+		icu
 		SDL       
 		Cairo+Pango+glib     (Cairo UI only)

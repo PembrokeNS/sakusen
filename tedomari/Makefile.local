@@ -13,7 +13,7 @@ LIBS += -lreadline
 endif
 
 ifeq ($(ENABLE_CONVERSION),yes)
-LIBS += -lunicode
+LIBS += -licuuc
 endif
 
 ifeq ($(ENABLE_SDL),yes)

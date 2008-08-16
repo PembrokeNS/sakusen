@@ -7,10 +7,8 @@
 #include <boost/utility.hpp>
 
 #ifndef DISABLE_CONVERSION
-#include <unicode.h>
-  #ifdef _MSC_VER
-    #include "langinfo.h"
-  #endif
+	#include "langinfo.h"
+	#include "unicode/ucnv.h"
 #endif
 
 namespace tedomari {
@@ -23,7 +21,7 @@ namespace tedomari {
  * 
  * \warning This may yield invalid UTF-8 strings
  *
- * Otherwise, the unicode library is used to convert strings between the native
+ * Otherwise, the icu library is used to convert strings between the native
  * encoding (as determined by locale settings) and UTF-8. */
 class Converter : boost::noncopyable {
   public:
@@ -40,18 +38,13 @@ class Converter : boost::noncopyable {
     }
 #else
   private:
-    unicode_iconv_t nativeToUTF8;
-    unicode_iconv_t UTF8ToNative;
+	 const char * native_locale;
+	 UErrorCode ErrorCode;
   public:
-    String convert(const String&, unicode_iconv_t conv);
-    /** \brief Converts a string from the native codeset to UTF-8 */
-    inline String convertNativeToUTF8(const String& s) {
-      return convert(s, nativeToUTF8);
-    }
+    /** \brief Converts a string from the native codeset to UTF-16 */
+   String convertNativeToUTF8(const String&);
     /** \brief Converts a string from UTF-8 to the native codeset */
-    inline String convertUTF8ToNative(const String& s) {
-      return convert(s, UTF8ToNative);
-    }
+   String convertUTF8ToNative(const String&);
 #endif
 };
 
