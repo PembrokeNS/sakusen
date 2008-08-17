@@ -46,7 +46,7 @@ function check_for_lib
     eval ${name}_exists=yes
   else
     eval ${name}_exists=no
-    printf "Missing either library '%s' or its header '%s'\n" "${lib}" "${header}"
+    printf "Missing either library '%s' or its header '%s'\n" "${name}" "${header}"
   fi
 }
 function check_for_pyplusplus
