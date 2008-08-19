@@ -118,7 +118,8 @@ GLOBAL_CFLAGS ?= -Werror -O0 -g3
 LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
 		$(top_builddir)$(subst -,/,$(lib))/$(lib).la \
 	)
-INCLUDE := -I$(this_srcdir) -I. $(foreach lib,\
+ALL_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(this_srcdir) -I. \
+	$(foreach lib,\
 		$(patsubst $(top_builddir)%,$(top_srcdir)%,$(LIB_DEP)),\
 		-I$(dir $(lib))\
 	) $(INCLUDE)
@@ -126,9 +127,9 @@ INCLUDE := -I$(this_srcdir) -I. $(foreach lib,\
 # Concatenate all the CXXFLAGSs and CFLAGSs together
 
 ALL_CXXFLAGS := \
-	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(INCLUDE) $(THIS_CXXFLAGS)
+	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(ALL_CPPFLAGS) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
-	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(INCLUDE) $(THIS_CFLAGS)
+	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(ALL_CPPFLAGS) $(THIS_CFLAGS)
 
 GAMESDIR := $(DESTDIR)$(PREFIX)/games
 BINDIR := $(DESTDIR)$(PREFIX)/bin
@@ -355,7 +356,7 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag:
 	@mkdir -p $(dir $@)
-	cpp $(INCLUDE) -MP -MM -MF $@.tmp $(this_srcdir)$(subst _dot_dot,..,$*)
+	cpp $(ALL_CPPFLAGS) -MP -MM -MF $@.tmp $(this_srcdir)$(subst _dot_dot,..,$*)
 	@echo "$@ .obj/$(filter-out ./,$(dir $*))`cat $@.tmp`" > $@
 	@rm $@.tmp
 
