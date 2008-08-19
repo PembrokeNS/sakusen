@@ -1,9 +1,7 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+use Test::More tests => 6;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-plan tests => 5;
 
 $s = Sakusen::SPoint32->new(1, 2, 3);
 $d = Sakusen::SPoint32->new(3, 5, 12);

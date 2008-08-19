@@ -1,10 +1,7 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+use Test::More tests => 4;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-plan tests => 3;
-
 
 my $identity = new Sakusen::Orientation();
 isa_ok ($identity, "Sakusen::Orientation");

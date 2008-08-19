@@ -1,11 +1,12 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+my @coords;
+BEGIN {
+  @coords = ([5, 5, -30], [-6, 5, 0], [9, 12, 5]);
+}
+
+use Test::More tests => 28 + 5 * scalar @coords;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-my @coords = ([5, 5, -30], [-6, 5, 0], [9, 12, 5]);
-
-plan tests => 27 + 5 * scalar @coords;
 
 my @points = ();
 for (@coords) {

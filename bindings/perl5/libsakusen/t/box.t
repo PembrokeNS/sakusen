@@ -1,9 +1,7 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+use Test::More tests => 41;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-plan tests => 40;
 
 $empty = Sakusen::SBox32->new;
 isa_ok($empty, 'Sakusen::SBox32');

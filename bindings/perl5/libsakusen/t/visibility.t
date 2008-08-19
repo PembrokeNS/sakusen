@@ -1,9 +1,7 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+use Test::More tests => 14;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-plan tests => 13;
 
 my $v = Sakusen::Visibility->new();
 isa_ok($v, 'Sakusen::Visibility');

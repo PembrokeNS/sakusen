@@ -1,9 +1,7 @@
 #!/usr/bin/perl
 
-use Test::More;
+use Test::More tests => 4+3*5*5*5;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
-
-plan tests => 3+3*5*5*5;
 
 my $result = Sakusen::mathsUtils_solveQuadratic(0, 0, 0);
 

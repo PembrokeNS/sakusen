@@ -1,13 +1,16 @@
 #!/usr/bin/perl -Tw
 
-use Test::More;
+my @types;
+my @primitives;
+
+BEGIN {
+  @types = qw(SPoint64 SPoint32 SPoint16);
+  @primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
+}
+
+use Test::More tests => (38 * scalar @types) + (3 * scalar @primitives) + 3;
 BEGIN {use_ok('Sakusen') or BAIL_OUT("module won't load");}
 
-@types = qw(SPoint64 SPoint32 SPoint16);
-@primitives = qw(sint16 sint32 sint64 uint16 uint32 uint64 double);
-
-# tests per templated type and per primitive type
-plan tests => (38 * scalar @types) + (3 * scalar @primitives) + 2;
 
 # test getting limits
 {
