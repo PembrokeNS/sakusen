@@ -170,7 +170,7 @@ $VERSION = 0.01;
 %{
 #include "libsakusen-global.h"
 %}
-%include "intmunger.h"
+%include "arithmetictraits.h"
 %array_class(uint8,uint8);
 /* it looks like it really has to be called uint8, otherwise SWIG gets confused. Crazy, huh? */
 /* tiny files */

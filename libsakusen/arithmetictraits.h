@@ -1,8 +1,12 @@
-#ifndef INTMUNGER_H
-#define INTMUNGER_H
+#ifndef LIBSAKUSEN__ARITHMETICTRAITS_H
+#define LIBSAKUSEN__ARITHMETICTRAITS_H
 
 #include "libsakusen-global.h"
 #include <limits>
+#include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
+#include <boost/type_traits/make_signed.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 #include <boost/mpl/less_equal.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/and.hpp>
@@ -11,87 +15,31 @@
 
 namespace sakusen {
 
+template<typename T, typename Enable = void>
+struct ArithmeticTraits;
+
 template<typename T>
-struct IntMunger { };
+struct ArithmeticTraits<
+    T, typename boost::enable_if<boost::is_unsigned<T> >::type
+  > {
+  typedef typename boost::make_unsigned<T>::type unsign;
+  typedef typename boost::make_signed<T>::type sign;
+  typedef uint64 widest;
+  typedef uint8 narrowest;
+};
 
-template<>
-struct IntMunger<uint8> {
-  typedef uint8 unsign;
-  typedef sint8 sign;
-  typedef uint16 wider;
+template<typename T>
+struct ArithmeticTraits<
+    T, typename boost::enable_if<boost::is_signed<T> >::type
+  > {
+  typedef typename boost::make_unsigned<T>::type unsign;
+  typedef typename boost::make_signed<T>::type sign;
   typedef uint64 widest;
   typedef uint8 narrowest;
 };
 
 template<>
-struct IntMunger<sint8> {
-  typedef uint8 unsign;
-  typedef sint8 sign;
-  typedef sint16 wider;
-  typedef sint64 widest;
-  typedef sint8 narrowest;
-};
-
-template<>
-struct IntMunger<uint16> {
-  typedef uint16 unsign;
-  typedef sint16 sign;
-  typedef uint32 wider;
-  typedef uint64 widest;
-  typedef uint8 narrower;
-  typedef uint8 narrowest;
-};
-
-template<>
-struct IntMunger<sint16> {
-  typedef uint16 unsign;
-  typedef sint16 sign;
-  typedef sint32 wider;
-  typedef sint64 widest;
-  typedef sint8 narrower;
-  typedef sint8 narrowest;
-};
-
-template<>
-struct IntMunger<uint32> {
-  typedef uint32 unsign;
-  typedef sint32 sign;
-  typedef uint64 wider;
-  typedef uint64 widest;
-  typedef uint16 narrower;
-  typedef uint8 narrowest;
-};
-
-template<>
-struct IntMunger<sint32> {
-  typedef uint32 unsign;
-  typedef sint32 sign;
-  typedef sint64 wider;
-  typedef sint64 widest;
-  typedef sint16 narrower;
-  typedef sint8 narrowest;
-};
-
-template<>
-struct IntMunger<uint64> {
-  typedef uint64 unsign;
-  typedef sint64 sign;
-  typedef uint64 widest;
-  typedef uint32 narrower;
-  typedef uint8 narrowest;
-};
-
-template<>
-struct IntMunger<sint64> {
-  typedef uint64 unsign;
-  typedef sint64 sign;
-  typedef sint64 widest;
-  typedef sint32 narrower;
-  typedef sint8 narrowest;
-};
-
-template<>
-struct IntMunger<double>
+struct ArithmeticTraits<double, void>
 {
   typedef double unsign;
   typedef double sign;
@@ -99,16 +47,16 @@ struct IntMunger<double>
 };
 
 #ifdef SWIG
-%template(UIntMunger8) IntMunger<uint8>;
-%template(SIntMunger8) IntMunger<sint8>;
-%template(UIntMunger16) IntMunger<uint16>;
-%template(SIntMunger16) IntMunger<sint16>;
-%template(UIntMunger32) IntMunger<uint32>;
-%template(SIntMunger32) IntMunger<sint32>;
-%template(UIntMunger64) IntMunger<uint64>;
-%template(SIntMunger64) IntMunger<sint64>;
+%template(UArithmeticTraits8) ArithmeticTraits<uint8, void>;
+%template(SArithmeticTraits8) ArithmeticTraits<sint8, void>;
+%template(UArithmeticTraits16) ArithmeticTraits<uint16, void>;
+%template(SArithmeticTraits16) ArithmeticTraits<sint16, void>;
+%template(UArithmeticTraits32) ArithmeticTraits<uint32, void>;
+%template(SArithmeticTraits32) ArithmeticTraits<sint32, void>;
+%template(UArithmeticTraits64) ArithmeticTraits<uint64, void>;
+%template(SArithmeticTraits64) ArithmeticTraits<sint64, void>;
 
-%template(IntMungerDouble) IntMunger<double>;
+%template(ArithmeticTraitsDouble) ArithmeticTraits<double>;
 #endif /*SWIG*/
 
 /** \brief Determines whether one integer type can be safely cast to another

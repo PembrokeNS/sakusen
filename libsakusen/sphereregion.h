@@ -16,13 +16,13 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
    * benefit
    */
 #ifdef SWIG
-#define UT IntMunger<T>::unsign
-#define WideT IntMunger<T>::widest
-#define UWideT IntMunger<IntMunger<T>::unsign>::widest
+#define UT ArithmeticTraits<T>::unsign
+#define WideT ArithmeticTraits<T>::widest
+#define UWideT ArithmeticTraits<ArithmeticTraits<T>::unsign>::widest
 #else
-    typedef typename IntMunger<T>::unsign UT;
-    typedef typename IntMunger<T>::widest WideT;
-    typedef typename IntMunger<UT>::widest UWideT;
+    typedef typename ArithmeticTraits<T>::unsign UT;
+    typedef typename ArithmeticTraits<T>::widest WideT;
+    typedef typename ArithmeticTraits<UT>::widest UWideT;
 #endif
   public:
     SphereRegion() : centre(), radius(0) {}

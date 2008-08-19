@@ -4,7 +4,7 @@
 #include "libsakusen-global.h"
 #include <boost/utility.hpp>
 
-#include "intmunger.h"
+#include "arithmetictraits.h"
 
 namespace sakusen {
 
@@ -256,12 +256,12 @@ class LIBSAKUSEN_API Point {
      * #defines because the typedefs are far too complex for SWIG's tiny mind.
      */
 #ifdef SWIG
-#define Wide IntMunger<T>::widest
-#define UWide IntMunger<IntMunger<T>::widest>::unsign
+#define Wide ArithmeticTraits<T>::widest
+#define UWide uint64
 #else
   private:
-    typedef typename IntMunger<T>::widest Wide;
-    typedef typename IntMunger<Wide>::unsign UWide;
+    typedef typename ArithmeticTraits<T>::widest Wide;
+    typedef typename ArithmeticTraits<Wide>::unsign UWide;
   public:
 #endif
 
