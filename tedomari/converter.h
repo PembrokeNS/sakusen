@@ -6,11 +6,6 @@
 
 #include <boost/utility.hpp>
 
-#ifndef DISABLE_CONVERSION
-	#include "langinfo.h"
-	#include "unicode/ucnv.h"
-#endif
-
 namespace tedomari {
 
 /** \brief Handles conversion of text between the native encoding (used for
@@ -19,7 +14,7 @@ namespace tedomari {
  * When DISABLE_CONVERSION is defined, this class performs no alterations to
  * the strings it is given to convert, but simply passes them on verbatim.
  * 
- * \warning This may yield invalid UTF-8 strings
+ * \warning This may yield invalid UTF-8 strings.
  *
  * Otherwise, the icu library is used to convert strings between the native
  * encoding (as determined by locale settings) and UTF-8. */
@@ -38,8 +33,7 @@ class Converter : boost::noncopyable {
     }
 #else
   private:
-	 const char * native_locale;
-	 UErrorCode ErrorCode;
+    const char* nativeLocale;
   public:
     /** \brief Converts a string from the native codeset to UTF-16 */
    String convertNativeToUTF8(const String&);

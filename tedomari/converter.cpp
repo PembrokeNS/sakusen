@@ -12,44 +12,49 @@ Converter::Converter() {}
 Converter::~Converter() {}
 #else
 
+#include "langinfo.h"
+#include "unicode/ucnv.h"
+
 /** \brief Default constructor
  *
  * Uses nl_langinfo(3) to determine native codeset for conversion */
 Converter::Converter() 
 {
   //Find native locale.
-  native_locale = nl_langinfo(CODESET);
-  if(native_locale ==NULL)
-		native_locale = "ISO-8859-1";//default_locale
-  Debug("native codeset is " << String(native_locale));
+  nativeLocale = nl_langinfo(CODESET);
+  if (nativeLocale == NULL)
+    nativeLocale = "ISO-8859-1";//default_locale
+  Debug("native codeset is " << nativeLocale);
 }
 
 /** \brief Destructor */
 Converter::~Converter(){}
 
 /** \brief Converts a string from the native codeset to UTF-8. 
- *   TODO: There are more efficient/powerful ways to do this.  */
+ *   \todo There are more efficient/powerful ways to do this.  */
 String Converter::convertNativeToUTF8(const String& s) {
-    char out[CONVERT_BUFFER_LEN];
-    const char* mobileIn = s.c_str();
-    size_t outBytesLeft = CONVERT_BUFFER_LEN;
-    if( -1 == ucnv_convert ("UTF-8",native_locale, out,outBytesLeft, mobileIn, 1+s.length(), &ErrorCode) || U_FAILURE(ErrorCode))
-	 {
-       Debug("error converting string");
-       return s;
-    }
+  UErrorCode errorCode;
+  char out[CONVERT_BUFFER_LEN];
+  const char* mobileIn = s.c_str();
+  size_t outBytesLeft = CONVERT_BUFFER_LEN;
+  if (-1 == ucnv_convert("UTF-8", nativeLocale, out, outBytesLeft, mobileIn, 1+s.length(), &errorCode) || U_FAILURE(errorCode))
+  {
+    Debug("error converting string");
+    return s;
+  }
   return String(out);
 }
 /** \brief Converts a string from UTF-8 to the native codeset */
 String Converter::convertUTF8ToNative(const String& s) {
-    char out[CONVERT_BUFFER_LEN];
-    const char* mobileIn = s.c_str();
-    size_t outBytesLeft = CONVERT_BUFFER_LEN;
-    if( -1 == ucnv_convert (native_locale, "UTF-8", out,	outBytesLeft, mobileIn, 1+s.length(), &ErrorCode) || U_FAILURE(ErrorCode))
-	 {
-        Debug("error converting string");
-		  return s;
-	 }
+  UErrorCode errorCode;
+  char out[CONVERT_BUFFER_LEN];
+  const char* mobileIn = s.c_str();
+  size_t outBytesLeft = CONVERT_BUFFER_LEN;
+  if (-1 == ucnv_convert(nativeLocale, "UTF-8", out, outBytesLeft, mobileIn, 1+s.length(), &errorCode) || U_FAILURE(errorCode))
+  {
+    Debug("error converting string");
+    return s;
+  }
   return String(out);
 }
 #endif // DISABLE_CONVERSION
