@@ -34,8 +34,8 @@ struct ArithmeticTraits<
   > {
   typedef typename boost::make_unsigned<T>::type unsign;
   typedef typename boost::make_signed<T>::type sign;
-  typedef uint64 widest;
-  typedef uint8 narrowest;
+  typedef sint64 widest;
+  typedef sint8 narrowest;
 };
 
 template<>
