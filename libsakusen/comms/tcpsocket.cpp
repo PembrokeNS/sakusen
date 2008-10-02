@@ -6,7 +6,6 @@
 #include "socketexn.h"
 
 #ifdef WIN32
-#include "wsabsd.h"
 #define NativeReceiveReturnType int
 #else // BSD sockets
 #define NativeReceiveReturnType ssize_t

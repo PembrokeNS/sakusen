@@ -53,7 +53,7 @@
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp;..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\;..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib"
-				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1;BOOST_SYSTEM_DYN_LINK=1"
 				StringPooling="true"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -80,6 +80,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="boost_filesystem-vc80-mt-p-1_35.lib boost_filesystem-vc80-mt-p.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -154,7 +155,7 @@
 				AdditionalOptions="/LDd "
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;..\..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1;BOOST_SYSTEM_DYN_LINK=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
