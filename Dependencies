@@ -1,16 +1,19 @@
 Dependencies:
 
-libsakusen: 	mhash
-		Boost 1.35 (NOT 1.34 or 1.36)
-	 	STLPort (Windows only)
+libsakusen:
+	mhash
+	Boost 1.35 (NOT 1.34 or 1.36)
+	STLPort (Windows only)
 
-Fuseki: 	pcre 	
+Fuseki:
+	pcre
 
-libsakusen-resources: libpng
-			zlib (libpng dependency)
+libsakusen-resources:
+	libpng
+	zlib (libpng dependency)
 
 Tedomari:
-		readline5  (linux only)
-		icu
-		SDL       
-		Cairo+Pango+glib     (Cairo UI only)
+	readline5  (linux only)
+	icu
+	SDL
+	Cairo+Pango+glib     (Cairo UI only)
