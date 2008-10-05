@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <list>
+#include <set>
 #include <boost/shared_array.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/utility.hpp>
