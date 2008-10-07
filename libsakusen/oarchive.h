@@ -202,7 +202,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     /* Can't use the u_map metafunction because that prevents type inference */
     template<typename T, typename U, typename THash>
 #ifdef SAKUSEN_USE_UNORDERED_MAP
-    OArchive& operator<<(const std::tr1::unordered_map<T, U, THash>& toStore)
+    OArchive& operator<<(const UNORDERED_MAP_NAMESPACE::unordered_map<T, U, THash>& toStore)
 #else
     OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore)
 #endif

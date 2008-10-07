@@ -26,11 +26,11 @@
 
 #else// STLport has its own versions of hash_map, etc.
 
-#define __gnu_cxx std
+#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
+#include <boost/functional.hpp>
 
-#include <hash_map>
-#include <hash_set>
-#include <functional>
+#define SAKUSEN_USE_UNORDERED_MAP
 
 #endif // __GNUC__
 
@@ -41,14 +41,20 @@ namespace sakusen {
 
 #ifdef SAKUSEN_USE_UNORDERED_MAP
 
+#ifdef _MSC_VER
+  #define UNORDERED_MAP_NAMESPACE boost
+#else
+  #define UNORDERED_MAP_NAMESPACE std::tr1
+#endif
+
 template<typename TValue, typename THash = boost::hash<TValue> >
 struct u_set {
-  typedef std::tr1::unordered_set<TValue, THash> type;
+  typedef UNORDERED_MAP_NAMESPACE::unordered_set<TValue, THash> type;
 };
 
 template<typename TKey, typename TValue, typename THash = boost::hash<TKey> >
 struct u_map {
-  typedef std::tr1::unordered_map<TKey, TValue, THash> type;
+  typedef UNORDERED_MAP_NAMESPACE::unordered_map<TKey, TValue, THash> type;
 };
 
 #else // SAKUSEN_USE_UNORDERED_MAP

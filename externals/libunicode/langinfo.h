@@ -9,7 +9,7 @@ extern "C"
 typedef int nl_item;
 
 #define CODESET ((nl_item) 1)
-#ifdef _MSC_VER
+#if 0//_MSC_VER
   #ifdef LIBUNICODE_EXPORTS
     #define LIBUNICODE_API   __declspec(dllexport)
   #else

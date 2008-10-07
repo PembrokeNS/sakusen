@@ -53,8 +53,8 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;;..\..\..\externals\Stlport\stlport"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_EXPORTS"
+				AdditionalIncludeDirectories="&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_EXPORTS;_SCL_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -144,8 +144,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_EXPORTS"
+				AdditionalIncludeDirectories="&quot;..\..\..\externals\mhash-win32\include&quot;;&quot;..\..\..\externals\mhash-win32\lib&quot;"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_EXPORTS;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -174,7 +174,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\lib;..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 				OptimizeReferences="1"
 				EnableCOMDATFolding="1"
 			/>

@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
 				PreprocessorDefinitions="WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -113,7 +113,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
+				AdditionalIncludeDirectories="..\..\..\..\libsakusen\server\plugins;..\..\..\..\libsakusen\server\;..\..\..\..\libsakusen\;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\resources;..\..\..\..\externals\pcrecpp\;..\..\..\..\externals\pcrecpp\pcre"
 				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="2"
 				WarningLevel="3"
@@ -131,7 +131,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

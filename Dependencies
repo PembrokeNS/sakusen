@@ -2,8 +2,7 @@ Dependencies:
 
 libsakusen:
 	mhash
-	Boost 1.35 (NOT 1.34 or 1.36)
-	STLPort (Windows only)
+	Boost 1.36 
 
 Fuseki:
 	pcre

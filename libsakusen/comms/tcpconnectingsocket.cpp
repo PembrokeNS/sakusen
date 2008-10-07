@@ -4,6 +4,7 @@
 
 #ifdef WIN32
 #include <winsock2.h>
+#include "wsabsd.h"
 #endif
 
 using namespace sakusen::comms;

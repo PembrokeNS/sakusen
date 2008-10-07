@@ -6,7 +6,7 @@
 
 #if defined (_MSC_VER)
 #include <winsock2.h>
-#include "boost/cerrno.hpp"
+#include "wsabsd.h"
 #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #endif //_MSC_VER
 

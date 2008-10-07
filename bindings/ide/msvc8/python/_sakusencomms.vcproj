@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server;..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp"
+				AdditionalIncludeDirectories="&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server;..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp"
 				PreprocessorDefinitions="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;BOOST_FILESYSTEM_DYN_LINK=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -71,7 +71,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).pyd"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Python25\libs&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp;&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server"
+				AdditionalIncludeDirectories="..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp;&quot;C:\Program files\Python25\include&quot;;..\..\..\..\libsakusen;..\..\..\..\libsakusen\resources;..\..\..\..\libsakusen\comms;..\..\..\..\libsakusen\client;..\..\..\..\libsakusen\server"
 				PreprocessorDefinitions="WIN32;NDEBUG;DISABLE_UNIX_SOCKETS;_WIN32;_WINDOWS;BOOST_FILESYSTEM_DYN_LINK=1"
 				RuntimeLibrary="2"
 				WarningLevel="3"
@@ -154,7 +154,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).pyd"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\bin;..\..\..\..\externals\STLport\lib;&quot;C:\Program Files\Python25\libs&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Python25\libs&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

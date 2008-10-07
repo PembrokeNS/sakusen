@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO"
+				AdditionalIncludeDirectories="..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -66,7 +66,7 @@
 				AdditionalOptions="&#x0D;&#x0A;"
 				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib ..\..\..\externals\icu\lib\icuuc.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -126,8 +126,8 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_CONVERSION;DISABLE_READLINE;DISABLE_CAIRO;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO;_SCL_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -148,7 +148,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib ..\..\..\externals\icu\lib\icuuc.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -206,8 +206,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -233,7 +233,7 @@
 				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib ..\..\..\externals\icu\lib\icuuc.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -270,7 +270,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -293,8 +293,8 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode;..\..\..\externals\icu\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode;..\..\..\externals\icu\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -316,7 +316,7 @@
 				AdditionalDependencies="..\..\..\externals\SDL\lib\SDL.lib ..\..\..\externals\SDL\lib\SDLmain.lib ..\..\..\externals\icu\lib\icuuc.lib gobject-2.0.lib pango-1.0.lib cairo.lib pangocairo-1.0.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-cairo.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib;..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib"
+				AdditionalLibraryDirectories="..\..\..\externals\icu\lib"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -743,6 +743,14 @@
 		</File>
 		<File
 			RelativePath="..\..\converter.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\externals\libunicode\langinfo.c"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\externals\libunicode\langinfo.h"
 			>
 		</File>
 		<File

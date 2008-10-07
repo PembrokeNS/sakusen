@@ -23,7 +23,7 @@
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -52,9 +52,8 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../;..\..\..\;..\..\..\..\externals\STLport\stlport"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_COMMS_EXPORTS;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="../../;..\..\..\"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_COMMS_EXPORTS;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS"
 				StringPooling="false"
 				SmallerTypeCheck="false"
 				RuntimeLibrary="2"
@@ -83,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -146,8 +145,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../;..\..\..\;..\..\..\..\externals\STLport\stlport"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_COMMS_EXPORTS;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="../../;..\..\..\;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_COMMS_EXPORTS;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -174,7 +173,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 				OptimizeReferences="1"
 				EnableCOMDATFolding="1"
 			/>

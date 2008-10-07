@@ -53,8 +53,8 @@
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_CLIENT_EXPORTS;WIN32"
+				AdditionalIncludeDirectories="..\..\..\"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_CLIENT_EXPORTS;WIN32;_SCL_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -79,7 +79,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -143,8 +143,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/LDd "
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\externals\STLport\stlport;..\..\;..\..\..\"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_CLIENT_EXPORTS"
+				AdditionalIncludeDirectories="..\..\;..\..\..\"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_CLIENT_EXPORTS;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -172,7 +172,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="..\..\..\..\externals\STLport\lib;..\..\..\..\externals\STLport\bin"
+				AdditionalLibraryDirectories=""
 				EnableCOMDATFolding="1"
 			/>
 			<Tool

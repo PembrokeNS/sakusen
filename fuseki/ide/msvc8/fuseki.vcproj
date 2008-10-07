@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS"
+				AdditionalIncludeDirectories="..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -99,7 +99,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -122,8 +122,8 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\externals\STLport\stlport;..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI"
+				AdditionalIncludeDirectories="..\..\..\externals\pcrecpp;..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;..\..\..\externals\pcrecpp\pcre"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI;_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\externals\STLport\bin;..\..\..\externals\STLport\lib"
+				AdditionalLibraryDirectories=""
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
