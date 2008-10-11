@@ -379,7 +379,7 @@ revision.h: $(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/i
 			awk '{print $$2}' | sort -nr | head -n 1`; \
 	elif test -d $(top_srcdir).git ; \
 	then \
-		REVISION=`git-rev-list --max-count=1 HEAD`; \
+		REVISION=`git rev-list --max-count=1 HEAD`; \
 	else \
 		REVISION='unknown' ; \
 	fi; \
