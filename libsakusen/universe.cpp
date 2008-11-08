@@ -56,6 +56,12 @@ String Universe::resolveNames()
   return "";
 }
 
+bool Universe::sanityCheck() const
+{
+  /** \todo Check something */
+  return true;
+}
+
 WeaponTypeId Universe::getWeaponTypeId(String weaponTypeName) const
 {
   u_map<String, WeaponTypeId>::type::const_iterator

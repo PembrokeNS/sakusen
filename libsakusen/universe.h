@@ -56,6 +56,16 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
      * String is returned.
      */
     String resolveNames();
+
+    /** \brief Checks internal consistency of the universe
+     *
+     * This method checks that the universe is sensible and internally
+     * consistent; for example that all the WeaponTypes referenced in the
+     * UnitTypes really exist.
+     *
+     * \return false iff a problem is detected
+     */
+    bool sanityCheck() const;
     
     /** \name Accessors */
     //@{
