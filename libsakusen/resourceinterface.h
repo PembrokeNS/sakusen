@@ -111,12 +111,20 @@ class LIBSAKUSEN_API ResourceInterface {
      * where it was found. */
     virtual boost::tuple<Image::Ptr, String>
     imageSearch(const String& path) = 0;
-    
+
     template<typename T>
     inline bool save(
         const boost::shared_ptr<const T>& resource,
         const String& path
       );
+
+    template<typename T>
+    inline bool save(
+        const boost::shared_ptr<T>& resource,
+        const String& path
+      ) {
+      return save(boost::shared_ptr<const T>(resource), path);
+    }
 
     /** \brief Open a Writer appropriate to this ResourceInterface.
      *
