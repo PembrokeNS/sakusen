@@ -1,0 +1,15 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+# Include common icc stuff
+include $(top_srcdir)makefiles/icc-common.mk
+
+# Add optimisation flags
+# -ipo doesn't work because of libtool issues (you need to have a libtool
+# specifically configured to use icc in order for it to link with it, which is
+# required for IPO to work; even with such a libtool I still can't make it
+# work for other reasons)
+BUILD_CXXFLAGS += -g3 -O3 -no-prec-div -DNDEBUG -fvisibility=hidden -fvisibility-inlines-hidden
+BUILD_CFLAGS += -g3 -O3 -no-prec-div -DNDEBUG
+BUILD_LDFLAGS += -g3 -O3
+
