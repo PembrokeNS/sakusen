@@ -16,7 +16,9 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
    * benefit
    */
 #ifdef SWIG
-#define UT ArithmeticTraits<T>::unsign
+  /** \bug Using T rather than an unsigned version because otherwise it's
+   * impossible to use the constructer through bindings. */
+#define UT T
 #define WideT ArithmeticTraits<T>::widest
 #define UWideT ArithmeticTraits<ArithmeticTraits<T>::unsign>::widest
 #else
