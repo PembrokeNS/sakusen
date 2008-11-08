@@ -92,6 +92,7 @@ void RequestMapAction::act(Server& server) const
   String reason = server.settings->changeRequest(
       "game:map", path, &server
     );
+  static_cast<void>(reason);
   assert(reason == "");
   server.pendingActions.push_front(new SetMapPlayModeAction(0));
 
@@ -140,6 +141,7 @@ void AddPluginAction::act(Server& server) const
     String reason = server.settings->changeRequest(
         "server:plugins", "-"+name, &server
       );
+    static_cast<void>(reason);
     assert(reason == "");
   }
 }

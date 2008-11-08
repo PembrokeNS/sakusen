@@ -69,10 +69,12 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     
     Ref<ISensorReturns> getISensorReturns(PlayerId player, SensorReturnsId id) {
       assert(player == playerId);
+      static_cast<void>(player);
       return sensorReturnsById->find(id);
     }
     Ref<ICompleteUnit> getICompleteUnit(PlayerId player, UnitId uintId) {
       assert(player == playerId);
+      static_cast<void>(player);
       return unitsById->find(uintId);
     }
   public:
