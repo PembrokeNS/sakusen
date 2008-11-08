@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include <set>
+
 #include <boost/multi_array.hpp>
 #include <boost/call_traits.hpp>
 #include <set>
