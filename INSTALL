@@ -51,6 +51,10 @@ you want and customize as desired.
 Information for developers
 ==========================
 
+If you're going to be building sakusen repeatedly you can save a lot of time by
+adding "BUILD_LIBTOOLFLAGS=--tag=disable-static" to your config.mk.  This will
+mean that only shared versions of library object files are built.
+
 Documentation for developers wishing to use this build system does not exist at
 time of writing.  When it does, it should be in the Doxygen docs along with all
 the other development docs.  Probably it will never exist because we'll switch
