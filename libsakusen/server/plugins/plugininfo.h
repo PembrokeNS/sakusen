@@ -24,7 +24,7 @@ namespace plugins {
  * a PluginInfo* pointing to info for that plugin.  See replay_recorder for an
  * example.
  * */
-class PluginInfo : boost::noncopyable {
+class PluginInfo : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<PluginInfo> Ptr;
     typedef boost::shared_ptr<const PluginInfo> ConstPtr;

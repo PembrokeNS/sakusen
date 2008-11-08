@@ -18,7 +18,7 @@ class UnitMask;
  * Essentially an interface specifying what methods should be implemented by
  * any layer of a LayeredUnit.
  */
-class UnitLayer : public IUnitTypeData, boost::noncopyable {
+class UnitLayer : public IUnitTypeData, private boost::noncopyable {
   public:
     typedef boost::shared_ptr<UnitLayer> Ptr;
     typedef boost::shared_ptr<const UnitLayer> ConstPtr;

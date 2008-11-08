@@ -168,10 +168,10 @@ String ServerInterface::flushIncoming(
             ExtensionMessageData data = message.getExtensionData();
             if (data.getExtension() == "talk" && data.getVersion() == 0) {
               IArchive subData(data.getData());
-              String message;
+              String talkMessage;
               try {
-                subData >> message;
-                out << "-- " << message << "\n";
+                subData >> talkMessage;
+                out << "-- " << talkMessage << "\n";
               } catch (DeserializationExn& e) {
                 out << "Warning: Malformed talk message (" << e.message <<
                   ")\n";

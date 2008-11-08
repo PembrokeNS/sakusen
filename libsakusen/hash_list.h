@@ -76,7 +76,7 @@ class hash_list_const_iterator;
  * is the compile-time constant SAKUSEN_HASH_LIST_LIMIT_INDEX_TYPES.
  */
 template<typename T, SAKUSEN_HASH_LIST_DECLARE_PARAMS>
-class hash_list : boost::noncopyable {
+class hash_list : private boost::noncopyable {
   friend class hash_list_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
   friend
     class hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;

@@ -15,7 +15,7 @@ namespace sakusen {
 namespace resources {
 namespace vfs {
 
-class Branch : boost::noncopyable {
+class Branch : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Branch> Ptr;
     typedef boost::shared_ptr<const Branch> ConstPtr;

@@ -25,7 +25,8 @@ class Server;
  * plugin, it serves as an interface to the server.  Thus it implements
  * PluginServerInterface, handling the plugin's options, etc. */
 class Plugin :
-  public sakusen::server::plugins::PluginServerInterface, boost::noncopyable {
+  public sakusen::server::plugins::PluginServerInterface,
+  private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Plugin> Ptr;
     typedef boost::shared_ptr<const Plugin> ConstPtr;

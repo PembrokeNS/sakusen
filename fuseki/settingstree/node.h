@@ -20,7 +20,7 @@ namespace settingsTree {
 
 class Branch;
 
-class Node : boost::noncopyable {
+class Node : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Node> Ptr;
     typedef boost::shared_ptr<const Node> ConstPtr;

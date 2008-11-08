@@ -89,7 +89,7 @@ class IdBase {
       return b;
     }
 
-    friend TDerived& operator++(TDerived& b) { ++b.val; return b; }
+    friend TDerived& operator++(TDerived& c) { ++c.val; return c; }
     friend TDerived operator++(TDerived& b, int) {
       TDerived temp(b); ++b; return temp;
     }
@@ -104,7 +104,7 @@ inline size_t hash_value(const IdBase<TInteger, TDerived>& id)
 {
   boost::hash<TInteger> intHasher;
   return intHasher(id);
-};
+}
 
 }
 

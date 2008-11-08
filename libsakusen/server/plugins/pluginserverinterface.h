@@ -62,9 +62,9 @@ class PluginServerInterface {
         const String& name,                             \
         OptionCallback<type>* callback,                 \
         boost::call_traits<type>::param_type initialVal \
-      ) const = 0;
-    REGISTER_OPTION(String)
-    REGISTER_OPTION(std::set<String>)
+      ) const = 0
+    REGISTER_OPTION(String);
+    REGISTER_OPTION(std::set<String>);
     REGISTER_OPTION(bool);
     REGISTER_OPTION(sint8);
     REGISTER_OPTION(sint16);

@@ -13,7 +13,7 @@ namespace fuseki {
  * the correct order, various things the server does are abstracted out to
  * classes derived from ServerAction.  These actions are queued up in the
  * server. */
-class ServerAction : boost::noncopyable {
+class ServerAction : private boost::noncopyable {
   protected:
     ServerAction() {}
   public:

@@ -15,7 +15,7 @@ namespace resources {
  * 
  * \bug Methods marked as throwing FileIOExns (and maybe other methods), may
  * also throw std::ios_base::failure or boost::filesystem::filesystem_error. */
-class File : boost::noncopyable {
+class File : private boost::noncopyable {
   protected:
     File(const boost::filesystem::path& filePath);
   public:

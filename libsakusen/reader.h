@@ -11,7 +11,7 @@ namespace sakusen {
 /** \brief Abstract base for something from which we can read raw binary data
  * (like a file).
  */
-class Reader : boost::noncopyable {
+class Reader : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Reader> Ptr;
     typedef boost::shared_ptr<const Reader> ConstPtr;

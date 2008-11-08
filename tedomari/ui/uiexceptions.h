@@ -6,12 +6,12 @@
 namespace tedomari {
 namespace ui {
 
-class ActionArgumentExn : sakusen::Exn {
+class ActionArgumentExn : public sakusen::Exn {
   public:
     ActionArgumentExn(const String& message) : Exn(message) {}
 };
 
-class ActionExecuteExn : sakusen::Exn {
+class ActionExecuteExn : public sakusen::Exn {
   public:
     ActionExecuteExn(const String& message) : Exn(message) {}
 };

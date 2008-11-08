@@ -20,7 +20,7 @@ void line_callback_handler(char* line);
  * By default, GNU Readline is used to handle the input, which allows for
  * command history, etc.  However, if the preprocessor symbol DISABLE_READLINE
  * is set then a simpler fallback method is used. */
-class AsynchronousIOHandler : boost::noncopyable {
+class AsynchronousIOHandler : private boost::noncopyable {
   friend void line_callback_handler(char* line);
   public:
     /** \brief Constructor

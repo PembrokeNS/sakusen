@@ -24,7 +24,7 @@ namespace server {
  * not affect each other (e.g. by colliding), and they do not get destroyed
  * until they collide with something.
  */
-class LIBSAKUSEN_SERVER_API Ballistic : boost::noncopyable {
+class LIBSAKUSEN_SERVER_API Ballistic : private boost::noncopyable {
   private:
     /** \brief Player who owns the Ballistic (needded for kills counts, etc.)
      *

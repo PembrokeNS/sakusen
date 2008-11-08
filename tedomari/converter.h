@@ -18,7 +18,7 @@ namespace tedomari {
  *
  * Otherwise, the icu library is used to convert strings between the native
  * encoding (as determined by locale settings) and UTF-8. */
-class Converter : boost::noncopyable {
+class Converter : private boost::noncopyable {
   public:
     Converter();
     ~Converter();

@@ -7,7 +7,7 @@ namespace sakusen {
 
 /** \brief Function object for extracting pointer in a generic fashion */
 template<typename T>
-struct GetPtr : boost::static_visitor<T*> {
+struct GetPtr : public boost::static_visitor<T*> {
   template<typename P>
   T* operator()(const P& p) const { return /*boost::*/get_pointer(p); }
 

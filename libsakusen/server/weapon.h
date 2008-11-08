@@ -18,7 +18,7 @@ namespace server {
  * managed by Weapon::incrementState, which calls both the aforementioned
  * functions.
  */
-class LIBSAKUSEN_SERVER_API Weapon : boost::noncopyable {
+class LIBSAKUSEN_SERVER_API Weapon : private boost::noncopyable {
   private:
     Weapon();
   protected:

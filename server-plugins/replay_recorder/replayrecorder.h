@@ -28,7 +28,9 @@ namespace replay_recorder {
  *
  */
 class ReplayRecorder :
-  public Listener, OptionCallback<String>, OptionCallback<uint16> {
+  public Listener,
+  private OptionCallback<String>,
+  private OptionCallback<uint16> {
   public:
     ReplayRecorder(const PluginServerInterface&);
   private:

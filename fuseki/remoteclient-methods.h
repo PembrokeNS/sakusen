@@ -85,7 +85,7 @@ String RemoteClient::performMagic(
 
     try {
       setPlayerId(sakusen::PlayerId::fromInteger(newValueInt));
-    } catch (sakusen::InvalidPlayerId& e) {
+    } catch (sakusen::InvalidPlayerId&) {
       return "the given player id does not exist in this map";
     }
     return "";

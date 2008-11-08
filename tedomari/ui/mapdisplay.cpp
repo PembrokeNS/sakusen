@@ -47,21 +47,21 @@ void MapDisplay::redrawGround()
       if (ddex.y < bottom || ddex.y >= top) {
         g(pixel.x,pixel.y) = red;
       } else {
-        sint32 height = heightfield.getApproxHeightAt(Point<sint32>(ddex));
+        sint32 z = heightfield.getApproxHeightAt(Point<sint32>(ddex));
         //QDebug("height("<<dex.x<<", "<<dex.y<<")="<<height);
         /** \bug A host of arbitrary constants. */
         /* crop */
-        if (height >= (1<<16)) {
-          height = (1<<16)-1;
+        if (z >= (1<<16)) {
+          z = (1<<16)-1;
         }
-        if (height < -(1<<16)) {
-          height = -(1<<16);
+        if (z < -(1<<16)) {
+          z = -(1<<16);
         }
         /* convert this height into the range [0,256) */
-        height += (1<<16);
-        height /= (1<<9);
+        z += (1<<16);
+        z /= (1<<9);
         g(pixel.x,pixel.y) =
-          boost::make_tuple(uint8(0), uint8(255-height), uint8(height));
+          boost::make_tuple(uint8(0), uint8(255-z), uint8(z));
       }
     }
   }

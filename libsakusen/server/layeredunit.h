@@ -35,7 +35,7 @@ class UnitMask;
  * physics too much.
  */
 class LIBSAKUSEN_SERVER_API LayeredUnit :
-  public ICompleteUnit, boost::noncopyable {
+  public ICompleteUnit, private boost::noncopyable {
   public:
     typedef boost::shared_ptr<LayeredUnit> Ptr;
     typedef boost::shared_ptr<const LayeredUnit> ConstPtr;

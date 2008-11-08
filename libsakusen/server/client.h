@@ -22,7 +22,7 @@ namespace server {
  * channel to the client.  Subclasses will implement some specific means, such
  * as network communication.
  */
-class LIBSAKUSEN_SERVER_API Client : boost::noncopyable {
+class LIBSAKUSEN_SERVER_API Client : private boost::noncopyable {
   private:
     Client(const Client& copy);
   protected:

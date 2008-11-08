@@ -9,7 +9,7 @@ namespace server {
  * Typically a script will be provided by a Universe, to allow for things like
  * auto-layering of units, or by a MapTemplate, to allow for things like
  * victory conditions and other more unusual map-specific effects. */
-class Script : boost::noncopyable {
+class Script : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Script> Ptr;
   protected:

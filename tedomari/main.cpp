@@ -499,9 +499,9 @@ void runClient(
                         "Usage: talk MESSAGE\n"
                       );
                   } else {
-                    String message = command.substr(p);
+                    String talkMessage = command.substr(p);
                     OArchive data;
-                    data << message;
+                    data << talkMessage;
                     serverInterface.send(
                         new ExtensionMessageData("talk", 0, data.getBuffer())
                       );

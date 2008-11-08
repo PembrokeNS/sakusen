@@ -15,7 +15,7 @@ namespace ui {
 
 class UI;
 
-class Action : boost::noncopyable {
+class Action : private boost::noncopyable {
   public:
     typedef boost::shared_ptr<Action> Ptr;
     typedef boost::shared_ptr<const Action> ConstPtr;
