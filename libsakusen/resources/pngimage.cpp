@@ -44,7 +44,7 @@ PngImageImpl::PngImageImpl(const boost::filesystem::path& path) :
 #ifndef _MSC_VER
   fp = fopen(path.native_file_string().c_str(), "rb");
   if (!fp) {
-    throw FileIOExn("fopen");
+    throw FileIOExn("fopen("+path.native_file_string()+")");
   }
 #else
   if (fopen_s(&fp, path.native_file_string().c_str(), "rb"))
