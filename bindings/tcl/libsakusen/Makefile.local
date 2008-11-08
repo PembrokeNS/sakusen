@@ -21,12 +21,11 @@ sakusencomms.la: sakusencomms.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
                 sakusencomms.lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
 
-# FIXME: We're not taking account of the various CXX_FLAGS to which we have
-# access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
-# etc.)
+# FIXME: We're not taking account of all the *FLAGS to which we have
+# access
 %.o: %.cpp
-	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ \
-		-Wall $<
+	libtool --mode=compile --tag=CXX $(CXX) $(BUILD_CXXFLAGS) -c $(INCLUDE) \
+		-o $@ $<
 
 # There's no easy way to know what header files libsakusen.i is including, so
 # we just assume it's including all of them except revision.h

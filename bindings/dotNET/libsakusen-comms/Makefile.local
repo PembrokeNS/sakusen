@@ -18,12 +18,11 @@ $(ROOT_NAME).la: $(ROOT_NAME).o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
 		$(ROOT_NAME).lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
 
-# FIXME: We're not taking account of the various CXX_FLAGS to which we have
-# access (in particular, BUILD_CXXFLAGS is telling us whether to optimise,
-# etc.)
+# FIXME: We're not taking account of all the various *FLAGS to which we have
+# access
 $(ROOT_NAME).o: $(ROOT_CPP)
-	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $(ROOT_NAME).o \
-		-Wall $(ROOT_NAME).cpp
+	libtool --mode=compile --tag=CXX $(CXX) $(BUILD_CXXFLAGS) -c $(INCLUDE) \
+		-o $(ROOT_NAME).o $(ROOT_NAME).cpp
 
 # There's no easy way to know what header files libsakusencomms.i is including, so
 # we just assume it's including all of them except revision.h
