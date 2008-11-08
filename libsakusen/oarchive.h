@@ -7,7 +7,6 @@
 
 #include <boost/multi_array.hpp>
 #include <boost/call_traits.hpp>
-#include <set>
 
 #include "gnu_extensions.h"
 #include "stringutils.h"
