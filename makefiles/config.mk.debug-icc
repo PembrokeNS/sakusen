@@ -1,0 +1,11 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+# Include common icc stuff
+include $(top_srcdir)makefiles/icc-common.mk
+
+# Add debug flags
+BUILD_CXXFLAGS += -g3 -O0
+BUILD_CFLAGS += -g3 -O0
+BUILD_LDFLAGS += -g3
+
