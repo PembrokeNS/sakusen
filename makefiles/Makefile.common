@@ -99,7 +99,9 @@ C_BASES := $(patsubst $(this_srcdir)%,%,$(basename $(C_SOURCES)))
 # created anywhere and everywhere
 CXX_OBJS := $(foreach base,$(CXX_BASES),.obj/$(subst ..,_dot_dot,$(base)).o)
 C_OBJS := $(foreach base,$(C_BASES),.obj/$(subst ..,_dot_dot,$(base)).o)
-LIBTOOL_OBJS := $(foreach obj,$(CXX_OBJS) $(C_OBJS),$(basename $(obj)).lo)
+CXX_LIBTOOL_OBJS := $(foreach obj,$(CXX_OBJS),$(basename $(obj)).lo)
+C_LIBTOOL_OBJS := $(foreach obj,$(C_OBJS),$(basename $(obj)).lo)
+LIBTOOL_OBJS := $(CXX_LIBTOOL_OBJS) $(C_LIBTOOL_OBJS)
 MAKEFRAGS := \
 	$(foreach source,$(patsubst $(this_srcdir)%,%,$(CXX_SOURCES) $(C_SOURCES)),\
 		.makefrags/$(subst ..,_dot_dot,$(source)).makefrag\
@@ -130,6 +132,7 @@ ALL_CXXFLAGS := \
 	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(ALL_CPPFLAGS) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
 	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(ALL_CPPFLAGS) $(THIS_CFLAGS)
+ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS)
 
 GAMESDIR := $(DESTDIR)$(PREFIX)/games
 BINDIR := $(DESTDIR)$(PREFIX)/bin
@@ -272,32 +275,31 @@ ifneq ($(IS_LIB),)
 
 # Build the binary
 
-$(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
+$(BIN): $(LIBTOOL_OBJS)
 	libtool --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
 		-o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
-# Libtool objects are made when normal objects are
-
-$(LIBTOOL_OBJS): %.lo: %.o
-
 # The actual compile commands (source dependencies will come from the makefrag
 # file).
 
-$(CXX_OBJS): .obj/%.o:
+$(CXX_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
-	libtool --tag=CXX --mode=compile $(CXX) $(ALL_CXXFLAGS) -c \
+	libtool --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
+		$(CXX) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
-$(C_OBJS): .obj/%.o:
+$(C_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
-	libtool --tag=CC --mode=compile $(CC) $(ALL_CFLAGS) -c \
+	libtool --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
 # install the lib
 install-nonrecursive: $(BIN)
 	install -d $(LIBDIR)$(INSTALL_SUBDIR)
 	libtool --mode=install install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+
+MAKEFRAG_DEP_EXTENSION := lo
 
 else
 # When it is an executable
@@ -329,6 +331,8 @@ install-nonrecursive: $(BIN)
 	libtool --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 endif
 
+MAKEFRAG_DEP_EXTENSION := o
+
 endif
 else # $(BIN) is empty
 install-nonrecursive:
@@ -354,11 +358,10 @@ $(lastword $(MAKEFRAGS)): revision.h
 endif
 endif
 
-$(MAKEFRAGS): .makefrags/%.makefrag:
+$(MAKEFRAGS): .makefrags/%.makefrag: $(top_srcdir)makefiles/Makefile.common
 	@mkdir -p $(dir $@)
-	cpp $(ALL_CPPFLAGS) -MP -MM -MF $@.tmp $(this_srcdir)$(subst _dot_dot,..,$*)
-	@echo "$@ .obj/$(filter-out ./,$(dir $*))`cat $@.tmp`" > $@
-	@rm $@.tmp
+	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
+		-MT $@ -MP -MM -MF $@ $(this_srcdir)$(subst _dot_dot,..,$*)
 
 #####################################################
 #
