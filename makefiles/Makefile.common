@@ -62,6 +62,7 @@
 
 CXX ?= g++
 CC ?= gcc
+LIBTOOL ?= libtool
 
 PREFIX ?= /usr/local
 DESTDIR ?=
@@ -243,7 +244,7 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(LIBTOOL_OBJS)
-	libtool --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
 		-o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
@@ -252,19 +253,19 @@ $(BIN): $(LIBTOOL_OBJS)
 
 $(CXX_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
-	libtool --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
 		$(CXX) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
 $(C_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
-	libtool --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) $(ALL_CFLAGS) -c \
+	$(LIBTOOL) --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
 # install the lib
 install-nonrecursive: $(BIN)
 	install -d $(LIBDIR)$(INSTALL_SUBDIR)
-	libtool --mode=install install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+	$(LIBTOOL) --mode=install install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 
 MAKEFRAG_DEP_EXTENSION := lo
 
@@ -274,7 +275,7 @@ else
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
-	libtool --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-o $@ $(LIBS) $^
 
 # The actual compile commands (source dependencies will come from the makefrag
@@ -295,7 +296,7 @@ $(C_OBJS): .obj/%.o:
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
 install-nonrecursive: $(BIN)
 	install -d $(GAMESDIR)$(INSTALL_SUBDIR)
-	libtool --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+	$(LIBTOOL) --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 endif
 
 MAKEFRAG_DEP_EXTENSION := o
