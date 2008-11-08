@@ -1,5 +1,7 @@
 revision.h
-Makefile
+*/Makefile
+*/*/Makefile
+*/*/*/Makefile
 *.la
 *.exe
 .*.swp
