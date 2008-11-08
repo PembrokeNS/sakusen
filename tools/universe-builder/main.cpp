@@ -1,32 +1,48 @@
-#include <gtkmm.h>
-#include <libglademm.h>
+#include <iostream>
+
+#include <boost/foreach.hpp>
+#include <boost/filesystem.hpp>
+
+#include "fileresourceinterface.h"
+#include "fileutils.h"
 
 #include "ui.h"
 
+using namespace std;
+using namespace boost::filesystem;
+using namespace sakusen;
+using namespace sakusen::resources;
 using namespace universeBuilder;
 
 int main(int argc, char *argv[])
 {
+  ResourceInterface::Ptr resourceInterface(
+      FileResourceInterface::create(
+        fileUtils_getHome()/CONFIG_SUBDIR/DATA_SUBDIR, false
+      )
+    );
   Gtk::Main kit(argc, argv);
-  Glib::RefPtr<Gnome::Glade::Xml> refXml =
-    Gnome::Glade::Xml::create("universe-builder.glade");
+  vector<path> potentialGladeDirs;
+  // Current directory
+  potentialGladeDirs.push_back(path());
+  // Directory of executable
+  potentialGladeDirs.push_back(path(argv[0]).parent_path());
+  BOOST_FOREACH(const path& p, potentialGladeDirs) {
+    path gladeFile = p / "universe-builder.glade";
+    if (exists(gladeFile)) {
+      Glib::RefPtr<Gnome::Glade::Xml> refXml =
+        Gnome::Glade::Xml::create(gladeFile.file_string());
+  
+      UI ui(refXml, resourceInterface);
 
-#define GET_WIDGET(type, name, variable)       \
-  Gtk::type* variable = NULL;                  \
-  refXml->get_widget(#name, variable);         \
-  if (!variable) {                             \
-    throw std::runtime_error("missing "#name); \
+      return 0;
+    }
   }
 
-  GET_WIDGET(Window, MainWindow, window)
-  GET_WIDGET(Notebook, MainNotebook, notebook)
-  
-  UI ui;
-
-  notebook->signal_switch_page().connect(sigc::mem_fun(ui, &UI::changePage));
-
-  Gtk::Main::run(*window);
-
-  return 0;
+  cerr << "Unable to find glade file.  Following directories were searched:\n";
+  BOOST_FOREACH(const path& p, potentialGladeDirs) {
+    cerr << p.directory_string() << '\n';
+  }
+  return 1;
 }
 

@@ -2,6 +2,7 @@
 #define UNIVERSE_BUILDER__UI_H
 
 #include <gtkmm.h>
+#include <libglademm.h>
 
 #include "universe.h"
 
@@ -9,10 +10,14 @@ namespace universeBuilder {
 
 class UI {
   public:
-    UI();
-
-    void changePage(GtkNotebookPage* page, guint pageNum);
+    UI(Glib::RefPtr<Gnome::Glade::Xml>, sakusen::ResourceInterface::Ptr);
   private:
+    void changePage(GtkNotebookPage* page, guint pageNum);
+
+    void newUniverse();
+    void openUniverse();
+    void saveUniverse();
+
     void storeCurrentPage();
     void storeGeneralPage();
     void storeUnitTypesPage();
@@ -23,11 +28,14 @@ class UI {
     void updateUnitTypesPage();
     void updateWeaponTypesPage();
 
+    Gtk::Window* window;
     Gtk::Entry* internalNameEntry;
     Gtk::Entry* scriptModuleEntry;
     Gtk::Entry* scriptFunctionEntry;
 
+    sakusen::ResourceInterface::Ptr resourceInterface;
     sakusen::Universe::Ptr universe;
+    sakusen::String universePath;
 
     enum Page {
       page_general,
