@@ -27,7 +27,7 @@ boost::tuple<double,double> LIBSAKUSEN_API mathsUtils_solveQuadratic(
   )
 {
   /* I don't actually know what the differrence between a quiet and a signaling
-   * NaN are, possibly this is the wrong sort */
+   * NaN is, possibly this is the wrong sort */
   assert(std::numeric_limits<double>::has_quiet_NaN);
   const double nan = std::numeric_limits<double>::quiet_NaN();
   /* cope with the linear case */
