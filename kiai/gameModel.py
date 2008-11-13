@@ -39,7 +39,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		p.thisown=0 #TODO: check, as in eventUnitFactory above
 		return p
 class eventSensorReturns(UpdatedSensorReturns):
-	def __init__(self,scene):
+	def __init__(self,u,scene):
 		pass
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
