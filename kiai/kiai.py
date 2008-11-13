@@ -71,7 +71,7 @@ def startGame(d,w):
 	gamescene.s.addItem(mapmodel.i)
 	mainwindow=mainWindow()
 	mainwindow.ui.gameview.setScene(gamescene.s)
-	QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
+	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
 	mainwindow.show()
 	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
 a.setQuitOnLastWindowClosed(False)
