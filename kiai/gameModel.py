@@ -21,11 +21,13 @@ class eventUnitFactory(UnitFactory):
 		return p
 class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from UpdatedUnit *last*, otherwise swig directors fail. No idea whether signals will fail this way around, though.
 	def __init__(self,u):
+		debug("Creating eventUpdatedUnit")
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
 		utypedata=self.getTypeData()
 		ustatus=self.getStatus()
 		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
+		debug("Created eventUpdatedUnit")
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
 		SensorReturnsFactory.__init__(self)
@@ -34,12 +36,15 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		e=eventSensorReturns(u,self.scene)
 		debug("Created eventSensorReturns "+`e`)
 		e.thisown=0 # will probably need to be e.__disown__() once eventSensorReturns gets any code
+		debug("Disowned eventSensorReturns "+`e`)
 		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
 		debug("Returning pointer "+`p`)
 		p.thisown=0 #TODO: check, as in eventUnitFactory above
 		return p
 class eventSensorReturns(UpdatedSensorReturns):
 	def __init__(self,u,scene):
+		debug("Creating eventSensorReturns")
+		UpdatedSensorReturns.__init__(self,u)
 		pass
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
