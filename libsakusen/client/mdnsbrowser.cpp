@@ -83,6 +83,7 @@ static std::auto_ptr<ServedGame> txt_records_to_game(String name, int port, Avah
   assert(records != NULL);
   std::auto_ptr<ServedGame> result(new ServedGame(name, port));
   /** \bug Function not written. */
+  static_cast<void>(records);
 
   return result;
 }
