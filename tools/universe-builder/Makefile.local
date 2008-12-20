@@ -1,5 +1,5 @@
 BIN := universe-builder
-THIS_CXXFLAGS := `pkg-config --cflags libglademm-2.4`
+THIS_CPPFLAGS := `pkg-config --cflags libglademm-2.4`
 THIS_LDFLAGS := -export-dynamic -no-install
 LIBS := `pkg-config --libs libglademm-2.4`
 LIB_DEP_NAMES := libsakusen libsakusen-comms libsakusen-resources

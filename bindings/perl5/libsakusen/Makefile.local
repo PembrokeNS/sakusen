@@ -2,7 +2,7 @@ PERL5 ?= perl
 SWIG ?= swig
 PREFIX ?= /usr/local
 PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
-INCLUDE := -I$(PERL5ARCH)/CORE -I../../../libsakusen
+THIS_CPPFLAGS := -I$(PERL5ARCH)/CORE -I../../../libsakusen
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
@@ -39,7 +39,7 @@ Makefile.PL.out: Makefile.PL Sakusen.cpp
 # -DHAS_BOOL was suggested as an alternative to -Dbool=char, and it seems a
 # less silly option.  It also seems to work.
 Sakusen.o: Sakusen.cpp
-	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ \
+	libtool --mode=compile --tag=CXX $(CXX) -c $(THIS_CPPFLAGS) -o $@ \
 		-DHAS_BOOL -Wall $<
 
 # There's no easy way to know what header files libsakusen.i is including, so

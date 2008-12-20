@@ -3,7 +3,7 @@ BIN = libsakusen-server.la
 SOURCE_DIRS = 
 LIBS = -lstdc++
 LIB_DEP_NAMES = libsakusen
-INCLUDE =
+THIS_CPPFLAGS =
 
 ifneq ($(ENABLE_AVAHI),yes)
   EXCLUDE_FILES := mdns.cpp mdns.h

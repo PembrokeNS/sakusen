@@ -5,10 +5,9 @@ SOURCE_DIRS = settingstree
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = libltdl_hacked liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
 LIBS := -lstdc++ -lpcrecpp
-INCLUDE =
 ifeq ($(ENABLE_AVAHI),yes)
   LIBS += $(shell pkg-config --libs avahi-client)
-  THIS_CXXFLAGS := $(shell pkg-config --cflags avahi-client)
+  THIS_CPPFLAGS := $(shell pkg-config --cflags avahi-client)
 endif
 
 doc/man/man1/fuseki.1: $(BIN)

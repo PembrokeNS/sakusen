@@ -6,7 +6,7 @@ THIS_CXXFLAGS :=
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources libsakusen-client liboptimal
 LIBS := -lstdc++
-INCLUDE =
+THIS_CPPFLAGS =
 
 ifeq ($(ENABLE_READLINE),yes)
 LIBS += -lreadline
@@ -22,11 +22,11 @@ endif
 
 ifeq ($(ENABLE_CAIRO),yes)
 LIBS += `pkg-config --libs pangocairo`
-THIS_CXXFLAGS += `pkg-config --cflags pangocairo` 
+THIS_CPPFLAGS += `pkg-config --cflags pangocairo`
 endif
 
 ifeq ($(ENABLE_AVAHI),yes)
   LIBS += $(shell pkg-config --libs avahi-client)
-  THIS_CXXFLAGS += $(shell pkg-config --cflags avahi-client)
+  THIS_CPPFLAGS += $(shell pkg-config --cflags avahi-client)
 endif
 

@@ -12,9 +12,10 @@
 # 	look for sources
 # BIN - the name of the binary to compile from all the cpp files (either a .la
 #   library file, or an executable).
-# INCLUDE - include arguments, e.g. "-I.. -Imy-headers".  Include arguments
-#   will also be extrapolated from LIB_DEP_NAMES, so you needn't include those
-#   here.  Indeed, you probably shouldn't ever need to specify this.
+# THIS_CPPFLAGS - arguments for the preprocessor, e.g. "-I.. -Imy-headers".
+#   Include arguments will also be extrapolated from LIB_DEP_NAMES, so you
+#   needn't include those here.  Indeed, you probably should rarely need to
+#   specify this.
 # LIBS - system library arguments, e.g. "-lstdc++".
 # LIB_DEP_NAMES - base names of prerequisite libraries, e.g. "libsakusen" will
 #   be searched for at ../libsakusen/libsakusen.la  and at
@@ -125,7 +126,7 @@ ALL_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(this_srcdir) -I. \
 	$(foreach lib,\
 		$(patsubst $(top_builddir)%,$(top_srcdir)%,$(LIB_DEP)),\
 		-I$(dir $(lib))\
-	) $(INCLUDE)
+	) $(THIS_CPPFLAGS)
 
 # Concatenate all the CXXFLAGSs and CFLAGSs together
 

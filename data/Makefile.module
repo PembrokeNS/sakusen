@@ -1,6 +1,6 @@
 LIBS = -lstdc++
 THIS_LDFLAGS = -module
 LIB_DEP_NAMES = libsakusen libsakusen-server
-INCLUDE =
+THIS_CPPFLAGS =
 INSTALL_SUBDIR = sakusen
 

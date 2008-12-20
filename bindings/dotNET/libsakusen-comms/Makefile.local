@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms
+THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
@@ -21,8 +21,8 @@ $(ROOT_NAME).la: $(ROOT_NAME).o
 # FIXME: We're not taking account of all the various *FLAGS to which we have
 # access
 $(ROOT_NAME).o: $(ROOT_CPP)
-	libtool --mode=compile --tag=CXX $(CXX) $(BUILD_CXXFLAGS) -c $(INCLUDE) \
-		-o $(ROOT_NAME).o $(ROOT_NAME).cpp
+	libtool --mode=compile --tag=CXX $(CXX) $(BUILD_CXXFLAGS) $(THIS_CPPFLAGS) \
+		-c -o $(ROOT_NAME).o $(ROOT_NAME).cpp
 
 # There's no easy way to know what header files libsakusencomms.i is including, so
 # we just assume it's including all of them except revision.h

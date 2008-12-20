@@ -1,5 +1,5 @@
 NO_AUTO_COMPILING := yes
-INCLUDE := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
+THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
 LIBS := -lboost_python
 
 all-nonrecursive: sakusen.so sakusencomms.so
@@ -16,7 +16,7 @@ sakusen.la: sakusen.lo
         	$< $(top_builddir)libsakusen/libsakusen.la
 
 %.lo: %.cpp
-	libtool --mode=compile --tag=CXX $(CXX) -c $(INCLUDE) -o $@ -Wall $<
+	libtool --mode=compile --tag=CXX $(CXX) -c $(THIS_CPPFLAGS) -o $@ -Wall $<
 
 sakusencomms.cpp: sakusen.cpp
 
