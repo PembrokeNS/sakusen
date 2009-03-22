@@ -24,7 +24,7 @@
 
 #endif // __GNUC__ > 4
 
-#else// STLport has its own versions of hash_map, etc.
+#else
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>

@@ -518,7 +518,7 @@ inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::registerIndex(
 }
 
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-inline bool operator==(
+bool operator==(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )
@@ -527,7 +527,7 @@ inline bool operator==(
 }
 
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-inline bool operator!=(
+bool operator!=(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )

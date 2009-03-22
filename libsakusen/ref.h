@@ -105,7 +105,7 @@ class Ref {
 };
 
 template<typename T>
-inline bool operator==(const Ref<T>& left, const Ref<T>& right)
+bool operator==(const Ref<T>& left, const Ref<T>& right)
 {
   return left && right && left.referee.lock() == right.referee.lock();
 }

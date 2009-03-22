@@ -15,7 +15,7 @@
     #error Need at least MSVC 7.1 to work.
   #endif
 
-  #if (_MSC_VER<1450)
+  #if (_MSC_VER<1600)
     /* This is a rather silly way of avoiding a warning on VC.
      * Essentially, specifying the exception type is ignored by the compiler,
      * and generates warnings. 
