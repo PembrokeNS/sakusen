@@ -292,7 +292,6 @@ MdnsPublisher::~MdnsPublisher() {
  */
 MdnsPublisher::Implementation::~Implementation() {
   if (poll) {
-    avahi_threaded_poll_lock(poll);
     avahi_threaded_poll_stop(poll);
   }
 
