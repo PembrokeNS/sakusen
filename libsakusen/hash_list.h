@@ -173,13 +173,13 @@ class hash_list : private boost::noncopyable {
 };
 
 template <typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-bool operator==(
+inline bool operator==(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   );
 
 template <typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-bool operator!=(
+inline bool operator!=(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   );
@@ -518,7 +518,7 @@ inline void hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::registerIndex(
 }
 
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-bool operator==(
+inline bool operator==(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )
@@ -527,7 +527,7 @@ bool operator==(
 }
 
 template<typename T, SAKUSEN_HASH_LIST_ENUM_INDEXES(typename TIndex)>
-bool operator!=(
+inline bool operator!=(
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& left,
     const hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>& right
   )

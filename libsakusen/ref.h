@@ -17,7 +17,7 @@ template<typename T>
 class Ref;
 
 template<typename T>
-bool operator==(const Ref<T>& left, const Ref<T>& right);
+inline bool operator==(const Ref<T>& left, const Ref<T>& right);
 
 /** \brief A reference to a game object managed by the world.
  *
@@ -105,7 +105,7 @@ class Ref {
 };
 
 template<typename T>
-bool operator==(const Ref<T>& left, const Ref<T>& right)
+inline bool operator==(const Ref<T>& left, const Ref<T>& right)
 {
   return left && right && left.referee.lock() == right.referee.lock();
 }
