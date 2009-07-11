@@ -4,6 +4,7 @@ from PyQt4 import QtCore,QtGui
 from connectDialog import Ui_connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
+from gameModel import *
 from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
@@ -13,7 +14,8 @@ from sceneModel import sceneModel
 import sys,imp
 from sakusen_resources import fileUtils_getHome,path
 from sakusen import CONFIG_SUBDIR
-def debug(x): pass
+from sakusen_client import *
+def debug(x): print x
 
 KIAI_SUBDIR="kiai"
 
@@ -62,17 +64,27 @@ def openSettingsDialog(socket,clientid):
 def connectionfailed():
 	print "Failed to connect to server - check the server is running"
 	a.quit()
-def startGame(d,w):
+def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
 	#TODO: disconnect s.rejected() and a.quit()
 #	mapmodel = mapModel(w.getMap())
 	gamescene=sceneModel()
 	l.game.setScene(gamescene)
-	debug("Instantiating model of map "+`w.getMap()`)
-	mapmodel=mapModel(w.getMap())
+	#debug("Instantiating model of map "+`g.world.getMap()`)
+	debug("Game started, creating world")
+	e=eventUnitFactory()
+	e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
+	sf=eventSensorReturnsFactory(g.scene)
+	sf.__disown__() 
+	g.w=PartialWorld(g.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+	gamescene.bottom=g.w.getMap().bottom()
+	gamescene.left=g.w.getMap().left()
+	mapmodel=mapModel(g.w.getMap())
 	gamescene.s.addItem(mapmodel.i)
 	mainwindow=mainWindow()
 	mainwindow.ui.gameview.setScene(gamescene.s)
+	g.scene=gamescene
+	debug("Scene is %s"%repr(g.scene))
 	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
 	mainwindow.show()
 	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit

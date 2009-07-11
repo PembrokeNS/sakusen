@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#from __future__ import division #messes up other stuff
 from sakusen import *
 from sakusen_resources import *
 from sakusen_client import *
 import sakusen_client
 from PyQt4 import QtCore
 import imp
+
 def debug(x): pass
 
 class eventUnitFactory(UnitFactory):
@@ -53,7 +55,11 @@ class eventSensorReturns(UpdatedSensorReturns):
 			debug("Able to perceive approximate region")
 		if (p & sakusen.perception_unit):
 			debug("Able to perceive full unit")
-			r = self.getUnit() #reference to the unit
+			r = self.getUnit() #reference to the unit. Isn't properly wrapped, but fortunately all we do with it for now is:
+			#TODO: fix deletion of r
+			self.u = sakusen.CompleteUnit(r) #the unit
+			self.rect = u.getBoundingRectangle() #bounding rectangle
+			scene.s.addRect((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
@@ -74,15 +80,11 @@ class gameModel(QtCore.QObject):
 		self.universe=g(result,0)
 		debug("Set universe to "+`self.universe`)
 	def createWorld(self,d):
-		debug("Game started, creating world")
-		e=eventUnitFactory()
-		e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
-		sf=eventSensorReturnsFactory(self.scene)
-		sf.__disown__() #ditto, I assume
-		self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+		pass
+		#self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 		#w should now get deleted at the correct time, I think
-		debug("Created partial world %s"%self.w)
-		debug("Global variable world is now %s"%`sakusen_client.cvar.world`)
+		#debug("Created partial world %s"%self.w)
+		#debug("Global variable world is now %s"%`sakusen_client.cvar.world`)
 	def pushUpdates(self,d):
 		while(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
 			sakusen_client.cvar.world.endTick()

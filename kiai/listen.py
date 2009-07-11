@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import string
 from PyQt4 import QtCore
 from sakusen import *
@@ -48,8 +49,9 @@ class listener(QtCore.QObject):
 				elif(t==messageType_gameStart):
 					d=m.getGameStartData()
 					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
+					self.emit(QtCore.SIGNAL("gameStart(PyQt_PyObject,PyQt_PyObject)"),d,self.game)
+					#hope that's acted on before we do this
 					self.game.createWorld(d)
-					self.emit(QtCore.SIGNAL("gameStart(PyQt_PyObject,PyQt_PyObject)"),d,self.game.w)
 					QtCore.QObject.connect(self,QtCore.SIGNAL("update(PyQt_PyObject)"),self.game.pushUpdates)
 				elif(t==messageType_update):
 					d=m.getUpdateData()
