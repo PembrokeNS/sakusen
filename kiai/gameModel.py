@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from sakusen import *
 from sakusen_resources import *
 from sakusen_client import *
@@ -45,7 +46,14 @@ class eventSensorReturns(UpdatedSensorReturns):
 	def __init__(self,u,scene):
 		debug("Creating eventSensorReturns")
 		UpdatedSensorReturns.__init__(self,u)
-		pass
+		p = self.getPerception()
+		if (p & sakusen.perception_owner):
+			debug("Able to perceive owner")
+		if (p & sakusen.perception_region):
+			debug("Able to perceive approximate region")
+		if (p & sakusen.perception_unit):
+			debug("Able to perceive full unit")
+			r = self.getUnit() #reference to the unit
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)

@@ -321,10 +321,6 @@ namespace sakusen {
 %{
 #include "deserializationcontext.h"
 %}
-%include "sensorreturns.h"
-%{
-#include "sensorreturns.h"
-%}
 %include "sensorreturn.h"
 %{
 #include "sensorreturn.h"
@@ -337,7 +333,6 @@ namespace sakusen {
 #{
 #include "visibility.h"
 #}
-
 %include "iunittypedata.h"
 %{
 #include "iunittypedata.h"
@@ -349,6 +344,14 @@ namespace sakusen {
 %include "icompleteunit.h"
 %{
 #include "icompleteunit.h"
+%}
+namespace sakusen{
+%ignore Ref<ICompleteUnit>::operator*; /*Unfortunately this breaks due to making a pointer to a reference */
+%template(ICompleteUnitRef) Ref<ICompleteUnit>;
+}
+%include "sensorreturns.h"
+%{
+#include "sensorreturns.h"
 %}
 
 
@@ -518,5 +521,4 @@ namespace sakusen{
 %include "map.h"
 %{
 #include "map.h"
-%}	
-
+%}

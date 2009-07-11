@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from PyQt4 import QtCore,QtGui
 from connectDialog import Ui_connectDialog
 from settingsDialogImpl import settingsDialog
@@ -29,6 +30,7 @@ def userconfig(s):
 
 userconfig("startup")
 a=QtGui.QApplication(sys.argv)
+QtCore.pyqtRemoveInputHook() #to make debugging possible - remove in release version
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):
 		QtGui.QDialog.__init__(self,parent)

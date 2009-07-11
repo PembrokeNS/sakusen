@@ -23,12 +23,12 @@
 %{
 #include "boost/shared_ptr.hpp"
 %}
+%import "libsakusen.i"
 %{
 /* seems these have to be early, no idea why */
 #include "updatedunit.h"
 #include "updatedsensorreturns.h"
 %}
-%import "libsakusen.i"
 %include "libsakusen-client-global.h"
 %{
 #include "libsakusen-client-global.h"
