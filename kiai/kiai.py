@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore,QtGui
+from PyKDE4 import kdecore,kdeui
 from connectDialog import Ui_connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
@@ -31,7 +32,9 @@ def userconfig(s):
 
 
 userconfig("startup")
-a=QtGui.QApplication(sys.argv)
+aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
+kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
+a=kdeui.KApplication()
 QtCore.pyqtRemoveInputHook() #to make debugging possible - remove in release version
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from PyQt4 import QtGui,QtCore
+from PyKDE4 import kdeui,kdecore
 from sakusen import *
 def debug(x): pass
 
@@ -24,7 +25,7 @@ class mapModel:
 				c+=2**16
 				c/=2**9
 				i.setPixel((x-l)/100,(y-b)/100,QtGui.QColor(c,c,c).rgb())
-			QtGui.qApp.processEvents()
+			kdeui.KApplication.kApplication().processEvents()
 		d.setValue(w)
 		p=QtGui.QPixmap.fromImage(i)
 		self.i=QtGui.QGraphicsPixmapItem(p)
