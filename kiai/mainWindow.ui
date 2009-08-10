@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout">
     <item>
-     <widget class="QGraphicsView" name="gameview"/>
+     <widget class="gameView" name="gameview"/>
     </item>
    </layout>
   </widget>
@@ -32,6 +32,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>gameView</class>
+   <extends>QGraphicsView</extends>
+   <header>gameView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
