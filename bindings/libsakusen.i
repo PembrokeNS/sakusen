@@ -218,9 +218,6 @@ namespace sakusen {
   %template(SPoint64) Point<sint64>;
 }
 
-/* temporary */
-%import "boost/shared_array.hpp"
-%template(sharedarrayuint8) boost::shared_array<uint8>;
 %include "buffer.h"
 %{
 #include "buffer.h"
