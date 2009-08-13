@@ -58,7 +58,9 @@ class eventSensorReturns(UpdatedSensorReturns):
 			r = self.getUnit() #reference to the unit. Isn't properly wrapped, but fortunately all we do with it for now is:
 			#TODO: fix deletion of r
 			self.u = sakusen.CompleteUnit(r) #the unit
+			self.u.thisown=0
 			self.rect = u.getBoundingRectangle() #bounding rectangle
+			self.rect.thisown=0
 			scene.s.addRect((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):

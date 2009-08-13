@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
-    <height>263</height>
+    <width>759</width>
+    <height>662</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,6 +18,45 @@
     <item>
      <widget class="gameView" name="gameview"/>
     </item>
+    <item>
+     <widget class="KTabWidget" name="ktabwidget">
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Console</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>484</width>
+             <height>212</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="KTextBrowser" name="output"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="KLineEdit" name="entryline"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -25,14 +64,36 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>274</width>
+     <width>759</width>
      <height>28</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dock">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>ktextbrowser.h</header>
+  </customwidget>
   <customwidget>
    <class>gameView</class>
    <extends>QGraphicsView</extends>

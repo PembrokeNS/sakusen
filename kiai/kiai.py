@@ -46,11 +46,12 @@ class connectDialog(QtGui.QDialog):
 		debug("called openConnection")
 		self.emit(QtCore.SIGNAL("openConnection(QString)"),self.ui.address.text())
 def openSettingsDialog(socket,clientid):
-	global a,l,s,m #otherwise s and m will get hilariously garbage-collected
+	global a,l,s,m,mainwindow #otherwise s and m will get hilariously garbage-collected
 	l.addSocket(socket,clientid)
 	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),l.leave)
 	debug("going to open settings dialog") 
-	s=settingsDialog()
+	s = settingsDialog()
+	mainwindow.ui.dock.setWidget(s)
 	QtCore.QObject.connect(s,QtCore.SIGNAL("rejected()"),a,QtCore.SLOT("quit()")) #this may need to be reconsidered in the final version
 	m=settingsModel(s)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
@@ -84,17 +85,17 @@ def startGame(d,g):
 	gamescene.left=g.w.getMap().left()
 	mapmodel=mapModel(g.w.getMap())
 	gamescene.s.addItem(mapmodel.i)
-	mainwindow=mainWindow()
 	mainwindow.ui.gameview.setScene(gamescene.s)
 	g.scene=gamescene
 	debug("Scene is %s"%repr(g.scene))
 	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
-	mainwindow.show()
-	a.setQuitOnLastWindowClosed(True) #game started, so next time we have no windows it'll be because we want to quit
-a.setQuitOnLastWindowClosed(False)
-assert(not a.quitOnLastWindowClosed())
+	#mainwindow.show()
+mainwindow = mainWindow()
 w=connectDialog()
-#s=settingsDialog()
+#s = settingsDialog()
+#d = QtGui.QDockWidget("Settings",mainwindow)
+#d.setWidget(s)
+mainwindow.show()
 j=joiner()
 l=listener()
 t=QtCore.QTimer()
@@ -107,5 +108,7 @@ QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
 QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
 t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 w.show()
+sys.stdout = mainwindow
+sys.stderr = mainwindow
 r=a.exec_()
 debug("Event loop terminated with status %d, dying"%r)
