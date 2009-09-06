@@ -18,11 +18,16 @@ endif
 
 ifeq ($(ENABLE_SDL),yes)
 LIBS += -lSDL
+else
+EXCLUDE_FILES += ui/sdl/sdlui.cpp ui/sdl/sdlsurface.cpp ui/sdl/sdlutils.cpp
 endif
 
 ifeq ($(ENABLE_CAIRO),yes)
 LIBS += `pkg-config --libs pangocairo`
 THIS_CPPFLAGS += `pkg-config --cflags pangocairo`
+else
+EXCLUDE_FILES += ui/sdl/cairo/cairoui.cpp ui/sdl/cairo/cairolayout.cpp \
+                 ui/sdl/cairo/cairoregion.cpp
 endif
 
 ifeq ($(ENABLE_AVAHI),yes)
