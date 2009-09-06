@@ -65,6 +65,7 @@ namespace boost
       std::string  root_name() const;
       std::string  root_directory() const;
       path         relative_path() const;
+      std::string  filename() const;
       path         branch_path() const;
 
       // query functions:
@@ -76,6 +77,8 @@ namespace boost
       bool has_root_name() const;
       bool has_root_directory() const;
       bool has_relative_path() const;
+      bool has_filename() const { return !m_path.empty(); }
+      bool has_parent_path() const;
 
       // default name_check mechanism:
       static bool default_name_check_writable(); 
