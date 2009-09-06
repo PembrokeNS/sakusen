@@ -111,7 +111,7 @@ check_for_prog python python-config
 check_for_pyplusplus
 check_for_prog mcs
 check_for_prog tcl tclsh
-check_for_prog pyqt4 pyuic4
+check_for_prog pyqt4 pykdeuic4
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost/shared_ptr.hpp
 check_for_lib boost_filesystem boost/filesystem/path.hpp -lboost_filesystem -lboost_system
