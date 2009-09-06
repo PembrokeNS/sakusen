@@ -18,7 +18,7 @@ class SerializationHandler;
 class ICompleteUnit;
 
 template<>
-class SerializationHandler<ICompleteUnit> {
+class LIBSAKUSEN_API SerializationHandler<ICompleteUnit> {
   public:
     Ref<ICompleteUnit> extract(
         IArchive& archive,

@@ -13,7 +13,7 @@
 namespace sakusen {
 namespace comms {
 
-class UnixDatagramSocket : public Socket {
+class LIBSAKUSEN_API UnixDatagramSocket : public Socket {
   private:
     static void interpretAddress(
         std::list<String>& address,
