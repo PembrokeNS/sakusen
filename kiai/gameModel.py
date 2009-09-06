@@ -5,7 +5,7 @@ from sakusen import *
 from sakusen_resources import *
 from sakusen_client import *
 import sakusen_client
-from PyQt4 import QtCore
+from PyQt4 import QtCore,QtGui
 import imp
 
 def debug(x): pass
@@ -36,7 +36,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		SensorReturnsFactory.__init__(self)
 		self.scene = scene
 	def create(self,u):
-		e=eventSensorReturns(u,self.scene)
+		e=eventSensorReturns(u,self.scene,self.mapmodel)
 		debug("Created eventSensorReturns "+`e`)
 		e.thisown=0 # will probably need to be e.__disown__() once eventSensorReturns gets any code
 		debug("Disowned eventSensorReturns "+`e`)
@@ -45,7 +45,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		p.thisown=0 #TODO: check, as in eventUnitFactory above
 		return p
 class eventSensorReturns(UpdatedSensorReturns):
-	def __init__(self,u,scene):
+	def __init__(self,u,scene,m):
 		debug("Creating eventSensorReturns")
 		UpdatedSensorReturns.__init__(self,u)
 		p = self.getPerception()
@@ -61,7 +61,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			self.u.thisown=0
 			self.rect = u.getBoundingRectangle() #bounding rectangle
 			self.rect.thisown=0
-			scene.s.addRect((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0)
+			self.i=QtGui.QGraphicsRectItem((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0,m.i)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)

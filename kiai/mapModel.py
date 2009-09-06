@@ -13,6 +13,7 @@ class mapModel:
 		i=QtGui.QImage(w,h,QtGui.QImage.Format_RGB32) #use QSize because otherwise sip gets confused about the overloads, I assume. Certainly craziness occurs - created image is 0x0
 		debug("Created image, width %d, height %d"%(i.width(),i.height()))
 		h=m.getHeightfield()
+		h.thisown=0
 		l=m.left()
 		b=m.bottom()
 		debug("Looping from %d to %d"%(m.left(),m.right()))

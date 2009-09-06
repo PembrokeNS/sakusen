@@ -84,6 +84,7 @@ def startGame(d,g):
 	gamescene.bottom=g.w.getMap().bottom()
 	gamescene.left=g.w.getMap().left()
 	mapmodel=mapModel(g.w.getMap())
+	sf.mapmodel = mapmodel
 	gamescene.s.addItem(mapmodel.i)
 	mainwindow.ui.gameview.setScene(gamescene.s)
 	g.scene=gamescene
