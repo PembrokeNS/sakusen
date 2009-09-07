@@ -72,5 +72,5 @@ $(BUILTIN_CONFIGS): %: %/Makefile %/config.mk
 doc:
 	doxygen Doxyfile
 
-.PHONY: config doc
+.PHONY: config doc $(BUILTIN_CONFIGS)
 
