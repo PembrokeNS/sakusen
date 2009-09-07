@@ -9,7 +9,8 @@ include $(top_srcdir)makefiles/icc-common.mk
 # specifically configured to use icc in order for it to link with it, which is
 # required for IPO to work; even with such a libtool I still can't make it
 # work for other reasons)
-BUILD_CXXFLAGS += -g3 -O3 -no-prec-div -DNDEBUG -fvisibility=hidden -fvisibility-inlines-hidden
-BUILD_CFLAGS += -g3 -O3 -no-prec-div -DNDEBUG
+BUILD_CPPFLAGS += -DNDEBUG
+BUILD_CXXFLAGS += -g3 -O3 -no-prec-div -fvisibility=hidden -fvisibility-inlines-hidden
+BUILD_CFLAGS += -g3 -O3 -no-prec-div
 BUILD_LDFLAGS += -g3 -O3
 
