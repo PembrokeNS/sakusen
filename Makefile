@@ -43,6 +43,7 @@ BUILTIN_CONFIG_MAKEFILES := $(addsuffix /Makefile,$(BUILTIN_CONFIGS))
 
 $(BUILTIN_CONFIG_MK_DESTS): %/config.mk: makefiles/config.mk.%
 	@mkdir -p $*
+	rm -f $@
 	ln -s ../$< $*/config.mk
 
 $(BUILTIN_CONFIG_MAKEFILES): %/Makefile: $(top_srcdir)makefiles/Makefile.common
