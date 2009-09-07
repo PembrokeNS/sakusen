@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/optional.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_signed.hpp>
 #include <boost/lexical_cast.hpp>
 
 using namespace std;
@@ -359,6 +360,11 @@ void checkIntegerOptions()
         BOOST_CHECK_EQUAL(boost::lexical_cast<string>(*optInt3), setValue);
       } else {
         BOOST_CHECK_EQUAL(result, true);
+        std::string integerName = typeid(Integer).name();
+        BOOST_CHECK_MESSAGE(
+            result == true, "In subtest "<<test<<", valueindex "<<setValueIndex
+            << ", signedness=" << int(boost::is_signed<Integer>::type::value)
+          );
         BOOST_CHECK_EQUAL(int0, initialValue);
         BOOST_CHECK_EQUAL(int1, initialValue);
         BOOST_CHECK(!optInt2);

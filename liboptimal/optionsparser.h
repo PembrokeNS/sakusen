@@ -12,6 +12,9 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/spirit/include/qi_numeric.hpp>
+#include <boost/spirit/home/qi/parse.hpp>
+#include <boost/spirit/home/qi/numeric/uint.hpp>
 
 #if defined(_MSC_VER)
   #define __gnu_cxx std
@@ -177,9 +180,35 @@ class LIBOPTIMAL_API OptionsParser {
         template<typename U>
         std::list<std::string> internalSetString(
             const std::string& s,
+            const std::string& errorPrefix,
+            typename
+              boost::enable_if<boost::is_unsigned<U>, int>::type = 0
+          ) const {
+          namespace qi = boost::spirit::qi;
+          std::list<std::string> errors;
+          U val;
+          std::string::const_iterator st = s.begin();
+          qi::uint_spec<U, 10, 1, -1> parser;
+          if (qi::parse(st, s.end(), parser, val) && st == s.end()) {
+            *value = val;
+          } else {
+            errors.push_back(
+                "couldn't interpret '"+s+"' as a value of the required type"
+              );
+          }
+          return errors;
+        }
+        template<typename U>
+        std::list<std::string> internalSetString(
+            const std::string& s,
             const std::string& /*errorPrefix*/,
             typename
-              boost::disable_if<boost::is_same<U, OptionsParser>, int>::type =0
+              boost::disable_if<
+                typename boost::mpl::or_<
+                  boost::is_same<U, OptionsParser>,
+                  boost::is_unsigned<U>
+                >::type, int
+              >::type =0
           ) const {
           std::list<std::string> errors;
           try {
