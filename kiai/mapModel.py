@@ -17,7 +17,7 @@ class mapModel:
 		l=m.left()
 		b=m.bottom()
 		debug("Looping from %d to %d"%(m.left(),m.right()))
-		d=QtGui.QProgressDialog("Rendering map...","This button should not exist, but PyQt insists on it",0,w)
+		d=QtGui.QProgressDialog("Rendering map...",QtCore.QString(),0,w)
 		for x in range(m.left(),m.right(),100):
 			d.setValue((x-l)/100)
 			for y in range(m.bottom(),m.top(),100):
