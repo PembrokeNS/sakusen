@@ -110,7 +110,6 @@ check_for_prog perl
 check_for_prog python python-config
 check_for_pyplusplus
 check_for_prog mcs
-check_for_prog tcl tclsh
 check_for_prog pyqt4 pykdeuic4
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost/shared_ptr.hpp
@@ -125,6 +124,7 @@ check_for_lib png png.h -lpng
 check_for_lib avahiclient avahi-client/client.h -lavahi-client
 # Having 2.4 here is correct: that is the API version, not the library version
 check_for_lib glademm libglademm.h `pkg-config libglademm-2.4 --cflags --libs`
+check_for_lib tcl tcl.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
 if ! enable_component EVERYTHING pcrecpp mhash png boost boost_filesystem
