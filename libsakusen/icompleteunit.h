@@ -15,7 +15,7 @@
 
 namespace sakusen {
 
-/** \brief An interface providing all proerties of a Unit
+/** \brief An interface providing all properties of a Unit
  *
  * This class is effectively an interface, giving accessors to all the data
  * that goes with a Unit.  It is used to provide a common ground between client
