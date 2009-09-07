@@ -10,7 +10,10 @@ class settingItem:
 		if(data):
 			self.data=data
 		else:
-			self.data=path[-1]
+			if(column==0):
+				self.data=path[-1]
+			else:
+				self.data='[unset]'
 		self.children=()
 		self.column=column
 	def rowCount(self): return len(self.children)
@@ -91,7 +94,7 @@ class settingsModel(QtCore.QAbstractItemModel):
 				self.emit(QtCore.SIGNAL("dataChanged(const QModelIndex &,const QModelIndex &)"),self.l[m].selfindex,self.l[m].selfindex)
 			except Exception:
 				self.beginInsertColumns(self.l[self.indexof(path[:-1],0)].selfindex,1,1)
-				self.l.append(settingItem(path,None,self.l[n].parent,(d.getValue() or ('',))[0],1)) #aparrently we sometimes get an empty set even for a leaf node.
+				self.l.append(settingItem(path,None,self.l[n].parent,(d.getValue() or ('',))[0],1))
 				i=self.indexof(path,1)
 				self.l[i].selfindex=self.createIndex(self.l[n].selfindex.row(),1,i)
 				self.endInsertColumns()
