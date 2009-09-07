@@ -76,7 +76,7 @@ def startGame(d,g):
 	l.game.setScene(gamescene)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
-	e=eventUnitFactory()
+	e=eventUnitFactory(g.scene)
 	e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
 	sf=eventSensorReturnsFactory(g.scene)
 	sf.__disown__() 
@@ -85,6 +85,7 @@ def startGame(d,g):
 	gamescene.left=g.w.getMap().left()
 	mapmodel=mapModel(g.w.getMap())
 	sf.mapmodel = mapmodel
+	e.mapmodel = mapmodel
 	gamescene.s.addItem(mapmodel.i)
 	mainwindow.ui.gameview.setScene(gamescene.s)
 	g.scene=gamescene

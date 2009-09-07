@@ -11,11 +11,12 @@ import imp
 def debug(x): pass
 
 class eventUnitFactory(UnitFactory):
-	def __init__(self,interface=None): #TODO: remove default for second argument once we're actually using it
+	def __init__(self,scene,interface=None): #TODO: remove default for second argument once we're actually using it
 		UnitFactory.__init__(self)
+		self.scene = scene
 		self.interface=interface
 	def create(self,u):
-		e=eventUpdatedUnit(u)
+		e=eventUpdatedUnit(u,self.scene,self.mapmodel)
 		debug("Creating eventUpdatedUnit "+`e`)
 		e.__disown__() #the C++ code will look after it.
 		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
@@ -23,13 +24,15 @@ class eventUnitFactory(UnitFactory):
 		p.thisown=0 #I don't even know any more - TODO: CHECK THIS
 		return p
 class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from UpdatedUnit *last*, otherwise swig directors fail. No idea whether signals will fail this way around, though.
-	def __init__(self,u):
+	def __init__(self,u,scene,m):
 		debug("Creating eventUpdatedUnit")
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
 		utypedata=self.getTypeData()
 		ustatus=self.getStatus()
 		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
+		self.rect = u.getBoundingRectangle()
+		self.i=QtGui.QGraphicsRectItem((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0,m.i)
 		debug("Created eventUpdatedUnit")
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
@@ -62,6 +65,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			self.rect = u.getBoundingRectangle() #bounding rectangle
 			self.rect.thisown=0
 			self.i=QtGui.QGraphicsRectItem((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0,m.i)
+			self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
