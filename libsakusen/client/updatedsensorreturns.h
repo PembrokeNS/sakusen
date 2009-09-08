@@ -34,7 +34,9 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
      */
     void alter(const SensorReturns& to) {
       this->SensorReturns::operator=(to);
+      altered();
     }
+    virtual void altered() {}
 };
 
 }}

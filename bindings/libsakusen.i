@@ -214,7 +214,9 @@ namespace sakusen {
     %template("operator>") operator><T>;
   }
   %template(SPoint16) Point<sint16>;
+  %template(UPoint16) Point<uint16>;
   %template(SPoint32) Point<sint32>;
+  %template(UPoint32) Point<uint32>;
   %template(SPoint64) Point<sint64>;
 }
 

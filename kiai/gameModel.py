@@ -41,7 +41,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 	def create(self,u):
 		e=eventSensorReturns(u,self.scene,self.mapmodel)
 		debug("Created eventSensorReturns "+`e`)
-		e.thisown=0 # will probably need to be e.__disown__() once eventSensorReturns gets any code
+		e.__disown__()
 		debug("Disowned eventSensorReturns "+`e`)
 		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
 		debug("Returning pointer "+`p`)
@@ -51,6 +51,8 @@ class eventSensorReturns(UpdatedSensorReturns):
 	def __init__(self,u,scene,m):
 		debug("Creating eventSensorReturns")
 		UpdatedSensorReturns.__init__(self,u)
+		self.scene = scene
+		debug("About to get perception")
 		p = self.getPerception()
 		if (p & sakusen.perception_owner):
 			debug("Able to perceive owner")
@@ -61,11 +63,27 @@ class eventSensorReturns(UpdatedSensorReturns):
 			r = self.getUnit() #reference to the unit. Isn't properly wrapped, but fortunately all we do with it for now is:
 			#TODO: fix deletion of r
 			self.u = sakusen.CompleteUnit(r) #the unit
-			self.u.thisown=0
-			self.rect = u.getBoundingRectangle() #bounding rectangle
-			self.rect.thisown=0
-			self.i=QtGui.QGraphicsRectItem((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0,m.i)
+			status = self.u.getStatus()
+			frame = status.getFrame()
+			pos = frame.getPosition()
+			typedata = self.u.getTypeData()
+			size = typedata.getSize()
+			self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
+			corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+			self.polygon = QtGui.QPolygonF()
+			for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
+			self.i=QtGui.QGraphicsPolygonItem(self.polygon,m.i)
 			self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
+	def altered(self):
+		debug("Altering sensor returns")
+		r = self.getUnit()
+		self.u = sakusen.CompleteUnit(r)
+		status = self.u.getStatus()
+		frame = status.getFrame()	
+		corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+		self.polygon = QtGui.QPolygonF()
+		for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
+		self.i.setPolygon(self.polygon)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)

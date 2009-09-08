@@ -4,7 +4,11 @@
 %feature("director") sakusen::client::UnitFactory;
 %feature("director") sakusen::client::UpdatedUnit;
 %feature("director") sakusen::client::SensorReturnsFactory;
-/*If this has a director then when one tries to call it one gets an infinite loop, no idea why - maybe because it's inline?*/
+%feature("director") sakusen::client::UpdatedSensorReturns;
+/* My current thinking is that this is a SWIG bug - it doesn't generate director wrappings properly for functions which are implemented in classes in libsakusen, leading to an infinite loop whenever they are called. TODO: create test case, report */
+%feature("nodirector") sakusen::client::UpdatedSensorReturns::getPerception;
+%feature("nodirector") sakusen::client::UpdatedSensorReturns::getUnit;
+%feature("nodirector") sakusen::client::UpdatedSensorReturns::getId;
 %feature("nodirector") sakusen::client::UpdatedUnit::getId;
 %feature("director:except") {
     if ($error != NULL) {
