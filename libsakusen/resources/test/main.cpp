@@ -395,6 +395,20 @@ int main(/*int argc, char** argv*/)
     return EXIT_FAILURE;
   }
 
+  cout << "Creating small 2 player map" << endl;
+  heightfield = Heightfield(2*MAP_WIDTH/10, 2, 2, 2);
+  t.reset(new MapTemplate(
+        universe, "s2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH)/10,
+        Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_plane,
+        heightfield, 1000 /* gravity */, playModes
+      ));
+  
+  cout << "Saving small 2 player map" << endl;
+  if (resourceInterface->save(t, "test")) {
+    cout << resourceInterface->getError() << endl;
+    return EXIT_FAILURE;
+  }
+
   /* Now another one-or-two player map, but this time using a heightfield
    * built from an image */
   playerTemplates.pop_back();
