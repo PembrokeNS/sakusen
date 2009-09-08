@@ -28,6 +28,7 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		debug("Creating eventUpdatedUnit")
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
+		self.scene = scene
                 status = self.getStatus()
                 frame = status.getFrame()
                 pos = frame.getPosition()
@@ -39,6 +40,19 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
                 for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
                 self.i=QtGui.QGraphicsPolygonItem(self.polygon,m.i)
 		debug("Created eventUpdatedUnit")
+	def incrementState(self):
+		debug("Incrementing state")
+		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())
+		debug(flag and "Need to update position" or "Don't need to update position")
+		UpdatedUnit.incrementState(self)
+		debug("Ran library state increment")
+		if(flag):
+	                status = self.getStatus()
+        	        frame = status.getFrame()
+        	        corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+			self.polygon = QtGui.QPolygonF()
+                	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
+                	self.i.setPolygon(self.polygon)
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
 		SensorReturnsFactory.__init__(self)

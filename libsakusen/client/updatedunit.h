@@ -38,6 +38,9 @@ class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
     inline const UnitOrders &getUnitOrders() const {
       return orders;
     }
+    inline bool getAltered() const {
+      return altered;
+    }
     /*@}*/
     virtual void orderAccepted(const OrderAcceptedUpdateData& data);
     void alter(const CompleteUnit&);
