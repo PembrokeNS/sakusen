@@ -15,6 +15,6 @@ class mainWindow(kdeui.KMainWindow):
 		self.ui.entryline.setText("")
 		exec(str(t))
 	def write(self, t):
-		self.ui.output.append(t)
+		self.ui.output.append(t.strip())
 
 
