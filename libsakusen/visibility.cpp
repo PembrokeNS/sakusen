@@ -69,7 +69,7 @@ inline void SensorCapability::updateReturn(
     SensorType type,
     bool* changed,
     Perception* maxPerception,
-    uint32* /*bestRadius*/
+    uint32* bestRadius
   ) const
 {
   if (!capable) {
@@ -127,15 +127,35 @@ inline void SensorCapability::updateReturn(
     senseeStatus.getFrame().getPosition()-senserStatus.getFrame().getPosition();
   const uint64 effectiveDistance =
     (uint64(displacement.length()) << 23) / distanceModifier;
-  /* \todo This shouldn't be all-or-nothing; it should have the intermediate
-   * uncertain area */
-  if (range >= effectiveDistance) {
-    if (retrn.perception != perception_unit) {
-      retrn.perception = perception_unit;
-      *changed = true;
-    }
-    *maxPerception |= perception_unit;
-    return;
+  /* Use integer division so we can only change behaviour at integer multiples
+   * of range */
+  const uint64 normalizedDistance = effectiveDistance / range;
+  switch (normalizedDistance) {
+    case 0:
+      if (retrn.perception != perception_unit) {
+        retrn.perception = perception_unit;
+        *changed = true;
+      }
+      *maxPerception |= perception_unit;
+      return;
+    case 1:
+      {
+        if (retrn.perception != perception_region) {
+          retrn.perception = perception_region;
+          *changed = true;
+        }
+        /** \todo Think of a vaguely sensible formula */
+        const uint32 thisRadius = effectiveDistance - range;
+        if (thisRadius < *bestRadius) {
+          *bestRadius = thisRadius;
+          *changed = true;
+        }
+        *maxPerception |= perception_region;
+      }
+      return;
+    default:
+      /* See nothing */
+      return;
   }
 }
 
