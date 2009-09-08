@@ -53,7 +53,7 @@ $(SOURCES): sakusen_%.cpp: $(top_srcdir)bindings/libsakusen-%.i \
 	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
 
 define source_dependencies
-sakusen$(1).cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/$(1)/*.h))
+sakusen_$(1).cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/$(1)/*.h))
 endef
 
 $(foreach name,$(SHORT_NAMES),$(eval $(call source_dependencies,$(name))))
