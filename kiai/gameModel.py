@@ -28,11 +28,16 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		debug("Creating eventUpdatedUnit")
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
-		utypedata=self.getTypeData()
-		ustatus=self.getStatus()
-		self.emit(QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),utypedata,ustatus)
-		self.rect = u.getBoundingRectangle()
-		self.i=QtGui.QGraphicsRectItem((self.rect.minx-scene.left)/100.0,(self.rect.miny-scene.bottom)/100.0,(self.rect.maxx-self.rect.minx)/100.0,(self.rect.maxy-self.rect.miny)/100.0,m.i)
+                status = self.getStatus()
+                frame = status.getFrame()
+                pos = frame.getPosition()
+                typedata = self.getTypeData()
+		size = typedata.getSize()
+                self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
+                corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+                self.polygon = QtGui.QPolygonF()
+                for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
+                self.i=QtGui.QGraphicsPolygonItem(self.polygon,m.i)
 		debug("Created eventUpdatedUnit")
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
