@@ -71,6 +71,10 @@ class eventSensorReturns(UpdatedSensorReturns):
 		debug("Creating eventSensorReturns")
 		UpdatedSensorReturns.__init__(self,u)
 		self.scene = scene
+		self.m = m
+		self.i = None
+		self.altered()
+	def altered(self):
 		debug("About to get perception")
 		p = self.getPerception()
 		if (p & sakusen.perception_owner):
@@ -79,8 +83,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			debug("Able to perceive approximate region")
 		if (p & sakusen.perception_unit):
 			debug("Able to perceive full unit")
-			r = self.getUnit() #reference to the unit. Isn't properly wrapped, but fortunately all we do with it for now is:
-			#TODO: fix deletion of r
+			r = self.getUnit()
 			self.u = sakusen.CompleteUnit(r) #the unit
 			status = self.u.getStatus()
 			frame = status.getFrame()
@@ -90,19 +93,12 @@ class eventSensorReturns(UpdatedSensorReturns):
 			self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
 			corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
-			for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
-			self.i=QtGui.QGraphicsPolygonItem(self.polygon,m.i)
-			self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
-	def altered(self):
-		debug("Altering sensor returns")
-		r = self.getUnit()
-		self.u = sakusen.CompleteUnit(r)
-		status = self.u.getStatus()
-		frame = status.getFrame()	
-		corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
-		self.polygon = QtGui.QPolygonF()
-		for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
-		self.i.setPolygon(self.polygon)
+			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
+			if(not self.i):
+				self.i=QtGui.QGraphicsPolygonItem(self.polygon,self.m.i)
+				self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
+			else:
+				self.i.setPolygon(self.polygon)
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
