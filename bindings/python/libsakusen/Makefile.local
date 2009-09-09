@@ -11,7 +11,7 @@ NO_AUTO_COMPILING := yes
 
 SHORT_NAMES := comms resources client
 SOURCES := $(foreach name,$(SHORT_NAMES),sakusen_$(name).cpp)
-OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen_$(name).o)
+OBJECTS := $(foreach name,$(SHORT_NAMES),sakusen_$(name).lo)
 LIBRARIES := $(foreach name,$(SHORT_NAMES),_sakusen_$(name).la)
 PY_FILES := $(foreach name,$(SHORT_NAMES),sakusen_$(name).py)
 
@@ -20,26 +20,26 @@ all-nonrecursive: _sakusen.la $(LIBRARIES)
 install-nonrecursive: _sakusen.la $(LIBRARIES)
 	install -d $(DESTDIR)$(PYLIBDIR)
 	install sakusen.py $(PY_FILES) $(DESTDIR)$(PYLIBDIR)
-	libtool --mode=install install -m644 _sakusen.la $(LIBRARIES) $(DESTDIR)$(PYLIBDIR)
+	libtool --mode=install --tag=disable-static install -m644 _sakusen.la $(LIBRARIES) $(DESTDIR)$(PYLIBDIR)
 
 clean:
-	-rm -rf *.o *.so *.py *.cpp *.lo *.loT *.la .libs *.pyc *.h
+	-rm -rf *.lo *.so *.py *.cpp *.lo *.loT *.la .libs *.pyc *.h
 
 %.so: %.la
 	cp .libs/$@ $@
 
-_sakusen.la: sakusen.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
+_sakusen.la: sakusen.lo
+	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
-$(LIBRARIES): _sakusen_%.la: sakusen_%.o
-	libtool --mode=link --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
+$(LIBRARIES): _sakusen_%.la: sakusen_%.lo
+	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
                 sakusen_$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of all the *FLAGS to which we have
 # access
-$(OBJECTS) sakusen.o: %.o: %.cpp
-	libtool --mode=compile --tag=CXX $(CXX) $(BUILD_CXXFLAGS) $(THIS_CPPFLAGS) \
+$(OBJECTS) sakusen.lo: %.lo: %.cpp
+	libtool --mode=compile --tag=disable-static --tag=CXX $(CXX) $(BUILD_CXXFLAGS) $(THIS_CPPFLAGS) \
 		-c -o $@ $<
 
 # There's no easy way to know what header files libsakusen.i is including, so
