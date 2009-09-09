@@ -76,7 +76,7 @@ void TCPSocket::send(const void* buf, size_t len)
   *reinterpret_cast<uint16*>(longerBuf) = htons(len);
   memcpy(longerBuf+2, buf, len);
   
-  int retVal = ::send(sockfd, reinterpret_cast<char*>(longerBuf), len+2, 0);
+  int retVal = ::send(sockfd, reinterpret_cast<char*>(longerBuf), len+2, MSG_NOSIGNAL);
   if (retVal == -1) {
     switch (socket_errno) {
       case ENOTCONN:
