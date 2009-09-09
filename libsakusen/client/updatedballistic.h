@@ -10,7 +10,7 @@ namespace client {
  * distinction.  Ballistics fired by the enemy are no different from those
  * fired by friendly forces.  (The server does make such a distinction, for its
  * own reasons). */
-class UpdatedBallistic : public Bounded {
+class LIBSAKUSEN_CLIENT_API UpdatedBallistic : public Bounded {
   public:
     UpdatedBallistic(ClientBallisticId i, const Quadratic& p) :
       id(i),
