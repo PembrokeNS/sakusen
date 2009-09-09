@@ -72,6 +72,14 @@ static boost::shared_ptr<sakusen::client::UpdatedSensorReturns> CreateUpdatedSen
 %{
 #include "sensorreturnsfactory.h"
 %}
+%include "partialheightfield.h"
+%{
+#include "partialheightfield.h"
+%}
+%include "partialmap.h"
+%{
+#include "partialmap.h"
+%}
 %include "partialworld.h"
 %{
 #include "partialworld.h"

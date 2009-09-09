@@ -8,25 +8,25 @@ class mapModel:
 	def __init__(self,m):
 		#todo: lose this lame granularity
 		w=m.width()/100
-		h=m.height()/100
-		debug("Creating map image, width %s, height %s"%(`w`,`h`))
-		i=QtGui.QImage(w,h,QtGui.QImage.Format_RGB32) #use QSize because otherwise sip gets confused about the overloads, I assume. Certainly craziness occurs - created image is 0x0
+		h_=m.height()/100
+		debug("Creating map image, width %s, height %s"%(`w`,`h_`))
+		i=QtGui.QImage(w,h_,QtGui.QImage.Format_RGB32)
 		debug("Created image, width %d, height %d"%(i.width(),i.height()))
-		h=m.getHeightfield()
+		h=m.getPartialHeightfield()
 		h.thisown=0
-		l=m.left()
-		b=m.bottom()
-		debug("Looping from %d to %d"%(m.left(),m.right()))
-		d=QtGui.QProgressDialog("Rendering map...",QtCore.QString(),0,w)
-		for x in range(m.left(),m.right(),100):
-			d.setValue((x-l)/100)
-			for y in range(m.bottom(),m.top(),100):
-				c=h.getApproxHeightAt(SPoint32(x,y,0)) #TODO: use getApproxHeightAt - probably requires casting, ololol
-				assert(c<2**16 and c>-2**16)
-				c+=2**16
-				c/=2**9
-				i.setPixel((x-l)/100,(y-b)/100,QtGui.QColor(c,c,c).rgb())
-			kdeui.KApplication.kApplication().processEvents()
-		d.setValue(w)
-		p=QtGui.QPixmap.fromImage(i)
+		#TODO: make this work the new way
+		hwidth = h.getWidth()
+		hheight = h.getHeight()
+		hdata = h.getHeightfieldPtr()
+		hres = h.getXYResolution()
+		hzres = h.getZResolution()
+		#himage = QtGui.QImage(hdata,hwidth,hheight,QtGui.QImage.Format_RGB16) #This is the function to use, when it's properly wrapped
+		j = QtGui.QImage(hwidth, hheight, QtGui.QImage.Format_RGB32)
+		for x in range(hwidth):
+			for y in range(hheight):
+				c=(hdata[x*hheight + y] * hzres + 2**16) / 2**9
+				j.setPixel(x,y,QtGui.QColor(c,c,c).rgb())
+		k = j.scaled((hwidth*hres)/100,(hheight*hres)/100)
+		l = k.copy(0,0,w,h_)
+		p=QtGui.QPixmap.fromImage(l)
 		self.i=QtGui.QGraphicsPixmapItem(p)

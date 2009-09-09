@@ -39,8 +39,9 @@ namespace sakusen {
  * \todo It might be worthwhile storing the map left and bottom values here
  * rather than looking them up whenever needed. */
 class LIBSAKUSEN_API Heightfield : public IHeightfield {
-  protected:
+  public:
     typedef boost::multi_array<sint16, 2> hf_type;
+  protected:
     Heightfield(
         uint32 xyResolution,
         uint32 zResolution,
@@ -112,6 +113,8 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     uint32 getZResolution() const { return zResolution; }
     uint32 getWidth() const { return width; }
     uint32 getHeight() const { return height; }
+    const hf_type& getHeightfield() const { return heightfield; }
+    const sint16* getHeightfieldPtr() const { return heightfield.data(); }
     //@}
 
     sint32 getHeightAt(sint32 x, sint32 y) const;

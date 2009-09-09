@@ -81,9 +81,10 @@ def startGame(d,g):
 	sf=eventSensorReturnsFactory(g.scene)
 	sf.__disown__() 
 	g.w=PartialWorld(g.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+	#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
 	gamescene.bottom=g.w.getMap().bottom()
 	gamescene.left=g.w.getMap().left()
-	mapmodel=mapModel(g.w.getMap())
+	mapmodel=mapModel(g.w.getPartialMap())
 	sf.mapmodel = mapmodel
 	e.mapmodel = mapmodel
 	gamescene.s.addItem(mapmodel.i)

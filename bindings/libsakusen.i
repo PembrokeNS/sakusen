@@ -172,6 +172,7 @@ $VERSION = 0.01;
 %}
 %include "arithmetictraits.h"
 %array_class(uint8,uint8);
+%array_class(sint16,sint16);
 /* it looks like it really has to be called uint8, otherwise SWIG gets confused. Crazy, huh? */
 /* Causes make clean to fail, though this is probably due to problems in makefiles %include "revision.h"*/
 %include "gameobject.h"

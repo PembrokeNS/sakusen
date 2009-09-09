@@ -44,6 +44,9 @@ class LIBSAKUSEN_CLIENT_API PartialMap : public Map {
     const IHeightfield& getHeightfield() const {
       return heightfield;
     }
+    inline const PartialHeightfield& getPartialHeightfield() const {
+      return heightfield;
+    }
 };
 
 }}

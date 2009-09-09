@@ -92,6 +92,9 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     inline sakusen::ISpatial::ConstPtr getSpatialIndex() const {
       return spatialIndex;
     }
+    inline const PartialMap* getPartialMap() const {
+      return map;
+    }
     //@}
 
     void applyUpdate(const Update&);
