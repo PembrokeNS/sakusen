@@ -6,6 +6,7 @@ from sakusen_resources import *
 from sakusen_client import *
 import sakusen_client
 from PyQt4 import QtCore,QtGui
+import sip
 import imp
 
 def debug(x): pass
@@ -64,7 +65,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 		debug("Disowned eventSensorReturns "+`e`)
 		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
 		debug("Returning pointer "+`p`)
-		p.thisown=0 #TODO: check, as in eventUnitFactory above
+		#p.thisown=0 #TODO: check, as in eventUnitFactory above
 		return p
 class eventSensorReturns(UpdatedSensorReturns):
 	def __init__(self,u,scene,m):
@@ -73,14 +74,11 @@ class eventSensorReturns(UpdatedSensorReturns):
 		self.scene = scene
 		self.m = m
 		self.i = None
+		self.j = None
 		self.altered()
 	def altered(self):
 		debug("About to get perception")
 		p = self.getPerception()
-		if (p & sakusen.perception_owner):
-			debug("Able to perceive owner")
-		if (p & sakusen.perception_region):
-			debug("Able to perceive approximate region")
 		if (p & sakusen.perception_unit):
 			debug("Able to perceive full unit")
 			r = self.getUnit()
@@ -99,6 +97,41 @@ class eventSensorReturns(UpdatedSensorReturns):
 				self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
 			else:
 				self.i.setPolygon(self.polygon)
+			if(self.j): sip.delete(self.j)
+			self.j = None
+		elif (p & sakusen.perception_owner):
+                        debug("Able to perceive owner but not full unit. Unimplemented!!")
+                elif (p & sakusen.perception_region):
+                        debug("Able to perceive approximate region, but not unit or owner")
+			# Temporary excessive debugging data while I'm running on a machine that can't afford to run an actual debugger
+			debug("I am "+`self`)
+			debug(dir(self))
+			region = self.getRegion()
+			debug("Region is "+`region`)
+			debug(dir(region))
+			rect = region.getBoundingRectangle()
+			debug("Rect is "+`rect`)
+			debug(dir(rect))
+			if(not self.j):
+				self.j=QtGui.QGraphicsEllipseItem((rect.minx-self.scene.left)/100.0,(rect.miny-self.scene.bottom)/100.0,(rect.maxx-rect.minx)/100.0,(rect.maxy-rect.miny)/100.0,self.m.i)
+				p = QtGui.QPen(QtCore.Qt.DashLine)
+				p.setColor(QtGui.QColor('red'))
+				p.thisown = 0
+				self.j.setPen(p)
+			else:
+				self.j.setRect((rect.minx-self.scene.left)/100.0,(rect.miny-self.scene.bottom)/100.0,(rect.maxx-rect.minx)/100.0,(rect.maxy-rect.miny)/100.0)
+			if(self.i): sip.delete(self.i)
+			self.i = None
+		else:
+			if(self.i): sip.delete(self.i)
+			if(self.j): sip.delete(self.j)
+			self.i = None
+			self.j = None
+		def __del__(self):
+			if(self.i): sip.delete(self.i)
+			if(self.j): sip.delete(self.j)
+			self.i = None
+			self.j = None
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)

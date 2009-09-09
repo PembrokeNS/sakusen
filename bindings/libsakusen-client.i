@@ -9,6 +9,8 @@
 %feature("nodirector") sakusen::client::UpdatedSensorReturns::getPerception;
 %feature("nodirector") sakusen::client::UpdatedSensorReturns::getUnit;
 %feature("nodirector") sakusen::client::UpdatedSensorReturns::getId;
+%feature("nodirector") sakusen::client::UpdatedSensorReturns::getBoundingRectangle;
+%feature("nodirector") sakusen::client::UpdatedSensorReturns::getRegion;
 %feature("nodirector") sakusen::client::UpdatedUnit::getId;
 %feature("director:except") {
     if ($error != NULL) {

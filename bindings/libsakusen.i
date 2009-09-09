@@ -448,6 +448,7 @@ namespace sakusen{
 /*%extend Universe{*/
 %template(UniverseConstPtr) ::boost::shared_ptr<const Universe>;
 %template(UniversePtr) ::boost::shared_ptr<Universe>;
+%template(SRegion32ConstPtr) ::boost::shared_ptr<const Region<sint32> >;
 /*}*/
 }
 %include "weapontargettype.h"
