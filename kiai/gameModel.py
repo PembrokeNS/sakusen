@@ -103,15 +103,8 @@ class eventSensorReturns(UpdatedSensorReturns):
                         debug("Able to perceive owner but not full unit. Unimplemented!!")
                 elif (p & sakusen.perception_region):
                         debug("Able to perceive approximate region, but not unit or owner")
-			# Temporary excessive debugging data while I'm running on a machine that can't afford to run an actual debugger
-			debug("I am "+`self`)
-			debug(dir(self))
 			region = self.getRegion()
-			debug("Region is "+`region`)
-			debug(dir(region))
 			rect = region.getBoundingRectangle()
-			debug("Rect is "+`rect`)
-			debug(dir(rect))
 			if(not self.j):
 				self.j=QtGui.QGraphicsEllipseItem((rect.minx-self.scene.left)/100.0,(rect.miny-self.scene.bottom)/100.0,(rect.maxx-rect.minx)/100.0,(rect.maxy-rect.miny)/100.0,self.m.i)
 				p = QtGui.QPen(QtCore.Qt.DashLine)
@@ -123,11 +116,13 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(self.i): sip.delete(self.i)
 			self.i = None
 		else:
+			debug("Unable to percieve anything")
 			if(self.i): sip.delete(self.i)
 			if(self.j): sip.delete(self.j)
 			self.i = None
 			self.j = None
 		def __del__(self):
+			debug("About to delete sensor returns")
 			if(self.i): sip.delete(self.i)
 			if(self.j): sip.delete(self.j)
 			self.i = None
