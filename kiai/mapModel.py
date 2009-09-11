@@ -30,7 +30,3 @@ class mapModel:
 		l = k.copy(0,0,w,h_)
 		p=QtGui.QPixmap.fromImage(l)
 		self.i=QtGui.QGraphicsPixmapItem(p)
-
-class workingOrder:
-	def __init__(self, units):
-		pass

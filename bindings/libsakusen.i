@@ -524,3 +524,11 @@ namespace sakusen{
 %{
 #include "map.h"
 %}
+%include "orderdata.h"
+%{
+#include "orderdata.h"
+%}
+%include "order.h"
+%{
+#include "order.h"
+%}

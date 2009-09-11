@@ -70,8 +70,7 @@ def connectionfailed():
 	a.quit()
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
-	#TODO: disconnect s.rejected() and a.quit()
-	gamescene=sceneModel()
+	gamescene=sceneModel(mainwindow,l.activeSocket)
 	l.game.setScene(gamescene)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
