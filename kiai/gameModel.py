@@ -30,6 +30,7 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
 		self.scene = scene
+		self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
                 status = self.getStatus()
                 frame = status.getFrame()
                 pos = frame.getPosition()
