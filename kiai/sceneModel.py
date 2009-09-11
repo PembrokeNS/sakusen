@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 from PyQt4 import QtCore,QtGui
-class sceneModel(QtCore.QObject):
+class sceneModel(QtGui.QGraphicsScene):
 	def __init__(self):
-		self.s=QtGui.QGraphicsScene()
-	#def createUnit(self,typedata,status):
-	#	pass
+		QtGui.QGraphicsScene.__init__(self)

@@ -30,7 +30,6 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 		UpdatedUnit.__init__(self,u)
 		QtCore.QObject.__init__(self)
 		self.scene = scene
-		self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
                 status = self.getStatus()
                 frame = status.getFrame()
                 pos = frame.getPosition()
@@ -42,6 +41,8 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
                 for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
                 self.i=QtGui.QGraphicsPolygonItem(self.polygon,m.i)
 		debug("Created eventUpdatedUnit")
+		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+		self.i.unit = self #we need to be able to get back to the unit from the item in the view.
 	def incrementState(self):
 		debug("Incrementing state")
 		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())

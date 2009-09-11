@@ -86,8 +86,8 @@ def startGame(d,g):
 	mapmodel=mapModel(g.w.getPartialMap())
 	sf.mapmodel = mapmodel
 	e.mapmodel = mapmodel
-	gamescene.s.addItem(mapmodel.i)
-	mainwindow.ui.gameview.setScene(gamescene.s)
+	gamescene.addItem(mapmodel.i)
+	mainwindow.ui.gameview.setScene(gamescene)
 	mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
 	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
