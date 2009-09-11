@@ -71,7 +71,6 @@ def connectionfailed():
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
 	#TODO: disconnect s.rejected() and a.quit()
-#	mapmodel = mapModel(w.getMap())
 	gamescene=sceneModel()
 	l.game.setScene(gamescene)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
@@ -89,6 +88,9 @@ def startGame(d,g):
 	e.mapmodel = mapmodel
 	gamescene.s.addItem(mapmodel.i)
 	mainwindow.ui.gameview.setScene(gamescene.s)
+	mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
+	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 	g.scene=gamescene
 	debug("Scene is %s"%repr(g.scene))
 	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
