@@ -356,6 +356,13 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
     stepX = 0;
     tMaxX = inf;
     tDeltaX = inf;
+    if(ray.d.y == 0) {
+      if(ray.d.z < 0) {
+        /* Ray travelling directly down */
+        return (getHeightAt(ray.origin) - ray.origin.z) / double(ray.d.z);
+      }
+      return inf;
+    }
   }
 
   if (ray.d.y > 0) {
