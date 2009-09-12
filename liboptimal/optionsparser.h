@@ -193,7 +193,7 @@ class LIBOPTIMAL_API OptionsParser {
             *value = val;
           } else {
             errors.push_back(
-                "couldn't interpret '"+s+"' as a value of the required type"
+                errorPrefix+": couldn't interpret '"+s+"' as a value of the required type"
               );
           }
           return errors;
