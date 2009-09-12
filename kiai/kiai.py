@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from PyQt4 import QtCore,QtGui
+from PyQt4 import QtCore,QtGui,QtOpenGL
 from PyKDE4 import kdecore,kdeui
 from connectDialog import Ui_connectDialog
 from settingsDialogImpl import settingsDialog
@@ -86,6 +86,7 @@ def startGame(d,g):
 	sf.mapmodel = mapmodel
 	e.mapmodel = mapmodel
 	gamescene.addItem(mapmodel.i)
+	mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
 	mainwindow.ui.gameview.setScene(gamescene)
 	mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
 	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
