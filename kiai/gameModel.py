@@ -125,12 +125,12 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(self.j): sip.delete(self.j)
 			self.i = None
 			self.j = None
-		def destroying(self):
-			debug("About to delete sensor returns")
-			if(self.i): sip.delete(self.i)
-			if(self.j): sip.delete(self.j)
-			self.i = None
-			self.j = None
+	def destroying(self):
+		debug("About to delete sensor returns")
+		if(self.i): sip.delete(self.i)
+		if(self.j): sip.delete(self.j)
+		self.i = None
+		self.j = None
 class gameModel(QtCore.QObject):
 	def __init__(self,clientid):
 		QtCore.QObject.__init__(self)
