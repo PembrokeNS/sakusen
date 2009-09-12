@@ -8,6 +8,12 @@
 %{
 #include <string>
 %}
+%{
+/* Needed because libsakusen.i includes a weapontypes traits fragment */
+namespace sakusen{
+class WeaponType;
+}
+%}
 %import "libsakusen.i"
 %include "libsakusen-resources-global.h"
 %{

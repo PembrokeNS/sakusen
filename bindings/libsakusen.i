@@ -424,6 +424,10 @@ namespace sakusen{
 %{
 #include "weapontype.h"
 %}
+/*These two lines needed because WeaponTypeId is actually a const pointer, and swig has trouble with containers of such. There are unconfirmed reports that this problem is fixed in SWIG SVN, so it may be worth trying removing them once swig 1.3.37 is out. */
+%traits_swigtype(sakusen::WeaponType);
+%fragment(SWIG_Traits_frag( sakusen::WeaponType));
+%template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
 %include "unittype.h"
 %{
 #include "unittype.h"

@@ -29,6 +29,12 @@
 %{
 #include "boost/shared_ptr.hpp"
 %}
+%{
+/* Needed because libsakusen.i includes a weapontypes traits fragment */
+namespace sakusen{
+class WeaponType;
+}
+%}
 %import "libsakusen.i"
 %{
 /* seems these have to be early, no idea why */
