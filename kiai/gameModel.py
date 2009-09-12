@@ -19,7 +19,7 @@ class eventUnitFactory(UnitFactory):
 	def create(self,u):
 		e=eventUpdatedUnit(u,self.scene,self.mapmodel)
 		debug("Creating eventUpdatedUnit "+`e`)
-		e.__disown__() #the C++ code will look after it.
+		e = e.__disown__() #the C++ code will look after it.
 		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
 		debug("Returning pointer "+`p`)
 		p.thisown=0 #I don't even know any more - TODO: CHECK THIS
@@ -56,6 +56,8 @@ class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from Updat
 			self.polygon = QtGui.QPolygonF()
                 	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
                 	self.i.setPolygon(self.polygon)
+	def destroying(self):
+		sip.delete(self.i)
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
 		SensorReturnsFactory.__init__(self)
@@ -63,7 +65,7 @@ class eventSensorReturnsFactory(SensorReturnsFactory):
 	def create(self,u):
 		e=eventSensorReturns(u,self.scene,self.mapmodel)
 		debug("Created eventSensorReturns "+`e`)
-		e.__disown__()
+		e = e.__disown__()
 		debug("Disowned eventSensorReturns "+`e`)
 		p=UpdatedSensorReturns_CreateUpdatedSensorReturnsPtr(e)
 		debug("Returning pointer "+`p`)
@@ -123,7 +125,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(self.j): sip.delete(self.j)
 			self.i = None
 			self.j = None
-		def __del__(self):
+		def destroying(self):
 			debug("About to delete sensor returns")
 			if(self.i): sip.delete(self.i)
 			if(self.j): sip.delete(self.j)

@@ -45,6 +45,7 @@ class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
     virtual void orderAccepted(const OrderAcceptedUpdateData& data);
     void alter(const CompleteUnit&);
     virtual void incrementState();
+    virtual void destroying() {}
 };
 
 UpdatedUnit::~UpdatedUnit() {

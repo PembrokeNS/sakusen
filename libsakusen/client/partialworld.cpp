@@ -78,6 +78,7 @@ void PartialWorld::applyUpdate(const Update& update)
           Debug("tried to remove non-existant unit");
           break;
         }
+        unit->destroying();
         units.erase(unit);
       }
       break;
@@ -127,6 +128,7 @@ void PartialWorld::applyUpdate(const Update& update)
           Debug("tried to remove non-existant SensorReturns");
           break;
         }
+        returns->destroying();
         sensorReturns.erase(returns);
       }
       break;

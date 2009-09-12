@@ -37,6 +37,7 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
       altered();
     }
     virtual void altered() {}
+    virtual void destroying() {}
 };
 
 }}
