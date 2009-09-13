@@ -60,6 +60,10 @@ class Colour {
     inline double dg() const { return g; }
     inline double db() const { return b; }
     inline double da() const { return a; }
+    inline double& dr() { return r; }
+    inline double& dg() { return g; }
+    inline double& db() { return b; }
+    inline double& da() { return a; }
     //@}
 
     /** \name uint8 accessors
