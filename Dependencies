@@ -16,3 +16,8 @@ Tedomari:
 	icu
 	SDL
 	Cairo+Pango+glib     (Cairo UI only)
+
+kiai:
+	swig
+	python-kde4-dev
+	python-qt4-gl
