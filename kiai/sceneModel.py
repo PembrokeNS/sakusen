@@ -14,6 +14,8 @@ class sceneModel(QtGui.QGraphicsScene):
 	def mousePressEvent(self,e):
 		if(e.button() == QtCore.Qt.RightButton):
 			p = e.lastScenePos()
+			unitclicked = False
+			srclicked = False
 			if(self.itemAt(p)!=self.mapmodel.i): #clicked on a unit or sensor return
 				try:
 					clickedunit = self.itemAt(p).unit
@@ -23,9 +25,6 @@ class sceneModel(QtGui.QGraphicsScene):
 					sensorreturnclicked = True
 					csr = self.itemAt(p).sr
 					srclicked = True
-			else:
-				unitclicked = False
-				srclicked = False
 			r = SPoint32(int(p.x()*100) + self.left,int(p.y()*100) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
 			units = self.selectedItems()
