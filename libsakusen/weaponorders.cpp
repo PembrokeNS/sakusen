@@ -77,6 +77,14 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   }
 }
 
+const Frame& WeaponOrders::getTargetFrame() const
+{
+  if (targetType == weaponTargetType_frame) {
+    return targetFrame;
+  }
+  Fatal("no frame in this target type");
+}
+
 /** \brief Turn the target of the Weapon (whatever it may be) into an estimated
  * velocity
  *

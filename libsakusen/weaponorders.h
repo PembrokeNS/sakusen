@@ -39,7 +39,7 @@ class LIBSAKUSEN_API WeaponOrders {
     WeaponTargetType getTargetType() const { return targetType; }
     bool isTargetValid() const;
     Point<sint32> getTargetPosition() const;
-    const Frame& getTargetFrame() const { return targetFrame; }
+    const Frame& getTargetFrame() const;
     Ref<ICompleteUnit> getTargetUnit() const { return targetUnit; }
     Point<sint16> getTargetVelocity() const;
     /*@}*/
