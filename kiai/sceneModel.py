@@ -14,6 +14,15 @@ class sceneModel(QtGui.QGraphicsScene):
 	def mousePressEvent(self,e):
 		if(e.button() == QtCore.Qt.RightButton):
 			p = e.lastScenePos()
+			if(self.itemAt(p)!=self.mapmodel.i): #clicked on a unit or sensor return
+				try:
+					clickedunit = self.itemAt(p).unit
+					cu = clickedunit.getRefToThis()
+					unitclicked = True
+				except AttributeError: #not a unit
+					sensorreturnclicked = True
+			else:
+				unitclicked = False
 			r = SPoint32(int(p.x()*100) + self.left,int(p.y()*100) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
 			units = self.selectedItems()
@@ -75,14 +84,15 @@ class sceneModel(QtGui.QGraphicsScene):
                                         utype = s.getTypePtr()
                                         for j,w in enumerate(utype.getWeapons()):
                                                 if(w.getClientHint()[:2] == 'b'):
-                                                        od = TargetPositionOrderData(j,q)
-                                                        od.thisown = 0
-                                                        o = Order(od)
-                                                        om = OrderMessage(u.getId(), o)
-                                                        omd = OrderMessageData(om)
-                                                        m = Message(omd)
-                                                        omd.thisown = 0 #m now owns it
-                                                        self.sock.send(m)
+							if(unitclicked):
+	                                                        od = TargetUnitOrderData(j,cu)
+        	                                                od.thisown = 0
+                	                                        o = Order(od)
+                        	                                om = OrderMessage(u.getId(), o)
+                                	                        omd = OrderMessageData(om)
+                                        	                m = Message(omd)
+                                                	        omd.thisown = 0 #m now owns it
+                                                       		self.sock.send(m)
 
 		else:
 			QtGui.QGraphicsScene.mousePressEvent(self,e)

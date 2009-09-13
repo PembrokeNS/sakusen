@@ -32,5 +32,10 @@ void UpdatedUnit::incrementState()
   }
 }
 
+Ref<ICompleteUnit> UpdatedUnit::getRefToThis()
+{
+  return world->getUnitsById()->find(this->getId());
+}
+
 }}
 

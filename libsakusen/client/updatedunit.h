@@ -46,6 +46,7 @@ class LIBSAKUSEN_CLIENT_API UpdatedUnit : public CompleteUnit {
     void alter(const CompleteUnit&);
     virtual void incrementState();
     virtual void destroying() {}
+    Ref<ICompleteUnit> getRefToThis();
 };
 
 UpdatedUnit::~UpdatedUnit() {
