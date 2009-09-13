@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from PyQt4 import QtCore
-def debug(x): pass
 class settingItem:
 	#TODO: we could store whether a node is a leaf, and thus provide an efficient implementation of settingsModel.hasChildren()
 	def __init__(self,path,selfindex,parent,data,column=0):
@@ -34,10 +33,8 @@ class settingItem:
 
 class settingsModel(QtCore.QAbstractItemModel):
 	def __init__(self,parent=None):
-		debug("creating settingsModel")
 		QtCore.QAbstractItemModel.__init__(self,parent)
 		self.l=[settingItem(('',),self.createIndex(0,0,0),QtCore.QModelIndex(),"[root]")]
-		debug("created settingsModel")
 	def data(self,index,role):
 		if((role!=QtCore.Qt.DisplayRole) or not index.isValid()): return QtCore.QVariant()
 		else: return QtCore.QVariant(self.l[index.internalId()].data)
@@ -72,7 +69,6 @@ class settingsModel(QtCore.QAbstractItemModel):
 	def processUpdate(self,d):
 		self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
 		path=tuple(d.getSetting().split(':'))
-		debug("working on path "+`path`)
 		try:
 			n=self.indexof(path,0)
 		except Exception:
@@ -89,7 +85,6 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else:
 			try:
 				m=self.indexof(path,1)
-				debug("about to update setting "+`path`+" with value "+d.getValue()[0])
 				self.l[m].data=d.getValue()[0]
 				self.emit(QtCore.SIGNAL("dataChanged(const QModelIndex &,const QModelIndex &)"),self.l[m].selfindex,self.l[m].selfindex)
 			except Exception:

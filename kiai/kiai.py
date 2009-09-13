@@ -6,7 +6,6 @@ from connectDialog import Ui_connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
 from gameModel import *
-from jointcp import joiner
 from listen import listener
 from modeltest import ModelTest
 from mainWindowImpl import mainWindow
@@ -16,6 +15,7 @@ import sys,imp
 from sakusen_resources import fileUtils_getHome,path
 from sakusen import CONFIG_SUBDIR
 from sakusen_client import *
+from sakusen_comms import *
 def debug(x): print x
 
 KIAI_SUBDIR="kiai"
@@ -35,7 +35,6 @@ userconfig("startup")
 aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
-QtCore.pyqtRemoveInputHook() #to make debugging possible - remove in release version
 class connectDialog(QtGui.QDialog):
 	def __init__(self,parent=None):
 		QtGui.QDialog.__init__(self,parent)
@@ -45,6 +44,28 @@ class connectDialog(QtGui.QDialog):
 		global debug
 		debug("called openConnection")
 		self.emit(QtCore.SIGNAL("openConnection(QString)"),self.ui.address.text())
+def debug(x): pass
+Socket_socketsInit()
+def join(address):
+	"""Join a sakusen server at a tcp-based address"""
+	d=JoinMessageData("")
+	m=Message(d)
+	d.thisown=False #m now owns d
+	s=Socket_newConnectionToAddress(str(address))
+	s.setNonBlocking(True)
+	s.send(m)
+	b=uint8(BUFFER_LEN)
+	t=timeval(5,0) #5 seconds
+	l=s.receiveTimeout(b,BUFFER_LEN,t)
+	i=IArchive(b,l)
+	r=Message(i)
+	t=r.getType()
+	if(t==messageType_accept):
+		d=r.getAcceptData()
+		openSettingsDialog(s,d.getId().toString())
+	else:
+		debug("Got unexpected message type, dying")
+                raise Exception()
 def openSettingsDialog(socket,clientid):
 	global a,l,s,m,mainwindow #otherwise s and m will get hilariously garbage-collected
 	l.addSocket(socket,clientid)
@@ -103,16 +124,12 @@ w=connectDialog()
 #d = QtGui.QDockWidget("Settings",mainwindow)
 #d.setWidget(s)
 mainwindow.show()
-j=joiner()
 l=listener()
 t=QtCore.QTimer()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("rejected()"),a,QtCore.SLOT("quit()"))
-QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),j.join)
-QtCore.QObject.connect(j,QtCore.SIGNAL("failure()"),connectionfailed)
-#QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject)"),l.addSocket) #needs to be synchronised with settingsDialog
+QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
 QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
-QtCore.QObject.connect(j,QtCore.SIGNAL("newConnection(PyQt_PyObject,PyQt_PyObject)"),openSettingsDialog)
 t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 w.show()
 sys.stdout = mainwindow
