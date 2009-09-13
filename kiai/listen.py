@@ -57,7 +57,7 @@ class listener(QtCore.QObject):
 					d=m.getUpdateData()
 					self.emit(QtCore.SIGNAL("update(PyQt_PyObject)"),d)
 				else:
-					print "Received unexpected message of type %d"%m.getType()
+					debug("Received unexpected message of type %d"%m.getType())
 	def requestSetting(self,path):
 		s=string.join(path,':')
 		d=GetSettingMessageData(s)
