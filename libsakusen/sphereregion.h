@@ -27,6 +27,9 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     typedef typename ArithmeticTraits<UT>::widest UWideT;
 #endif
   public:
+    typedef boost::shared_ptr<SphereRegion> Ptr;
+    typedef boost::shared_ptr<const SphereRegion> ConstPtr;
+
     SphereRegion() : centre(), radius(0) {}
     SphereRegion(const Point<T>& c, UT r) :
       centre(c), radius(r) {}
@@ -47,6 +50,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
       return new SphereRegion<T>(centre, radius);
     }
   public:
+    inline UT getRadius() const { return radius; }
     inline UWideT squareRadius() const { return UWideT(radius) * radius; }
     inline bool contains(const Point<sint16>& point) const;
     inline bool contains(const Point<sint32>& point) const;
