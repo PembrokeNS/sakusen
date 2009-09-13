@@ -70,7 +70,7 @@ def connectionfailed():
 	a.quit()
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
-	gamescene=sceneModel(mainwindow,l.activeSocket)
+	gamescene=sceneModel(mainwindow,l.activeSocket,g.universe)
 	l.game.setScene(gamescene)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
@@ -83,6 +83,7 @@ def startGame(d,g):
 	gamescene.bottom=g.w.getMap().bottom()
 	gamescene.left=g.w.getMap().left()
 	mapmodel=mapModel(g.w.getPartialMap())
+	gamescene.mapmodel = mapmodel
 	sf.mapmodel = mapmodel
 	e.mapmodel = mapmodel
 	gamescene.addItem(mapmodel.i)

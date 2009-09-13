@@ -12,14 +12,14 @@ class mapModel:
 		debug("Creating map image, width %s, height %s"%(`w`,`h_`))
 		i=QtGui.QImage(w,h_,QtGui.QImage.Format_RGB32)
 		debug("Created image, width %d, height %d"%(i.width(),i.height()))
-		h=m.getPartialHeightfield()
-		h.thisown=0
+		self.h=m.getPartialHeightfield()
+		#h.thisown=0
 		#TODO: make this work the new way
-		hwidth = h.getWidth()
-		hheight = h.getHeight()
-		hdata = h.getHeightfieldPtr()
-		hres = h.getXYResolution()
-		hzres = h.getZResolution()
+		hwidth = self.h.getWidth()
+		hheight = self.h.getHeight()
+		hdata = self.h.getHeightfieldPtr()
+		hres = self.h.getXYResolution()
+		hzres = self.h.getZResolution()
 		#himage = QtGui.QImage(hdata,hwidth,hheight,QtGui.QImage.Format_RGB16) #This is the function to use, when it's properly wrapped
 		j = QtGui.QImage(hwidth, hheight, QtGui.QImage.Format_RGB32)
 		for x in range(hwidth):
