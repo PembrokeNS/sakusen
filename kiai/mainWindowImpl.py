@@ -3,11 +3,12 @@ from PyKDE4 import kdeui
 from PyQt4 import QtCore
 from mainWindow import Ui_mainWindow
 def debug(x): pass
-class mainWindow(kdeui.KMainWindow):
+class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self,parent=None):
-		kdeui.KMainWindow.__init__(self,parent)
+		kdeui.KXmlGuiWindow.__init__(self,parent)
 		self.ui=Ui_mainWindow()
 		self.ui.setupUi(self)
+		self.setupGUI()
 		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &) '),self.runcommand)
 	def runcommand(self, t):
 		debug("Called to run command: %s"%t)
