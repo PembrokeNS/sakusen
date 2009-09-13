@@ -21,8 +21,11 @@ class sceneModel(QtGui.QGraphicsScene):
 					unitclicked = True
 				except AttributeError: #not a unit
 					sensorreturnclicked = True
+					csr = self.itemAt(p).sr
+					srclicked = True
 			else:
 				unitclicked = False
+				srclicked = False
 			r = SPoint32(int(p.x()*100) + self.left,int(p.y()*100) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
 			units = self.selectedItems()
@@ -47,7 +50,10 @@ class sceneModel(QtGui.QGraphicsScene):
 					for j,w in enumerate(utype.getWeapons()):
 						debug("Considering weapon %d with hint %s"%(j,w.getClientHint()))
 						if(w.getClientHint() == 'o'):
-							od = TargetPositionOrderData(j,q)
+							if(srclicked):
+								od = TargetSensorReturnsOrderData(j, csr.getRefToThis())
+							else:
+								od = TargetPositionOrderData(j,q)
 							od.thisown = 0 
 							o = Order(od)
 							om = OrderMessage(u.getId(), o)

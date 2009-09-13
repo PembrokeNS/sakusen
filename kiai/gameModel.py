@@ -99,6 +99,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(not self.i):
 				self.i=QtGui.QGraphicsPolygonItem(self.polygon,self.m.i)
 				self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
+				self.i.sr = self
 			else:
 				self.i.setPolygon(self.polygon)
 			if(self.j): sip.delete(self.j)

@@ -38,6 +38,7 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
     }
     virtual void altered() {}
     virtual void destroying() {}
+    Ref<ISensorReturns> getRefToThis();
 };
 
 }}
