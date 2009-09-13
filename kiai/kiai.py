@@ -92,6 +92,7 @@ def startGame(d,g):
 	mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
 	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 	g.scene=gamescene
 	debug("Scene is %s"%repr(g.scene))
 	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
