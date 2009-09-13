@@ -3,6 +3,7 @@
 #include "heightfield-methods.h"
 #include "unitcorneriterator.h"
 #include "ui/ui.h"
+#include "sphereregion.h"
 
 using namespace std;
 
@@ -107,6 +108,33 @@ void MapDisplay::drawUnitOrders(
   }
 }
 
+void MapDisplay::drawRegion(
+    const sakusen::Region<sint32>::ConstPtr& region,
+    const Colour& colour
+  )
+{
+  Colour transparentColour(colour);
+  transparentColour.da() = 0.2;
+  switch (region->getType()) {
+    case regionType_sphere:
+      {
+        SphereRegion<sint32>::ConstPtr sphereRegion =
+          boost::dynamic_pointer_cast<const SphereRegion<sint32> >(region);
+        Position dexPos = sphereRegion->getBestPosition();;
+        Point<double> pixelPos = dexToPixel(dexPos);
+        /** \bug Should draw an ellipse if dexPerPixelX != dexPerPixelY */
+        getRegion()->fillCircle(
+            pixelPos,
+            sphereRegion->getRadius()/dexPerPixelX,
+            transparentColour
+          );
+      }
+      return;
+    default:
+      Fatal("not implemented");
+  }
+}
+
 void MapDisplay::drawBallistic(
     const Ref<const sakusen::client::UpdatedBallistic>& ballistic,
     const Colour& colour
@@ -179,6 +207,8 @@ void MapDisplay::paint()
         retrnIt->dynamicCast<UpdatedSensorReturns>();
       if (retrn->getPerception() & perception_unit) {
         drawUnit(retrn->getUnit(), Colour::yellow);
+      } else if (retrn->getPerception() & perception_region) {
+        drawRegion(retrn->getRegion(), Colour::yellow);
       } else {
         Fatal("Not implemented");
       }

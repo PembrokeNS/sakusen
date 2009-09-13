@@ -69,6 +69,10 @@ class MapDisplay : public Control {
         const sakusen::Ref<const sakusen::client::UpdatedUnit>& unit,
         const Colour&
       );
+    void drawRegion(
+        const sakusen::Region<sint32>::ConstPtr& region,
+        const Colour&
+      );
     void drawBallistic(
         const sakusen::Ref<const sakusen::client::UpdatedBallistic>&,
         const Colour&
