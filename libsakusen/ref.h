@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 #include "iarchive.h"
 #include "oarchive.h"
@@ -50,7 +51,7 @@ class Ref {
     inline operator bool() const { return !referee.expired(); }
     inline bool operator!() const { return referee.expired(); }
     
-    inline bool isRefTo(const T* t) const { return referee.lock().get() == t; }
+    inline bool isRefTo(typename boost::add_const<T>::type* t) const { return referee.lock().get() == t; }
     
     /** \brief Standard dereferencing operator 
      *

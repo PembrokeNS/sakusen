@@ -350,6 +350,8 @@ namespace sakusen{
 %ignore Ref<ICompleteUnit>::operator*; /*Unfortunately this breaks due to making a pointer to a reference */
 %template(ICompleteUnitRef) Ref<ICompleteUnit>;
 }
+%ignore sakusen::Ref<sakusen::ICompleteUnit const>::operator*;
+%template(ICompleteUnitConstRef) sakusen::Ref<sakusen::ICompleteUnit const>;
 %include "sensorreturns.h"
 %{
 #include "sensorreturns.h"
