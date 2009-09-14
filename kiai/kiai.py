@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from PyKDE4 import kdecore,kdeui
-from connectDialog import Ui_connectDialog
+from connectDialogImpl import connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
 from gameModel import *
-from modeltest import ModelTest
 from mainWindowImpl import mainWindow
 from mapModel import mapModel
 from sceneModel import sceneModel
@@ -31,21 +30,10 @@ def userconfig(s):
 	except IOError:
 		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
 
-
 userconfig("startup")
 aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
-class connectDialog(QtGui.QDialog):
-	def __init__(self,parent=None):
-		QtGui.QDialog.__init__(self,parent)
-		self.ui=Ui_connectDialog()
-		self.ui.setupUi(self)
-		self.connect(self,QtCore.SIGNAL("accepted()"),self.openConnection)
-	def openConnection(self):
-		global debug
-		debug("called openConnection")
-		self.emit(QtCore.SIGNAL("openConnection(QString)"),self.ui.address.text())
 Socket_socketsInit()
 def join(address):
 	"""Join a sakusen server at a tcp-based address"""
