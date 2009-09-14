@@ -100,12 +100,10 @@ class listener(QtCore.QObject):
 					d=me.getGameStartData()
 					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
 					startGame(d,self.game)
-					#hope that's acted on before we do this
 					self.game.createWorld(d)
-					QtCore.QObject.connect(self,QtCore.SIGNAL("update(PyQt_PyObject)"),self.game.pushUpdates)
 				elif(t==messageType_update):
 					d=me.getUpdateData()
-					self.emit(QtCore.SIGNAL("update(PyQt_PyObject)"),d)
+					self.game.pushUpdates(d)
 				else:
 					debug("Received unexpected message of type %d"%me.getType())
 	def requestSetting(self,path):
