@@ -41,7 +41,8 @@ class socketModel():
 		"""Creates a socket, and connects it to the given address"""
 		self.s = Socket_newConnectionToAddress(address)
 		self.s.setNonBlocking(True)
-		self.b = uint8(BUFFER_LEN) # try reusing our buffer
+		self.b = uint8(BUFFER_LEN) #try reusing our buffer
+		self.game = False #whether there's a game in progress
 	def sendd(self, data):
 		"""Sends a MessageData object"""
 		data.thisown = 0 #the Message will take care of it.
@@ -56,11 +57,11 @@ class socketModel():
 			return None
 	def processm(self):
 		"""Receives a Message and processes it appropriately"""
-		global universe, game, a,mainwindow,gamescene,mapmodel, pw
+		global a,mainwindow
 		l=self.s.receive(self.b,BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
-			if(game):
+			if(self.game):
 				if(cvar.world):
 					playerid=cvar.world.getPlayerId()
 				else:
@@ -76,23 +77,23 @@ class socketModel():
 					#TODO: check hash
 					result=resourceinterface.searchUniverse(d.getValue()[0])
 					if(g(result,1)!=resourceSearchResult_success):
-						print "Failed finding universe \"%s\", error %d"%(universe,g(result,1))
+						print "Failed finding universe \"%s\", error %d"%(d.getValue()[0],g(result,1))
 					else:
-						universe = g(result,0)
+						self.universe = g(result,0)
 				m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
-				gamescene=sceneModel(mainwindow,activeSocket,universe)
+				gamescene=sceneModel(mainwindow,activeSocket,self.universe)
 				debug("Game started, creating world")
 				e=eventUnitFactory(gamescene)
 				sf=eventSensorReturnsFactory(gamescene)
-				pw = PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+				self.pw = PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 				e = e.__disown__() #pw takes ownership of e and sf
 				sf = sf.__disown__() 
 				#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
-				gamescene.bottom=pw.getMap().bottom()
-				gamescene.left=pw.getMap().left()
-				mapmodel=mapModel(pw.getPartialMap())
+				gamescene.bottom=self.pw.getMap().bottom()
+				gamescene.left=self.pw.getMap().left()
+				mapmodel=mapModel(self.pw.getPartialMap())
 				gamescene.mapmodel = mapmodel
 				sf.mapmodel = mapmodel
 				e.mapmodel = mapmodel
@@ -103,7 +104,7 @@ class socketModel():
 				mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 				mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 				mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
-				game = True
+				self.game = True
 			elif(t==messageType_update):
 				d=me.getUpdateData()
 				while(d.getTime()>cvar.world.getTimeNow()):
@@ -117,7 +118,7 @@ class socketModel():
 				print("Received unexpected message of type %d"%me.getType())
 
 def join(address):
-	global interestingthings, activeSocket, game, t, clientid, l, m
+	global interestingthings, activeSocket, t, clientid, l, m
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
 	activeSocket=socketModel(str(address))
@@ -153,8 +154,6 @@ aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち"
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
-
-game = False #temporary
 
 d=fileUtils_getHome()
 d/=path(CONFIG_SUBDIR)
