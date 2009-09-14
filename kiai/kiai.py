@@ -57,81 +57,75 @@ def join(address):
 	else:
 		debug("Got unexpected message type, dying")
                 raise Exception()
-class listener(QtCore.QObject):
-	"""A class to handle sockets and emit signals when messages are received"""
-	def __init__(self):
-		QtCore.QObject.__init__(self)
-		self.activeSocket=None
-		self.clientid=None
-		self.game=None
-	def addSocket(self,s,clientid=0):
-		debug("Adding a socket")
-		self.activeSocket=s
-		self.clientid=clientid
-		self.game=gameModel(clientid)
-		self.setSetting(('clients',str(clientid),'application','name'),'Kiai')
-	def checkPendingSockets(self):
-		b=uint8(BUFFER_LEN)
-		if(self.activeSocket):
-			s=self.activeSocket
-			l=s.receive(b,BUFFER_LEN)
-			if(l):
-				debug("Received %d bytes from socket"%l)
-				i=IArchive(b,l)
-				if(sakusen_client.cvar.world):
-					playerid=sakusen_client.cvar.world.getPlayerId()
-				else:
-					playerid=PlayerId.invalid()
-				debug("Deserializing message")
-				me=Message(i,playerid,self.game.resourceinterface)
-				debug("Getting message type")
-				t=me.getType()
-				debug("Message is of type %d"%t)
-				if(t==messageType_notifySetting):
-					d=me.getNotifySettingData()
-					if(d.getSetting()==":game:universe:name"):
-						try:
-							self.game.setUniverse(d.getValue()[0])
-						except Exception:
-							#should do some sort of error handling here
-							print "Unable to find universe \"%s\""%d.getValue()[0]
-					m.processUpdate(d)
-				elif(t==messageType_gameStart):
-					d=me.getGameStartData()
-					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
-					startGame(d,self.game)
-					self.game.createWorld(d)
-				elif(t==messageType_update):
-					d=me.getUpdateData()
-					self.game.pushUpdates(d)
-				else:
-					debug("Received unexpected message of type %d"%me.getType())
-	def requestSetting(self,path):
-		s=string.join(path,':')
-		d=GetSettingMessageData(s)
-		m=Message(d)
-		d.thisown=0 #m now owns d
-		self.activeSocket.send(m)
-	def leave(self):
-		d=LeaveMessageData()
-		m=Message(d)
-		d.thisown=0 #m now owns d
-		self.activeSocket.send(m)
-	def setSetting(self,path,value):
-		s=string.join(path,':')
-		d=ChangeSettingMessageData(s,value)
-		m=Message(d)
-		d.thisown=0 #m now owns d
-		self.activeSocket.send(m)
+def addSocket(s,cid=0):
+	global activeSocket, clientid, game
+	debug("Adding a socket")
+	activeSocket=s
+	clientid=cid
+	game=gameModel(clientid)
+	setSetting(('clients',str(clientid),'application','name'),'Kiai')
+def checkPendingSockets():
+	b=uint8(BUFFER_LEN)
+	if(activeSocket):
+		s=activeSocket
+		l=s.receive(b,BUFFER_LEN)
+		if(l):
+			debug("Received %d bytes from socket"%l)
+			i=IArchive(b,l)
+			if(sakusen_client.cvar.world):
+				playerid=sakusen_client.cvar.world.getPlayerId()
+			else:
+				playerid=PlayerId.invalid()
+			debug("Deserializing message")
+			me=Message(i,playerid,game.resourceinterface)
+			debug("Getting message type")
+			t=me.getType()
+			debug("Message is of type %d"%t)
+			if(t==messageType_notifySetting):
+				d=me.getNotifySettingData()
+				if(d.getSetting()==":game:universe:name"):
+					try:
+						game.setUniverse(d.getValue()[0])
+					except Exception:
+						#should do some sort of error handling here
+						print "Unable to find universe \"%s\""%d.getValue()[0]
+				m.processUpdate(d)
+			elif(t==messageType_gameStart):
+				d=me.getGameStartData()
+				debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
+				startGame(d,game)
+				game.createWorld(d)
+			elif(t==messageType_update):
+				d=me.getUpdateData()
+				game.pushUpdates(d)
+			else:
+				debug("Received unexpected message of type %d"%me.getType())
+def requestSetting(path):
+	s=string.join(path,':')
+	d=GetSettingMessageData(s)
+	m=Message(d)
+	d.thisown=0 #m now owns d
+	activeSocket.send(m)
+def leave():
+	d=LeaveMessageData()
+	m=Message(d)
+	d.thisown=0 #m now owns d
+	activeSocket.send(m)
+def setSetting(path,value):
+	s=string.join(path,':')
+	d=ChangeSettingMessageData(s,value)
+	m=Message(d)
+	d.thisown=0 #m now owns d
+	activeSocket.send(m)
 def openSettingsDialog(socket,clientid):
 	global a,l,s,m,mainwindow #otherwise s and m will get hilariously garbage-collected
-	l.addSocket(socket,clientid)
-	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),l.leave)
+	addSocket(socket,clientid)
+	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 	s = settingsDialog()
 	mainwindow.ui.dock.setWidget(s)
 	m=settingsModel(s)
-	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
-	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
+	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),requestSetting)
+	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),setSetting)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
@@ -139,8 +133,8 @@ def openSettingsDialog(socket,clientid):
 	userconfig("onconnect")
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
-	gamescene=sceneModel(mainwindow,l.activeSocket,g.universe)
-	l.game.setScene(gamescene)
+	gamescene=sceneModel(mainwindow,activeSocket,g.universe)
+	game.setScene(gamescene)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
 	e=eventUnitFactory(g.scene)
@@ -164,19 +158,14 @@ def startGame(d,g):
 	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 	g.scene=gamescene
 	debug("Scene is %s"%repr(g.scene))
-	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
-	#mainwindow.show()
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
-#s = settingsDialog()
-#d = QtGui.QDockWidget("Settings",mainwindow)
-#d.setWidget(s)
 mainwindow.show()
-l=listener()
+activeSocket = False #temporary
 t=QtCore.QTimer()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
-QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),l.checkPendingSockets)
+QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
 t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 w.show()
 sys.stdout = mainwindow
