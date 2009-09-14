@@ -5,13 +5,13 @@ from PyKDE4 import kdecore,kdeui
 from connectDialogImpl import connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
-from gameModel import *
+from gameModel import gameModel, eventUnitFactory, eventSensorReturnsFactory
 from mainWindowImpl import mainWindow
 from mapModel import mapModel
 from sceneModel import sceneModel
 import sys, imp, string
 from sakusen_resources import fileUtils_getHome, path
-from sakusen import CONFIG_SUBDIR
+from sakusen import *
 from sakusen_client import *
 from sakusen_comms import *
 
@@ -75,8 +75,8 @@ def checkPendingSockets():
 		if(l):
 			debug("Received %d bytes from socket"%l)
 			i=IArchive(b,l)
-			if(sakusen_client.cvar.world):
-				playerid=sakusen_client.cvar.world.getPlayerId()
+			if(cvar.world):
+				playerid=cvar.world.getPlayerId()
 			else:
 				playerid=PlayerId.invalid()
 			debug("Deserializing message")
