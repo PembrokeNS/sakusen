@@ -22,13 +22,5 @@ class gameModel(QtCore.QObject):
 			print "Failed finding universe \"%s\", error %d"%(universe,g(result,1))
 			raise Exception()
 		self.universe=g(result,0)
-	def pushUpdates(self,d):
-		while(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
-			sakusen_client.cvar.world.endTick()
-		if(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
-			print "Got updates in wrong order"
-		l=d.getUpdates()
-		for u in l:
-			sakusen_client.cvar.world.applyUpdate(u)
 	def setScene(self,scene):
 		self.scene = scene

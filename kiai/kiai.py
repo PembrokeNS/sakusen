@@ -107,17 +107,23 @@ def checkPendingSockets():
 				m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
-				debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
 				startGame(d,game)
 			elif(t==messageType_update):
 				d=me.getUpdateData()
-				game.pushUpdates(d)
+				while(d.getTime()>cvar.world.getTimeNow()):
+					cvar.world.endTick()
+				if(d.getTime()>cvar.world.getTimeNow()):
+					print "Got updates in wrong order"
+				l=d.getUpdates()
+				for u in l:
+					cvar.world.applyUpdate(u)
 			else:
 				debug("Received unexpected message of type %d"%me.getType())
 def requestSetting(path):
 	s=string.join(path,':')
 	d=GetSettingMessageData(s)
 	activeSocket.sendd(d)
+
 def leave():
 	try: #try and leave cleanly
 		d=LeaveMessageData()
