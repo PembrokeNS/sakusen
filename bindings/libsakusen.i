@@ -352,6 +352,8 @@ namespace sakusen{
 }
 %ignore sakusen::Ref<sakusen::ICompleteUnit const>::operator*;
 %template(ICompleteUnitConstRef) sakusen::Ref<sakusen::ICompleteUnit const>;
+%ignore sakusen::Ref<sakusen::ISensorReturns>::operator*;
+%template(ISensorReturnsRef) sakusen::Ref<sakusen::ISensorReturns>;
 %include "sensorreturns.h"
 %{
 #include "sensorreturns.h"
