@@ -42,13 +42,28 @@ class socketModel():
 	def __init__(self, address):
 		self.s = Socket_newConnectionToAddress(address)
 		self.s.setNonBlocking(True)
+		self.b = uint8(BUFFER_LEN) # try reusing our buffer
 	def sendd(self, data):
 		data.thisown = 0 #the Message will take care of it.
 		self.s.send(Message(data))
-	def receiveTimeout(self, buf, blen, tout):
-		return self.s.receiveTimeout(buf, blen, tout)
-	def receive(self, buf, blen):
-		return self.s.receive(buf, blen)
+	def receivem(self, timeout = None):
+		if(timeout):
+			l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeout)
+		else:
+			l=self.s.receive(self.b,BUFFER_LEN)
+		if(l):
+			i=IArchive(self.b,l)
+			if(cvar.world):
+				playerid=cvar.world.getPlayerId()
+			else:
+				playerid=PlayerId.invalid()
+			if(game):
+				me=Message(i,playerid,game.resourceinterface)
+			else:
+				me = Message(i)
+			return me
+		else:
+			return None
 def join(address):
 	global interestingthings, activeSocket, game, t, clientid
 	"""Join a sakusen server at a tcp-based address"""
@@ -56,13 +71,9 @@ def join(address):
 	s=socketModel(str(address))
 	interestingthings['socket'] = s
 	s.sendd(d)
-	b=uint8(BUFFER_LEN)
-	t=timeval(5,0) #5 seconds
-	l=s.receiveTimeout(b,BUFFER_LEN,t)
-	i=IArchive(b,l)
-	r=Message(i)
-	t=r.getType()
-	if(t==messageType_accept):
+	t = timeval(5, 0) #5 seconds
+	r = s.receivem(t)
+	if(r and r.getType() ==messageType_accept):
 		d=r.getAcceptData()
 		activeSocket = s
 		t=QtCore.QTimer()
@@ -75,20 +86,9 @@ def join(address):
 	else:
 		debug("Failed to connect to server!")
 def checkPendingSockets():
-	b=uint8(BUFFER_LEN)
 	if(activeSocket):
-		s=activeSocket
-		l=s.receive(b,BUFFER_LEN)
-		if(l):
-			debug("Received %d bytes from socket"%l)
-			i=IArchive(b,l)
-			if(cvar.world):
-				playerid=cvar.world.getPlayerId()
-			else:
-				playerid=PlayerId.invalid()
-			debug("Deserializing message")
-			me=Message(i,playerid,game.resourceinterface)
-			debug("Getting message type")
+		me = activeSocket.receivem()
+		if(me):
 			t=me.getType()
 			debug("Message is of type %d"%t)
 			if(t==messageType_notifySetting):
@@ -166,13 +166,15 @@ def startGame(d,g):
 
 interestingthings['setSetting'] = setSetting #want to let users set settings
 
+game = False #temporary
+
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 w.show()
-sys.stdout = mainwindow
-sys.stderr = mainwindow
+#sys.stdout = mainwindow
+#sys.stderr = mainwindow
 r=a.exec_()
 debug("Event loop terminated with status %d, dying"%r)
