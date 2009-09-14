@@ -36,11 +36,13 @@ kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
 def join(address):
+	global interestingthings
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
 	m=Message(d)
-	d.thisown=False #m now owns d
+	d.thisown=0 #m now owns d
 	s=Socket_newConnectionToAddress(str(address))
+	interestingthings['socket'] = s
 	s.setNonBlocking(True)
 	s.send(m)
 	b=uint8(BUFFER_LEN)
@@ -133,17 +135,11 @@ def openSettingsDialog(socket,clientid):
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
 	QtCore.QObject.connect(l,QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),m.processUpdate)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
-	QtCore.QObject.connect(l,QtCore.SIGNAL("gameStart(PyQt_PyObject,PyQt_PyObject)"),startGame)
-	#mt=ModelTest(s,m)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
 	s.show()
 	userconfig("onconnect")
-	debug("opened a settings dialog")
-def connectionfailed():
-	print "Failed to connect to server - check the server is running"
-	a.quit()
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
 	gamescene=sceneModel(mainwindow,l.activeSocket,g.universe)
@@ -173,7 +169,7 @@ def startGame(d,g):
 	debug("Scene is %s"%repr(g.scene))
 	#QtCore.QObject.connect(l.game,QtCore.SIGNAL("unitCreated(PyQt_PyQbject,PyQt_PyQbject)"),gamescene.createUnit)
 	#mainwindow.show()
-mainwindow = mainWindow()
+mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 #s = settingsDialog()
 #d = QtGui.QDockWidget("Settings",mainwindow)
