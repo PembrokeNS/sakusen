@@ -151,15 +151,14 @@ def openSettingsDialog(socket,clientid):
 	s.show()
 	userconfig("onconnect")
 def startGame(d):
-	global a,mainwindow,gamescene,mapmodel,l, pw
+	global a,mainwindow,gamescene,mapmodel, pw
 	gamescene=sceneModel(mainwindow,activeSocket,universe)
-	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
 	e=eventUnitFactory(gamescene)
-	e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
 	sf=eventSensorReturnsFactory(gamescene)
-	sf.__disown__() 
 	pw = PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+	e = e.__disown__() #pw takes ownership of e and sf
+	sf = sf.__disown__() 
 	#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
 	gamescene.bottom=pw.getMap().bottom()
 	gamescene.left=pw.getMap().left()

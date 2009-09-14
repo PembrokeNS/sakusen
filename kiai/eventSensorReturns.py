@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtCore, QtGui
+import sip
 
 from sakusen import *
 from sakusen_client import *
@@ -56,6 +57,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 				p.setColor(QtGui.QColor('red'))
 				p.thisown = 0
 				self.j.setPen(p)
+				self.j.sr = self
 			else:
 				self.j.setRect((rect.minx-self.scene.left)/100.0,(rect.miny-self.scene.bottom)/100.0,(rect.maxx-rect.minx)/100.0,(rect.maxy-rect.miny)/100.0)
 			if(self.i): sip.delete(self.i)

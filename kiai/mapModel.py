@@ -1,20 +1,17 @@
 #!/usr/bin/env python
+
 from PyQt4 import QtGui,QtCore
 from PyKDE4 import kdeui,kdecore
 from sakusen import *
-def debug(x): pass
 
 class mapModel:
+	"""Represents the map - mainly its width, height, heightfield and a pixmap of the heights"""
 	def __init__(self,m):
-		#todo: lose this lame granularity
+		#TODO: lose this lame granularity
 		w=m.width()/100
 		h_=m.height()/100
-		debug("Creating map image, width %s, height %s"%(`w`,`h_`))
 		i=QtGui.QImage(w,h_,QtGui.QImage.Format_RGB32)
-		debug("Created image, width %d, height %d"%(i.width(),i.height()))
 		self.h=m.getPartialHeightfield()
-		#h.thisown=0
-		#TODO: make this work the new way
 		hwidth = self.h.getWidth()
 		hheight = self.h.getHeight()
 		hdata = self.h.getHeightfieldPtr()

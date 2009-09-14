@@ -2,6 +2,7 @@
 from PyQt4 import QtGui
 
 class gameView(QtGui.QGraphicsView):
+	"""A QGraphicsView with strategic zoom"""
 	def __init__(self, parent):
 		QtGui.QGraphicsView.__init__(self,parent)
 		self.setTransformationAnchor(self.AnchorUnderMouse)

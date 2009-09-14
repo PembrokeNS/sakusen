@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtCore, QtGui
+import sip
 
 from sakusen import *
 from sakusen_client import *
