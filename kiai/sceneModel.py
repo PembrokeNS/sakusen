@@ -1,9 +1,8 @@
 #!/usr/bin/env python
+
 from PyQt4 import QtCore,QtGui
 from sakusen import *
 from sakusen_comms import *
-
-def debug(x): pass
 
 class sceneModel(QtGui.QGraphicsScene):
 	"""Encapsulates a model of the game world, and handles giving orders to it"""
@@ -46,9 +45,7 @@ class sceneModel(QtGui.QGraphicsScene):
                                         u = i.unit
 					s = u.getStatus()
 					utype = s.getTypePtr()
-					debug("Attacking at (%d,%d,%d)"%(q.x,q.y,q.z))
 					for j,w in enumerate(utype.getWeapons()):
-						debug("Considering weapon %d with hint %s"%(j,w.getClientHint()))
 						if(w.getClientHint() == 'o'):
 							if(srclicked):
 								od = TargetSensorReturnsOrderData(j, csr.getRefToThis())
@@ -72,7 +69,6 @@ class sceneModel(QtGui.QGraphicsScene):
 							cpt = SPoint32(q.x,q.y,q.z + csz.z)
 							orient = Orientation()
 							f = Frame(cpt, orient)
-							debug("Building at (%d,%d,%d)"%(cpt.x,cpt.y,cpt.z))
                                                         od = TargetFrameOrderData(j,f)
                                                         od.thisown = 0
                                                         o = Order(od)

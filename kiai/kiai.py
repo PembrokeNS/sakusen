@@ -3,19 +3,17 @@
 
 import sys
 
-from PyQt4 import QtCore, QtGui, QtOpenGL
+from PyQt4 import QtCore
 from PyKDE4 import kdecore,kdeui
 
-from sakusen_resources import *
 from sakusen import *
-from sakusen_client import *
+from sakusen_resources import *
 from sakusen_comms import *
 
 from connectDialogImpl import connectDialog
 from mainWindowImpl import mainWindow
 from socketModel import socketModel
 
-def debug(x): pass
 
 KIAI_SUBDIR="kiai"
 interestingthings = {} #the things we want user scripting to be able to interact with
@@ -50,7 +48,6 @@ interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
 w.show()
-#sys.stdout = mainwindow
-#sys.stderr = mainwindow
+sys.stdout = mainwindow
+sys.stderr = mainwindow
 r=a.exec_()
-debug("Event loop terminated with status %d, dying"%r)
