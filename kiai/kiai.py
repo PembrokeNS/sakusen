@@ -52,13 +52,18 @@ class socketModel():
 		"""Sends a MessageData object"""
 		data.thisown = 0 #the Message will take care of it.
 		self.s.send(Message(data))
-	def receivem(self, timeout = None):
-		"""Receives a Message"""
-		global universe, game
-		if(timeout):
-			l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeout)
+	def receivem(self, timeout = timeval(10,0)):
+		"""Receives a Message and returns it"""
+		l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeout)
+		if(l):
+			i=IArchive(self.b,l)
+			return Message(i)
 		else:
-			l=self.s.receive(self.b,BUFFER_LEN)
+			return None
+	def processm(self):
+		"""Receives a Message and processes it appropriately"""
+		global universe, game
+		l=self.s.receive(self.b,BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
 			if(game):
@@ -70,7 +75,6 @@ class socketModel():
 				me=Message(i,playerid,resourceinterface)
 			else:
 				me = Message(i)
-				if(timeout): return me #TODO: remove the two different branches here, they're separate functions really
 			t=me.getType()
 			if(t==messageType_notifySetting):
 				d=me.getNotifySettingData()
@@ -111,7 +115,7 @@ def join(address):
 		d=r.getAcceptData()
 		activeSocket = s
 		t=QtCore.QTimer()
-		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),s.receivem)
+		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),s.processm)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
