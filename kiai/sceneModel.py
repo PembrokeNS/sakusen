@@ -37,9 +37,7 @@ class sceneModel(QtGui.QGraphicsScene):
 					o = Order(od)
 					om = OrderMessage(u.getId(), o)
 					omd = OrderMessageData(om)
-					m = Message(omd)
-					omd.thisown = 0 #m now owns it
-					self.sock.send(m)
+					self.sock.sendd(omd)
 			if(self.mw.ui.attack.isChecked()):
 				 for i in units:
                                         u = i.unit
@@ -57,9 +55,7 @@ class sceneModel(QtGui.QGraphicsScene):
 							o = Order(od)
 							om = OrderMessage(u.getId(), o)
 							omd = OrderMessageData(om)
-							m = Message(omd)
-							omd.thisown = 0 #m now owns it
-							self.sock.send(m)
+							self.sock.sendd(omd)
 			if(self.mw.ui.create.isChecked()):
 				for i in units:
 					u = i.unit
@@ -79,9 +75,7 @@ class sceneModel(QtGui.QGraphicsScene):
                                                         o = Order(od)
                                                         om = OrderMessage(u.getId(), o)
                                                         omd = OrderMessageData(om)
-                                                        m = Message(omd)
-                                                        omd.thisown = 0 #m now owns it
-                                                        self.sock.send(m)
+                                                        self.sock.sendd(omd)
                         if(self.mw.ui.build.isChecked()):
                                 for i in units:
                                         u = i.unit
@@ -95,9 +89,7 @@ class sceneModel(QtGui.QGraphicsScene):
                 	                                        o = Order(od)
                         	                                om = OrderMessage(u.getId(), o)
                                 	                        omd = OrderMessageData(om)
-                                        	                m = Message(omd)
-                                                	        omd.thisown = 0 #m now owns it
-                                                       		self.sock.send(m)
+                                                       		self.sock.sendd(omd)
 
 		else:
 			QtGui.QGraphicsScene.mousePressEvent(self,e)

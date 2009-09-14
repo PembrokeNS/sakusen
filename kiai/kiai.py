@@ -35,16 +35,24 @@ aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち"
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
+class socketModel():
+	def __init__(self, address):
+		self.s = Socket_newConnectionToAddress(address)
+		self.s.setNonBlocking(True)
+	def sendd(self, data):
+		data.thisown = 0 #the Message will take care of it.
+		self.s.send(Message(data))
+	def receiveTimeout(self, buf, blen, tout):
+		return self.s.receiveTimeout(buf, blen, tout)
+	def receive(self, buf, blen):
+		return self.s.receive(buf, blen)
 def join(address):
 	global interestingthings
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
-	m=Message(d)
-	d.thisown=0 #m now owns d
-	s=Socket_newConnectionToAddress(str(address))
+	s=socketModel(str(address))
 	interestingthings['socket'] = s
-	s.setNonBlocking(True)
-	s.send(m)
+	s.sendd(d)
 	b=uint8(BUFFER_LEN)
 	t=timeval(5,0) #5 seconds
 	l=s.receiveTimeout(b,BUFFER_LEN,t)
@@ -106,20 +114,14 @@ def checkPendingSockets():
 def requestSetting(path):
 	s=string.join(path,':')
 	d=GetSettingMessageData(s)
-	m=Message(d)
-	d.thisown=0 #m now owns d
-	activeSocket.send(m)
+	activeSocket.sendd(d)
 def leave():
 	d=LeaveMessageData()
-	m=Message(d)
-	d.thisown=0 #m now owns d
-	activeSocket.send(m)
+	activeSocket.sendd(d)
 def setSetting(path,value):
 	s=string.join(path,':')
 	d=ChangeSettingMessageData(s,value)
-	m=Message(d)
-	d.thisown=0 #m now owns d
-	activeSocket.send(m)
+	activeSocket.sendd(d)
 def openSettingsDialog(socket,clientid):
 	global a,l,m,mainwindow
 	addSocket(socket,clientid)
