@@ -21,12 +21,13 @@ KIAI_SUBDIR="kiai"
 interestingthings = {} #the things we want user scripting to be able to interact with
 
 def userconfig(s):
+	"""Try and execute the specified user configuration file"""
 	configpath=fileUtils_getHome()
 	configpath/=path(CONFIG_SUBDIR)
 	configpath/=path(KIAI_SUBDIR)
 	configpath/=path(s+".py")
 	try:
-		execfile(configpath.string())
+		execfile(configpath.string(),interestingthings)
 	except IOError:
 		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
 
@@ -35,7 +36,9 @@ aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち"
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
+
 class socketModel():
+	"""Encapsulates a sakusen socket"""
 	def __init__(self, address):
 		self.s = Socket_newConnectionToAddress(address)
 		self.s.setNonBlocking(True)
@@ -160,10 +163,12 @@ def startGame(d,g):
 	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 	g.scene=gamescene
 	debug("Scene is %s"%repr(g.scene))
+
+interestingthings['setSetting'] = setSetting #want to let users set settings
+
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
-QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 w.show()
