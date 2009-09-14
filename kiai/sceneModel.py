@@ -7,8 +7,9 @@ def debug(x): pass
 
 class sceneModel(QtGui.QGraphicsScene):
 	"""Encapsulates a model of the game world, and handles giving orders to it"""
-	def __init__(self,mainwindow,socket, universe):
-		# Needs access to mainwindow to get at  buttons
+	def __init__(self, mainwindow, socket, universe):
+		# Needs access to mainwindow to get at buttons. Needs access to socket to send orders.
+		# Needs access to universe to be able to grab unit type pointer stuff.
 		QtGui.QGraphicsScene.__init__(self)
 		self.mw = mainwindow
 		self.sock = socket

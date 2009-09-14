@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+
 from PyQt4 import QtCore
+
+import string
+
+from sakusen_comms import *
+
 class settingItem:
 	#TODO: we could store whether a node is a leaf, and thus provide an efficient implementation of settingsModel.hasChildren()
 	def __init__(self,path,selfindex,parent,data,column=0):
@@ -28,12 +34,13 @@ class settingItem:
 				self.selfindex.model().l.append(settingItem(path,None,self.selfindex,None))
 				i=self.selfindex.model().createIndex(row,column,self.selfindex.model().indexof(path,column))
 				self.selfindex.model().l[i.internalId()].selfindex=i
-				self.selfindex.model().emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),path)
+				self.selfindex.model().requestSetting(path)
 				return i
 
 class settingsModel(QtCore.QAbstractItemModel):
-	def __init__(self,parent=None):
+	def __init__(self, socket, parent=None):
 		QtCore.QAbstractItemModel.__init__(self,parent)
+		self.socket = socket
 		self.l=[settingItem(('',),self.createIndex(0,0,0),QtCore.QModelIndex(),"[root]")]
 	def data(self,index,role):
 		if((role!=QtCore.Qt.DisplayRole) or not index.isValid()): return QtCore.QVariant()
@@ -99,8 +106,15 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else: return QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
 	def setData(self,index,value,role):
 		if(index.isValid()): 
-			self.emit(QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),self.l[index.internalId()].path,str(value.toString()))
+			self.setSetting(self.l[index.internalId()].path,str(value.toString()))
 			return True
 		else:
 			return False
-
+	def requestSetting(self, path):
+		s=string.join(path,':')
+		d=GetSettingMessageData(s)
+		self.socket.sendd(d)
+	def setSetting(self, path, value):
+		s=string.join(path,':')
+		d=ChangeSettingMessageData(s,value)
+		self.socket.sendd(d)

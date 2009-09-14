@@ -12,7 +12,7 @@ from mainWindowImpl import mainWindow
 from mapModel import mapModel
 from sceneModel import sceneModel
 
-import sys, imp, string
+import sys
 
 from sakusen_resources import *
 from sakusen import *
@@ -110,22 +110,16 @@ def join(address):
 		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),activeSocket.processm)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
-		setSetting(('clients',str(clientid),'application','name'),'Kiai')
-		m = settingsModel()
+		m = settingsModel(activeSocket)
 		s = settingsDialog(m, QtCore.QModelIndex())
 		mainwindow.ui.dock.setWidget(s)
-		QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),requestSetting)
-		QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),setSetting)
-		m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
+		m.requestSetting(())
 		s.show()
+		m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+		interestingthings['setSetting'] = m.setSetting #want to let users set settings
 		userconfig("onconnect")
 	else:
 		print("Failed to connect to server!")
-
-def requestSetting(path):
-	s=string.join(path,':')
-	d=GetSettingMessageData(s)
-	activeSocket.sendd(d)
 
 def leave():
 	try: #try and leave cleanly
@@ -133,10 +127,7 @@ def leave():
 		activeSocket.sendd(d)
 	except Exception: #but if we can't, don't worry
 		pass
-def setSetting(path,value):
-	s=string.join(path,':')
-	d=ChangeSettingMessageData(s,value)
-	activeSocket.sendd(d)
+
 def startGame(d):
 	global a,mainwindow,gamescene,mapmodel, pw
 	gamescene=sceneModel(mainwindow,activeSocket,universe)
@@ -167,7 +158,6 @@ kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
 
-interestingthings['setSetting'] = setSetting #want to let users set settings
 
 game = False #temporary
 
