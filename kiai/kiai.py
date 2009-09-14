@@ -37,6 +37,11 @@ def userconfig(s):
 
 class socketModel():
 	"""Encapsulates a sakusen socket"""
+	def __init__(self, interestingthings, mainwindow, resourceinterface, userconfig):
+		self.interestingthings = interestingthings
+		self.mainwindow = mainwindow
+		self.resourceinterface = resourceinterface
+		self.userconfig = userconfig
 	def join(self, address):
 		"""Creates a socket, and connects it to the given address"""
 		self.s = Socket_newConnectionToAddress(str(address))
@@ -44,38 +49,34 @@ class socketModel():
 		self.b = uint8(BUFFER_LEN) #try reusing our buffer
 		self.game = False #whether there's a game in progress
 		self.sendd(JoinMessageData(""))
-		r = self.receivem(timeval(5, 0))
-		if(r and r.getType() ==messageType_accept):
-			d=r.getAcceptData()
-			self.t=QtCore.QTimer()
-			QtCore.QObject.connect(self.t,QtCore.SIGNAL("timeout()"),self.processm)
-			self.t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
-			clientid=d.getId().toString()
-			self.m = settingsModel(self)
-			s = settingsDialog(self.m, QtCore.QModelIndex())
-			mainwindow.ui.dock.setWidget(s)
-			self.m.requestSetting(())
-			s.show()
-			self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
-			interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
-			userconfig("onconnect")
+		l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeval(5, 0))
+		if(l):
+			i=IArchive(self.b,l)
+			r = Message(i)
+			if(r.getType() ==messageType_accept):
+				d=r.getAcceptData()
+				self.t=QtCore.QTimer()
+				QtCore.QObject.connect(self.t,QtCore.SIGNAL("timeout()"),self.processm)
+				self.t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
+				clientid=d.getId().toString()
+				self.m = settingsModel(self)
+				s = settingsDialog(self.m, QtCore.QModelIndex())
+				self.mainwindow.ui.dock.setWidget(s)
+				self.m.requestSetting(())
+				s.show()
+				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+				interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
+				self.userconfig("onconnect")
+			else:
+				print("Server refused our connection")
 		else:
 			print("Failed to connect to server!")
 	def sendd(self, data):
 		"""Sends a MessageData object"""
 		data.thisown = 0 #the Message will take care of it.
 		self.s.send(Message(data))
-	def receivem(self, timeout = timeval(10,0)):
-		"""Receives a Message and returns it"""
-		l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeout)
-		if(l):
-			i=IArchive(self.b,l)
-			return Message(i)
-		else:
-			return None
 	def processm(self):
 		"""Receives a Message and processes it appropriately"""
-		global a,mainwindow
 		l=self.s.receive(self.b,BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
@@ -85,7 +86,7 @@ class socketModel():
 				else:
 					#can this ever occur?
 					playerid=PlayerId.invalid()
-				me=Message(i,playerid,resourceinterface)
+				me=Message(i,playerid,self.resourceinterface)
 			else:
 				me = Message(i)
 			t=me.getType()
@@ -93,7 +94,7 @@ class socketModel():
 				d=me.getNotifySettingData()
 				if(d.getSetting()==":game:universe:name"):
 					#TODO: check hash
-					result=resourceinterface.searchUniverse(d.getValue()[0])
+					result=self.resourceinterface.searchUniverse(d.getValue()[0])
 					if(g(result,1)!=resourceSearchResult_success):
 						print "Failed finding universe \"%s\", error %d"%(d.getValue()[0],g(result,1))
 					else:
@@ -101,7 +102,7 @@ class socketModel():
 				self.m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
-				gamescene=sceneModel(mainwindow,self,self.universe)
+				gamescene=sceneModel(self.mainwindow,self,self.universe)
 				debug("Game started, creating world")
 				e=eventUnitFactory(gamescene)
 				sf=eventSensorReturnsFactory(gamescene)
@@ -116,12 +117,12 @@ class socketModel():
 				sf.mapmodel = mapmodel
 				e.mapmodel = mapmodel
 				gamescene.addItem(mapmodel.i)
-				mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
-				mainwindow.ui.gameview.setScene(gamescene)
-				mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
-				mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
-				mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
-				mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
+				self.mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
+				self.mainwindow.ui.gameview.setScene(gamescene)
+				self.mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
+				self.mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+				self.mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+				self.mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 				self.game = True
 			elif(t==messageType_update):
 				d=me.getUpdateData()
@@ -155,7 +156,7 @@ resourceinterface=FileResourceInterface_create(d,False)
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
-activeSocket = socketModel()
+activeSocket = socketModel(interestingthings, mainwindow, resourceinterface, userconfig)
 interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
