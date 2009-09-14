@@ -58,9 +58,12 @@ def join(address):
 		debug("Got unexpected message type, dying")
                 raise Exception()
 def addSocket(s,cid=0):
-	global activeSocket, clientid, game
+	global activeSocket, clientid, game, t
 	debug("Adding a socket")
 	activeSocket=s
+	t=QtCore.QTimer()
+	QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
+	t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 	clientid=cid
 	game=gameModel(clientid)
 	setSetting(('clients',str(clientid),'application','name'),'Kiai')
@@ -118,7 +121,7 @@ def setSetting(path,value):
 	d.thisown=0 #m now owns d
 	activeSocket.send(m)
 def openSettingsDialog(socket,clientid):
-	global a,l,s,m,mainwindow #otherwise s and m will get hilariously garbage-collected
+	global a,l,m,mainwindow
 	addSocket(socket,clientid)
 	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 	s = settingsDialog()
@@ -161,12 +164,8 @@ def startGame(d,g):
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
-activeSocket = False #temporary
-t=QtCore.QTimer()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
-QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
-t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 w.show()
 sys.stdout = mainwindow
 sys.stderr = mainwindow
