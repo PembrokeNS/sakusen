@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from PyKDE4 import kdecore,kdeui
 from connectDialogImpl import connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
-from gameModel import gameModel, eventUnitFactory, eventSensorReturnsFactory
+from gameModel import gameModel
+from eventUnit import  eventUnitFactory
+from eventSensorReturns import  eventSensorReturnsFactory
 from mainWindowImpl import mainWindow
 from mapModel import mapModel
 from sceneModel import sceneModel
+
 import sys, imp, string
+
 from sakusen_resources import fileUtils_getHome, path
 from sakusen import *
 from sakusen_client import *
@@ -173,7 +178,7 @@ mainwindow.show()
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 w.show()
-#sys.stdout = mainwindow
-#sys.stderr = mainwindow
+sys.stdout = mainwindow
+sys.stderr = mainwindow
 r=a.exec_()
 debug("Event loop terminated with status %d, dying"%r)
