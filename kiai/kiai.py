@@ -100,25 +100,22 @@ def join(address):
 	global interestingthings, activeSocket, game, t, clientid, l, m
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
-	sock=socketModel(str(address))
-	interestingthings['socket'] = sock
-	sock.sendd(d)
-	r = sock.receivem(timeval(5, 0))
+	activeSocket=socketModel(str(address))
+	interestingthings['socket'] = activeSocket
+	activeSocket.sendd(d)
+	r = activeSocket.receivem(timeval(5, 0))
 	if(r and r.getType() ==messageType_accept):
 		d=r.getAcceptData()
-		activeSocket = sock
 		t=QtCore.QTimer()
-		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),sock.processm)
+		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),activeSocket.processm)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
-		s = settingsDialog()
+		m = settingsModel()
+		s = settingsDialog(m, QtCore.QModelIndex())
 		mainwindow.ui.dock.setWidget(s)
-		m=settingsModel(s)
 		QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),requestSetting)
 		QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),setSetting)
-		s.ui.settingsTree.setModel(m)
-		s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 		m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
 		s.show()
 		userconfig("onconnect")
