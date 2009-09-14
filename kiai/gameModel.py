@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#from __future__ import division #messes up other stuff
 from sakusen import *
 from sakusen_resources import *
 from sakusen_client import *
 import sakusen_client
 from PyQt4 import QtCore,QtGui
 import sip
-import imp
 
 def debug(x): pass
 
 class eventUnitFactory(UnitFactory):
-	def __init__(self,scene,interface=None): #TODO: remove default for second argument once we're actually using it
+	def __init__(self,scene):
 		UnitFactory.__init__(self)
 		self.scene = scene
-		self.interface=interface
 	def create(self,u):
 		e=eventUpdatedUnit(u,self.scene,self.mapmodel)
 		debug("Creating eventUpdatedUnit "+`e`)
@@ -24,11 +21,10 @@ class eventUnitFactory(UnitFactory):
 		debug("Returning pointer "+`p`)
 		p.thisown=0 #I don't even know any more - TODO: CHECK THIS
 		return p
-class eventUpdatedUnit(QtCore.QObject,UpdatedUnit): #needs to inherit from UpdatedUnit *last*, otherwise swig directors fail. No idea whether signals will fail this way around, though.
+class eventUpdatedUnit(UpdatedUnit):
 	def __init__(self,u,scene,m):
 		debug("Creating eventUpdatedUnit")
 		UpdatedUnit.__init__(self,u)
-		QtCore.QObject.__init__(self)
 		self.scene = scene
                 status = self.getStatus()
                 frame = status.getFrame()
@@ -151,12 +147,6 @@ class gameModel(QtCore.QObject):
 		debug("If the universe doesn't get set now, something fishy's going on")
 		self.universe=g(result,0)
 		debug("Set universe to "+`self.universe`)
-	def createWorld(self,d):
-		pass
-		#self.w=PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
-		#w should now get deleted at the correct time, I think
-		#debug("Created partial world %s"%self.w)
-		#debug("Global variable world is now %s"%`sakusen_client.cvar.world`)
 	def pushUpdates(self,d):
 		while(d.getTime()>sakusen_client.cvar.world.getTimeNow()):
 			sakusen_client.cvar.world.endTick()

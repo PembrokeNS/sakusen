@@ -104,7 +104,6 @@ def checkPendingSockets():
 				d=me.getGameStartData()
 				debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
 				startGame(d,game)
-				game.createWorld(d)
 			elif(t==messageType_update):
 				d=me.getUpdateData()
 				game.pushUpdates(d)
