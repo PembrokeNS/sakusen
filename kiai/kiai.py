@@ -47,7 +47,7 @@ class socketModel():
 	def receive(self, buf, blen):
 		return self.s.receive(buf, blen)
 def join(address):
-	global interestingthings
+	global interestingthings, activeSocket, game, t, clientid
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
 	s=socketModel(str(address))
@@ -61,20 +61,16 @@ def join(address):
 	t=r.getType()
 	if(t==messageType_accept):
 		d=r.getAcceptData()
-		openSettingsDialog(s,d.getId().toString())
+		activeSocket = s
+		t=QtCore.QTimer()
+		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
+		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
+		clientid=d.getId().toString()
+		game=gameModel(clientid)
+		setSetting(('clients',str(clientid),'application','name'),'Kiai')
+		openSettingsDialog(s,clientid)
 	else:
-		debug("Got unexpected message type, dying")
-                raise Exception()
-def addSocket(s,cid=0):
-	global activeSocket, clientid, game, t
-	debug("Adding a socket")
-	activeSocket=s
-	t=QtCore.QTimer()
-	QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
-	t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
-	clientid=cid
-	game=gameModel(clientid)
-	setSetting(('clients',str(clientid),'application','name'),'Kiai')
+		debug("Failed to connect to server!")
 def checkPendingSockets():
 	b=uint8(BUFFER_LEN)
 	if(activeSocket):
@@ -116,16 +112,17 @@ def requestSetting(path):
 	d=GetSettingMessageData(s)
 	activeSocket.sendd(d)
 def leave():
-	d=LeaveMessageData()
-	activeSocket.sendd(d)
+	try: #try and leave cleanly
+		d=LeaveMessageData()
+		activeSocket.sendd(d)
+	except Exception: #but if we can't, don't worry
+		pass
 def setSetting(path,value):
 	s=string.join(path,':')
 	d=ChangeSettingMessageData(s,value)
 	activeSocket.sendd(d)
 def openSettingsDialog(socket,clientid):
 	global a,l,m,mainwindow
-	addSocket(socket,clientid)
-	QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 	s = settingsDialog()
 	mainwindow.ui.dock.setWidget(s)
 	m=settingsModel(s)
@@ -168,6 +165,7 @@ w=connectDialog()
 mainwindow.show()
 QtCore.QObject.connect(w,QtCore.SIGNAL("accepted()"),w.openConnection)
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
+QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
 w.show()
 sys.stdout = mainwindow
 sys.stderr = mainwindow
