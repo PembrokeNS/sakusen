@@ -35,12 +35,6 @@ def userconfig(s):
 	except IOError:
 		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
 
-userconfig("startup")
-aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
-kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
-a=kdeui.KApplication()
-Socket_socketsInit()
-
 class socketModel():
 	"""Encapsulates a sakusen socket"""
 	def __init__(self, address):
@@ -103,23 +97,31 @@ class socketModel():
 				print("Received unexpected message of type %d"%me.getType())
 
 def join(address):
-	global interestingthings, activeSocket, game, t, clientid
+	global interestingthings, activeSocket, game, t, clientid, l, m
 	"""Join a sakusen server at a tcp-based address"""
 	d=JoinMessageData("")
-	s=socketModel(str(address))
-	interestingthings['socket'] = s
-	s.sendd(d)
-	t = timeval(5, 0) #5 seconds
-	r = s.receivem(t)
+	sock=socketModel(str(address))
+	interestingthings['socket'] = sock
+	sock.sendd(d)
+	r = sock.receivem(timeval(5, 0))
 	if(r and r.getType() ==messageType_accept):
 		d=r.getAcceptData()
-		activeSocket = s
+		activeSocket = sock
 		t=QtCore.QTimer()
-		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),s.processm)
+		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),sock.processm)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
-		openSettingsDialog(s,clientid)
+		s = settingsDialog()
+		mainwindow.ui.dock.setWidget(s)
+		m=settingsModel(s)
+		QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),requestSetting)
+		QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),setSetting)
+		s.ui.settingsTree.setModel(m)
+		s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
+		m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
+		s.show()
+		userconfig("onconnect")
 	else:
 		print("Failed to connect to server!")
 
@@ -138,18 +140,6 @@ def setSetting(path,value):
 	s=string.join(path,':')
 	d=ChangeSettingMessageData(s,value)
 	activeSocket.sendd(d)
-def openSettingsDialog(socket,clientid):
-	global a,l,m,mainwindow
-	s = settingsDialog()
-	mainwindow.ui.dock.setWidget(s)
-	m=settingsModel(s)
-	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),requestSetting)
-	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),setSetting)
-	s.ui.settingsTree.setModel(m)
-	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
-	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
-	s.show()
-	userconfig("onconnect")
 def startGame(d):
 	global a,mainwindow,gamescene,mapmodel, pw
 	gamescene=sceneModel(mainwindow,activeSocket,universe)
@@ -173,6 +163,12 @@ def startGame(d):
 	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
+
+userconfig("startup")
+aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
+kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
+a=kdeui.KApplication()
+Socket_socketsInit()
 
 interestingthings['setSetting'] = setSetting #want to let users set settings
 
