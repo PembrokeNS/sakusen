@@ -56,7 +56,7 @@ class socketModel():
 			return None
 	def processm(self):
 		"""Receives a Message and processes it appropriately"""
-		global universe, game
+		global universe, game, a,mainwindow,gamescene,mapmodel, pw
 		l=self.s.receive(self.b,BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
@@ -82,7 +82,27 @@ class socketModel():
 				m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
-				startGame(d)
+				gamescene=sceneModel(mainwindow,activeSocket,universe)
+				debug("Game started, creating world")
+				e=eventUnitFactory(gamescene)
+				sf=eventSensorReturnsFactory(gamescene)
+				pw = PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+				e = e.__disown__() #pw takes ownership of e and sf
+				sf = sf.__disown__() 
+				#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
+				gamescene.bottom=pw.getMap().bottom()
+				gamescene.left=pw.getMap().left()
+				mapmodel=mapModel(pw.getPartialMap())
+				gamescene.mapmodel = mapmodel
+				sf.mapmodel = mapmodel
+				e.mapmodel = mapmodel
+				gamescene.addItem(mapmodel.i)
+				mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
+				mainwindow.ui.gameview.setScene(gamescene)
+				mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
+				mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+				mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+				mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 				game = True
 			elif(t==messageType_update):
 				d=me.getUpdateData()
@@ -128,36 +148,11 @@ def leave():
 	except Exception: #but if we can't, don't worry
 		pass
 
-def startGame(d):
-	global a,mainwindow,gamescene,mapmodel, pw
-	gamescene=sceneModel(mainwindow,activeSocket,universe)
-	debug("Game started, creating world")
-	e=eventUnitFactory(gamescene)
-	sf=eventSensorReturnsFactory(gamescene)
-	pw = PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
-	e = e.__disown__() #pw takes ownership of e and sf
-	sf = sf.__disown__() 
-	#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
-	gamescene.bottom=pw.getMap().bottom()
-	gamescene.left=pw.getMap().left()
-	mapmodel=mapModel(pw.getPartialMap())
-	gamescene.mapmodel = mapmodel
-	sf.mapmodel = mapmodel
-	e.mapmodel = mapmodel
-	gamescene.addItem(mapmodel.i)
-	mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
-	mainwindow.ui.gameview.setScene(gamescene)
-	mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
-	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
-	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
-	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
-
 userconfig("startup")
 aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 a=kdeui.KApplication()
 Socket_socketsInit()
-
 
 game = False #temporary
 
