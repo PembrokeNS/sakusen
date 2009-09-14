@@ -6,7 +6,6 @@ from PyKDE4 import kdecore,kdeui
 from connectDialogImpl import connectDialog
 from settingsDialogImpl import settingsDialog
 from settingsModel import settingsModel
-from gameModel import gameModel
 from eventUnit import  eventUnitFactory
 from eventSensorReturns import  eventSensorReturnsFactory
 from mainWindowImpl import mainWindow
@@ -15,7 +14,7 @@ from sceneModel import sceneModel
 
 import sys, imp, string
 
-from sakusen_resources import fileUtils_getHome, path
+from sakusen_resources import *
 from sakusen import *
 from sakusen_client import *
 from sakusen_comms import *
@@ -63,7 +62,7 @@ class socketModel():
 			else:
 				playerid=PlayerId.invalid()
 			if(game):
-				me=Message(i,playerid,game.resourceinterface)
+				me=Message(i,playerid,resourceinterface)
 			else:
 				me = Message(i)
 			return me
@@ -85,12 +84,12 @@ def join(address):
 		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
-		game=gameModel()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
 		openSettingsDialog(s,clientid)
 	else:
 		debug("Failed to connect to server!")
 def checkPendingSockets():
+	global universe
 	if(activeSocket):
 		me = activeSocket.receivem()
 		if(me):
@@ -99,11 +98,12 @@ def checkPendingSockets():
 			if(t==messageType_notifySetting):
 				d=me.getNotifySettingData()
 				if(d.getSetting()==":game:universe:name"):
-					try:
-						game.setUniverse(d.getValue()[0])
-					except Exception:
-						#should do some sort of error handling here
-						print "Unable to find universe \"%s\""%d.getValue()[0]
+					#TODO: check hash
+					result=resourceinterface.searchUniverse(d.getValue()[0])
+					if(g(result,1)!=resourceSearchResult_success):
+						print "Failed finding universe \"%s\", error %d"%(universe,g(result,1))
+					else:
+						universe = g(result,0)
 				m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
@@ -148,15 +148,14 @@ def openSettingsDialog(socket,clientid):
 	userconfig("onconnect")
 def startGame(d,g):
 	global a,mainwindow,gamescene,mapmodel,l
-	gamescene=sceneModel(mainwindow,activeSocket,g.universe)
-	game.setScene(gamescene)
+	gamescene=sceneModel(mainwindow,activeSocket,universe)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
-	e=eventUnitFactory(g.scene)
+	e=eventUnitFactory(gamescene)
 	e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
-	sf=eventSensorReturnsFactory(g.scene)
+	sf=eventSensorReturnsFactory(gamescene)
 	sf.__disown__() 
-	g.w=PartialWorld(g.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+	g.w=PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 	#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
 	gamescene.bottom=g.w.getMap().bottom()
 	gamescene.left=g.w.getMap().left()
@@ -171,12 +170,15 @@ def startGame(d,g):
 	mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 	mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 	mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
-	g.scene=gamescene
-	debug("Scene is %s"%repr(g.scene))
 
 interestingthings['setSetting'] = setSetting #want to let users set settings
 
 game = False #temporary
+
+d=fileUtils_getHome()
+d/=path(CONFIG_SUBDIR)
+d/=path(DATA_SUBDIR)
+resourceinterface=FileResourceInterface_create(d,False)
 
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
