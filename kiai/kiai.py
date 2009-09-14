@@ -85,7 +85,7 @@ def join(address):
 		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
-		game=gameModel(clientid)
+		game=gameModel()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
 		openSettingsDialog(s,clientid)
 	else:
