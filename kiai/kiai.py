@@ -83,12 +83,12 @@ class listener(QtCore.QObject):
 				else:
 					playerid=PlayerId.invalid()
 				debug("Deserializing message")
-				m=Message(i,playerid,self.game.resourceinterface)
+				me=Message(i,playerid,self.game.resourceinterface)
 				debug("Getting message type")
-				t=m.getType()
+				t=me.getType()
 				debug("Message is of type %d"%t)
 				if(t==messageType_notifySetting):
-					d=m.getNotifySettingData()
+					d=me.getNotifySettingData()
 					if(d.getSetting()==":game:universe:name"):
 						try:
 							self.game.setUniverse(d.getValue()[0])
@@ -97,17 +97,17 @@ class listener(QtCore.QObject):
 							print "Unable to find universe \"%s\""%d.getValue()[0]
 					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
 				elif(t==messageType_gameStart):
-					d=m.getGameStartData()
+					d=me.getGameStartData()
 					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
 					startGame(d,self.game)
 					#hope that's acted on before we do this
 					self.game.createWorld(d)
 					QtCore.QObject.connect(self,QtCore.SIGNAL("update(PyQt_PyObject)"),self.game.pushUpdates)
 				elif(t==messageType_update):
-					d=m.getUpdateData()
+					d=me.getUpdateData()
 					self.emit(QtCore.SIGNAL("update(PyQt_PyObject)"),d)
 				else:
-					debug("Received unexpected message of type %d"%m.getType())
+					debug("Received unexpected message of type %d"%me.getType())
 	def requestSetting(self,path):
 		s=string.join(path,':')
 		d=GetSettingMessageData(s)
