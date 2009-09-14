@@ -95,7 +95,7 @@ class listener(QtCore.QObject):
 						except Exception:
 							#should do some sort of error handling here
 							print "Unable to find universe \"%s\""%d.getValue()[0]
-					self.emit(QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),d)
+					m.processUpdate(d)
 				elif(t==messageType_gameStart):
 					d=me.getGameStartData()
 					debug("Server wants us to start a game, our id is %s, topology %s, corners %s and %s, gravity %s, heightfield %s"%(`d.getPlayerId()`,`d.getTopology()`,`d.getTopRight()`,`d.getBottomLeft()`,`d.getGravity()`,`d.getHeightfield()`))
@@ -133,7 +133,6 @@ def openSettingsDialog(socket,clientid):
 	mainwindow.ui.dock.setWidget(s)
 	m=settingsModel(s)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),l.requestSetting)
-	QtCore.QObject.connect(l,QtCore.SIGNAL("settingsNotification(PyQt_PyObject)"),m.processUpdate)
 	QtCore.QObject.connect(m,QtCore.SIGNAL("editSetting(PyQt_PyObject,PyQt_PyObject)"),l.setSetting)
 	s.ui.settingsTree.setModel(m)
 	s.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
