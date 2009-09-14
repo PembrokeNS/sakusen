@@ -113,6 +113,7 @@ class socketModel():
 					cvar.world.applyUpdate(u)
 			else:
 				print("Received unexpected message of type %d"%me.getType())
+			self.processm()
 	def leave(self):
 		try: #try and leave cleanly
 			d=LeaveMessageData()
