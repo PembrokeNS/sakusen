@@ -38,28 +38,26 @@ def userconfig(s):
 class socketModel():
 	"""Encapsulates a sakusen socket"""
 	def join(self, address):
-		global interestingthings, activeSocket, t, clientid, l, m
 		"""Creates a socket, and connects it to the given address"""
 		self.s = Socket_newConnectionToAddress(str(address))
 		self.s.setNonBlocking(True)
 		self.b = uint8(BUFFER_LEN) #try reusing our buffer
 		self.game = False #whether there's a game in progress
-		interestingthings['socket'] = activeSocket
 		self.sendd(JoinMessageData(""))
 		r = self.receivem(timeval(5, 0))
 		if(r and r.getType() ==messageType_accept):
 			d=r.getAcceptData()
-			t=QtCore.QTimer()
-			QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),activeSocket.processm)
-			t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
+			self.t=QtCore.QTimer()
+			QtCore.QObject.connect(self.t,QtCore.SIGNAL("timeout()"),self.processm)
+			self.t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 			clientid=d.getId().toString()
-			m = settingsModel(activeSocket)
-			s = settingsDialog(m, QtCore.QModelIndex())
+			self.m = settingsModel(self)
+			s = settingsDialog(self.m, QtCore.QModelIndex())
 			mainwindow.ui.dock.setWidget(s)
-			m.requestSetting(())
+			self.m.requestSetting(())
 			s.show()
-			m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
-			interestingthings['setSetting'] = m.setSetting #want to let users set settings
+			self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+			interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
 			userconfig("onconnect")
 		else:
 			print("Failed to connect to server!")
@@ -100,10 +98,10 @@ class socketModel():
 						print "Failed finding universe \"%s\", error %d"%(d.getValue()[0],g(result,1))
 					else:
 						self.universe = g(result,0)
-				m.processUpdate(d)
+				self.m.processUpdate(d)
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
-				gamescene=sceneModel(mainwindow,activeSocket,self.universe)
+				gamescene=sceneModel(mainwindow,self,self.universe)
 				debug("Game started, creating world")
 				e=eventUnitFactory(gamescene)
 				sf=eventSensorReturnsFactory(gamescene)
@@ -158,6 +156,7 @@ mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
 activeSocket = socketModel()
+interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
 w.show()
