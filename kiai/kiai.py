@@ -44,30 +44,60 @@ Socket_socketsInit()
 class socketModel():
 	"""Encapsulates a sakusen socket"""
 	def __init__(self, address):
+		"""Creates a socket, and connects it to the given address"""
 		self.s = Socket_newConnectionToAddress(address)
 		self.s.setNonBlocking(True)
 		self.b = uint8(BUFFER_LEN) # try reusing our buffer
 	def sendd(self, data):
+		"""Sends a MessageData object"""
 		data.thisown = 0 #the Message will take care of it.
 		self.s.send(Message(data))
 	def receivem(self, timeout = None):
+		"""Receives a Message"""
+		global universe, game
 		if(timeout):
 			l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeout)
 		else:
 			l=self.s.receive(self.b,BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
-			if(cvar.world):
-				playerid=cvar.world.getPlayerId()
-			else:
-				playerid=PlayerId.invalid()
 			if(game):
+				if(cvar.world):
+					playerid=cvar.world.getPlayerId()
+				else:
+					#can this ever occur?
+					playerid=PlayerId.invalid()
 				me=Message(i,playerid,resourceinterface)
 			else:
 				me = Message(i)
-			return me
-		else:
-			return None
+				if(timeout): return me #TODO: remove the two different branches here, they're separate functions really
+			t=me.getType()
+			if(t==messageType_notifySetting):
+				d=me.getNotifySettingData()
+				if(d.getSetting()==":game:universe:name"):
+					#TODO: check hash
+					result=resourceinterface.searchUniverse(d.getValue()[0])
+					if(g(result,1)!=resourceSearchResult_success):
+						print "Failed finding universe \"%s\", error %d"%(universe,g(result,1))
+					else:
+						universe = g(result,0)
+				m.processUpdate(d)
+			elif(t==messageType_gameStart):
+				d=me.getGameStartData()
+				startGame(d)
+				game = True
+			elif(t==messageType_update):
+				d=me.getUpdateData()
+				while(d.getTime()>cvar.world.getTimeNow()):
+					cvar.world.endTick()
+				if(d.getTime()>cvar.world.getTimeNow()):
+					print "Got updates in wrong order"
+				l=d.getUpdates()
+				for u in l:
+					cvar.world.applyUpdate(u)
+			else:
+				print("Received unexpected message of type %d"%me.getType())
+
 def join(address):
 	global interestingthings, activeSocket, game, t, clientid
 	"""Join a sakusen server at a tcp-based address"""
@@ -81,44 +111,14 @@ def join(address):
 		d=r.getAcceptData()
 		activeSocket = s
 		t=QtCore.QTimer()
-		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),checkPendingSockets)
+		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),s.receivem)
 		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 		clientid=d.getId().toString()
 		setSetting(('clients',str(clientid),'application','name'),'Kiai')
 		openSettingsDialog(s,clientid)
 	else:
-		debug("Failed to connect to server!")
-def checkPendingSockets():
-	global universe
-	if(activeSocket):
-		me = activeSocket.receivem()
-		if(me):
-			t=me.getType()
-			debug("Message is of type %d"%t)
-			if(t==messageType_notifySetting):
-				d=me.getNotifySettingData()
-				if(d.getSetting()==":game:universe:name"):
-					#TODO: check hash
-					result=resourceinterface.searchUniverse(d.getValue()[0])
-					if(g(result,1)!=resourceSearchResult_success):
-						print "Failed finding universe \"%s\", error %d"%(universe,g(result,1))
-					else:
-						universe = g(result,0)
-				m.processUpdate(d)
-			elif(t==messageType_gameStart):
-				d=me.getGameStartData()
-				startGame(d,game)
-			elif(t==messageType_update):
-				d=me.getUpdateData()
-				while(d.getTime()>cvar.world.getTimeNow()):
-					cvar.world.endTick()
-				if(d.getTime()>cvar.world.getTimeNow()):
-					print "Got updates in wrong order"
-				l=d.getUpdates()
-				for u in l:
-					cvar.world.applyUpdate(u)
-			else:
-				debug("Received unexpected message of type %d"%me.getType())
+		print("Failed to connect to server!")
+
 def requestSetting(path):
 	s=string.join(path,':')
 	d=GetSettingMessageData(s)
@@ -146,8 +146,8 @@ def openSettingsDialog(socket,clientid):
 	m.emit(QtCore.SIGNAL("requestSetting(PyQt_PyObject)"),())
 	s.show()
 	userconfig("onconnect")
-def startGame(d,g):
-	global a,mainwindow,gamescene,mapmodel,l
+def startGame(d):
+	global a,mainwindow,gamescene,mapmodel,l, pw
 	gamescene=sceneModel(mainwindow,activeSocket,universe)
 	#debug("Instantiating model of map "+`g.world.getMap()`)
 	debug("Game started, creating world")
@@ -155,11 +155,11 @@ def startGame(d,g):
 	e.__disown__() #w takes ownership of e; we have to do this differently because it is a director class, *sigh*
 	sf=eventSensorReturnsFactory(gamescene)
 	sf.__disown__() 
-	g.w=PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
+	pw = PartialWorld(universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 	#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
-	gamescene.bottom=g.w.getMap().bottom()
-	gamescene.left=g.w.getMap().left()
-	mapmodel=mapModel(g.w.getPartialMap())
+	gamescene.bottom=pw.getMap().bottom()
+	gamescene.left=pw.getMap().left()
+	mapmodel=mapModel(pw.getPartialMap())
 	gamescene.mapmodel = mapmodel
 	sf.mapmodel = mapmodel
 	e.mapmodel = mapmodel
