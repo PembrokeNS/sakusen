@@ -37,12 +37,32 @@ def userconfig(s):
 
 class socketModel():
 	"""Encapsulates a sakusen socket"""
-	def __init__(self, address):
+	def join(self, address):
+		global interestingthings, activeSocket, t, clientid, l, m
 		"""Creates a socket, and connects it to the given address"""
-		self.s = Socket_newConnectionToAddress(address)
+		self.s = Socket_newConnectionToAddress(str(address))
 		self.s.setNonBlocking(True)
 		self.b = uint8(BUFFER_LEN) #try reusing our buffer
 		self.game = False #whether there's a game in progress
+		interestingthings['socket'] = activeSocket
+		self.sendd(JoinMessageData(""))
+		r = self.receivem(timeval(5, 0))
+		if(r and r.getType() ==messageType_accept):
+			d=r.getAcceptData()
+			t=QtCore.QTimer()
+			QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),activeSocket.processm)
+			t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
+			clientid=d.getId().toString()
+			m = settingsModel(activeSocket)
+			s = settingsDialog(m, QtCore.QModelIndex())
+			mainwindow.ui.dock.setWidget(s)
+			m.requestSetting(())
+			s.show()
+			m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+			interestingthings['setSetting'] = m.setSetting #want to let users set settings
+			userconfig("onconnect")
+		else:
+			print("Failed to connect to server!")
 	def sendd(self, data):
 		"""Sends a MessageData object"""
 		data.thisown = 0 #the Message will take care of it.
@@ -116,38 +136,12 @@ class socketModel():
 					cvar.world.applyUpdate(u)
 			else:
 				print("Received unexpected message of type %d"%me.getType())
-
-def join(address):
-	global interestingthings, activeSocket, t, clientid, l, m
-	"""Join a sakusen server at a tcp-based address"""
-	d=JoinMessageData("")
-	activeSocket=socketModel(str(address))
-	interestingthings['socket'] = activeSocket
-	activeSocket.sendd(d)
-	r = activeSocket.receivem(timeval(5, 0))
-	if(r and r.getType() ==messageType_accept):
-		d=r.getAcceptData()
-		t=QtCore.QTimer()
-		QtCore.QObject.connect(t,QtCore.SIGNAL("timeout()"),activeSocket.processm)
-		t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
-		clientid=d.getId().toString()
-		m = settingsModel(activeSocket)
-		s = settingsDialog(m, QtCore.QModelIndex())
-		mainwindow.ui.dock.setWidget(s)
-		m.requestSetting(())
-		s.show()
-		m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
-		interestingthings['setSetting'] = m.setSetting #want to let users set settings
-		userconfig("onconnect")
-	else:
-		print("Failed to connect to server!")
-
-def leave():
-	try: #try and leave cleanly
-		d=LeaveMessageData()
-		activeSocket.sendd(d)
-	except Exception: #but if we can't, don't worry
-		pass
+	def leave(self):
+		try: #try and leave cleanly
+			d=LeaveMessageData()
+			self.sendd(d)
+		except Exception: #but if we can't, don't worry
+			pass
 
 userconfig("startup")
 aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
@@ -163,8 +157,9 @@ resourceinterface=FileResourceInterface_create(d,False)
 mainwindow = mainWindow(interestingthings)
 w=connectDialog()
 mainwindow.show()
-QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),join)
-QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),leave)
+activeSocket = socketModel()
+QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
+QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
 w.show()
 sys.stdout = mainwindow
 sys.stderr = mainwindow
