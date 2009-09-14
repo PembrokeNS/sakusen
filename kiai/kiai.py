@@ -32,6 +32,7 @@ def userconfig(s):
 userconfig("startup")
 aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
+sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
 Socket_socketsInit()
 
@@ -48,6 +49,6 @@ interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
 w.show()
-sys.stdout = mainwindow
-sys.stderr = mainwindow
+#sys.stdout = mainwindow
+#sys.stderr = mainwindow
 r=a.exec_()
