@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtCore, QtGui
+from PyKDE4 import kdeui
 import sip
 
 from sakusen import *
@@ -12,7 +13,34 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		self.unit = unit
 		self.mainwindow = mainwindow
 	def itemChange(self, change, value):
-		if(change == QtGui.QGraphicsItem.ItemSelectedHasChanged):
+		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
+			s = self.unit.getStatus()
+			d = value.toBool()
+                	utype = s.getTypePtr()
+                	for j,w in enumerate(utype.getWeapons()):
+                        	if(w.getClientHint()[:2] == 'c:'):
+                                	cname = w.getClientHint()[2:]
+					b = self.mainwindow.ui.construct.findChild(kdeui.KPushButton, cname)
+					if(b):
+						#this is a manual reference-counting scheme to ensure that
+						#there are always buttons available to build something so long
+						#as any of the selected units can build it.
+						#button exists, so cahnge its reference count
+						if(d):
+							b.refcount += 1
+						else:
+							b.refcount -= 1
+							if( not b.refcount):
+								sip.delete(b)
+					else:
+						assert(d) #no button, so we must be getting selected
+						b = kdeui.KPushButton(self.mainwindow.ui.construct)
+						b.setCheckable(True)
+						b.setObjectName(cname)
+						b.setText(cname)
+						b.refcount = 1
+						self.mainwindow.ui.construct.layout().addWidget(b)
+						b.show()
 			return value
 		else:
 			return value

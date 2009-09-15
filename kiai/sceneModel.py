@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtCore,QtGui
+from PyKDE4 import kdeui
+
 from sakusen import *
 from sakusen_comms import *
 
@@ -57,25 +59,27 @@ class sceneModel(QtGui.QGraphicsScene):
 							om = OrderMessage(u.getId(), o)
 							omd = OrderMessageData(om)
 							self.sock.sendd(omd)
-			if(self.mw.ui.create.isChecked()):
-				for i in units:
-					u = i.unit
-                                        s = u.getStatus()
-                                        utype = s.getTypePtr()
-                                        for j,w in enumerate(utype.getWeapons()):
-                                                if(w.getClientHint()[:2] == 'c:'):
-							cname = w.getClientHint()[2:]
-							ctype = self.u.getUnitTypePtr(cname)
-							csz = ctype.getDynamicData().getSize()
-							cpt = SPoint32(q.x,q.y,q.z + csz.z)
-							orient = Orientation()
-							f = Frame(cpt, orient)
-                                                        od = TargetFrameOrderData(j,f)
-                                                        od.thisown = 0
-                                                        o = Order(od)
-                                                        om = OrderMessage(u.getId(), o)
-                                                        omd = OrderMessageData(om)
-                                                        self.sock.sendd(omd)
+			for b in self.mw.ui.construct.findChildren(kdeui.KPushButton):
+				if(b.isChecked()):
+					for i in units:
+						u = i.unit
+                        	                s = u.getStatus()
+                                	        utype = s.getTypePtr()
+                                        	for j,w in enumerate(utype.getWeapons()):
+                                        	        if(w.getClientHint()[:2] == 'c:'):
+								cname = w.getClientHint()[2:]
+								if(cname == b.objectName()):
+									ctype = self.u.getUnitTypePtr(cname)
+									csz = ctype.getDynamicData().getSize()
+									cpt = SPoint32(q.x,q.y,q.z + csz.z)
+									orient = Orientation()
+									f = Frame(cpt, orient)
+	                         					od = TargetFrameOrderData(j,f)
+                                        				od.thisown = 0
+                                                        		o = Order(od)
+                                                        		om = OrderMessage(u.getId(), o)
+                                                        		omd = OrderMessageData(om)
+                                                        		self.sock.sendd(omd)
                         if(self.mw.ui.build.isChecked()):
                                 for i in units:
                                         u = i.unit
