@@ -122,19 +122,9 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>250</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      <widget class="QTreeView" name="settingsTree"/>
      </item>
     </layout>
    </widget>

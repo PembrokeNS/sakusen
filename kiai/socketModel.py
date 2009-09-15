@@ -8,7 +8,6 @@ from sakusen_resources import *
 from sakusen_client import *
 
 from settingsModel import settingsModel
-from settingsDialogImpl import settingsDialog
 from eventUnit import  eventUnitFactory
 from eventSensorReturns import  eventSensorReturnsFactory
 from sceneModel import sceneModel
@@ -39,10 +38,9 @@ class socketModel():
 				self.t.start(10) #value in miliseconds - might want to make this less for the actual release, and more when debugging
 				clientid=d.getId().toString()
 				self.m = settingsModel(self)
-				s = settingsDialog(self.m, QtCore.QModelIndex())
-				self.mainwindow.ui.settingsdock.setWidget(s)
+				self.mainwindow.ui.settingsTree.setModel(self.m)
+		                self.mainwindow.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 				self.m.requestSetting(())
-				s.show()
 				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
 				self.interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
 				self.userconfig("onconnect")
