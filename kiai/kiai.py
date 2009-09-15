@@ -49,6 +49,6 @@ interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)
 w.show()
-#sys.stdout = mainwindow
-#sys.stderr = mainwindow
+sys.stdout = mainwindow
+sys.stderr = mainwindow
 r=a.exec_()

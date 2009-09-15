@@ -40,7 +40,7 @@ class socketModel():
 				clientid=d.getId().toString()
 				self.m = settingsModel(self)
 				s = settingsDialog(self.m, QtCore.QModelIndex())
-				self.mainwindow.ui.dock.setWidget(s)
+				self.mainwindow.ui.settingsdock.setWidget(s)
 				self.m.requestSetting(())
 				s.show()
 				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
