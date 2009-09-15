@@ -15,6 +15,7 @@ class sceneModel(QtGui.QGraphicsScene):
 		self.u = universe
 	def mousePressEvent(self,e):
 		if(e.button() == QtCore.Qt.RightButton):
+			e.accept()
 			p = e.lastScenePos()
 			unitclicked = False
 			srclicked = False
@@ -89,6 +90,3 @@ class sceneModel(QtGui.QGraphicsScene):
                         	                                om = OrderMessage(u.getId(), o)
                                 	                        omd = OrderMessageData(om)
                                                        		self.sock.sendd(omd)
-
-		else:
-			QtGui.QGraphicsScene.mousePressEvent(self,e)
