@@ -80,7 +80,7 @@ class socketModel():
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
 				gamescene=sceneModel(self.mainwindow,self,self.universe)
-				e=eventUnitFactory(gamescene)
+				e=eventUnitFactory(gamescene, self.mainwindow)
 				sf=eventSensorReturnsFactory(gamescene)
 				self.pw = PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 				e = e.__disown__() #pw takes ownership of e and sf
