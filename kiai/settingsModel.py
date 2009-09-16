@@ -79,7 +79,7 @@ class settingsModel(QtCore.QAbstractItemModel):
 		try:
 			n=self.indexof(path,0)
 		except Exception:
-			print "Got unexpected update to setting "+`path`+", ignoring"
+			#update was to a setting we're not displaying - probably happened because user manually set one with setSetting before the tree was expanded
 			return
 		if(not d.isLeaf()):
 			#this is ugly, but I don't know any way to be sure the set of children hasn't changed - and it certainly does sometimes. Thankfully the Qt class is designed to handle this sort of thing - but it leaves a lot of exceptions on the console.

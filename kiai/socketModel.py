@@ -109,6 +109,9 @@ class socketModel():
 				l=d.getUpdates()
 				for u in l:
 					cvar.world.applyUpdate(u)
+			elif(t==messageType_reject):
+				d=me.getRejectData()
+				print "Server refused our settings change: %s" %d.getReason()
 			else:
 				print("Received unexpected message of type %d"%me.getType())
 			self.processm()
