@@ -46,18 +46,20 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 			return value
 
 class eventUnitFactory(UnitFactory):
-	def __init__(self, scene, mainwindow):
+	def __init__(self, interestingthings, scene, mainwindow):
 		UnitFactory.__init__(self)
+		self.interestingthings = interestingthings
 		self.scene = scene
 		self.mainwindow = mainwindow
+		self.interestingthings['units'] = []
 	def create(self,u):
-		e=eventUpdatedUnit(u, self.scene, self.mapmodel, self.mainwindow)
+		e=eventUpdatedUnit(self.interestingthings, u, self.scene, self.mapmodel, self.mainwindow)
 		e = e.__disown__() #the C++ code will look after it.
 		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
 		return p
 
 class eventUpdatedUnit(UpdatedUnit):
-	def __init__(self, u, scene, m, mainwindow):
+	def __init__(self, interestingthings, u, scene, m, mainwindow):
 		UpdatedUnit.__init__(self,u)
 		self.scene = scene
                 status = self.getStatus()
@@ -71,6 +73,8 @@ class eventUpdatedUnit(UpdatedUnit):
                 for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
                 self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+		interestingthings['units'].append(self)
+		self.interestingthings = interestingthings
 	def incrementState(self):
 		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())
 		UpdatedUnit.incrementState(self)
@@ -83,4 +87,5 @@ class eventUpdatedUnit(UpdatedUnit):
                 	self.i.setPolygon(self.polygon)
 	def destroying(self):
 		sip.delete(self.i)
+		interestingthings['units'].remove(self)
 
