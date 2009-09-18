@@ -44,6 +44,15 @@ class eventSensorReturns(UpdatedSensorReturns):
 				self.i.sr = self
 			else:
 				self.i.setPolygon(self.polygon)
+			curhp = self.u.getStatus().getHitPoints().numify()
+        	        tmaxhp = self.u.getStatus().getTypePtr().getDynamicData().getMaxHitPoints().numify()
+	                maxhp = self.u.getTypeData().getMaxHitPoints().numify()
+        	        if(tmaxhp != maxhp):
+	                        #still being built
+                        	self.i.setBrush(QtGui.QBrush(QtGui.QColor('blue')))
+               		else:
+        	                r = (curhp * 255) // maxhp
+	                        self.i.setBrush(QtGui.QBrush(QtGui.QColor(255 - r, r, 0)))
 			if(self.j): sip.delete(self.j)
 			self.j = None
 		elif (p & sakusen.perception_owner):
