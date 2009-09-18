@@ -75,16 +75,28 @@ class eventUpdatedUnit(UpdatedUnit):
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
 		interestingthings['units'].append(self)
 		self.interestingthings = interestingthings
+		self.i.setPen(self.pen())
 	def incrementState(self):
 		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())
 		UpdatedUnit.incrementState(self)
-		if(flag):
+		if(flag): #have changed
 	                status = self.getStatus()
         	        frame = status.getFrame()
         	        corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
                 	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
                 	self.i.setPolygon(self.polygon)
+			self.i.setPen(self.pen())
+	def pen(self): #create a pen of the appropriate colour for the current hitpoints and stuff
+		curhp = self.getStatus().getHitPoints().numify()
+		tmaxhp = self.getStatus().getTypePtr().getDynamicData().getMaxHitPoints().numify()
+		maxhp = self.getTypeData().getMaxHitPoints().numify()
+		if(tmaxhp != maxhp):
+			#still being built
+			return QtGui.QPen(QtGui.QColor('blue'))
+		else:
+			r = (curhp * 255) // maxhp
+			return QtGui.QPen(QtGui.QColor(255 - r, r, 0))
 	def destroying(self):
 		sip.delete(self.i)
 		interestingthings['units'].remove(self)

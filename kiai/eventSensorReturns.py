@@ -40,7 +40,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
 			if(not self.i):
 				self.i=QtGui.QGraphicsPolygonItem(self.polygon,self.m.i)
-				self.i.setPen(QtGui.QPen(QtGui.QColor('red')))
+				self.i.setPen(QtGui.QPen(QtGui.QColor('purple')))
 				self.i.sr = self
 			else:
 				self.i.setPolygon(self.polygon)
@@ -54,7 +54,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(not self.j):
 				self.j=QtGui.QGraphicsEllipseItem((rect.minx-self.scene.left)/100.0,(rect.miny-self.scene.bottom)/100.0,(rect.maxx-rect.minx)/100.0,(rect.maxy-rect.miny)/100.0,self.m.i)
 				p = QtGui.QPen(QtCore.Qt.DashLine)
-				p.setColor(QtGui.QColor('red'))
+				p.setColor(QtGui.QColor('purple'))
 				p.thisown = 0
 				self.j.setPen(p)
 				self.j.sr = self

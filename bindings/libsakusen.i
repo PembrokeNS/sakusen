@@ -83,8 +83,8 @@ class tuple<
 $VERSION = 0.01;
 %}
 
-%rename(numify) *::operator uint32;
 #endif
+%rename(numify) *::operator uint32;
 
 
 /*Make derived classes in different packages from their base classes work*/
@@ -539,4 +539,8 @@ namespace sakusen{
 %include "order.h"
 %{
 #include "order.h"
+%}
+%include "hitpoints.h"
+%{
+#include "hitpoints.h"
 %}
