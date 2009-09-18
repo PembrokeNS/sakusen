@@ -1,4 +1,4 @@
-SUBDIRS :=
+SUBDIRS := sagittariusgen
 
 ifeq ($(ENABLE_UNIVERSE_BUILDER),yes)
 SUBDIRS += universe-builder

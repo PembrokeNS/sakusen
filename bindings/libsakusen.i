@@ -318,6 +318,9 @@ namespace sakusen {
 #include "resourceinterface.h"
 #include "resourceinterface-methods.h"
 %}
+%extend sakusen::ResourceInterface{
+%template(usave) save<sakusen::Universe>;
+}
 %include "deserializationcontext.h"
 %{
 #include "deserializationcontext.h"
@@ -431,11 +434,17 @@ namespace sakusen{
 /*These two lines needed because WeaponTypeId is actually a const pointer, and swig has trouble with containers of such. There are unconfirmed reports that this problem is fixed in SWIG SVN, so it may be worth trying removing them once swig 1.3.37 is out. */
 %traits_swigtype(sakusen::WeaponType);
 %fragment(SWIG_Traits_frag( sakusen::WeaponType));
+%ignore std::vector<sakusen::WeaponType>::vector(size_type);
+%ignore std::vector<sakusen::WeaponType>::resize(size_type);
+%ignore std::vector<sakusen::UnitType>::resize(size_type);
+%ignore std::vector<sakusen::UnitType>::vector(size_type);
 %template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
+%template(stdVectorWeaponType) std::vector<sakusen::WeaponType>;
 %include "unittype.h"
 %{
 #include "unittype.h"
 %}
+%template(stdVectorUnitType) std::vector<sakusen::UnitType>;
 %include "universe.h"
 %{
 #include "universe.h"
@@ -453,11 +462,14 @@ namespace sakusen{
     }
   }
   %template(resourceInterfacePtr) ::boost::shared_ptr<ResourceInterface>;
-/*%extend Universe{*/
 %template(UniverseConstPtr) ::boost::shared_ptr<const Universe>;
 %template(UniversePtr) ::boost::shared_ptr<Universe>;
 %template(SRegion32ConstPtr) ::boost::shared_ptr<const Region<sint32> >;
-/*}*/
+}
+%extend sakusen::Universe {
+static ::boost::shared_ptr<const sakusen::Universe> createConstPtr(sakusen::Universe *u) {
+return ::boost::shared_ptr<const sakusen::Universe>(u);
+}
 }
 %include "weapontargettype.h"
 %{
