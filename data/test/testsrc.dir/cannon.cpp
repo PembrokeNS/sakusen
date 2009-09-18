@@ -39,6 +39,7 @@ HitPoints BuildingLayer::build(HitPoints amount)
   }
 
   builtHitPoints += amount;
+  getOuterUnit()->repair(amount, false);
   getOuterUnit()->setDirty();
   return amount;
 }
@@ -76,6 +77,7 @@ void Creater::onFire(
             HitPoints(1)
           );
         newUnit->insertLayer(BuildingLayer::Ptr(new BuildingLayer()));
+	newUnit->setDirty();
         orders.clear();
       }
       break;
