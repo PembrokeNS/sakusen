@@ -1,4 +1,4 @@
-DIRS := $(shell find $(this_srcdir)test -type d -a -name '*.dir')
+DIRS := $(shell find $(this_srcdir)test $(this_srcdir)sagittarius -type d -a -name '*.dir')
 BASES := $(patsubst $(this_srcdir)%,%,$(basename $(DIRS)))
 SAKUSNSOURCES := $(addsuffix .sakusensource,$(BASES))
 DIR_MAKEFRAGS := $(foreach base,$(BASES),.makefrags/$(base).makefrag)

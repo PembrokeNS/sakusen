@@ -394,7 +394,6 @@ namespace sakusen{
 %template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
 
 /* we shouldn't need to call any of the functions herein */
-%import "playertemplate.h"
 %import "ordertype.h"
 
 
@@ -572,3 +571,37 @@ namespace sakusen{
 %{
 #include "hitpoints.h"
 %}
+%include "unittemplate.h"
+%{
+#include "unittemplate.h"
+%}
+%ignore std::vector<sakusen::UnitTemplate>::vector(size_type);
+%ignore std::vector<sakusen::UnitTemplate>::resize(size_type);
+%template(unitTemplateVector) std::vector<sakusen::UnitTemplate>;
+%include "playertemplate.h"
+%{
+#include "playertemplate.h"
+%}
+%ignore std::vector<sakusen::PlayerTemplate>::resize(size_type);
+%ignore std::vector<sakusen::PlayerTemplate>::vector(size_type);
+%template(playerTemplateVector) std::vector<sakusen::PlayerTemplate>;
+%include "mapplaymode.h"
+%{
+#include "mapplaymode.h"
+%}
+%ignore std::vector<sakusen::MapPlayMode>::resize(size_type);
+%ignore std::vector<sakusen::MapPlayMode>::vector(size_type);
+%template(mapPlayModeVector) std::vector<sakusen::MapPlayMode>;
+%include "maptemplate.h"
+%{
+#include "maptemplate.h"
+%}
+%extend sakusen::MapTemplate {
+static boost::shared_ptr<sakusen::MapTemplate > createPtr(sakusen::MapTemplate * r ){
+  return boost::shared_ptr<sakusen::MapTemplate >(r);
+  }
+}
+%extend sakusen::ResourceInterface{
+%template(mtsave) save<sakusen::MapTemplate>;
+}
+%template(MapTemplatePtr) boost::shared_ptr<sakusen::MapTemplate>;

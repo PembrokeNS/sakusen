@@ -10,8 +10,8 @@ if(__name__=="__main__"):
 	spath /= path(DATA_SUBDIR)
 	resint = FileResourceInterface_create(spath, False)
 	
-	laser = WeaponType("laser", "sagittarius", "o", 0, 0, 0, 0, resint)
-	torpedo = WeaponType("torpedo", "sagittarius", "c:torp", 0, 0, 0, 0, resint)
+	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
+	torpedo = WeaponType("torpedo", "sagittarius/sagittarius_module", "c:torp", 0, 0, 0, 0, resint)
 	
 
 	
@@ -68,10 +68,25 @@ if(__name__=="__main__"):
 	torp = UnitType("torp", shiptype, 0, 0, "ground", [], "")
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius", "create_script", [laser, torpedo], [ship, torp])
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", [laser, torpedo], [ship, torp])
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr
 	up = Universe.createConstPtr(u)
 	res = resint.usave(up, "sagittarius")
 	print("Tried to save, result: %d" % res)
+
+	#next the map
+	h = Heightfield(150 * CM, 2, 2, 2)
+	uid = u.getUnitTypeId('ship')
+	us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM,0), Orientation()), SPoint16(0,0,0))
+	us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM,0), Orientation(rotation_anticlockwise, 18000)), SPoint16(0,0,0))
+	ut1 = UnitTemplate(up, us1)
+	ut2 = UnitTemplate(up, us2)
+	pt1 = PlayerTemplate(False, True, [ut1])
+	pt2 = PlayerTemplate(False, True, [ut2])
+	mpm = MapPlayMode(2, 2, [pt1, pt2])
+	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 0, [mpm])
+	mtp = MapTemplate.createPtr(mt)
+	res = resint.mtsave(mtp, "sagittarius_map")
+	print("Tried to save map, result: %d" %res)
