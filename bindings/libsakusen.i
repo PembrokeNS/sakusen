@@ -7,6 +7,7 @@
 %include "std_string.i"
 %include "std_vector.i"
 %include "std_pair.i"
+%include "std_list.i"
 
 /* We can't just define _MSC_VER, because that picks up a 
  * whole load of template stuff that blows SWIG's tiny mind.*/
@@ -170,6 +171,7 @@ $VERSION = 0.01;
 %{
 #include "libsakusen-global.h"
 %}
+%template(stringList) std::list<sakusen::String>;
 %include "arithmetictraits.h"
 %array_class(uint8,uint8);
 %array_class(sint16,sint16);
@@ -287,9 +289,17 @@ namespace sakusen {
     %template(contains) contains<sint32>;
   }
   %template(SRectangle32) Rectangle<sint32>;
+  %ignore Rectangle<sint16>::fastIntersects;
   %template(SRectangle16) Rectangle<sint16>;
 }
 
+%extend sakusen::Region {
+static boost::shared_ptr<sakusen::Region<T> > createRegionPtr(sakusen::Region<T> * r ){
+  return boost::shared_ptr<sakusen::Region<T> >(r);
+  }
+}
+
+%template(SRegion16) sakusen::Region<sint16>;
 %template(SSphereRegion16) sakusen::SphereRegion<sint16>;
 %template(SRectangleRegion16) sakusen::RectangleRegion<sint16>;
 
@@ -470,6 +480,8 @@ namespace sakusen{
 %template(UniversePtr) ::boost::shared_ptr<Universe>;
 %template(SRegion32ConstPtr) ::boost::shared_ptr<const Region<sint32> >;
 }
+%template(SRegion32Ptr) boost::shared_ptr<sakusen::Region<sint32> >;
+%template(SRegion16Ptr) boost::shared_ptr<sakusen::Region<sint16> >;
 %extend sakusen::Universe {
 static ::boost::shared_ptr<const sakusen::Universe> createConstPtr(sakusen::Universe *u) {
 return ::boost::shared_ptr<const sakusen::Universe>(u);
