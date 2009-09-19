@@ -287,7 +287,11 @@ namespace sakusen {
     %template(contains) contains<sint32>;
   }
   %template(SRectangle32) Rectangle<sint32>;
+  %template(SRectangle16) Rectangle<sint16>;
 }
+
+%template(SSphereRegion16) sakusen::SphereRegion<sint16>;
+%template(SRectangleRegion16) sakusen::RectangleRegion<sint16>;
 
 %include "hitpoints.h"
 %{
