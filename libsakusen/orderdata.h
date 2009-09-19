@@ -61,7 +61,7 @@ class LIBSAKUSEN_API SetAngularVelocityOrderData : public OrderData {
   private:
     SetAngularVelocityOrderData();
   public:
-    SetAngularVelocityOrderData(const Velocity& t) : OrderData(), target(t) {}
+    SetAngularVelocityOrderData(const AngularVelocity& t) : OrderData(), target(t) {}
     SetAngularVelocityOrderData(IArchive& in) : OrderData() { in >> target; }
     ~SetAngularVelocityOrderData() {};
   private:

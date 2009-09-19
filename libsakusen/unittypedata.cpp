@@ -10,7 +10,7 @@ UnitTypeData::UnitTypeData(
     const Point<uint32>& s,
     const Region<sint16>::Ptr& pA,
     const Region<sint16>::Ptr& pV,
-    const Region<sint16>::Ptr& pAV,
+    const Region<sint32>::Ptr& pAV,
     const Visibility& visib,
     const Sensors& visio
   ) :
@@ -57,7 +57,7 @@ UnitTypeData UnitTypeData::load(IArchive& in)
   in >> maxHitPoints >> mass >> size;
   Region<sint16>::Ptr possibleAccelerations = Region<sint16>::loadNew(in);
   Region<sint16>::Ptr possibleVelocities = Region<sint16>::loadNew(in);
-  Region<sint16>::Ptr possibleAngularVelocities = Region<sint16>::loadNew(in);
+  Region<sint32>::Ptr possibleAngularVelocities = Region<sint32>::loadNew(in);
   Visibility visibility(in);
   Sensors vision(in);
 

@@ -77,7 +77,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     inline Region<sint16>::ConstPtr getPossibleVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleVelocities();
     }
-    inline Region<sint16>::ConstPtr getPossibleAngularVelocities(void) const {
+    inline Region<sint32>::ConstPtr getPossibleAngularVelocities(void) const {
       return getTypePtr()->getDynamicData().getPossibleAngularVelocities();
     }
     inline const Visibility& getVisibility(void) const {

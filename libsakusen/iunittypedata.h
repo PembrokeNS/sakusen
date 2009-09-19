@@ -20,7 +20,7 @@ class LIBSAKUSEN_API IUnitTypeData {
     virtual const Point<uint32>& getSize() const = 0;
     virtual Region<sint16>::ConstPtr getPossibleAccelerations() const = 0;
     virtual Region<sint16>::ConstPtr getPossibleVelocities() const = 0;
-    virtual Region<sint16>::ConstPtr getPossibleAngularVelocities() const = 0;
+    virtual Region<sint32>::ConstPtr getPossibleAngularVelocities() const = 0;
     virtual const Visibility& getVisibility() const = 0;
     virtual const Sensors& getVision() const = 0;
 };

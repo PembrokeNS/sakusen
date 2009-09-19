@@ -137,7 +137,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   /* Make copies of everything so that we can simulate the move */
   Frame newFrame = status.frame;
   Velocity newVelocity = expectedVelocity;
-  Velocity newAngularVelocity = expectedAngularVelocity;
+  AngularVelocity newAngularVelocity = expectedAngularVelocity;
   
   /* Simulate the move (note: potentially changes all the arguments) */
   world->getMap()->transform(newFrame, newVelocity, newAngularVelocity);

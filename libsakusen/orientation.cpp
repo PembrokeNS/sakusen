@@ -17,7 +17,7 @@ Orientation::Orientation()
 
 /** \brief Constructs an Orientation representing a rotation.
  *
- * The rotation constructed is that by \p amount degrees
+ * The rotation constructed is that by \p amount centidegrees
  * around the axis specified by \p rotation.
  */
 Orientation::Orientation(Rotation rotation, Angle amount)
@@ -26,7 +26,7 @@ Orientation::Orientation(Rotation rotation, Angle amount)
   
   switch (rotation) {
     case rotation_anticlockwise:
-      radians = double(amount) * M_PI / 180;
+      radians = double(amount) * M_PI / 18000;
       matrix[2][2] = 1;
       matrix[2][0] = matrix[2][1] = matrix[0][2] = matrix[1][2] = 0;
       matrix[0][0] = matrix[1][1] = cos(radians);
@@ -44,11 +44,11 @@ Orientation::Orientation(Rotation rotation, Angle amount)
 /** \brief Constructs an Orientation representing a rotation.
  *
  * The rotation constructed is around the axis specified by \p axis, and is by
- * a number of degrees equal to the length of \p axis.
+ * a number of centidegrees equal to the length of \p axis.
  */
 Orientation::Orientation(const AngularVelocity& axis)
 {
-  const double theta = axis.length() * M_PI / 180;
+  const double theta = axis.length() * M_PI / 18000;
   Point<double> normalised;
   if (theta != 0) {
     normalised = Point<double>(axis);
@@ -195,7 +195,7 @@ AngularVelocity Orientation::getGeneratingAngularVelocity()
   } else if (sin(theta) == 0) {
     /** \bug This isn't always the right answer in this case; need to think
      * more */
-    return AngularVelocity(0, 0, 180);
+    return AngularVelocity(0, 0, 18000);
   }
   /* Construct a vector pointing in the right direction */
   Point<double> angularVelocity(
@@ -208,7 +208,7 @@ AngularVelocity Orientation::getGeneratingAngularVelocity()
   /* Now we scale it to a value appropriate for working with degrees, rather
    * than radians (because we use integer arithmetic mostly, radians are much
    * too big) */
-  angularVelocity *= theta*180/M_PI;
+  angularVelocity *= theta*18000/M_PI;
   return AngularVelocity(angularVelocity);
 }
 

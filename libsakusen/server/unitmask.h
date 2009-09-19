@@ -36,7 +36,7 @@ class UnitMask : public UnitLayer {
     Region<sint16>::ConstPtr getPossibleVelocities() const {
       return nextLayer->getPossibleVelocities();
     }
-    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
+    Region<sint32>::ConstPtr getPossibleAngularVelocities() const {
       return nextLayer->getPossibleAngularVelocities();
     }
     const Visibility& getVisibility() const {

@@ -729,7 +729,7 @@ void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
           );
       const double angle = atan2(static_cast<double>(displacement.y), displacement.x);
       const Orientation desiredOrientation(
-          AngularVelocity(0, 0, AngularVelocity::element_type(angle*180/M_PI))
+          AngularVelocity(0, 0, AngularVelocity::element_type(angle*18000/M_PI))
         );
       const Order rotationOrder(new OrientOrderData(desiredOrientation));
       game->order(OrderMessage(unitId, rotationOrder));

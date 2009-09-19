@@ -24,7 +24,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
         const Point<uint32>& s,
         const Region<sint16>::Ptr& pA,
         const Region<sint16>::Ptr& pV,
-        const Region<sint16>::Ptr& pAV,
+        const Region<sint32>::Ptr& pAV,
         const Visibility& visib,
         const Sensors& visio
       );
@@ -35,7 +35,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     Point<uint32> size;
     Region<sint16>::ConstPtr possibleAccelerations;
     Region<sint16>::ConstPtr possibleVelocities;
-    Region<sint16>::ConstPtr possibleAngularVelocities;
+    Region<sint32>::ConstPtr possibleAngularVelocities;
     Visibility visibility;
     Sensors vision;
     
@@ -50,7 +50,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     inline Region<sint16>::ConstPtr getPossibleVelocities() const {
       return possibleVelocities;
     }
-    inline Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
+    inline Region<sint32>::ConstPtr getPossibleAngularVelocities() const {
       return possibleAngularVelocities;
     }
     inline const Visibility& getVisibility(void) const {return visibility;}

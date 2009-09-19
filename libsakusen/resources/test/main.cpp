@@ -178,7 +178,7 @@ int main(/*int argc, char** argv*/)
             /* possibleAccelerations */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 1000))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 1000))
+          Region<sint32>::Ptr(new SphereRegion<sint32>(AngularVelocity(), 100000))
             /* possibleAngularVelocities */,
           Visibility(),
           opticalSensors
@@ -206,7 +206,7 @@ int main(/*int argc, char** argv*/)
             /* possibleAccelerations */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 0))
+          Region<sint32>::Ptr(new SphereRegion<sint32>(AngularVelocity(), 0))
             /* possibleAngularVelocities */,
           Visibility(),
           Sensors()
@@ -232,7 +232,7 @@ int main(/*int argc, char** argv*/)
             /* possibleAccelerations */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
+          Region<sint32>::Ptr(new SphereRegion<sint32>(AngularVelocity(), 50000))
             /* possibleAngularVelocities */,
           Visibility(),
           opticalSensors
@@ -258,7 +258,7 @@ int main(/*int argc, char** argv*/)
             /* possibleAccelerations */,
           Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 500))
             /* possibleVelocities */,
-          Region<sint16>::Ptr(new SphereRegion<sint16>(Point<sint16>(), 3))
+          Region<sint32>::Ptr(new SphereRegion<sint32>(AngularVelocity(), 300))
             /* possibleAngularVelocities */,
           Visibility(),
           opticalSensors

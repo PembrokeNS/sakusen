@@ -60,13 +60,15 @@ class BuildingLayer : public UnitMask {
     BuildingLayer() :
       UnitMask(),
       builtHitPoints(1),
-      empty(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      empty16(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      empty32(new SphereRegion<sint32>(Point<sint32>(), 0)),
       blind()
     {
     }
   private:
     HitPoints builtHitPoints;
-    const Region<sint16>::ConstPtr empty;
+    const Region<sint16>::ConstPtr empty16;
+    const Region<sint32>::ConstPtr empty32;
     const Sensors blind;
   public:
     HitPoints getMaxHitPoints() const {
@@ -75,13 +77,13 @@ class BuildingLayer : public UnitMask {
 
     /* Prevent constructing thing from moving */
     Region<sint16>::ConstPtr getPossibleAccelerations() const {
-      return empty;
+      return empty16;
     }
     Region<sint16>::ConstPtr getPossibleVelocities() const {
-      return empty;
+      return empty16;
     }
-    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
-      return empty;
+    Region<sint32>::ConstPtr getPossibleAngularVelocities() const {
+      return empty32;
     }
     const Sensors& getVision() const {
       return blind;
@@ -258,24 +260,26 @@ class ParalyzingLayer : public UnitMask, public Fuse {
     typedef boost::shared_ptr<const ParalyzingLayer> ConstPtr;
 
     ParalyzingLayer() :
-      empty(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      empty16(new SphereRegion<sint16>(Point<sint16>(), 0)),
+      empty32(new SphereRegion<sint32>(Point<sint32>(), 0)),
       blind(),
       token(FuseToken(-1))
     {}
   private:
-    const Region<sint16>::ConstPtr empty;
+    const Region<sint16>::ConstPtr empty16;
+    const Region<sint32>::ConstPtr empty32;
     const Sensors blind;
     FuseToken token;
   public:
     /* Prevent paralyzed thing from moving */
     Region<sint16>::ConstPtr getPossibleAccelerations() const {
-      return empty;
+      return empty16;
     }
     Region<sint16>::ConstPtr getPossibleVelocities() const {
-      return empty;
+      return empty16;
     }
-    Region<sint16>::ConstPtr getPossibleAngularVelocities() const {
-      return empty;
+    Region<sint32>::ConstPtr getPossibleAngularVelocities() const {
+      return empty32;
     }
     const Sensors& getVision() const {
       return blind;
