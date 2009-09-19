@@ -54,10 +54,21 @@ if(__name__=="__main__"):
 	shiptype = UnitTypeData(HitPoints(10000), 100, UPoint32(CM // 2, CM // 10, CM // 10), ap, vp, avp, Visibility(), s)
 	ship = UnitType("ship", shiptype, 0, 0, "ground", [], "")
 	
-	
+	taccelrect = SRectangle16(0,0,0,0)
+	taccelrr = SRectangleRegion16(taccelrect)
+	tap = SRectangleRegion16.createRegionPtr(taccelrr)
+	taccelrr.thisown = 0	
+	tvelrect = SSphereRegion16(SPoint16(0,0,0),30000)
+	tvp = SSphereRegion16.createRegionPtr(tvelrect)
+	tvelrect.thisown = 0
+	tangularvelrect = SSphereRegion32(SPoint32(0,0,0),0)
+	tavp = SSphereRegion32.createRegionPtr(tangularvelrect)
+	tangularvelrect.thisown = 0
+	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
+	torp = UnitType("torp", shiptype, 0, 0, "ground", [], "")
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius", "create_script", [laser, torpedo], [ship])
+	u = Universe("sagittarius", "", "sagittarius", "create_script", [laser, torpedo], [ship, torp])
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr
