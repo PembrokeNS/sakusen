@@ -25,7 +25,8 @@ class LIBSAKUSEN_API PlayerTemplate {
     PlayerTemplate(
         bool noClients,
         bool fixedRace,
-        const std::vector<UnitTemplate>& units
+        const std::vector<UnitTemplate>& units,
+	const Position& startPos = Position()
       );
   private:
     bool noClients;
@@ -35,10 +36,13 @@ class LIBSAKUSEN_API PlayerTemplate {
       /**< indicates that there is no choice as to the race of a player */
     std::vector<UnitTemplate> units;
       /**< provides a list of all the units that a player starts with */
+    Position startPos;
+      /**< tells the client where to start the view */
   public:
     inline bool isNoClients() const { return noClients; }
     inline bool isRaceFixed() const { return raceFixed; }
     inline const std::vector<UnitTemplate>& getUnits() const { return units; }
+    inline const Position& getStartPos() const { return startPos; }
     
     bool sanityCheck(
         const Universe::ConstPtr& universe,

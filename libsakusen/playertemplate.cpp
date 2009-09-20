@@ -8,11 +8,13 @@ using namespace sakusen;
 PlayerTemplate::PlayerTemplate(
     bool nc,
     bool rf,
-    const std::vector<UnitTemplate>& u
+    const std::vector<UnitTemplate>& u,
+    const Position& p
   ) :
   noClients(nc),
   raceFixed(rf),
-  units(u)
+  units(u),
+  startPos(p)
 {
   assert(raceFixed || !noClients);
 }
@@ -44,7 +46,7 @@ bool PlayerTemplate::sanityCheck(
 
 void PlayerTemplate::store(OArchive& archive) const
 {
-  archive << noClients << raceFixed << units;
+  archive << noClients << raceFixed << units << startPos;
 }
 
 PlayerTemplate PlayerTemplate::load(
@@ -55,7 +57,8 @@ PlayerTemplate PlayerTemplate::load(
   bool noClients;
   bool fixedRace;
   std::vector<UnitTemplate> units;
-  (archive >> noClients >> fixedRace).extract(units, context);
-  return PlayerTemplate(noClients, fixedRace, units);
+  Position p;
+  (archive >> noClients >> fixedRace).extract(units, context) >> p;
+  return PlayerTemplate(noClients, fixedRace, units, p);
 }
 
