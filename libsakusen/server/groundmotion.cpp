@@ -46,16 +46,12 @@ void GroundMotion::incrementState(LayeredUnit& unit)
           world->getMap()->getShortestDifference(
               orders.getTargetPosition(), f.getPosition()
             );
-        Debug("Requested direction (global): " << desiredDirection);
 	Point<sint16> desiredVelocity(
             typeData.getPossibleVelocities()->truncateToFit(f.globalToLocalRelative(desiredDirection))
           );
-	Debug("Desired velocity (local): " << desiredVelocity);
         Point<sint16> acceleration = desiredVelocity - f.globalToLocalRelative(status.velocity);
-        Debug("Requested acceleration (local coordinates): " << acceleration);
         acceleration =
           Point<sint16>(f.localToGlobalRelative(typeData.getPossibleAccelerations()->truncateToFit(acceleration)));
-        Debug("Truncated acceleration (global coordinates): " << acceleration);
         /*if (owner == 1 && unitId == 0) {
           Debug("[1] desiredVel=" << desiredVelocity <<
               ", acc=" << acceleration);
