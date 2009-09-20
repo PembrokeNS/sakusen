@@ -70,7 +70,7 @@ class eventUpdatedUnit(UpdatedUnit):
                 self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
                 corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
                 self.polygon = QtGui.QPolygonF()
-                for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/100,(t.y-scene.bottom)/100))
+                for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)/self.scene.mapmodel.d,(t.y-scene.bottom)/self.scene.mapmodel.d))
                 self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
 		interestingthings['units'].append(self)
@@ -84,7 +84,7 @@ class eventUpdatedUnit(UpdatedUnit):
         	        frame = status.getFrame()
         	        corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
-                	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/100,(t.y-self.scene.bottom)/100))
+                	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/self.scene.mapmodel.d,(t.y-self.scene.bottom)/self.scene.mapmodel.d))
                 	self.i.setPolygon(self.polygon)
 			self.i.setPen(self.pen())
 	def pen(self): #create a pen of the appropriate colour for the current hitpoints and stuff

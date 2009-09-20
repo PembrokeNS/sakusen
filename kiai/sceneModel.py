@@ -30,7 +30,7 @@ class sceneModel(QtGui.QGraphicsScene):
 					sensorreturnclicked = True
 					csr = self.itemAt(p).sr
 					srclicked = True
-			r = SPoint32(int(p.x()*100) + self.left,int(p.y()*100) + self.bottom,0)
+			r = SPoint32(int(p.x()*self.mapmodel.d) + self.left,int(p.y()*self.mapmodel.d) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
 			units = self.selectedItems()
 			#TODO: be more intelligent about the following - they differ by very small amounts.

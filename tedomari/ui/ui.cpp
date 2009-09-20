@@ -128,8 +128,7 @@ void UI::initializeControls()
     );
   activeMapDisplay = new MapDisplay(
       0, 0, dockStyle_fill, newRegion(0, 0, getWidth(), getHeight()), game,
-      this,
-      100 /** \bug Initial scale should be fetched from GameStartMessage */
+      this, game->getDexPerPixel()
     );
   addSubControl(commandEntryBox);
   addSubControl(regexEntryBox);

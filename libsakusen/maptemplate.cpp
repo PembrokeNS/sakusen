@@ -13,6 +13,7 @@ MapTemplate::MapTemplate(
     const Point<sint32>& bl,
     Topology t,
     const Heightfield& hf,
+    uint32 d,
     uint16 g,
     const std::vector<MapPlayMode>& p
   ) :
@@ -22,6 +23,7 @@ MapTemplate::MapTemplate(
   bottomLeft(bl),
   topology(t),
   heightfield(hf),
+  dexPerPixel(d),
   gravity(g),
   playModes(p)
 {
@@ -49,7 +51,7 @@ void MapTemplate::store(OArchive& archive) const
   archive.insertEnum(getTopology()) << internalName;
   archive << topRight << bottomLeft;
   heightfield.store(archive);
-  archive << gravity << playModes;
+  archive << dexPerPixel << gravity << playModes;
 }
 
 MapTemplate MapTemplate::load(
@@ -63,14 +65,16 @@ MapTemplate MapTemplate::load(
   Point<sint32> bottomLeft;
   archive.extractEnum(topology) >> internalName >> topRight >> bottomLeft;
   Heightfield heightfield = Heightfield::load(archive, context);
+  uint32 dexPerPixel;
   uint16 gravity;
   vector<MapPlayMode> playModes;
+  archive >> dexPerPixel;
   archive >> gravity;
   archive.extract(playModes, context);
   
   return MapTemplate(
       context.getUniverse(), internalName, topRight, bottomLeft,
-      topology, heightfield, gravity, playModes
+      topology, heightfield, dexPerPixel, gravity, playModes
     );
 }
 

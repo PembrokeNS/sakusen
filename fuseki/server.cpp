@@ -628,6 +628,7 @@ void Server::serve()
       client->send(new GameStartMessageData(
             client->getPlayerId(), map->getTopology(),
             map->getTopRight(), map->getBottomLeft(),
+            map->getDexPerPixel(),
             map->getGravity(), map->getHeightfield()
           ));
       bool wasAdmin = client->hasGroup("admin");

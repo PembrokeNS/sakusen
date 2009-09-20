@@ -340,7 +340,7 @@ int main(/*int argc, char** argv*/)
   MapTemplate::ConstPtr t(new MapTemplate(
         universe, "map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-        heightfield, 200 /* gravity */, playModes
+        heightfield, 100 /* dexPerPixel */, 200 /* gravity */, playModes
       ));
 
   cout << "Saving map" << endl;
@@ -386,7 +386,7 @@ int main(/*int argc, char** argv*/)
   t.reset(new MapTemplate(
         universe, "2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-        heightfield, 1000 /* gravity */, playModes
+        heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
 
   cout << "Saving two player map" << endl;
@@ -400,7 +400,7 @@ int main(/*int argc, char** argv*/)
   t.reset(new MapTemplate(
         universe, "s2map", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH)/10,
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_plane,
-        heightfield, 1000 /* gravity */, playModes
+        heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
   
   cout << "Saving small 2 player map" << endl;
@@ -429,7 +429,7 @@ int main(/*int argc, char** argv*/)
   t.reset(new MapTemplate(
         universe, "immap", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH),
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
-        heightfield, 1000 /* gravity */, playModes
+        heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
   
   cout << "Saving image-based map" << endl;
@@ -448,7 +448,7 @@ int main(/*int argc, char** argv*/)
   t.reset(new MapTemplate(
         universe, "mobiusmap", Point<sint32>(MAP_WIDTH,MAP_WIDTH,MAP_WIDTH)/10,
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_mobius,
-        heightfield, 1000 /* gravity */, playModes
+        heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
   
   cout << "Saving mobius strip map" << endl;

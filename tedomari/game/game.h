@@ -39,11 +39,16 @@ class Game {
 
     uint64 availableEnergy;
     uint64 availableMetal;
+
+    /** \bug This doesn't belong here */
+    uint32 dexPerPixel;
     
     bool dirty;
   public:
     uint64 getAvailableEnergy() const { return availableEnergy; }
     uint64 getAvailableMetal() const { return availableMetal; }
+
+    uint32 getDexPerPixel() const { return dexPerPixel; }
 
     /** \brief Checks for changes to game state
      *

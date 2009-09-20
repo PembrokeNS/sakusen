@@ -30,6 +30,7 @@ class LIBSAKUSEN_API MapTemplate {
         const Point<sint32>& bottomLeft,
         Topology topology,
         const Heightfield& heightfield,
+	uint32 dexPerPixel,
         uint16 gravity,
         const std::vector<MapPlayMode>& playModes
       );
@@ -40,6 +41,7 @@ class LIBSAKUSEN_API MapTemplate {
     Point<sint32> bottomLeft; /* Includes bottom left */
     Topology topology;
     Heightfield heightfield;
+    uint32 dexPerPixel;
     uint16 gravity;
     std::vector<MapPlayMode> playModes;
   public:
@@ -61,6 +63,7 @@ class LIBSAKUSEN_API MapTemplate {
     }
     inline Topology getTopology(void) const { return topology; }
     inline const Heightfield& getHeightfield(void) const { return heightfield; }
+    inline uint32 getDexPerPixel(void) const { return dexPerPixel; }
     inline uint16 getGravity(void) const { return gravity; }
     inline const std::vector<MapPlayMode>& getPlayModes(void) const {
       return playModes;

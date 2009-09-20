@@ -21,6 +21,7 @@ Game::Game(const sakusen::ResourceInterface::Ptr& rI) :
   universe(),
   availableEnergy(0),
   availableMetal(0),
+  dexPerPixel(100),
   dirty(false)
 {
 }
@@ -77,6 +78,7 @@ void Game::start(
       data.getGravity(),
       data.getHeightfield()
     );
+  dexPerPixel = data.getDexPerPixel();
 }
 
 /** \brief Applies updates to game state

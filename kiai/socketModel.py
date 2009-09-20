@@ -88,7 +88,7 @@ class socketModel():
 				#TODO: consistency between getMap and getPartialMap, depends on library organisation (sort of).
 				gamescene.bottom=self.pw.getMap().bottom()
 				gamescene.left=self.pw.getMap().left()
-				mapmodel=mapModel(self.pw.getPartialMap())
+				mapmodel=mapModel(self.pw.getPartialMap(), d.getDexPerPixel())
 				gamescene.mapmodel = mapmodel
 				sf.mapmodel = mapmodel
 				e.mapmodel = mapmodel

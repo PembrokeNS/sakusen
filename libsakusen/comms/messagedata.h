@@ -197,6 +197,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
+	uint32 dexPerPixel,
         uint16 gravity,
         const Heightfield& hf
       );
@@ -207,6 +208,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     Topology topology;
     Point<sint32> topRight;
     Point<sint32> bottomLeft;
+    uint32 dexPerPixel;
     uint16 gravity;
     Heightfield heightfield;
   protected:
@@ -217,6 +219,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
     inline Topology getTopology() const { return topology; }
     inline const Point<sint32>& getTopRight() const { return topRight; }
     inline const Point<sint32>& getBottomLeft() const { return bottomLeft; }
+    inline uint32 getDexPerPixel() const { return dexPerPixel; }
     inline uint16 getGravity() const { return gravity; }
     inline const Heightfield& getHeightfield() const {
       return heightfield;

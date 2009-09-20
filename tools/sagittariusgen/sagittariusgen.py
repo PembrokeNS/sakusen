@@ -87,7 +87,7 @@ if(__name__=="__main__"):
 	pt2 = PlayerTemplate(False, True, [ut2])
 	np = PlayerTemplate(True, True, []) #neutral player because playerid 0 is special
 	mpm = MapPlayMode(3, 3, [np, pt1, pt2])
-	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 0, [mpm])
+	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 1000, 0, [mpm])
 	mtp = MapTemplate.createPtr(mt)
 	mtp.thisown = 0 #shared_ptr
 	res = resint.mtsave(mtp, "sagittarius")
@@ -105,7 +105,7 @@ if(__name__=="__main__"):
         pt2 = PlayerTemplate(False, True, [ut2])
         np = PlayerTemplate(True, True, []) #neutral player because playerid 0 is special
         mpm = MapPlayMode(3, 3, [np, pt1, pt2])
-        mt = MapTemplate(up, "mini", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 0, [mpm])
+        mt = MapTemplate(up, "mini", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 1000, 0, [mpm])
         mtp = MapTemplate.createPtr(mt)
         mtp.thisown = 0 #shared_ptr
         res = resint.mtsave(mtp, "sagittarius")

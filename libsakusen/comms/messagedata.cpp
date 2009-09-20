@@ -218,6 +218,7 @@ GameStartMessageData::GameStartMessageData(
     Topology t,
     const Point<sint32>& tR,
     const Point<sint32>& bL,
+    uint32 d,
     uint16 g,
     const Heightfield& hf
   ) :
@@ -226,6 +227,7 @@ GameStartMessageData::GameStartMessageData(
   topology(t),
   topRight(tR),
   bottomLeft(bL),
+  dexPerPixel(d),
   gravity(g),
   heightfield(hf)
 {
@@ -240,14 +242,14 @@ GameStartMessageData::GameStartMessageData(
   heightfield(1, 1, 2, 2) 
 {
   (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >>
-    gravity;
+    dexPerPixel >> gravity;
   heightfield = Heightfield::load(in, context);
 }
 
 void GameStartMessageData::fillArchive(OArchive& archive) const
 {
   (archive << playerId).insertEnum(topology) << topRight << bottomLeft <<
-    gravity;
+    dexPerPixel << gravity;
   heightfield.store(archive);
 }
 
