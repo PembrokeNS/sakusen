@@ -28,7 +28,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   switch (orders.getLinearTarget()) {
     case linearTargetType_none:
       break;
-    case linearTargetType_velocity:
+    case linearTargetType_velocity: /** \todo use correct frame here */
       if (typeData.getPossibleVelocities()->contains(
             orders.getTargetVelocity()
           )) {
@@ -41,17 +41,21 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       break;
     case linearTargetType_position:
       {
+	Frame& f = status.getFrame();
         Point<sint32> desiredDirection =
           world->getMap()->getShortestDifference(
-              orders.getTargetPosition(), status.getFrame().getPosition()
+              orders.getTargetPosition(), f.getPosition()
             );
-        Point<sint16> desiredVelocity(
-            typeData.getPossibleVelocities()->truncateToFit(desiredDirection)
+        Debug("Requested direction (global): " << desiredDirection);
+	Point<sint16> desiredVelocity(
+            typeData.getPossibleVelocities()->truncateToFit(f.globalToLocalRelative(desiredDirection))
           );
-        Point<sint16> acceleration = desiredVelocity - status.velocity;
+	Debug("Desired velocity (local): " << desiredVelocity);
+        Point<sint16> acceleration = desiredVelocity - f.globalToLocalRelative(status.velocity);
+        Debug("Requested acceleration (local coordinates): " << acceleration);
         acceleration =
-          typeData.getPossibleAccelerations()->truncateToFit(acceleration);
-        
+          Point<sint16>(f.localToGlobalRelative(typeData.getPossibleAccelerations()->truncateToFit(acceleration)));
+        Debug("Truncated acceleration (global coordinates): " << acceleration);
         /*if (owner == 1 && unitId == 0) {
           Debug("[1] desiredVel=" << desiredVelocity <<
               ", acc=" << acceleration);

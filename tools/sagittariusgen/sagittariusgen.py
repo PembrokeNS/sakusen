@@ -41,7 +41,7 @@ if(__name__=="__main__"):
 	# accesseration should be 200 in 200 ticks, i.e. 1
 	# if we want accel up to 100, must make speed up to 20000 and 1cm 100000
 	
-	accelrect = SRectangle16(-2, 0, 2, 100)
+	accelrect = SRectangle16(0, -2, 100, 2)
 	accelrr = SRectangleRegion16(accelrect)
 	ap = SRectangleRegion16.createRegionPtr(accelrr)
 	accelrr.thisown = 0 #shared_ptr
@@ -51,7 +51,7 @@ if(__name__=="__main__"):
 	angularvelrect = SSphereRegion32(SPoint32(0,0,0),45)
 	avp = SSphereRegion32.createRegionPtr(angularvelrect)
 	angularvelrect.thisown = 0
-	shiptype = UnitTypeData(HitPoints(10000), 100, UPoint32(CM // 10, CM // 2, CM // 10), ap, vp, avp, Visibility(), s)
+	shiptype = UnitTypeData(HitPoints(10000), 100, UPoint32(CM // 2, CM // 10, CM // 10), ap, vp, avp, Visibility(), s)
 	ship = UnitType("ship", shiptype, 0, 0, "ground", ['laser', 'torpedo'], "")
 	
 	taccelrect = SRectangle16(0,0,0,0)
@@ -64,7 +64,7 @@ if(__name__=="__main__"):
 	tangularvelrect = SSphereRegion32(SPoint32(0,0,0),0)
 	tavp = SSphereRegion32.createRegionPtr(tangularvelrect)
 	tangularvelrect.thisown = 0
-	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 100, CM // 20, CM // 100), tap, tvp, tavp, Visibility(), torps)
+	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
 	torp = UnitType("torp", shiptype, 0, 0, "ground", [], "")
 
 	#make universe and save
@@ -79,34 +79,17 @@ if(__name__=="__main__"):
 	#next the map
 	h = Heightfield(150 * CM, 2, 2, 2)
 	uid = u.getUnitTypeId('ship')
-	us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM,0), Orientation()), SPoint16(0,0,0))
-	us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM,0), Orientation(rotation_anticlockwise, 18000)), SPoint16(0,0,0))
+	us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM, CM//10), Orientation(rotation_anticlockwise, 9000)), SPoint16(0,0,0)) #face forwards
+	us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM, CM//10), Orientation(rotation_anticlockwise, 27000)), SPoint16(0,0,0)) #face forwards
 	ut1 = UnitTemplate(up, us1)
 	ut2 = UnitTemplate(up, us2)
 	pt1 = PlayerTemplate(False, True, [ut1])
 	pt2 = PlayerTemplate(False, True, [ut2])
 	np = PlayerTemplate(True, True, []) #neutral player because playerid 0 is special
 	mpm = MapPlayMode(3, 3, [np, pt1, pt2])
-	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 1000, 0, [mpm])
+	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 * CM, 10 * CM), SPoint32(0, 0, 0), topology_plane, h, 10000, 0, [mpm])
 	mtp = MapTemplate.createPtr(mt)
 	mtp.thisown = 0 #shared_ptr
 	res = resint.mtsave(mtp, "sagittarius")
 	print("Tried to save map, result: %d" %res)
 	
-	#small version for testing
-	CM /= 100
-	h = Heightfield(int(150 * CM), 2, 2, 2)
-        uid = u.getUnitTypeId('ship')
-        us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM,0), Orientation()), SPoint16(0,0,0))
-        us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM,0), Orientation(rotation_anticlockwise, 18000)), SPoint16(0,0,0))
-        ut1 = UnitTemplate(up, us1)
-        ut2 = UnitTemplate(up, us2)
-        pt1 = PlayerTemplate(False, True, [ut1])
-        pt2 = PlayerTemplate(False, True, [ut2])
-        np = PlayerTemplate(True, True, []) #neutral player because playerid 0 is special
-        mpm = MapPlayMode(3, 3, [np, pt1, pt2])
-        mt = MapTemplate(up, "mini", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 1000, 0, [mpm])
-        mtp = MapTemplate.createPtr(mt)
-        mtp.thisown = 0 #shared_ptr
-        res = resint.mtsave(mtp, "sagittarius")
-        print("Tried to save mini map, result: %d" %res)

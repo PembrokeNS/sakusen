@@ -49,8 +49,8 @@ bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const W
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
 	BOOST_AUTO(orient, firer->getStatus().getFrame());
 	BOOST_AUTO(dir, orient.globalToLocalRelative(displacement));
-	BOOST_AUTO(left, Point<sint32>(1, 0, 0));
-	BOOST_AUTO(right, Point<sint32>(-1, 0, 0));
+	BOOST_AUTO(left, Point<sint32>(0, 1, 0));
+	BOOST_AUTO(right, Point<sint32>(0, -1, 0));
 	BOOST_AUTO(cmp, cos((22.5 * M_PI) * dir.length()/ 180));
 	if(dir.innerProduct(left) >= cmp or dir.innerProduct(right) >= cmp) {
 		status.setTargetDirection(displacement);
