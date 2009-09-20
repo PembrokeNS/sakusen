@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
 
@@ -41,7 +42,9 @@ class socketModel():
 				self.mainwindow.ui.settingsTree.setModel(self.m)
 		                self.mainwindow.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 				self.m.requestSetting(())
+				self.m.requestSetting(('game','universe','name')) #so that we find the universe, if another player has already set it
 				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
+				self.m.setSetting(('clients',str(clientid),'application','version'),'"0.0.4 気持ち')
 				self.interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
 				self.userconfig("onconnect")
 			else:
