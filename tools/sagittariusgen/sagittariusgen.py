@@ -65,7 +65,7 @@ if(__name__=="__main__"):
 	tavp = SSphereRegion32.createRegionPtr(tangularvelrect)
 	tangularvelrect.thisown = 0
 	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
-	torp = UnitType("torp", shiptype, 0, 0, "ground", [], "")
+	torp = UnitType("torp", torptype, 0, 0, "ground", [], "")
 
 	#make universe and save
 	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", [laser, torpedo], [ship, torp])

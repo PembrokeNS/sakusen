@@ -6,6 +6,7 @@
 #include "weapon.h"
 #include "beam.h"
 #include "completeworld.h"
+#include "sphereregion.h"
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -21,6 +22,8 @@
     #define MODULE_API
   #endif
 #endif
+
+#define CM 100000
 
 using namespace std;
 using namespace sakusen;
@@ -45,6 +48,15 @@ class LaserBeam: public Beam {
 class SagScript: public Script {
 	};
 
+class TorpedoLauncher: public Weapon {
+	public:
+		TorpedoLauncher(const WeaponType* type) : Weapon(type), lastFire(0) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 30000; } //Unused as this is non-ballisticm
+		Time lastFire;
+	};
+
 bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
 	BOOST_AUTO(orient, firer->getStatus().getFrame());
@@ -52,7 +64,7 @@ bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const W
 	BOOST_AUTO(left, Point<sint32>(0, 1, 0));
 	BOOST_AUTO(right, Point<sint32>(0, -1, 0));
 	BOOST_AUTO(cmp, cos((22.5 * M_PI) * dir.length()/ 180));
-	if(dir.innerProduct(left) >= cmp or dir.innerProduct(right) >= cmp) {
+	if(dir.innerProduct(left) > cmp or dir.innerProduct(right) > cmp) {
 		status.setTargetDirection(displacement);
 		return true;
 		}
@@ -69,9 +81,35 @@ void LaserBeam::onInteractUnit(double position, const Ref<LayeredUnit>& unit, bo
 	if (not leaving) unit->damage(HitPoints(1));
 	}
 
+bool TorpedoLauncher::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
+	if(server::world->getTimeNow() - lastFire < 100) return false; /* does not overflow unless time travel */
+	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
+        BOOST_AUTO(orient, firer->getStatus().getFrame());
+        BOOST_AUTO(dir, orient.globalToLocalRelative(displacement));
+        BOOST_AUTO(forward, Point<sint32>(1, 0, 0));
+        BOOST_AUTO(cmp, cos((22.5 * M_PI) * dir.length()/ 180));
+        if(dir.innerProduct(forward) > cmp) {
+		BOOST_AUTO(sr, SphereRegion<sint32>(Position(), 2.5 * CM));
+                status.setTargetDirection(sr.truncateToFit(displacement));
+                return true;
+                }
+        else return false;
+        }
+
+void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16 weaponIndex) {
+	/** \todo permit clients to fire torpedoes out of the plane, if they really want to */
+	BOOST_AUTO(angle, Orientation(rotation_anticlockwise, atan2(status.getTargetDirection().y, status.getTargetDirection().x) / M_PI * 18000));
+	BOOST_AUTO(tp, status.getTargetDirection() + firer->getStatus().getPosition());
+	Point<double> tv = status.getTargetDirection();
+	tv.normalise();
+	tv *= 30000;
+	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
+	lastFire = server::world->getTimeNow();
+	}
+
 extern "C" {
 	MODULE_API Weapon* spawn_laser(const WeaponType* type) { return new Laserator(type); }
 	MODULE_API Script* create_script() { return new SagScript(); }
-	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new Laserator(type); } // temporary until torpedoes are implemented
+	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
 
 	}
