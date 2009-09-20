@@ -85,8 +85,10 @@ if(__name__=="__main__"):
 	ut2 = UnitTemplate(up, us2)
 	pt1 = PlayerTemplate(False, True, [ut1])
 	pt2 = PlayerTemplate(False, True, [ut2])
-	mpm = MapPlayMode(2, 2, [pt1, pt2])
+	np = PlayerTemplate(True, True, []) #neutral player because playerid 0 is special
+	mpm = MapPlayMode(3, 3, [np, pt1, pt2])
 	mt = MapTemplate(up, "sagittarius_map", SPoint32(150 * CM, 150 *CM, 0), SPoint32(0, 0, 0), topology_plane, h, 0, [mpm])
 	mtp = MapTemplate.createPtr(mt)
-	res = resint.mtsave(mtp, "sagittarius_map")
+	mtp.thisown = 0 #shared_ptr
+	res = resint.mtsave(mtp, "sagittarius")
 	print("Tried to save map, result: %d" %res)

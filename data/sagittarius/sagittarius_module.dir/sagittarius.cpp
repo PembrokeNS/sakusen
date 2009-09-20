@@ -73,6 +73,6 @@ void LaserBeam::onInteractUnit(double position, const Ref<LayeredUnit>& unit, bo
 extern "C" {
 	MODULE_API Weapon* spawn_laser(const WeaponType* type) { return new Laserator(type); }
 	MODULE_API Script* create_script() { return new SagScript(); }
-	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return 0; }
+	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new Laserator(type); } // temporary until torpedoes are implemented
 
 	}
