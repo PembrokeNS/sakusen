@@ -28,7 +28,7 @@ class RectangleRegion : public Region<T> {
     inline Point<sint32> truncateToFit(const Point<sint32>&) const;
     inline Point<T> getBestPosition() const;
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
-    inline Box<T> getBoundingBox() const;
+    inline Box<sint32> getBoundingBox() const;
     inline boost::tuple<double,double> intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_rectangle; }
@@ -85,9 +85,9 @@ inline Point<T> RectangleRegion<T>::getBestPosition() const
 }
 
 template<typename T>
-inline Box<T> RectangleRegion<T>::getBoundingBox() const
+inline Box<sint32> RectangleRegion<T>::getBoundingBox() const
 {
-  return Box<T>(
+  return Box<sint32>(
       Point<T>(
         rectangle.getMinX(),
         rectangle.getMinY(),

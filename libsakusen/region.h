@@ -20,7 +20,7 @@ class IUnitStatus;
  * instance can instead be shared).
  */
 template<typename T>
-class LIBSAKUSEN_API Region {
+class LIBSAKUSEN_API Region : public Bounded {
   public:
     typedef boost::shared_ptr<Region> Ptr;
     typedef boost::shared_ptr<const Region> ConstPtr;
@@ -106,7 +106,11 @@ class LIBSAKUSEN_API Region {
      * bounding box, but not vice-versa. If the region is empty, the
      * bounding box will also be empty.
      */
-    virtual Box<T> getBoundingBox() const = 0;
+    virtual Box<sint32> getBoundingBox() const = 0;
+
+
+    /* By default, regions do not represent game objects at all */
+    virtual GameObject getObjectType() const { return gameObject_null; }
 
     /** \brief Intersect a Ray with the region.
      *

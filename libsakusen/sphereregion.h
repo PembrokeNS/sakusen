@@ -58,7 +58,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     inline Point<sint32> truncateToFit(const Point<sint32>&) const;
     inline Point<T> getBestPosition() const { return centre; }
     inline Rectangle<T> getBoundingRectangle() const;
-    inline Box<T> getBoundingBox() const;
+    inline Box<sint32> getBoundingBox() const;
     inline boost::tuple<double,double> intersect(const Ray& r) const;
     
     RegionType getType() const { return regionType_sphere; }
@@ -124,9 +124,9 @@ inline Rectangle<T> SphereRegion<T>::getBoundingRectangle() const
 }
 
 template<typename T>
-inline Box<T> SphereRegion<T>::getBoundingBox() const
+inline Box<sint32> SphereRegion<T>::getBoundingBox() const
 {
-  return Box<T>(
+  return Box<sint32>(
       Point<T>(
         centre.x-radius,
         centre.y-radius,
