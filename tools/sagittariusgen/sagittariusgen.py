@@ -12,6 +12,7 @@ if(__name__=="__main__"):
 	
 	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
 	torpedo = WeaponType("torpedo", "sagittarius/sagittarius_module", "c:torp", 0, 0, 0, 0, resint)
+	#torpdetonate = Weapontype('torpdetonate', 'sagittarius/sagittarius_module', 'o', 0, 0, 0, 0, resint)
 	
 
 	

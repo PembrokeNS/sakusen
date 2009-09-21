@@ -7,6 +7,8 @@
 #include "beam.h"
 #include "completeworld.h"
 #include "sphereregion.h"
+#include "unitmask.h"
+#include "ispatial.h"
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -57,6 +59,19 @@ class TorpedoLauncher: public Weapon {
 		Time lastFire;
 	};
 
+class TorpedoDetonator: public UnitMask {
+	public:
+		void incrementState();
+	};
+
+/*class TorpedoDetonator: public Weapon {
+	public:
+		TorpedoDetonator(const WeaponType* type) : Weapon(type) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+	};*/
+
 bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
 	BOOST_AUTO(orient, firer->getStatus().getFrame());
@@ -106,10 +121,28 @@ void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& 
 	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
 	lastFire = server::world->getTimeNow();
 	}
+/*
+bool TorpedoDetonator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
+	return SphereRegion<sint32>(firer->getStatus.getPosition(), 2.5 * CM).contains(orders.getTargetPosition());
+	}
+
+void TorpedoDetonator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders& orders, uint16 weaponIndex) {
+		BOOST_AUTO(tu, orders.getTargetUnit());
+		server::world->getLayeredUnit(,tu->getId())
+	}
+*/
+
+void TorpedoDetonator::incrementState() {
+	BOOST_AUTO(local, SphereRegion<sint32>(getOuterUnit()->getStatus().getPosition(), 2.5 * CM));
+	BOOST_AUTO(lbb, local.getBoundingBox());
+	/** \todo use the actual sphere for intersections, not the bounding box */
+	/* Too complicated for BOOST_AUTO, it seems */
+	ISpatial::Result targets = server::world->getSpatialIndex()->findIntersecting(lbb, gameObject_unit);
+	}
 
 extern "C" {
 	MODULE_API Weapon* spawn_laser(const WeaponType* type) { return new Laserator(type); }
 	MODULE_API Script* create_script() { return new SagScript(); }
 	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
-
+	//MODULE_API Weapon* spawn_torpdetonator(const WeaponType* type) { return new TorpedoDenotator(type); }
 	}
