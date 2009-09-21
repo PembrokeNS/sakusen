@@ -84,7 +84,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       assert(player < players.size());
       return players[player].getSensorReturns(id).cast<ISensorReturns>();
     }
-    inline Ref<ICompleteUnit> getICompleteUnit(
+    inline Ref<LayeredUnit> getLayeredUnit(
         PlayerId player, UnitId unitId
       ) {
       assert(player < players.size());
@@ -93,10 +93,13 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       u_map<UnitId, Ref<LayeredUnit> >::type::const_iterator it =
         units.find(unitId);
       if (it == units.end()) {
-        return Ref<ICompleteUnit>();
+        return Ref<LayeredUnit>();
       } else {
         return it->second;
       }
+    }
+    inline Ref<ICompleteUnit> getICompleteUnit(PlayerId player, UnitId unitId) {
+      return getLayeredUnit(player, unitId);
     }
     //@}
     

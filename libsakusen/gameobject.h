@@ -11,6 +11,7 @@ namespace sakusen {
  * bitfield.
  */
 enum GameObject {
+  gameObject_null          = 0x00,
   gameObject_land          = 0x01,
   gameObject_water         = 0x02,
   gameObject_unit          = 0x04,
