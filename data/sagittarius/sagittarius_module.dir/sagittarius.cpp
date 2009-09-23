@@ -86,13 +86,13 @@ bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const W
 	else return false;
 	}
 
-void Laserator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16 weaponIndex) {
+void Laserator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	server::world->addBeam(new LaserBeam(firer, status));
 	}
 
 LaserBeam::LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status): Beam(source->getStatus().getPosition(), status.getTargetDirection(), source, server::world->getTimeNow(), 3) {}
 
-void LaserBeam::onInteractUnit(double position, const Ref<LayeredUnit>& unit, bool leaving) {
+void LaserBeam::onInteractUnit(double, const Ref<LayeredUnit>& unit, bool leaving) {
 	if (not leaving) unit->damage(HitPoints(1));
 	}
 
@@ -111,7 +111,7 @@ bool TorpedoLauncher::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, c
         else return false;
         }
 
-void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16 weaponIndex) {
+void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	/** \todo permit clients to fire torpedoes out of the plane, if they really want to */
 	BOOST_AUTO(angle, Orientation(rotation_anticlockwise, atan2(status.getTargetDirection().y, status.getTargetDirection().x) / M_PI * 18000));
 	BOOST_AUTO(tp, status.getTargetDirection() + firer->getStatus().getPosition());
