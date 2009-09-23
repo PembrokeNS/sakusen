@@ -453,10 +453,15 @@ namespace sakusen{
 %traits_swigtype(sakusen::WeaponType);
 %fragment(SWIG_Traits_frag( sakusen::WeaponType));
 #endif
+/* Different circumstances require different %ignores here to actually persuade
+ * Swig to ignore the constructor.  Exactly what circumstances matter is
+ * unclear. */
 %ignore std::vector<sakusen::WeaponType>::vector(size_type);
+%ignore std::vector<sakusen::WeaponType>::vector(unsigned int);
 %ignore std::vector<sakusen::WeaponType>::resize(size_type);
-%ignore std::vector<sakusen::UnitType>::resize(size_type);
 %ignore std::vector<sakusen::UnitType>::vector(size_type);
+%ignore std::vector<sakusen::UnitType>::vector(unsigned int);
+%ignore std::vector<sakusen::UnitType>::resize(size_type);
 #ifndef SWIGCSHARP
 %template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
 #endif
@@ -585,6 +590,7 @@ namespace sakusen{
 #include "unittemplate.h"
 %}
 %ignore std::vector<sakusen::UnitTemplate>::vector(size_type);
+%ignore std::vector<sakusen::UnitTemplate>::vector(unsigned int);
 %ignore std::vector<sakusen::UnitTemplate>::resize(size_type);
 %template(unitTemplateVector) std::vector<sakusen::UnitTemplate>;
 %include "playertemplate.h"
@@ -593,6 +599,7 @@ namespace sakusen{
 %}
 %ignore std::vector<sakusen::PlayerTemplate>::resize(size_type);
 %ignore std::vector<sakusen::PlayerTemplate>::vector(size_type);
+%ignore std::vector<sakusen::PlayerTemplate>::vector(unsigned int);
 %template(playerTemplateVector) std::vector<sakusen::PlayerTemplate>;
 %include "mapplaymode.h"
 %{
@@ -600,6 +607,7 @@ namespace sakusen{
 %}
 %ignore std::vector<sakusen::MapPlayMode>::resize(size_type);
 %ignore std::vector<sakusen::MapPlayMode>::vector(size_type);
+%ignore std::vector<sakusen::MapPlayMode>::vector(unsigned int);
 %template(mapPlayModeVector) std::vector<sakusen::MapPlayMode>;
 %include "maptemplate.h"
 %{
