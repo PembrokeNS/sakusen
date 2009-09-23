@@ -7,7 +7,6 @@
 %include "std_string.i"
 %include "std_vector.i"
 %include "std_pair.i"
-%include "std_list.i"
 
 /* We can't just define _MSC_VER, because that picks up a 
  * whole load of template stuff that blows SWIG's tiny mind.*/
@@ -171,7 +170,11 @@ $VERSION = 0.01;
 %{
 #include "libsakusen-global.h"
 %}
+#ifndef SWIGCSHARP
+#ifndef SWIGTCL
 %template(stringList) std::list<sakusen::String>;
+#endif
+#endif
 %include "arithmetictraits.h"
 %array_class(uint8,uint8);
 %array_class(sint16,sint16);
@@ -445,14 +448,20 @@ namespace sakusen{
 #include "weapontype.h"
 %}
 /*These two lines needed because WeaponTypeId is actually a const pointer, and swig has trouble with containers of such. There are unconfirmed reports that this problem is fixed in SWIG SVN, so it may be worth trying removing them once swig 1.3.37 is out. */
+
+#ifndef SWIGCSHARP
 %traits_swigtype(sakusen::WeaponType);
 %fragment(SWIG_Traits_frag( sakusen::WeaponType));
+#endif
 %ignore std::vector<sakusen::WeaponType>::vector(size_type);
 %ignore std::vector<sakusen::WeaponType>::resize(size_type);
 %ignore std::vector<sakusen::UnitType>::resize(size_type);
 %ignore std::vector<sakusen::UnitType>::vector(size_type);
+#ifndef SWIGCSHARP
 %template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
+#endif
 %template(stdVectorWeaponType) std::vector<sakusen::WeaponType>;
+
 %include "unittype.h"
 %{
 #include "unittype.h"
