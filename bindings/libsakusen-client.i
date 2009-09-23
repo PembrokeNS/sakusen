@@ -33,7 +33,10 @@
 /* Needed because libsakusen.i includes a weapontypes traits fragment */
 namespace sakusen{
 class WeaponType;
+/* And some Region template instantiations */
+template<typename T> class SphereRegion;
 }
+#include "rectangleregion.h"
 %}
 %import "libsakusen.i"
 %{
