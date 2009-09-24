@@ -17,11 +17,9 @@
 #endif
 
 %include "std_except.i"
-#ifndef SWIGCSHARP
-#ifndef SWIGTCL
-/*SWIG doesn't support this in C# or TCL yet*/
-%include "std_list.i"
-#endif
+#if !defined(SWIGCSHARP) && !defined(SWIGTCL)
+  /* SWIG doesn't support this in C# or TCL yet */
+  %include "std_list.i"
 #endif
 %include "carrays.i"
 
@@ -78,12 +76,12 @@ class tuple<
 }
 
 #ifdef SWIGPERL
-#define BINDING_NOOVERLOAD
-%perlcode %{
-$VERSION = 0.01;
-%}
-
+  #define BINDING_NOOVERLOAD
+  %perlcode %{
+    $VERSION = 0.01;
+  %}
 #endif
+
 %rename(numify) *::operator uint32;
 
 
@@ -117,45 +115,44 @@ $VERSION = 0.01;
     return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
   }
 %}
+
 #ifdef SWIGCSHARP
+  /* Renames for wrapped operators.  Although C# does support operator
+   * overloading, it doesn't work in the same way as C++'s, so for now we don't
+   * try to make use of it */
+  %rename(Numify) *::operator unsigned char;
+  %rename(Numify) *::operator unsigned int;
+  %rename(Numify) *::operator uint32;
+  %rename(Item) *::operator[];
+  %rename(Or) *::operator|;
+  %rename(Minus) *::operator-;
+  %rename(MinusEquals) *::operator-=;
+  %rename(Times) *::operator*;
+  %rename(TimesEquals) *::operator*=;
+  %rename(Over) *::operator/;
+  %rename(OverEquals) *::operator/=;
+  %rename(Plus) *::operator+;
+  %rename(PlusEquals) *::operator+=;
+  %rename(Equals) *::operator==;
+  %ignore *::operator!=;
+  %rename(Leq) *::operator<=;
+  %rename(Geq) *::operator>=;
+  %rename(Less) *::operator<;
+  %rename(Greater) *::operator>;
+  %ignore *::operator=;
+  %ignore *::operator!;
+  %ignore *::operator>>;
+  %ignore *::operator<<;
+  %ignore operator++;
+  %ignore operator==;
+  %ignore operator!=;
+  %ignore operator>>;
+  %ignore operator<<;
+  %ignore operator|;
+  %ignore operator|=;
 
-/* Renames for wrapped operators.  Although C# does support operator
- * overloading, it doesn't work in the same way as C++'s, so for now we don't
- * try to make use of it */
-%rename(Numify) *::operator unsigned char;
-%rename(Numify) *::operator unsigned int;
-%rename(Numify) *::operator uint32;
-%rename(Item) *::operator[];
-%rename(Or) *::operator|;
-%rename(Minus) *::operator-;
-%rename(MinusEquals) *::operator-=;
-%rename(Times) *::operator*;
-%rename(TimesEquals) *::operator*=;
-%rename(Over) *::operator/;
-%rename(OverEquals) *::operator/=;
-%rename(Plus) *::operator+;
-%rename(PlusEquals) *::operator+=;
-%rename(Equals) *::operator==;
-%ignore *::operator!=;
-%rename(Leq) *::operator<=;
-%rename(Geq) *::operator>=;
-%rename(Less) *::operator<;
-%rename(Greater) *::operator>;
-%ignore *::operator=;
-%ignore *::operator!;
-%ignore *::operator>>;
-%ignore *::operator<<;
-%ignore operator++;
-%ignore operator==;
-%ignore operator!=;
-%ignore operator>>;
-%ignore operator<<;
-%ignore operator|;
-%ignore operator|=;
-
-/* We have to rename Buffer because the name clashes with System.Buffer */
-%rename(SakusenBuffer) Buffer;
-
+  /* We have to rename Buffer because the name clashes with System.Buffer */
+  %rename(SakusenBuffer) Buffer;
 #endif
 
 /* General ignores to resolve ambiguities caused by SWIG's collapsing of types
@@ -170,15 +167,14 @@ $VERSION = 0.01;
 %{
 #include "libsakusen-global.h"
 %}
-#ifndef SWIGCSHARP
-#ifndef SWIGTCL
-%template(stringList) std::list<sakusen::String>;
-#endif
+#if !defined(SWIGCSHARP) && !defined(SWIGTCL)
+  %template(stringList) std::list<sakusen::String>;
 #endif
 %include "arithmetictraits.h"
 %array_class(uint8,uint8);
 %array_class(sint16,sint16);
-/* it looks like it really has to be called uint8, otherwise SWIG gets confused. Crazy, huh? */
+/* it looks like it really has to be called uint8, otherwise SWIG gets
+ * confused. Crazy, huh? */
 /* Causes make clean to fail, though this is probably due to problems in makefiles %include "revision.h"*/
 %include "gameobject.h"
 %include "topology.h"
@@ -192,36 +188,36 @@ $VERSION = 0.01;
 %}
 namespace sakusen {
 #ifdef BINDING_NOOVERLOAD
-%template(bottomsint16) bottomNumber<sint16>;
-%template(bottomsint32) bottomNumber<sint32>;
-%template(bottomsint64) bottomNumber<sint64>;
-%template(topsint16) topNumber<sint16>;
-%template(topsint32) topNumber<sint32>;
-%template(topsint64) topNumber<sint64>;
-%template(bottomuint16) bottomNumber<uint16>;
-%template(bottomuint32) bottomNumber<uint32>;
-%template(bottomuint64) bottomNumber<uint64>;
-%template(topuint16) topNumber<uint16>;
-%template(topuint32) topNumber<uint32>;
-%template(topuint64) topNumber<uint64>;
-%template(bottomdouble) bottomNumber<double>;
-%template(topdouble) topNumber<double>;
+  %template(bottomsint16) bottomNumber<sint16>;
+  %template(bottomsint32) bottomNumber<sint32>;
+  %template(bottomsint64) bottomNumber<sint64>;
+  %template(topsint16) topNumber<sint16>;
+  %template(topsint32) topNumber<sint32>;
+  %template(topsint64) topNumber<sint64>;
+  %template(bottomuint16) bottomNumber<uint16>;
+  %template(bottomuint32) bottomNumber<uint32>;
+  %template(bottomuint64) bottomNumber<uint64>;
+  %template(topuint16) topNumber<uint16>;
+  %template(topuint32) topNumber<uint32>;
+  %template(topuint64) topNumber<uint64>;
+  %template(bottomdouble) bottomNumber<double>;
+  %template(topdouble) topNumber<double>;
 #endif
-  %extend Point {
-    %template("operator+") operator+<T>;
-    %template("operator-") operator-<T>;
-    %template("operator==") operator==<T>;
-    %template("operator!=") operator!=<T>;
-    %template("operator<=") operator<=<T>;
-    %template("operator>=") operator>=<T>;
-    %template("operator<") operator< <T>;
-    %template("operator>") operator><T>;
-  }
-  %template(SPoint16) Point<sint16>;
-  %template(UPoint16) Point<uint16>;
-  %template(SPoint32) Point<sint32>;
-  %template(UPoint32) Point<uint32>;
-  %template(SPoint64) Point<sint64>;
+%extend Point {
+  %template("operator+") operator+<T>;
+  %template("operator-") operator-<T>;
+  %template("operator==") operator==<T>;
+  %template("operator!=") operator!=<T>;
+  %template("operator<=") operator<=<T>;
+  %template("operator>=") operator>=<T>;
+  %template("operator<") operator< <T>;
+  %template("operator>") operator><T>;
+}
+%template(SPoint16) Point<sint16>;
+%template(UPoint16) Point<uint16>;
+%template(SPoint32) Point<sint32>;
+%template(UPoint32) Point<uint32>;
+%template(SPoint64) Point<sint64>;
 }
 %include "angle.h"
 %{
@@ -297,8 +293,9 @@ namespace sakusen {
 }
 
 %extend sakusen::Region {
-static boost::shared_ptr<sakusen::Region<T> > createRegionPtr(sakusen::Region<T> * r ){
-  return boost::shared_ptr<sakusen::Region<T> >(r);
+  static boost::shared_ptr<sakusen::Region<T> >
+  createRegionPtr(sakusen::Region<T> * r ){
+    return boost::shared_ptr<sakusen::Region<T> >(r);
   }
 }
 
@@ -336,7 +333,7 @@ static boost::shared_ptr<sakusen::Region<T> > createRegionPtr(sakusen::Region<T>
 #include "resourceinterface-methods.h"
 %}
 %extend sakusen::ResourceInterface{
-%template(usave) save<sakusen::Universe>;
+  %template(usave) save<sakusen::Universe>;
 }
 %include "deserializationcontext.h"
 %{
@@ -367,7 +364,8 @@ static boost::shared_ptr<sakusen::Region<T> > createRegionPtr(sakusen::Region<T>
 #include "icompleteunit.h"
 %}
 namespace sakusen{
-%ignore Ref<ICompleteUnit>::operator*; /*Unfortunately this breaks due to making a pointer to a reference */
+/*Unfortunately this breaks due to making a pointer to a reference */
+%ignore Ref<ICompleteUnit>::operator*;
 %template(ICompleteUnitRef) Ref<ICompleteUnit>;
 }
 %ignore sakusen::Ref<sakusen::ICompleteUnit const>::operator*;
@@ -449,13 +447,14 @@ namespace sakusen{
 %{
 #include "weapontype.h"
 %}
-/*These two lines needed because WeaponTypeId is actually a const pointer, and swig has trouble with containers of such. There are unconfirmed reports that this problem is fixed in SWIG SVN, so it may be worth trying removing them once swig 1.3.37 is out. */
 
-#ifndef SWIGCSHARP
-#ifndef SWIGTCL
-%traits_swigtype(sakusen::WeaponType);
-%fragment(SWIG_Traits_frag( sakusen::WeaponType));
-#endif
+#if !defined(SWIGCSHARP) && !defined(SWIGTCL)
+  /* These two lines needed because WeaponTypeId is actually a const pointer,
+   * and swig has trouble with containers of such. There are unconfirmed
+   * reports that this problem is fixed in SWIG SVN, so it may be worth trying
+   * removing them once swig 1.3.37 is out. */
+  %traits_swigtype(sakusen::WeaponType);
+  %fragment(SWIG_Traits_frag(sakusen::WeaponType));
 #endif
 /* Different circumstances require different %ignores here to actually persuade
  * Swig to ignore the constructor.  Exactly what circumstances matter is
@@ -466,10 +465,8 @@ namespace sakusen{
 %ignore std::vector<sakusen::UnitType>::vector(size_type);
 %ignore std::vector<sakusen::UnitType>::vector(unsigned int);
 %ignore std::vector<sakusen::UnitType>::resize(size_type);
-#ifndef SWIGCSHARP
-#ifndef SWIGTCL
-%template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
-#endif
+#if !defined(SWIGCSHARP) && !defined(SWIGTCL)
+  %template(stdVectorWeaponTypeId) std::vector<sakusen::WeaponTypeId>;
 #endif
 %template(stdVectorWeaponType) std::vector<sakusen::WeaponType>;
 
@@ -484,8 +481,9 @@ namespace sakusen{
 %}
 namespace sakusen{
 %extend ResourceInterface {
-/*This should be a %template, but as of swig-1.3.31 that broke for reasons unknown*/
-/*Returning a ConstPtr rather than a Ptr is very useful to me - Lmm*/
+  /* This should be a %template, but as of swig-1.3.31 that broke for reasons
+   * unknown. */
+  /* Returning a ConstPtr rather than a Ptr is very useful to me - Lmm */
     boost::tuple<sakusen::Universe::ConstPtr, ResourceSearchResult, String>
     searchUniverse(
         const String& name,
@@ -495,16 +493,17 @@ namespace sakusen{
     }
   }
   %template(resourceInterfacePtr) ::boost::shared_ptr<ResourceInterface>;
-%template(UniverseConstPtr) ::boost::shared_ptr<const Universe>;
-%template(UniversePtr) ::boost::shared_ptr<Universe>;
-%template(SRegion32ConstPtr) ::boost::shared_ptr<const Region<sint32> >;
+  %template(UniverseConstPtr) ::boost::shared_ptr<const Universe>;
+  %template(UniversePtr) ::boost::shared_ptr<Universe>;
+  %template(SRegion32ConstPtr) ::boost::shared_ptr<const Region<sint32> >;
 }
 %template(SRegion32Ptr) boost::shared_ptr<sakusen::Region<sint32> >;
 %template(SRegion16Ptr) boost::shared_ptr<sakusen::Region<sint16> >;
 %extend sakusen::Universe {
-static ::boost::shared_ptr<const sakusen::Universe> createConstPtr(sakusen::Universe *u) {
-return ::boost::shared_ptr<const sakusen::Universe>(u);
-}
+  static ::boost::shared_ptr<const sakusen::Universe>
+  createConstPtr(sakusen::Universe *u) {
+    return ::boost::shared_ptr<const sakusen::Universe>(u);
+  }
 }
 %include "weapontargettype.h"
 %{
@@ -543,13 +542,11 @@ return ::boost::shared_ptr<const sakusen::Universe>(u);
 %{
 #include "update.h"
 %}
-#ifndef SWIGCSHARP
-#ifndef SWIGTCL
-/*SWIG doesn't support std::list in C# or TCL yet*/
-namespace sakusen{
-%template(listUpdate) ::std::list<Update>;
-}
-#endif
+#if !defined(SWIGCSHARP) && !defined(SWIGTCL)
+  /* SWIG doesn't support std::list in C# or TCL yet */
+  namespace sakusen{
+  %template(listUpdate) ::std::list<Update>;
+  }
 #endif
 %include "ordermessage.h"
 %{
@@ -620,11 +617,12 @@ namespace sakusen{
 #include "maptemplate.h"
 %}
 %extend sakusen::MapTemplate {
-static boost::shared_ptr<sakusen::MapTemplate > createPtr(sakusen::MapTemplate * r ){
-  return boost::shared_ptr<sakusen::MapTemplate >(r);
+  static boost::shared_ptr<sakusen::MapTemplate>
+  createPtr(sakusen::MapTemplate * r ){
+    return boost::shared_ptr<sakusen::MapTemplate>(r);
   }
 }
 %extend sakusen::ResourceInterface{
-%template(mtsave) save<sakusen::MapTemplate>;
+  %template(mtsave) save<sakusen::MapTemplate>;
 }
 %template(MapTemplatePtr) boost::shared_ptr<sakusen::MapTemplate>;
