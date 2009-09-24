@@ -16,13 +16,13 @@
 #include "plugins/pluginexn.h"
 
 #ifndef _MSC_VER
-	#include "revision.h"
+  #include "revision.h"
 #else
   #define REVISION "0.1"
 #endif
 
 #ifndef DISABLE_AVAHI
-	#include "mdns.h"
+  #include "mdns.h"
 #endif
 
 #include <time.h>

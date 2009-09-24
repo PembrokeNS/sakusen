@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 
 #ifdef __GNUC__
-	#include <ltdl_hacked.h>
+  #include <ltdl_hacked.h>
 #endif //Not condoned here.
 
 #include <cerrno>

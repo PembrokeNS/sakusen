@@ -32,8 +32,7 @@ class PluginInfo : private boost::noncopyable {
     PluginInfo() {}
   public:
     virtual ~PluginInfo() {}
-	//interface is an MS-specific keyword.
-    virtual void init(PluginServerInterface& PSinterface) = 0;
+    virtual void init(PluginServerInterface&) = 0;
     virtual void close() = 0;
 };
 

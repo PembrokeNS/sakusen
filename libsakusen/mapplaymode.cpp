@@ -40,7 +40,7 @@ bool MapPlayMode::sanityCheck(
 
 void MapPlayMode::store(OArchive& archive) const
 {
-	archive << minPlayers << maxPlayers << players;
+  archive << minPlayers << maxPlayers << players;
 }
 
 MapPlayMode MapPlayMode::load(

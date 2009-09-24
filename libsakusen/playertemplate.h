@@ -26,7 +26,7 @@ class LIBSAKUSEN_API PlayerTemplate {
         bool noClients,
         bool fixedRace,
         const std::vector<UnitTemplate>& units,
-	const Position& startPos = Position()
+        const Position& startPos = Position()
       );
   private:
     bool noClients;

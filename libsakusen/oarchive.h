@@ -129,7 +129,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     }
 
     template<typename T, size_t rank>
-	  OArchive& insert(const boost::multi_array<T, rank>& toStore) {
+    OArchive& insert(const boost::multi_array<T, rank>& toStore) {
       /** \bug Handles only zero-based-indexed multi_arrays */
       assert(rank == toStore.num_dimensions());
       boost::array<uint32, rank> shape;
@@ -161,7 +161,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     }
 
     template<typename T>
-	  OArchive& operator<<(const std::vector<T>& toStore) {
+    OArchive& operator<<(const std::vector<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
   

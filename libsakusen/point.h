@@ -30,7 +30,7 @@ namespace sakusen {
  * nothing happens. Thanks MSVC.
  */
 #ifdef _MSC_VER 
-	#pragma warning (disable:4101 4146)
+  #pragma warning (disable:4101 4146)
 #endif
 
 template<typename T>

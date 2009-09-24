@@ -30,7 +30,7 @@ class LIBSAKUSEN_API MapTemplate {
         const Point<sint32>& bottomLeft,
         Topology topology,
         const Heightfield& heightfield,
-	uint32 dexPerPixel,
+        uint32 dexPerPixel,
         uint16 gravity,
         const std::vector<MapPlayMode>& playModes
       );

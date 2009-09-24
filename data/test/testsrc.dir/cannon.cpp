@@ -77,7 +77,7 @@ void Creater::onFire(
             HitPoints(1)
           );
         newUnit->insertLayer(BuildingLayer::Ptr(new BuildingLayer()));
-	newUnit->setDirty();
+        newUnit->setDirty();
         orders.clear();
       }
       break;

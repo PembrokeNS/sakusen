@@ -197,7 +197,7 @@ class LIBSAKUSEN_COMMS_API GameStartMessageData : public MessageData {
         Topology topology,
         const Point<sint32>& topRight,
         const Point<sint32>& bottomLeft,
-	uint32 dexPerPixel,
+        uint32 dexPerPixel,
         uint16 gravity,
         const Heightfield& hf
       );

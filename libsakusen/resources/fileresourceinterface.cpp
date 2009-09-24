@@ -304,7 +304,7 @@ FileResourceInterface::internalSymbolSearch(
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }
 #else
-  //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());	
+  //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
   //Opens the library for searching. Must be a dll or an exe.
   /** \bug This should work for UNICODE filenames.*/
   HMODULE moduleHandle = LoadLibrary(modulePath.native_file_string().c_str());

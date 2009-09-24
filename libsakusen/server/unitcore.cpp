@@ -67,7 +67,7 @@ void UnitCore::incrementWeaponsState()
   size_t numWeapons = weapons.size();
 
   for (size_t i=0; i<numWeapons; ++i) {
-	  weapons[i]->incrementState(outerUnit->getRefToThis(), static_cast<uint16>(i));
+    weapons[i]->incrementState(outerUnit->getRefToThis(), static_cast<uint16>(i));
   }
 }
 

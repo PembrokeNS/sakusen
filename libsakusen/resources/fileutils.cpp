@@ -16,7 +16,7 @@
 
 #if (BOOST_VERSION == 103500) 
    #define BOOST_FILENAME leaf
-#else	
+#else
    #define BOOST_FILENAME filename
 #endif
 

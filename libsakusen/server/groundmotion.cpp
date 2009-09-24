@@ -41,17 +41,23 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       break;
     case linearTargetType_position:
       {
-	Frame& f = status.getFrame();
+        Frame& f = status.getFrame();
         Point<sint32> desiredDirection =
           world->getMap()->getShortestDifference(
               orders.getTargetPosition(), f.getPosition()
             );
-	Point<sint16> desiredVelocity(
-            typeData.getPossibleVelocities()->truncateToFit(f.globalToLocalRelative(desiredDirection))
+        Point<sint16> desiredVelocity(
+            typeData.getPossibleVelocities()->truncateToFit(
+              f.globalToLocalRelative(desiredDirection)
+            )
           );
-        Point<sint16> acceleration = desiredVelocity - f.globalToLocalRelative(status.velocity);
+        Point<sint16> acceleration =
+          desiredVelocity - f.globalToLocalRelative(status.velocity);
         acceleration =
-          Point<sint16>(f.localToGlobalRelative(typeData.getPossibleAccelerations()->truncateToFit(acceleration)));
+          Point<sint16>(f.localToGlobalRelative(
+                typeData.getPossibleAccelerations()->
+                truncateToFit(acceleration))
+              );
         /*if (owner == 1 && unitId == 0) {
           Debug("[1] desiredVel=" << desiredVelocity <<
               ", acc=" << acceleration);
