@@ -64,13 +64,10 @@ class TorpedoDetonator: public UnitMask {
 		void incrementState();
 	};
 
-/*class TorpedoDetonator: public Weapon {
+class TorpedoFuse: public UnitMask, public Fuse {
 	public:
-		TorpedoDetonator(const WeaponType* type) : Weapon(type) {}
-		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders);
-		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
-		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
-	};*/
+		void expire(FuseToken);
+	};
 
 bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
@@ -118,31 +115,39 @@ void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& 
 	Point<double> tv = status.getTargetDirection();
 	tv.normalise();
 	tv *= 30000;
-	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
+	BOOST_AUTO(u, LayeredUnit::spawn(PlayerId::fromString("0"), /* All torpedoes are neutral */
+	server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
+	BOOST_AUTO(f, boost::shared_ptr<TorpedoFuse>(new TorpedoFuse())); /* can't use TorpedoFuse::Ptr as ambiguous */
+	u->insertLayer(f);
 	lastFire = server::world->getTimeNow();
+	server::world->addFuse(f, lastFire + 33); /* Fuse of 1/3 of a turn, in which the torpedo should move 10cm and the ship 6.66 cm, leaving them well over 2.5cm apart */
+	Debug("Launched torpedo at time " << lastFire);
 	}
-/*
-bool TorpedoDetonator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
-	return SphereRegion<sint32>(firer->getStatus.getPosition(), 2.5 * CM).contains(orders.getTargetPosition());
-	}
-
-void TorpedoDetonator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders& orders, uint16 weaponIndex) {
-		BOOST_AUTO(tu, orders.getTargetUnit());
-		server::world->getLayeredUnit(,tu->getId())
-	}
-*/
 
 void TorpedoDetonator::incrementState() {
+	UnitMask::incrementState();
 	BOOST_AUTO(local, SphereRegion<sint32>(getOuterUnit()->getStatus().getPosition(), 2.5 * CM));
 	BOOST_AUTO(lbb, local.getBoundingBox());
 	/** \todo use the actual sphere for intersections, not the bounding box */
 	/* Too complicated for BOOST_AUTO, it seems */
 	ISpatial::Result targets = server::world->getSpatialIndex()->findIntersecting(lbb, gameObject_unit);
+	for(BOOST_AUTO(t, targets.begin()); t != targets.end(); t++)
+		if(t->dynamicCast<LayeredUnit>()->getOwner() or t->dynamicCast<LayeredUnit>()->getId() != this->getOuterUnit()->getId()) {
+			/* Detonate the torpedo, damaging only one ship - for balance reasons, and can be justified with nanotech or something */
+			Debug("Detonating torpedo with id " << int(this->getOuterUnit()->getId()) << " at time " << server::world->getTimeNow() << ", targetting player: " << t->dynamicCast<LayeredUnit>()->getOwner() << ", unit: " << t->dynamicCast<LayeredUnit>()->getId());
+			t->dynamicCast<LayeredUnit>()->damage(HitPoints(200));
+			this->getOuterUnit()->kill();
+			return;
+			}
+	}
+
+void TorpedoFuse::expire(FuseToken) {
+	this->getOuterUnit()->insertLayer(TorpedoDetonator::Ptr(new TorpedoDetonator()));
+	this->getOuterUnit()->removeLayer(this);
 	}
 
 extern "C" {
 	MODULE_API Weapon* spawn_laser(const WeaponType* type) { return new Laserator(type); }
 	MODULE_API Script* create_script() { return new SagScript(); }
 	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
-	//MODULE_API Weapon* spawn_torpdetonator(const WeaponType* type) { return new TorpedoDenotator(type); }
 	}
