@@ -29,7 +29,7 @@ sakusen.cpp sakusen.cs: $(top_srcdir)bindings/libsakusen.i \
 	$(SWIG) $(SWIGWORDSIZE) -csharp -namespace Sakusen -c++ -o sakusen.cpp -I$(top_srcdir)libsakusen -I/usr/include $<
 
 sakusen.dll: sakusen.cpp sakusen.cs
-	mcs -checked+ -debug+ -out:$@ -recurse:'*.cs' -target:library
+	gmcs -checked+ -debug+ -out:$@ -recurse:'*.cs' -target:library
 
 .PHONY: all test clean
 

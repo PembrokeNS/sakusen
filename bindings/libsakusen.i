@@ -396,8 +396,10 @@ namespace sakusen{
 %template(SSphereRegion32) sakusen::SphereRegion<sint32>;
 %template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
 
-/* we shouldn't need to call any of the functions herein */
-%import "ordertype.h"
+%include "ordertype.h"
+%{
+#include "ordertype.h"
+%}
 
 
 /* dependencies of libsakusen-comms */
