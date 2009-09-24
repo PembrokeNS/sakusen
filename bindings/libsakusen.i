@@ -450,8 +450,10 @@ namespace sakusen{
 /*These two lines needed because WeaponTypeId is actually a const pointer, and swig has trouble with containers of such. There are unconfirmed reports that this problem is fixed in SWIG SVN, so it may be worth trying removing them once swig 1.3.37 is out. */
 
 #ifndef SWIGCSHARP
+#ifndef SWIGTCL
 %traits_swigtype(sakusen::WeaponType);
 %fragment(SWIG_Traits_frag( sakusen::WeaponType));
+#endif
 #endif
 /* Different circumstances require different %ignores here to actually persuade
  * Swig to ignore the constructor.  Exactly what circumstances matter is
@@ -463,7 +465,9 @@ namespace sakusen{
 %ignore std::vector<sakusen::UnitType>::vector(unsigned int);
 %ignore std::vector<sakusen::UnitType>::resize(size_type);
 #ifndef SWIGCSHARP
+#ifndef SWIGTCL
 %template(stdVectorWeaponTypeId) std::vector< sakusen::WeaponTypeId>;
+#endif
 #endif
 %template(stdVectorWeaponType) std::vector<sakusen::WeaponType>;
 
