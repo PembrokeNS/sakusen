@@ -132,7 +132,8 @@ void TorpedoDetonator::incrementState() {
 	/* Too complicated for BOOST_AUTO, it seems */
 	ISpatial::Result targets = server::world->getSpatialIndex()->findIntersecting(lbb, gameObject_unit);
 	for(BOOST_AUTO(t, targets.begin()); t != targets.end(); t++)
-		if(t->dynamicCast<LayeredUnit>()->getOwner() or t->dynamicCast<LayeredUnit>()->getId() != this->getOuterUnit()->getId()) {
+		if(t->dynamicCast<LayeredUnit>()->getOwner()) {
+			/* For now, torpedoes never detonate on each other - really, need some way to discriminate between torpedoes in the same salvo. Perhaps using a wide but very short detection box? */
 			/* Detonate the torpedo, damaging only one ship - for balance reasons, and can be justified with nanotech or something */
 			Debug("Detonating torpedo with id " << int(this->getOuterUnit()->getId()) << " at time " << server::world->getTimeNow() << ", targetting player: " << t->dynamicCast<LayeredUnit>()->getOwner() << ", unit: " << t->dynamicCast<LayeredUnit>()->getId());
 			t->dynamicCast<LayeredUnit>()->damage(HitPoints(200));
