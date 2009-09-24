@@ -11,6 +11,7 @@ Universe::Universe(
     const String& h,
     const String& sM,
     const String& sF,
+    const String& pF,
     const std::vector<WeaponType>& w,
     const std::vector<UnitType>& u
   ) :
@@ -18,6 +19,7 @@ Universe::Universe(
   hash(h),
   scriptModule(sM),
   scriptFunction(sF),
+  playerDataFunction(pF),
   weaponTypes(w),
   unitTypes(u)
 {
@@ -98,7 +100,7 @@ bool Universe::containsUnitType(const UnitTypeId id) const
 
 void Universe::store(OArchive& archive) const
 {
-  archive << internalName << scriptModule << scriptFunction << weaponTypes <<
+  archive << internalName << scriptModule << scriptFunction << playerDataFunction << weaponTypes <<
     unitTypes;
 }
 
@@ -110,13 +112,14 @@ Universe* Universe::loadNew(
   String internalName;
   String scriptModule;
   String scriptFunction;
+  String playerDataFunction;
   vector<WeaponType> weaponTypes;
   vector<UnitType> unitTypes;
-  archive >> internalName >> scriptModule >> scriptFunction;
+  archive >> internalName >> scriptModule >> scriptFunction >> playerDataFunction;
   archive.extract(weaponTypes, context) >> unitTypes;
   Universe* u = new Universe(
       internalName, archive.getSecureHashAsString(),
-      scriptModule, scriptFunction, weaponTypes, unitTypes
+      scriptModule, scriptFunction, playerDataFunction, weaponTypes, unitTypes
     );
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {

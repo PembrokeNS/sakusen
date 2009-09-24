@@ -68,7 +68,7 @@ if(__name__=="__main__"):
 	torp = UnitType("torp", torptype, 0, 0, "ground", [], "")
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", [laser, torpedo], [ship, torp])
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo], [ship, torp])
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr

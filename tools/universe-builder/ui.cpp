@@ -65,6 +65,7 @@ void UI::newUniverse()
         "", // hash
         "", // scriptModule
         "", // scriptFunction
+	"", // playerDataFunction
         vector<WeaponType>(),
         vector<UnitType>()
       ));

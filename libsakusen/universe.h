@@ -30,6 +30,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
         const String& hash,
         const String& scriptModule,
         const String& scriptFunction,
+	const String& playerDataFunction,
         const std::vector<WeaponType>& weaponTypes,
         const std::vector<UnitType>& unitTypes
       );
@@ -39,6 +40,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     String hash;
     String scriptModule;
     String scriptFunction;
+    String playerDataFunction;
     std::vector<WeaponType> weaponTypes;
     u_map<String, WeaponTypeId>::type weaponIdLookup;
     std::vector<UnitType> unitTypes;
@@ -73,6 +75,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     inline const String& getHash() const { return hash; }
     inline const String& getScriptModule() const { return scriptModule; }
     inline const String& getScriptFunction() const { return scriptFunction; }
+    inline const String& getPlayerDataFunction() const { return playerDataFunction; }
     //@}
     
     /** \name Index/pointer/Id/Name conversions */
