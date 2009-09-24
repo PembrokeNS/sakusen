@@ -265,7 +265,7 @@ void CompleteWorld::incrementGameState(void)
      * current speed.  This method also responsible for
      * ensuring that all appropriate client messages caused by the things
      * that happen in it are sent */
-    (*j)->incrementState(timeNow);
+    LayeredUnit::incrementState(*j, timeNow);
   }
 
   /* process Ballistics */

@@ -191,37 +191,34 @@ void LayeredUnit::setPosition(const Point<sint32>& newPos)
  * weapons fire.  Any changes which require it will cause the dirty flag to be
  * set.
  */
-void LayeredUnit::incrementState(const Time& /*timeNow*/)
+void LayeredUnit::incrementState(Ref<LayeredUnit> refToThis, const Time& /*timeNow*/)
 {
   /** \todo Rethink this function for subunits */
 
-  /* Take a reference so that we can detect ourselves being killed */
-  Ref<LayeredUnit> refToThis = getRefToThis();
-  
   /* Allow layers to do every-tick stuff (e.g. generate some resources) */
-  topLayer->incrementState();
+  refToThis->topLayer->incrementState();
   if (!refToThis) { return; }
 
   /* Call motion handler to set velocity properly */
-  motion->incrementState(*this);
+  refToThis->motion->incrementState(*refToThis);
   if (!refToThis) { return; }
   
   /* Do the actual move */
-  Position oldPos = status.frame.getPosition();
+  Position oldPos = refToThis->status.frame.getPosition();
   world->getMap()->transform(
-      status.frame, status.velocity, status.angularVelocity
+      refToThis->status.frame, refToThis->status.velocity, refToThis->status.angularVelocity
     );
 
-  if (status.frame.getPosition() != oldPos) {
+  if (refToThis->status.frame.getPosition() != oldPos) {
     /* Whenever a unit position changes, we need to check
      * whether it has entered/exited the region of some effect */
     world->applyEntryExitEffects(
-        getRefToThis(), oldPos, status.frame.getPosition()
+        refToThis, oldPos, refToThis->status.frame.getPosition()
       );
   }
 
   /* Process the weapons */
-  topLayer->incrementWeaponsState();
+  refToThis->topLayer->incrementWeaponsState();
 }
 
 /** \brief Inserts a new layer at the top of the unit's layers */

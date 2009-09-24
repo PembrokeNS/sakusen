@@ -123,7 +123,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     bool setRadar(bool active);
     bool setSonar(bool active);
 
-    void incrementState(const Time& timeNow);
+    static void incrementState(Ref<LayeredUnit> refToThis, const Time& timeNow);
 
     /** Accept a new order from the queue */
     void acceptOrder(const Order&);
