@@ -1,8 +1,0 @@
-SUBDIRS := libsakusen libsakusen-comms
-
-# libsakusen-client doesn't work at present, uncomment this to see why
-#SUBDIRS += libsakusen-client
-
-all-recurse-libsakusen-comms all-recurse-libsakusen-client: all-recurse-libsakusen
-test-recurse-libsakusen-comms test-recurse-libsakusen-client: test-recurse-libsakusen
-

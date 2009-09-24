@@ -109,7 +109,6 @@ check_for_prog swig
 check_for_prog perl
 check_for_prog python python-config
 check_for_pyplusplus
-check_for_prog mcs
 check_for_prog pyqt4 pykdeuic4
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost/shared_ptr.hpp
@@ -136,7 +135,6 @@ fi
 
 enable_component BINDINGS swig
 enable_component PERL_BINDINGS swig perl
-enable_component DOTNET_BINDINGS swig mcs
 enable_component PYTHON_BINDINGS swig python
 enable_component PYSTE_BINDINGS python pyplusplus
 enable_component TCL_BINDINGS swig tcl
