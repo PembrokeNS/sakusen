@@ -50,6 +50,9 @@ class LaserBeam: public Beam {
 class SagScript: public Script {
 	};
 
+class SagPlayerData: public PlayerData {
+	};
+
 class TorpedoLauncher: public Weapon {
 	public:
 		TorpedoLauncher(const WeaponType* type) : Weapon(type), lastFire(0) {}
@@ -150,5 +153,6 @@ void TorpedoFuse::expire(FuseToken) {
 extern "C" {
 	MODULE_API Weapon* spawn_laser(const WeaponType* type) { return new Laserator(type); }
 	MODULE_API Script* create_script() { return new SagScript(); }
+	MODULE_API PlayerData* create_player() { return new SagPlayerData(); }
 	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
 	}
