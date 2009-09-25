@@ -8,6 +8,7 @@ namespace sakusen {
  * Used in WeaponOrders. */
 enum WeaponTargetType {
   weaponTargetType_none,
+  weaponTargetType_number,
   weaponTargetType_direction,
   weaponTargetType_position,
   weaponTargetType_frame,

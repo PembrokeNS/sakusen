@@ -27,6 +27,8 @@ enum OrderType {
   /** Target a weapon at a Frame (e.g. for creating a
    * building with the Position and Orientation of the frame) */
   orderType_targetFrame,
+  /** "Target" a weapon at a number, for weapons that do things like modify the unit */
+  orderType_targetNumber,
   /** Target a weapon at a unit.  Note that this will always be a friendly unit;
    * enemy units are always SensorReturns */
   orderType_targetUnit,

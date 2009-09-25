@@ -13,7 +13,7 @@ LIBSAKUSEN_API std::ostream& operator<<(
 {
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 10);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 11);
   
   switch (orderType) {
     #define CASE(type)              \
@@ -26,6 +26,7 @@ LIBSAKUSEN_API std::ostream& operator<<(
     CASE(setAngularVelocity)
     CASE(orient)
     CASE(targetNone)
+    CASE(targetNumber)
     CASE(targetPosition)
     CASE(targetFrame)
     CASE(targetUnit)

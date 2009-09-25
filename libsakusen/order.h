@@ -28,7 +28,7 @@ class LIBSAKUSEN_API Order {
 
     /* To remind that update here is needed by causing a compile error when a
      * new enum value is added. */
-    SAKUSEN_STATIC_ASSERT(orderType_max == 10);
+    SAKUSEN_STATIC_ASSERT(orderType_max == 11);
     
     #define GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
@@ -39,6 +39,7 @@ class LIBSAKUSEN_API Order {
     GET_DATA(SetAngularVelocity)
     GET_DATA(Orient)
     GET_DATA(TargetNone)
+    GET_DATA(TargetNumber)
     GET_DATA(TargetWeapon)
     GET_DATA(TargetPosition)
     GET_DATA(TargetFrame)

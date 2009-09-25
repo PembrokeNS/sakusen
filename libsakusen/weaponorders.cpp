@@ -8,7 +8,7 @@ WeaponOrders::WeaponOrders() :
   targetType(weaponTargetType_none),
   targetPosition(),
   targetFrame(Position(), Orientation()),
-  targetSensorReturns()
+  targetSensorReturns(), targetNumber(0)
 {
 }
 
@@ -17,13 +17,15 @@ WeaponOrders::WeaponOrders(
     const Point<sint32>& tP,
     const Frame& tF,
     const Ref<ICompleteUnit>& tU,
-    const Ref<ISensorReturns>& tSR
+    const Ref<ISensorReturns>& tSR,
+    const uint16 N
   ) :
   targetType(tT),
   targetPosition(tP),
   targetFrame(tF),
   targetUnit(tU),
-  targetSensorReturns(tSR)
+  targetSensorReturns(tSR),
+  targetNumber(N)
 {
 }
 
@@ -32,13 +34,14 @@ bool WeaponOrders::isTargetValid() const
   /* To cause a compile error when a new enum value is added.  If you get this,
    * update all of the (several) switch statements in this file and then
    * adjust the value appropriately. */
-  SAKUSEN_STATIC_ASSERT(weaponTargetType_max == 6);
+  SAKUSEN_STATIC_ASSERT(weaponTargetType_max == 7);
 
   switch (targetType) {
     case weaponTargetType_none:
       return false;
     case weaponTargetType_position:
     case weaponTargetType_frame:
+    case weaponTargetType_number:
       return true;
     case weaponTargetType_unit:
       return bool(targetUnit);
@@ -59,6 +62,7 @@ Point<sint32> WeaponOrders::getTargetPosition() const
 {
   switch (targetType) {
     case weaponTargetType_none:
+    case weaponTargetType_number:
       Fatal("no target to get position of");
     case weaponTargetType_position:
       return targetPosition;
@@ -95,6 +99,7 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
 {
   switch (targetType) {
     case weaponTargetType_none:
+    case weaponTargetType_number:
       Fatal("no target to get velocity of");
     case weaponTargetType_position:
     case weaponTargetType_frame:
@@ -125,7 +130,7 @@ void WeaponOrders::update(const Order& order)
 {
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
-  SAKUSEN_STATIC_ASSERT(orderType_max == 10);
+  SAKUSEN_STATIC_ASSERT(orderType_max == 11);
 
   switch (order.getType()) {
     case orderType_setVelocity:
@@ -135,6 +140,10 @@ void WeaponOrders::update(const Order& order)
       Fatal("Order type not appropriate for a Weapon");
     case orderType_targetNone:
       targetType = weaponTargetType_none;
+      break;
+    case orderType_targetNumber:
+      targetType = weaponTargetType_number;
+      targetNumber = order.getTargetNumberData().getTarget();
       break;
     case orderType_targetPosition:
       targetType = weaponTargetType_position;
@@ -174,15 +183,17 @@ WeaponOrders WeaponOrders::load(
   Point<sint32> targetPosition;
   Ref<ICompleteUnit> targetUnit;
   Ref<ISensorReturns> targetSensorReturns;
+  uint16 targetNumber;
 
   archive.extractEnum(targetType) >> targetPosition;
   Frame targetFrame = Frame::load(archive);
   targetUnit = Ref<ICompleteUnit>::load(archive, context);
   targetSensorReturns = Ref<ISensorReturns>::load(archive, context);
+  archive >> targetNumber;
   
   return WeaponOrders(
       targetType, targetPosition, targetFrame, targetUnit,
-      targetSensorReturns
+      targetSensorReturns, targetNumber
     );
 }
 

@@ -37,6 +37,11 @@ void TargetNoneOrderData::store(OArchive& out) const
   out << weaponIndex;
 }
 
+void TargetNumberOrderData::store(OArchive& out) const
+{
+  out << weaponIndex << target;
+}
+
 void TargetPositionOrderData::store(OArchive& out) const
 {
   out << weaponIndex << target;

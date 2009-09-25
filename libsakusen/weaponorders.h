@@ -25,7 +25,8 @@ class LIBSAKUSEN_API WeaponOrders {
         const Position& targetPoint,
         const Frame& targetFrame,
         const Ref<ICompleteUnit>& targetUnit,
-        const Ref<ISensorReturns>& targetSensorReturns
+        const Ref<ISensorReturns>& targetSensorReturns,
+	const uint16 targetNumber
       );
     
     WeaponTargetType targetType;
@@ -33,6 +34,7 @@ class LIBSAKUSEN_API WeaponOrders {
     Frame targetFrame;
     Ref<ICompleteUnit> targetUnit;
     Ref<ISensorReturns> targetSensorReturns;
+    uint16 targetNumber;
   public:
     /** \name accessors */
     /*@{*/
@@ -42,6 +44,7 @@ class LIBSAKUSEN_API WeaponOrders {
     const Frame& getTargetFrame() const;
     Ref<ICompleteUnit> getTargetUnit() const { return targetUnit; }
     Point<sint16> getTargetVelocity() const;
+    uint16 getTargetNumber() const;
     /*@}*/
 
     void clear();
