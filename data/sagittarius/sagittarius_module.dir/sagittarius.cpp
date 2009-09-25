@@ -51,6 +51,11 @@ class SagScript: public Script {
 	};
 
 class SagPlayerData: public PlayerData {
+	public:
+		SagPlayerData() : attack(0), defense(0), speed(0) {};
+		uint16 attack;
+		uint16 defense;
+		uint16 speed;
 	};
 
 class TorpedoLauncher: public Weapon {
@@ -61,6 +66,38 @@ class TorpedoLauncher: public Weapon {
 		uint32 getProjectileSpeed() const { return 30000; } //Unused as this is non-ballisticm
 		Time lastFire;
 	};
+
+class AttackSetter: public Weapon {
+        public:
+                AttackSetter(const WeaponType* type) : Weapon(type) {}
+                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+        };
+
+class DefenseSetter: public Weapon {
+        public:
+                DefenseSetter(const WeaponType* type) : Weapon(type) {}
+                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+        };
+
+class SpeedSetter: public Weapon {
+        public:
+                SpeedSetter(const WeaponType* type) : Weapon(type) {}
+                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+        };
+
+class FleetCreator: public Weapon {
+        public:
+                FleetCreator(const WeaponType* type) : Weapon(type) {}
+                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+        };
 
 class TorpedoDetonator: public UnitMask {
 	public:
