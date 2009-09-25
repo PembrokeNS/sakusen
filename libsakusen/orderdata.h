@@ -126,7 +126,7 @@ class LIBSAKUSEN_API TargetNumberOrderData : public TargetWeaponOrderData {
       target(t)
     {}
     TargetNumberOrderData(IArchive& in) : TargetWeaponOrderData() {
-      in >> weaponIndex;
+      in >> weaponIndex >> target;
     }
     ~TargetNumberOrderData() {};
   private:

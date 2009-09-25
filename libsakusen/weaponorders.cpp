@@ -182,6 +182,7 @@ void WeaponOrders::store(OArchive& archive) const
   targetFrame.store(archive);
   targetUnit.store(archive);
   targetSensorReturns.store(archive);
+  archive << targetNumber;
 }
 
 WeaponOrders WeaponOrders::load(
