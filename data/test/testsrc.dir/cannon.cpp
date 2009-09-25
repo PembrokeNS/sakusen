@@ -263,6 +263,11 @@ MODULE_API Script* create_script()
   return new TestScript();
 }
 
+MODULE_API PlayerData* create_player()
+{
+  return new TestPlayerData();
+}
+
 MODULE_API Weapon* spawn_cannon(const WeaponType* type)
 {
   return new Cannon(type);

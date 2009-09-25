@@ -10,6 +10,7 @@
 #include "unitmask.h"
 #include "fuse.h"
 #include "script.h"
+#include "playerdata.h"
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and
@@ -34,6 +35,9 @@ namespace testsrc {
 class TestScript : public Script {
   public:
     void unitAdded(const Ref<LayeredUnit>&);
+};
+
+class TestPlayerData : public PlayerData {
 };
 
 class MaterielCreater : public UnitMask {
