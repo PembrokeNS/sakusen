@@ -25,7 +25,8 @@ Player::Player(const PlayerTemplate& t, const PlayerId i) :
   visibleBallistics(),
   nextClientBallisticId(),
   availableEnergy(0),
-  availableMetal(0)
+  availableMetal(0),
+  playerData()
 {
   assert(raceFixed || !noClients);
   sensorReturns.registerIndex<DynamicSensorReturns>(sensorReturnsById);
@@ -46,7 +47,8 @@ Player::Player(const Player& copy) :
   visibleBallistics(copy.visibleBallistics),
   nextClientBallisticId(copy.nextClientBallisticId),
   availableEnergy(copy.availableEnergy),
-  availableMetal(copy.availableMetal)
+  availableMetal(copy.availableMetal),
+  playerData(copy.playerData)
 {
   if (!copy.sensorReturns.empty()) {
     /* To perform this copy we'd need to set up sensorReturnsById, which would
@@ -77,6 +79,7 @@ Player& Player::operator=(const Player& copy)
   nextClientBallisticId = copy.nextClientBallisticId;
   availableEnergy = copy.availableEnergy;
   availableMetal = copy.availableMetal;
+  playerData = copy.playerData;
 
   return *this;
 }

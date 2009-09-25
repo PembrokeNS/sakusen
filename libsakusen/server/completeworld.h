@@ -12,6 +12,7 @@
 #include "ballistic.h"
 #include "beam.h"
 #include "effect.h"
+#include "playerdata.h"
 
 namespace sakusen {
 namespace server {
@@ -34,7 +35,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     CompleteWorld(
         const MapTemplate& map,
         uint32 playMode, /* what mode of the map we are using */
-        const std::vector<Player>& players,
+        std::vector<Player>& players,
         const ResourceInterface::Ptr&
       );
     ~CompleteWorld();

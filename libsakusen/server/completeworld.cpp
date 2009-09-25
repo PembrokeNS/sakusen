@@ -10,6 +10,7 @@
 #include <vector>
 #include <iterator>
 #include <boost/foreach.hpp>
+#include <boost/typeof/typeof.hpp>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ namespace server{
 CompleteWorld::CompleteWorld(
     const MapTemplate& m,
     uint32 mode,
-    const std::vector<Player>& p,
+    std::vector<Player>& p,
     const ResourceInterface::Ptr& resourceInterface
   ) :
   World(m.getUniverse()),
@@ -83,6 +84,30 @@ CompleteWorld::CompleteWorld(
         /* Everything is OK */
         Script::Ptr universeScript(universeScriptFunction());
         scripts.push_back(universeScript);
+      }
+      break;
+    default:
+      /* There is a problem */
+      throw ResourceDeserializationExn(
+          universe->getScriptModule(), result, resourceInterface->getError()
+        );
+  }
+
+  /* Init player-global data for each player */
+  PlayerData* (*playerDataFunction)();
+  boost::tie(playerDataFunction, result) =
+    resourceInterface->symbolSearch<PlayerData* (*)()>(
+        universe->getScriptModule(), universe->getPlayerDataFunction()
+      );
+  switch (result) {
+    case resourceSearchResult_success:
+      {
+        /* Everything is OK */
+	for(BOOST_AUTO(i, p.begin()); i != p.end(); i++)
+          {
+          PlayerData::Ptr pD(playerDataFunction());
+          i->playerData = pD;
+          }
       }
       break;
     default:

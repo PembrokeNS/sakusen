@@ -13,6 +13,7 @@
 #include "idindex.h"
 #include "dynamicsensorreturns.h"
 #include "ballistic.h"
+#include "playerdata.h"
 
 namespace sakusen {
 namespace server {
@@ -62,6 +63,8 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     uint64 availableEnergy;
     uint64 availableMetal;
   public:
+    PlayerData::Ptr playerData;
+
     /** \name Accessors. */
     //@{
     PlayerId getId() const { return playerId; }
