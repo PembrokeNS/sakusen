@@ -81,6 +81,16 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   }
 }
 
+uint16 WeaponOrders::getTargetNumber() const
+{
+  switch (targetType) {
+    case weaponTargetType_number:
+      return targetNumber;
+    default:
+      Fatal("Tried to get number for non-number WeaponTargetType: "<< targetType);
+  }
+}
+
 const Frame& WeaponOrders::getTargetFrame() const
 {
   if (targetType == weaponTargetType_frame) {
