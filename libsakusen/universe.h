@@ -30,7 +30,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
         const String& hash,
         const String& scriptModule,
         const String& scriptFunction,
-	const String& playerDataFunction,
+        const String& playerDataFunction,
         const std::vector<WeaponType>& weaponTypes,
         const std::vector<UnitType>& unitTypes
       );

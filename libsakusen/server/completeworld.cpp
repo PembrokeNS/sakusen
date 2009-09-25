@@ -103,11 +103,11 @@ CompleteWorld::CompleteWorld(
     case resourceSearchResult_success:
       {
         /* Everything is OK */
-	for(BOOST_AUTO(i, players.begin()); i != players.end(); i++)
-          {
+        for(BOOST_AUTO(i, players.begin()); i != players.end(); i++)
+        {
           PlayerData::Ptr pD(playerDataFunction());
           i->playerData = pD;
-          }
+        }
       }
       break;
     default:
