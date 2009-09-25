@@ -35,7 +35,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     CompleteWorld(
         const MapTemplate& map,
         uint32 playMode, /* what mode of the map we are using */
-        std::vector<Player>& players,
+        const std::vector<Player>& players,
         const ResourceInterface::Ptr&
       );
     ~CompleteWorld();

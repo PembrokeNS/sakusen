@@ -20,7 +20,7 @@ namespace server{
 CompleteWorld::CompleteWorld(
     const MapTemplate& m,
     uint32 mode,
-    std::vector<Player>& p,
+    const std::vector<Player>& p,
     const ResourceInterface::Ptr& resourceInterface
   ) :
   World(m.getUniverse()),
@@ -103,7 +103,7 @@ CompleteWorld::CompleteWorld(
     case resourceSearchResult_success:
       {
         /* Everything is OK */
-	for(BOOST_AUTO(i, p.begin()); i != p.end(); i++)
+	for(BOOST_AUTO(i, players.begin()); i != players.end(); i++)
           {
           PlayerData::Ptr pD(playerDataFunction());
           i->playerData = pD;
