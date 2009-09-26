@@ -15,7 +15,7 @@ if(__name__=="__main__"):
 #	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
 #	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
 #	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
-	fleet = WeaponType('fleet', 'sagittarius/sagittarius_module', 'c:fleet', 0, 0, 0, 0, resint)
+	fleet = WeaponType('fleet', 'sagittarius/sagittarius_module', 'c:ship', 0, 0, 0, 0, resint)
 	
 
 	
@@ -71,8 +71,22 @@ if(__name__=="__main__"):
 	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
 	torp = UnitType("torp", torptype, 0, 0, "ground", [], "")
 
+	ccaccelrect = SRectangleRegion16(SRectangle16(0,0,0,0))
+	ccap = SRectangleRegion16.createRegionPtr(ccaccelrect)
+	ccaccelrect.thisown = 0
+	ccvelrect = SRectangleRegion16(SRectangle16(0,0,0,0))
+	ccvp = SRectangleRegion16.createRegionPtr(ccvelrect)
+	ccvelrect.thisown = 0
+	ccangularvelrect = SRectangleRegion32(SRectangle32(0,0,0,0))
+	ccavp = SRectangleRegion32.createRegionPtr(ccangularvelrect)
+	ccangularvelrect.thisown = 0
+	#TODO: uint8 for mass is really a bit small - I want the mass to be about a million.
+	cctype = UnitTypeData(HitPoints(1000000), 200, UPoint32(CM // 2, CM // 2, CM // 2), ccap, ccvp, ccavp, Visibility(), Sensors())
+	cc = UnitType('cc', cctype, 0, 0, 'ground', ['fleet'], "")
+
+
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet], [ship, torp])
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet], [ship, torp, cc])
 	#attack, defense, speed
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
@@ -83,9 +97,9 @@ if(__name__=="__main__"):
 
 	#next the map
 	h = Heightfield(150 * CM, 2, 2, 2)
-	uid = u.getUnitTypeId('ship')
-	us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM, CM//10), Orientation(rotation_anticlockwise, 9000)), SPoint16(0,0,0)) #face forwards
-	us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM, CM//10), Orientation(rotation_anticlockwise, 27000)), SPoint16(0,0,0)) #face forwards
+	uid = u.getUnitTypeId('cc')
+	us1 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,15 * CM, CM//2), Orientation(rotation_anticlockwise, 9000)), SPoint16(0,0,0)) #face forwards
+	us2 = UnitStatus(up, uid, Frame(SPoint32(75 * CM,135 * CM, CM//2), Orientation(rotation_anticlockwise, 27000)), SPoint16(0,0,0)) #face forwards
 	ut1 = UnitTemplate(up, us1)
 	ut2 = UnitTemplate(up, us2)
 	pt1 = PlayerTemplate(False, True, [ut1])

@@ -164,7 +164,9 @@ bool FleetCreator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, cons
 	}
 
 void FleetCreator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
+	/** \todo Want to create 1500 ships, but for now 1 */
 	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity()));
+	firer->kill();
 	}
 
 void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
