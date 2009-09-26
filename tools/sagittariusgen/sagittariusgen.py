@@ -45,7 +45,7 @@ if(__name__=="__main__"):
 	# accesseration should be 200 in 200 ticks, i.e. 1
 	# if we want accel up to 100, must make speed up to 20000 and 1cm 100000
 	
-	accelrect = SRectangle16(0, -2, 100, 2)
+	accelrect = SRectangle16(-2, -2, 100, 2)
 	accelrr = SRectangleRegion16(accelrect)
 	ap = SRectangleRegion16.createRegionPtr(accelrr)
 	accelrr.thisown = 0 #shared_ptr
