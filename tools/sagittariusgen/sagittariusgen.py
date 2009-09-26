@@ -12,6 +12,10 @@ if(__name__=="__main__"):
 	
 	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
 	torpedo = WeaponType("torpedo", "sagittarius/sagittarius_module", "c:torp", 0, 0, 0, 0, resint)
+#	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
+#	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
+#	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
+	fleet = WeaponType('fleet', 'sagittarius/sagittarius_module', 'c:fleet', 0, 0, 0, 0, resint)
 	
 
 	
@@ -68,7 +72,8 @@ if(__name__=="__main__"):
 	torp = UnitType("torp", torptype, 0, 0, "ground", [], "")
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo], [ship, torp])
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet], [ship, torp])
+	#attack, defense, speed
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr

@@ -68,36 +68,36 @@ class TorpedoLauncher: public Weapon {
 	};
 
 class AttackSetter: public Weapon {
-        public:
-                AttackSetter(const WeaponType* type) : Weapon(type) {}
-                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
-                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
-        };
+	public:
+		AttackSetter(const WeaponType* type) : Weapon(type) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+	};
 
 class DefenseSetter: public Weapon {
-        public:
-                DefenseSetter(const WeaponType* type) : Weapon(type) {}
-                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
-                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
-        };
+	public:
+		DefenseSetter(const WeaponType* type) : Weapon(type) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+	};
 
 class SpeedSetter: public Weapon {
-        public:
-                SpeedSetter(const WeaponType* type) : Weapon(type) {}
-                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
-                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
-        };
+	public:
+		SpeedSetter(const WeaponType* type) : Weapon(type) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+	};
 
 class FleetCreator: public Weapon {
-        public:
-                FleetCreator(const WeaponType* type) : Weapon(type) {}
-                bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-                void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
-                uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
-        };
+	public:
+		FleetCreator(const WeaponType* type) : Weapon(type) {}
+		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
+	};
 
 class TorpedoDetonator: public UnitMask {
 	public:
@@ -136,17 +136,36 @@ void LaserBeam::onInteractUnit(double, const Ref<LayeredUnit>& unit, bool leavin
 bool TorpedoLauncher::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
 	if(server::world->getTimeNow() - lastFire < 100) return false; /* does not overflow unless time travel */
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
-        BOOST_AUTO(orient, firer->getStatus().getFrame());
-        BOOST_AUTO(dir, orient.globalToLocalRelative(displacement));
-        BOOST_AUTO(forward, Point<sint32>(1, 0, 0));
-        BOOST_AUTO(cmp, cos((22.5 * M_PI) * dir.length()/ 180));
-        if(dir.innerProduct(forward) > cmp) {
+	BOOST_AUTO(orient, firer->getStatus().getFrame());
+	BOOST_AUTO(dir, orient.globalToLocalRelative(displacement));
+	BOOST_AUTO(forward, Point<sint32>(1, 0, 0));
+	BOOST_AUTO(cmp, cos((22.5 * M_PI) * dir.length()/ 180));
+	if(dir.innerProduct(forward) > cmp) {
 		BOOST_AUTO(sr, SphereRegion<sint32>(Position(), 2.5 * CM));
-                status.setTargetDirection(sr.truncateToFit(displacement));
-                return true;
-                }
-        else return false;
-        }
+		status.setTargetDirection(sr.truncateToFit(displacement));
+		return true;
+		}
+	else return false;
+	}
+
+bool FleetCreator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
+	/* can't use BOOST_AUTO because , in the middle */
+	boost::shared_ptr<SagPlayerData> pd = boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData);
+	if(pd->attack + pd->defense + pd->speed != 100) {
+		/** \todo should return false in this instance, but for now: */
+		pd->attack = pd->defense = pd->speed = 33;
+		pd->attack++;
+		}
+	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
+	BOOST_AUTO(orient, firer->getStatus().getFrame());
+	BOOST_AUTO(sr, SphereRegion<sint32>(Position(), 5 * CM));
+	status.setTargetDirection(sr.truncateToFit(displacement));
+	return true;
+	}
+
+void FleetCreator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
+	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity()));
+	}
 
 void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	/** \todo permit clients to fire torpedoes out of the plane, if they really want to */
@@ -192,4 +211,8 @@ extern "C" {
 	MODULE_API Script* create_script() { return new SagScript(); }
 	MODULE_API PlayerData* create_player() { return new SagPlayerData(); }
 	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
+/*	MODULE_API Weapon* spawn_attack(const WeaponType* type) { return new AttackSetter(type); }
+	MODULE_API Weapon* spawn_defense(const WeaponType* type) { return new DefenseSetter(type); }
+	MODULE_API Weapon* spawn_speed(const WeaponType* type) { return new SpeedSetter(type); }
+*/	MODULE_API Weapon* spawn_fleet(const WeaponType* type) { return new FleetCreator(type); }
 	}
