@@ -55,7 +55,7 @@ if(__name__=="__main__"):
 	angularvelrect = SSphereRegion32(SPoint32(0,0,0),45)
 	avp = SSphereRegion32.createRegionPtr(angularvelrect)
 	angularvelrect.thisown = 0
-	shiptype = UnitTypeData(HitPoints(10000), 100, UPoint32(CM // 2, CM // 10, CM // 10), ap, vp, avp, Visibility(), s)
+	shiptype = UnitTypeData(HitPoints(100000), 100, UPoint32(CM // 2, CM // 10, CM // 10), ap, vp, avp, Visibility(), s)
 	ship = UnitType("ship", shiptype, 0, 0, "ground", ['laser', 'torpedo'], "")
 	
 	taccelrect = SRectangle16(0,0,0,0)
