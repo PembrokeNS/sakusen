@@ -101,12 +101,16 @@ class FleetCreator: public Weapon {
 
 class TorpedoDetonator: public UnitMask {
 	public:
+		HitPoints damage;
 		void incrementState();
+		TorpedoDetonator(HitPoints d): UnitMask() { damage = d; }
 	};
 
 class TorpedoFuse: public UnitMask, public Fuse {
 	public:
+		HitPoints damage;
 		void expire(FuseToken);
+		TorpedoFuse(HitPoints d): UnitMask(), Fuse() { damage = d; }
 	};
 
 bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
@@ -185,7 +189,7 @@ void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& 
 	tv *= 30000;
 	BOOST_AUTO(u, LayeredUnit::spawn(PlayerId::fromString("0"), /* All torpedoes are neutral */
 	server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
-	BOOST_AUTO(f, boost::shared_ptr<TorpedoFuse>(new TorpedoFuse())); /* can't use TorpedoFuse::Ptr as ambiguous */
+	BOOST_AUTO(f, boost::shared_ptr<TorpedoFuse>(new TorpedoFuse(HitPoints(200 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->attack)))); /* can't use TorpedoFuse::Ptr as ambiguous */
 	u->insertLayer(f);
 	lastFire = server::world->getTimeNow();
 	server::world->addFuse(f, lastFire + 33); /* Fuse of 1/3 of a turn, in which the torpedo should move 10cm and the ship 6.66 cm, leaving them well over 2.5cm apart */
@@ -204,14 +208,14 @@ void TorpedoDetonator::incrementState() {
 			/* For now, torpedoes never detonate on each other - really, need some way to discriminate between torpedoes in the same salvo. Perhaps using a wide but very short detection box? */
 			/* Detonate the torpedo, damaging only one ship - for balance reasons, and can be justified with nanotech or something */
 			Debug("Detonating torpedo with id " << int(this->getOuterUnit()->getId()) << " at time " << server::world->getTimeNow() << ", targetting player: " << t->dynamicCast<LayeredUnit>()->getOwner() << ", unit: " << t->dynamicCast<LayeredUnit>()->getId());
-			t->dynamicCast<LayeredUnit>()->damage(HitPoints(200));
+			t->dynamicCast<LayeredUnit>()->damage(this->damage);
 			this->getOuterUnit()->kill();
 			return;
 			}
 	}
 
 void TorpedoFuse::expire(FuseToken) {
-	this->getOuterUnit()->insertLayer(TorpedoDetonator::Ptr(new TorpedoDetonator()));
+	this->getOuterUnit()->insertLayer(TorpedoDetonator::Ptr(new TorpedoDetonator(damage)));
 	this->getOuterUnit()->removeLayer(this);
 	}
 
