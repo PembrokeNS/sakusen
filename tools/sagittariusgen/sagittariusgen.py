@@ -68,7 +68,7 @@ if(__name__=="__main__"):
 	tangularvelrect = SSphereRegion32(SPoint32(0,0,0),0)
 	tavp = SSphereRegion32.createRegionPtr(tangularvelrect)
 	tangularvelrect.thisown = 0
-	torptype = UnitTypeData(HitPoints(1000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
+	torptype = UnitTypeData(HitPoints(5000), 10, UPoint32(CM // 20, CM // 100, CM // 100), tap, tvp, tavp, Visibility(), torps)
 	torp = UnitType("torp", torptype, 0, 0, "ground", [], "")
 
 	ccaccelrect = SRectangleRegion16(SRectangle16(0,0,0,0))
