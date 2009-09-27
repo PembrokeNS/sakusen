@@ -41,7 +41,8 @@ class Laserator: public Weapon {
 
 class LaserBeam: public Beam {
 	public:
-		LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status);
+		HitPoints damage;
+		LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status, HitPoints d);
 		GameObject interactsWith() const { return gameObject_unit; }
 		GameObject stoppedBy() const { return gameObject_unit; }
 		void onInteractUnit(double position, const Ref<LayeredUnit>&, bool leaving);
@@ -132,13 +133,13 @@ class DefenseLayer: public UnitMask {
 	};
 
 void Laserator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
-	server::world->addBeam(new LaserBeam(firer, status));
+	server::world->addBeam(new LaserBeam(firer, status, HitPoints(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->attack)));
 	}
 
-LaserBeam::LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status): Beam(source->getStatus().getPosition(), status.getTargetDirection(), source, server::world->getTimeNow(), 3) {}
+LaserBeam::LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status, HitPoints d): Beam(source->getStatus().getPosition(), status.getTargetDirection(), source, server::world->getTimeNow(), 3) { damage = d; }
 
 void LaserBeam::onInteractUnit(double, const Ref<LayeredUnit>& unit, bool leaving) {
-	if (not leaving) unit->damage(HitPoints(1));
+	if (not leaving) unit->damage(this->damage);
 	}
 
 bool TorpedoLauncher::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
