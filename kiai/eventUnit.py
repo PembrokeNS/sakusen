@@ -98,6 +98,14 @@ class eventUpdatedUnit(UpdatedUnit):
 			r = (curhp * 255) // maxhp
 			return QtGui.QPen(QtGui.QColor(255 - r, r, 0))
 	def destroying(self):
+		if(self.i.isSelected()):
+			for w in self.getStatus().getTypePtr().getWeapons():
+				if(w.getClientHint()[:2]=='c:'):
+					b = self.i.mainwindow.ui.construct.findChild(kdeui.KPushButton, w.getClientHint()[2:])
+					assert(b)
+					b.refcount -= 1
+					if( not b.refcount):
+						sip.delete(b)
 		sip.delete(self.i)
-		interestingthings['units'].remove(self)
+		self.interestingthings['units'].remove(self)
 
