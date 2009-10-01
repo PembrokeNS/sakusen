@@ -72,24 +72,24 @@ class TorpedoLauncher: public Weapon {
 class AttackSetter: public Weapon {
 	public:
 		AttackSetter(const WeaponType* type) : Weapon(type) {}
-		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		bool aim(const Ref<LayeredUnit>&, WeaponStatus&, const WeaponOrders& orders) { return orders.getTargetType() == weaponTargetType_number and orders.getTargetNumber() <= 100; }
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders& orders , uint16) { (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->attack = orders.getTargetNumber(); }
 		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
 	};
 
 class DefenseSetter: public Weapon {
 	public:
 		DefenseSetter(const WeaponType* type) : Weapon(type) {}
-		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		bool aim(const Ref<LayeredUnit>&, WeaponStatus&, const WeaponOrders& orders)  { return orders.getTargetType() == weaponTargetType_number and orders.getTargetNumber() <= 100; }
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders& orders, uint16) { (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->defense = orders.getTargetNumber(); }
 		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
 	};
 
 class SpeedSetter: public Weapon {
 	public:
 		SpeedSetter(const WeaponType* type) : Weapon(type) {}
-		bool aim(const Ref<LayeredUnit>& firer, WeaponStatus&, const WeaponOrders& orders);
-		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders&, uint16 weaponIndex);
+		bool aim(const Ref<LayeredUnit>&, WeaponStatus&, const WeaponOrders& orders)  { return orders.getTargetType() == weaponTargetType_number and orders.getTargetNumber() <= 100; }
+		void onFire(const Ref<LayeredUnit>& firer, const WeaponStatus&, WeaponOrders& orders, uint16)  { (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->speed = orders.getTargetNumber(); }
 		uint32 getProjectileSpeed() const { return 0; } //Unused as this is non-ballisticm
 	};
 
@@ -249,8 +249,8 @@ extern "C" {
 	MODULE_API Script* create_script() { return new SagScript(); }
 	MODULE_API PlayerData* create_player() { return new SagPlayerData(); }
 	MODULE_API Weapon* spawn_torpedo(const WeaponType* type) { return new TorpedoLauncher(type); }
-/*	MODULE_API Weapon* spawn_attack(const WeaponType* type) { return new AttackSetter(type); }
+	MODULE_API Weapon* spawn_attack(const WeaponType* type) { return new AttackSetter(type); }
 	MODULE_API Weapon* spawn_defense(const WeaponType* type) { return new DefenseSetter(type); }
 	MODULE_API Weapon* spawn_speed(const WeaponType* type) { return new SpeedSetter(type); }
-*/	MODULE_API Weapon* spawn_fleet(const WeaponType* type) { return new FleetCreator(type); }
+	MODULE_API Weapon* spawn_fleet(const WeaponType* type) { return new FleetCreator(type); }
 	}

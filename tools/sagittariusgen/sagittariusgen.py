@@ -12,9 +12,9 @@ if(__name__=="__main__"):
 	
 	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
 	torpedo = WeaponType("torpedo", "sagittarius/sagittarius_module", "c:torp", 0, 0, 0, 0, resint)
-#	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
-#	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
-#	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 's', 0, 0, 0, 0, resint)
+	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 's:attack', 0, 0, 0, 0, resint)
+	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 's:defense', 0, 0, 0, 0, resint)
+	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 's:speed', 0, 0, 0, 0, resint)
 	fleet = WeaponType('fleet', 'sagittarius/sagittarius_module', 'c:ship', 0, 0, 0, 0, resint)
 	
 
@@ -82,12 +82,11 @@ if(__name__=="__main__"):
 	ccangularvelrect.thisown = 0
 	#TODO: uint8 for mass is really a bit small - I want the mass to be about a million.
 	cctype = UnitTypeData(HitPoints(1000000), 200, UPoint32(CM // 2, CM // 2, CM // 2), ccap, ccvp, ccavp, Visibility(), Sensors())
-	cc = UnitType('cc', cctype, 0, 0, 'ground', ['fleet'], "")
+	cc = UnitType('cc', cctype, 0, 0, 'ground', ['fleet', 'attack', 'defense', 'speed'], "")
 
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet], [ship, torp, cc])
-	#attack, defense, speed
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet, attack, defense, speed], [ship, torp, cc])
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr
