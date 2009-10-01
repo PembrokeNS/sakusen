@@ -21,7 +21,8 @@ typedef boost::variant<
     String,
     sakusen::Frame,
     sakusen::Ref<sakusen::client::UpdatedUnit>,
-    std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> >
+    std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> >,
+    uint16
   > ActionArgument;
 
 enum ActionParameterType {
@@ -30,7 +31,8 @@ enum ActionParameterType {
   actionParameterType_stringFromSet,
   actionParameterType_frame,
   actionParameterType_unit,
-  actionParameterType_unitSet
+  actionParameterType_unitSet,
+  actionParameterType_number
 };
 
 }}

@@ -36,6 +36,18 @@ class StopAction : public Action {
     }
 };
 
+/* TODO: action for setting numeric parameters 
+class SetAction : public Action {
+  public:
+    SetAction(const set<UnitId>& selection):
+      Action(actionParameterType_number), movers(selection)
+    {
+    }
+  private:
+    set<UnitId> movers;
+};
+*/
+
 class MoveAction : public Action {
   public:
     MoveAction(const set<UnitId>& selection) :
