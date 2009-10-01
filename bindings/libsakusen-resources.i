@@ -22,7 +22,10 @@ class WeaponType;
 %{
 #include "pcrecpp.h"
 %}
-/*The following code snippet is GPLed*/
+/*The following code snippet might be GPLed, if it's substantial enough (independently of
+boost itself) to be copyrightable at all. It was taken from the ArX sources; the ArX COPYING
+file claims that detailed authorship information is given in the copyright statement of each
+file, but the file in question has no copyright statement. */
 /* This software is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation. */
