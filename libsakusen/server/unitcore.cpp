@@ -65,9 +65,11 @@ void UnitCore::initializeWeapons()
 void UnitCore::incrementWeaponsState()
 {
   size_t numWeapons = weapons.size();
+  Ref<LayeredUnit> refToThis = outerUnit->getRefToThis();
 
   for (size_t i=0; i<numWeapons; ++i) {
-    weapons[i]->incrementState(outerUnit->getRefToThis(), static_cast<uint16>(i));
+    weapons[i]->incrementState(refToThis, static_cast<uint16>(i));
+    if(not refToThis) return;
   }
 }
 
