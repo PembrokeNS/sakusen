@@ -16,3 +16,4 @@ tags
 /debug-icc
 /release-icc
 /small
+*.bak
