@@ -52,7 +52,7 @@ if(__name__=="__main__"):
 	velrect = SSphereRegion16(SPoint16(0,0,0),20000)
 	vp = SSphereRegion16.createRegionPtr(velrect)
 	velrect.thisown = 0
-	angularvelrect = SSphereRegion32(SPoint32(0,0,0),45)
+	angularvelrect = SSphereRegion32(SPoint32(0,0,0),50)
 	avp = SSphereRegion32.createRegionPtr(angularvelrect)
 	angularvelrect.thisown = 0
 	shiptype = UnitTypeData(HitPoints(100000), 100, UPoint32(CM // 2, CM // 10, CM // 10), ap, vp, avp, Visibility(), s)

@@ -7,6 +7,7 @@
 #include "beam.h"
 #include "completeworld.h"
 #include "sphereregion.h"
+#include "rectangleregion.h"
 #include "unitmask.h"
 #include "ispatial.h"
 
@@ -129,8 +130,29 @@ bool Laserator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const W
 	}
 
 class DefenseLayer: public UnitMask {
-	HitPoints getMaxHitPoints() const { return HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(getOwner())->playerData))->defense); }
+	public:
+		HitPoints getMaxHitPoints() const { return HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(getOwner())->playerData))->defense); }
 	};
+
+class SpeedLayer: public UnitMask {
+	public:
+		Rectangle<sint16> rar;
+		Region<sint16>::ConstPtr ar;
+		Region<sint16>::ConstPtr vr;
+		Region<sint32>::ConstPtr avr;
+		Region<sint16>::ConstPtr getPossibleAccelerations() const { return ar; }
+		Region<sint16>::ConstPtr getPossibleVelocities() const { return vr; }
+		Region<sint32>::ConstPtr getPossibleAngularVelocities() const { return avr; }
+		SpeedLayer(uint16 s);
+	};
+
+SpeedLayer::SpeedLayer(uint16 s): UnitMask() {
+	rar = Rectangle<sint16>(-2, -2, s, 2);
+	ar = Region<sint16>::ConstPtr(new RectangleRegion<sint16>(rar));
+	BOOST_AUTO(zero, Point<sint16>(0,0,0));
+	vr = boost::shared_ptr<SphereRegion<sint16> >(new SphereRegion<sint16>(zero, 200 * s));
+	avr = boost::shared_ptr<SphereRegion<sint32> >(new SphereRegion<sint32>(zero, s / 2));
+	}
 
 void Laserator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	server::world->addBeam(new LaserBeam(firer, status, HitPoints(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->attack)));
@@ -176,7 +198,9 @@ void FleetCreator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& sta
 	/** \todo Want to create 1500 ships, but for now 1 */
 	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity(), HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->defense)));
 	BOOST_AUTO(f, boost::shared_ptr<DefenseLayer>(new DefenseLayer()));
+	BOOST_AUTO(g, boost::shared_ptr<SpeedLayer>(new SpeedLayer(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->speed)));
 	u->insertLayer(f);
+	u->insertLayer(g);
 	u->setDirty();
 	firer->kill();
 	}
