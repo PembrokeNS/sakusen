@@ -41,7 +41,7 @@ function check_for_lib
   shift
   # Subsequent arguments are things to pass to gcc (probably includes and -lfoo)
   if printf '#include <stdio.h>\n#include <%s>\nint main() { return 0; }\n' "${header}" | \
-    g++ -x c++ -o /dev/null "$@" -
+    g++ $CPPFLAGS -x c++ -o /dev/null "$@" -
   then
     eval ${name}_exists=yes
   else
