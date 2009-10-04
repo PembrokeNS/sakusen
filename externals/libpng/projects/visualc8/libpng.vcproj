@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="libpng"
 	ProjectGUID="{0008960E-E0DD-41A6-8265-00B31DDB4C21}"
 	RootNamespace="libpng"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -66,6 +67,8 @@
 				OutputFile="$(OutDir)/libpng13.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="..\..\scripts\pngw32.def"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -84,9 +87,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -144,6 +144,8 @@
 				OutputFile="$(OutDir)/libpng13d.dll"
 				ModuleDefinitionFile="..\..\scripts\pngw32.def"
 				GenerateDebugInformation="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -162,9 +164,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -223,6 +222,8 @@
 				OutputFile="$(OutDir)/libpng13.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="..\..\scripts\pngw32.def"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -241,9 +242,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -302,6 +300,8 @@
 				OutputFile="$(OutDir)/libpng13d.dll"
 				ModuleDefinitionFile="..\..\scripts\pngw32.def"
 				GenerateDebugInformation="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -320,9 +320,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -380,6 +377,8 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/libpng13vb.dll"
 				LinkIncremental="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -398,9 +397,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

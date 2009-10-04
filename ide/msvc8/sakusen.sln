@@ -1,6 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C28892A-27FA-475E-B14E-9E6907120EDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net-bindings", "net-bindings", "{39B52AC7-84CF-4753-899F-9FC8B74372B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "python-bindings", "python-bindings", "{1ED7220A-FBA4-4007-B372-5B52971BEB72}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen", "..\..\libsakusen\ide\msvc8\libsakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
 	ProjectSection(ProjectDependencies) = postProject
 		{598635F0-5D26-4C6B-85B5-F6904DB3EB83} = {598635F0-5D26-4C6B-85B5-F6904DB3EB83}
@@ -73,8 +79,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcrecpp", "..\..\externals\
 		{6E5ED061-69E9-4111-A70F-EA4309411132} = {6E5ED061-69E9-4111-A70F-EA4309411132}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C28892A-27FA-475E-B14E-9E6907120EDA}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmhash", "..\..\externals\mhash-win32\win32\libmhash\libmhash.vcproj", "{598635F0-5D26-4C6B-85B5-F6904DB3EB83}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "..\..\externals\libpng\projects\visualc8\libpng.vcproj", "{0008960E-E0DD-41A6-8265-00B31DDB4C21}"
@@ -96,8 +100,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testsrc", "..\..\data\test\
 	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{92F66EEF-4235-45A1-AB49-CB034A3A6F2C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net-bindings", "net-bindings", "{39B52AC7-84CF-4753-899F-9FC8B74372B9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sakusen", "..\..\bindings\ide\msvc8\csharp\Sakusen.vcproj", "{439A5C2D-B0EE-4D62-B186-B40E72D3C94D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -147,8 +149,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SakusenResourcesCsharp", ".
 	ProjectSection(ProjectDependencies) = postProject
 		{48F8301C-772E-4CD6-9425-6A3480D83B21} = {48F8301C-772E-4CD6-9425-6A3480D83B21}
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "python-bindings", "python-bindings", "{1ED7220A-FBA4-4007-B372-5B52971BEB72}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_sakusen", "..\..\bindings\ide\msvc8\python\_sakusen.vcproj", "{D979B173-CF86-4BD8-B95B-F60F3CBD8BDD}"
 	ProjectSection(ProjectDependencies) = postProject
