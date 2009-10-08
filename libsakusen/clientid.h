@@ -1,7 +1,6 @@
 #ifndef CLIENTID_H
 #define CLIENTID_H
 
-#include "stringutils.h"
 #include "idbase.h"
 
 namespace sakusen {
