@@ -18,6 +18,15 @@
 /** The TXT record version number, as recommended by RFC. */
 #define TXTVERS "1"
 
+/* Writing output from the avahi thread causes false-positives in thread error
+ * checking tools; to easily turn off such output we define a local debugging
+ * macro */
+#ifdef SAUKUSEN_DEBUG_AVAHI
+  #define SAKUSEN_SERVER_MDNS_DEBUG(x) Debug(x)
+#else
+  #define SAKUSEN_SERVER_MDNS_DEBUG(x)
+#endif
+
 namespace sakusen {
 namespace server {
 
@@ -81,15 +90,15 @@ void MdnsPublisher::Implementation::entry_group_callback(
       break;
 
     case AVAHI_ENTRY_GROUP_UNCOMMITED:
-      Debug("Avahi advert enters uncommitted state.");
+      SAKUSEN_SERVER_MDNS_DEBUG("Avahi advert enters uncommitted state.");
       break;
 
     case AVAHI_ENTRY_GROUP_REGISTERING:
-      Debug("Avahi advert enters registering state.");
+      SAKUSEN_SERVER_MDNS_DEBUG("Avahi advert enters registering state.");
       break;
 
     default:
-      Debug("Avahi advert enters unknown state.");
+      SAKUSEN_SERVER_MDNS_DEBUG("Avahi advert enters unknown state.");
       break;
   }
 }
