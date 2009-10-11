@@ -70,6 +70,12 @@ RemoteClient::~RemoteClient()
 
 void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
 {
+  if (id != 0) {
+    /* If id is invalid, then getPlayerPtr will throw, and we'll leave, which
+     * is right */
+    server->getPlayerPtr(id)->attachClient(this);
+    addGroup(String("player")+id.toString());
+  }
   if (playerId != 0) {
     try {
       server->getPlayerPtr(playerId)->detachClient(this);
@@ -84,15 +90,6 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
        * recover.
        */
       Debug("RemoteClient::setPlayerId found the old id was invalid");
-    }
-  }
-  if (id != 0) {
-    try {
-      server->getPlayerPtr(id)->attachClient(this);
-      addGroup(String("player")+id.toString());
-    } catch (InvalidPlayerId&) {
-      Debug("RemoteClient::setPlayerId was given an invalid id");
-      throw;
     }
   }
   playerId = id; /* do this last in case we exn'd out */
