@@ -21,21 +21,17 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
     typedef boost::shared_ptr<const UpdatedSensorReturns> ConstPtr;
   private:
     UpdatedSensorReturns();
+
+    bool altered_;
   public:
     UpdatedSensorReturns(const SensorReturns& copy) :
-      SensorReturns(copy)
+      SensorReturns(copy),
+      altered_(true)
     {}
     virtual ~UpdatedSensorReturns() {}
     
-    /** \brief Alter this to mimic the given SensorReturns
-     *
-     * \warning Don't try to achieve such an alteration with simple assignment.
-     * It will go horribly wrong.
-     */
-    void alter(const SensorReturns& to) {
-      this->SensorReturns::operator=(to);
-      altered();
-    }
+    void alter(const SensorReturns& to);
+    virtual void incrementState();
     virtual void altered() {}
     virtual void destroying() {}
     Ref<ISensorReturns> getRefToThis();

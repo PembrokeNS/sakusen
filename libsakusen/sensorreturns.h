@@ -64,8 +64,9 @@ class LIBSAKUSEN_API SensorReturns : public ISensorReturns {
     Perception perception;
     PlayerId senserOwner;
     PlayerId senseeOwner;
+  protected:
     Region<sint32>::ConstPtr region;
-    CompleteUnit::ConstPtr unit;
+    CompleteUnit::Ptr unit;
 
     SensorReturnMap returns;
   public:

@@ -184,6 +184,10 @@ void PartialWorld::endTick()
       units.begin(); unit != units.end(); ++unit) {
     (*unit)->incrementState();
   }
+  for (hash_list<UpdatedSensorReturns, Bounded, UpdatedSensorReturns>::iterator r =
+      sensorReturns.begin(); r != sensorReturns.end(); ++r) {
+    (*r)->incrementState();
+  }
   ++timeNow;
 }
 

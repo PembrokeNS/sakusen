@@ -42,6 +42,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
   public:
     /* accessors */
     inline UnitId getId(void) const {return unitId;}
+    inline UnitStatus& getStatus(void) { return status; }
     inline const UnitStatus& getStatus(void) const { return status; }
     inline const IUnitStatus& getIStatus(void) const { return status; }
     inline const UnitTypeData& getTypeData(void) const { return typeData; }
