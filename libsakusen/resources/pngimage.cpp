@@ -54,7 +54,10 @@ PngImageImpl::PngImageImpl(const boost::filesystem::path& path) :
 #define SIG_BYTES 8
   /* Read in a bit of file and check it matches the PNG header */
   uint8 header[SIG_BYTES];
-  fread(header, 1, SIG_BYTES, fp);
+  size_t r = fread(header, 1, SIG_BYTES, fp);
+  if (r != SIG_BYTES) {
+    throw FileIOExn::customMessage("couldn't read PNG header");
+  }
   if (png_sig_cmp(header, 0, SIG_BYTES)) {
     throw FileIOExn::customMessage("file not a PNG");
   }
