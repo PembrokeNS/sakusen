@@ -26,7 +26,7 @@ class LIBSAKUSEN_API Region : public Bounded {
     typedef boost::shared_ptr<const Region> ConstPtr;
   protected:
     Region() {}
-    Region(const Region&) {}
+    Region(const Region&) : Bounded() {}
   public:
     virtual ~Region() {}
   protected:
