@@ -1,0 +1,6 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+CXX=llvm-g++
+CC=llvm-gcc
+

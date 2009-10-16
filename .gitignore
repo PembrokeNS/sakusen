@@ -15,5 +15,7 @@ tags
 /release
 /debug-icc
 /release-icc
+/debug-llvm
+/release-llvm
 /small
 *.bak
