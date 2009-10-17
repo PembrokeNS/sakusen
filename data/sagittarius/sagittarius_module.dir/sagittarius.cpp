@@ -146,19 +146,20 @@ class SpeedLayer: public UnitMask {
 		SpeedLayer(uint16 s);
 	};
 
-SpeedLayer::SpeedLayer(uint16 s): UnitMask() {
-	rar = Rectangle<sint16>(-2, -2, s, 2);
-	ar = Region<sint16>::ConstPtr(new RectangleRegion<sint16>(rar));
-	BOOST_AUTO(zero, Point<sint16>(0,0,0));
-	vr = boost::shared_ptr<SphereRegion<sint16> >(new SphereRegion<sint16>(zero, 200 * s));
-	avr = boost::shared_ptr<SphereRegion<sint32> >(new SphereRegion<sint32>(zero, s / 2));
-	}
+SpeedLayer::SpeedLayer(uint16 s):
+  UnitMask(),
+	rar(-2, -2, s, 2),
+	ar(new RectangleRegion<sint16>(rar)),
+	vr(new SphereRegion<sint16>(Velocity(), 200 * s)),
+	avr(new SphereRegion<sint32>(AngularVelocity(), s / 2))
+{
+}
 
 void Laserator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	server::world->addBeam(new LaserBeam(firer, status, HitPoints(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->attack)));
 	}
 
-LaserBeam::LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status, HitPoints d): Beam(source->getStatus().getPosition(), status.getTargetDirection(), source, server::world->getTimeNow(), 3) { damage = d; }
+LaserBeam::LaserBeam(const Ref<LayeredUnit>& source, const WeaponStatus& status, HitPoints d): Beam(source->getStatus().getPosition(), status.getTargetDirection(), source, server::world->getTimeNow(), 3), damage(d) {}
 
 void LaserBeam::onInteractUnit(double, const Ref<LayeredUnit>& unit, bool leaving) {
 	if (not leaving) unit->damage(this->damage);
