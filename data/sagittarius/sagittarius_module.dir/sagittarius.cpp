@@ -16,14 +16,14 @@
  * imported back into libraries.
  *
  * This being a module opened at runtime, we always export and never import. */
-  #define MODULE_API   __declspec(dllexport)
-  #define MODULE_EXIMP extern
+	#define MODULE_API   __declspec(dllexport)
+	#define MODULE_EXIMP extern
 #else
-  #if defined(__GNUC__) && (__GNUC__ >= 4)
-    #define MODULE_API __attribute__ ((visibility ("default")))
-  #else
-    #define MODULE_API
-  #endif
+	#if defined(__GNUC__) && (__GNUC__ >= 4)
+	  #define MODULE_API __attribute__ ((visibility ("default")))
+	#else
+	  #define MODULE_API
+	#endif
 #endif
 
 #define CM 100000
@@ -147,7 +147,7 @@ class SpeedLayer: public UnitMask {
 	};
 
 SpeedLayer::SpeedLayer(uint16 s):
-  UnitMask(),
+	UnitMask(),
 	rar(-2, -2, s, 2),
 	ar(new RectangleRegion<sint16>(rar)),
 	vr(new SphereRegion<sint16>(Velocity(), 200 * s)),
@@ -196,14 +196,15 @@ bool FleetCreator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, cons
 	}
 
 void FleetCreator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
-	/** \todo Want to create 1500 ships, but for now 1 */
 	/** \todo Require ships to be created in the plane */
-	BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity(), HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->defense)));
-	BOOST_AUTO(f, boost::shared_ptr<DefenseLayer>(new DefenseLayer()));
-	BOOST_AUTO(g, boost::shared_ptr<SpeedLayer>(new SpeedLayer(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->speed)));
-	u->insertLayer(f);
-	u->insertLayer(g);
-	u->setDirty();
+	for(int i=0; i<1500; i++) {
+		BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity(), HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->defense)));
+		BOOST_AUTO(f, boost::shared_ptr<DefenseLayer>(new DefenseLayer()));
+		BOOST_AUTO(g, boost::shared_ptr<SpeedLayer>(new SpeedLayer(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->speed)));
+		u->insertLayer(f);
+		u->insertLayer(g);
+		u->setDirty();
+	}
 	firer->kill();
 	}
 
