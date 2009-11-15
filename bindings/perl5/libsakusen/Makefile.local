@@ -7,6 +7,14 @@ THIS_CPPFLAGS := -I$(PERL5ARCH)/CORE -I../../../libsakusen $(BUILD_CPPFLAGS)
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
 
+ifeq ($(BUILD_ARCH),x86)
+SWIGWORDSIZE := -DSWIGWORDSIZE32
+endif
+
+ifeq ($(BUILD_ARCH),x86_64)
+SWIGWORDSIZE := -DSWIGWORDSIZE64
+endif
+
 # Forward any targets we don't understand to the perl-generated Makefile
 .DEFAULT: Makefile.PL.out
 	$(MAKE) -f $< $@

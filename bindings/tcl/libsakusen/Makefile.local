@@ -5,6 +5,14 @@ THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
 
+ifeq ($(BUILD_ARCH),x86)
+SWIGWORDSIZE := -DSWIGWORDSIZE32
+endif
+
+ifeq ($(BUILD_ARCH),x86_64)
+SWIGWORDSIZE := -DSWIGWORDSIZE64
+endif
+
 all-nonrecursive: sakusen.so sakusencomms.so
 
 clean:
