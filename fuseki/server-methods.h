@@ -119,7 +119,7 @@ String Server::settingAlteringCallback(
             pendingActions.push_front(new RequestUniverseAction(u, uPath));
             return "";
           case sakusen::resourceSearchResult_ambiguous:
-            return "specified universe name ambiguous";
+            return "specified universe name '"+newValueString+"' ambiguous";
           case sakusen::resourceSearchResult_notFound:
             return "specified universe name not found";
           case sakusen::resourceSearchResult_error:
