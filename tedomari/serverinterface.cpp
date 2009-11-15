@@ -303,7 +303,7 @@ bool ServerInterface::leave(bool sendMessage)
     try {
       outgoingSocket->send(Message(new LeaveMessageData()));
     } catch (SocketExn& e) {
-      Debug("Error sending leave message:" << e.message);
+      Debug("Error sending leave message: " << e.message);
     }
   }
   game->stop();
