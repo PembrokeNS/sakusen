@@ -12,8 +12,16 @@
 #define NativeReceiveReturnType ssize_t
 #endif
 
-using namespace sakusen;
-using namespace sakusen::comms;
+namespace sakusen {
+namespace comms {
+
+namespace {
+
+typedef uint32 BufferLenType;
+inline BufferLenType hton_buffer(BufferLenType i) { return htonl(i); }
+inline BufferLenType ntoh_buffer(BufferLenType i) { return ntohl(i); }
+
+}
 
 Socket::Ptr TCPSocket::newConnectionToAddress(std::list<String>& address)
 {
@@ -72,11 +80,17 @@ TCPSocket::TCPSocket(NativeSocket s, const sockaddr_in& peerAddress) :
 void TCPSocket::send(const void* buf, size_t len)
 {
   /* Prefix the message by its length */
-  uint8* longerBuf = new uint8[len+2];
-  *reinterpret_cast<uint16*>(longerBuf) = htons(len);
-  memcpy(longerBuf+2, buf, len);
+  uint8* longerBuf = new uint8[len+sizeof(BufferLenType)];
+  if (len > std::numeric_limits<BufferLenType>::max()) {
+    Fatal("message too long for protocol ("<<len<<" bytes");
+  }
+  *reinterpret_cast<BufferLenType*>(longerBuf) = hton_buffer(len);
+  memcpy(longerBuf+sizeof(BufferLenType), buf, len);
   
-  int retVal = ::send(sockfd, reinterpret_cast<char*>(longerBuf), len+2, MSG_NOSIGNAL);
+  int retVal = ::send(
+      sockfd, reinterpret_cast<char*>(longerBuf), len+sizeof(BufferLenType),
+      MSG_NOSIGNAL
+    );
   if (retVal == -1) {
     switch (socket_errno) {
       case ENOTCONN:
@@ -100,52 +114,6 @@ void TCPSocket::send(const void* buf, size_t len)
 void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*address*/)
 {
   Fatal("not implemented");
-#if 0
-  std::list<String> splitAddress = stringUtils_split(address, ADDR_DELIM);
-  assert(!splitAddress.empty());
-  assert(splitAddress.front() == getType());
-  splitAddress.pop_front();
-  
-  String hostname;
-  uint16 port;
-
-  interpretAddress(splitAddress, &hostname, &port);
-  
-  struct hostent *endpoint;
-  endpoint = gethostbyname(hostname.c_str());
-  
-  if (endpoint == NULL) {
-    Fatal("host " << hostname << " not found.");
-  }
-
-  sockaddr_in dest;
-
-  memset(&dest, 0, sizeof(addr));
-  dest.sin_family = AF_INET;
-  memcpy(&dest.sin_addr.s_addr, endpoint->h_addr, endpoint->h_length);
-  dest.sin_port = htons(port);
-  
-  /* Prefix the message by its length */
-  uint8 longerBuf[len+2];
-  *reinterpret_cast<uint16*>(longerBuf) = htons(len);
-  memcpy(longerBuf+2, buf, len);
-  
-  int retVal = ::sendto(
-      sockfd, longerBuf, len+2, 0, reinterpret_cast<sockaddr*>(&dest),
-      sizeof(dest)
-    );
-  if (retVal == -1) {
-    switch (socket_errno) {
-      case ENOTCONN:
-      case ECONNREFUSED:
-        throw SocketClosedExn();
-        break;
-      default:
-        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
-        break;
-    }
-  }
-#endif
 }
 
 size_t TCPSocket::receive(void* outBuf, size_t len)
@@ -154,7 +122,8 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   do {
     if (bufferCapacity > bufferLength) {
       NativeReceiveReturnType received = recv(
-          sockfd, reinterpret_cast<char*>(buffer+bufferLength), bufferCapacity - bufferLength, 0
+          sockfd, reinterpret_cast<char*>(buffer+bufferLength),
+          bufferCapacity - bufferLength, 0
         );
       if (received == -1) {
         if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
@@ -188,19 +157,24 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   } while (true);
 
   /* Now we check whether we've got a whole message */
-  if (bufferLength < 2) {
+  if (bufferLength < sizeof(BufferLenType)) {
     return 0;
   }
-  uint16 nextMessageLen = ntohs(*reinterpret_cast<uint16*>(buffer));
+  BufferLenType nextMessageLen =
+    ntoh_buffer(*reinterpret_cast<BufferLenType*>(buffer));
   assert(nextMessageLen > 0);
-  /*Debug("nextMessageLen=" << nextMessageLen);*/
-  if (bufferLength >= nextMessageLen + 2U) {
+  Debug("nextMessageLen=" << nextMessageLen);
+  if (bufferLength >= nextMessageLen + sizeof(BufferLenType)) {
     if (len < nextMessageLen) {
-      Fatal("insufficient space in buffer for message");
+      Fatal("insufficient space in buffer for message (needed " <<
+          nextMessageLen<<", given "<<len<<")");
     }
-    memcpy(outBuf, buffer+2, nextMessageLen);
-    memmove(buffer, buffer+nextMessageLen+2, bufferLength-nextMessageLen-2);
-    bufferLength -= (nextMessageLen+2);
+    memcpy(outBuf, buffer+sizeof(BufferLenType), nextMessageLen);
+    memmove(
+        buffer, buffer+nextMessageLen+sizeof(BufferLenType),
+        bufferLength-nextMessageLen-sizeof(BufferLenType)
+      );
+    bufferLength -= (nextMessageLen+sizeof(BufferLenType));
     return nextMessageLen;
   }
   return 0;
@@ -211,4 +185,6 @@ size_t TCPSocket::receiveFrom(void* /*buf*/, size_t /*len*/, String& /*from*/)
   Fatal("not implemented");
   return 0; /* Return statement for the benefit of MSVC */
 }
+
+}}
 
