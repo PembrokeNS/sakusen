@@ -306,6 +306,11 @@ class LIBSAKUSEN_API Point {
 #endif
 };
 
+#ifdef SWIG
+#undef Wide
+#undef UWide
+#endif
+
 template<>
 inline void Point<double>::normalise(void) {
   *this /= length();
