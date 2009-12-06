@@ -5,6 +5,8 @@
 #include "errorutils.h"
 #include "socketexn.h"
 
+#include <boost/scoped_array.hpp>
+
 #ifdef WIN32
 #include "wsabsd.h"
 #define NativeReceiveReturnType int
@@ -80,35 +82,43 @@ TCPSocket::TCPSocket(NativeSocket s, const sockaddr_in& peerAddress) :
 void TCPSocket::send(const void* buf, size_t len)
 {
   /* Prefix the message by its length */
-  uint8* longerBuf = new uint8[len+sizeof(BufferLenType)];
+  boost::scoped_array<uint8> longerBuf(new uint8[len+sizeof(BufferLenType)]);
   if (len > std::numeric_limits<BufferLenType>::max()) {
-    Fatal("message too long for protocol ("<<len<<" bytes");
+    Fatal("message too long for protocol ("<<len<<" bytes)");
   }
-  *reinterpret_cast<BufferLenType*>(longerBuf) = hton_buffer(len);
-  memcpy(longerBuf+sizeof(BufferLenType), buf, len);
+  *reinterpret_cast<BufferLenType*>(longerBuf.get()) = hton_buffer(len);
+  memcpy(longerBuf.get()+sizeof(BufferLenType), buf, len);
   
-  int retVal = ::send(
-      sockfd, reinterpret_cast<char*>(longerBuf), len+sizeof(BufferLenType),
-      MSG_NOSIGNAL
-    );
-  if (retVal == -1) {
-    switch (socket_errno) {
-      case ENOTCONN:
-      case ECONNREFUSED:
-      case ECONNABORTED:
-      case ECONNRESET:
-        throw SocketClosedExn();
-        break;
-      case EPIPE:
-        throw SocketExn("Socket has been closed locally");
-        break;
-      default:
-        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
-        break;
-    }
-  }
+  char const* toSend = reinterpret_cast<char*>(longerBuf.get());
+  char const* bufferEnd = toSend+len+sizeof(BufferLenType);
 
-  delete[] longerBuf;
+  while (toSend != bufferEnd) {
+    ssize_t retVal = ::send(sockfd, toSend, bufferEnd - toSend, MSG_NOSIGNAL);
+    if (retVal == -1) {
+      switch (socket_errno) {
+        case ENOTCONN:
+        case ECONNREFUSED:
+        case ECONNABORTED:
+        case ECONNRESET:
+          throw SocketClosedExn();
+          break;
+        case EAGAIN:
+          /** \bug Spinlock on EAGAIN; not ideal.  Long term solution: use
+           * asyncronous I/O.  In the short term, this could be improved with
+           * select. */
+          Debug("EAGAIN; trying again; "<<(bufferEnd-toSend)<<" bytes remain");
+          continue;
+        case EPIPE:
+          throw SocketExn("Socket has been closed locally");
+          break;
+        default:
+          Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+          break;
+      }
+    }
+    assert(retVal > 0);
+    toSend += retVal;
+  }
 }
 
 void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*address*/)
