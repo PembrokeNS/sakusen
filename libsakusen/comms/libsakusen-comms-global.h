@@ -39,9 +39,9 @@
  * think about expanding it to two bytes. */
 #define NETWORK_PROTOCOL_VERSION 0
 
-/* BUFFER_LEN is the max length allowed for any sakusen message sent over the
+/** BUFFER_LEN is the max length allowed for any sakusen message sent over the
  * wire */
-#define BUFFER_LEN 4096
+#define BUFFER_LEN 1000000
 
 /** ADDR_DELIM is the delimiter for sakusen-style socket addresses */
 #define ADDR_DELIM "|"

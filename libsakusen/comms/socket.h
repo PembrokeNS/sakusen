@@ -79,6 +79,9 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      * be set with setNonBlocking.
      * \param len The maximum number of bytes you are willing to see.
      * \return The number of bytes actually read.
+     *
+     * \bug Need ~1MB of buffer for the largest messages, which is way too
+     * much for a fixed buffer size; should allocate dynamically instead.
      */
     virtual size_t receive(void* buf, size_t len) = 0;
     /** \brief receives a binary stream from the network, with a timeout.
