@@ -173,7 +173,6 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   BufferLenType nextMessageLen =
     ntoh_buffer(*reinterpret_cast<BufferLenType*>(buffer));
   assert(nextMessageLen > 0);
-  Debug("nextMessageLen=" << nextMessageLen);
   if (bufferLength >= nextMessageLen + sizeof(BufferLenType)) {
     if (len < nextMessageLen) {
       Fatal("insufficient space in buffer for message (needed " <<
