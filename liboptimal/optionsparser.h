@@ -188,7 +188,7 @@ class LIBOPTIMAL_API OptionsParser {
           std::list<std::string> errors;
           U val;
           std::string::const_iterator st = s.begin();
-          qi::uint_spec<U, 10, 1, -1> parser;
+          qi::uint_parser<U, 10, 1, -1> parser;
           if (qi::parse(st, s.end(), parser, val) && st == s.end()) {
             *value = val;
           } else {
