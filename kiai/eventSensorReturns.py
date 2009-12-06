@@ -6,6 +6,8 @@ import sip
 from sakusen import *
 from sakusen_client import *
 
+from util import color
+
 class eventSensorReturnsFactory(SensorReturnsFactory):
 	def __init__(self,scene):
 		SensorReturnsFactory.__init__(self)
@@ -51,8 +53,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 	                        #still being built
                         	self.i.setBrush(QtGui.QBrush(QtGui.QColor('blue')))
                		else:
-        	                r = (curhp * 255) // maxhp
-	                        self.i.setBrush(QtGui.QBrush(QtGui.QColor(255 - r, r, 0)))
+        	                self.i.setBrush(QtGui.QBrush(color(curhp, maxhp)))
 			if(self.j): sip.delete(self.j)
 			self.j = None
 		elif (p & sakusen.perception_owner):

@@ -7,6 +7,8 @@ import sip
 from sakusen import *
 from sakusen_client import *
 
+from util import color
+
 class unitShape(QtGui.QGraphicsPolygonItem):
 	def __init__(self, unit, polygon, mainwindow, parent = None):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
@@ -95,8 +97,7 @@ class eventUpdatedUnit(UpdatedUnit):
 			#still being built
 			return QtGui.QPen(QtGui.QColor('blue'))
 		else:
-			r = (curhp * 255) // maxhp
-			return QtGui.QPen(QtGui.QColor(255 - r, r, 0))
+			return QtGui.QPen(color(curhp, maxhp))
 	def destroying(self):
 		if(self.i.isSelected()):
 			for w in self.getStatus().getTypePtr().getWeapons():
