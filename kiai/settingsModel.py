@@ -54,7 +54,7 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else: return self.l[index.internalId()].rowCount()
 	def columnCount(self,index): return 2
 	def index(self,row,column,index):
-		if(index<=0 or not index.isValid()): #remove the index<=0 once it's understood
+		if(not index.isValid()):
 			if(row==0 and column==0):
 				return self.l[0].selfindex #creating index again might be a bad idea
 			else:

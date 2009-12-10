@@ -39,7 +39,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
 			corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
-			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)/self.scene.mapmodel.d,(t.y-self.scene.bottom)/self.scene.mapmodel.d))
+			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)//self.scene.mapmodel.d,(t.y-self.scene.bottom)//self.scene.mapmodel.d))
 			if(not self.i):
 				self.i=QtGui.QGraphicsPolygonItem(self.polygon,self.m.i)
 				self.i.setPen(QtGui.QPen(QtGui.QColor('purple')))
@@ -62,14 +62,14 @@ class eventSensorReturns(UpdatedSensorReturns):
 			region = self.getRegion()
 			rect = region.getBoundingRectangle()
 			if(not self.j):
-				self.j=QtGui.QGraphicsEllipseItem((rect.minx-self.scene.left + 0.0)/self.scene.mapmodel.d,(rect.miny-self.scene.bottom + 0.0)/self.scene.mapmodel.d,(rect.maxx-rect.minx + 0.0)/self.scene.mapmodel.d,(rect.maxy-rect.miny + 0.0)/self.scene.mapmodel.d,self.m.i)
+				self.j=QtGui.QGraphicsEllipseItem((rect.minx-self.scene.left + 0.0)//self.scene.mapmodel.d,(rect.miny-self.scene.bottom + 0.0)//self.scene.mapmodel.d,(rect.maxx-rect.minx + 0.0)//self.scene.mapmodel.d,(rect.maxy-rect.miny + 0.0)//self.scene.mapmodel.d,self.m.i)
 				p = QtGui.QPen(QtCore.Qt.DashLine)
 				p.setColor(QtGui.QColor('purple'))
 				p.thisown = 0
 				self.j.setPen(p)
 				self.j.sr = self
 			else:
-				self.j.setRect((rect.minx-self.scene.left + 0.0)/self.scene.mapmodel.d,(rect.miny-self.scene.bottom + 0.0)/self.scene.mapmodel.d,(rect.maxx-rect.minx + 0.0)/self.scene.mapmodel.d,(rect.maxy-rect.miny + 0.0)/self.scene.mapmodel.d)
+				self.j.setRect((rect.minx-self.scene.left + 0.0)//self.scene.mapmodel.d,(rect.miny-self.scene.bottom + 0.0)//self.scene.mapmodel.d,(rect.maxx-rect.minx + 0.0)//self.scene.mapmodel.d,(rect.maxy-rect.miny + 0.0)//self.scene.mapmodel.d)
 			if(self.i): sip.delete(self.i)
 			self.i = None
 		else:

@@ -25,7 +25,7 @@ def userconfig(s):
 	configpath/=path(KIAI_SUBDIR)
 	configpath/=path(s+".py")
 	try:
-		execfile(configpath.string(),interestingthings)
+		exec(open(configpath.string(),'r'),interestingthings)
 	except IOError:
 		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
 
