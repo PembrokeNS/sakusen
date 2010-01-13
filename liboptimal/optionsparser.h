@@ -12,7 +12,6 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/tokenizer.hpp>
-#include <boost/spirit/include/qi_numeric.hpp>
 #include <boost/spirit/home/qi/parse.hpp>
 #include <boost/spirit/home/qi/numeric/uint.hpp>
 
