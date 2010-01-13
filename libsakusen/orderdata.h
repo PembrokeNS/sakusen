@@ -8,6 +8,7 @@
 #include "iarchive.h"
 #include "sensorreturns.h"
 #include "ordertype.h"
+#include "numbertarget.h"
 #include "ref.h"
 
 namespace sakusen {
@@ -120,7 +121,7 @@ class LIBSAKUSEN_API TargetNoneOrderData : public TargetWeaponOrderData {
 class LIBSAKUSEN_API TargetNumberOrderData : public TargetWeaponOrderData {
   private: TargetNumberOrderData();
   public:
-    TargetNumberOrderData(uint16 wI, const uint16 t) :
+    TargetNumberOrderData(uint16 wI, const NumberTarget t) :
       TargetWeaponOrderData(),
       weaponIndex(wI),
       target(t)
@@ -131,10 +132,10 @@ class LIBSAKUSEN_API TargetNumberOrderData : public TargetWeaponOrderData {
     ~TargetNumberOrderData() {};
   private:
     uint16 weaponIndex;
-    uint16 target;
+    NumberTarget target;
   public:
     uint16 getWeaponIndex(void) const { return weaponIndex; }
-    const uint16& getTarget(void) const { return target; }
+    const NumberTarget& getTarget(void) const { return target; }
     OrderType getType(void) const { return orderType_targetNumber; }
     void store(OArchive&) const;
 };

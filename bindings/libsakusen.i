@@ -182,6 +182,11 @@ class tuple<
 #include "topology.h"
 %}
 
+%include "numbertarget.h"
+%{
+#include "numbertarget.h"
+%}
+
 %include "point.h"
 %{
 #include "point.h"

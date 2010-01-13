@@ -3,6 +3,7 @@
 
 #include "tedomari-global.h"
 
+#include "numbertarget.h"
 #include "point.h"
 #include "orientation.h"
 #include "ref.h"
@@ -22,7 +23,7 @@ typedef boost::variant<
     sakusen::Frame,
     sakusen::Ref<sakusen::client::UpdatedUnit>,
     std::vector<sakusen::Ref<sakusen::client::UpdatedUnit> >,
-    uint16
+    sakusen::NumberTarget
   > ActionArgument;
 
 enum ActionParameterType {

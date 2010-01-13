@@ -12,9 +12,9 @@ if(__name__=="__main__"):
 	
 	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
 	torpedo = WeaponType("torpedo", "sagittarius/sagittarius_module", "c:torp", 0, 0, 0, 0, resint)
-	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 's:attack', 0, 0, 0, 0, resint)
-	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 's:defense', 0, 0, 0, 0, resint)
-	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 's:speed', 0, 0, 0, 0, resint)
+	attack = WeaponType('attack', 'sagittarius/sagittarius_module', 'n:attack', 0, 0, 0, 0, resint)
+	defense = WeaponType('defense', 'sagittarius/sagittarius_module', 'n:defense', 0, 0, 0, 0, resint)
+	speed = WeaponType('speed', 'sagittarius/sagittarius_module', 'n:speed', 0, 0, 0, 0, resint)
 	fleet = WeaponType('fleet', 'sagittarius/sagittarius_module', 'c:ship', 0, 0, 0, 0, resint)
 	
 

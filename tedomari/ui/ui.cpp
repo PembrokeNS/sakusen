@@ -8,6 +8,9 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/join.hpp>
+#include <boost/spirit/home/qi/parse.hpp>
+#include <boost/spirit/home/qi/numeric/uint.hpp>
 #include <pcrecpp.h>
 
 using namespace std;
@@ -222,6 +225,7 @@ void UI::setModeFor(ActionParameterType type)
       setMode(&modes["target"]);
       break;
     case actionParameterType_stringFromSet:
+    case actionParameterType_number:
       setMode(&modes["string"]);
       break;
     case actionParameterType_frame:
@@ -365,19 +369,43 @@ void UI::executeRegex(const String& regex)
 {
   pcrecpp::RE r(regex);
   /** \todo Other possible uses of regexes */
-  if (pendingAction &&
-      pendingAction->getNextParameterType() ==
-        actionParameterType_stringFromSet) {
-    const set<String>& options = pendingAction->getStringSet();
-    for (set<String>::const_iterator i=options.begin(); i != options.end(); ++i ) {
-      if (r.PartialMatch(*i)) {
-        supplyActionArg(ActionArgument(*i));
-        return;
-      }
+  if (pendingAction) {
+    switch (pendingAction->getNextParameterType()) {
+      case actionParameterType_stringFromSet:
+        {
+          const set<String>& options = pendingAction->getStringSet();
+          for (set<String>::const_iterator i=options.begin();
+              i != options.end(); ++i ) {
+            if (r.PartialMatch(*i)) {
+              supplyActionArg(ActionArgument(*i));
+              return;
+            }
+          }
+          String options_s;
+          if (options.empty()) {
+            options_s = "no valid options";
+          } else {
+            options_s = "options were " + boost::algorithm::join(options, ", ");
+          }
+          alert("No option matched regex '"+regex+"' ("+options_s+")");
+          return;
+        }
+      case actionParameterType_number:
+        {
+          NumberTarget val;
+          std::string::const_iterator st = regex.begin();
+          namespace qi = boost::spirit::qi;
+          qi::uint_parser<NumberTarget, 10, 1, -1> parser;
+          if (qi::parse(st, regex.end(), parser, val) && st == regex.end()) {
+            supplyActionArg(ActionArgument(val));
+          } else {
+            alert("Couldn't interpret '"+regex+"' as a number");
+          }
+          return;
+        }
+      default:
+        alert("No obvious purpose for regex");
     }
-    //alert(Alert("No option matched regex"));
-    //Please stop writing lines like this. They are silly.
-    alert("No option matched regex '"+regex+"'");
   }
 }
 

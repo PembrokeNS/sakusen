@@ -16,6 +16,42 @@ using namespace tedomari::game;
 namespace tedomari {
 namespace ui {
 
+namespace {
+
+std::set<String> findAllWeaponsWithPrefix(
+    const set<UnitId>& selection,
+    const String& prefix
+  )
+{
+  /* Extract the set of all unit types represented in the selection */
+  set<UnitTypeId> unitTypes;
+  for (set<UnitId>::iterator unitId = selection.begin();
+      unitId != selection.end(); ++unitId) {
+    Ref<UpdatedUnit> creater =
+      client::world->getUnitsById()->find(*unitId);
+    unitTypes.insert(creater->getStatus().getType());
+  }
+  std::set<String> result;
+  /* Extract all the number-weapons any of these unit types can build */
+  for (set<UnitTypeId>::iterator typeId = unitTypes.begin();
+      typeId != unitTypes.end(); ++typeId) {
+    const UnitType* unitType =
+      client::world->getUniverse()->getUnitTypePtr(*typeId);
+    const vector<WeaponTypeId>& weapons = unitType->getWeapons();
+    for (vector<WeaponTypeId>::const_iterator weaponTypeId =
+        weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
+      const WeaponType* weaponType =
+        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
+      if (boost::starts_with(weaponType->getClientHint(), prefix)) {
+        result.insert(weaponType->getClientHint().substr(prefix.size()));
+      }
+    }
+  }
+  return result;
+}
+
+}
+
 class StopAction : public Action {
   public:
     StopAction(const set<UnitId>& selection) :
@@ -36,17 +72,79 @@ class StopAction : public Action {
     }
 };
 
-/* TODO: action for setting numeric parameters 
-class SetAction : public Action {
+class NumberAction : public Action {
   public:
-    SetAction(const set<UnitId>& selection):
-      Action(actionParameterType_number), movers(selection)
+    NumberAction(const set<UnitId>& selection):
+      Action(actionParameterType_stringFromSet),
+      units(selection),
+      number()
     {
+      possibleWeapons = findAllWeaponsWithPrefix(selection, "n:");
     }
   private:
-    set<UnitId> movers;
+    set<UnitId> units;
+    set<String> possibleWeapons;
+    String weapon;
+    NumberTarget number;
+
+    void internalSupplyArgument(const ActionArgument& arg) {
+      switch (nextParameterType) {
+        case actionParameterType_stringFromSet:
+          {
+            const String& w = boost::get<String>(arg);
+            set<String>::iterator i = possibleWeapons.find(w);
+            if (i == possibleWeapons.end()) {
+              throw ActionArgumentExn(
+                  "string '"+w+"' not one of the valid values"
+                );
+            } else {
+              weapon = w;
+              nextParameterType = actionParameterType_number;
+            }
+          }
+          break;
+        case actionParameterType_number:
+          {
+            number = boost::get<NumberTarget>(arg);
+            nextParameterType = actionParameterType_none;
+          }
+          break;
+        default:
+          Fatal("unexpected parameter type");
+      }
+    }
+
+    const set<String>& internalGetStringSet() const {
+      return possibleWeapons;
+    }
+    void internalExecute(UI* ui);
 };
-*/
+
+void NumberAction::internalExecute(UI* ui) {
+  for (set<UnitId>::iterator unitId = units.begin();
+      unitId != units.end(); ++unitId) {
+    Ref<UpdatedUnit> unit =
+      client::world->getUnitsById()->find(*unitId);
+    if (!unit) {
+      continue;
+    }
+    const UnitType* unitType =
+      client::world->getUniverse()->
+      getUnitTypePtr(unit->getStatus().getType());
+    const vector<WeaponTypeId>& weapons = unitType->getWeapons();
+    for (vector<WeaponTypeId>::const_iterator weaponTypeId =
+        weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
+      const WeaponType* weaponType =
+        client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
+      if (weaponType->getClientHint() == "n:"+weapon) {
+        Order order(new TargetNumberOrderData(
+              weaponTypeId-weapons.begin(), number
+            ));
+        ui->getGame()->order(OrderMessage(*unitId, order));
+      }
+    }
+  }
+}
 
 class MoveAction : public Action {
   public:
@@ -151,29 +249,8 @@ class CreateAction : public Action {
       creaters(selection),
       target()
     {
-      /* Extract the set of all unit types represented in the selection */
-      set<UnitTypeId> unitTypes;
-      for (set<UnitId>::iterator createrId = creaters.begin();
-          createrId != creaters.end(); ++createrId) {
-        Ref<UpdatedUnit> creater =
-          client::world->getUnitsById()->find(*createrId);
-        unitTypes.insert(creater->getStatus().getType());
-      }
       /* Extract all the types of things any of these unit types can build */
-      for (set<UnitTypeId>::iterator typeId = unitTypes.begin();
-          typeId != unitTypes.end(); ++typeId) {
-        const UnitType* unitType =
-          client::world->getUniverse()->getUnitTypePtr(*typeId);
-        const vector<WeaponTypeId>& weapons = unitType->getWeapons();
-        for (vector<WeaponTypeId>::const_iterator weaponTypeId =
-            weapons.begin(); weaponTypeId != weapons.end(); ++weaponTypeId) {
-          const WeaponType* weaponType =
-            client::world->getUniverse()->getWeaponTypePtr(*weaponTypeId);
-          if (boost::starts_with(weaponType->getClientHint(), "c:")) {
-            possibleCreations.insert(weaponType->getClientHint().substr(2));
-          }
-        }
-      }
+      possibleCreations = findAllWeaponsWithPrefix(selection, "c:");
     }
   private:
     /** \brief Units to create with */
@@ -333,6 +410,8 @@ Action::Ptr initializeAction(
     return Action::Ptr(new BuildAction(selection));
   } else if (actionName == "stop") {
     return Action::Ptr(new StopAction(selection));
+  } else if (actionName == "number") {
+    return Action::Ptr(new NumberAction(selection));
   } else {
     return Action::Ptr();
   }

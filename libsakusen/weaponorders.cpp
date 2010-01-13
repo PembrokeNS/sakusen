@@ -18,7 +18,7 @@ WeaponOrders::WeaponOrders(
     const Frame& tF,
     const Ref<ICompleteUnit>& tU,
     const Ref<ISensorReturns>& tSR,
-    const uint16 N
+    const NumberTarget N
   ) :
   targetType(tT),
   targetPosition(tP),
@@ -81,7 +81,7 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   }
 }
 
-uint16 WeaponOrders::getTargetNumber() const
+NumberTarget WeaponOrders::getTargetNumber() const
 {
   switch (targetType) {
     case weaponTargetType_number:
