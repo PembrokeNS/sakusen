@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 #define LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 
+#include <boost/random/mersenne_twister.hpp>
+
 #include "world.h"
 #include "hash_list.h"
 #include "player.h"
@@ -65,6 +67,8 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     std::vector<Script::Ptr> scripts;
 
     std::vector<Player> players;
+
+    boost::mt19937 random;
 
     void applyEffect(
         const Ref<Effect>&,
@@ -182,6 +186,13 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       assert(id<players.size());
       return &players[id];
     }
+
+    /** \brief Get the random number source.
+     *
+     * At present this is a mersenne twister, but that may change.  It may only
+     * be assumed to be a UniformRandomNumberGenerator (in the sense of
+     * Boost.Random). */
+    boost::mt19937& getRandom() { return random; }
 
     /* methods to perform game mechanics */
     void advanceGameState(Time timeToReach);

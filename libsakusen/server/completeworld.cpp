@@ -28,8 +28,13 @@ CompleteWorld::CompleteWorld(
   units(),
   lastFuseToken(static_cast<FuseToken>(-1)),
   fuseQueue(),
-  players(p)
+  players(p),
+  random()
 {
+  /** \todo We are default-constructing random for testing purposes.  At some
+   * point it should be seeded from a high-quality random source (and probably
+   * regularly reseeded). */
+
   /* yes, these first two variables hold the same number. But it makes
    * type-checking easier, and the optimizer will deal with them.
    */
