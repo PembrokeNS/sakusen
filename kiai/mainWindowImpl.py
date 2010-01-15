@@ -18,6 +18,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.setupGUI()
 		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &)'), self.runcommand)
 		self.connect(self.ui.move, QtCore.SIGNAL('pressed()'), self.setmove)
+		self.connect(self.ui.attack, QtCore.SIGNAL('pressed()'), self.setattack)
 		self.env = environment
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
@@ -26,6 +27,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 	def write(self, t):
 		self.ui.output.append(t.strip())
 	def setmove(self): self.ui.gameview.scene().mpe = move
+	def setattack(self): self.ui.gameview.scene().mpe = attack
 
 @mpeFunction
 def move(**kwargs):
@@ -38,23 +40,25 @@ def move(**kwargs):
 		omd = OrderMessageData(om)
 		kwargs['socket'].sendd(omd)
 
+@mpeFunction
+def attack(**kwargs):
+	for i in kwargs['selectedUnits']:
+		u = i.unit
+		s = u.getStatus()
+		utype = s.getTypePtr()
+		for j,w in enumerate(utype.getWeapons()):
+			if(w.getClientHint() == 'o'):
+				try:
+					od = TargetSensorReturnsOrderData(j, kwargs['targetObject'].sr.getRefToThis())
+				except AttributeError:
+					od = TargetPositionOrderData(j, kwargs['targetPosition'])
+				od.thisown = 0 
+				o = Order(od)
+				om = OrderMessage(u.getId(), o)
+				omd = OrderMessageData(om)
+				kwargs['socket'].sendd(omd)
+
 def foo():
-			if(self.mw.ui.attack.isChecked()):
-				 for i in units:
-					u = i.unit
-					s = u.getStatus()
-					utype = s.getTypePtr()
-					for j,w in enumerate(utype.getWeapons()):
-						if(w.getClientHint() == 'o'):
-							if(srclicked):
-								od = TargetSensorReturnsOrderData(j, csr.getRefToThis())
-							else:
-								od = TargetPositionOrderData(j,q)
-							od.thisown = 0 
-							o = Order(od)
-							om = OrderMessage(u.getId(), o)
-							omd = OrderMessageData(om)
-							self.sock.sendd(omd)
 			for b in self.mw.ui.construct.findChildren(kdeui.KPushButton):
 				if(b.isChecked()):
 					for i in units:
