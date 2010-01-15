@@ -27,12 +27,24 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		exec str(t) in self.env
 	def write(self, t):
 		self.ui.output.append(t.strip())
+	def othercommands(self, button):
+		button.setEnabled(False)
+		for b in self.findChildren(kdeui.KPushButton):
+			if(b != button):
+				b.setEnabled(True)
+				b.setChecked(False)
 	def setmove(self, t):
-		if(t): self.ui.gameview.scene().mpe = move
+		if(t):
+			self.ui.gameview.scene().mpe = move
+			self.othercommands(self.ui.move)
 	def setattack(self, t):
-		if(t): self.ui.gameview.scene().mpe = attack
+		if(t):
+			self.ui.gameview.scene().mpe = attack
+			self.othercommands(self.ui.attack)
 	def setbuild(self, t):
-		if(t): self.ui.gameview.scene().mpe = build
+		if(t):
+			self.ui.gameview.scene().mpe = build
+			self.othercommands(self.ui.build)
 
 @mpeFunction
 def move(**kwargs):
