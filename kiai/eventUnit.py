@@ -69,6 +69,7 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 						def setConstruct(flag):
 							if(flag):
 								self.mainwindow.ui.gameview.scene().mpe = construct
+								self.mainwindow.othercommands(b)
 						QtCore.QObject.connect(b, QtCore.SIGNAL('toggled(bool)'), setConstruct)
 						b.show()
 			return value
