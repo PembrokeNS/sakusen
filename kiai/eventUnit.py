@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore, QtGui
 from PyKDE4 import kdeui
@@ -18,10 +19,10 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
 			s = self.unit.getStatus()
 			d = value.toBool()
-                	utype = s.getTypePtr()
-                	for j,w in enumerate(utype.getWeapons()):
-                        	if(w.getClientHint()[:2] == 'c:'):
-                                	cname = w.getClientHint()[2:]
+			utype = s.getTypePtr()
+			for j,w in enumerate(utype.getWeapons()):
+				if(w.getClientHint()[:2] == 'c:'):
+					cname = w.getClientHint()[2:]
 					b = self.mainwindow.ui.construct.findChild(kdeui.KPushButton, cname)
 					if(b):
 						#this is a manual reference-counting scheme to ensure that
@@ -64,16 +65,16 @@ class eventUpdatedUnit(UpdatedUnit):
 	def __init__(self, interestingthings, u, scene, m, mainwindow):
 		UpdatedUnit.__init__(self,u)
 		self.scene = scene
-                status = self.getStatus()
-                frame = status.getFrame()
-                pos = frame.getPosition()
-                typedata = self.getTypeData()
+		status = self.getStatus()
+		frame = status.getFrame()
+		pos = frame.getPosition()
+		typedata = self.getTypeData()
 		size = typedata.getSize()
-                self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
-                corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
-                self.polygon = QtGui.QPolygonF()
-                for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)//self.scene.mapmodel.d,(t.y-scene.bottom)//self.scene.mapmodel.d))
-                self.i=unitShape(self, self.polygon, mainwindow, m.i)
+		self.size = UPoint32(size) #make a copy of size, since we're going to let u get deleted eventually
+		corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+		self.polygon = QtGui.QPolygonF()
+		for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)//self.scene.mapmodel.d,(t.y-scene.bottom)//self.scene.mapmodel.d))
+		self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
 		interestingthings['units'].append(self)
 		self.interestingthings = interestingthings
@@ -82,12 +83,12 @@ class eventUpdatedUnit(UpdatedUnit):
 		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())
 		UpdatedUnit.incrementState(self)
 		if(flag): #have changed
-	                status = self.getStatus()
-        	        frame = status.getFrame()
-        	        corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
+			status = self.getStatus()
+			frame = status.getFrame()
+			corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
-                	for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)//self.scene.mapmodel.d,(t.y-self.scene.bottom)//self.scene.mapmodel.d))
-                	self.i.setPolygon(self.polygon)
+			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)//self.scene.mapmodel.d,(t.y-self.scene.bottom)//self.scene.mapmodel.d))
+			self.i.setPolygon(self.polygon)
 			self.i.setPen(self.pen())
 	def pen(self): #create a pen of the appropriate colour for the current hitpoints and stuff
 		curhp = self.getStatus().getHitPoints().numify()
