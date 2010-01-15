@@ -58,6 +58,23 @@ def attack(**kwargs):
 				omd = OrderMessageData(om)
 				kwargs['socket'].sendd(omd)
 
+@mpeFunction
+def build(**kwargs):
+	for i in kwargs['selectedUnits']:
+		u = i.unit
+		s = u.getStatus()
+		utype = s.getTypePtr()
+		for j,w in enumerate(utype.getWeapons()):
+			if(w.getClientHint()[:2] == 'b'):
+				try:
+					od = TargetUnitOrderData(j, kwargs['targetObject'].unit.getRefToThis())
+					od.thisown = 0
+					o = Order(od)
+					om = OrderMessage(u.getId(), o)
+					omd = OrderMessageData(om)
+					kwargs['socket'].sendd(omd)
+				except AttributeError: pass
+
 def foo():
 			for b in self.mw.ui.construct.findChildren(kdeui.KPushButton):
 				if(b.isChecked()):
@@ -80,19 +97,6 @@ def foo():
 									om = OrderMessage(u.getId(), o)
 									omd = OrderMessageData(om)
 									self.sock.sendd(omd)
-			if(self.mw.ui.build.isChecked()):
-				for i in units:
-					u = i.unit
-					s = u.getStatus()
-					utype = s.getTypePtr()
-					for j,w in enumerate(utype.getWeapons()):
-						if(w.getClientHint()[:2] == 'b'):
-							if(unitclicked):
-								od = TargetUnitOrderData(j,cu)
-								od.thisown = 0
-								o = Order(od)
-								om = OrderMessage(u.getId(), o)
-								omd = OrderMessageData(om)
-								self.sock.sendd(omd)
+
 
 

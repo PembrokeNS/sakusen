@@ -23,17 +23,6 @@ def mpeFunction(f):
 		if(e.button() == QtCore.Qt.RightButton):
 			e.accept()
 			p = e.lastScenePos()
-			unitclicked = False
-			srclicked = False
-			if(self.itemAt(p)!=self.mapmodel.i): #clicked on a unit or sensor return
-				try:
-					clickedunit = self.itemAt(p).unit
-					cu = clickedunit.getRefToThis()
-					unitclicked = True
-				except AttributeError: #not a unit
-					sensorreturnclicked = True
-					csr = self.itemAt(p).sr
-					srclicked = True
 			r = SPoint32(int(p.x()*self.mapmodel.d) + self.left,int(p.y()*self.mapmodel.d) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
 			f(selectedUnits = self.selectedItems(), targetPoint = q, targetObject = self.itemAt(p), socket = self.sock)
