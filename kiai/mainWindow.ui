@@ -45,6 +45,13 @@
         </widget>
        </item>
        <item>
+        <widget class="KPushButton" name="stop">
+         <property name="text">
+          <string>Stop</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="KPushButton" name="build">
          <property name="text">
           <string>Build</string>
@@ -90,7 +97,7 @@
      <x>0</x>
      <y>0</y>
      <width>759</width>
-     <height>29</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>
