@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore,QtGui
 from PyKDE4 import kdeui
@@ -45,7 +46,7 @@ class sceneModel(QtGui.QGraphicsScene):
 					self.sock.sendd(omd)
 			if(self.mw.ui.attack.isChecked()):
 				 for i in units:
-                                        u = i.unit
+					u = i.unit
 					s = u.getStatus()
 					utype = s.getTypePtr()
 					for j,w in enumerate(utype.getWeapons()):
@@ -63,10 +64,10 @@ class sceneModel(QtGui.QGraphicsScene):
 				if(b.isChecked()):
 					for i in units:
 						u = i.unit
-                        	                s = u.getStatus()
-                                	        utype = s.getTypePtr()
-                                        	for j,w in enumerate(utype.getWeapons()):
-                                        	        if(w.getClientHint()[:2] == 'c:'):
+						s = u.getStatus()
+						utype = s.getTypePtr()
+						for j,w in enumerate(utype.getWeapons()):
+							if(w.getClientHint()[:2] == 'c:'):
 								cname = w.getClientHint()[2:]
 								if(cname == b.objectName()):
 									ctype = self.u.getUnitTypePtr(cname)
@@ -74,23 +75,23 @@ class sceneModel(QtGui.QGraphicsScene):
 									cpt = SPoint32(q.x,q.y,q.z + csz.z)
 									orient = Orientation()
 									f = Frame(cpt, orient)
-	                         					od = TargetFrameOrderData(j,f)
-                                        				od.thisown = 0
-                                                        		o = Order(od)
-                                                        		om = OrderMessage(u.getId(), o)
-                                                        		omd = OrderMessageData(om)
-                                                        		self.sock.sendd(omd)
-                        if(self.mw.ui.build.isChecked()):
-                                for i in units:
-                                        u = i.unit
-                                        s = u.getStatus()
-                                        utype = s.getTypePtr()
-                                        for j,w in enumerate(utype.getWeapons()):
-                                                if(w.getClientHint()[:2] == 'b'):
+				 					od = TargetFrameOrderData(j,f)
+									od.thisown = 0
+									o = Order(od)
+									om = OrderMessage(u.getId(), o)
+									omd = OrderMessageData(om)
+									self.sock.sendd(omd)
+			if(self.mw.ui.build.isChecked()):
+				for i in units:
+					u = i.unit
+					s = u.getStatus()
+					utype = s.getTypePtr()
+					for j,w in enumerate(utype.getWeapons()):
+						if(w.getClientHint()[:2] == 'b'):
 							if(unitclicked):
-	                                                        od = TargetUnitOrderData(j,cu)
-        	                                                od.thisown = 0
-                	                                        o = Order(od)
-                        	                                om = OrderMessage(u.getId(), o)
-                                	                        omd = OrderMessageData(om)
-                                                       		self.sock.sendd(omd)
+								od = TargetUnitOrderData(j,cu)
+								od.thisown = 0
+								o = Order(od)
+								om = OrderMessage(u.getId(), o)
+								omd = OrderMessageData(om)
+								self.sock.sendd(omd)
