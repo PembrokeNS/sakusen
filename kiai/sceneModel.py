@@ -25,5 +25,5 @@ def mpeFunction(f):
 			p = e.lastScenePos()
 			r = SPoint32(int(p.x()*self.mapmodel.d) + self.left,int(p.y()*self.mapmodel.d) + self.bottom,0)
 			q = SPoint32(r.x,r.y,self.mapmodel.h.getHeightAt(r))
-			f(selectedUnits = self.selectedItems(), targetPoint = q, targetObject = self.itemAt(p), socket = self.sock)
+			f(selectedUnits = self.selectedItems(), targetPoint = q, targetObject = self.itemAt(p), socket = self.sock, universe = self.u)
 	return g

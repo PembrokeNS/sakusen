@@ -27,9 +27,12 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		exec str(t) in self.env
 	def write(self, t):
 		self.ui.output.append(t.strip())
-	def setmove(self, t): if(t): self.ui.gameview.scene().mpe = move
-	def setattack(self, t): if(t): self.ui.gameview.scene().mpe = attack
-	def setbuild(self, t): if(t): self.ui.gameview.scene().mpe = build
+	def setmove(self, t):
+		if(t): self.ui.gameview.scene().mpe = move
+	def setattack(self, t):
+		if(t): self.ui.gameview.scene().mpe = attack
+	def setbuild(self, t):
+		if(t): self.ui.gameview.scene().mpe = build
 
 @mpeFunction
 def move(**kwargs):
@@ -77,28 +80,7 @@ def build(**kwargs):
 					kwargs['socket'].sendd(omd)
 				except AttributeError: pass
 
-def foo():
-			for b in self.mw.ui.construct.findChildren(kdeui.KPushButton):
-				if(b.isChecked()):
-					for i in units:
-						u = i.unit
-						s = u.getStatus()
-						utype = s.getTypePtr()
-						for j,w in enumerate(utype.getWeapons()):
-							if(w.getClientHint()[:2] == 'c:'):
-								cname = w.getClientHint()[2:]
-								if(cname == b.objectName()):
-									ctype = self.u.getUnitTypePtr(cname)
-									csz = ctype.getDynamicData().getSize()
-									cpt = SPoint32(q.x,q.y,q.z + csz.z)
-									orient = Orientation()
-									f = Frame(cpt, orient)
-				 					od = TargetFrameOrderData(j,f)
-									od.thisown = 0
-									o = Order(od)
-									om = OrderMessage(u.getId(), o)
-									omd = OrderMessageData(om)
-									self.sock.sendd(omd)
+
 
 
 

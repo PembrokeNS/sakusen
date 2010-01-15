@@ -7,8 +7,10 @@ import sip
 
 from sakusen import *
 from sakusen_client import *
+from sakusen_comms import *
 
 from util import color
+from sceneModel import mpeFunction
 
 class unitShape(QtGui.QGraphicsPolygonItem):
 	def __init__(self, unit, polygon, mainwindow, parent = None):
@@ -43,6 +45,31 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 						b.setText(cname)
 						b.refcount = 1
 						self.mainwindow.ui.construct.layout().addWidget(b)
+						@mpeFunction
+						def construct(**kwargs):
+							for i in kwargs['selectedUnits']:
+								u = i.unit
+								s = u.getStatus()
+								utype = s.getTypePtr()
+								for j,w in enumerate(utype.getWeapons()):
+									if(w.getClientHint()[:2] == 'c:'):
+										cname_ = w.getClientHint()[2:]
+										if(cname_ == cname):
+											ctype = kwargs['universe'].getUnitTypePtr(cname)
+											csz = ctype.getDynamicData().getSize()
+											cpt = SPoint32(kwargs['targetPoint'].x,kwargs['targetPoint'].y,kwargs['targetPoint'].z + csz.z)
+											orient = Orientation()
+											f = Frame(cpt, orient)
+											od = TargetFrameOrderData(j,f)
+											od.thisown = 0
+											o = Order(od)
+											om = OrderMessage(u.getId(), o)
+											omd = OrderMessageData(om)
+											kwargs['socket'].sendd(omd)
+						def setConstruct(flag):
+							if(flag):
+								self.mainwindow.ui.gameview.scene().mpe = construct
+						QtCore.QObject.connect(b, QtCore.SIGNAL('toggled(bool)'), setConstruct)
 						b.show()
 			return value
 		else:
