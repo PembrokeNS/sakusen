@@ -17,8 +17,9 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.ui.setupUi(self)
 		self.setupGUI()
 		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &)'), self.runcommand)
-		self.connect(self.ui.move, QtCore.SIGNAL('pressed()'), self.setmove)
-		self.connect(self.ui.attack, QtCore.SIGNAL('pressed()'), self.setattack)
+		self.connect(self.ui.move, QtCore.SIGNAL('toggled(bool)'), self.setmove)
+		self.connect(self.ui.attack, QtCore.SIGNAL('toggled(bool)'), self.setattack)
+		self.connect(self.ui.build, QtCore.SIGNAL('toggled(bool)'), self.setbuild)
 		self.env = environment
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
@@ -26,8 +27,9 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		exec str(t) in self.env
 	def write(self, t):
 		self.ui.output.append(t.strip())
-	def setmove(self): self.ui.gameview.scene().mpe = move
-	def setattack(self): self.ui.gameview.scene().mpe = attack
+	def setmove(self, t): if(t): self.ui.gameview.scene().mpe = move
+	def setattack(self, t): if(t): self.ui.gameview.scene().mpe = attack
+	def setbuild(self, t): if(t): self.ui.gameview.scene().mpe = build
 
 @mpeFunction
 def move(**kwargs):
