@@ -1,14 +1,23 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from PyKDE4 import kdeui
 from PyQt4 import QtCore
+
+from sakusen import *
+from sakusen_comms import *
+
 from mainWindow import Ui_mainWindow
+
+from sceneModel import mpeFunction
+
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, environment, parent=None):
 		kdeui.KXmlGuiWindow.__init__(self,parent)
 		self.ui=Ui_mainWindow()
 		self.ui.setupUi(self)
 		self.setupGUI()
-		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &) '),self.runcommand)
+		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &)'), self.runcommand)
+		self.connect(self.ui.move, QtCore.SIGNAL('pressed()'), self.setmove)
 		self.env = environment
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
@@ -16,5 +25,70 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		exec str(t) in self.env
 	def write(self, t):
 		self.ui.output.append(t.strip())
+	def setmove(self): self.ui.gameview.scene().mpe = move
+
+@mpeFunction
+def move(**kwargs):
+	for i in kwargs['selectedUnits']:
+		u = i.unit
+		od = MoveOrderData(kwargs['targetPoint'])
+		od.thisown = 0
+		o = Order(od)
+		om = OrderMessage(u.getId(), o)
+		omd = OrderMessageData(om)
+		kwargs['socket'].sendd(omd)
+
+def foo():
+			if(self.mw.ui.attack.isChecked()):
+				 for i in units:
+					u = i.unit
+					s = u.getStatus()
+					utype = s.getTypePtr()
+					for j,w in enumerate(utype.getWeapons()):
+						if(w.getClientHint() == 'o'):
+							if(srclicked):
+								od = TargetSensorReturnsOrderData(j, csr.getRefToThis())
+							else:
+								od = TargetPositionOrderData(j,q)
+							od.thisown = 0 
+							o = Order(od)
+							om = OrderMessage(u.getId(), o)
+							omd = OrderMessageData(om)
+							self.sock.sendd(omd)
+			for b in self.mw.ui.construct.findChildren(kdeui.KPushButton):
+				if(b.isChecked()):
+					for i in units:
+						u = i.unit
+						s = u.getStatus()
+						utype = s.getTypePtr()
+						for j,w in enumerate(utype.getWeapons()):
+							if(w.getClientHint()[:2] == 'c:'):
+								cname = w.getClientHint()[2:]
+								if(cname == b.objectName()):
+									ctype = self.u.getUnitTypePtr(cname)
+									csz = ctype.getDynamicData().getSize()
+									cpt = SPoint32(q.x,q.y,q.z + csz.z)
+									orient = Orientation()
+									f = Frame(cpt, orient)
+				 					od = TargetFrameOrderData(j,f)
+									od.thisown = 0
+									o = Order(od)
+									om = OrderMessage(u.getId(), o)
+									omd = OrderMessageData(om)
+									self.sock.sendd(omd)
+			if(self.mw.ui.build.isChecked()):
+				for i in units:
+					u = i.unit
+					s = u.getStatus()
+					utype = s.getTypePtr()
+					for j,w in enumerate(utype.getWeapons()):
+						if(w.getClientHint()[:2] == 'b'):
+							if(unitclicked):
+								od = TargetUnitOrderData(j,cu)
+								od.thisown = 0
+								o = Order(od)
+								om = OrderMessage(u.getId(), o)
+								omd = OrderMessageData(om)
+								self.sock.sendd(omd)
 
 
