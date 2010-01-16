@@ -57,48 +57,38 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.othercommands(self.ui.stop)
 		self.ui.stop.setEnabled(True)
 
-@mpeFunction
-def move(**kwargs):
-	for i in kwargs['selectedUnits']:
-		u = i.unit
-		od = MoveOrderData(kwargs['targetPoint'])
-		od.thisown = 0
-		o = Order(od)
-		om = OrderMessage(u.getId(), o)
-		omd = OrderMessageData(om)
-		kwargs['socket'].sendd(omd)
+def orderSelectedUnits(f):
+	def g(**kwargs):
+		for i in kwargs['selectedUnits']:
+			kwargs['unit'] = i.unit
+			od = f(**kwargs)
+			od.thisown = 0
+			o = Order(od)
+			om = OrderMessage(kwargs['unit'].getId(), o)
+			omd = OrderMessageData(om)
+			kwargs['socket'].sendd(omd)
+	return g
 
 @mpeFunction
+@orderSelectedUnits
+def move(**kwargs):	return MoveOrderData(kwargs['targetPoint'])
+
+@mpeFunction
+@orderSelectedUnits
 def attack(**kwargs):
-	for i in kwargs['selectedUnits']:
-		u = i.unit
-		s = u.getStatus()
-		utype = s.getTypePtr()
-		for j,w in enumerate(utype.getWeapons()):
-			if(w.getClientHint() == 'o'):
-				try:
-					od = TargetSensorReturnsOrderData(j, kwargs['targetObject'].sr.getRefToThis())
-				except AttributeError:
-					od = TargetPositionOrderData(j, kwargs['targetPoint'])
-				od.thisown = 0 
-				o = Order(od)
-				om = OrderMessage(u.getId(), o)
-				omd = OrderMessageData(om)
-				kwargs['socket'].sendd(omd)
+	s = kwargs['unit'].getStatus()
+	utype = s.getTypePtr()
+	for j,w in enumerate(utype.getWeapons()):
+		if(w.getClientHint() == 'o'):
+			try: return TargetSensorReturnsOrderData(j, kwargs['targetObject'].sr.getRefToThis())
+			except AttributeError: return TargetPositionOrderData(j, kwargs['targetPoint'])
 
 @mpeFunction
+@orderSelectedUnits
 def build(**kwargs):
-	for i in kwargs['selectedUnits']:
-		u = i.unit
-		s = u.getStatus()
-		utype = s.getTypePtr()
-		for j,w in enumerate(utype.getWeapons()):
-			if(w.getClientHint()[:2] == 'b'):
-				try:
-					od = TargetUnitOrderData(j, kwargs['targetObject'].unit.getRefToThis())
-					od.thisown = 0
-					o = Order(od)
-					om = OrderMessage(u.getId(), o)
-					omd = OrderMessageData(om)
-					kwargs['socket'].sendd(omd)
-				except AttributeError: pass
+	s = kwargs['unit'].getStatus()
+	utype = s.getTypePtr()
+	for j,w in enumerate(utype.getWeapons()):
+		if(w.getClientHint()[:2] == 'b'):
+			try: return TargetUnitOrderData(j, kwargs['targetObject'].unit.getRefToThis())
+			except AttributeError: pass
