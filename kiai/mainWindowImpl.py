@@ -17,9 +17,9 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.ui.setupUi(self)
 		self.setupGUI()
 		self.connect(self.ui.entryline, QtCore.SIGNAL('returnPressed(const QString &)'), self.runcommand)
-		self.connect(self.ui.move, QtCore.SIGNAL('toggled(bool)'), self.setmove)
-		self.connect(self.ui.attack, QtCore.SIGNAL('toggled(bool)'), self.setattack)
-		self.connect(self.ui.build, QtCore.SIGNAL('toggled(bool)'), self.setbuild)
+		self.connectUp(self.ui.move, move)
+		self.connectUp(self.ui.attack, attack)
+		self.connectUp(self.ui.build, build)
 		self.connect(self.ui.stop, QtCore.SIGNAL('clicked()'), self.stop)
 		self.env = environment
 	def runcommand(self, t):
@@ -34,18 +34,12 @@ class mainWindow(kdeui.KXmlGuiWindow):
 			if(b != button):
 				b.setEnabled(True)
 				b.setChecked(False)
-	def setmove(self, t):
-		if(t):
-			self.ui.gameview.scene().mpe = move
-			self.othercommands(self.ui.move)
-	def setattack(self, t):
-		if(t):
-			self.ui.gameview.scene().mpe = attack
-			self.othercommands(self.ui.attack)
-	def setbuild(self, t):
-		if(t):
-			self.ui.gameview.scene().mpe = build
-			self.othercommands(self.ui.build)
+	def connectUp(self, button, function):
+		def setf(t):
+			if(t):
+				self.ui.gameview.scene().mpe = function
+				self.othercommands(button)
+		QtCore.QObject.connect(button, QtCore.SIGNAL('toggled(bool)'), setf)
 	def stop(self):
 		self.ui.gameview.scene().mpe = sceneModel.mpe
 		for i in self.ui.gameview.scene().selectedItems():
