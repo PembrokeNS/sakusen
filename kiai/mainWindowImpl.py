@@ -8,7 +8,7 @@ from sakusen_comms import *
 
 from mainWindow import Ui_mainWindow
 
-from sceneModel import mpeFunction
+from sceneModel import mpeFunction, sceneModel
 
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, environment, parent=None):
@@ -20,6 +20,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.connect(self.ui.move, QtCore.SIGNAL('toggled(bool)'), self.setmove)
 		self.connect(self.ui.attack, QtCore.SIGNAL('toggled(bool)'), self.setattack)
 		self.connect(self.ui.build, QtCore.SIGNAL('toggled(bool)'), self.setbuild)
+		self.connect(self.ui.stop, QtCore.SIGNAL('clicked()'), self.stop)
 		self.env = environment
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
@@ -45,6 +46,22 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		if(t):
 			self.ui.gameview.scene().mpe = build
 			self.othercommands(self.ui.build)
+	def stop(self):
+		self.ui.gameview.scene().mpe = sceneModel.mpe
+		for i in self.ui.gameview.scene().selectedItems():
+			u = i.unit
+			s = u.getStatus()
+			utype = s.getTypePtr()
+			for j,w in enumerate(utype.getWeapons()):
+				if(w.getClientHint() == 'o'):
+					od = TargetNoneOrderData(j);
+					od.thisown = 0 
+					o = Order(od)
+					om = OrderMessage(u.getId(), o)
+					omd = OrderMessageData(om)
+					self.ui.gameview.scene().sock.sendd(omd)
+		self.othercommands(self.ui.stop)
+		self.ui.stop.setEnabled(True)
 
 @mpeFunction
 def move(**kwargs):
