@@ -40,6 +40,26 @@ class constructor:
 				self.mainwindow.othercommands(self.button)
 		QtCore.QObject.connect(self.button, QtCore.SIGNAL('toggled(bool)'), setConstruct)
 
+class setter:
+	def __init__(self, cname, mainwindow):
+		self.button = kdeui.KPushButton(mainwindow.ui.setters)
+		self.button.setObjectName(cname)
+		self.button.setText(cname)
+		self.button.refcount = 1
+		mainwindow.ui.setters.layout().addWidget(self.button)
+		self.button.show()
+		self.cname = cname
+		self.mainwindow = mainwindow
+		self.flag = False
+		@orderSelectedUnits
+		@forWeapons('n:'+self.cname)
+		def setcmd(**kwargs):
+			#TODO: don't really want to be prompting individually for each unit.
+			return TargetNumberOrderData(kwargs['weaponId'], QtGui.QInputDialog.getInt(self.mainwindow, "Input setting", "Please enter the number to set %s to" % self.cname)[0])
+		def set_():
+			setcmd(selectedUnits = self.mainwindow.ui.gameview.scene().selectedItems(), socket = self.mainwindow.ui.gameview.scene().sock)
+		QtCore.QObject.connect(self.button, QtCore.SIGNAL('clicked()'), set_)
+
 class unitShape(QtGui.QGraphicsPolygonItem):
 	def __init__(self, unit, polygon, mainwindow, parent = None):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
@@ -68,6 +88,23 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 					else:
 						assert(d) #no button, so we must be getting selected
 						b = constructor(cname, self.mainwindow)
+				if(w.getClientHint()[:2] == 'n:'):
+					cname = w.getClientHint()[2:]
+					b = self.mainwindow.ui.setters.findChild(kdeui.KPushButton, cname)
+					if(b):
+						#this is a manual reference-counting scheme to ensure that
+						#there are always buttons available to build something so long
+						#as any of the selected units can build it.
+						#button exists, so cahnge its reference count
+						if(d):
+							b.refcount += 1
+						else:
+							b.refcount -= 1
+							if( not b.refcount):
+								sip.delete(b)
+					else:
+						assert(d) #no button, so we must be getting selected
+						b = setter(cname, self.mainwindow)
 			return value
 		else:
 			return value

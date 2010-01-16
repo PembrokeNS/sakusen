@@ -170,6 +170,10 @@ class tuple<
 #if !defined(SWIGCSHARP) && !defined(SWIGTCL)
   %template(stringList) std::list<sakusen::String>;
 #endif
+%include "numbertarget.h"
+%{
+#include "numbertarget.h"
+%}
 %include "arithmetictraits.h"
 %array_class(uint8,uint8);
 %array_class(sint16,sint16);
