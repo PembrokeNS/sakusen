@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>pixmaps/sakusen-unit-ground01.PNG</file>
+	<file>pixmaps/sakusen-unit-ground02.PNG</file>
+	<file>sakusen-unit-factory01.PNG</file>
+</qresource>
+</RCC>
