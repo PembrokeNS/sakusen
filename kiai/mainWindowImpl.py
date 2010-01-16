@@ -42,7 +42,6 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		QtCore.QObject.connect(button, QtCore.SIGNAL('toggled(bool)'), setf)
 
 	def stop(self):
-		self.ui.gameview.scene().mpe = sceneModel.mpe
 		self.stopcmd(selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
 
 	@staticmethod
