@@ -102,8 +102,3 @@ def build(**kwargs):
 					omd = OrderMessageData(om)
 					kwargs['socket'].sendd(omd)
 				except AttributeError: pass
-
-
-
-
-
