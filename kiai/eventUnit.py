@@ -9,6 +9,7 @@ from sakusen import *
 from sakusen_client import *
 from sakusen_comms import *
 
+import resources
 from util import color
 from sceneModel import mpeFunction
 
@@ -17,6 +18,7 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
 		self.unit = unit
 		self.mainwindow = mainwindow
+		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self)
 	def itemChange(self, change, value):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
 			s = self.unit.getStatus()
