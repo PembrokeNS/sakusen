@@ -183,11 +183,7 @@ bool TorpedoLauncher::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, c
 bool FleetCreator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, const WeaponOrders& orders) {
 	/* can't use BOOST_AUTO because , in the middle */
 	boost::shared_ptr<SagPlayerData> pd = boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData);
-	if(pd->attack + pd->defense + pd->speed != 100) {
-		/** \todo should return false in this instance, but for now: */
-		pd->attack = pd->defense = pd->speed = 33;
-		pd->attack++;
-		}
+	if(pd->attack + pd->defense + pd->speed != 100) return false;
 	BOOST_AUTO(displacement ,orders.getTargetPosition() - firer->getStatus().getPosition());
 	BOOST_AUTO(orient, firer->getStatus().getFrame());
 	BOOST_AUTO(sr, SphereRegion<sint32>(Position(), 5 * CM));
