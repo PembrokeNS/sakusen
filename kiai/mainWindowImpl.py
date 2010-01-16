@@ -8,7 +8,7 @@ from sakusen_comms import *
 
 from mainWindow import Ui_mainWindow
 
-from sceneModel import mpeFunction, sceneModel
+from sceneModel import mpeFunction, orderSelectedUnits, forWeapons, sceneModel
 
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, environment, parent=None):
@@ -56,28 +56,6 @@ class mainWindow(kdeui.KXmlGuiWindow):
 					self.ui.gameview.scene().sock.sendd(omd)
 		self.othercommands(self.ui.stop)
 		self.ui.stop.setEnabled(True)
-
-def orderSelectedUnits(f):
-	def g(**kwargs):
-		for i in kwargs['selectedUnits']:
-			kwargs['unit'] = i.unit
-			od = f(**kwargs)
-			od.thisown = 0
-			o = Order(od)
-			om = OrderMessage(kwargs['unit'].getId(), o)
-			omd = OrderMessageData(om)
-			kwargs['socket'].sendd(omd)
-	return g
-
-def forWeapons(hint):
-	def g(f, **kwargs):
-		s = kwargs['unit'].getStatus()
-		utype = s.getTypePtr()
-		for j,w in enumerate(utype.getWeapons()):
-			if(w.getClientHint().startswith(hint)):
-				kwargs['weaponId'] = j
-				return f(**kwargs)
-	return lambda f: lambda **kwargs: g(f, **kwargs)
 
 @mpeFunction
 @orderSelectedUnits
