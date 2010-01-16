@@ -69,26 +69,30 @@ def orderSelectedUnits(f):
 			kwargs['socket'].sendd(omd)
 	return g
 
+def forWeapons(hint):
+	def g(f, **kwargs):
+		s = kwargs['unit'].getStatus()
+		utype = s.getTypePtr()
+		for j,w in enumerate(utype.getWeapons()):
+			if(w.getClientHint().startswith(hint)):
+				kwargs['weaponId'] = j
+				return f(**kwargs)
+	return lambda f: lambda **kwargs: g(f, **kwargs)
+
 @mpeFunction
 @orderSelectedUnits
 def move(**kwargs):	return MoveOrderData(kwargs['targetPoint'])
 
 @mpeFunction
 @orderSelectedUnits
+@forWeapons('o')
 def attack(**kwargs):
-	s = kwargs['unit'].getStatus()
-	utype = s.getTypePtr()
-	for j,w in enumerate(utype.getWeapons()):
-		if(w.getClientHint() == 'o'):
-			try: return TargetSensorReturnsOrderData(j, kwargs['targetObject'].sr.getRefToThis())
-			except AttributeError: return TargetPositionOrderData(j, kwargs['targetPoint'])
+	try: return TargetSensorReturnsOrderData(kwargs['weaponId'], kwargs['targetObject'].sr.getRefToThis())
+	except AttributeError: return TargetPositionOrderData(kwargs['weaponId'], kwargs['targetPoint'])
 
 @mpeFunction
 @orderSelectedUnits
+@forWeapons('b')
 def build(**kwargs):
-	s = kwargs['unit'].getStatus()
-	utype = s.getTypePtr()
-	for j,w in enumerate(utype.getWeapons()):
-		if(w.getClientHint()[:2] == 'b'):
-			try: return TargetUnitOrderData(j, kwargs['targetObject'].unit.getRefToThis())
-			except AttributeError: pass
+	try: return TargetUnitOrderData(kwargs['weaponId'], kwargs['targetObject'].unit.getRefToThis())
+	except AttributeError: pass
