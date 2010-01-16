@@ -1,9 +1,12 @@
 NO_AUTO_COMPILING=yes
 
-all-nonrecursive: connectDialog.py mainWindow.py run-kiai-from-builddir.sh
+all-nonrecursive: connectDialog.py mainWindow.py resources.py run-kiai-from-builddir.sh
 
 %.py: $(this_srcdir)%.ui
 	pykdeuic4 -o $@ $<
+
+%.py: $(this_srcdir)%.qrc
+	pyrcc4 -o $@ $<
 
 run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
 	echo '#!/bin/sh' > $@
@@ -12,5 +15,5 @@ run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
 	-chmod a+x $@
 
 clean:
-	-rm -f settingsDialog.py connectDialog.py mainWindow.py *.pyc run-kiai-from-builddir.sh
+	-rm -f connectDialog.py mainWindow.py resources.py *.pyc run-kiai-from-builddir.sh
 
