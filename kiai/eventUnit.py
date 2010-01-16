@@ -18,7 +18,6 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
 		self.unit = unit
 		self.mainwindow = mainwindow
-		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self)
 	def itemChange(self, change, value):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
 			s = self.unit.getStatus()
@@ -109,17 +108,21 @@ class eventUpdatedUnit(UpdatedUnit):
 		interestingthings['units'].append(self)
 		self.interestingthings = interestingthings
 		self.i.setPen(self.pen())
+		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self.i)
+		self.icon.setOffset((pos.x-self.scene.left)//self.scene.mapmodel.d, (pos.y-self.scene.bottom)//self.scene.mapmodel.d)
 	def incrementState(self):
 		flag = self.getAltered() or (not self.getStatus().velocity.isZero()) or (not self.getStatus().angularVelocity.isZero())
 		UpdatedUnit.incrementState(self)
 		if(flag): #have changed
 			status = self.getStatus()
 			frame = status.getFrame()
+			pos = frame.getPosition()
 			corners = [frame.localToGlobal(sakusen.SPoint32(x,y,z)) for (x,y,z) in ((self.size.x,self.size.y,self.size.z),(-self.size.x,self.size.y,self.size.z),(-self.size.x,-self.size.y,self.size.z),(self.size.x,-self.size.y,self.size.z),(self.size.x,self.size.y,self.size.z))]
 			self.polygon = QtGui.QPolygonF()
 			for t in corners: self.polygon.append(QtCore.QPointF((t.x-self.scene.left)//self.scene.mapmodel.d,(t.y-self.scene.bottom)//self.scene.mapmodel.d))
 			self.i.setPolygon(self.polygon)
 			self.i.setPen(self.pen())
+			self.icon.setOffset((pos.x-self.scene.left)//self.scene.mapmodel.d, (pos.y-self.scene.bottom)//self.scene.mapmodel.d)
 	def pen(self): #create a pen of the appropriate colour for the current hitpoints and stuff
 		curhp = self.getStatus().getHitPoints().numify()
 		tmaxhp = self.getStatus().getTypePtr().getDynamicData().getMaxHitPoints().numify()
