@@ -40,22 +40,16 @@ class mainWindow(kdeui.KXmlGuiWindow):
 				self.ui.gameview.scene().mpe = function
 				self.othercommands(button)
 		QtCore.QObject.connect(button, QtCore.SIGNAL('toggled(bool)'), setf)
+
 	def stop(self):
 		self.ui.gameview.scene().mpe = sceneModel.mpe
-		for i in self.ui.gameview.scene().selectedItems():
-			u = i.unit
-			s = u.getStatus()
-			utype = s.getTypePtr()
-			for j,w in enumerate(utype.getWeapons()):
-				if(w.getClientHint() == 'o'):
-					od = TargetNoneOrderData(j);
-					od.thisown = 0 
-					o = Order(od)
-					om = OrderMessage(u.getId(), o)
-					omd = OrderMessageData(om)
-					self.ui.gameview.scene().sock.sendd(omd)
-		self.othercommands(self.ui.stop)
-		self.ui.stop.setEnabled(True)
+		self.stopcmd(selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
+
+	@staticmethod
+	@orderSelectedUnits
+	@forWeapons('o')
+	def stopcmd(**kwargs):
+		return TargetNoneOrderData(kwargs['weaponId'])
 
 @mpeFunction
 @orderSelectedUnits
