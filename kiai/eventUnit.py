@@ -13,6 +13,33 @@ import resources
 from util import color
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons
 
+class constructor:
+	def __init__(self, cname, mainwindow):
+		self.button = kdeui.KPushButton(mainwindow.ui.construct)
+		self.button.setCheckable(True)
+		self.button.setObjectName(cname)
+		self.button.setText(cname)
+		self.button.refcount = 1
+		mainwindow.ui.construct.layout().addWidget(self.button)
+		self.button.show()
+		self.cname = cname
+		self.mainwindow = mainwindow
+		@mpeFunction
+		@orderSelectedUnits
+		@forWeapons('c:'+cname)
+		def construct(**kwargs):
+			ctype = kwargs['universe'].getUnitTypePtr(cname)
+			csz = ctype.getDynamicData().getSize()
+			cpt = SPoint32(kwargs['targetPoint'].x,kwargs['targetPoint'].y,kwargs['targetPoint'].z + csz.z)
+			orient = Orientation()
+			f = Frame(cpt, orient)
+			return TargetFrameOrderData(kwargs['weaponId'],f)
+		def setConstruct(flag):
+			if(flag):
+				self.mainwindow.ui.gameview.scene().mpe = construct
+				self.mainwindow.othercommands(self.button)
+		QtCore.QObject.connect(self.button, QtCore.SIGNAL('toggled(bool)'), setConstruct)
+
 class unitShape(QtGui.QGraphicsPolygonItem):
 	def __init__(self, unit, polygon, mainwindow, parent = None):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
@@ -40,28 +67,7 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 								sip.delete(b)
 					else:
 						assert(d) #no button, so we must be getting selected
-						b = kdeui.KPushButton(self.mainwindow.ui.construct)
-						b.setCheckable(True)
-						b.setObjectName(cname)
-						b.setText(cname)
-						b.refcount = 1
-						self.mainwindow.ui.construct.layout().addWidget(b)
-						@mpeFunction
-						@orderSelectedUnits
-						@forWeapons('c:'+cname)
-						def construct(**kwargs):
-							ctype = kwargs['universe'].getUnitTypePtr(cname)
-							csz = ctype.getDynamicData().getSize()
-							cpt = SPoint32(kwargs['targetPoint'].x,kwargs['targetPoint'].y,kwargs['targetPoint'].z + csz.z)
-							orient = Orientation()
-							f = Frame(cpt, orient)
-							return TargetFrameOrderData(kwargs['weaponId'],f)
-						def setConstruct(flag):
-							if(flag):
-								self.mainwindow.ui.gameview.scene().mpe = construct
-								self.mainwindow.othercommands(b)
-						QtCore.QObject.connect(b, QtCore.SIGNAL('toggled(bool)'), setConstruct)
-						b.show()
+						b = constructor(cname, self.mainwindow)
 			return value
 		else:
 			return value

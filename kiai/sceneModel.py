@@ -34,11 +34,12 @@ def orderSelectedUnits(f):
 		for i in kwargs['selectedUnits']:
 			kwargs['unit'] = i.unit
 			od = f(**kwargs)
-			od.thisown = 0
-			o = Order(od)
-			om = OrderMessage(kwargs['unit'].getId(), o)
-			omd = OrderMessageData(om)
-			kwargs['socket'].sendd(omd)
+			if(od):
+				od.thisown = 0
+				o = Order(od)
+				om = OrderMessage(kwargs['unit'].getId(), o)
+				omd = OrderMessageData(om)
+				kwargs['socket'].sendd(omd)
 	return g
 
 def forWeapons(hint):
