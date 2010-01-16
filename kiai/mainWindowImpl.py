@@ -85,7 +85,7 @@ def attack(**kwargs):
 				try:
 					od = TargetSensorReturnsOrderData(j, kwargs['targetObject'].sr.getRefToThis())
 				except AttributeError:
-					od = TargetPositionOrderData(j, kwargs['targetPosition'])
+					od = TargetPositionOrderData(j, kwargs['targetPoint'])
 				od.thisown = 0 
 				o = Order(od)
 				om = OrderMessage(u.getId(), o)
