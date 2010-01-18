@@ -213,6 +213,8 @@ void UI::keyUp(Key k)
 /** \brief Set mode appropriate for producing given ActionParameterType */
 void UI::setModeFor(ActionParameterType type)
 {
+  /* When this assertion fails, update the switch appropriately */
+  BOOST_MPL_ASSERT_RELATION(actionParameterType_max,==,7);
   switch (type) {
     case actionParameterType_none:
       if (pendingMode) {

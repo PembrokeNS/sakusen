@@ -33,7 +33,8 @@ enum ActionParameterType {
   actionParameterType_frame,
   actionParameterType_unit,
   actionParameterType_unitSet,
-  actionParameterType_number
+  actionParameterType_number,
+  actionParameterType_max /* Must be last */
 };
 
 }}
