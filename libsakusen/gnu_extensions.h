@@ -13,6 +13,7 @@
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 #include <ext/functional>
+#include <ext/numeric>
 
 #define SAKUSEN_USE_UNORDERED_MAP
 
@@ -21,6 +22,7 @@
 #include <ext/hash_map>
 #include <ext/hash_set>
 #include <ext/functional>
+#include <ext/numeric>
 
 #endif // __GNUC__ > 4
 
@@ -38,6 +40,10 @@
  * metafunction... */
 
 namespace sakusen {
+
+/** \bug Will need a variant of this for MSVC */
+template<typename T, typename Integer>
+inline T power(T c, Integer n) { return __gnu_cxx::power(c, n); }
 
 #ifdef SAKUSEN_USE_UNORDERED_MAP
 
