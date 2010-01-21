@@ -125,6 +125,10 @@ class SawWaveField {
           iterator, logScale, strides, boost::begin(coords), boost::end(coords)
         );
     }
+
+    uint64 seed() const { return *iterator; }
+
+    void reseed(uint64 const seed) { iterator.reseed(seed | 1); }
   private:
     uint32 logScale;
     LcgIterator<0x7bec9cc1ef90f1a3> iterator;
