@@ -77,7 +77,7 @@ boost::filesystem::path fileUtils_getHome()
   String path(buffer);
   //path += buffer;
   if(err)
-    Fatal("Error getting environment variable");
+    SAKUSEN_FATAL("Error getting environment variable");
   return path;
 #else
   return getenv("HOME");

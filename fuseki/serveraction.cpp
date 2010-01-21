@@ -137,7 +137,7 @@ void AddPluginAction::act(Server& server) const
       assert(reason == "");
     }
   } catch (PluginExn& e) {
-    Debug("plugin load failed: " + e.message);
+    SAKUSEN_DEBUG("plugin load failed: " + e.message);
     String reason = server.settings->changeRequest(
         "server:plugins", "-"+name, &server
       );

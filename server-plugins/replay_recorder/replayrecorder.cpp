@@ -59,7 +59,7 @@ String ReplayRecorder::setOption(const String& name, const String& newVal)
     replayFileRoot = newVal;
     return "";
   } else {
-    Fatal("unexpected string option name " << name);
+    SAKUSEN_FATAL("unexpected string option name " << name);
   }
 }
 
@@ -69,14 +69,14 @@ String ReplayRecorder::setOption(const String& name, const uint16 newVal)
     keyTickInterval = newVal;
     return "";
   } else {
-    Fatal("unexpected string option name " << name);
+    SAKUSEN_FATAL("unexpected string option name " << name);
   }
 }
 
 void ReplayRecorder::gameStart()
 {
   if (replayFileRoot == "") {
-    QDebug("ReplayRecorder not recording because no filename specified");
+    SAKUSEN_QDEBUG("ReplayRecorder not recording because no filename specified");
     return;
   }
   

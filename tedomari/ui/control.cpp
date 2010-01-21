@@ -111,7 +111,7 @@ void Control::alignSubControls()
           remainingArea.minx = remainingArea.maxx;
           break;
         default:
-          Fatal("Unexpected DockStyle: " << (*subControl)->getDockStyle());
+          SAKUSEN_FATAL("Unexpected DockStyle: " << (*subControl)->getDockStyle());
       }
       (*subControl)->x = remainingArea.getMinX();
       (*subControl)->y = remainingArea.getMinY();

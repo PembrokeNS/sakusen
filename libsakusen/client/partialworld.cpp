@@ -64,7 +64,7 @@ void PartialWorld::applyUpdate(const Update& update)
         UnitAddedUpdateData data = update.getUnitAddedData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
         if (unit) {
-          Debug("adding unit of existing id");
+          SAKUSEN_DEBUG("adding unit of existing id");
           units.erase(unit);
         }
         units.push_back(unitFactory->create(data.getUnit()));
@@ -75,7 +75,7 @@ void PartialWorld::applyUpdate(const Update& update)
         UnitRemovedUpdateData data = update.getUnitRemovedData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getId());
         if (!unit) {
-          Debug("tried to remove non-existant unit");
+          SAKUSEN_DEBUG("tried to remove non-existant unit");
           break;
         }
         unit->destroying();
@@ -87,7 +87,7 @@ void PartialWorld::applyUpdate(const Update& update)
         UnitAlteredUpdateData data = update.getUnitAlteredData();
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnit().getId());
         if (!unit) {
-          Debug("tried to alter non-existant unit");
+          SAKUSEN_DEBUG("tried to alter non-existant unit");
           break;
         }
         unit->alter(data.getUnit());
@@ -98,7 +98,7 @@ void PartialWorld::applyUpdate(const Update& update)
         OrderAcceptedUpdateData data(update.getOrderAcceptedData());
         Ref<UpdatedUnit> unit = unitsById->find(data.getUnitId());
         if (!unit) {
-          Debug("Update for non-existant unit");
+          SAKUSEN_DEBUG("Update for non-existant unit");
           break;
         }
         unit->orderAccepted(data);
@@ -110,7 +110,7 @@ void PartialWorld::applyUpdate(const Update& update)
         SensorReturnsId id = data.getSensorReturns().getId();
         Ref<UpdatedSensorReturns> returns = sensorReturnsById->find(id);
         if (returns) {
-          Debug("adding sensor returns of existing id");
+          SAKUSEN_DEBUG("adding sensor returns of existing id");
           sensorReturns.erase(returns);
         }
         sensorReturns.push_back(
@@ -125,7 +125,7 @@ void PartialWorld::applyUpdate(const Update& update)
         Ref<UpdatedSensorReturns> returns =
           sensorReturnsById->find(data.getId());
         if (!returns) {
-          Debug("tried to remove non-existant SensorReturns");
+          SAKUSEN_DEBUG("tried to remove non-existant SensorReturns");
           break;
         }
         returns->destroying();
@@ -139,7 +139,7 @@ void PartialWorld::applyUpdate(const Update& update)
         Ref<UpdatedSensorReturns> returns =
           sensorReturnsById->find(data.getSensorReturns().getId());
         if (!returns) {
-          Debug("tried to alter non-existant SensorReturns");
+          SAKUSEN_DEBUG("tried to alter non-existant SensorReturns");
           break;
         }
         returns->alter(data.getSensorReturns());
@@ -150,7 +150,7 @@ void PartialWorld::applyUpdate(const Update& update)
         BallisticAddedUpdateData data = update.getBallisticAddedData();
         ClientBallisticId id = data.getId();
         if (ballisticsById->count(id)) {
-          Debug("adding Ballistic of existing id");
+          SAKUSEN_DEBUG("adding Ballistic of existing id");
         }
         ballistics.push_back(new UpdatedBallistic(id, data.getPath()));
       }
@@ -160,14 +160,14 @@ void PartialWorld::applyUpdate(const Update& update)
         BallisticRemovedUpdateData data = update.getBallisticRemovedData();
         Ref<UpdatedBallistic> ballistic = ballisticsById->find(data.getId());
         if (!ballistic) {
-          Debug("tried to remove non-existant Ballistic");
+          SAKUSEN_DEBUG("tried to remove non-existant Ballistic");
           break;
         }
         ballistics.erase(ballistic);
       }
       break;
     default:
-      Fatal("unexpected UpdateType: " << update.getType());
+      SAKUSEN_FATAL("unexpected UpdateType: " << update.getType());
   }
 }
 

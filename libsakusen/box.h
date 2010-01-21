@@ -49,7 +49,7 @@ class LIBSAKUSEN_API Box {
         case 1:
           return max;
         default:
-          Fatal("index " << i << " out of bounds");
+          SAKUSEN_FATAL("index " << i << " out of bounds");
       }
     }
 

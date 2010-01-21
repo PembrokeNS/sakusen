@@ -35,7 +35,7 @@ void doLoadTest(ostream& output)
   struct timespec endTime;
   /* get time before test */
   if (clock_gettime(CLOCK_REALTIME, &startTime)) {
-    Debug("Clock error");
+    SAKUSEN_DEBUG("Clock error");
     cerr << "errno=" << errno << endl;
     exit(1);
   }
@@ -49,7 +49,7 @@ void doLoadTest(ostream& output)
 #ifndef _MSC_VER
   /* get time after test */
   if (clock_gettime(CLOCK_REALTIME, &endTime)) {
-    Debug("Clock error");
+    SAKUSEN_DEBUG("Clock error");
     cerr << "errno=" << errno << endl;
     exit(1);
   }
@@ -83,7 +83,7 @@ int main(/* int argc, char** argv */)
 {
   /* ltdl initialization */
   if (lt_dlinit()) {
-    Fatal("lt_dlinit() failed");
+    SAKUSEN_FATAL("lt_dlinit() failed");
   }
   
   boost::filesystem::path::default_name_check(
@@ -190,7 +190,7 @@ int main(/* int argc, char** argv */)
   
   /* ltdl finalization */
   if (lt_dlexit()) {
-    Fatal("lt_dlexit() failed");
+    SAKUSEN_FATAL("lt_dlexit() failed");
   }
 
   return 0;

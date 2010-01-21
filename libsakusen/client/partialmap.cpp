@@ -7,7 +7,7 @@ void LIBSAKUSEN_CLIENT_API PartialMap::sanityCheck()
 {
   if (0 != width() % heightfield.getXYResolution() ||
       0 != height() % heightfield.getXYResolution()) {
-    Fatal(
+    SAKUSEN_FATAL(
         "heightfield resolution (" << heightfield.getXYResolution() <<
         ") not exact factor of map dimensions (" << width() << ", " <<
         height() << ")"
@@ -15,7 +15,7 @@ void LIBSAKUSEN_CLIENT_API PartialMap::sanityCheck()
   }
   if (heightfield.getWidth() !=
       1+width()/heightfield.getXYResolution()) {
-    Fatal(
+    SAKUSEN_FATAL(
         "heightfield width (" << heightfield.getWidth() <<
         ") incorrect; it should be " <<
         1+width()/heightfield.getXYResolution()
@@ -23,7 +23,7 @@ void LIBSAKUSEN_CLIENT_API PartialMap::sanityCheck()
   }
   if (heightfield.getHeight() !=
       1+height()/heightfield.getXYResolution()) {
-    Fatal(
+    SAKUSEN_FATAL(
         "heightfield height (" << heightfield.getHeight() <<
         ") incorrect; it should be " <<
         height()/heightfield.getXYResolution()+1

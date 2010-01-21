@@ -40,7 +40,7 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      * of same. On a Windows box it calls the
      * Winsock initialization routines; on boxes with BSD sockets it does
      * nothing ATM, but this is not guaranteed for future versions. It
-     * Fatal()s on failure.
+     * SAKUSEN_FATAL()s on failure.
      */
     static void socketsInit(void);
     
@@ -118,7 +118,7 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      *
      * For a connection-based socket, this will return a new Socket
      * corresponding to the next pending connection, or NULL if there is no
-     * such.  For a non-connection-based socket, this will Fatal() */
+     * such.  For a non-connection-based socket, this will SAKUSEN_FATAL() */
     virtual Ptr accept() = 0;
     /** \brief Close a socket, unless it is already closed. */
     virtual void close() = 0;

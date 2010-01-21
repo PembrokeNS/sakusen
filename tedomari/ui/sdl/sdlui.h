@@ -9,7 +9,7 @@
 #ifdef NDEBUG
   #define SDLDebug(msg)
 #else
-  #define SDLDebug(msg) if (debug) { Debug(msg); }
+  #define SDLDebug(msg) if (debug) { SAKUSEN_DEBUG(msg); }
 #endif
 
 struct SDL_Surface;

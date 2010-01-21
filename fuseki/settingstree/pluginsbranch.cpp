@@ -11,7 +11,7 @@ PluginsBranch::PluginsBranch(Branch* parent, Server* server) :
 PluginBranch::Ptr PluginsBranch::addPlugin(const String& name, Plugin* plugin)
 {
   if (getChild(name)) {
-    Fatal("tried to add plugin branch of existing name " << name);
+    SAKUSEN_FATAL("tried to add plugin branch of existing name " << name);
   }
   PluginBranch::Ptr newBranch(new PluginBranch(name, plugin, this, server));
   addChild(newBranch);
@@ -21,7 +21,7 @@ PluginBranch::Ptr PluginsBranch::addPlugin(const String& name, Plugin* plugin)
 void PluginsBranch::removePlugin(const String& name)
 {
   if (!getChild(name)) {
-    Fatal("tried to remove non-existant plugin branch " << name);
+    SAKUSEN_FATAL("tried to remove non-existant plugin branch " << name);
   }
   removeChild(name);
 }

@@ -59,7 +59,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
                 truncateToFit(acceleration))
               );
         /*if (owner == 1 && unitId == 0) {
-          Debug("[1] desiredVel=" << desiredVelocity <<
+          SAKUSEN_DEBUG("[1] desiredVel=" << desiredVelocity <<
               ", acc=" << acceleration);
         }*/
         
@@ -67,7 +67,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       }
       break;
     default:
-      Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
+      SAKUSEN_FATAL("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
       break;
   }
   
@@ -96,7 +96,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       }
       break;
     default:
-      Fatal("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
+      SAKUSEN_FATAL("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
       break;
   }
 
@@ -130,7 +130,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   }
 
   /*if (owner == 1 && unitId == 0) {
-    Debug("[2] heightAboveGround=" << heightAboveGround <<
+    SAKUSEN_DEBUG("[2] heightAboveGround=" << heightAboveGround <<
         ", expectedVelocity=" << expectedVelocity);
   }*/
 

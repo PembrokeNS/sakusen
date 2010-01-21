@@ -31,7 +31,7 @@ Buffer FileReader::getBuffer()
    * abstract so that we can have a version that extracts data directly from
    * the file rather than copying it all over the place as we do at present */
   if (length > (1 << 20)) {
-    Fatal("file size exceeded arbitrary limit");
+    SAKUSEN_FATAL("file size exceeded arbitrary limit");
   }
   
   size_t lengthAsSizeT = static_cast<size_t>(length);

@@ -50,7 +50,7 @@ class LIBSAKUSEN_API UnixDatagramSocket : public Socket {
     size_t receiveTimeout(void* buf, size_t len, const struct timeval& timeout);
     size_t receiveFrom(void* buf, size_t len, String& from);
     bool isConnectionBased() { return false; }
-    Socket::Ptr accept() { Fatal("Not connection-based socket"); }
+    Socket::Ptr accept() { SAKUSEN_FATAL("Not connection-based socket"); }
     void close();
     void setNonBlocking(bool val);
     String getAddress() const;

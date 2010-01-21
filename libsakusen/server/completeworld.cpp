@@ -50,28 +50,28 @@ CompleteWorld::CompleteWorld(
 
   /* Some sanity checks */
   if (world) {
-    Debug("World constructed when world != NULL");
+    SAKUSEN_DEBUG("World constructed when world != NULL");
   }
   world = this;
 
   if (players.empty()) {
-    Fatal("A World must have at least a neutral player.");
+    SAKUSEN_FATAL("A World must have at least a neutral player.");
   }
   const MapPlayMode* playMode = &m.getPlayModes()[mode];
   
   vectorSize = players.size();
   numPlayers = static_cast<uint32>(vectorSize);
   if (!playMode->acceptableNumberOfPlayers(numPlayers)) {
-    Fatal("Number of players not acceptable for this map and mode");
+    SAKUSEN_FATAL("Number of players not acceptable for this map and mode");
   }
   
   /* check player ids */
   for (PlayerId i; i < numPlayers; ++i) {
     if (!i.valid()) {
-      Fatal("too many players");
+      SAKUSEN_FATAL("too many players");
     }
     if (players[i].getId() != i) {
-      Fatal("player id mismatch");
+      SAKUSEN_FATAL("player id mismatch");
     }
   }
 
@@ -241,7 +241,7 @@ void CompleteWorld::removeUnit(LayeredUnit* unit)
   unit->changeOwner(PlayerId(), changeOwnerReason_destroyed);
   hash_list<LayeredUnit, Bounded>::iterator it = units.find(unit);
   if (it == units.end()) {
-    Fatal("removing unit not present");
+    SAKUSEN_FATAL("removing unit not present");
   }
   units.erase(it);
 }
@@ -262,7 +262,7 @@ void CompleteWorld::advanceGameState(Time timeToReach)
 {
   if (timeToReach < timeNow)
   {
-    Debug("Attempting to move the game backwards in time");
+    SAKUSEN_DEBUG("Attempting to move the game backwards in time");
   }
   while (timeNow < timeToReach)
   {
@@ -342,7 +342,7 @@ void CompleteWorld::incrementGameState(void)
         (fuseEntry = fuseQueue.top()).time <= timeNow) {
       fuseQueue.pop();
       if (fuseEntry.time < timeNow) {
-        Debug(
+        SAKUSEN_DEBUG(
             "Fuse occurance time missed (fuse time=" << fuseEntry.time <<
             ", timeNow = " << timeNow << ")"
           );
@@ -358,7 +358,7 @@ void CompleteWorld::incrementGameState(void)
       u_map<FuseToken, Fuse::Ptr>::type::iterator fuseIt =
         fuseMap.find(fuseEntry.token);
       if (fuseIt == fuseMap.end()) {
-        Fatal("Fuse missing from fuseMap");
+        SAKUSEN_FATAL("Fuse missing from fuseMap");
       }
       /* perform action */
       fuseIt->second->expire(fuseEntry.token);
@@ -451,7 +451,7 @@ void CompleteWorld::save(OArchive& /*archive*/) const
 {
   /** \bug This is not implemented with good reason, because it is likely to
    * change dramatically as the game engine develops */
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void CompleteWorld::loadNew(
@@ -461,7 +461,7 @@ void CompleteWorld::loadNew(
 {
   /** \bug This is not implemented with good reason, because it is likely to
    * change dramatically as the game engine develops */
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 LIBSAKUSEN_SERVER_API CompleteWorld* world = NULL;

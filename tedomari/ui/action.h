@@ -67,13 +67,13 @@ class Action : private boost::noncopyable {
     }
     const std::set<String>& getStringSet() const {
       if (nextParameterType != actionParameterType_stringFromSet) {
-        Fatal("invalid call");
+        SAKUSEN_FATAL("invalid call");
       }
       return internalGetStringSet();
     }
     sakusen::Point<uint32> getSize() const {
       if (nextParameterType != actionParameterType_frame) {
-        Fatal("invalid call");
+        SAKUSEN_FATAL("invalid call");
       }
       return internalGetSize();
     }

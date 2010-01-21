@@ -89,7 +89,7 @@ list<String> UI::tokenise(const String& s)
   
   while(re.Consume(&piece, &token)) {
     assert(!token.empty());
-    /*QDebug("adding token '" << token << "'");*/
+    /*SAKUSEN_QDEBUG("adding token '" << token << "'");*/
     tokens.push_back(token);
   }
 
@@ -189,7 +189,7 @@ void UI::keyDown(Key k, uint16 c)
     list<String> tokens(binding->second);
     executeCommands(tokens);
   } else {
-    Debug("Unbound key: +" << getName(k));
+    SAKUSEN_DEBUG("Unbound key: +" << getName(k));
   }
 }
 
@@ -206,7 +206,7 @@ void UI::keyUp(Key k)
     list<String> tokens(binding->second);
     executeCommands(tokens);
   } else {
-    /*Debug("Unbound key: -" << getName(k));*/
+    /*SAKUSEN_DEBUG("Unbound key: -" << getName(k));*/
   }
 }
 
@@ -238,7 +238,7 @@ void UI::setModeFor(ActionParameterType type)
       setMode(&modes["targetunit"]);
       break;
     default:
-      Fatal("unexpected ActionParameterType " << type);
+      SAKUSEN_FATAL("unexpected ActionParameterType " << type);
   }
 }
 
@@ -275,7 +275,7 @@ void UI::update()
 
 void UI::executeCommand(const String& cmdName, std::list<String>& args)
 {
-  QDebug(
+  SAKUSEN_QDEBUG(
       "executing '" << cmdName << "' with args '" <<
       stringUtils_join(args, "' '") << "'"
     );
@@ -359,7 +359,7 @@ void UI::executeCommands(list<String>& tokens)
 
 void UI::executeCommands(const String& cmdString)
 {
-  /*Debug("executing command '" << cmdString << "'");*/
+  /*SAKUSEN_DEBUG("executing command '" << cmdString << "'");*/
   list<String> tokens = tokenise(cmdString);
   if (tokens.empty()) {
     return;
@@ -414,7 +414,7 @@ void UI::executeRegex(const String& regex)
 void UI::alert(const Alert& a)
 {
   if (alertDisplay == NULL) {
-    QDebug("Alert: " + a.getMessage());
+    SAKUSEN_QDEBUG("Alert: " + a.getMessage());
   } else {
     alertDisplay->add(a);
     /** \bug Realigning all subcontrols is overkill */
@@ -495,7 +495,7 @@ void UI::addAlias(
   } else {
     u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
-      Debug("no such mode '" << mode << "'");
+      SAKUSEN_DEBUG("no such mode '" << mode << "'");
       return;
     }
     modeIt->second.addCommand(newCmd, Command(oldCmd), this);
@@ -524,7 +524,7 @@ void UI::addBinding(
   } else {
     u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
-      Debug("no such mode '" << mode << "'");
+      SAKUSEN_DEBUG("no such mode '" << mode << "'");
       return;
     }
     modeIt->second.addBinding(keyEvent, cmd);
@@ -542,7 +542,7 @@ void UI::addFunction(const String& mode, const Function& function)
   } else {
     u_map<String, Mode>::type::iterator modeIt = modes.find(mode);
     if (modeIt == modes.end()) {
-      Debug("no such mode '" << mode << "'");
+      SAKUSEN_DEBUG("no such mode '" << mode << "'");
       return;
     }
     modeIt->second.addFunction(function, this);

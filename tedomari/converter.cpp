@@ -24,7 +24,7 @@ Converter::Converter()
   nativeLocale = nl_langinfo(CODESET);
   if (nativeLocale == NULL)
     nativeLocale = "ISO-8859-1";//default_locale
-  Debug("native codeset is " << nativeLocale);
+  SAKUSEN_DEBUG("native codeset is " << nativeLocale);
 }
 
 /** \brief Destructor */
@@ -39,7 +39,7 @@ String Converter::convertNativeToUTF8(const String& s) {
   size_t outBytesLeft = CONVERT_BUFFER_LEN;
   if (-1 == ucnv_convert("UTF-8", nativeLocale, out, outBytesLeft, mobileIn, 1+s.length(), &errorCode) || U_FAILURE(errorCode))
   {
-    Debug("error converting string: " << u_errorName(errorCode));
+    SAKUSEN_DEBUG("error converting string: " << u_errorName(errorCode));
     return s;
   }
   return String(out);
@@ -52,7 +52,7 @@ String Converter::convertUTF8ToNative(const String& s) {
   size_t outBytesLeft = CONVERT_BUFFER_LEN;
   if (-1 == ucnv_convert(nativeLocale, "UTF-8", out, outBytesLeft, mobileIn, 1+s.length(), &errorCode) || U_FAILURE(errorCode))
   {
-    Debug("error converting string: " << u_errorName(errorCode));
+    SAKUSEN_DEBUG("error converting string: " << u_errorName(errorCode));
     return s;
   }
   return String(out);

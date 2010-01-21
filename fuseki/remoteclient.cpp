@@ -36,7 +36,7 @@ RemoteClient::RemoteClient(
   outSocket->setNonBlocking(true);
   if (createInSocket) {
 #ifdef DISABLE_UNIX_SOCKETS
-    Fatal("Separate inSocket not supported on this platform");
+    SAKUSEN_FATAL("Separate inSocket not supported on this platform");
 #else
     inSocket = Socket::Ptr(new UnixDatagramListeningSocket(abstract));
     inSocket->setNonBlocking(true);
@@ -89,7 +89,7 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
       /* The last player id was invalid. Continue anyway, o/w we can never
        * recover.
        */
-      Debug("RemoteClient::setPlayerId found the old id was invalid");
+      SAKUSEN_DEBUG("RemoteClient::setPlayerId found the old id was invalid");
     }
   }
   playerId = id; /* do this last in case we exn'd out */
@@ -106,7 +106,7 @@ void RemoteClient::flushIncoming()
     if (message.isRealMessage()) {
       incomingMessageQueue.push(message);
     } else {
-      Debug("Unrecognized MessageType");
+      SAKUSEN_DEBUG("Unrecognized MessageType");
     }
   }
 }

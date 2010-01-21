@@ -403,7 +403,7 @@ void Server::changeInClientBranch(
       String("clients:") + client->getClientId().toString() +
         ":" + node, value, this
     )) {
-      Fatal("something has gone wrong with the settings tree");
+      SAKUSEN_FATAL("something has gone wrong with the settings tree");
   }
 }
 
@@ -811,7 +811,7 @@ void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
   } else if (Branch::Ptr b = boost::dynamic_pointer_cast<Branch>(altered)) {
     value = b->getChildNames();
   } else {
-    Fatal("unexpected node type");
+    SAKUSEN_FATAL("unexpected node type");
   }
   
   NotifySettingMessageData data(fullName, altered->isLeaf(), value);

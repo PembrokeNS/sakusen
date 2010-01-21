@@ -194,7 +194,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   /* ltdl initialization */
 #ifdef __GNUC__
   if (lt_dlinit()) {
-    Fatal("lt_dlinit() failed");
+    SAKUSEN_FATAL("lt_dlinit() failed");
   }
 #endif
 
@@ -249,7 +249,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 
     /* Check that config directory is really a directory */
     if (!boost::filesystem::is_directory(serverPath)) {
-      Fatal("path '" << serverPath.native_directory_string() <<
+      SAKUSEN_FATAL("path '" << serverPath.native_directory_string() <<
           "' not a directory");
     }
 
@@ -331,7 +331,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 #ifdef __GNUC__
   /* ltdl finalization */
   if (lt_dlexit()) {
-    Fatal("lt_dlexit() failed");
+    SAKUSEN_FATAL("lt_dlexit() failed");
   }
 #endif
 

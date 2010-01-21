@@ -80,7 +80,7 @@ void IPSocket::close()
 {
   if (!closed) {
     if (-1 == NativeSocketClose(sockfd)) {
-      Fatal("Error " << errorUtils_parseErrno(socket_errno) << " closing socket");
+      SAKUSEN_FATAL("Error " << errorUtils_parseErrno(socket_errno) << " closing socket");
     }
     closed = true;
   }
@@ -92,19 +92,19 @@ void IPSocket::setNonBlocking(bool val)
   unsigned long flags = 0ul;
   if (val) flags = 1ul; else flags = 0ul;
   if (0 != ioctlsocket(sockfd, FIONBIO, &flags))
-    Fatal("could not set non-blocking; " << socket_errno);
+    SAKUSEN_FATAL("could not set non-blocking; " << socket_errno);
 #else
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {
-    Fatal("could not get socket flags");
+    SAKUSEN_FATAL("could not get socket flags");
   }
   if (val) {
     if (-1 == fcntl(sockfd, F_SETFL, O_NONBLOCK | flags)) {
-      Fatal("could not set socket flags");
+      SAKUSEN_FATAL("could not set socket flags");
     }
   } else {
     if (-1 == fcntl(sockfd, F_SETFL, (~O_NONBLOCK) & flags)) {
-      Fatal("could not set socket flags");
+      SAKUSEN_FATAL("could not set socket flags");
     }
   }
 #endif

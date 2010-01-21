@@ -159,7 +159,7 @@ void usage();
 int main(int argc, char* argv[])
 {
   if (NULL == setlocale(LC_CTYPE, "")) {
-    Fatal("error setting locale");
+    SAKUSEN_FATAL("error setting locale");
   }
   
   boost::filesystem::path::default_name_check(
@@ -533,7 +533,7 @@ void runClient(
                 ioHandler.message(helpMessage);
                 break;
               default:
-                Fatal("failed to handle command " << commands[commandName]);
+                SAKUSEN_FATAL("failed to handle command " << commands[commandName]);
             }
           } else {
             ioHandler.message(
@@ -645,7 +645,7 @@ Options getOptions(
     exit(EXIT_FAILURE);
   }
 
-  /*Debug("options.unixSockets=" << results.unixSockets);*/
+  /*SAKUSEN_DEBUG("options.unixSockets=" << results.unixSockets);*/
 
   return results;
 }
@@ -661,7 +661,7 @@ UI::Ptr newUI(
 #ifndef DISABLE_CAIRO
   UI::Ptr ui(new CairoUI(o.sdlOptions, uiConf, game));
 #else
-  Fatal("No UI enabled at compile time");
+  SAKUSEN_FATAL("No UI enabled at compile time");
   UI::Ptr ui;
 #endif
   ui->setTitle("tedomari");

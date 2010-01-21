@@ -21,7 +21,7 @@ String RemoteClient::performMagic(
   if (name.front() == "observer") {
     bool newValueBool = null_cast<bool>(newValue);
     if (newValueBool == observer) {
-      Debug("unexpectedly asked to confirm a non-change");
+      SAKUSEN_DEBUG("unexpectedly asked to confirm a non-change");
       return "";
     }
     if (newValueBool) {
@@ -44,7 +44,7 @@ String RemoteClient::performMagic(
   } else if (name.front() == "neveradmin") {
     bool newValueBool = null_cast<bool>(newValue);
     if (newValueBool == neverAdmin) {
-      Debug("unexpectedly asked to confirm non-change");
+      SAKUSEN_DEBUG("unexpectedly asked to confirm non-change");
       return "";
     }
 
@@ -56,7 +56,7 @@ String RemoteClient::performMagic(
   } else if (name.front() == "admin") {
     bool newValueBool = null_cast<bool>(newValue);
     if (newValueBool == admin) {
-      Debug("unexpectedly asked to confirm non-change");
+      SAKUSEN_DEBUG("unexpectedly asked to confirm non-change");
       return "";
     }
     
@@ -75,7 +75,7 @@ String RemoteClient::performMagic(
     sakusen::PlayerId::internal_type newValueInt =
       null_cast<sakusen::PlayerId::internal_type>(newValue);
     if (newValueInt == playerId) {
-      Debug("unexpectedly asked to confirm a non-change");
+      SAKUSEN_DEBUG("unexpectedly asked to confirm a non-change");
       return "";
     }
 
@@ -92,7 +92,7 @@ String RemoteClient::performMagic(
   } else if (name.front() == "ready") {
     bool newValueBool = null_cast<bool>(newValue);
     if (newValueBool == ready) {
-      Debug("Unexpectedly asked to confirm non-change");
+      SAKUSEN_DEBUG("Unexpectedly asked to confirm non-change");
       return "";
     }
 
@@ -103,7 +103,7 @@ String RemoteClient::performMagic(
     }
     return "";
   } else {
-    Fatal("unexpected child of client branch: " << name.front());
+    SAKUSEN_FATAL("unexpected child of client branch: " << name.front());
   }
 }
 

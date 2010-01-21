@@ -67,7 +67,7 @@ Ref<const ICompleteUnit> DynamicSensorReturns::getUnit() const
  */
 void DynamicSensorReturns::senseeDestroyed() {
   if (perception == perception_none) {
-    Fatal(
+    SAKUSEN_FATAL(
         "Tried to indicate destruction when SensorReturns shouldn't have "
         "existed"
       );

@@ -5,7 +5,7 @@ namespace fuseki {
 template<typename T, typename U>
 struct NullCaster {
   T& operator()(U&) const {
-    Fatal("invalid null_cast");
+    SAKUSEN_FATAL("invalid null_cast");
 #ifdef _MSC_VER
     //MSVC says this must return a value.
     T *t = new T;

@@ -14,7 +14,7 @@ void PluginBranch::addLeaf(
     typename boost::call_traits<T>::param_type defaultVal
   ) {
   if (getChild(name)) {
-    Fatal("tried to add already existing child " << name <<
+    SAKUSEN_FATAL("tried to add already existing child " << name <<
         " to plugin branch " << getName());
   }
   addChild(Node::Ptr(new typename TreeTraits<T>::LeafType(

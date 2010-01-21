@@ -53,7 +53,7 @@ Player::Player(const Player& copy) :
   if (!copy.sensorReturns.empty()) {
     /* To perform this copy we'd need to set up sensorReturnsById, which would
      * be non-trivial */
-    Fatal("Don't support copying a player with SensorReturns in place");
+    SAKUSEN_FATAL("Don't support copying a player with SensorReturns in place");
   }
   sensorReturns.registerIndex<DynamicSensorReturns>(sensorReturnsById);
 }
@@ -63,7 +63,7 @@ Player& Player::operator=(const Player& copy)
   if (!copy.sensorReturns.empty()) {
     /* To perform this copy we'd need to set up sensorReturnsById, which would
      * be non-trivial */
-    Fatal("Don't support copying a player with SensorReturns in place");
+    SAKUSEN_FATAL("Don't support copying a player with SensorReturns in place");
   }
 
   noClients = copy.noClients;
@@ -92,7 +92,7 @@ void Player::attachClient(Client* client)
 {
   assert(!noClients);
   if (clients.end() != find(clients.begin(), clients.end(), client)) {
-    Debug("Tried to attach an already attached client");
+    SAKUSEN_DEBUG("Tried to attach an already attached client");
     return;
   }
   clients.push_back(client);
@@ -107,7 +107,7 @@ void Player::detachClient(Client* client)
     return;
   }
   
-  Debug("Tried to detach an unattached client");
+  SAKUSEN_DEBUG("Tried to detach an unattached client");
 }
 
 uint32 Player::requestEnergy(uint32 amount) {
@@ -133,18 +133,18 @@ void Player::removeUnit(const UnitId id, enum changeOwnerReason why)
   u_map<UnitId, Ref<LayeredUnit> >::type::iterator unit =
     units.find(id);
   if (unit == units.end()) {
-    Fatal("tried to remove a unit which wasn't there");
+    SAKUSEN_FATAL("tried to remove a unit which wasn't there");
   }
-  /*Debug("removing unit " << id << " for player " << playerId);*/
+  /*SAKUSEN_DEBUG("removing unit " << id << " for player " << playerId);*/
   units.erase(id);
   informClients(Update(new UnitRemovedUpdateData(id, why)));
 }
 
 void Player::addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why)
 {
-  /*QDebug("[Player::addUnit]");*/
+  /*SAKUSEN_QDEBUG("[Player::addUnit]");*/
   if (units.count(nextUnitId)) {
-    Fatal("tried to insert a unit with an existing id");
+    SAKUSEN_FATAL("tried to insert a unit with an existing id");
   }
   units[nextUnitId] = unit;
   assert(units.find(nextUnitId) != units.end());
@@ -279,10 +279,10 @@ void Player::applyIncomingOrders(void)
       u_map<UnitId, Ref<LayeredUnit> >::type::iterator orderee =
         units.find(message.getOrderee());
       if (orderee == units.end()) {
-        Debug("Order for non-existent unit id " << message.getOrderee() <<
+        SAKUSEN_DEBUG("Order for non-existent unit id " << message.getOrderee() <<
               ", player " << playerId);
       } else {
-        /*Debug("order for unit id " << message.getOrderee());*/
+        /*SAKUSEN_DEBUG("order for unit id " << message.getOrderee());*/
         orderee->second->acceptOrder(
             message.getOrder()
           );
@@ -294,10 +294,10 @@ void Player::applyIncomingOrders(void)
 /** \brief Dispatch an update to all this player's clients */
 void Player::informClients(const Update& update)
 {
-  /*Debug("clients.size()=" << clients.size());*/
+  /*SAKUSEN_DEBUG("clients.size()=" << clients.size());*/
   for (std::list<Client*>::iterator client = clients.begin();
       client != clients.end(); client++) {
-    /* Debug("informing client"); */
+    /* SAKUSEN_DEBUG("informing client"); */
     (*client)->queueUpdate(update);
   }
 }

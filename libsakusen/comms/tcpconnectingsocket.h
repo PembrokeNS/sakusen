@@ -22,7 +22,7 @@ class TCPConnectingSocket : public TCPSocket {
 
     bool isConnectionBased() { return false; }
     Socket::Ptr accept() {
-      Fatal("Not connection-based socket");
+      SAKUSEN_FATAL("Not connection-based socket");
       return Socket::Ptr(); /* Return statement for the benefit of MSVC */
     }
 };

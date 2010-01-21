@@ -15,7 +15,7 @@ void PlayersBranch::addPlayer(PlayerId id, const PlayerTemplate& t)
 {
   String name = id.toString();
   if (getChild(name) != NULL) {
-    Fatal("tried to add player branch of existing name");
+    SAKUSEN_FATAL("tried to add player branch of existing name");
   }
   addChild(Node::Ptr(new PlayerBranch(id, this, server, t)));
 }
@@ -24,7 +24,7 @@ void PlayersBranch::removePlayer(PlayerId id)
 {
   String name = id.toString();
   if (getChild(name) == NULL) {
-    Fatal("tried to remove non-existant player branch " << name);
+    SAKUSEN_FATAL("tried to remove non-existant player branch " << name);
   }
   removeChild(name);
 }

@@ -18,7 +18,7 @@ Point<sint32> ISensorReturns::getBestPosition() const
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->getBestPosition();
   } else {
-    Fatal("No best position available (perception=" << getPerception() << ")");
+    SAKUSEN_FATAL("No best position available (perception=" << getPerception() << ")");
   }
 }
 
@@ -39,7 +39,7 @@ Rectangle<sint32> ISensorReturns::getBoundingRectangle() const
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->getBoundingRectangle();
   } else {
-    Fatal("No bounding rectangle available");
+    SAKUSEN_FATAL("No bounding rectangle available");
   }
 }
 
@@ -50,7 +50,7 @@ Box<sint32> ISensorReturns::getBoundingBox() const
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->getBoundingBox();
   } else {
-    Fatal("No bounding box available");
+    SAKUSEN_FATAL("No bounding box available");
   }
 }
 
@@ -61,7 +61,7 @@ boost::tuple<double,double> ISensorReturns::intersect(const Ray& r) const
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->intersect(r);
   } else {
-    Fatal("No intersection test available");
+    SAKUSEN_FATAL("No intersection test available");
   }
 }
 
@@ -72,7 +72,7 @@ bool ISensorReturns::contains(const Position& p) const
   } else if (0 != (getPerception() & perception_region)) {
     return getRegion()->contains(p);
   } else {
-    Fatal("No containment test available");
+    SAKUSEN_FATAL("No containment test available");
   }
 }
 

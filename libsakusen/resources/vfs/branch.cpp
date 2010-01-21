@@ -58,7 +58,7 @@ Writer::Ptr Branch::openWriter(
   deque<String> splitPath = stringUtils_split<deque<String> >(relPath, "/");
   if (splitPath.empty()) {
     /** \todo Is it better to throw an exception or return null here? */
-    Fatal("empty path");
+    SAKUSEN_FATAL("empty path");
   }
   Branch::Ptr currentBranch =
     ( rootedPath ? getRoot() : ptrToThis.lock() );
@@ -114,7 +114,7 @@ boost::tuple<Resource, ResourceSearchResult> Branch::search(
   BOOST_FOREACH (const Resource& candidate, candidates) {
     assert(candidate);
     if (candidate.getSakusenPath() != firstPath) {
-      QDebug(
+      SAKUSEN_QDEBUG(
           "Ambiguous result because '" << candidate.getSakusenPath() <<
           "' != '" << firstPath << "'"
         );

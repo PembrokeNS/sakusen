@@ -44,7 +44,7 @@ Node::Ptr Branch::getNodeByListRef(
   Node::Ptr child = getChild(nodeAddress.front());
   
   if (!child) {
-    Fatal("node '" << nodeAddress.front() << "' not found in '" <<
+    SAKUSEN_FATAL("node '" << nodeAddress.front() << "' not found in '" <<
         getFullName() << "'");
   }
 

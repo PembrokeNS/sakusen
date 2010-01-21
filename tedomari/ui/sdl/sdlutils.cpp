@@ -17,7 +17,7 @@ Key tedomari::ui::sdl::sdlUtils_getButton(uint8 b)
     case 5:
       return K_MOUSEWHEELDOWN;
     default:
-      Debug("unknown SDL mouse button number");
+      SAKUSEN_DEBUG("unknown SDL mouse button number");
       return K_Unknown;
   }
 }
@@ -293,7 +293,7 @@ Key tedomari::ui::sdl::sdlUtils_getKey(SDLKey k)
     case SDLK_EURO:
       return K_EURO;
     default:
-      Debug("Unexpected SDLKey: " << SDL_GetKeyName(k));
+      SAKUSEN_DEBUG("Unexpected SDLKey: " << SDL_GetKeyName(k));
       return K_Unknown;
   }
 }

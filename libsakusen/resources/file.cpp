@@ -52,7 +52,7 @@ size_t File::getWholeFile(
   getLength();
   /* If the above fails, it will throw an exn to the caller. */
   if (bufferLen < length) {
-    Debug("buffer of insufficient size");
+    SAKUSEN_DEBUG("buffer of insufficient size");
     /* do nothing, since we were asked for the *whole* file */
     return 0;
   }

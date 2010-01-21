@@ -50,7 +50,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return UnitLayer::Ptr();
     }
     inline void removeLayer(const UnitMask*) {
-      Fatal("tried to remove non-existant layer");
+      SAKUSEN_FATAL("tried to remove non-existant layer");
     }
     inline Ref<LayeredUnit> getOuterUnit() {
       return outerUnit->getRefToThis();

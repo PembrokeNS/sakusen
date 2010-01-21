@@ -70,7 +70,7 @@ class MorphingSawWaveField {
       assert(boost::size(coords) == Rank);
       Time const temporalScale = Time(1) << logTemporalScale;
       if (t < timeBase) {
-        Fatal("time going backwards");
+        SAKUSEN_FATAL("time going backwards");
       } else if (t >= timeBase + temporalScale) {
         /* We need to reset one of both subfields */
         if (t < timeBase + (temporalScale<<1)) {

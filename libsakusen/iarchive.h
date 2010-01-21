@@ -365,7 +365,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
     inline void magicValue(const String& val) {
       assertLength(val.size());
       if (0 != memcmp(val.c_str(), pos, val.size())) {
-        Debug("Wrong magic");
+        SAKUSEN_DEBUG("Wrong magic");
         throw WrongMagicDeserializationExn(val, pos);
       }
       advance(val.size());

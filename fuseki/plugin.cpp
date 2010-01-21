@@ -19,7 +19,7 @@ Plugin::Plugin(
   info(i),
   server(s)
 {
-  QDebug("Adding PluginBranch " << name);
+  SAKUSEN_QDEBUG("Adding PluginBranch " << name);
   pluginBranch =
     server->getSettings()->getPluginsBranch()->addPlugin(name, this);
   info->init(*this);
@@ -31,7 +31,7 @@ Plugin::~Plugin()
     server->unregisterListener(listeners.top());
     listeners.pop();
   }
-  QDebug("Removing PluginBranch " << name);
+  SAKUSEN_QDEBUG("Removing PluginBranch " << name);
   server->getSettings()->getPluginsBranch()->removePlugin(name);
   info->close();
 }

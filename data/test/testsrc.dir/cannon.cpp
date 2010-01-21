@@ -125,7 +125,7 @@ void Builder::onFire(
           if (!(bL && bL->getOuterUnit() == targetUnit)) {
             bL = targetUnit->getLayer<BuildingLayer>();
             if (!bL) {
-              Debug(
+              SAKUSEN_DEBUG(
                   "building target (" <<
                   targetUnit->getStatus().getType()->getInternalName() <<
                   ") not being built"
@@ -136,7 +136,7 @@ void Builder::onFire(
           }
           bL->build(HitPoints(10));
         } else {
-          Debug("invalid building target");
+          SAKUSEN_DEBUG("invalid building target");
         }
       }
       break;

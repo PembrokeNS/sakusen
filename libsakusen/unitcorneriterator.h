@@ -118,7 +118,7 @@ class UnitCornerIterator :
         case 7:
           break;
         default:
-          Fatal("incrementing iterator beyond end");
+          SAKUSEN_FATAL("incrementing iterator beyond end");
       }
       globalPosition = frame->localToGlobal(localPosition);
     }
@@ -149,7 +149,7 @@ class UnitCornerIterator :
         case 7:
           break;
         default:
-          Fatal("decrementing iterator beyond start");
+          SAKUSEN_FATAL("decrementing iterator beyond start");
       }
     }
 };

@@ -83,7 +83,7 @@ UnitTypeId Universe::getUnitTypeId(String unitTypeName) const
   u_map<String, UnitTypeId>::type::const_iterator
     unitType = unitIdLookup.find(unitTypeName);
   if (unitType == unitIdLookup.end()) {
-    Debug("unit type '"+unitTypeName+"' not found");
+    SAKUSEN_DEBUG("unit type '"+unitTypeName+"' not found");
     return NULL;
   }
   return unitType->second;

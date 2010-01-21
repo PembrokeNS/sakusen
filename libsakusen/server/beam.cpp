@@ -45,7 +45,7 @@ void Beam::onInteract(const Intersection& in)
       onInteractEffect(in.getPosition(), in.getRef<Effect>(), in.isLeaving());
       break;
     default:
-      Fatal("unexpected interaction type: "<<in.getType());
+      SAKUSEN_FATAL("unexpected interaction type: "<<in.getType());
   }
 }
 

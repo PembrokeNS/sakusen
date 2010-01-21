@@ -161,7 +161,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline FuseToken addFuse(Fuse::Ptr fuse, Time expiryTime) {
       FuseToken token = ++lastFuseToken;
       if (fuseMap.count(token) || removedFuses.count(token)) {
-        Fatal("FuseToken wraparound");
+        SAKUSEN_FATAL("FuseToken wraparound");
       }
       fuseQueue.push(FuseEntry(expiryTime, token));
       fuseMap[token] = fuse;
@@ -176,7 +176,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       u_map<FuseToken, Fuse::Ptr>::type::iterator fuseIt =
         fuseMap.find(token);
       if (fuseIt == fuseMap.end()) {
-        Fatal("Removing nonexistant Fuse");
+        SAKUSEN_FATAL("Removing nonexistant Fuse");
       }
       removedFuses.insert(token);
       fuseMap.erase(fuseIt);

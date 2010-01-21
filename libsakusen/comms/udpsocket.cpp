@@ -69,7 +69,7 @@ void UDPSocket::send(const void* buf, size_t len)
         throw SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+        SAKUSEN_FATAL("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -92,7 +92,7 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    Fatal("host " << hostname << " not found.");
+    SAKUSEN_FATAL("host " << hostname << " not found.");
   }
 
   sockaddr_in dest;
@@ -114,7 +114,7 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
         throw SocketClosedExn();
         break;
       default:
-        Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+        SAKUSEN_FATAL("error " << errorUtils_parseErrno(socket_errno) << " sending message");
         break;
     }
   }
@@ -127,7 +127,7 @@ size_t UDPSocket::receive(void* buf, size_t len)
     if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
       return 0;
     }
-    Fatal("error receiving message: " << errorUtils_errorMessage(socket_errno));
+    SAKUSEN_FATAL("error receiving message: " << errorUtils_errorMessage(socket_errno));
   }
   return retVal;
 }
@@ -143,7 +143,7 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
     if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
       return 0;
     }
-    Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
+    SAKUSEN_FATAL("error receiving message: " << errorUtils_parseErrno(socket_errno));
   }
 #ifdef WIN32
   /** \bug Not thread-safe */

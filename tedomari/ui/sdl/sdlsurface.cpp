@@ -16,7 +16,7 @@ SDLSurface::SDLSurface(uint16 width, uint16 height) :
       GMASK, BMASK, AMASK
     );
   if (sdlSurface == NULL) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 }
 

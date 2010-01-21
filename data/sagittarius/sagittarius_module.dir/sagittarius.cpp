@@ -220,7 +220,7 @@ void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& 
 	u->insertLayer(f);
 	lastFire = server::world->getTimeNow();
 	server::world->addFuse(f, lastFire + 33); /* Fuse of 1/3 of a turn, in which the torpedo should move 10cm and the ship 6.66 cm, leaving them well over 2.5cm apart */
-	Debug("Launched torpedo at time " << lastFire);
+	SAKUSEN_DEBUG("Launched torpedo at time " << lastFire);
 	}
 
 void TorpedoDetonator::incrementState() {
@@ -234,7 +234,7 @@ void TorpedoDetonator::incrementState() {
 		if(t->dynamicCast<LayeredUnit>()->getOwner()) {
 			/* For now, torpedoes never detonate on each other - really, need some way to discriminate between torpedoes in the same salvo. Perhaps using a wide but very short detection box? */
 			/* Detonate the torpedo, damaging only one ship - for balance reasons, and can be justified with nanotech or something */
-			Debug("Detonating torpedo with id " << int(this->getOuterUnit()->getId()) << " at time " << server::world->getTimeNow() << ", targetting player: " << t->dynamicCast<LayeredUnit>()->getOwner() << ", unit: " << t->dynamicCast<LayeredUnit>()->getId());
+			SAKUSEN_DEBUG("Detonating torpedo with id " << int(this->getOuterUnit()->getId()) << " at time " << server::world->getTimeNow() << ", targetting player: " << t->dynamicCast<LayeredUnit>()->getOwner() << ", unit: " << t->dynamicCast<LayeredUnit>()->getId());
 			t->dynamicCast<LayeredUnit>()->damage(this->damage);
 			this->getOuterUnit()->kill();
 			return;

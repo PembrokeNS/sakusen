@@ -25,8 +25,8 @@ void PatrollerClient::queueUpdate(const Update& update)
             data.getReason() == changeOwnerReason_created) {
           patrolFrom = data.getUnit().getStatus().getPosition();
           patrolFrom.z = patrolTo.z;
-          /*Debug("sending move order");*/
-          Debug("Patrolling to " << patrolTo);
+          /*SAKUSEN_DEBUG("sending move order");*/
+          SAKUSEN_DEBUG("Patrolling to " << patrolTo);
           orderMessageQueue.push(
               OrderMessage(UnitId(),
                 Order(new MoveOrderData(patrolTo))
@@ -40,7 +40,7 @@ void PatrollerClient::queueUpdate(const Update& update)
       {
         const UnitAlteredUpdateData& data = update.getUnitAlteredData();
         Position position = data.getUnit().getStatus().getPosition();
-        /*QDebug("Unit at " << data.getUnit().getStatus().getPosition());*/
+        /*SAKUSEN_QDEBUG("Unit at " << data.getUnit().getStatus().getPosition());*/
 
         if (headedOutward && (position - patrolTo).length() < CLOSE_ENOUGH) {
           orderMessageQueue.push(
@@ -66,7 +66,7 @@ void PatrollerClient::queueUpdate(const Update& update)
         const SensorReturnsAddedUpdateData& data =
           update.getSensorReturnsAddedData();
         otherUnit.reset(new SensorReturns(data.getSensorReturns()));
-        QDebug("otherUnit at " <<
+        SAKUSEN_QDEBUG("otherUnit at " <<
             otherUnit->getUnit()->getIStatus().getPosition());
         /* throw in a weapon targeting orders */
         for (uint16 weaponIndex = 0; weaponIndex < 2; ++weaponIndex) {

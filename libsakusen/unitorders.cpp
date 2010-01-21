@@ -72,14 +72,14 @@ void UnitOrders::acceptOrder(const Order& order)
         uint16 weaponIndex;
         weaponIndex = order.getTargetWeaponData().getWeaponIndex();
         if (weaponIndex >= weaponOrders.size()) {
-          Debug("Weapon index out of range");
+          SAKUSEN_DEBUG("Weapon index out of range");
           break;
         }
         weaponOrders[weaponIndex].update(order);
       }
       break;
     default:
-      Fatal("Unknown OrderType " << order.getType());
+      SAKUSEN_FATAL("Unknown OrderType " << order.getType());
   }
 }
 

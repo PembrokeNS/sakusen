@@ -124,7 +124,7 @@ class LIBSAKUSEN_API Visibility {
         CASE(seismar);
 #undef CASE
         default:
-          Fatal("unexpected SensorType " << sensorType);
+          SAKUSEN_FATAL("unexpected SensorType " << sensorType);
       }
     }
 

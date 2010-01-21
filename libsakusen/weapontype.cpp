@@ -48,7 +48,7 @@ WeaponType::WeaponType(
 server::Weapon* WeaponType::spawn() const
 {
   if (spawnFunction == NULL) {
-    Fatal("missing spawn function");
+    SAKUSEN_FATAL("missing spawn function");
   }
 
   return (*spawnFunction)(this);

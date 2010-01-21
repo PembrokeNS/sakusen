@@ -38,7 +38,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
 {
 #ifdef NDEBUG
   if (options.debug) {
-    Debug("SDL debugging output not supported on release build");
+    SAKUSEN_DEBUG("SDL debugging output not supported on release build");
   }
 #else
   debug = options.debug;
@@ -47,7 +47,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   
   /* Initialize SDL */
   if (-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 
   /* Turn on returning unicode values with keydown events */
@@ -70,7 +70,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   
   screen = SDL_SetVideoMode(getWidth(), getHeight(), BITS_PER_PIXEL, flags);
   if (screen == NULL) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 
   /* Create our internal buffer */
@@ -84,7 +84,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
       GMASK, BMASK, AMASK
     );
   if (sdlBuffer == NULL) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 }
 
@@ -110,7 +110,7 @@ void SDLUI::resize(uint16 width, uint16 height)
       buffer, width, height, BITS_PER_PIXEL, stride, RMASK, GMASK, BMASK, AMASK
     );
   if (sdlBuffer == NULL) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 }
 
@@ -195,7 +195,7 @@ void SDLUI::update()
         }
         break;
       default:
-        Debug("Unexpected SDL_Event type: " << sint32(event.type));
+        SAKUSEN_DEBUG("Unexpected SDL_Event type: " << sint32(event.type));
         break;
     }
   }
@@ -206,10 +206,10 @@ void SDLUI::update()
   /* Update the display */
   /** \todo Update only that portion which has been altered */
   if (0 != SDL_BlitSurface(sdlBuffer, NULL, screen, NULL)) {
-    Debug("SDL_BlitSurface failed: " << SDL_GetError());
+    SAKUSEN_DEBUG("SDL_BlitSurface failed: " << SDL_GetError());
   }
   if (SDL_Flip(screen)) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 }
 
@@ -224,7 +224,7 @@ void SDLUI::blit(uint16 x, uint16 y, const SDLSurface::ConstPtr& surface)
   /* The destination rectangle width and height do not matter */
   SDL_Rect destRect = { /*.x=*/x, /*.y=*/y, /*.w=*/0, /*.h=*/0 };
   if (SDL_BlitSurface(src, NULL, sdlBuffer, &destRect)) {
-    Fatal(SDL_GetError());
+    SAKUSEN_FATAL(SDL_GetError());
   }
 }
 

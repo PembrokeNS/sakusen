@@ -164,23 +164,23 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
  * the semicolon that should be used after calling them. */
 
 //#ifndef NDEBUG
-  #define Debug(msg) \
+  #define SAKUSEN_DEBUG(msg) \
     do { \
       sakusen::debugStream << __FILE__ << ":" << __LINE__ << ":" << \
         __PRETTY_FUNCTION__ <<  ": " << msg << std::endl; \
     } while(false)
 
-  #define QDebug(msg) \
+  #define SAKUSEN_QDEBUG(msg) \
     do { \
       sakusen::debugStream << __FILE__ << ":" << __LINE__ << ":" << msg << \
         std::endl; \
     } while(false)
 //#else
-//  #define Debug(msg)
+//  #define SAKUSEN_DEBUG(msg)
 //  #define QDebug(msg)
 //#endif
 
-#define Fatal(msg) \
+#define SAKUSEN_FATAL(msg) \
   do { \
     sakusen::errorStream << __FILE__ << ":" << __LINE__ << ":" << \
       __PRETTY_FUNCTION__ <<  ": fatal error: " << msg << std::endl; \

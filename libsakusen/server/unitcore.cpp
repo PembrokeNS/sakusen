@@ -165,7 +165,7 @@ void UnitCore::changeType(
           std::min<HitPoints>(hitPoints, newType->getDynamicData().getMaxHitPoints());
         break;
       default:
-        Debug("Invalid hitpointAlteration");
+        SAKUSEN_DEBUG("Invalid hitpointAlteration");
         /* intentionally no break */
       case fullHitPoints:
         hitPoints = newType->getDynamicData().getMaxHitPoints();

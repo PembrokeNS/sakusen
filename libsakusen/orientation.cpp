@@ -34,7 +34,7 @@ Orientation::Orientation(Rotation rotation, Angle amount)
       matrix[0][1] = -matrix[1][0];
       break;
     default:
-      Fatal("Unknown Rotation");
+      SAKUSEN_FATAL("Unknown Rotation");
       break;
   }
 
