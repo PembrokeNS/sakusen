@@ -69,6 +69,9 @@ class LIBSAKUSEN_API Box {
       return max;
     }
 
+    /** \brief getMax() - getMin() */
+    inline Point<T> getSize() const { return max - min; }
+
     /** Two Boxes are equal iff both of their points are equal or they are both
      * empty.
      */
