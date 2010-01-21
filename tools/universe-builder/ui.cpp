@@ -67,7 +67,9 @@ void UI::newUniverse()
         "", // scriptFunction
         "", // playerDataFunction
         vector<WeaponType>(),
-        vector<UnitType>()
+        vector<UnitType>(),
+        10, // logMinSpatialNoiseScale
+        15  // logMaxSpatialNoiseScale
       ));
   /** \todo Set universe path */
   updateCurrentPage();

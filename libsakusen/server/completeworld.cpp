@@ -29,7 +29,14 @@ CompleteWorld::CompleteWorld(
   lastFuseToken(static_cast<FuseToken>(-1)),
   fuseQueue(),
   players(p),
-  random()
+  random(),
+  randomDisplacementField(
+      random,
+      m.getUniverse()->getLogMinSpatialNoiseScale(),
+      m.getUniverse()->getLogMaxSpatialNoiseScale(),
+      3 /** \bug Random constant (minTemporalNoiseScale) */,
+      map->volume()
+    )
 {
   /** \todo We are default-constructing random for testing purposes.  At some
    * point it should be seeded from a high-quality random source (and probably

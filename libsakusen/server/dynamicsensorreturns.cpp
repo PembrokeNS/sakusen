@@ -3,13 +3,13 @@
 #include "player.h"
 #include "layeredunit.h"
 #include "sphereregion.h"
+#include "completeworld.h"
 
 #include <stack>
 
 using namespace std;
 
-using namespace sakusen;
-using namespace sakusen::server;
+namespace sakusen { namespace server {
 
 DynamicSensorReturns::DynamicSensorReturns(
     SensorReturnsId i,
@@ -159,13 +159,21 @@ void DynamicSensorReturns::update()
      * could change every tick, and also we aren't informed by the unit
      * whenever its position changes, so that could have altered too. */
     dirty = true;
+    MorphingPerlinVectorField<CompleteWorld::random_engine_type>&
+      randomDisplacementField = world->getRandomDisplacementField();
+    Position const actualPosition = sensee->getIStatus().getPosition();
+    Position const error(Point<sint64>(
+        randomDisplacementField(world->getTimeNow(), actualPosition)
+      ) * bestRadius / (sint64(1)<<32));
     /* \todo Add some randomness to the position of the centre of the region,
      * otherwise it might as well just be a point */
     region.reset(new SphereRegion<sint32>(
-          sensee->getIStatus().getPosition(), bestRadius
+          actualPosition+error, bestRadius
         ));
   } else {
     region.reset();
   }
 }
+
+}}
 

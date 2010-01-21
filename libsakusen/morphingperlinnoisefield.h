@@ -3,8 +3,9 @@
 
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_int.hpp>
+#include <boost/foreach.hpp>
 
-#include "sawwavefield.h"
+#include "morphingsawwavefield.h"
 
 namespace sakusen {
 
@@ -37,6 +38,23 @@ class MorphingPerlinNoiseField {
         );
     }
 
+    MorphingPerlinNoiseField(
+        UniformRandomNumberGenerator& rng,
+        uint32 const logMinSpatialScale,
+        uint32 const logMaxSpatialScale,
+        uint32 const logMinTemporalScale,
+        dimension_type const dimX,
+        dimension_type const dimY,
+        dimension_type const dimZ
+      )
+    {
+      dimension_type dims[3] = { dimX, dimY, dimZ };
+      init(
+          rng, logMinSpatialScale, logMaxSpatialScale,
+          logMinTemporalScale, dims
+        );
+    }
+
     sint32 operator()(
         Time const t,
         dimension_type const x
@@ -53,6 +71,17 @@ class MorphingPerlinNoiseField {
       ) {
       BOOST_MPL_ASSERT_RELATION(Rank,==,2);
       dimension_type coords[2] = { x, y };
+      return valueAt(t, coords);
+    }
+
+    sint32 operator()(
+        Time const t,
+        dimension_type const x,
+        dimension_type const y,
+        dimension_type const z
+      ) {
+      BOOST_MPL_ASSERT_RELATION(Rank,==,3);
+      dimension_type coords[3] = { x, y, z };
       return valueAt(t, coords);
     }
   private:

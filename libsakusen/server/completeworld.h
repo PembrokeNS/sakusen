@@ -15,6 +15,7 @@
 #include "beam.h"
 #include "effect.h"
 #include "playerdata.h"
+#include "morphingperlinvectorfield.h"
 
 namespace sakusen {
 namespace server {
@@ -33,6 +34,8 @@ namespace server {
 class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   /* noncopyable */
   public:
+    typedef boost::mt19937 random_engine_type;
+
     /** Constructor which the server is expected to use */
     CompleteWorld(
         const MapTemplate& map,
@@ -68,7 +71,9 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
 
     std::vector<Player> players;
 
-    boost::mt19937 random;
+    random_engine_type random;
+
+    MorphingPerlinVectorField<random_engine_type> randomDisplacementField;
 
     void applyEffect(
         const Ref<Effect>&,
@@ -192,7 +197,13 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
      * At present this is a mersenne twister, but that may change.  It may only
      * be assumed to be a UniformRandomNumberGenerator (in the sense of
      * Boost.Random). */
-    boost::mt19937& getRandom() { return random; }
+    random_engine_type& getRandom() { return random; }
+
+    /** \brief The source of random displacements applied to sensor returns */
+    MorphingPerlinVectorField<random_engine_type>& getRandomDisplacementField()
+    {
+      return randomDisplacementField;
+    }
 
     /* methods to perform game mechanics */
     void advanceGameState(Time timeToReach);
