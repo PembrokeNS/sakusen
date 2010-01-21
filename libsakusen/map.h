@@ -59,6 +59,12 @@ class LIBSAKUSEN_API Map {
     inline Rectangle<sint32> area(void) const {
       return Rectangle<sint32>(left(), bottom(), right(), top());
     }
+    inline Box<sint32> volume(void) const {
+      return Box<sint32>(
+          Position(left(), bottom(), bottomNumber<sint32>()),
+          Position(right(), top(), topNumber<sint32>())
+        );
+    }
     inline sint32 reflectX(sint32 x) const
     {
       return right() - (x - left() + 1);
