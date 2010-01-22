@@ -1,5 +1,5 @@
-#ifndef NAIVESPATIAL_H
-#define NAIVESPATIAL_H
+#ifndef LIBSAKUSEN__NAIVESPATIAL_H
+#define LIBSAKUSEN__NAIVESPATIAL_H
 
 #include "ispatial.h"
 
@@ -39,5 +39,5 @@ class LIBSAKUSEN_API NaiveSpatial : public ISpatial {
 
 }
 
-#endif // NAIVESPATIAL_H
+#endif // LIBSAKUSEN__NAIVESPATIAL_H
 

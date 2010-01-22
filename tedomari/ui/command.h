@@ -1,5 +1,5 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef TEDOMARI__UI__COMMAND_H
+#define TEDOMARI__UI__COMMAND_H
 
 #include <list>
 
@@ -99,5 +99,5 @@ class Command {
 
 }}
 
-#endif // COMMAND_H
+#endif // TEDOMARI__UI__COMMAND_H
 

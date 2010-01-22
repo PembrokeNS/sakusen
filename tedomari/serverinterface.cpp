@@ -61,8 +61,8 @@ ServerInterface::~ServerInterface()
 void ServerInterface::initialSettingsSetup()
 {
   /** \todo deal with return values */
-  setClientSetting("application:name", APPLICATION_NAME);
-  setClientSetting("application:version", APPLICATION_VERSION);
+  setClientSetting("application:name", TEDOMARI_APPLICATION_NAME);
+  setClientSetting("application:version", TEDOMARI_APPLICATION_VERSION);
   setClientSetting("application:revision", REVISION);
 
   /* we request the universe name and hash so that our game can be set up
@@ -110,11 +110,12 @@ String ServerInterface::flushIncoming(
   assert(incomingSocket != NULL);
 
   size_t messageLength;
-  uint8 buf[BUFFER_LEN];
+  uint8 buf[SAKUSEN_COMMS_BUFFER_LEN];
   ostringstream out;
   
-  while (joined &&
-      0 != (messageLength = incomingSocket->receive(buf, BUFFER_LEN))) {
+  while (joined && 0 != (
+        messageLength = incomingSocket->receive(buf, SAKUSEN_COMMS_BUFFER_LEN)
+      )) {
     try {
       PlayerId playerId =
         ( NULL == client::world ?
@@ -242,11 +243,12 @@ String ServerInterface::join()
     return ret;
   }
   
-  uint8 buffer[BUFFER_LEN];
+  uint8 buffer[SAKUSEN_COMMS_BUFFER_LEN];
   size_t messageLength;
 
-  if (0 == (messageLength =
-        incomingSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
+  if (0 == (messageLength = incomingSocket->receiveTimeout(
+          buffer, SAKUSEN_COMMS_BUFFER_LEN, timeout
+        ))) {
     incomingSocket.reset();
     outgoingSocket.reset();
     return "Timed out while waiting for response to join request.\n";
@@ -353,7 +355,7 @@ bool ServerInterface::getClientSetting(
 {
   String delim;
   if (setting.length() != 0 && setting[0] != ':') {
-    delim = SETTINGS_DELIMITER;
+    delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
   
   return getSetting(
@@ -374,7 +376,7 @@ bool ServerInterface::setClientSetting(
 {
   String delim;
   if (setting.length() != 0 && setting[0] != ':') {
-    delim = SETTINGS_DELIMITER;
+    delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
   
   return setSetting(

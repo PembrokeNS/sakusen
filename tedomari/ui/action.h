@@ -1,5 +1,5 @@
-#ifndef UI__ACTION_H
-#define UI__ACTION_H
+#ifndef TEDOMARI__UI__ACTION_H
+#define TEDOMARI__UI__ACTION_H
 
 #include <set>
 
@@ -86,5 +86,5 @@ Action::Ptr initializeAction(
 
 }}
 
-#endif // UI__ACTION_H
+#endif // TEDOMARI__UI__ACTION_H
 

@@ -1,5 +1,5 @@
-#ifndef REPLAYRECORDERINFO_H
-#define REPLAYRECORDERINFO_H
+#ifndef SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDERINFO_H
+#define SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDERINFO_H
 
 #include "plugininfo.h"
 #include "replayrecorder.h"
@@ -18,10 +18,11 @@ class ReplayRecorderInfo : public PluginInfo {
 };
 
 extern "C" {
-  REPLAY_RECORDER_API PluginInfo* get_replay_recorder_info();
+  SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER_API PluginInfo*
+    get_replay_recorder_info();
 }
 
 }}}}
 
-#endif // REPLAYRECORDERINFO_H
+#endif // SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDERINFO_H
 

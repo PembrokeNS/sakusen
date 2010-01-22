@@ -1,5 +1,5 @@
-#ifndef QUADRATIC_H
-#define QUADRATIC_H
+#ifndef LIBSAKUSEN__QUADRATIC_H
+#define LIBSAKUSEN__QUADRATIC_H
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -51,5 +51,5 @@ class LIBSAKUSEN_API Quadratic {
 
 }
 
-#endif // QUADRATIC_H
+#endif // LIBSAKUSEN__QUADRATIC_H
 

@@ -1,5 +1,5 @@
-#ifndef STRINGLEAF_H
-#define STRINGLEAF_H
+#ifndef FUSEKI__SETTINGSTREE__STRINGLEAF_H
+#define FUSEKI__SETTINGSTREE__STRINGLEAF_H
 
 #include "settingstree/leaf.h"
 
@@ -26,5 +26,5 @@ class StringLeaf : public Leaf {
 
 }}
 
-#endif // STRINGLEAF_H
+#endif // FUSEKI__SETTINGSTREE__STRINGLEAF_H
 

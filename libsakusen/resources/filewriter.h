@@ -1,5 +1,5 @@
-#ifndef FILEWRITER_H
-#define FILEWRITER_H
+#ifndef LIBSAKUSEN_RESOURCES__FILEWRITER_H
+#define LIBSAKUSEN_RESOURCES__FILEWRITER_H
 
 #include "libsakusen-resources-global.h"
 #include "oarchive.h"
@@ -23,5 +23,5 @@ class FileWriter : public File, public Writer {
 
 }}
 
-#endif // FILEWRITER_H
+#endif // LIBSAKUSEN_RESOURCES__FILEWRITER_H
 

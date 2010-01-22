@@ -1,5 +1,5 @@
-#ifndef HEIGHTFIELD_METHODS_H
-#define HEIGHTFIELD_METHODS_H
+#ifndef LIBSAKUSEN__HEIGHTFIELD_METHODS_H
+#define LIBSAKUSEN__HEIGHTFIELD_METHODS_H
 
 #include "heightfield.h"
 #include "world.h"
@@ -44,5 +44,5 @@ inline sint32 Heightfield::sampleToDexY(uint32 y) const {
 
 }
 
-#endif // HEIGHTFIELD_METHODS_H
+#endif // LIBSAKUSEN__HEIGHTFIELD_METHODS_H
 

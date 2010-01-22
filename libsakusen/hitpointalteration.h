@@ -1,5 +1,5 @@
-#ifndef HITPOINTALTERATION_H
-#define HITPOINTALTERATION_H
+#ifndef LIBSAKUSEN__HITPOINTALTERATION_H
+#define LIBSAKUSEN__HITPOINTALTERATION_H
 
 namespace sakusen {
 
@@ -18,5 +18,5 @@ enum hitPointAlteration {
 
 }
 
-#endif // HITPOINTALTERATION_H
+#endif // LIBSAKUSEN__HITPOINTALTERATION_H
 

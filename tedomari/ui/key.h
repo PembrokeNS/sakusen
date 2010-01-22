@@ -1,5 +1,5 @@
-#ifndef UI__KEY_H
-#define UI__KEY_H
+#ifndef TEDOMARI__UI__KEY_H
+#define TEDOMARI__UI__KEY_H
 
 #include "tedomari-global.h"
 
@@ -165,5 +165,5 @@ String getName(Key);
 
 }}
 
-#endif // UI__KEY_H
+#endif // TEDOMARI__UI__KEY_H
 

@@ -88,7 +88,7 @@ void CairoUI::resetClip() {
 
 void CairoUI::fillRect(double x, double y, double w, double h, const Colour& c)
 {
-  SDLDebug(
+  TEDOMARI_UI_SDL_DEBUG(
       "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h << ", c.ia=" <<
       uint32(c.ia())
     );
@@ -109,7 +109,7 @@ void CairoUI::fillPolygon(
     const Colour& c
   )
 {
-  SDLDebug(c.ir());
+  TEDOMARI_UI_SDL_DEBUG(c.ir());
   assert(!poly.empty());
 
   list< sakusen::Point<double> >::const_iterator vertex = poly.begin();
@@ -124,7 +124,9 @@ void CairoUI::fillPolygon(
 
 void CairoUI::stroke(double x1, double y1, double x2, double y2, const Colour& c)
 {
-  SDLDebug("x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2);
+  TEDOMARI_UI_SDL_DEBUG(
+      "x1=" << x1 << ", y1=" << y1 << ", x2=" << x2 << ", y2=" << y2
+    );
   cairoSetSource(c);
   cairo_move_to(cairoContext, x1, y1);
   cairo_line_to(cairoContext, x2, y2);
@@ -133,7 +135,9 @@ void CairoUI::stroke(double x1, double y1, double x2, double y2, const Colour& c
 
 void CairoUI::drawRect(double x, double y, double w, double h, const Colour& c)
 {
-  SDLDebug("x=" << x << ", y=" << y << ", w=" << w << ", h=" << h);
+  TEDOMARI_UI_SDL_DEBUG(
+      "x=" << x << ", y=" << y << ", w=" << w << ", h=" << h
+    );
   cairoSetSource(c);
   cairo_rectangle(cairoContext, x, y, w, h);
   cairo_stroke(cairoContext);

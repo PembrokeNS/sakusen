@@ -1,5 +1,5 @@
-#ifndef UI_SDL_CAIRO__CAIROREGION_H
-#define UI_SDL_CAIRO__CAIROREGION_H
+#ifndef TEDOMARI__UI_SDL_CAIRO__CAIROREGION_H
+#define TEDOMARI__UI_SDL_CAIRO__CAIROREGION_H
 
 #include "ui/region.h"
 #include "ui/sdl/cairo/cairoui.h"
@@ -68,5 +68,5 @@ class CairoRegion : public Region {
 
 }}}}
 
-#endif // UI_SDL_CAIRO__CAIROREGION_H
+#endif // TEDOMARI__UI_SDL_CAIRO__CAIROREGION_H
 

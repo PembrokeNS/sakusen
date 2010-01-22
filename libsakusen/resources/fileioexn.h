@@ -1,5 +1,5 @@
-#ifndef FILEIOEXN_H
-#define FILEIOEXN_H
+#ifndef LIBSAKUSEN_RESOURCES__FILEIOEXN_H
+#define LIBSAKUSEN_RESOURCES__FILEIOEXN_H
 
 #include "libsakusen-resources-global.h"
 
@@ -28,4 +28,4 @@ class LIBSAKUSEN_RESOURCES_API FileIOExn : public Exn
 
 }}
 
-#endif // FILEIOEXN_H
+#endif // LIBSAKUSEN_RESOURCES__FILEIOEXN_H

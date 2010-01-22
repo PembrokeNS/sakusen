@@ -1,5 +1,5 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef LIBSAKUSEN_COMMS__SOCKET_H
+#define LIBSAKUSEN_COMMS__SOCKET_H
 
 #include <sys/types.h>
 #include <boost/shared_ptr.hpp>
@@ -130,5 +130,5 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
 
 }}
 
-#endif // SOCKET_H
+#endif // LIBSAKUSEN_COMMS__SOCKET_H
 

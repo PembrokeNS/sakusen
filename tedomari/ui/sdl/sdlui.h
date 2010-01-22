@@ -7,9 +7,9 @@
 #include "ui/sdl/sdlsurface.h"
 
 #ifdef NDEBUG
-  #define SDLDebug(msg)
+  #define TEDOMARI_UI_SDL_DEBUG(msg)
 #else
-  #define SDLDebug(msg) if (debug) { SAKUSEN_DEBUG(msg); }
+  #define TEDOMARI_UI_SDL_DEBUG(msg) if (debug) { SAKUSEN_DEBUG(msg); }
 #endif
 
 struct SDL_Surface;

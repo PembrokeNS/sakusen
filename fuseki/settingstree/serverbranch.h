@@ -1,5 +1,5 @@
-#ifndef SERVERBRANCH_H
-#define SERVERBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__SERVERBRANCH_H
+#define FUSEKI__SETTINGSTREE__SERVERBRANCH_H
 
 #include "settingstree/branch.h"
 
@@ -16,5 +16,5 @@ class ServerBranch : public Branch {
 
 }}
 
-#endif // SERVERBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__SERVERBRANCH_H
 

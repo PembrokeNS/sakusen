@@ -36,8 +36,10 @@ Message::Message(
 
   (in >> version).extractEnum(type);
 
-  if (version != NETWORK_PROTOCOL_VERSION) {
-    throw WrongVersionDeserializationExn(NETWORK_PROTOCOL_VERSION, version);
+  if (version != SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION) {
+    throw WrongVersionDeserializationExn(
+        SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION, version
+      );
   }
   
   /** \todo More stuff in the message header such as endianness, a magic value
@@ -107,7 +109,7 @@ void Message::store(OArchive& archive) const
     archive << data->getBuffer();
   } else {
     OArchive subArchive;
-    subArchive << uint8(NETWORK_PROTOCOL_VERSION);
+    subArchive << uint8(SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION);
     subArchive.insertEnum(messageType_none);
     archive << subArchive.getBuffer();
   }

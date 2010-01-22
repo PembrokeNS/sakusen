@@ -1,5 +1,5 @@
-#ifndef UNITTEMPLATE_H
-#define UNITTEMPLATE_H
+#ifndef LIBSAKUSEN__UNITTEMPLATE_H
+#define LIBSAKUSEN__UNITTEMPLATE_H
 
 #include "libsakusen-global.h"
 
@@ -39,5 +39,5 @@ class LIBSAKUSEN_API UnitTemplate {
 };
 }
 
-#endif // UNITTEMPLATE_H
+#endif // LIBSAKUSEN__UNITTEMPLATE_H
 

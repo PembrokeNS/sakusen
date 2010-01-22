@@ -1,5 +1,5 @@
-#ifndef SENSORRETURNSID_H
-#define SENSORRETURNSID_H
+#ifndef LIBSAKUSEN__SENSORRETURNSID_H
+#define LIBSAKUSEN__SENSORRETURNSID_H
 
 #include "idbase.h"
 
@@ -10,5 +10,5 @@ class SensorReturnsId : public IdBase<uint32, SensorReturnsId> {
 
 }
 
-#endif // SENSORRETURNSID_H
+#endif // LIBSAKUSEN__SENSORRETURNSID_H
 

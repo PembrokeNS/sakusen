@@ -1,5 +1,5 @@
-#ifndef MAP_METHODS_H
-#define MAP_METHODS_H
+#ifndef LIBSAKUSEN__MAP_METHODS_H
+#define LIBSAKUSEN__MAP_METHODS_H
 
 #include "map.h"
 #include "maps/planemap.h"
@@ -24,19 +24,19 @@ MapType* Map::newMap(const MapTemplate& t)
   SAKUSEN_STATIC_ASSERT(topology_max == 7);
   
   switch (t.getTopology()) {
-#define CASE(ltopology, utopology) \
+#define SAKUSEN_MAP_CASE(ltopology, utopology) \
     case topology_##ltopology:     \
       return new maps::utopology##Map<MapType>(t);
-    CASE(plane, Plane)
-    CASE(cylinder, Cylinder)
-    CASE(torus, Torus)
-    CASE(mobius, Mobius)
-    CASE(klein, Klein)
-    CASE(sphere, Sphere)
-    CASE(crosscut, Crosscut)
+    SAKUSEN_MAP_CASE(plane, Plane)
+    SAKUSEN_MAP_CASE(cylinder, Cylinder)
+    SAKUSEN_MAP_CASE(torus, Torus)
+    SAKUSEN_MAP_CASE(mobius, Mobius)
+    SAKUSEN_MAP_CASE(klein, Klein)
+    SAKUSEN_MAP_CASE(sphere, Sphere)
+    SAKUSEN_MAP_CASE(crosscut, Crosscut)
     default:
       throw DeserializationExn("Invalid topology");
-#undef CASE
+#undef SAKUSEN_MAP_CASE
   }
 }
 
@@ -54,24 +54,24 @@ MapType* Map::newMap(
   )
 {
   switch (topology) {
-#define CASE(ltopology, utopology)              \
+#define SAKUSEN_MAP_CASE(ltopology, utopology)  \
     case topology_##ltopology:                  \
       return new maps::utopology##Map<MapType>( \
           topRight, bottomLeft, gravity, hf     \
         );
-    CASE(plane, Plane)
-    CASE(cylinder, Cylinder)
-    CASE(torus, Torus)
-    CASE(mobius, Mobius)
-    CASE(klein, Klein)
-    CASE(sphere, Sphere)
-    CASE(crosscut, Crosscut)
+    SAKUSEN_MAP_CASE(plane, Plane)
+    SAKUSEN_MAP_CASE(cylinder, Cylinder)
+    SAKUSEN_MAP_CASE(torus, Torus)
+    SAKUSEN_MAP_CASE(mobius, Mobius)
+    SAKUSEN_MAP_CASE(klein, Klein)
+    SAKUSEN_MAP_CASE(sphere, Sphere)
+    SAKUSEN_MAP_CASE(crosscut, Crosscut)
     default:
       throw DeserializationExn("Invalid topology");
-#undef CASE
+#undef SAKUSEN_MAP_CASE
   }
 }
 
 }
 
-#endif // MAP_METHODS_H
+#endif // LIBSAKUSEN__MAP_METHODS_H

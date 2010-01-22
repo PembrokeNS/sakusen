@@ -1,5 +1,5 @@
-#ifndef APPLICATIONBRANCH_H
-#define APPLICATIONBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__APPLICATIONBRANCH_H
+#define FUSEKI__SETTINGSTREE__APPLICATIONBRANCH_H
 
 #include "branch.h"
 
@@ -20,5 +20,5 @@ class ApplicationBranch : public Branch {
 
 }}
 
-#endif // APPLICATIONBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__APPLICATIONBRANCH_H
 

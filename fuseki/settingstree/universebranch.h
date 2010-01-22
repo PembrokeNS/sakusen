@@ -1,5 +1,5 @@
-#ifndef UNIVERSEBRANCH_H
-#define UNIVERSEBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__UNIVERSEBRANCH_H
+#define FUSEKI__SETTINGSTREE__UNIVERSEBRANCH_H
 
 #include "settingstree/branch.h"
 
@@ -13,5 +13,5 @@ class UniverseBranch : public Branch {
 
 }}
 
-#endif // UNIVERSEBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__UNIVERSEBRANCH_H
 

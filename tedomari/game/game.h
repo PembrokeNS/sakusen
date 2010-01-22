@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef TEDOMARI__GAME__GAME_H
+#define TEDOMARI__GAME__GAME_H
 
 #include <queue>
 
@@ -83,5 +83,5 @@ class Game {
 
 }}
 
-#endif // GAME_H
+#endif // TEDOMARI__GAME__GAME_H
 

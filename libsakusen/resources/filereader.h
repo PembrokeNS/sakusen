@@ -1,5 +1,5 @@
-#ifndef FILEREADER_H
-#define FILEREADER_H
+#ifndef LIBSAKUSEN_RESOURCES__FILEREADER_H
+#define LIBSAKUSEN_RESOURCES__FILEREADER_H
 
 #include <boost/filesystem/path.hpp>
 
@@ -23,5 +23,5 @@ class FileReader : public File, public Reader {
 
 }}
 
-#endif // FILEREADER_H
+#endif // LIBSAKUSEN_RESOURCES__FILEREADER_H
 

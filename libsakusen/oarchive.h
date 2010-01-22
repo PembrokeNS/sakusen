@@ -1,5 +1,5 @@
-#ifndef OARCHIVE_H
-#define OARCHIVE_H
+#ifndef LIBSAKUSEN__OARCHIVE_H
+#define LIBSAKUSEN__OARCHIVE_H
 
 #include "libsakusen-global.h"
 
@@ -202,7 +202,10 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     /* Can't use the u_map metafunction because that prevents type inference */
     template<typename T, typename U, typename THash>
 #ifdef SAKUSEN_USE_UNORDERED_MAP
-    OArchive& operator<<(const UNORDERED_MAP_NAMESPACE::unordered_map<T, U, THash>& toStore)
+    OArchive& operator<<(
+        const SAKUSEN_UNORDERED_MAP_NAMESPACE::unordered_map<T, U, THash>&
+          toStore
+      )
 #else
     OArchive& operator<<(const __gnu_cxx::hash_map<T, U, THash>& toStore)
 #endif
@@ -231,5 +234,5 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
 
 }
 
-#endif // OARCHIVE_H
+#endif // LIBSAKUSEN__OARCHIVE_H
 

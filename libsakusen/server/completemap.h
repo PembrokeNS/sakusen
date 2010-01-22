@@ -1,5 +1,5 @@
-#ifndef COMPLETEMAP_H
-#define COMPLETEMAP_H
+#ifndef LIBSAKUSEN_SERVER__COMPLETEMAP_H
+#define LIBSAKUSEN_SERVER__COMPLETEMAP_H
 
 #include "libsakusen-server-global.h"
 #include "map.h"
@@ -46,5 +46,5 @@ class LIBSAKUSEN_SERVER_API CompleteMap : public Map {
 
 }}
 
-#endif // COMPLETEMAP_H
+#endif // LIBSAKUSEN_SERVER__COMPLETEMAP_H
 

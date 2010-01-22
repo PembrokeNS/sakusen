@@ -1,5 +1,5 @@
-#ifndef CLIENTSBRANCH_H
-#define CLIENTSBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__CLIENTSBRANCH_H
+#define FUSEKI__SETTINGSTREE__CLIENTSBRANCH_H
 
 #include "settingstree/branch.h"
 
@@ -18,5 +18,5 @@ class ClientsBranch : public Branch {
 
 }}
 
-#endif // CLIENTSBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__CLIENTSBRANCH_H
 

@@ -1,5 +1,5 @@
-#ifndef UI__MODE_H
-#define UI__MODE_H
+#ifndef TEDOMARI__UI__MODE_H
+#define TEDOMARI__UI__MODE_H
 
 #include "gnu_extensions.h"
 #include "stringutils.h"
@@ -51,5 +51,5 @@ class Mode {
 
 }}
 
-#endif // UI__MODE_H
+#endif // TEDOMARI__UI__MODE_H
 

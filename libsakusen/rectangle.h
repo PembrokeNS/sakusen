@@ -1,5 +1,5 @@
-#ifndef UI__RECTANGLE_H
-#define UI__RECTANGLE_H
+#ifndef LIBSAKUSEN__RECTANGLE_H
+#define LIBSAKUSEN__RECTANGLE_H
 
 #include "point.h"
 #include "iarchive.h"
@@ -168,5 +168,5 @@ bool Rectangle<T>::operator==(const Rectangle<T>& right) const {
 #endif
 }
 
-#endif // UI__RECTANGLE_H
+#endif // LIBSAKUSEN__RECTANGLE_H
 

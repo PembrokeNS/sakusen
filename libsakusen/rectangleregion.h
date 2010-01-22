@@ -1,5 +1,5 @@
-#ifndef RECTANGLEREGION_H
-#define RECTANGLEREGION_H
+#ifndef LIBSAKUSEN__RECTANGLEREGION_H
+#define LIBSAKUSEN__RECTANGLEREGION_H
 
 #include "region.h"
 #include "world.h"
@@ -138,5 +138,5 @@ RectangleRegion<T>* RectangleRegion<T>::loadNew(IArchive& archive)
 
 }
 
-#endif // RECTANGLEREGION_H
+#endif // LIBSAKUSEN__RECTANGLEREGION_H
 

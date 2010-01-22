@@ -1,5 +1,5 @@
-#ifndef IARCHIVE_H
-#define IARCHIVE_H
+#ifndef LIBSAKUSEN__IARCHIVE_H
+#define LIBSAKUSEN__IARCHIVE_H
 
 #include "libsakusen-global.h"
 
@@ -289,7 +289,9 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
     /* Can't use the u_map metafunction because that prevents type inference */
     template<typename T, typename U, typename THash>
 #ifdef SAKUSEN_USE_UNORDERED_MAP
-    IArchive& operator>>(UNORDERED_MAP_NAMESPACE::unordered_map<T, U, THash>& result)
+    IArchive& operator>>(
+        SAKUSEN_UNORDERED_MAP_NAMESPACE::unordered_map<T, U, THash>& result
+      )
 #else
     IArchive& operator>>(__gnu_cxx::hash_map<T, U, THash>& result)
 #endif
@@ -372,7 +374,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
     }
 };
 
-#define SIMPLE_EXTRACTER(type) \
+#define SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(type) \
 template<>                     \
 struct Extracter<type> {       \
   type operator()(             \
@@ -385,17 +387,17 @@ struct Extracter<type> {       \
   }                            \
 };
 
-SIMPLE_EXTRACTER(uint8)
-SIMPLE_EXTRACTER(sint8)
-SIMPLE_EXTRACTER(uint16)
-SIMPLE_EXTRACTER(sint16)
-SIMPLE_EXTRACTER(uint32)
-SIMPLE_EXTRACTER(sint32)
-SIMPLE_EXTRACTER(uint64)
-SIMPLE_EXTRACTER(sint64)
-SIMPLE_EXTRACTER(String)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(uint8)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(sint8)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(uint16)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(sint16)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(uint32)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(sint32)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(uint64)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(sint64)
+SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER(String)
 
-#undef SIMPLE_EXTRACTER
+#undef SAKUSEN_IARCHIVE_SIMPLE_EXTRACTER
 
 template<typename T, typename U>
 struct Extracter<std::pair<T, U> > {
@@ -444,5 +446,5 @@ inline T Extracter<T>::operator()(
 
 }
 
-#endif // IARCHIVE_H
+#endif // LIBSAKUSEN__IARCHIVE_H
 

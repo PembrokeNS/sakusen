@@ -63,13 +63,16 @@ void UDPSocket::send(const void* buf, size_t len)
  
   retVal = ::send(sockfd, reinterpret_cast<const char*>(buf), len, 0);
   if (retVal == -1) {
-    switch (socket_errno) {
+    switch (socketErrno()) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw SocketClosedExn();
         break;
       default:
-        SAKUSEN_FATAL("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+        SAKUSEN_FATAL(
+            "error " << errorUtils_parseErrno(socketErrno()) <<
+            " sending message"
+          );
         break;
     }
   }
@@ -78,7 +81,7 @@ void UDPSocket::send(const void* buf, size_t len)
 void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
 {
   std::list<String> splitAddress =
-    stringUtils_split<list<String> >(address, ADDR_DELIM);
+    stringUtils_split<list<String> >(address, SAKUSEN_COMMS_ADDR_DELIM);
   assert(!splitAddress.empty());
   assert(splitAddress.front() == getType());
   splitAddress.pop_front();
@@ -105,16 +108,20 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
   int retVal;
  
   retVal = ::sendto(
-      sockfd, reinterpret_cast<const char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&dest), sizeof(dest)
+      sockfd, reinterpret_cast<const char*>(buf), len, 0,
+      reinterpret_cast<sockaddr*>(&dest), sizeof(dest)
     );
   if (retVal == -1) {
-    switch (socket_errno) {
+    switch (socketErrno()) {
       case ENOTCONN:
       case ECONNREFUSED:
         throw SocketClosedExn();
         break;
       default:
-        SAKUSEN_FATAL("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+        SAKUSEN_FATAL(
+            "error " << errorUtils_parseErrno(socketErrno()) <<
+            " sending message"
+          );
         break;
     }
   }
@@ -124,10 +131,12 @@ size_t UDPSocket::receive(void* buf, size_t len)
 {
   NativeReceiveReturnType retVal = ::recv(sockfd, reinterpret_cast<char*>(buf), len, 0);
   if (retVal == -1) {
-    if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
+    if (socketErrno() == EAGAIN || socketErrno() == EWOULDBLOCK) {
       return 0;
     }
-    SAKUSEN_FATAL("error receiving message: " << errorUtils_errorMessage(socket_errno));
+    SAKUSEN_FATAL(
+        "error receiving message: " << errorUtils_errorMessage(socketErrno())
+      );
   }
   return retVal;
 }
@@ -140,10 +149,12 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
       sockfd, reinterpret_cast<char*>(buf), len, 0, reinterpret_cast<sockaddr*>(&fromAddr), &fromLen
     );
   if (retVal == -1) {
-    if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
+    if (socketErrno() == EAGAIN || socketErrno() == EWOULDBLOCK) {
       return 0;
     }
-    SAKUSEN_FATAL("error receiving message: " << errorUtils_parseErrno(socket_errno));
+    SAKUSEN_FATAL(
+        "error receiving message: " << errorUtils_parseErrno(socketErrno())
+      );
   }
 #ifdef WIN32
   /** \bug Not thread-safe */
@@ -152,8 +163,8 @@ size_t UDPSocket::receiveFrom(void* buf, size_t len, String& from)
   char fromChar[INET_ADDRSTRLEN];
   inet_ntop(AF_INET, &fromAddr.sin_addr, fromChar, INET_ADDRSTRLEN);
 #endif
-  from = getType() + ADDR_DELIM + fromChar + ADDR_DELIM +
-    numToString(ntohs(fromAddr.sin_port));
+  from = getType() + SAKUSEN_COMMS_ADDR_DELIM + fromChar +
+    SAKUSEN_COMMS_ADDR_DELIM + numToString(ntohs(fromAddr.sin_port));
   return retVal;
 }
 

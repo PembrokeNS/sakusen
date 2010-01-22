@@ -1,5 +1,5 @@
-#ifndef IPSOCKET_H
-#define IPSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__IPSOCKET_H
+#define LIBSAKUSEN_COMMS__IPSOCKET_H
 
 #include "libsakusen-comms-global.h"
 #include "socket.h"
@@ -67,4 +67,4 @@ class IPSocket : public Socket {
 
 }}
 
-#endif // IPSOCKET_H
+#endif // LIBSAKUSEN_COMMS__IPSOCKET_H

@@ -1,5 +1,5 @@
-#ifndef GAMEBRANCH_H
-#define GAMEBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__GAMEBRANCH_H
+#define FUSEKI__SETTINGSTREE__GAMEBRANCH_H
 
 #include "settingstree/branch.h"
 
@@ -13,5 +13,5 @@ class GameBranch : public Branch {
 
 }}
 
-#endif // GAMEBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__GAMEBRANCH_H
 

@@ -1,5 +1,5 @@
-#ifndef UPDATE_H
-#define UPDATE_H
+#ifndef LIBSAKUSEN__UPDATE_H
+#define LIBSAKUSEN__UPDATE_H
 
 #include "updatedata.h"
 #include "updatetype.h"
@@ -26,20 +26,20 @@ class LIBSAKUSEN_API Update {
      * Primarily intended for (de)serialization
      */
     inline UpdateType getType(void) const { return data->getType(); }
-#define GET(type) \
+#define SAKUSEN_UPDATE_GET(type) \
     inline type##UpdateData get##type##Data(void) const { \
       return dynamic_cast<const type##UpdateData&>(*data); \
     }
-    GET(UnitRemoved)
-    GET(UnitAdded)
-    GET(UnitAltered)
-    GET(OrderAccepted)
-    GET(SensorReturnsRemoved)
-    GET(SensorReturnsAdded)
-    GET(SensorReturnsAltered)
-    GET(BallisticRemoved)
-    GET(BallisticAdded)
-#undef GET
+    SAKUSEN_UPDATE_GET(UnitRemoved)
+    SAKUSEN_UPDATE_GET(UnitAdded)
+    SAKUSEN_UPDATE_GET(UnitAltered)
+    SAKUSEN_UPDATE_GET(OrderAccepted)
+    SAKUSEN_UPDATE_GET(SensorReturnsRemoved)
+    SAKUSEN_UPDATE_GET(SensorReturnsAdded)
+    SAKUSEN_UPDATE_GET(SensorReturnsAltered)
+    SAKUSEN_UPDATE_GET(BallisticRemoved)
+    SAKUSEN_UPDATE_GET(BallisticAdded)
+#undef SAKUSEN_UPDATE_GET
 
     inline void store(OArchive& out) const {
       out.insertEnum(getType());
@@ -52,5 +52,5 @@ LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, const Update& upda
 
 }
 
-#endif // UPDATE_H
+#endif // LIBSAKUSEN__UPDATE_H
 

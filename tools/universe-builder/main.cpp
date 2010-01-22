@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
 {
   ResourceInterface::Ptr resourceInterface(
       FileResourceInterface::create(
-        fileUtils_getHome()/CONFIG_SUBDIR/DATA_SUBDIR, false
+        fileUtils_getHome()/SAKUSEN_CONFIG_SUBDIR/SAKUSEN_RESOURCES_SUBDIR,
+        false
       )
     );
   Gtk::Main kit(argc, argv);

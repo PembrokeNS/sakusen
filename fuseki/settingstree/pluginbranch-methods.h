@@ -1,5 +1,5 @@
-#ifndef PLUGINBRANCH_METHODS_H
-#define PLUGINBRANCH_METHODS_H
+#ifndef FUSEKI__SETTINGSTREE__PLUGINBRANCH_METHODS_H
+#define FUSEKI__SETTINGSTREE__PLUGINBRANCH_METHODS_H
 
 #include "settingstree/pluginbranch.h"
 #include "settingstree/intleaf-methods.h"
@@ -24,5 +24,5 @@ void PluginBranch::addLeaf(
 
 }}
 
-#endif // PLUGINBRANCH_METHODS_H
+#endif // FUSEKI__SETTINGSTREE__PLUGINBRANCH_METHODS_H
 

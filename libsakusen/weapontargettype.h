@@ -1,5 +1,5 @@
-#ifndef WEAPONTARGETTYPE_H
-#define WEAPONTARGETTYPE_H
+#ifndef LIBSAKUSEN__WEAPONTARGETTYPE_H
+#define LIBSAKUSEN__WEAPONTARGETTYPE_H
 
 namespace sakusen {
 
@@ -19,5 +19,5 @@ enum WeaponTargetType {
 
 }
 
-#endif // WEAPONTARGETTYPE_H
+#endif // LIBSAKUSEN__WEAPONTARGETTYPE_H
 

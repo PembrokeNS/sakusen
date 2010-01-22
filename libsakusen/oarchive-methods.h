@@ -1,5 +1,5 @@
-#ifndef OARCHIVE_METHODS_H
-#define OARCHIVE_METHODS_H
+#ifndef LIBSAKUSEN__OARCHIVE_METHODS_H
+#define LIBSAKUSEN__OARCHIVE_METHODS_H
 
 #include "oarchive.h"
 
@@ -8,7 +8,7 @@
 
 namespace sakusen {
 
-#define SIMPLE_STORER(type) \
+#define SAKUSEN_OARCHIVE_SIMPLE_STORER(type) \
 template<>                  \
 struct Storer<type> {       \
   void operator()(          \
@@ -20,15 +20,15 @@ struct Storer<type> {       \
   }                         \
 };
 
-SIMPLE_STORER(uint8)
-SIMPLE_STORER(sint8)
-SIMPLE_STORER(uint16)
-SIMPLE_STORER(sint16)
-SIMPLE_STORER(uint32)
-SIMPLE_STORER(sint32)
-SIMPLE_STORER(String)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(uint8)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(sint8)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(uint16)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(sint16)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(uint32)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(sint32)
+SAKUSEN_OARCHIVE_SIMPLE_STORER(String)
 
-#undef SIMPLE_STORER
+#undef SAKUSEN_OARCHIVE_SIMPLE_STORER
 
 template<>
 struct Storer<WeaponTypeId> {
@@ -81,5 +81,5 @@ inline void Storer<T>::operator()(
 
 }
 
-#endif // OARCHIVE_METHODS_H
+#endif // LIBSAKUSEN__OARCHIVE_METHODS_H
 

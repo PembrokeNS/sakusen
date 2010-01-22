@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef LIBSAKUSEN__POINT_H
+#define LIBSAKUSEN__POINT_H
 
 #include "libsakusen-global.h"
 #include <boost/utility.hpp>
@@ -398,5 +398,5 @@ template class LIBSAKUSEN_API Point<double>;
 #pragma warning (default:4101 4146)
 #endif
 
-#endif // POINT_H
+#endif // LIBSAKUSEN__POINT_H
 

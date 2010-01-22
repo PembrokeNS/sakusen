@@ -1,5 +1,5 @@
-#ifndef TIMEUTILS_H
-#define TIMEUTILS_H
+#ifndef LIBSAKUSEN_COMMS__TIMEUTILS_H
+#define LIBSAKUSEN_COMMS__TIMEUTILS_H
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -12,7 +12,7 @@
 #include "libsakusen-comms-global.h"
 
 /** Number of microseconds in a second */
-#define MICRO 1000000
+#define SAKUSEN_COMMS_TIMEUTILS_MICRO 1000000
 
 /** \file
  * This file defines some routines for manipulating time structures via
@@ -60,7 +60,7 @@ LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const uint32& usec)
 /** \brief A Sleep function taking a timeval */
 LIBSAKUSEN_COMMS_API inline void timeUtils_sleep(const timeval& tv)
 {
-  timeUtils_sleep(tv.tv_sec*MICRO+tv.tv_usec);
+  timeUtils_sleep(tv.tv_sec*SAKUSEN_COMMS_TIMEUTILS_MICRO+tv.tv_usec);
 }
 
 /** \brief Returns a timeval which is \a tv incremented by \a usec
@@ -96,7 +96,8 @@ LIBSAKUSEN_COMMS_API inline sint32 operator-(
     const timeval& uv
   )
 {
-  return (tv.tv_sec - uv.tv_sec)*MICRO + tv.tv_usec - uv.tv_usec;
+  return (tv.tv_sec - uv.tv_sec)*SAKUSEN_COMMS_TIMEUTILS_MICRO +
+    tv.tv_usec - uv.tv_usec;
 }
 
 /** \brief Compares the two timeval arguments */
@@ -111,5 +112,5 @@ LIBSAKUSEN_COMMS_API inline bool operator<(const timeval& tv, const timeval& uv)
   return timercmp(&tv, &uv, <);
 }
 
-#endif // TIMEUTILS_H
+#endif // LIBSAKUSEN_COMMS__TIMEUTILS_H
 

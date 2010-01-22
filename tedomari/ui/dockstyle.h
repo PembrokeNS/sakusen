@@ -1,5 +1,5 @@
-#ifndef UI__DOCKSTYLE_H
-#define UI__DOCKSTYLE_H
+#ifndef TEDOMARI__UI__DOCKSTYLE_H
+#define TEDOMARI__UI__DOCKSTYLE_H
 
 namespace tedomari {
 namespace ui {
@@ -23,5 +23,5 @@ enum DockStyle {
 
 }}
 
-#endif // UI__DOCKSTYLE_H
+#endif // TEDOMARI__UI__DOCKSTYLE_H
 

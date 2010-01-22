@@ -1,5 +1,5 @@
-#ifndef INTLEAF_H
-#define INTLEAF_H
+#ifndef FUSEKI__SETTINGSTREE__INTLEAF_H
+#define FUSEKI__SETTINGSTREE__INTLEAF_H
 
 #include "leaf.h"
 
@@ -33,5 +33,5 @@ class IntLeaf : public Leaf {
 
 }}
 
-#endif // INTLEAF_H
+#endif // FUSEKI__SETTINGSTREE__INTLEAF_H
 

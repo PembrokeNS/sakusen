@@ -1,5 +1,5 @@
-#ifndef UI__REGION_H
-#define UI__REGION_H
+#ifndef TEDOMARI__UI__REGION_H
+#define TEDOMARI__UI__REGION_H
 
 #include "libsakusen-global.h"
 
@@ -106,5 +106,5 @@ class Region {
 
 }}
 
-#endif // UI__REGION_H
+#endif // TEDOMARI__UI__REGION_H
 

@@ -1,10 +1,10 @@
-#ifndef UI__COLOUR_H
-#define UI__COLOUR_H
+#ifndef TEDOMARI__UI__COLOUR_H
+#define TEDOMARI__UI__COLOUR_H
 
 #include "libsakusen-global.h"
 
 /* Opaque is 1 to align with what SDL uses */
-#define ALPHA_OPAQUE_DBL 1.0
+#define TEDOMARI_UI_ALPHA_OPAQUE_DBL 1.0
 
 namespace tedomari {
 namespace ui {
@@ -22,21 +22,21 @@ class Colour {
     /** \brief Default constructor
      *
      * Creates an opaque, black Colour */
-    Colour() : r(0.0), g(0.0), b(0.0), a(ALPHA_OPAQUE_DBL) {}
+    Colour() : r(0.0), g(0.0), b(0.0), a(TEDOMARI_UI_ALPHA_OPAQUE_DBL) {}
     /** \brief uint8 opaque constructor
      *
      * Creates an opaque Colour with given RGB values (uint8 values are
      * scaled linearly from [0,255] to [0,1]). */
     Colour(uint8 red, uint8 green, uint8 blue) :
       r(double(red)/255), g(double(green)/255), b(double(blue)/255),
-      a(ALPHA_OPAQUE_DBL)
+      a(TEDOMARI_UI_ALPHA_OPAQUE_DBL)
     {}
     /** \brief double opaque constructor
      *
      * Creates an opaque Colour with given RGB values. All arguments should be
      * in the range [0,1]. */
     Colour(double red, double green, double blue) :
-      r(red), g(green), b(blue), a(ALPHA_OPAQUE_DBL)
+      r(red), g(green), b(blue), a(TEDOMARI_UI_ALPHA_OPAQUE_DBL)
     {}
     /** \brief double constructor
      *
@@ -109,5 +109,5 @@ inline Colour operator*(const Colour& c, const double d) {
 
 }}
 
-#endif // UI__COLOUR_H
+#endif // TEDOMARI__UI__COLOUR_H
 

@@ -1,5 +1,5 @@
-#ifndef ERRORUTILS_H
-#define ERRORUTILS_H
+#ifndef LIBSAKUSEN_COMMS__ERRORUTILS_H
+#define LIBSAKUSEN_COMMS__ERRORUTILS_H
 
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
@@ -7,7 +7,6 @@
 #if defined (_MSC_VER)
 #include <winsock2.h>
 #include "wsabsd.h"
-#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #endif //_MSC_VER
 
 namespace sakusen {
@@ -21,5 +20,5 @@ LIBSAKUSEN_COMMS_API String errorUtils_errorMessage(int num);
 
 }}
 
-#endif // ERRORUTILS_H
+#endif // LIBSAKUSEN_COMMS__ERRORUTILS_H
 

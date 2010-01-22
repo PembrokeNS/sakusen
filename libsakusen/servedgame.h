@@ -1,5 +1,5 @@
-#ifndef SERVEDGAME_H
-#define SERVEDGAME_H
+#ifndef LIBSAKUSEN__SERVEDGAME_H
+#define LIBSAKUSEN__SERVEDGAME_H
 
 #include "exceptions.h"
 
@@ -94,4 +94,4 @@ class ServedGame {
 
 }
 
-#endif /*SERVEDGAME_H*/
+#endif /*LIBSAKUSEN__SERVEDGAME_H*/

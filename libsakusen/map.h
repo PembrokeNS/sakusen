@@ -1,5 +1,5 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef LIBSAKUSEN__MAP_H
+#define LIBSAKUSEN__MAP_H
 
 #include <vector>
 
@@ -202,5 +202,5 @@ class LIBSAKUSEN_API Map {
 
 }
 
-#endif // MAP_H
+#endif // LIBSAKUSEN__MAP_H
 

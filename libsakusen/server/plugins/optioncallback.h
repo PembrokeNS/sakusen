@@ -1,5 +1,5 @@
-#ifndef OPTIONCALLBACK_H
-#define OPTIONCALLBACK_H
+#ifndef LIBSAKUSEN_SERVER_PLUGINS__OPTIONCALLBACK_H
+#define LIBSAKUSEN_SERVER_PLUGINS__OPTIONCALLBACK_H
 
 #include <boost/call_traits.hpp>
 
@@ -32,5 +32,5 @@ class OptionCallback {
 
 }}}
 
-#endif // OPTIONCALLBACK_H
+#endif // LIBSAKUSEN_SERVER_PLUGINS__OPTIONCALLBACK_H
 

@@ -1,5 +1,5 @@
-#ifndef PTRHASH_H
-#define PTRHASH_H
+#ifndef LIBSAKUSEN__PTRHASH_H
+#define LIBSAKUSEN__PTRHASH_H
 
 #include "libsakusen-global.h"
 
@@ -15,5 +15,5 @@ class PtrHash {
 
 }
 
-#endif // PTRHASH_H
+#endif // LIBSAKUSEN__PTRHASH_H
 

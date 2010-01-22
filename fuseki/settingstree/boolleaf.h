@@ -1,5 +1,5 @@
-#ifndef BOOLLEAF_H
-#define BOOLLEAF_H
+#ifndef FUSEKI__SETTINGSTREE__BOOLLEAF_H
+#define FUSEKI__SETTINGSTREE__BOOLLEAF_H
 
 #include "settingstree/leaf.h"
 
@@ -28,5 +28,5 @@ class BoolLeaf : public Leaf {
 
 }}
 
-#endif // BOOLLEAF_H
+#endif // FUSEKI__SETTINGSTREE__BOOLLEAF_H
 

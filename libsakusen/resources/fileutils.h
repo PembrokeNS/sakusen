@@ -1,19 +1,15 @@
-#ifndef FILEUTILS_H
-#define FILEUTILS_H
+#ifndef LIBSAKUSEN_RESOURCES__FILEUTILS_H
+#define LIBSAKUSEN_RESOURCES__FILEUTILS_H
 
 #include "libsakusen-resources-global.h"
 
 #include <list>
 #include <boost/filesystem/path.hpp>
 
-#ifdef _MSC_VER
-#define NativeFileno _fileno
-#else
-#define NativeFileno fileno
-#endif
-
 namespace sakusen {
 namespace resources {
+
+LIBSAKUSEN_RESOURCES_API int fileUtils_fileno(FILE*);
 
 LIBSAKUSEN_RESOURCES_API void fileUtils_mkdirRecursive(
     const boost::filesystem::path& path
@@ -32,5 +28,5 @@ LIBSAKUSEN_RESOURCES_API boost::filesystem::path fileUtils_getHome();
 
 }}
 
-#endif // FILEUTILS_H
+#endif // LIBSAKUSEN_RESOURCES__FILEUTILS_H
 

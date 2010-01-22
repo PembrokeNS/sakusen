@@ -1,5 +1,5 @@
-#ifndef UNITCORE_H
-#define UNITCORE_H
+#ifndef LIBSAKUSEN_SERVER__UNITCORE_H
+#define LIBSAKUSEN_SERVER__UNITCORE_H
 
 #include "unitstatus.h"
 #include "unitlayer.h"
@@ -110,5 +110,5 @@ class UnitCore : public UnitLayer, public UnitStatus {
 
 }}
 
-#endif // UNITCORE_H
+#endif // LIBSAKUSEN_SERVER__UNITCORE_H
 

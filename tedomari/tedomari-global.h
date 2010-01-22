@@ -4,8 +4,8 @@
 #include "libsakusen-global.h"
 #include "gnu_extensions.h"
 
-#define APPLICATION_NAME "tedomari"
-#define APPLICATION_VERSION "0.1"
+#define TEDOMARI_APPLICATION_NAME "tedomari"
+#define TEDOMARI_APPLICATION_VERSION "0.1"
 
 #ifdef _MSC_VER
  #pragma warning(disable:4251 4275)

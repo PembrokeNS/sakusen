@@ -1,5 +1,5 @@
-#ifndef PLAYERID_H
-#define PLAYERID_H
+#ifndef LIBSAKUSEN__PLAYERID_H
+#define LIBSAKUSEN__PLAYERID_H
 
 #include "libsakusen-global.h"
 
@@ -35,5 +35,5 @@ class InvalidPlayerId : public std::runtime_error {
 
 }
 
-#endif // PLAYERID_H
+#endif // LIBSAKUSEN__PLAYERID_H
 

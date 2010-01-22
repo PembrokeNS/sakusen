@@ -1,5 +1,5 @@
-#ifndef PERCEPTION_H
-#define PERCEPTION_H
+#ifndef LIBSAKUSEN__PERCEPTION_H
+#define LIBSAKUSEN__PERCEPTION_H
 
 namespace sakusen {
 
@@ -26,5 +26,5 @@ inline Perception& operator|=(Perception& left, const Perception& right) {
 
 }
 
-#endif // PERCEPTION_H
+#endif // LIBSAKUSEN__PERCEPTION_H
 

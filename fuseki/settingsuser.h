@@ -1,5 +1,5 @@
-#ifndef SETTINGSUSER_H
-#define SETTINGSUSER_H
+#ifndef FUSEKI__SETTINGSUSER_H
+#define FUSEKI__SETTINGSUSER_H
 
 #include "fuseki-global.h"
 
@@ -63,5 +63,5 @@ class SettingsUser {
 
 }
 
-#endif // SETTINGSUSER_H
+#endif // FUSEKI__SETTINGSUSER_H
 

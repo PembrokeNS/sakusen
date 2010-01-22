@@ -1,5 +1,5 @@
-#ifndef UNITID_H
-#define UNITID_H
+#ifndef LIBSAKUSEN__UNITID_H
+#define LIBSAKUSEN__UNITID_H
 
 #include "libsakusen-global.h"
 #include "idbase.h"
@@ -12,5 +12,5 @@ class UnitId : public IdBase<uint32, UnitId> {
 
 }
 
-#endif // UNITID_H
+#endif // LIBSAKUSEN__UNITID_H
 

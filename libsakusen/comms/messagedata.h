@@ -1,5 +1,5 @@
-#ifndef MESSAGEDATA_H
-#define MESSAGEDATA_H
+#ifndef LIBSAKUSEN_COMMS__MESSAGEDATA_H
+#define LIBSAKUSEN_COMMS__MESSAGEDATA_H
 
 #include "messagetype.h"
 #include "oarchive.h"
@@ -29,7 +29,8 @@ class LIBSAKUSEN_COMMS_API MessageData {
     const Buffer& getBuffer() const {
       if (buffer.getSize() == 0) {
         OArchive archive;
-        (archive << uint8(NETWORK_PROTOCOL_VERSION)).insertEnum(getType());
+        archive << uint8(SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION);
+        archive.insertEnum(getType());
         fillArchive(archive);
         buffer = archive.getBuffer();
       }
@@ -302,5 +303,5 @@ class LIBSAKUSEN_COMMS_API ExtensionMessageData : public MessageData {
 
 }}
 
-#endif // MESSAGEDATA_H
+#endif // LIBSAKUSEN_COMMS__MESSAGEDATA_H
 

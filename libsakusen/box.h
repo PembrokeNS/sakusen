@@ -1,5 +1,5 @@
-#ifndef BOX_H
-#define BOX_H
+#ifndef LIBSAKUSEN__BOX_H
+#define LIBSAKUSEN__BOX_H
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -212,5 +212,5 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 
 #endif // LIBSAKUSEN_METHOD_DEFINITIONS
 }
-#endif
+#endif // LIBSAKUSEN__BOX_H
 

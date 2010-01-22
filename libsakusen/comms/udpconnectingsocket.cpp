@@ -19,7 +19,10 @@ UDPConnectingSocket::UDPConnectingSocket(
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    SAKUSEN_FATAL("host " << hostname << " not found: " << errorUtils_parseErrno(socket_errno));
+    SAKUSEN_FATAL(
+        "host " << hostname << " not found: " <<
+        errorUtils_parseErrno(socketErrno())
+      );
   }
 
   memset(&addr, 0, sizeof(addr));

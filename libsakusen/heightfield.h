@@ -1,5 +1,5 @@
-#ifndef HEIGHTFIELD_H
-#define HEIGHTFIELD_H
+#ifndef LIBSAKUSEN__HEIGHTFIELD_H
+#define LIBSAKUSEN__HEIGHTFIELD_H
 
 #include "libsakusen-global.h"
 
@@ -141,5 +141,5 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
 
 }
 
-#endif // HEIGHTFIELD_H
+#endif // LIBSAKUSEN__HEIGHTFIELD_H
 

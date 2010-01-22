@@ -1,5 +1,5 @@
-#ifndef UNIXDATAGRAMSOCKET_H
-#define UNIXDATAGRAMSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__UNIXDATAGRAMSOCKET_H
+#define LIBSAKUSEN_COMMS__UNIXDATAGRAMSOCKET_H
 
 #ifndef DISABLE_UNIX_SOCKETS
 
@@ -35,7 +35,7 @@ class LIBSAKUSEN_API UnixDatagramSocket : public Socket {
     bool abstract;
     /** whether this socket has been closed already */
     bool closed;
-    char path[UNIX_PATH_MAX];
+    char path[SAKUSEN_COMMS_UNIX_PATH_MAX];
     struct sockaddr_un addr; /**< socket address */
     int sockfd; /**< socket file descriptor */
       /* This class's constructor sets up everything except actually binding or
@@ -60,5 +60,5 @@ class LIBSAKUSEN_API UnixDatagramSocket : public Socket {
 
 #endif // DISABLE_UNIX_SOCKETS
 
-#endif // UNIXDATAGRAMSOCKET_H
+#endif // LIBSAKUSEN_COMMS__UNIXDATAGRAMSOCKET_H
 

@@ -169,7 +169,8 @@ int main(int argc, char* argv[])
   boost::filesystem::path homePath = fileUtils_getHome();
   
   /* Construct the path to the tedomari config directory */
-  boost::filesystem::path configPath = homePath / CONFIG_SUBDIR / "tedomari";
+  boost::filesystem::path configPath =
+    homePath / SAKUSEN_CONFIG_SUBDIR / "tedomari";
   cout << "Using directory " << configPath.native_file_string() <<
     " for tedomari configuration\n";
 
@@ -186,7 +187,7 @@ int main(int argc, char* argv[])
   }
 
   if (options.version) {
-    cout << APPLICATION_NAME " " APPLICATION_VERSION;
+    cout << TEDOMARI_APPLICATION_NAME " " TEDOMARI_APPLICATION_VERSION;
     cout << " (revision " << REVISION << ")";
     cout << endl;
     exit(EXIT_SUCCESS);
@@ -228,14 +229,14 @@ void runTest(
     uiConfFilePath = options.uiConfig;
   }
   ResourceInterface::Ptr resourceInterface = FileResourceInterface::create(
-      homePath / CONFIG_SUBDIR / DATA_SUBDIR, false
+      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR, false
     );
   Game* game = new Game(resourceInterface);
   UI::Ptr ui = newUI(options, uiConfFilePath, game);
 
-  struct timeval sleepTime = {0, MICRO/25};
+  struct timeval sleepTime = {0, SAKUSEN_COMMS_TIMEUTILS_MICRO/25};
   if (options.evil) {
-    sleepTime.tv_usec = MICRO/250;
+    sleepTime.tv_usec = SAKUSEN_COMMS_TIMEUTILS_MICRO/250;
   }
 
   while (true) {
@@ -273,8 +274,10 @@ void runClient(
     socketAddress = "tcp"ADDR_DELIM"localhost";
 #else
     /* Use default socket */
-    socketAddress = "unix"ADDR_DELIM"concrete"ADDR_DELIM +
-      (homePath / CONFIG_SUBDIR / SOCKET_SUBDIR / "fuseki-socket").
+    socketAddress =
+      "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM +
+      (homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_COMMS_SOCKET_SUBDIR /
+        "fuseki-socket").
       native_file_string();
 #endif
   }
@@ -301,7 +304,9 @@ void runClient(
      * resources over the network from the server as well as from disk */
     boost::filesystem::path dotDot("..");
     vector<boost::filesystem::path> dataDirs;
-    dataDirs.push_back(homePath / CONFIG_SUBDIR / DATA_SUBDIR);
+    dataDirs.push_back(
+        homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR
+      );
     dataDirs.push_back("data");
     dataDirs.push_back(dotDot/"data");
     dataDirs.push_back(dotDot/".."/"data");
@@ -333,9 +338,9 @@ void runClient(
                                       general fashion.  Maybe use regexes and
                                       their associated cunningness */
 
-    struct timeval sleepTime = {0, MICRO/25};
+    struct timeval sleepTime = {0, SAKUSEN_COMMS_TIMEUTILS_MICRO/25};
     if (options.evil) {
-      sleepTime.tv_usec = MICRO/250;
+      sleepTime.tv_usec = SAKUSEN_COMMS_TIMEUTILS_MICRO/250;
     }
     struct timeval commandSleepTime = {0, 0};
 

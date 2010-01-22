@@ -1,5 +1,5 @@
-#ifndef RESOURCE_INTERFACE_METHODS_H
-#define RESOURCE_INTERFACE_METHODS_H
+#ifndef LIBSAKUSEN__RESOURCEINTERFACE_METHODS_H
+#define LIBSAKUSEN__RESOURCEINTERFACE_METHODS_H
 
 #include "resourceinterface.h"
 #include "universe.h"
@@ -62,5 +62,5 @@ inline bool ResourceInterface::save(
 
 }
 
-#endif // RESOURCE_INTERFACE_METHODS_H
+#endif // LIBSAKUSEN__RESOURCEINTERFACE_METHODS_H
 

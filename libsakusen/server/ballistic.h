@@ -1,5 +1,5 @@
-#ifndef BALLISTIC_H
-#define BALLISTIC_H
+#ifndef LIBSAKUSEN_SERVER__BALLISTIC_H
+#define LIBSAKUSEN_SERVER__BALLISTIC_H
 
 #include "libsakusen-global.h"
 #include "quadratic.h"
@@ -81,5 +81,5 @@ class LIBSAKUSEN_SERVER_API Ballistic : private boost::noncopyable {
 
 }}
 
-#endif
+#endif // LIBSAKUSEN_SERVER__BALLISTIC_H
 

@@ -1,5 +1,5 @@
-#ifndef UI__ACTIONTARGET_H
-#define UI__ACTIONTARGET_H
+#ifndef TEDOMARI__UI__ACTIONTARGET_H
+#define TEDOMARI__UI__ACTIONTARGET_H
 
 #include <boost/variant.hpp>
 
@@ -18,5 +18,5 @@ enum ActionTargetType {
   actionTargetType_position
 };
 
-#endif // UI__ACTIONTARGET_H
+#endif // TEDOMARI__UI__ACTIONTARGET_H
 

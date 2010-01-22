@@ -12,9 +12,9 @@
 
 #include "pcrecpp.h"
 
-/** DATA_SUBDIR is the subdirectory of CONFIG_SUBDIR where the game data is to
- * be found */
-#define DATA_SUBDIR "data"
+/** SAKUSEN_RESOURCES_SUBDIR is the subdirectory of SAKUSEN_CONFIG_SUBDIR where
+ * the game data is to be found */
+#define SAKUSEN_RESOURCES_SUBDIR "data"
 
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and

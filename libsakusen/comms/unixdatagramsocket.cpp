@@ -108,23 +108,23 @@ void UnixDatagramSocket::initialize(const char* p)
   addr.sun_family = AF_UNIX;
   
   if (abstract) {
-    memset(path, 0, UNIX_PATH_MAX);
-    if (strlen(p) >= UNIX_PATH_MAX-1) {
+    memset(path, 0, SAKUSEN_COMMS_UNIX_PATH_MAX);
+    if (strlen(p) >= SAKUSEN_COMMS_UNIX_PATH_MAX-1) {
       SAKUSEN_FATAL("Socket path too long");
     }
 
     /* First byte of path must be zero to indicate abstract namespace */
-    strncpy(path+1, p, UNIX_PATH_MAX-1);
-    memcpy(addr.sun_path, path, UNIX_PATH_MAX);
+    strncpy(path+1, p, SAKUSEN_COMMS_UNIX_PATH_MAX-1);
+    memcpy(addr.sun_path, path, SAKUSEN_COMMS_UNIX_PATH_MAX);
   } else {
-    if (strlen(p) >= UNIX_PATH_MAX) {
+    if (strlen(p) >= SAKUSEN_COMMS_UNIX_PATH_MAX) {
       SAKUSEN_FATAL("Socket path too long");
     }
     
-    strncpy(path, p, UNIX_PATH_MAX-1);
-    path[UNIX_PATH_MAX-1] = '\0';
-    memset(addr.sun_path, 0, UNIX_PATH_MAX);
-    strncpy(addr.sun_path, path, UNIX_PATH_MAX-1);
+    strncpy(path, p, SAKUSEN_COMMS_UNIX_PATH_MAX-1);
+    path[SAKUSEN_COMMS_UNIX_PATH_MAX-1] = '\0';
+    memset(addr.sun_path, 0, SAKUSEN_COMMS_UNIX_PATH_MAX);
+    strncpy(addr.sun_path, path, SAKUSEN_COMMS_UNIX_PATH_MAX-1);
   }
 }
 
@@ -228,9 +228,13 @@ void UnixDatagramSocket::setNonBlocking(bool val)
 
 String UnixDatagramSocket::getAddress() const {
   if (abstract) {
-    return String("unix"ADDR_DELIM"abstract"ADDR_DELIM) + (path+1);
+    return String(
+        "unix"SAKUSEN_COMMS_ADDR_DELIM"abstract"SAKUSEN_COMMS_ADDR_DELIM
+      ) + (path+1);
   } else {
-    return String("unix"ADDR_DELIM"concrete"ADDR_DELIM) + path;
+    return String(
+        "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM
+      ) + path;
   }
 }
 

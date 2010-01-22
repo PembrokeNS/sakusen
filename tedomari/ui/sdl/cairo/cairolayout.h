@@ -1,5 +1,5 @@
-#ifndef UI_SDL_CAIRO__CAIROLAYOUT_H
-#define UI_SDL_CAIRO__CAIROLAYOUT_H
+#ifndef TEDOMARI__UI_SDL_CAIRO__CAIROLAYOUT_H
+#define TEDOMARI__UI_SDL_CAIRO__CAIROLAYOUT_H
 
 #include "ui/layout.h"
 #include "ui/sdl/cairo/cairoui.h"
@@ -31,5 +31,5 @@ class CairoLayout : public Layout {
 
 }}}}
 
-#endif // UI_SDL_CAIRO__CAIROLAYOUT_H
+#endif // TEDOMARI__UI_SDL_CAIRO__CAIROLAYOUT_H
 

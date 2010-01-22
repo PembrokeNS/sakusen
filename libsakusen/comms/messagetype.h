@@ -1,5 +1,5 @@
-#ifndef MESSAGETYPE_H
-#define MESSAGETYPE_H
+#ifndef LIBSAKUSEN_COMMS__MESSAGETYPE_H
+#define LIBSAKUSEN_COMMS__MESSAGETYPE_H
 
 #include "libsakusen-comms-global.h"
 
@@ -31,5 +31,5 @@ LIBSAKUSEN_COMMS_API std::ostream& operator<<(std::ostream& output, MessageType 
 
 }}
 
-#endif // MESSAGETYPE_H
+#endif // LIBSAKUSEN_COMMS__MESSAGETYPE_H
 

@@ -258,42 +258,42 @@ void ParalyzingLayer::onRemoval() {
 
 extern "C" {
 
-MODULE_API Script* create_script()
+SAKUSEN_TESTSRC_MODULE_API Script* create_script()
 {
   return new TestScript();
 }
 
-MODULE_API PlayerData* create_player()
+SAKUSEN_TESTSRC_MODULE_API PlayerData* create_player()
 {
   return new TestPlayerData();
 }
 
-MODULE_API Weapon* spawn_cannon(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_cannon(const WeaponType* type)
 {
   return new Cannon(type);
 }
 
-MODULE_API Weapon* spawn_paralyzer(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_paralyzer(const WeaponType* type)
 {
   return new Paralyzer(type);
 }
 
-MODULE_API Weapon* spawn_factorycreater(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_factorycreater(const WeaponType* type)
 {
   return new FactoryCreater(type);
 }
 
-MODULE_API Weapon* spawn_gruntcreater(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_gruntcreater(const WeaponType* type)
 {
   return new GruntCreater(type);
 }
 
-MODULE_API Weapon* spawn_spidercreater(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_spidercreater(const WeaponType* type)
 {
   return new SpiderCreater(type);
 }
 
-MODULE_API Weapon* spawn_builder(const WeaponType* type)
+SAKUSEN_TESTSRC_MODULE_API Weapon* spawn_builder(const WeaponType* type)
 {
   return new Builder(type);
 }

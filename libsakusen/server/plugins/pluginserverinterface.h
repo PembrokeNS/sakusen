@@ -1,5 +1,5 @@
-#ifndef PLUGINSERVERINTERFACE_H
-#define PLUGINSERVERINTERFACE_H
+#ifndef LIBSAKUSEN_SERVER_PLUGINS__PLUGINSERVERINTERFACE_H
+#define LIBSAKUSEN_SERVER_PLUGINS__PLUGINSERVERINTERFACE_H
 
 #include <set>
 
@@ -57,24 +57,24 @@ class PluginServerInterface {
      * template member because virtual template members are not allowed.
      */
     //@{
-#define REGISTER_OPTION(type)                           \
+#define SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(type) \
     virtual void registerOption(                        \
         const String& name,                             \
         OptionCallback<type>* callback,                 \
         boost::call_traits<type>::param_type initialVal \
       ) const = 0
-    REGISTER_OPTION(String);
-    REGISTER_OPTION(std::set<String>);
-    REGISTER_OPTION(bool);
-    REGISTER_OPTION(sint8);
-    REGISTER_OPTION(sint16);
-    REGISTER_OPTION(sint32);
-    REGISTER_OPTION(sint64);
-    REGISTER_OPTION(uint8);
-    REGISTER_OPTION(uint16);
-    REGISTER_OPTION(uint32);
-    REGISTER_OPTION(uint64);
-#undef REGISTER_OPTION
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(String);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(std::set<String>);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(bool);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(sint8);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(sint16);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(sint32);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(sint64);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(uint8);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(uint16);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(uint32);
+    SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION(uint64);
+#undef SAKUSEN_SERVER_PLUGINS_PLUGININTERFACE_REGISTER_OPTION
     //@}
     /** \brief Alternate signature for string option registration.
      *
@@ -92,5 +92,5 @@ class PluginServerInterface {
 
 }}}
 
-#endif // PLUGINSERVERINTERFACE_H
+#endif // LIBSAKUSEN_SERVER_PLUGINS__PLUGINSERVERINTERFACE_H
 

@@ -1,5 +1,5 @@
-#ifndef WEAPONTYPE_H
-#define WEAPONTYPE_H
+#ifndef LIBSAKUSEN_WEAPONTYPE_H
+#define LIBSAKUSEN_WEAPONTYPE_H
 
 #include "libsakusen-global.h"
 #include "iarchive.h"
@@ -84,5 +84,5 @@ class LIBSAKUSEN_API WeaponType {
 
 }
 
-#endif
+#endif // LIBSAKUSEN_WEAPONTYPE_H
 

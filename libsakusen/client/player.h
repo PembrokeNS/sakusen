@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef LIBSAKUSEN_CLIENT__PLAYER_H
+#define LIBSAKUSEN_CLIENT__PLAYER_H
 
 #include "libsakusen-global.h"
 #include <list>
@@ -37,5 +37,5 @@ class Player {
 
 }}
 
-#endif
+#endif // LIBSAKUSEN_CLIENT__PLAYER_H
 

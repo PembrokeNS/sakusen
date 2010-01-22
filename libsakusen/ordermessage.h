@@ -1,5 +1,5 @@
-#ifndef ORDERMESSAGE_H
-#define ORDERMESSAGE_H
+#ifndef LIBSAKUSEN__ORDERMESSAGE_H
+#define LIBSAKUSEN__ORDERMESSAGE_H
 
 #include "libsakusen-global.h"
 
@@ -30,5 +30,5 @@ class LIBSAKUSEN_API OrderMessage {
 
 }
 
-#endif // ORDERMESSAGE_H
+#endif // LIBSAKUSEN__ORDERMESSAGE_H
 

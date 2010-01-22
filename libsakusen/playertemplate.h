@@ -1,5 +1,5 @@
-#ifndef PLAYERTEMPLATE_H
-#define PLAYERTEMPLATE_H
+#ifndef LIBSAKUSEN__PLAYERTEMPLATE_H
+#define LIBSAKUSEN__PLAYERTEMPLATE_H
 
 #include <vector>
 
@@ -55,5 +55,5 @@ class LIBSAKUSEN_API PlayerTemplate {
 
 }
 
-#endif // PLAYERTEMPLATE_H
+#endif // LIBSAKUSEN__PLAYERTEMPLATE_H
 

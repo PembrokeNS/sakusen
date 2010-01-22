@@ -1,5 +1,5 @@
-#ifndef UDPLISTENINGSOCKET_H
-#define UDPLISTENINGSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__UDPLISTENINGSOCKET_H
+#define LIBSAKUSEN_COMMS__UDPLISTENINGSOCKET_H
 
 #include "udpsocket.h"
 
@@ -17,5 +17,5 @@ class UDPListeningSocket : public UDPSocket {
 
 }}
 
-#endif // UDPLISTENINGSOCKET_H
+#endif // LIBSAKUSEN_COMMS__UDPLISTENINGSOCKET_H
 

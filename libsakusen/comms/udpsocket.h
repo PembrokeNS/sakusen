@@ -1,5 +1,5 @@
-#ifndef UDPSOCKET_H
-#define UDPSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__UDPSOCKET_H
+#define LIBSAKUSEN_COMMS__UDPSOCKET_H
 
 #include "libsakusen-comms-global.h"
 #include "ipsocket.h"
@@ -33,4 +33,4 @@ class UDPSocket : public IPSocket {
 
 }}
 
-#endif // UDPSOCKET_H
+#endif // LIBSAKUSEN_COMMS__UDPSOCKET_H

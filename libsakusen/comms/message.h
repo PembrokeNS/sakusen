@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef LIBSAKUSEN_COMMS__MESSAGE_H
+#define LIBSAKUSEN_COMMS__MESSAGE_H
 
 #include "libsakusen-global.h"
 #include "messagedata.h"
@@ -47,23 +47,23 @@ class LIBSAKUSEN_COMMS_API Message {
     inline const Buffer& getBuffer(void) const {
       return data->getBuffer();
     }
-#define GETDATA(type) \
+#define SAKUSEN_COMMS_MESSAGE_GETDATA(type) \
     inline type##MessageData get##type##Data(void) const { \
       return dynamic_cast<const type##MessageData&>(*data); \
     }
-    GETDATA(Join)
-    GETDATA(Accept)
-    GETDATA(Reject)
-    GETDATA(Kick)
-    GETDATA(Leave)
-    GETDATA(GetSetting)
-    GETDATA(ChangeSetting)
-    GETDATA(NotifySetting)
-    GETDATA(GameStart)
-    GETDATA(Order)
-    GETDATA(Update)
-    GETDATA(Extension)
-#undef GETDATA
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Join)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Accept)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Reject)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Kick)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Leave)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(GetSetting)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(ChangeSetting)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(NotifySetting)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(GameStart)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Order)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Update)
+    SAKUSEN_COMMS_MESSAGE_GETDATA(Extension)
+#undef SAKUSEN_COMMS_MESSAGE_GETDATA
 
     void store(OArchive&) const;
     static Message load(IArchive&);
@@ -71,5 +71,5 @@ class LIBSAKUSEN_COMMS_API Message {
 
 }}
 
-#endif // MESSAGE_H
+#endif // LIBSAKUSEN_COMMS__MESSAGE_H
 

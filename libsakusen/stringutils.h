@@ -1,5 +1,5 @@
-#ifndef STRINGUTILS_H
-#define STRINGUTILS_H
+#ifndef LIBSAKUSEN__STRINGUTILS_H
+#define LIBSAKUSEN__STRINGUTILS_H
 
 #include "libsakusen-global.h"
 
@@ -118,5 +118,5 @@ String LIBSAKUSEN_API stringUtils_getSecureHashAsString(const uint8* buffer, siz
 
 }
 
-#endif // STRINGUTILS_H
+#endif // LIBSAKUSEN__STRINGUTILS_H
 

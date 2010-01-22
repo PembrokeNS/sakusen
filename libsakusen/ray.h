@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef LIBSAKUSEN__RAY_H
+#define LIBSAKUSEN__RAY_H
 
 #include "libsakusen-global.h"
 
@@ -63,5 +63,5 @@ class LIBSAKUSEN_API Ray {
 
 }
 
-#endif
+#endif // LIBSAKUSEN__RAY_H
 

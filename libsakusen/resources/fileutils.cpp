@@ -10,16 +10,6 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-//Purely to maintain compatibility with Boost 1.35.
-//This should be removed once that is no longer required. 
-#include <boost/version.hpp>
-
-#if (BOOST_VERSION == 103500) 
-   #define BOOST_FILENAME leaf
-#else
-   #define BOOST_FILENAME filename
-#endif
-
 using namespace std;
 
 using namespace sakusen;
@@ -27,6 +17,12 @@ using namespace sakusen::comms;
 
 namespace sakusen {
 namespace resources {
+
+#ifdef _MSC_VER
+int fileUtils_fileno(FILE* s) { return _fileno(s); }
+#else
+int fileUtils_fileno(FILE* s) { return fileno(s); }
+#endif
 
 /** \brief Make a directory, creating parent directories as necessary.
  *
@@ -56,7 +52,7 @@ list<boost::filesystem::path> fileUtils_findMatches(
   for (boost::filesystem::directory_iterator
       item = boost::filesystem::directory_iterator(directory);
       item != boost::filesystem::directory_iterator(); ++item) {
-    if (boost::algorithm::starts_with(item->BOOST_FILENAME(), name)) {
+    if (boost::algorithm::starts_with(item->filename(), name)) {
       result.push_back(*item);
     }
   }

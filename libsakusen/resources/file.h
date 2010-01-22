@@ -1,5 +1,5 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef LIBSAKUSEN_RESOURCES__FILE_H
+#define LIBSAKUSEN_RESOURCES__FILE_H
 
 #include "libsakusen-global.h"
 
@@ -62,5 +62,5 @@ class File : private boost::noncopyable {
 
 }}
 
-#endif // FILE_H
+#endif // LIBSAKUSEN_RESOURCES__FILE_H
 

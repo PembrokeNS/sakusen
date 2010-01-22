@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef FUSEKI__SERVER_H
+#define FUSEKI__SERVER_H
 
 #include "fuseki-global.h"
 
@@ -176,5 +176,5 @@ class Server : public SettingsUser, private boost::noncopyable {
 
 }
 
-#endif // SERVER_H
+#endif // FUSEKI__SERVER_H
 

@@ -1,5 +1,5 @@
-#ifndef SPHEREREGION_H
-#define SPHEREREGION_H
+#ifndef LIBSAKUSEN__SPHEREREGION_H
+#define LIBSAKUSEN__SPHEREREGION_H
 
 #include "libsakusen-global.h"
 #include "region.h"
@@ -165,5 +165,5 @@ template LIBSAKUSEN_API SphereRegion<sint32>;
 
 }
 
-#endif // SPHEREREGION_H
+#endif // LIBSAKUSEN__SPHEREREGION_H
 

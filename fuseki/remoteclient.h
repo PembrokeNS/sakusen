@@ -1,5 +1,5 @@
-#ifndef REMOTECLIENT_H
-#define REMOTECLIENT_H
+#ifndef FUSEKI__REMOTECLIENT_H
+#define FUSEKI__REMOTECLIENT_H
 
 #include <list>
 
@@ -117,5 +117,5 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
 
 }
 
-#endif // REMOTECLIENT_H
+#endif // FUSEKI__REMOTECLIENT_H
 

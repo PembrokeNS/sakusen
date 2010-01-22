@@ -1,5 +1,5 @@
-#ifndef UI__DUMMYREGION_H
-#define UI__DUMMYREGION_H
+#ifndef TEDOMARI__UI__DUMMYREGION_H
+#define TEDOMARI__UI__DUMMYREGION_H
 
 namespace tedomari {
 namespace ui {
@@ -47,5 +47,5 @@ class DummyRegion : public Region {
 
 }}
 
-#endif // UI__DUMMYREGION_H
+#endif // TEDOMARI__UI__DUMMYREGION_H
 

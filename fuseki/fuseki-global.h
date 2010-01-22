@@ -4,10 +4,10 @@
 #include "libsakusen-comms-global.h"
 #include "gnu_extensions.h"
 
-#define APPLICATION_NAME "fuseki"
-#define APPLICATION_VERSION "0.1"
+#define FUSEKI_APPLICATION_NAME "fuseki"
+#define FUSEKI_APPLICATION_VERSION "0.1"
 
-#define DEFAULT_GAME_SPEED 20000
+#define FUSEKI_DEFAULT_GAME_SPEED 20000
 
 namespace fuseki {
 

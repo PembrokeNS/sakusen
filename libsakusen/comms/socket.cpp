@@ -30,7 +30,7 @@ Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address)
   SAKUSEN_THROW_SPEC (SocketExn)
 {
   list<String> addressComponents =
-    stringUtils_split<list<String> >(address, ADDR_DELIM);
+    stringUtils_split<list<String> >(address, SAKUSEN_COMMS_ADDR_DELIM);
   if (addressComponents.empty()) {
     return Ptr();
   }
@@ -55,7 +55,7 @@ Socket::Ptr Socket::newConnectionToAddress(const sakusen::String& address)
 Socket::Ptr Socket::newBindingToAddress(const sakusen::String& address)
 {
   list<String> addressComponents =
-    stringUtils_split<list<String> >(address, ADDR_DELIM);
+    stringUtils_split<list<String> >(address, SAKUSEN_COMMS_ADDR_DELIM);
   if (addressComponents.empty()) {
     return Ptr();
   }

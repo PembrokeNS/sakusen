@@ -1,5 +1,5 @@
-#ifndef UI__FUNCTION_H
-#define UI__FUNCTION_H
+#ifndef TEDOMARI__UI__FUNCTION_H
+#define TEDOMARI__UI__FUNCTION_H
 
 #include "tedomari-global.h"
 
@@ -32,5 +32,5 @@ class Function {
 
 }}
 
-#endif // FUNCTION_H
+#endif // TEDOMARI__UI__FUNCTION_H
 

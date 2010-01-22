@@ -1,5 +1,5 @@
-#ifndef UNIVERSE_H
-#define UNIVERSE_H
+#ifndef LIBSAKUSEN__UNIVERSE_H
+#define LIBSAKUSEN__UNIVERSE_H
 
 #include "libsakusen-global.h"
 
@@ -130,5 +130,5 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
 
 }
 
-#endif // UNIVERSE_H
+#endif // LIBSAKUSEN__UNIVERSE_H
 

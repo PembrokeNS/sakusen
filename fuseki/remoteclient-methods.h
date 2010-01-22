@@ -1,5 +1,5 @@
-#ifndef REMOTECLIENT_METHODS_H
-#define REMOTECLIENT_METHODS_H
+#ifndef FUSEKI__REMOTECLIENT_METHODS_H
+#define FUSEKI__REMOTECLIENT_METHODS_H
 
 #include "remoteclient.h"
 #include "server.h"
@@ -111,8 +111,7 @@ String RemoteClient::performMagic(
 
 #ifdef _MSC_VER
 #pragma warning (default:4101)
-#endif //This is about unreferenced local variables. 
-//Called on e, below. Spurious, because the constructor to e does all the work.
+#endif // Reset warning disabled above
 
-#endif // REMOTECLIENT_METHODS_H
+#endif // FUSEKI__REMOTECLIENT_METHODS_H
 

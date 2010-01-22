@@ -1,5 +1,5 @@
-#ifndef MAPTEMPLATE_H
-#define MAPTEMPLATE_H
+#ifndef LIBSAKUSEN__MAPTEMPLATE_H
+#define LIBSAKUSEN__MAPTEMPLATE_H
 
 #include "libsakusen-global.h"
 #include "universe.h"
@@ -75,5 +75,5 @@ class LIBSAKUSEN_API MapTemplate {
 
 }
 
-#endif
+#endif // LIBSAKUSEN__MAPTEMPLATE_H
 

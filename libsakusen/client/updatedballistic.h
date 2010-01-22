@@ -1,5 +1,5 @@
-#ifndef UPDATEDBALLISTIC_H
-#define UPDATEDBALLISTIC_H
+#ifndef LIBSAKUSEN_CLIENT__UPDATEDBALLISTIC_H
+#define LIBSAKUSEN_CLIENT__UPDATEDBALLISTIC_H
 
 namespace sakusen {
 namespace client {
@@ -50,5 +50,5 @@ struct UpdatedBallisticIder {
 
 }}
 
-#endif // UPDATEDBALLISTIC_H
+#endif // LIBSAKUSEN_CLIENT__UPDATEDBALLISTIC_H
 

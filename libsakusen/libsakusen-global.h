@@ -135,12 +135,12 @@
   #define SAKUSEN_STATIC_ASSERT(a) BOOST_STATIC_ASSERT(a)
 #endif
 
-/* CONFIG_SUBDIR is the subdirectory of the users home directory where general
- * sakusen stuff happens. */
+/* SAKUSEN_CONFIG_SUBDIR is the subdirectory of the users home directory where
+ * general sakusen stuff happens. */
 #ifdef WIN32
-  #define CONFIG_SUBDIR "sakusen"
+  #define SAKUSEN_CONFIG_SUBDIR "sakusen"
 #else
-  #define CONFIG_SUBDIR ".sakusen"
+  #define SAKUSEN_CONFIG_SUBDIR ".sakusen"
 #endif
 
 #ifndef SAKUSEN_THROW_SPEC
@@ -177,7 +177,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
     } while(false)
 //#else
 //  #define SAKUSEN_DEBUG(msg)
-//  #define QDebug(msg)
+//  #define SAKUSEN_QDEBUG(msg)
 //#endif
 
 #define SAKUSEN_FATAL(msg) \

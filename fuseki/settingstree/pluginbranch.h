@@ -1,5 +1,5 @@
-#ifndef PLUGINBRANCH_H
-#define PLUGINBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__PLUGINBRANCH_H
+#define FUSEKI__SETTINGSTREE__PLUGINBRANCH_H
 
 #include <boost/call_traits.hpp>
 
@@ -34,5 +34,5 @@ class PluginBranch : public Branch {
 
 }}
 
-#endif // PLUGINBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__PLUGINBRANCH_H
 

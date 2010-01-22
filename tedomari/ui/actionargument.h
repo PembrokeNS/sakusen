@@ -1,5 +1,5 @@
-#ifndef UI__ACTIONARGUMET_H
-#define UI__ACTIONARGUMET_H
+#ifndef TEDOMARI__UI__ACTIONARGUMET_H
+#define TEDOMARI__UI__ACTIONARGUMET_H
 
 #include "tedomari-global.h"
 
@@ -39,5 +39,5 @@ enum ActionParameterType {
 
 }}
 
-#endif // UI__ACTIONARGUMET_H
+#endif // TEDOMARI__UI__ACTIONARGUMET_H
 

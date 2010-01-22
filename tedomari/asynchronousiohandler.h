@@ -1,5 +1,5 @@
-#ifndef ASYNCHRONOUSIOHANDLER_H
-#define ASYNCHRONOUSIOHANDLER_H
+#ifndef TEDOMARI__ASYNCHRONOUSIOHANDLER_H
+#define TEDOMARI__ASYNCHRONOUSIOHANDLER_H
 
 #include <cstdio>
 #include <iosfwd>
@@ -99,5 +99,5 @@ class AsynchronousIOHandler : private boost::noncopyable {
 
 }
 
-#endif // ASYNCHRONOUSIOHANDLER_H
+#endif // TEDOMARI__ASYNCHRONOUSIOHANDLER_H
 

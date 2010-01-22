@@ -1,5 +1,5 @@
-#ifndef ANGLE_H
-#define ANGLE_H
+#ifndef LIBSAKUSEN__ANGLE_H
+#define LIBSAKUSEN__ANGLE_H
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -15,5 +15,5 @@ typedef Point<sint32> AngularVelocity;
 
 }
 
-#endif // ANGLE_H
+#endif // LIBSAKUSEN__ANGLE_H
 

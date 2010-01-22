@@ -1,5 +1,5 @@
-#ifndef UI__ALERTDISPLAY_H
-#define UI__ALERTDISPLAY_H
+#ifndef TEDOMARI__UI__ALERTDISPLAY_H
+#define TEDOMARI__UI__ALERTDISPLAY_H
 
 #include <boost/scoped_ptr.hpp>
 
@@ -42,5 +42,5 @@ class AlertDisplay : public Control {
 
 }}
 
-#endif // UI__ALERTDISPLAY_H
+#endif // TEDOMARI__UI__ALERTDISPLAY_H
 

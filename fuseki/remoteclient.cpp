@@ -98,9 +98,10 @@ void RemoteClient::setPlayerId(PlayerId id, bool removeGroup)
 
 void RemoteClient::flushIncoming()
 {
-  uint8 buf[BUFFER_LEN];
+  uint8 buf[SAKUSEN_COMMS_BUFFER_LEN];
   size_t messageLength;
-  while (0 != (messageLength = inSocket->receive(buf, BUFFER_LEN))) {
+  while (0 !=
+      (messageLength = inSocket->receive(buf, SAKUSEN_COMMS_BUFFER_LEN))) {
     IArchive archive(buf, messageLength);
     Message message(archive, getPlayerId());
     if (message.isRealMessage()) {

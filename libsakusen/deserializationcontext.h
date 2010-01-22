@@ -1,5 +1,5 @@
-#ifndef DESERIALIZATIONCONTEXT_H
-#define DESERIALIZATIONCONTEXT_H
+#ifndef LIBSAKUSEN__DESERIALIZATIONCONTEXT_H
+#define LIBSAKUSEN__DESERIALIZATIONCONTEXT_H
 
 #include "resourceinterface.h"
 #include "playerid.h"
@@ -64,5 +64,5 @@ class LIBSAKUSEN_API DeserializationContext {
 
 }
 
-#endif // DESERIALIZATIONCONTEXT_H
+#endif // LIBSAKUSEN__DESERIALIZATIONCONTEXT_H
 

@@ -1,5 +1,5 @@
-#ifndef UNITSTATUS_METHODS_H
-#define UNITSTATUS_METHODS_H
+#ifndef LIBSAKUSEN__UNITSTATUS_METHODS_H
+#define LIBSAKUSEN__UNITSTATUS_METHODS_H
 
 #include "unitstatus.h"
 
@@ -13,5 +13,5 @@ inline const UnitType* UnitStatus::getTypePtr(void) const {
 
 }
 
-#endif // UNITSTATUS_METHODS_H
+#endif // LIBSAKUSEN__UNITSTATUS_METHODS_H
 

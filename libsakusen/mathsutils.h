@@ -1,5 +1,5 @@
-#ifndef MATHSUTILS_H
-#define MATHSUTILS_H
+#ifndef LIBSAKUSEN__MATHSUTILS_H
+#define LIBSAKUSEN__MATHSUTILS_H
 
 #include "libsakusen-global.h"
 
@@ -28,5 +28,5 @@ inline LIBSAKUSEN_API T mathsUtils_divideRoundUp(T const n, T const d)
 
 }
 
-#endif // MATHSUTILS_H
+#endif // LIBSAKUSEN__MATHSUTILS_H
 

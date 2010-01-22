@@ -1,5 +1,5 @@
-#ifndef PNGIMAGE_H
-#define PNGIMAGE_H
+#ifndef LIBSAKUSEN_RESOURCES__PNGIMAGE_H
+#define LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 
 #include "libsakusen-resources-global.h"
 
@@ -25,5 +25,5 @@ class LIBSAKUSEN_RESOURCES_API PngImage : public Image {
 
 }}
 
-#endif // PNGIMAGE_H
+#endif // LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 

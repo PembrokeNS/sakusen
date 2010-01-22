@@ -38,7 +38,8 @@ int main(/*int argc, char** argv*/)
       boost::filesystem::portable_posix_name
     );
   boost::filesystem::path homePath = fileUtils_getHome();
-  boost::filesystem::path dataDir = homePath / CONFIG_SUBDIR / DATA_SUBDIR;
+  boost::filesystem::path dataDir =
+    homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path testDir = dataDir / "test";
   fileUtils_mkdirRecursive(dataDir);
   boost::filesystem::path dotDot("..");

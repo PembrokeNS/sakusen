@@ -28,7 +28,9 @@ TCPConnectingSocket::TCPConnectingSocket(
   memcpy(&addr.sin_addr.s_addr, endpoint->h_addr, endpoint->h_length);
   addr.sin_port = htons(port);
   if (-1 == connect(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr))) {
-    throw SocketExn("Error connecting TCP socket: "+errorUtils_errorMessage(socket_errno));
+    throw SocketExn(
+        "Error connecting TCP socket: "+errorUtils_errorMessage(socketErrno())
+      );
   }
 }
 

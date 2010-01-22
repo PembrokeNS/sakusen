@@ -1,5 +1,5 @@
-#ifndef SENSORRETURNS_H
-#define SENSORRETURNS_H
+#ifndef LIBSAKUSEN__SENSORRETURNS_H
+#define LIBSAKUSEN__SENSORRETURNS_H
 
 #include <list>
 
@@ -114,5 +114,5 @@ struct SensorReturnsIder {
 
 }
 
-#endif // SENSORRETURNS_H
+#endif // LIBSAKUSEN__SENSORRETURNS_H
 

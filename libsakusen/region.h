@@ -1,5 +1,5 @@
-#ifndef REGION_H
-#define REGION_H
+#ifndef LIBSAKUSEN__REGION_H
+#define LIBSAKUSEN__REGION_H
 
 #include "regiontype.h"
 #include "point.h"
@@ -133,5 +133,5 @@ class LIBSAKUSEN_API Region : public Bounded {
 
 }
 
-#endif // REGION_H
+#endif // LIBSAKUSEN__REGION_H
 

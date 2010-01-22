@@ -1,5 +1,5 @@
-#ifndef RESOURCETYPE_H
-#define RESOURCETYPE_H
+#ifndef LIBSAKUSEN__RESOURCETYPE_H
+#define LIBSAKUSEN__RESOURCETYPE_H
 
 #include "libsakusen-global.h"
 
@@ -22,5 +22,5 @@ LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceType resou
 
 }
 
-#endif // RESOURCETYPE_H
+#endif // LIBSAKUSEN__RESOURCETYPE_H
 

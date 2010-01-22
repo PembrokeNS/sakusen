@@ -1,5 +1,5 @@
-#ifndef UPDATEDUNIT_H
-#define UPDATEDUNIT_H
+#ifndef LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
+#define LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 
 #include "libsakusen-client-global.h"
 
@@ -61,5 +61,5 @@ struct UpdatedUnitIder {
 
 }}
 
-#endif // UPDATEDUNIT_H
+#endif // LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 

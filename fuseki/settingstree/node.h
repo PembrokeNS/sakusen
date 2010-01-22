@@ -1,5 +1,5 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef FUSEKI__SETTINGSTREE__NODE_H
+#define FUSEKI__SETTINGSTREE__NODE_H
 
 #include <list>
 #include <iosfwd>
@@ -90,5 +90,5 @@ class Node : private boost::noncopyable {
 
 }}
 
-#endif // NODE_H
+#endif // FUSEKI__SETTINGSTREE__NODE_H
 

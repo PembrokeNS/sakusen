@@ -1,5 +1,5 @@
-#ifndef SERVERINTERFACE_H
-#define SERVERINTERFACE_H
+#ifndef TEDOMARI__SERVERINTERFACE_H
+#define TEDOMARI__SERVERINTERFACE_H
 
 #include "libsakusen-comms-global.h"
 #include "tedomari-global.h"
@@ -82,5 +82,5 @@ class ServerInterface {
 
 }
 
-#endif // SERVERINTERFACE_H
+#endif // TEDOMARI__SERVERINTERFACE_H
 

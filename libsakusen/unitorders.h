@@ -1,5 +1,5 @@
-#ifndef UNITORDERS_H
-#define UNITORDERS_H
+#ifndef LIBSAKUSEN__UNITORDERS_H
+#define LIBSAKUSEN__UNITORDERS_H
 
 #include "libsakusen-global.h"
 
@@ -83,5 +83,5 @@ class LIBSAKUSEN_API UnitOrders {
 
 }
 
-#endif // UNITORDERS_H
+#endif // LIBSAKUSEN__UNITORDERS_H
 

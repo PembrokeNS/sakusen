@@ -1,5 +1,5 @@
-#ifndef UPDATETYPE_H
-#define UPDATETYPE_H
+#ifndef LIBSAKUSEN__UPDATETYPE_H
+#define LIBSAKUSEN__UPDATETYPE_H
 
 #include "libsakusen-global.h"
 
@@ -62,5 +62,5 @@ LIBSAKUSEN_API std::ostream& operator<<(
 
 }
 
-#endif // UPDATETYPE_H
+#endif // LIBSAKUSEN__UPDATETYPE_H
 

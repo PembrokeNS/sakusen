@@ -1,5 +1,5 @@
-#ifndef SERVER_METHODS_H
-#define SERVER_METHODS_H
+#ifndef FUSEKI__SERVER_METHODS_H
+#define FUSEKI__SERVER_METHODS_H
 
 #include "server.h"
 
@@ -182,5 +182,5 @@ String Server::settingAlteringCallback(
 
 }
 
-#endif // SERVER_METHODS_H
+#endif // FUSEKI__SERVER_METHODS_H
 
