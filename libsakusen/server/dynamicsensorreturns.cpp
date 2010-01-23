@@ -162,11 +162,16 @@ void DynamicSensorReturns::update()
     MorphingPerlinVectorField<CompleteWorld::random_engine_type>&
       randomDisplacementField = world->getRandomDisplacementField();
     Position const actualPosition = sensee->getIStatus().getPosition();
+    /** We add randomness to the position.  The randomness has a standard
+     * deviation (in each coordinate axis) of up to 2^31 / 3, so we scale
+     * by bestRadius * 3 / 2^31 to make the standard deviation equal
+     * bestRadius.
+     *
+     * \bug The randomness should really be spherically symmetric.  It's not.
+     */
     Position const error(Point<sint64>(
         randomDisplacementField(world->getTimeNow(), actualPosition)
-      ) * bestRadius / (sint64(1)<<32));
-    /* \todo Add some randomness to the position of the centre of the region,
-     * otherwise it might as well just be a point */
+      ) * bestRadius * 3 / (sint64(1)<<31));
     region.reset(new SphereRegion<sint32>(
           actualPosition+error, bestRadius
         ));
