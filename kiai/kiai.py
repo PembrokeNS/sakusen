@@ -21,7 +21,7 @@ interestingthings = {} #the things we want user scripting to be able to interact
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
 	configpath=fileUtils_getHome()
-	configpath/=path(CONFIG_SUBDIR)
+	configpath/=path(SAKUSEN_CONFIG_SUBDIR)
 	configpath/=path(KIAI_SUBDIR)
 	configpath/=path(s+".py")
 	try:
@@ -37,8 +37,8 @@ a=kdeui.KApplication()
 Socket_socketsInit()
 
 d=fileUtils_getHome()
-d/=path(CONFIG_SUBDIR)
-d/=path(DATA_SUBDIR)
+d/=path(SAKUSEN_CONFIG_SUBDIR)
+d/=path(SAKUSEN_RESOURCES_SUBDIR)
 resourceinterface=FileResourceInterface_create(d,False)
 
 mainwindow = mainWindow(interestingthings)

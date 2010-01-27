@@ -25,10 +25,10 @@ class socketModel():
 		"""Creates a socket, and connects it to the given address"""
 		self.s = Socket_newConnectionToAddress(str(address))
 		self.s.setNonBlocking(True)
-		self.b = uint8(BUFFER_LEN) #try reusing our buffer
+		self.b = uint8(SAKUSEN_COMMS_BUFFER_LEN) #try reusing our buffer
 		self.game = False #whether there's a game in progress
 		self.sendd(JoinMessageData(""))
-		l = self.s.receiveTimeout(self.b, BUFFER_LEN, timeval(5, 0))
+		l = self.s.receiveTimeout(self.b, SAKUSEN_COMMS_BUFFER_LEN, timeval(5, 0))
 		if(l):
 			i=IArchive(self.b,l)
 			r = Message(i)
@@ -57,7 +57,7 @@ class socketModel():
 		self.s.send(Message(data))
 	def processm(self):
 		"""Receives a Message and processes it appropriately"""
-		l=self.s.receive(self.b,BUFFER_LEN)
+		l=self.s.receive(self.b,SAKUSEN_COMMS_BUFFER_LEN)
 		if(l):
 			i=IArchive(self.b,l)
 			if(self.game):
