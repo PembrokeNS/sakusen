@@ -1,5 +1,5 @@
-#ifndef UI__TEXBOX_H
-#define UI__TEXBOX_H
+#ifndef TEDOMARI__UI__TEXBOX_H
+#define TEDOMARI__UI__TEXBOX_H
 
 #include "ui/label.h"
 
@@ -33,5 +33,5 @@ class TextBox : public Label {
 
 }}
 
-#endif // UI__TEXBOX_H
+#endif // TEDOMARI__UI__TEXBOX_H
 

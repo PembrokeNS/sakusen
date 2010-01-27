@@ -1,5 +1,5 @@
-#ifndef DYNAMICSENSORRETURNS_H
-#define DYNAMICSENSORRETURNS_H
+#ifndef LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
+#define LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 
 #include "libsakusen-global.h"
 #include "hash_list.h"
@@ -74,5 +74,5 @@ typedef hash_list<DynamicSensorReturns, DynamicSensorReturns>::iterator
 
 }}
 
-#endif // DYNAMICSENSORRETURNS_H
+#endif // LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 

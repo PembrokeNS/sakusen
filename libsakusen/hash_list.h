@@ -1,5 +1,5 @@
-#ifndef HASH_LIST_H
-#define HASH_LIST_H
+#ifndef LIBSAKUSEN__HASH_LIST_H
+#define LIBSAKUSEN__HASH_LIST_H
 
 #include <list>
 #include <boost/variant.hpp>
@@ -652,5 +652,5 @@ inline hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
 
 }
 
-#endif // HASH_LIST_H
+#endif // LIBSAKUSEN__HASH_LIST_H
 

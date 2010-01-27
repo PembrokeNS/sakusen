@@ -67,7 +67,9 @@ void UI::newUniverse()
         "", // scriptFunction
         "", // playerDataFunction
         vector<WeaponType>(),
-        vector<UnitType>()
+        vector<UnitType>(),
+        10, // logMinSpatialNoiseScale
+        15  // logMaxSpatialNoiseScale
       ));
   /** \todo Set universe path */
   updateCurrentPage();
@@ -133,20 +135,20 @@ void UI::saveUniverse()
   storeCurrentPage();
 
   if (!universe) {
-    Debug("no universe");
+    SAKUSEN_DEBUG("no universe");
     /** \todo message box */
     return;
   }
 
   if (!universe->sanityCheck()) {
-    Debug("sanity check failed");
+    SAKUSEN_DEBUG("sanity check failed");
     /** \todo message box */
     return;
   }
 
   bool success = resourceInterface->save(universe, universePath);
   if (!success) {
-    Debug("save failed");
+    SAKUSEN_DEBUG("save failed");
     /** \todo message box */
   }
 }
@@ -176,17 +178,17 @@ void UI::storeCurrentPage()
 
 void UI::storeGeneralPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void UI::storeUnitTypesPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void UI::storeWeaponTypesPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void UI::updateCurrentPage()
@@ -214,17 +216,17 @@ void UI::updateCurrentPage()
 
 void UI::updateGeneralPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void UI::updateUnitTypesPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 void UI::updateWeaponTypesPage()
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 }

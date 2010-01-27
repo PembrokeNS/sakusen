@@ -1,5 +1,5 @@
-#ifndef UNITTYPEDATA_H
-#define UNITTYPEDATA_H
+#ifndef LIBSAKUSEN__UNITTYPEDATA_H
+#define LIBSAKUSEN__UNITTYPEDATA_H
 
 #include "iarchive.h"
 #include "oarchive.h"
@@ -63,5 +63,5 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
 
 }
 
-#endif // UNITTYPEDATA_H
+#endif // LIBSAKUSEN__UNITTYPEDATA_H
 

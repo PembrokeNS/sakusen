@@ -33,13 +33,13 @@ MapTemplate::MapTemplate(
    * We allow maps of zero area because they are actually useful in some
    * circumstances (e.g. a map which exists only for its briefing) */
   if (!(topRight >= bottomLeft)) {
-    Fatal("map has negative dimension");
+    SAKUSEN_FATAL("map has negative dimension");
   }
   
   for (std::vector<MapPlayMode>::iterator playMode = playModes.begin();
       playMode != playModes.end(); playMode++) {
     if (playMode->sanityCheck(universe, *this)) {
-      Fatal("MapPlayMode sanity check failed");
+      SAKUSEN_FATAL("MapPlayMode sanity check failed");
     }
   }
 }

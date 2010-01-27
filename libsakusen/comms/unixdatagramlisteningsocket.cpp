@@ -18,7 +18,7 @@ UnixDatagramListeningSocket::UnixDatagramListeningSocket(bool abstract) :
   if (-1 ==
       bind(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error binding socket");
+    SAKUSEN_FATAL("Error binding socket");
   }
 }
 
@@ -30,14 +30,14 @@ UnixDatagramListeningSocket::UnixDatagramListeningSocket(
   if (-1 ==
       bind(sockfd, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)))
   {
-    Fatal("Error binding socket: " << errorUtils_errorMessage(errno));
+    SAKUSEN_FATAL("Error binding socket: " << errorUtils_errorMessage(errno));
   }
 }
 
 UnixDatagramListeningSocket::~UnixDatagramListeningSocket()
 {
   if (!abstract && -1==unlink(path)) {
-    Fatal("Error " << errorUtils_parseErrno(errno) << " removing socket file");
+    SAKUSEN_FATAL("Error " << errorUtils_parseErrno(errno) << " removing socket file");
   }
 }
 

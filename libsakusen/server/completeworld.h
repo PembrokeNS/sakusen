@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 #define LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 
+#include <boost/random/mersenne_twister.hpp>
+
 #include "world.h"
 #include "hash_list.h"
 #include "player.h"
@@ -13,6 +15,7 @@
 #include "beam.h"
 #include "effect.h"
 #include "playerdata.h"
+#include "morphingperlinvectorfield.h"
 
 namespace sakusen {
 namespace server {
@@ -31,6 +34,8 @@ namespace server {
 class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
   /* noncopyable */
   public:
+    typedef boost::mt19937 random_engine_type;
+
     /** Constructor which the server is expected to use */
     CompleteWorld(
         const MapTemplate& map,
@@ -65,6 +70,10 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     std::vector<Script::Ptr> scripts;
 
     std::vector<Player> players;
+
+    random_engine_type random;
+
+    MorphingPerlinVectorField<random_engine_type> randomDisplacementField;
 
     void applyEffect(
         const Ref<Effect>&,
@@ -152,7 +161,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline FuseToken addFuse(Fuse::Ptr fuse, Time expiryTime) {
       FuseToken token = ++lastFuseToken;
       if (fuseMap.count(token) || removedFuses.count(token)) {
-        Fatal("FuseToken wraparound");
+        SAKUSEN_FATAL("FuseToken wraparound");
       }
       fuseQueue.push(FuseEntry(expiryTime, token));
       fuseMap[token] = fuse;
@@ -167,7 +176,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       u_map<FuseToken, Fuse::Ptr>::type::iterator fuseIt =
         fuseMap.find(token);
       if (fuseIt == fuseMap.end()) {
-        Fatal("Removing nonexistant Fuse");
+        SAKUSEN_FATAL("Removing nonexistant Fuse");
       }
       removedFuses.insert(token);
       fuseMap.erase(fuseIt);
@@ -181,6 +190,19 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       /* assert(id>=0); (Always true) */
       assert(id<players.size());
       return &players[id];
+    }
+
+    /** \brief Get the random number source.
+     *
+     * At present this is a mersenne twister, but that may change.  It may only
+     * be assumed to be a UniformRandomNumberGenerator (in the sense of
+     * Boost.Random). */
+    random_engine_type& getRandom() { return random; }
+
+    /** \brief The source of random displacements applied to sensor returns */
+    MorphingPerlinVectorField<random_engine_type>& getRandomDisplacementField()
+    {
+      return randomDisplacementField;
     }
 
     /* methods to perform game mechanics */

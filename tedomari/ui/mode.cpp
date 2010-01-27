@@ -78,7 +78,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
 void Mode::addBinding(const ModifiedKeyEvent& key, const std::list<String>& cmd)
 {
   if (bindings.count(key)) {
-    Debug("replacing existing binding");
+    SAKUSEN_DEBUG("replacing existing binding");
   }
   bindings[key] = cmd;
 }

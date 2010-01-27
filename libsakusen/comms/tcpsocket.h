@@ -1,5 +1,5 @@
-#ifndef TCPSOCKET_H
-#define TCPSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__TCPSOCKET_H
+#define LIBSAKUSEN_COMMS__TCPSOCKET_H
 
 #include "libsakusen-comms-global.h"
 #include "ipsocket.h"
@@ -34,4 +34,4 @@ class TCPSocket : public IPSocket {
 
 }}
 
-#endif // TCPSOCKET_H
+#endif // LIBSAKUSEN_COMMS__TCPSOCKET_H

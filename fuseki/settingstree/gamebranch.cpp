@@ -18,7 +18,8 @@ GameBranch::GameBranch(Branch* parent, Server* server) :
         new IntLeaf<uint8>("mapplaymode", "world", "admin", this, server)
       ));
   addChild(Node::Ptr(new IntLeaf<uint32>(
-          "speed", "world", "admin,playtime", this, server, DEFAULT_GAME_SPEED
+          "speed", "world", "admin,playtime", this, server,
+          FUSEKI_DEFAULT_GAME_SPEED
         )));
   addChild(Node::Ptr(
         new BoolLeaf("paused", "world", "admin,playtime", this, server, false)

@@ -15,7 +15,7 @@ UnitMotion* UnitMotion::create(const String& type)
   } else if (type == "fixed") {
     return new FixedMotion();
   } else {
-    Fatal("unexpected UnitMotion type");
+    SAKUSEN_FATAL("unexpected UnitMotion type");
   }
 }
 

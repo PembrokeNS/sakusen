@@ -1,5 +1,5 @@
-#ifndef UI__LAYOUT_H
-#define UI__LAYOUT_H
+#ifndef TEDOMARI__UI__LAYOUT_H
+#define TEDOMARI__UI__LAYOUT_H
 
 #include "tedomari-global.h"
 
@@ -47,5 +47,5 @@ class Layout {
 
 }}
 
-#endif // UI__LAYOUT_H
+#endif // TEDOMARI__UI__LAYOUT_H
 

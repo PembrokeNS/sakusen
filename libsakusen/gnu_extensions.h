@@ -1,5 +1,5 @@
-#ifndef GNU_EXTENSIONS_H
-#define GNU_EXTENSIONS_H
+#ifndef LIBSAKUSEN__GNU_EXTENSIONS_H
+#define LIBSAKUSEN__GNU_EXTENSIONS_H
 
 #include "libsakusen-global.h"
 #include <boost/functional/hash/hash.hpp>
@@ -13,6 +13,7 @@
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 #include <ext/functional>
+#include <ext/numeric>
 
 #define SAKUSEN_USE_UNORDERED_MAP
 
@@ -21,6 +22,7 @@
 #include <ext/hash_map>
 #include <ext/hash_set>
 #include <ext/functional>
+#include <ext/numeric>
 
 #endif // __GNUC__ > 4
 
@@ -39,22 +41,27 @@
 
 namespace sakusen {
 
+/** \bug Will need a variant of this for MSVC */
+template<typename T, typename Integer>
+inline T power(T c, Integer n) { return __gnu_cxx::power(c, n); }
+
 #ifdef SAKUSEN_USE_UNORDERED_MAP
 
 #ifdef _MSC_VER
-  #define UNORDERED_MAP_NAMESPACE boost
+  #define SAKUSEN_UNORDERED_MAP_NAMESPACE boost
 #else
-  #define UNORDERED_MAP_NAMESPACE std::tr1
+  #define SAKUSEN_UNORDERED_MAP_NAMESPACE std::tr1
 #endif
 
 template<typename TValue, typename THash = boost::hash<TValue> >
 struct u_set {
-  typedef UNORDERED_MAP_NAMESPACE::unordered_set<TValue, THash> type;
+  typedef SAKUSEN_UNORDERED_MAP_NAMESPACE::unordered_set<TValue, THash> type;
 };
 
 template<typename TKey, typename TValue, typename THash = boost::hash<TKey> >
 struct u_map {
-  typedef UNORDERED_MAP_NAMESPACE::unordered_map<TKey, TValue, THash> type;
+  typedef SAKUSEN_UNORDERED_MAP_NAMESPACE::unordered_map<TKey, TValue, THash>
+    type;
 };
 
 #else // SAKUSEN_USE_UNORDERED_MAP
@@ -73,5 +80,5 @@ struct u_map {
 
 }
 
-#endif // GNU_EXTENSIONS_H
+#endif // LIBSAKUSEN__GNU_EXTENSIONS_H
 

@@ -64,7 +64,7 @@ class StopAction : public Action {
     set<UnitId> movers;
 
     void internalSupplyArgument(const ActionArgument& /*arg*/) {
-      Fatal("shouldn't call");
+      SAKUSEN_FATAL("shouldn't call");
     }
 
     void internalExecute(UI* ui) {
@@ -110,7 +110,7 @@ class NumberAction : public Action {
           }
           break;
         default:
-          Fatal("unexpected parameter type");
+          SAKUSEN_FATAL("unexpected parameter type");
       }
     }
 
@@ -187,7 +187,7 @@ class AttackVisitor : public boost::static_visitor<void> {
 
   void operator()(const Point<sint32>& target);
   void operator()(boost::blank) {
-    Fatal("invalid target");
+    SAKUSEN_FATAL("invalid target");
   }
 };
 
@@ -282,7 +282,7 @@ class CreateAction : public Action {
           }
           break;
         default:
-          Fatal("unexpected parameter type");
+          SAKUSEN_FATAL("unexpected parameter type");
       }
     }
 

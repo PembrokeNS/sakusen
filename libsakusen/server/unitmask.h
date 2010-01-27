@@ -1,5 +1,5 @@
-#ifndef UNITMASK_H
-#define UNITMASK_H
+#ifndef LIBSAKUSEN_SERVER__UNITMASK_H
+#define LIBSAKUSEN_SERVER__UNITMASK_H
 
 #include "unitlayer.h"
 #include "unitcore.h"
@@ -97,5 +97,5 @@ class UnitMask : public UnitLayer {
 
 }}
 
-#endif // UNITMASK_H
+#endif // LIBSAKUSEN_SERVER__UNITMASK_H
 

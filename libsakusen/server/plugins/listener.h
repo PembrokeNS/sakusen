@@ -1,5 +1,5 @@
-#ifndef LISTENER_H
-#define LISTENER_H
+#ifndef LIBSAKUSEN_SERVER_PLUGINS__LISTENER_H
+#define LIBSAKUSEN_SERVER_PLUGINS__LISTENER_H
 
 #include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
@@ -55,5 +55,5 @@ class Listener {
 
 }}}
 
-#endif // LISTENER_H
+#endif // LIBSAKUSEN_SERVER_PLUGINS__LISTENER_H
 

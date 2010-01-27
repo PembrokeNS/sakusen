@@ -52,21 +52,21 @@ AsynchronousIOHandler::AsynchronousIOHandler(
   if (hStdin == INVALID_HANDLE_VALUE) 
   {
     /* No reason why this should stop the whole show. */
-    Fatal("Error getting console handle. Will try again later.");
+    SAKUSEN_FATAL("Error getting console handle. Will try again later.");
     return;
   }
 
   //Change the console mode to single-character. 
   if (! GetConsoleMode(hStdin, &fdwOldMode)) 
   {
-    Fatal("GetConsoleMode Console Error"); 
+    SAKUSEN_FATAL("GetConsoleMode Console Error");
     return;
   }
 
   fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT); 
   if (! SetConsoleMode(hStdin, fdwMode)) 
   {
-    Fatal("SetConsoleMode Console Error"); 
+    SAKUSEN_FATAL("SetConsoleMode Console Error");
     return;
   }
 #endif
@@ -89,7 +89,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     struct timeval localTimeout = timeout;
     switch(select(infd+1, &inSet, NULL, NULL, &localTimeout)) {
       case -1:
-        Fatal("select failed: " << errorUtils_parseErrno(socket_errno));
+        SAKUSEN_FATAL("select failed: " << errorUtils_parseErrno(socket_errno));
       case 0:
         /* Nothing further */
         return;
@@ -103,7 +103,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
             /* Append what we've read to the input buffer */
             inputBuffer.append(buf, bytesRead);
           } catch (FileIOExn&) {
-            Fatal("error reading input: " << errorUtils_errorMessage(errno));
+            SAKUSEN_FATAL("error reading input: " << errorUtils_errorMessage(errno));
           }
           /* Strip newline-delimited commands from the input buffer */
           String::iterator nl =
@@ -116,7 +116,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
         }
         break;
       default:
-        Fatal("Unexpected return value from select.");
+        SAKUSEN_FATAL("Unexpected return value from select.");
     }
   }
 #else
@@ -134,7 +134,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
       break;
     }      
     /* Append what we've read to the input buffer */
-    /*QDebug("[updateBuffer] got char " << chr);*/
+    /*SAKUSEN_QDEBUG("[updateBuffer] got char " << chr);*/
     /* If a backspace is pressed, we want to remove a character from the buffer 
      * and then move the cursor back one.*/
     switch(buf[0])
@@ -168,7 +168,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
   /* Strip newline-delimited commands from the input buffer */
   String::iterator nl = find_first_of(inputBuffer.begin(), inputBuffer.end(), newlines, newlines+2);
   while (nl != inputBuffer.end()){
-    /*QDebug("[updateBuffer] found command");*/
+    /*SAKUSEN_QDEBUG("[updateBuffer] found command");*/
     commandBuffer.push(String(inputBuffer.begin(), nl));
     inputBuffer.erase(inputBuffer.begin(), nl+1);
     nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
@@ -228,7 +228,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
   eof(false)
 {
   if (handler != NULL) {
-    Fatal("cannot install multiple AsynchronousIOHandlers");
+    SAKUSEN_FATAL("cannot install multiple AsynchronousIOHandlers");
   }
   handler = this;
   rl_callback_handler_install("> ", line_callback_handler);
@@ -236,11 +236,11 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     if (!boost::filesystem::is_directory(historyFile)) {
       if (0 == read_history(historyFile.native_file_string().c_str())) {
         if (0 == history_set_pos(history_length)) {
-          Debug("error setting history position");
+          SAKUSEN_DEBUG("error setting history position");
         }
         /** \todo set the value of lastLine appropriately */
       } else {
-        Debug("error reading history");
+        SAKUSEN_DEBUG("error reading history");
       }
     }
   }
@@ -252,10 +252,10 @@ AsynchronousIOHandler::~AsynchronousIOHandler()
     if (0 != history_truncate_file(
           historyFile.native_file_string().c_str(), historyLength
         )) {
-      Debug("error truncating history");
+      SAKUSEN_DEBUG("error truncating history");
     }
   } else {
-    Debug("error writing history");
+    SAKUSEN_DEBUG("error writing history");
   }
   rl_callback_handler_remove();
   handler = NULL;
@@ -270,7 +270,7 @@ void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout2)
   while(true) {
     switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
-        Fatal("select failed , errno=" << errno << " (" <<
+        SAKUSEN_FATAL("select failed , errno=" << errno << " (" <<
           errorUtils_parseErrno(errno) << ")");
       case 0:
         /* Nothing further */
@@ -280,7 +280,7 @@ void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout2)
         rl_callback_read_char();
         break;
       default:
-        Fatal("Unexpected return value from select.");
+        SAKUSEN_FATAL("Unexpected return value from select.");
     }
   }
 }

@@ -1,5 +1,5 @@
-#ifndef UNITLAYER_H
-#define UNITLAYER_H
+#ifndef LIBSAKUSEN_SERVER__UNITLAYER_H
+#define LIBSAKUSEN_SERVER__UNITLAYER_H
 
 #include "hitpointalteration.h"
 #include "playerid.h"
@@ -80,5 +80,5 @@ class UnitLayer : public IUnitTypeData, private boost::noncopyable {
 
 }}
 
-#endif // UNITLAYER_H
+#endif // LIBSAKUSEN_SERVER__UNITLAYER_H
 

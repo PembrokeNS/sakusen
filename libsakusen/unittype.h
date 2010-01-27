@@ -1,5 +1,5 @@
-#ifndef UNITTYPE_H
-#define UNITTYPE_H
+#ifndef LIBSAKUSEN__UNITTYPE_H
+#define LIBSAKUSEN__UNITTYPE_H
 
 #include "libsakusen-global.h"
 #include "weapontype.h"
@@ -84,4 +84,5 @@ class LIBSAKUSEN_API UnitType {
 
 }
 
-#endif
+#endif // LIBSAKUSEN__UNITTYPE_H
+

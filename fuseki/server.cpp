@@ -73,18 +73,18 @@ Server::Server(
   settings(new SettingsTree(this)),
   allowObservers(false),
   gameStarted(false),
-  gameSpeed(DEFAULT_GAME_SPEED)
+  gameSpeed(FUSEKI_DEFAULT_GAME_SPEED)
 {
   String reason;
   reason = settings->changeRequest(
       "server:application:name",
-      APPLICATION_NAME,
+      FUSEKI_APPLICATION_NAME,
       this
     );
   assert(reason == "");
   reason = settings->changeRequest(
       "server:application:version",
-      APPLICATION_VERSION,
+      FUSEKI_APPLICATION_VERSION,
       this
     );
   assert(reason == "");
@@ -403,7 +403,7 @@ void Server::changeInClientBranch(
       String("clients:") + client->getClientId().toString() +
         ":" + node, value, this
     )) {
-      Fatal("something has gone wrong with the settings tree");
+      SAKUSEN_FATAL("something has gone wrong with the settings tree");
   }
 }
 
@@ -466,10 +466,12 @@ void interruptHandler(int /*signal*/)
  * the server is interrupted */
 void Server::serve()
 {
-  uint8 buf[BUFFER_LEN];
-  struct timeval sleepTime = {0, MICRO/10};
+  uint8 buf[SAKUSEN_COMMS_BUFFER_LEN];
+  struct timeval sleepTime = {0, SAKUSEN_COMMS_TIMEUTILS_MICRO/10};
   /** \todo Get the TCP port number and game name to the publisher. */
-  gameToAdvertise.reset(new ServedGame("Game name", DEFAULT_PORT));
+  gameToAdvertise.reset(
+      new ServedGame("Game name", SAKUSEN_COMMS_DEFAULT_PORT)
+    );
   /** \bug signal is deprecated.  Use sigaction(2) instead */
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
@@ -497,8 +499,9 @@ void Server::serve()
     String receivedFrom;
 #ifndef DISABLE_UNIX_SOCKETS
     /* Look for join messages on the unix socket. */
-    if ((bytesReceived =
-          unixSocket->receiveFrom(buf, BUFFER_LEN, receivedFrom))) {
+    if ((bytesReceived = unixSocket->receiveFrom(
+            buf, SAKUSEN_COMMS_BUFFER_LEN, receivedFrom
+          ))) {
       IArchive messageArchive(buf, bytesReceived);
       Message message(messageArchive);
       if (message.isRealMessage()) {
@@ -535,7 +538,7 @@ void Server::serve()
         timeUtils_getTime(&timeout);
         /** \todo We use a straight five second timeout.  It should be
          * user-specifiable */
-        timeout += 5*MICRO;
+        timeout += 5*SAKUSEN_COMMS_TIMEUTILS_MICRO;
         newConnections.push_back(
             pair<Socket::Ptr, timeval>(newConnection, timeout)
           );
@@ -550,7 +553,7 @@ void Server::serve()
       for (list<pair<Socket::Ptr, timeval> >::iterator conn =
           newConnections.begin(); conn != newConnections.end(); ) {
         if ((bytesReceived =
-            conn->first->receive(buf, BUFFER_LEN))) {
+            conn->first->receive(buf, SAKUSEN_COMMS_BUFFER_LEN))) {
           IArchive messageArchive(buf, bytesReceived);
           Message message(messageArchive);
           if (message.isRealMessage()) {
@@ -811,7 +814,7 @@ void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
   } else if (Branch::Ptr b = boost::dynamic_pointer_cast<Branch>(altered)) {
     value = b->getChildNames();
   } else {
-    Fatal("unexpected node type");
+    SAKUSEN_FATAL("unexpected node type");
   }
   
   NotifySettingMessageData data(fullName, altered->isLeaf(), value);

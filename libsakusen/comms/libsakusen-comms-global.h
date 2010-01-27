@@ -3,6 +3,8 @@
 
 #include "libsakusen-global.h"
 
+#include <cerrno>
+
 #if defined(_MSC_VER)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
@@ -23,40 +25,44 @@
   #endif
 #endif
 
+namespace sakusen { namespace comms {
 #ifdef WIN32
-  #define socket_errno WSAGetLastError()
+  inline int socketErrno() { return WSAGetLastError(); }
 #else
-  #define socket_errno errno
+  inline int socketErrno() { return errno; }
 #endif
+}}
 
 /* The value 108 is used in sys/un.h, but not declared to anything.  The
  * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit */
-#define UNIX_PATH_MAX 108
+#define SAKUSEN_COMMS_UNIX_PATH_MAX 108
 
 /* NETWORK_PROTOCOL_VERSION is the version number of the sakusen network
  * protocol.  It must fit in a uint8.  It should remain at 0 until at least
  * v1.0 of some server and client exist.  If we hit version ~100, we should
  * think about expanding it to two bytes. */
-#define NETWORK_PROTOCOL_VERSION 0
+#define SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION 0
 
 /** BUFFER_LEN is the max length allowed for any sakusen message sent over the
- * wire */
-#define BUFFER_LEN 1000000
+ * wire.
+ *
+ * \bug This is surely unnecessary. */
+#define SAKUSEN_COMMS_BUFFER_LEN 1000000
 
 /** ADDR_DELIM is the delimiter for sakusen-style socket addresses */
-#define ADDR_DELIM "|"
+#define SAKUSEN_COMMS_ADDR_DELIM "|"
 
 /* SOCKET_SUBDIR is the subdirectory of CONFG_SUBDIR where servers are
  * expected to put their sockets */
-#define SOCKET_SUBDIR "servers"
+#define SAKUSEN_COMMS_SOCKET_SUBDIR "servers"
 
 /* SETTINGS_DELIMITER is the character used to split the names of nodes when
  * constructing full names of nodes in the settings tree */
-#define SETTINGS_DELIMITER ":"
+#define SAKUSEN_COMMS_SETTINGS_DELIMITER ":"
 
 /** DEFAULT_PORT is the port that sockets default to using if none is specified
  * */
-#define DEFAULT_PORT 1723
+#define SAKUSEN_COMMS_DEFAULT_PORT 1723
 
 #endif // LIBSAKUSEN_COMMS_GLOBAL_H
 

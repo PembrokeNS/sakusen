@@ -38,7 +38,7 @@ ServerInterface::ServerInterface(
   outgoingSocket(),
   universeName()
 {
-  /*Debug("unixSockets = " << unixSockets);*/
+  /*SAKUSEN_DEBUG("unixSockets = " << unixSockets);*/
   /** \todo Make timeout user-specifiable (currently 5 seconds) */
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
@@ -61,8 +61,8 @@ ServerInterface::~ServerInterface()
 void ServerInterface::initialSettingsSetup()
 {
   /** \todo deal with return values */
-  setClientSetting("application:name", APPLICATION_NAME);
-  setClientSetting("application:version", APPLICATION_VERSION);
+  setClientSetting("application:name", TEDOMARI_APPLICATION_NAME);
+  setClientSetting("application:version", TEDOMARI_APPLICATION_VERSION);
   setClientSetting("application:revision", REVISION);
 
   /* we request the universe name and hash so that our game can be set up
@@ -78,7 +78,7 @@ void ServerInterface::settingAlteration(
 {
   if (setting == ":game:universe:name") {
     /* Store the universe name for use when the hash arrives */
-    /*QDebug("storing universe name");*/
+    /*SAKUSEN_QDEBUG("storing universe name");*/
     assert(value.size() == 1);
     universeName = *value.begin();
   }
@@ -87,7 +87,7 @@ void ServerInterface::settingAlteration(
      * of a report that was in progress when we joined.  The hash *should*
      * arrive again after the name, so for now we wait */
     if (universeName.empty()) {
-      Debug("got universe hash without name");
+      SAKUSEN_DEBUG("got universe hash without name");
       return;
     }
     /* When the universe is set we need to let game know */
@@ -110,11 +110,12 @@ String ServerInterface::flushIncoming(
   assert(incomingSocket != NULL);
 
   size_t messageLength;
-  uint8 buf[BUFFER_LEN];
+  uint8 buf[SAKUSEN_COMMS_BUFFER_LEN];
   ostringstream out;
   
-  while (joined &&
-      0 != (messageLength = incomingSocket->receive(buf, BUFFER_LEN))) {
+  while (joined && 0 != (
+        messageLength = incomingSocket->receive(buf, SAKUSEN_COMMS_BUFFER_LEN)
+      )) {
     try {
       PlayerId playerId =
         ( NULL == client::world ?
@@ -198,7 +199,7 @@ String ServerInterface::flushIncoming(
 String ServerInterface::join()
 {
   if (joined) {
-    Fatal("attempted to join when already joined");
+    SAKUSEN_FATAL("attempted to join when already joined");
   }
   assert(!incomingSocket);
   assert(!outgoingSocket);
@@ -219,7 +220,7 @@ String ServerInterface::join()
        * from, and we need to be prepared to open a second socket only if the
        * server tells us to.
        */
-      /*Debug(
+      /*SAKUSEN_DEBUG(
           "creating new connection to " << joinAddress << " for join message"
         );*/
       incomingSocket = Socket::newConnectionToAddress(joinAddress);
@@ -242,11 +243,12 @@ String ServerInterface::join()
     return ret;
   }
   
-  uint8 buffer[BUFFER_LEN];
+  uint8 buffer[SAKUSEN_COMMS_BUFFER_LEN];
   size_t messageLength;
 
-  if (0 == (messageLength =
-        incomingSocket->receiveTimeout(buffer, BUFFER_LEN, timeout))) {
+  if (0 == (messageLength = incomingSocket->receiveTimeout(
+          buffer, SAKUSEN_COMMS_BUFFER_LEN, timeout
+        ))) {
     incomingSocket.reset();
     outgoingSocket.reset();
     return "Timed out while waiting for response to join request.\n";
@@ -295,7 +297,7 @@ String ServerInterface::join()
 bool ServerInterface::leave(bool sendMessage)
 {
   if (!joined) {
-    Fatal("attempted to leave when not joined");
+    SAKUSEN_FATAL("attempted to leave when not joined");
   }
   assert(incomingSocket != NULL);
   assert(outgoingSocket != NULL);
@@ -303,7 +305,7 @@ bool ServerInterface::leave(bool sendMessage)
     try {
       outgoingSocket->send(Message(new LeaveMessageData()));
     } catch (SocketExn& e) {
-      Debug("Error sending leave message: " << e.message);
+      SAKUSEN_DEBUG("Error sending leave message: " << e.message);
     }
   }
   game->stop();
@@ -353,7 +355,7 @@ bool ServerInterface::getClientSetting(
 {
   String delim;
   if (setting.length() != 0 && setting[0] != ':') {
-    delim = SETTINGS_DELIMITER;
+    delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
   
   return getSetting(
@@ -374,7 +376,7 @@ bool ServerInterface::setClientSetting(
 {
   String delim;
   if (setting.length() != 0 && setting[0] != ':') {
-    delim = SETTINGS_DELIMITER;
+    delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
   
   return setSetting(

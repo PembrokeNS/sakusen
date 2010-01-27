@@ -3,13 +3,13 @@
 #include "player.h"
 #include "layeredunit.h"
 #include "sphereregion.h"
+#include "completeworld.h"
 
 #include <stack>
 
 using namespace std;
 
-using namespace sakusen;
-using namespace sakusen::server;
+namespace sakusen { namespace server {
 
 DynamicSensorReturns::DynamicSensorReturns(
     SensorReturnsId i,
@@ -67,7 +67,7 @@ Ref<const ICompleteUnit> DynamicSensorReturns::getUnit() const
  */
 void DynamicSensorReturns::senseeDestroyed() {
   if (perception == perception_none) {
-    Fatal(
+    SAKUSEN_FATAL(
         "Tried to indicate destruction when SensorReturns shouldn't have "
         "existed"
       );
@@ -159,13 +159,26 @@ void DynamicSensorReturns::update()
      * could change every tick, and also we aren't informed by the unit
      * whenever its position changes, so that could have altered too. */
     dirty = true;
-    /* \todo Add some randomness to the position of the centre of the region,
-     * otherwise it might as well just be a point */
+    MorphingPerlinVectorField<CompleteWorld::random_engine_type>&
+      randomDisplacementField = world->getRandomDisplacementField();
+    Position const actualPosition = sensee->getIStatus().getPosition();
+    /** We add randomness to the position.  The randomness has a standard
+     * deviation (in each coordinate axis) of up to 2^31 / 3, so we scale
+     * by bestRadius * 3 / 2^31 to make the standard deviation equal
+     * bestRadius.
+     *
+     * \bug The randomness should really be spherically symmetric.  It's not.
+     */
+    Position const error(Point<sint64>(
+        randomDisplacementField(world->getTimeNow(), actualPosition)
+      ) * bestRadius * 3 / (sint64(1)<<31));
     region.reset(new SphereRegion<sint32>(
-          sensee->getIStatus().getPosition(), bestRadius
+          actualPosition+error, bestRadius
         ));
   } else {
     region.reset();
   }
 }
+
+}}
 

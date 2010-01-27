@@ -1,5 +1,5 @@
-#ifndef RESOURCE_INTERFACE_H
-#define RESOURCE_INTERFACE_H
+#ifndef LIBSAKUSEN__RESOURCE_INTERFACE_H
+#define LIBSAKUSEN__RESOURCE_INTERFACE_H
 
 #include "libsakusen-global.h"
 
@@ -145,5 +145,5 @@ class LIBSAKUSEN_API ResourceInterface {
 
 }
 
-#endif // RESOURCE_INTERFACE_H
+#endif // LIBSAKUSEN__RESOURCE_INTERFACE_H
 

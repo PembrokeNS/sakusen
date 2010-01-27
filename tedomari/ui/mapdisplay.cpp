@@ -49,7 +49,7 @@ void MapDisplay::redrawGround()
         g(pixel.x,pixel.y) = red;
       } else {
         sint32 z = heightfield.getApproxHeightAt(Point<sint32>(ddex));
-        //QDebug("height("<<dex.x<<", "<<dex.y<<")="<<height);
+        //SAKUSEN_QDEBUG("height("<<dex.x<<", "<<dex.y<<")="<<height);
         /** \bug A host of arbitrary constants. */
         /* crop */
         if (z >= (1<<16)) {
@@ -131,7 +131,7 @@ void MapDisplay::drawRegion(
       }
       return;
     default:
-      Fatal("not implemented");
+      SAKUSEN_FATAL("not implemented");
   }
 }
 
@@ -185,7 +185,7 @@ void MapDisplay::paint()
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_unit
         );
-    /*QDebug("drawing " << unitsToDraw.size() << " units");*/
+    /*SAKUSEN_QDEBUG("drawing " << unitsToDraw.size() << " units");*/
     for (ISpatial::Result::iterator unitIt = unitsToDraw.begin();
         unitIt != unitsToDraw.end(); ++unitIt) {
       Ref<UpdatedUnit> unit = unitIt->dynamicCast<UpdatedUnit>();
@@ -200,7 +200,7 @@ void MapDisplay::paint()
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_sensorReturns
         );
-    /*QDebug("drawing " << returnsToDraw.size() << " sensor returns");*/
+    /*SAKUSEN_QDEBUG("drawing " << returnsToDraw.size() << " sensor returns");*/
     for (ISpatial::Result::iterator retrnIt = returnsToDraw.begin();
         retrnIt != returnsToDraw.end(); ++retrnIt) {
       Ref<UpdatedSensorReturns> retrn =
@@ -210,7 +210,7 @@ void MapDisplay::paint()
       } else if (retrn->getPerception() & perception_region) {
         drawRegion(retrn->getRegion(), Colour::yellow);
       } else {
-        Fatal("Not implemented");
+        SAKUSEN_FATAL("Not implemented");
       }
     }
 
@@ -219,7 +219,7 @@ void MapDisplay::paint()
       sakusen::client::world->getSpatialIndex()->findIntersecting(
           displayRect, gameObject_ballistic
         );
-    /*QDebug("drawing " << ballisticsToDraw.size() << " ballistics");*/
+    /*SAKUSEN_QDEBUG("drawing " << ballisticsToDraw.size() << " ballistics");*/
     for (ISpatial::Result::iterator ballisticIt = ballisticsToDraw.begin();
         ballisticIt != ballisticsToDraw.end(); ++ballisticIt) {
       Ref<UpdatedBallistic> ballistic =
@@ -228,7 +228,7 @@ void MapDisplay::paint()
     }
     
     if (dragging) {
-      /*Debug("Drawing the selection rectangle");*/
+      /*SAKUSEN_DEBUG("Drawing the selection rectangle");*/
       /* Draw the selection rectangle as it stands */
       Rectangle<double> selection(dexToPixel(dragStart), mousePos);
       r->drawRect(selection, Colour::grey(0.5));
@@ -257,7 +257,7 @@ void MapDisplay::translate(const Point<sint32>& d)
     sakusen::world->getMap()->addToPosition(posOfDisplayZero, d);
   redrawGround();
   getRegion()->paint();
-  /*Debug("posOfDisplayZero=" << posOfDisplayZero);*/
+  /*SAKUSEN_DEBUG("posOfDisplayZero=" << posOfDisplayZero);*/
 }
 
 void MapDisplay::translate(sint32 dx, sint32 dy)
@@ -274,7 +274,7 @@ void MapDisplay::startDrag()
 Rectangle<sint32> MapDisplay::stopDrag()
 {
   if (!dragging) {
-    Debug("stopped dragging when wasn't dragging");
+    SAKUSEN_DEBUG("stopped dragging when wasn't dragging");
     return Rectangle<sint32>();
   }
 

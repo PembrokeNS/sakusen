@@ -1,5 +1,5 @@
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef FUSEKI__PLUGIN_H
+#define FUSEKI__PLUGIN_H
 
 #include "fuseki-global.h"
 
@@ -73,24 +73,24 @@ class Plugin :
     void registerListener(
         const sakusen::server::plugins::Listener::VPtr&
       ) const;
-#define REGISTER_OPTION(type)                           \
+#define FUSEKI_PLUGIN_REGISTER_OPTION(type)             \
     void registerOption(                                \
         const String& name,                             \
         sakusen::server::plugins::OptionCallback<type>* callback, \
         boost::call_traits<type>::param_type initialVal \
       ) const;
-    REGISTER_OPTION(String)
-    REGISTER_OPTION(std::set<String>)
-    REGISTER_OPTION(bool)
-    REGISTER_OPTION(sint8)
-    REGISTER_OPTION(sint16)
-    REGISTER_OPTION(sint32)
-    REGISTER_OPTION(sint64)
-    REGISTER_OPTION(uint8)
-    REGISTER_OPTION(uint16)
-    REGISTER_OPTION(uint32)
-    REGISTER_OPTION(uint64)
-#undef REGISTER_OPTION
+    FUSEKI_PLUGIN_REGISTER_OPTION(String)
+    FUSEKI_PLUGIN_REGISTER_OPTION(std::set<String>)
+    FUSEKI_PLUGIN_REGISTER_OPTION(bool)
+    FUSEKI_PLUGIN_REGISTER_OPTION(sint8)
+    FUSEKI_PLUGIN_REGISTER_OPTION(sint16)
+    FUSEKI_PLUGIN_REGISTER_OPTION(sint32)
+    FUSEKI_PLUGIN_REGISTER_OPTION(sint64)
+    FUSEKI_PLUGIN_REGISTER_OPTION(uint8)
+    FUSEKI_PLUGIN_REGISTER_OPTION(uint16)
+    FUSEKI_PLUGIN_REGISTER_OPTION(uint32)
+    FUSEKI_PLUGIN_REGISTER_OPTION(uint64)
+#undef FUSEKI_PLUGIN_REGISTER_OPTION
   public:
     /** \brief Returns the full internal name of the plugin */
     const String& getName() const { return name; }
@@ -119,5 +119,5 @@ class Plugin :
 
 }
 
-#endif // PLUGIN_H
+#endif // FUSEKI__PLUGIN_H
 

@@ -1,5 +1,5 @@
-#ifndef CONVERTER_H
-#define CONVERTER_H
+#ifndef TEDOMARI__CONVERTER_H
+#define TEDOMARI__CONVERTER_H
 
 #include "libsakusen-global.h"
 #include "tedomari-global.h"
@@ -44,5 +44,5 @@ class Converter : private boost::noncopyable {
 
 }
 
-#endif // CONVERTER_H
+#endif // TEDOMARI__CONVERTER_H
 

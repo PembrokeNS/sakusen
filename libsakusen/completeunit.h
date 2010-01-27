@@ -1,5 +1,5 @@
-#ifndef COMPLETEUNIT_H
-#define COMPLETEUNIT_H
+#ifndef LIBSAKUSEN__COMPLETEUNIT_H
+#define LIBSAKUSEN__COMPLETEUNIT_H
 
 #include "libsakusen-global.h"
 
@@ -54,5 +54,5 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
 
 }
 
-#endif // COMPLETEUNIT_H
+#endif // LIBSAKUSEN__COMPLETEUNIT_H
 

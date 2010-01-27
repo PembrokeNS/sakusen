@@ -100,7 +100,7 @@ String FileResourceInterface::getExtension(ResourceType type) const
     case resourceType_replayIndex:
       return ".sakusenreplayindex";
     default:
-      Fatal("Unexpected ResourceType: " << type);
+      SAKUSEN_FATAL("Unexpected ResourceType: " << type);
   }
 }
 
@@ -171,7 +171,7 @@ FileResourceInterface::internalSearch(
           ));
         break;
       default:
-        Fatal("unexpected ResourceType: " << type);
+        SAKUSEN_FATAL("unexpected ResourceType: " << type);
     }
   } catch (DeserializationExn& e) {
     error = String("exception: ") + e.message;
@@ -241,7 +241,7 @@ FileResourceInterface::internalSymbolSearch(
         error = "ambiguous source '"+moduleName+"'";
         break;
       default:
-        Fatal("unexpected enum value");
+        SAKUSEN_FATAL("unexpected enum value");
     }
     return boost::make_tuple<void*>(NULL, result);
   }
@@ -276,7 +276,7 @@ FileResourceInterface::internalSymbolSearch(
     return boost::make_tuple<void*>(NULL, result);
   }
   boost::filesystem::path modulePath = moduleResource.asPath();
-  /*Debug("modulePath='" << modulePath << "'");*/
+  /*SAKUSEN_DEBUG("modulePath='" << modulePath << "'");*/
 
 #ifdef __GNUC__
   /** \todo Maybe we should keep a record and not open the same module over and
@@ -290,7 +290,7 @@ FileResourceInterface::internalSymbolSearch(
   /* We could make the module resident (it cannot be closed) so as to avoid
    * segfault madness that would ensue if it was closed, as follows:
   if (lt_dlmakeresident(moduleHandle)) {
-    Fatal("lt_dlmakeresident() failed");
+    SAKUSEN_FATAL("lt_dlmakeresident() failed");
   }
    * However, that this causes libltdl to leak the memory used to store the
    * module name and such data, which bugs me, so I'm not doing that now. I
@@ -378,7 +378,7 @@ bool FileResourceInterface::internalSave(
         }
         break;
       default:
-        Fatal("unexpected ResourceType: " << type);
+        SAKUSEN_FATAL("unexpected ResourceType: " << type);
     }
 
     if (!filenameRegex.FullMatch(shortName)) {

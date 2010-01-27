@@ -1,5 +1,5 @@
-#ifndef SETTINGSTREE__TREETRAITS_H
-#define SETTINGSTREE__TREETRAITS_H
+#ifndef FUSEKI__SETTINGSTREE__TREETRAITS_H
+#define FUSEKI__SETTINGSTREE__TREETRAITS_H
 
 #include "settingstree/intleaf.h"
 #include "settingstree/stringleaf.h"
@@ -34,5 +34,5 @@ struct TreeTraits<bool> {
 
 }}
 
-#endif // SETTINGSTREE__TREETRAITS_H
+#endif // FUSEKI__SETTINGSTREE__TREETRAITS_H
 

@@ -1,5 +1,5 @@
-#ifndef TCPCONNECTINGSOCKET_H
-#define TCPCONNECTINGSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__TCPCONNECTINGSOCKET_H
+#define LIBSAKUSEN_COMMS__TCPCONNECTINGSOCKET_H
 
 #include "tcpsocket.h"
 
@@ -22,12 +22,12 @@ class TCPConnectingSocket : public TCPSocket {
 
     bool isConnectionBased() { return false; }
     Socket::Ptr accept() {
-      Fatal("Not connection-based socket");
+      SAKUSEN_FATAL("Not connection-based socket");
       return Socket::Ptr(); /* Return statement for the benefit of MSVC */
     }
 };
 
 }}
 
-#endif // TCPCONNECTINGSOCKET_H
+#endif // LIBSAKUSEN_COMMS__TCPCONNECTINGSOCKET_H
 

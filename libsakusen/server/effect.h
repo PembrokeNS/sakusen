@@ -1,5 +1,5 @@
-#ifndef EFFECT_H
-#define EFFECT_H
+#ifndef LIBSAKUSEN_SERVER__EFFECT_H
+#define LIBSAKUSEN_SERVER__EFFECT_H
 
 namespace sakusen {
 namespace server {
@@ -92,5 +92,5 @@ class Effect : public Bounded {
 
 }}
 
-#endif
+#endif // LIBSAKUSEN_SERVER__EFFECT_H
 

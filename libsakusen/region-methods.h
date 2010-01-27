@@ -1,5 +1,5 @@
-#ifndef REGION_METHODS_H
-#define REGION_METHODS_H
+#ifndef LIBSAKUSEN__REGION_METHODS_H
+#define LIBSAKUSEN__REGION_METHODS_H
 
 #include "region.h"
 #include "world.h"
@@ -54,5 +54,5 @@ template class LIBSAKUSEN_API Region<sint32>;
 
 }
 
-#endif // REGION_METHODS_H
+#endif // LIBSAKUSEN__REGION_METHODS_H
 

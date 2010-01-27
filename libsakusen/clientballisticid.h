@@ -1,5 +1,5 @@
-#ifndef CLIENTBALLISTICID_H
-#define CLIENTBALLISTICID_H
+#ifndef LIBSAKUSEN__CLIENTBALLISTICID_H
+#define LIBSAKUSEN__CLIENTBALLISTICID_H
 
 #include "idbase.h"
 
@@ -15,5 +15,5 @@ class ClientBallisticId : public IdBase<uint32, ClientBallisticId> {
 
 }
 
-#endif // CLIENTBALLISTICID_H
+#endif // LIBSAKUSEN__CLIENTBALLISTICID_H
 

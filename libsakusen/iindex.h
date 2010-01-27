@@ -1,5 +1,5 @@
-#ifndef IINDEX_H
-#define IINDEX_H
+#ifndef LIBSAKUSEN__IINDEX_H
+#define LIBSAKUSEN__IINDEX_H
 
 #include "ref.h"
 
@@ -41,5 +41,5 @@ class IIndex {
 
 }
 
-#endif // IINDEX_H
+#endif // LIBSAKUSEN__IINDEX_H
 

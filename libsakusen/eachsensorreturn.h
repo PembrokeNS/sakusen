@@ -1,5 +1,5 @@
-#ifndef EACHSENSORRETURN_H
-#define EACHSENSORRETURN_H
+#ifndef LIBSAKUSEN__EACHSENSORRETURN_H
+#define LIBSAKUSEN__EACHSENSORRETURN_H
 
 #include "sensorreturn.h"
 
@@ -49,5 +49,5 @@ struct LIBSAKUSEN_API EachSensorReturn {
 
 }
 
-#endif // EACHSENSORRETURN_H
+#endif // LIBSAKUSEN__EACHSENSORRETURN_H
 

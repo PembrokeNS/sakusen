@@ -41,7 +41,7 @@ void Command::execute(std::list<String>& args, UI* ui) const
       function.execute(args, ui);
       break;
     default:
-      Fatal("Unexpected CommandType: " << type);
+      SAKUSEN_FATAL("Unexpected CommandType: " << type);
   }
 }
 

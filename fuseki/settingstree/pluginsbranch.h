@@ -1,5 +1,5 @@
-#ifndef PLUGINSBRANCH_H
-#define PLUGINSBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__PLUGINSBRANCH_H
+#define FUSEKI__SETTINGSTREE__PLUGINSBRANCH_H
 
 #include "settingstree/pluginbranch.h"
 
@@ -18,5 +18,5 @@ class PluginsBranch : public Branch {
 
 }}
 
-#endif // PLUGINSBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__PLUGINSBRANCH_H
 

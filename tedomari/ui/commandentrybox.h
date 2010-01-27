@@ -1,5 +1,5 @@
-#ifndef UI__COMMANDENTRYBOX_H
-#define UI__COMMANDENTRYBOX_H
+#ifndef TEDOMARI__UI__COMMANDENTRYBOX_H
+#define TEDOMARI__UI__COMMANDENTRYBOX_H
 
 #include "ui/textbox.h"
 
@@ -24,5 +24,5 @@ class CommandEntryBox : public TextBox {
 
 }}
 
-#endif // UI__COMMANDENTRYBOX_H
+#endif // TEDOMARI__UI__COMMANDENTRYBOX_H
 

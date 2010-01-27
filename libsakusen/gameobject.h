@@ -1,5 +1,5 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef LIBSAKUSEN__GAMEOBJECT_H
+#define LIBSAKUSEN__GAMEOBJECT_H
 
 namespace sakusen {
 
@@ -26,5 +26,5 @@ inline GameObject operator|(const GameObject& left, const GameObject& right) {
 
 }
 
-#endif // GAMEOBJECT_H
+#endif // LIBSAKUSEN__GAMEOBJECT_H
 

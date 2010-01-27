@@ -1,5 +1,5 @@
-#ifndef PATROLLERCLIENT_H
-#define PATROLLERCLIENT_H
+#ifndef SAKUSEN_SERVER_TEST__PATROLLERCLIENT_H
+#define SAKUSEN_SERVER_TEST__PATROLLERCLIENT_H
 
 #include <boost/scoped_ptr.hpp>
 
@@ -28,5 +28,5 @@ class PatrollerClient : public Client {
 
 }}}
 
-#endif // PATROLLERCLIENT_H
+#endif // SAKUSEN_SERVER_TEST__PATROLLERCLIENT_H
 

@@ -1,5 +1,5 @@
-#ifndef ORDERDATA_H
-#define ORDERDATA_H
+#ifndef LIBSAKUSEN__ORDERDATA_H
+#define LIBSAKUSEN__ORDERDATA_H
 
 #include "libsakusen-global.h"
 
@@ -251,5 +251,5 @@ class LIBSAKUSEN_API TargetSensorReturnsOrderData :
 
 }
 
-#endif // ORDERDATA_H
+#endif // LIBSAKUSEN__ORDERDATA_H
 

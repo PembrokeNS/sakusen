@@ -35,7 +35,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
 {
   for (vector<boost::filesystem::path>::iterator path = pluginPaths.begin();
       path != pluginPaths.end(); ++path) {
-    Debug(
+    SAKUSEN_DEBUG(
         "Looking for plugin " << pluginName << " in " <<
         path->directory_string()
       );

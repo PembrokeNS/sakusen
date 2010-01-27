@@ -1,5 +1,5 @@
-#ifndef PARTIALHEIGHTFIELD_H
-#define PARTIALHEIGHTFIELD_H
+#ifndef LIBSAKUSEN_CLIENT__PARTIALHEIGHTFIELD_H
+#define LIBSAKUSEN_CLIENT__PARTIALHEIGHTFIELD_H
 
 #include "heightfield.h"
 
@@ -31,5 +31,5 @@ class PartialHeightfield : public Heightfield {
 
 }}
 
-#endif // PARTIALHEIGHTFIELD_H
+#endif // LIBSAKUSEN_CLIENT__PARTIALHEIGHTFIELD_H
 

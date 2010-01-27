@@ -1,5 +1,5 @@
-#ifndef UI__CONTROL_H
-#define UI__CONTROL_H
+#ifndef TEDOMARI__UI__CONTROL_H
+#define TEDOMARI__UI__CONTROL_H
 
 #include <list>
 
@@ -57,5 +57,5 @@ class Control {
 
 }}
 
-#endif // UI__CONTROL_H
+#endif // TEDOMARI__UI__CONTROL_H
 

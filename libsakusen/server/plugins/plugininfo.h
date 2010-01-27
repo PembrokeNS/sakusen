@@ -1,5 +1,5 @@
-#ifndef PLUGININFO_H
-#define PLUGININFO_H
+#ifndef LIBSAKUSEN_SERVER_PLUGINS__PLUGININFO_H
+#define LIBSAKUSEN_SERVER_PLUGINS__PLUGININFO_H
 
 #include <boost/utility.hpp>
 
@@ -38,5 +38,5 @@ class PluginInfo : private boost::noncopyable {
 
 }}}
 
-#endif // PLUGININFO_H
+#endif // LIBSAKUSEN_SERVER_PLUGINS__PLUGININFO_H
 

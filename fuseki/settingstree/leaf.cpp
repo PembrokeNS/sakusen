@@ -25,7 +25,7 @@ Leaf::~Leaf()
 Node::Ptr Leaf::getNodeByListRef(list<String>& nodeAddress)
 {
   if (!nodeAddress.empty()) {
-    Fatal("sought child of leaf '" << getFullName() << "'");
+    SAKUSEN_FATAL("sought child of leaf '" << getFullName() << "'");
   }
 
   return ptrToThis();
@@ -36,7 +36,7 @@ String Leaf::changeRequestListRef(
     const String& value,
     const SettingsUser* user)
 {
-  //Debug("checking permissions for node " << getFullName());
+  //SAKUSEN_DEBUG("checking permissions for node " << getFullName());
   
   if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +

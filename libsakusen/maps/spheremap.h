@@ -14,7 +14,7 @@ class SphereMap : public MapType {
     SphereMap(const MapTemplate& t) : MapType(t)
     {
       if (this->height() != this->width()) {
-        Fatal("spherical topology incompatible with non-square map");
+        SAKUSEN_FATAL("spherical topology incompatible with non-square map");
       }
     }
     SphereMap(
@@ -28,7 +28,7 @@ class SphereMap : public MapType {
         )
     {
       if (this->height() != this->width()) {
-        Fatal("spherical topology incompatible with non-square map");
+        SAKUSEN_FATAL("spherical topology incompatible with non-square map");
       }
     }
     
@@ -99,7 +99,7 @@ class SphereMap : public MapType {
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const {
       /** \todo implement */
-      Fatal("not implemented");
+      SAKUSEN_FATAL("not implemented");
       return op1 - op2;
     }
 };

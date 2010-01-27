@@ -1,5 +1,5 @@
-#ifndef SENSORRETURN_H
-#define SENSORRETURN_H
+#ifndef LIBSAKUSEN__SENSORRETURN_H
+#define LIBSAKUSEN__SENSORRETURN_H
 
 #include "libsakusen-global.h"
 #include "perception.h"
@@ -37,5 +37,5 @@ struct LIBSAKUSEN_API SensorReturn {
 
 }
 
-#endif
+#endif // LIBSAKUSEN__SENSORRETURN_H
 

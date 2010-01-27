@@ -1,5 +1,5 @@
-#ifndef ORDERTYPE_H
-#define ORDERTYPE_H
+#ifndef LIBSAKUSEN__ORDERTYPE_H
+#define LIBSAKUSEN__ORDERTYPE_H
 
 #include <iosfwd>
 #include "libsakusen-global.h"
@@ -42,5 +42,5 @@ LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, OrderType);
 
 }
 
-#endif // ORDERTYPE_H
+#endif // LIBSAKUSEN__ORDERTYPE_H
 

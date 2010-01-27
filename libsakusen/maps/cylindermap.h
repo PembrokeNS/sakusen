@@ -55,7 +55,7 @@ class CylinderMap : public MapType {
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const {
       /** \todo implement */
-      Fatal("not implemented");
+      SAKUSEN_FATAL("not implemented");
       return op1 - op2;
     }
 };

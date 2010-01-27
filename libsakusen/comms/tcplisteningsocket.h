@@ -1,5 +1,5 @@
-#ifndef TCPLISTENINGSOCKET_H
-#define TCPLISTENINGSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__TCPLISTENINGSOCKET_H
+#define LIBSAKUSEN_COMMS__TCPLISTENINGSOCKET_H
 
 #include "tcpsocket.h"
 
@@ -20,5 +20,5 @@ class TCPListeningSocket : public TCPSocket {
 
 }}
 
-#endif // UDPLISTENINGSOCKET_H
+#endif // LIBSAKUSEN_COMMS__TCPLISTENINGSOCKET_H
 

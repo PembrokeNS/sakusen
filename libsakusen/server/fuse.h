@@ -1,5 +1,5 @@
-#ifndef FUSE_H
-#define FUSE_H
+#ifndef LIBSAKUSEN_SERVER__FUSE_H
+#define LIBSAKUSEN_SERVER__FUSE_H
 
 #include "libsakusen-global.h"
 #include "fifo_priority_queue.h"
@@ -73,5 +73,5 @@ typedef fifo_priority_queue<FuseEntry, Time, PrioritizeFuseEntries> FuseQueue;
 
 }}
 
-#endif
+#endif // LIBSAKUSEN_SERVER__FUSE_H
 

@@ -1,5 +1,5 @@
-#ifndef UI__MODIFIED_KEY_H
-#define UI__MODIFIED_KEY_H
+#ifndef TEDOMARI__UI__MODIFIED_KEY_H
+#define TEDOMARI__UI__MODIFIED_KEY_H
 
 #include <set>
 
@@ -49,5 +49,5 @@ class ModifiedKeyHash {
 
 }}
 
-#endif // UI__MODIFIED_KEY_H
+#endif // TEDOMARI__UI__MODIFIED_KEY_H
 

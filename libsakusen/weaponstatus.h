@@ -1,5 +1,5 @@
-#ifndef WEAPONSTATUS_H
-#define WEAPONSTATUS_H
+#ifndef LIBSAKUSEN__WEAPONSTATUS_H
+#define LIBSAKUSEN__WEAPONSTATUS_H
 
 #include "iarchive.h"
 #include "oarchive.h"
@@ -77,5 +77,5 @@ class LIBSAKUSEN_API WeaponStatus {
 
 }
 
-#endif // WEAPONSTATUS_H
+#endif // LIBSAKUSEN__WEAPONSTATUS_H
 

@@ -1,5 +1,5 @@
-#ifndef MASKEDPTR_H
-#define MASKEDPTR_H
+#ifndef LIBSAKUSEN__MASKEDPTR_H
+#define LIBSAKUSEN__MASKEDPTR_H
 
 #include <boost/shared_ptr.hpp>
 
@@ -58,5 +58,5 @@ inline size_t hash_value(const MaskedPtr<T>& p)
 
 }
 
-#endif // MASKEDPTR_H
+#endif // LIBSAKUSEN__MASKEDPTR_H
 

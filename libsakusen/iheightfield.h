@@ -1,5 +1,5 @@
-#ifndef IHEIGHTFIELD_H
-#define IHEIGHTFIELD_H
+#ifndef LIBSAKUSEN__IHEIGHTFIELD_H
+#define LIBSAKUSEN__IHEIGHTFIELD_H
 
 #include "ray.h"
 
@@ -34,5 +34,5 @@ class LIBSAKUSEN_API IHeightfield {
 
 }
 
-#endif // IHEIGHTFIELD_H
+#endif // LIBSAKUSEN__IHEIGHTFIELD_H
 

@@ -97,7 +97,7 @@ int main(int argc, char* const* argv)
   boost::filesystem::path homePath = fileUtils_getHome();
   
   boost::filesystem::path fusekiConfigFile =
-    homePath / CONFIG_SUBDIR / "fuseki" / "config";
+    homePath / SAKUSEN_CONFIG_SUBDIR / "fuseki" / "config";
   
   /* Parse config file and command line arguments */
   Options options = getOptions(fusekiConfigFile, argc, argv);
@@ -108,7 +108,8 @@ int main(int argc, char* const* argv)
   }
 
   if (options.version) {
-    cout << APPLICATION_NAME << " " << APPLICATION_VERSION << endl;
+    cout << FUSEKI_APPLICATION_NAME << " " << FUSEKI_APPLICATION_VERSION <<
+      endl;
     return EXIT_SUCCESS;
   }
 
@@ -144,7 +145,8 @@ void usage()
   "                         A plugin foo is expected at PATH/foo/foo.la or\n"
   "                         PATH/foo/foo.dll according to platform.\n"
   "\n"
-  "Port for TCP socket defaults to "<<DEFAULT_PORT<<" if not specified.\n"
+  "Port for TCP socket defaults to "<<SAKUSEN_COMMS_DEFAULT_PORT<<
+    " if not specified.\n"
   "Some examples: \n"
   "fuseki -t \"\" \n"
   "fuseki -t 192.168.1.1:1775 \n"
@@ -194,7 +196,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   /* ltdl initialization */
 #ifdef __GNUC__
   if (lt_dlinit()) {
-    Fatal("lt_dlinit() failed");
+    SAKUSEN_FATAL("lt_dlinit() failed");
   }
 #endif
 
@@ -202,7 +204,9 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   /** \todo make the directories searched configurable */
   boost::filesystem::path dotDot("..");
   vector<boost::filesystem::path> dataDirs;
-  dataDirs.push_back(homePath / CONFIG_SUBDIR / DATA_SUBDIR);
+  dataDirs.push_back(
+      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR
+    );
   dataDirs.push_back("data");
   dataDirs.push_back(dotDot/"data");
   dataDirs.push_back(dotDot/".."/"data");
@@ -229,11 +233,12 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   
   if (unixSocketAddress.empty()) {
     /* By default, when Unix sockets enabled, this server listens for clients
-     * on a unix datagram socket located in ~/CONFIG_SUBDIR/SOCKET_SUBDIR */
+     * on a unix datagram socket located in
+     * ~/SAKUSEN_CONFIG_SUBDIR/SAKUSEN_COMMS_SOCKET_SUBDIR */
 
     /* Construct the server directory */
     boost::filesystem::path serverPath =
-      homePath / CONFIG_SUBDIR / SOCKET_SUBDIR;
+      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_COMMS_SOCKET_SUBDIR;
 
     cout << "Using directory '" << serverPath.native_directory_string() <<
       "' for unix socket.\n";
@@ -249,7 +254,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 
     /* Check that config directory is really a directory */
     if (!boost::filesystem::is_directory(serverPath)) {
-      Fatal("path '" << serverPath.native_directory_string() <<
+      SAKUSEN_FATAL("path '" << serverPath.native_directory_string() <<
           "' not a directory");
     }
 
@@ -270,12 +275,13 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 
     /* Use the default socket address */
     unixSocketAddress =
-      "concrete"ADDR_DELIM + unixSocketPath.native_file_string();
+      "concrete"SAKUSEN_COMMS_ADDR_DELIM + unixSocketPath.native_file_string();
   }
 
   cout << "Creating unix socket " << unixSocketAddress << endl;
-  Socket::Ptr unixSocket =
-    Socket::newBindingToAddress("unix"ADDR_DELIM+unixSocketAddress);
+  Socket::Ptr unixSocket =Socket::newBindingToAddress(
+        "unix"SAKUSEN_COMMS_ADDR_DELIM+unixSocketAddress
+      );
 
   if (unixSocket == NULL) {
     cout << "Error creating unix socket.  Check the address and try "
@@ -289,7 +295,8 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   
   if (!bindAddress.empty()) {
     cout << "Starting TCP socket at " << bindAddress << endl;
-    tcpSocket = Socket::newBindingToAddress("tcp"ADDR_DELIM+bindAddress);
+    tcpSocket =
+      Socket::newBindingToAddress("tcp"SAKUSEN_COMMS_ADDR_DELIM+bindAddress);
 
     if (tcpSocket==NULL) {
       cout << "Error creating TCP socket at:" << endl;
@@ -331,7 +338,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 #ifdef __GNUC__
   /* ltdl finalization */
   if (lt_dlexit()) {
-    Fatal("lt_dlexit() failed");
+    SAKUSEN_FATAL("lt_dlexit() failed");
   }
 #endif
 

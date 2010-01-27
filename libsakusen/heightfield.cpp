@@ -91,18 +91,18 @@ void Heightfield::sanityCheck() const
    * support more on 64-bit computers with enough RAM, but it's best to keep it
    * sane for now. */
   if (width == 0 || height == 0) {
-    Fatal("heightfield dimension 0");
+    SAKUSEN_FATAL("heightfield dimension 0");
   }
   if (numeric_limits<uint32>::max() / width < height) {
-    Fatal("heightfield contains too much data");
+    SAKUSEN_FATAL("heightfield contains too much data");
   }
   /* Check that all possible height values fit into the proper range */
   if (zResolution == 0 || xyResolution == 0) {
-    Fatal("heightfield resolution 0");
+    SAKUSEN_FATAL("heightfield resolution 0");
   }
   if (numeric_limits<sint32>::max() / zResolution <
       uint32(numeric_limits<sint16>::max())) {
-    Fatal(
+    SAKUSEN_FATAL(
         "heights could overflow (zres is " << zResolution <<
         ")"
       );
@@ -165,7 +165,7 @@ double Heightfield::intersectRayInCell(
 
   if (isnan(r1) || (!isnan(r2) && r2 < minimum)) {
     /* Something's gone wrong... */
-    Fatal("no valid solution found");
+    SAKUSEN_FATAL("no valid solution found");
   }
 
   if (r1 >= minimum) {
@@ -261,7 +261,7 @@ sint32 Heightfield::getApproxHeightAt(const Position& p) const {
 sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
 {
   if (!area.intersects(world->getMap()->area())) {
-    Fatal("rectangle outside map");
+    SAKUSEN_FATAL("rectangle outside map");
   }
   Rectangle<sint32> croppedArea = area.intersect(world->getMap()->area());
   sint32 result = numeric_limits<sint32>::min();
@@ -329,7 +329,7 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
 
   if (extent == inf) {
     /* This could well make us loop forever, so abort instead */
-    Fatal("non-terminating intersection tests possible");
+    SAKUSEN_FATAL("non-terminating intersection tests possible");
   }
 
   /* Locate starting heightfield sample cell */

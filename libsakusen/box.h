@@ -1,5 +1,5 @@
-#ifndef BOX_H
-#define BOX_H
+#ifndef LIBSAKUSEN__BOX_H
+#define LIBSAKUSEN__BOX_H
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -49,7 +49,7 @@ class LIBSAKUSEN_API Box {
         case 1:
           return max;
         default:
-          Fatal("index " << i << " out of bounds");
+          SAKUSEN_FATAL("index " << i << " out of bounds");
       }
     }
 
@@ -68,6 +68,9 @@ class LIBSAKUSEN_API Box {
     inline const Point<T>& getMax() const {
       return max;
     }
+
+    /** \brief getMax() - getMin() */
+    inline Point<T> getSize() const { return max - min; }
 
     /** Two Boxes are equal iff both of their points are equal or they are both
      * empty.
@@ -209,5 +212,5 @@ Box<T> Box<T>::enclosure(const Box<T>& b) const {
 
 #endif // LIBSAKUSEN_METHOD_DEFINITIONS
 }
-#endif
+#endif // LIBSAKUSEN__BOX_H
 

@@ -38,7 +38,7 @@ OArchive::OArchive(size_t startCapacity) :
  * debugger. */
 void OArchive::dumpBuffer() const
 {
-  Debug(stringUtils_bufferToHex(buffer.getConst(), buffer.getSize()));
+  SAKUSEN_DEBUG(stringUtils_bufferToHex(buffer.getConst(), buffer.getSize()));
 }
 
 OArchive& OArchive::operator<<(const uint16& i)
@@ -81,7 +81,7 @@ OArchive& OArchive::operator<<(const double& d)
 OArchive& OArchive::operator<<(const String& s)
 {
   size_t sLength = s.length();
-  /** \todo Probably this should be an exception rather than a Fatal, but maybe
+  /** \todo Probably this should be an exception rather than a SAKUSEN_FATAL, but maybe
    * we should handle it altogether differently?
    */
   *this << static_cast<uint32>(sLength);

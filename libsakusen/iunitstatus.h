@@ -1,5 +1,5 @@
-#ifndef IUNITSTATUS_H
-#define IUNITSTATUS_H
+#ifndef LIBSAKUSEN__IUNITSTATUS_H
+#define LIBSAKUSEN__IUNITSTATUS_H
 
 #include "libsakusen-global.h"
 
@@ -35,5 +35,5 @@ class LIBSAKUSEN_API IUnitStatus {
 
 }
 
-#endif // IUNITSTATUS_H
+#endif // LIBSAKUSEN__IUNITSTATUS_H
 

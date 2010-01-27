@@ -1,5 +1,5 @@
-#ifndef CANNON_H
-#define CANNON_H
+#ifndef SAKUSEN_TESTSRC__CANNON_H
+#define SAKUSEN_TESTSRC__CANNON_H
 
 #include "weapon.h"
 #include "ballistic.h"
@@ -17,13 +17,13 @@
  * imported back into libraries.
  *
  * This being a module opened at runtime, we always export and never import. */
-  #define MODULE_API   __declspec(dllexport)
-  #define MODULE_EXIMP extern
+  #define SAKUSEN_TESTSRC_MODULE_API   __declspec(dllexport)
+  #define SAKUSEN_TESTSRC_MODULE_EXIMP extern
 #else
   #if defined(__GNUC__) && (__GNUC__ >= 4)
-    #define MODULE_API __attribute__ ((visibility ("default")))
+    #define SAKUSEN_TESTSRC_MODULE_API __attribute__ ((visibility ("default")))
   #else
-    #define MODULE_API
+    #define SAKUSEN_TESTSRC_MODULE_API
   #endif
 #endif
 
@@ -300,5 +300,5 @@ class ParalyzingLayer : public UnitMask, public Fuse {
 
 }
 
-#endif // CANNON_H
+#endif // SAKUSEN_TESTSRC__CANNON_H
 

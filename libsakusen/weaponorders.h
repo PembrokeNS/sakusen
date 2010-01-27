@@ -1,5 +1,5 @@
-#ifndef WEAPONORDERS_H
-#define WEAPONORDERS_H
+#ifndef LIBSAKUSEN__WEAPONORDERS_H
+#define LIBSAKUSEN__WEAPONORDERS_H
 
 #include "order.h"
 #include "weapontargettype.h"
@@ -58,5 +58,5 @@ class LIBSAKUSEN_API WeaponOrders {
 
 }
 
-#endif // WEAPONORDERS_H
+#endif // LIBSAKUSEN__WEAPONORDERS_H
 

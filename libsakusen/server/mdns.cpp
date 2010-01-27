@@ -22,7 +22,7 @@
  * checking tools; to easily turn off such output we define a local debugging
  * macro */
 #ifdef SAUKUSEN_DEBUG_AVAHI
-  #define SAKUSEN_SERVER_MDNS_DEBUG(x) Debug(x)
+  #define SAKUSEN_SERVER_MDNS_DEBUG(x) SAKUSEN_DEBUG(x)
 #else
   #define SAKUSEN_SERVER_MDNS_DEBUG(x)
 #endif
@@ -120,12 +120,12 @@ void MdnsPublisher::Implementation::client_callback(
   Implementation *self = reinterpret_cast<Implementation*>(userdata);
   switch (state) {
     case AVAHI_CLIENT_S_RUNNING:
-      Debug("Avahi enters running state");
+      SAKUSEN_DEBUG("Avahi enters running state");
       self->create_services(c);
       break;
 
     case AVAHI_CLIENT_S_COLLISION:
-      Debug("Avahi enters collision state");
+      SAKUSEN_DEBUG("Avahi enters collision state");
       break;
 
     case AVAHI_CLIENT_FAILURE:
@@ -133,15 +133,15 @@ void MdnsPublisher::Implementation::client_callback(
       break;
 
     case AVAHI_CLIENT_CONNECTING:
-      Debug("Avahi enters connecting state");
+      SAKUSEN_DEBUG("Avahi enters connecting state");
       break;
 
     case AVAHI_CLIENT_S_REGISTERING:
-      Debug("Avahi enters registering state");
+      SAKUSEN_DEBUG("Avahi enters registering state");
       break;
 
     default:
-      Debug("Avahi enters unknown state.");
+      SAKUSEN_DEBUG("Avahi enters unknown state.");
       break;
   }
 }
@@ -236,11 +236,11 @@ void MdnsPublisher::Implementation::game_changed() {
     avahi_threaded_poll_lock(poll);
 
     if (avahi_client_get_state(client) != AVAHI_CLIENT_S_RUNNING) {
-      Debug("Avahi client in unexpected state on update");
+      SAKUSEN_DEBUG("Avahi client in unexpected state on update");
     }
 
     if (avahi_entry_group_get_state(group) != AVAHI_ENTRY_GROUP_ESTABLISHED) {
-      Debug("Avahi advert in unexpected state on update.");
+      SAKUSEN_DEBUG("Avahi advert in unexpected state on update.");
     }
     
     avahi_entry_group_update_service_txt_strlst(group,

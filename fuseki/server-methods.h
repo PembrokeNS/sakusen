@@ -1,5 +1,5 @@
-#ifndef SERVER_METHODS_H
-#define SERVER_METHODS_H
+#ifndef FUSEKI__SERVER_METHODS_H
+#define FUSEKI__SERVER_METHODS_H
 
 #include "server.h"
 
@@ -72,7 +72,7 @@ String Server::settingAlteringCallback(
       /* Do nothing */
       return "";
     } else {
-      Fatal("unexpected child of player branch: " << fullName.front());
+      SAKUSEN_FATAL("unexpected child of player branch: " << fullName.front());
     }
   } else if (fullName.front() == "server") {
     /* It's in the server branch, so we need to deal with it */
@@ -91,7 +91,7 @@ String Server::settingAlteringCallback(
       checkPlugins(null_cast<std::set<String> >(newValue));
       return "";
     } else {
-      Fatal("unexpected child of server branch: " << fullName.front());
+      SAKUSEN_FATAL("unexpected child of server branch: " << fullName.front());
     }
   } else if (fullName.front() == "game") {
     fullName.pop_front();
@@ -126,12 +126,12 @@ String Server::settingAlteringCallback(
             return String("error finding resource: ") +
               resourceInterface->getError();
           default:
-            Fatal("unexpected ResourceSearchResult: " << result);
+            SAKUSEN_FATAL("unexpected ResourceSearchResult: " << result);
         }
       } else if (fullName.front() == "hash") {
         return "";
       } else {
-        Fatal("unexpected child of universe branch: " << fullName.front());
+        SAKUSEN_FATAL("unexpected child of universe branch: " << fullName.front());
       }
     } else if (fullName.front() == "map") {
       if (universe == NULL) {
@@ -161,10 +161,10 @@ String Server::settingAlteringCallback(
           return String("error finding resource: ") +
             resourceInterface->getError();
         default:
-          Fatal("unexpected ResourceSearchResult: " << result);
+          SAKUSEN_FATAL("unexpected ResourceSearchResult: " << result);
       }
     } else {
-      Fatal("unexpected child of game branch: " << fullName.front());
+      SAKUSEN_FATAL("unexpected child of game branch: " << fullName.front());
     }
   } else if (fullName.front() == "plugins") {
     fullName.pop_front();
@@ -176,11 +176,11 @@ String Server::settingAlteringCallback(
     assert(!fullName.empty());
     return plugin->second->settingAlterationCallback<T>(altering, newValue);
   } else {
-    Fatal("unexpected child of root node: " << fullName.front());
+    SAKUSEN_FATAL("unexpected child of root node: " << fullName.front());
   }
 }
 
 }
 
-#endif // SERVER_METHODS_H
+#endif // FUSEKI__SERVER_METHODS_H
 

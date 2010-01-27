@@ -84,7 +84,7 @@ void TCPSocket::send(const void* buf, size_t len)
   /* Prefix the message by its length */
   boost::scoped_array<uint8> longerBuf(new uint8[len+sizeof(BufferLenType)]);
   if (len > std::numeric_limits<BufferLenType>::max()) {
-    Fatal("message too long for protocol ("<<len<<" bytes)");
+    SAKUSEN_FATAL("message too long for protocol ("<<len<<" bytes)");
   }
   *reinterpret_cast<BufferLenType*>(longerBuf.get()) = hton_buffer(len);
   memcpy(longerBuf.get()+sizeof(BufferLenType), buf, len);
@@ -95,7 +95,7 @@ void TCPSocket::send(const void* buf, size_t len)
   while (toSend != bufferEnd) {
     ssize_t retVal = ::send(sockfd, toSend, bufferEnd - toSend, MSG_NOSIGNAL);
     if (retVal == -1) {
-      switch (socket_errno) {
+      switch (socketErrno()) {
         case ENOTCONN:
         case ECONNREFUSED:
         case ECONNABORTED:
@@ -106,13 +106,18 @@ void TCPSocket::send(const void* buf, size_t len)
           /** \bug Spinlock on EAGAIN; not ideal.  Long term solution: use
            * asyncronous I/O.  In the short term, this could be improved with
            * select. */
-          Debug("EAGAIN; trying again; "<<(bufferEnd-toSend)<<" bytes remain");
+          SAKUSEN_DEBUG(
+              "EAGAIN; trying again; "<<(bufferEnd-toSend)<<" bytes remain"
+            );
           continue;
         case EPIPE:
           throw SocketExn("Socket has been closed locally");
           break;
         default:
-          Fatal("error " << errorUtils_parseErrno(socket_errno) << " sending message");
+          SAKUSEN_FATAL(
+              "error " << errorUtils_parseErrno(socketErrno()) <<
+              " sending message"
+            );
           break;
       }
     }
@@ -123,7 +128,7 @@ void TCPSocket::send(const void* buf, size_t len)
 
 void TCPSocket::sendTo(const void* /*buf*/, size_t /*len*/, const String& /*address*/)
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
 }
 
 size_t TCPSocket::receive(void* outBuf, size_t len)
@@ -136,19 +141,21 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
           bufferCapacity - bufferLength, 0
         );
       if (received == -1) {
-        if (socket_errno == EAGAIN || socket_errno == EWOULDBLOCK) {
+        if (socketErrno() == EAGAIN || socketErrno() == EWOULDBLOCK) {
           break;
         }
-        if (socket_errno == ECONNABORTED) {
+        if (socketErrno() == ECONNABORTED) {
           throw SocketClosedExn();
         }
-        if (socket_errno == ECONNRESET) {
+        if (socketErrno() == ECONNRESET) {
            throw SocketClosedExn();
         }
-        Fatal("error receiving message: " << errorUtils_parseErrno(socket_errno));
+        SAKUSEN_FATAL(
+            "error receiving message: " << errorUtils_parseErrno(socketErrno())
+          );
       }
       if (received != 0) {
-        /*Debug("received = " << received);*/
+        /*SAKUSEN_DEBUG("received = " << received);*/
       }
       bufferLength += received;
       if (bufferCapacity > bufferLength) {
@@ -175,7 +182,7 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
   assert(nextMessageLen > 0);
   if (bufferLength >= nextMessageLen + sizeof(BufferLenType)) {
     if (len < nextMessageLen) {
-      Fatal("insufficient space in buffer for message (needed " <<
+      SAKUSEN_FATAL("insufficient space in buffer for message (needed " <<
           nextMessageLen<<", given "<<len<<")");
     }
     memcpy(outBuf, buffer+sizeof(BufferLenType), nextMessageLen);
@@ -191,7 +198,7 @@ size_t TCPSocket::receive(void* outBuf, size_t len)
 
 size_t TCPSocket::receiveFrom(void* /*buf*/, size_t /*len*/, String& /*from*/)
 {
-  Fatal("not implemented");
+  SAKUSEN_FATAL("not implemented");
   return 0; /* Return statement for the benefit of MSVC */
 }
 

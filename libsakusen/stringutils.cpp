@@ -83,7 +83,7 @@ String LIBSAKUSEN_API stringUtils_getSecureHashAsString(
   /** \bug Commented out because it generates an old style cast warning (silly
    * reason...)
   if (thread == MHASH_FAILED) {
-    Fatal("error initing hash");
+    SAKUSEN_FATAL("error initing hash");
   }
   */
   

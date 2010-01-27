@@ -1,5 +1,5 @@
-#ifndef TOPOLOGY_H
-#define TOPOLOGY_H
+#ifndef LIBSAKUSEN__TOPOLOGY_H
+#define LIBSAKUSEN__TOPOLOGY_H
 
 namespace sakusen {
 
@@ -43,5 +43,5 @@ enum Topology {
 
 }
 
-#endif // TOPOLOGY_H
+#endif // LIBSAKUSEN__TOPOLOGY_H
 

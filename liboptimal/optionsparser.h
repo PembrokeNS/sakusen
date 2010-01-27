@@ -1,5 +1,5 @@
-#ifndef OPTIONSPARSER_H
-#define OPTIONSPARSER_H
+#ifndef OPTIMAL__OPTIONSPARSER_H
+#define OPTIMAL__OPTIONSPARSER_H
 
 #include <string>
 #include <list>
@@ -378,5 +378,5 @@ void OptionsParser::addOption(
 
 }
 
-#endif // OPTIONSPARSER_H
+#endif // OPTIMAL__OPTIONSPARSER_H
 

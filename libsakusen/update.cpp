@@ -50,7 +50,7 @@ Update Update::load(
     case updateType_ballisticAdded:
       return Update(new BallisticAddedUpdateData(in));
     default:
-      Debug("Unknown UpdateType " << type);
+      SAKUSEN_DEBUG("Unknown UpdateType " << type);
       throw EnumDeserializationExn("type", type);
   }
 }

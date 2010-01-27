@@ -1,5 +1,5 @@
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#ifndef FUSEKI__PLUGININTERFACE_H
+#define FUSEKI__PLUGININTERFACE_H
 
 #include "libsakusen-global.h"
 
@@ -34,5 +34,5 @@ class PluginInterface {
 
 }
 
-#endif // PLUGININTERFACE_H
+#endif // FUSEKI__PLUGININTERFACE_H
 

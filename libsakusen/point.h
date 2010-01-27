@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef LIBSAKUSEN__POINT_H
+#define LIBSAKUSEN__POINT_H
 
 #include "libsakusen-global.h"
 #include <boost/utility.hpp>
@@ -135,7 +135,7 @@ class LIBSAKUSEN_API Point {
         case 2:
           return z;
         default:
-          Fatal("index " << index << " out of bounds");
+          SAKUSEN_FATAL("index " << index << " out of bounds");
       }
     }
 
@@ -148,7 +148,7 @@ class LIBSAKUSEN_API Point {
         case 2:
           return z;
         default:
-          Fatal("index " << index << " out of bounds");
+          SAKUSEN_FATAL("index " << index << " out of bounds");
       }
     }
 
@@ -287,7 +287,7 @@ class LIBSAKUSEN_API Point {
      * Thus we have separate implementations for double and not double.
      * The double version is below. */
     inline void normalise(void) {
-      Fatal("normalise on Point<T> for T!=double");
+      SAKUSEN_FATAL("normalise on Point<T> for T!=double");
     };
 
     inline bool isZero(void) const {
@@ -398,5 +398,5 @@ template class LIBSAKUSEN_API Point<double>;
 #pragma warning (default:4101 4146)
 #endif
 
-#endif // POINT_H
+#endif // LIBSAKUSEN__POINT_H
 

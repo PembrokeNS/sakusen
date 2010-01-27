@@ -13,7 +13,9 @@ Universe::Universe(
     const String& sF,
     const String& pF,
     const std::vector<WeaponType>& w,
-    const std::vector<UnitType>& u
+    const std::vector<UnitType>& u,
+    const uint32 lMinSNS,
+    const uint32 lMaxSNS
   ) :
   internalName(in),
   hash(h),
@@ -21,7 +23,9 @@ Universe::Universe(
   scriptFunction(sF),
   playerDataFunction(pF),
   weaponTypes(w),
-  unitTypes(u)
+  unitTypes(u),
+  logMinSpatialNoiseScale(lMinSNS),
+  logMaxSpatialNoiseScale(lMaxSNS)
 {
   constructHashMaps();
 }
@@ -79,7 +83,7 @@ UnitTypeId Universe::getUnitTypeId(String unitTypeName) const
   u_map<String, UnitTypeId>::type::const_iterator
     unitType = unitIdLookup.find(unitTypeName);
   if (unitType == unitIdLookup.end()) {
-    Debug("unit type '"+unitTypeName+"' not found");
+    SAKUSEN_DEBUG("unit type '"+unitTypeName+"' not found");
     return NULL;
   }
   return unitType->second;
@@ -100,8 +104,9 @@ bool Universe::containsUnitType(const UnitTypeId id) const
 
 void Universe::store(OArchive& archive) const
 {
-  archive << internalName << scriptModule << scriptFunction << playerDataFunction << weaponTypes <<
-    unitTypes;
+  archive << internalName << scriptModule << scriptFunction <<
+    playerDataFunction<< logMinSpatialNoiseScale << logMaxSpatialNoiseScale <<
+    weaponTypes << unitTypes;
 }
 
 Universe* Universe::loadNew(
@@ -115,11 +120,15 @@ Universe* Universe::loadNew(
   String playerDataFunction;
   vector<WeaponType> weaponTypes;
   vector<UnitType> unitTypes;
-  archive >> internalName >> scriptModule >> scriptFunction >> playerDataFunction;
+  uint32 logMinSpatialNoiseScale;
+  uint32 logMaxSpatialNoiseScale;
+  archive >> internalName >> scriptModule >> scriptFunction >>
+    playerDataFunction >> logMinSpatialNoiseScale >> logMaxSpatialNoiseScale;
   archive.extract(weaponTypes, context) >> unitTypes;
   Universe* u = new Universe(
       internalName, archive.getSecureHashAsString(),
-      scriptModule, scriptFunction, playerDataFunction, weaponTypes, unitTypes
+      scriptModule, scriptFunction, playerDataFunction, weaponTypes, unitTypes,
+      logMinSpatialNoiseScale, logMaxSpatialNoiseScale
     );
   String unresolvedName;
   if ("" != (unresolvedName = u->resolveNames())) {

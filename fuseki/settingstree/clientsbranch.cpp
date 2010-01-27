@@ -15,7 +15,7 @@ void ClientsBranch::addClient(ClientId id)
 {
   String name = id.toString();
   if (getChild(name)) {
-    Fatal("tried to add client branch of existing name " << name);
+    SAKUSEN_FATAL("tried to add client branch of existing name " << name);
   }
   addChild(Node::Ptr(new ClientBranch(id, this, server)));
 }
@@ -24,7 +24,7 @@ void ClientsBranch::removeClient(ClientId id)
 {
   String name = id.toString();
   if (!getChild(name)) {
-    Fatal("tried to remove non-existant client branch " << name);
+    SAKUSEN_FATAL("tried to remove non-existant client branch " << name);
   }
   removeChild(name);
 }

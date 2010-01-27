@@ -1,5 +1,5 @@
-#ifndef INTERSECTION_H
-#define INTERSECTION_H
+#ifndef LIBSAKUSEN__INTERSECTION_H
+#define LIBSAKUSEN__INTERSECTION_H
 
 #include "ref.h"
 #include "bounded.h"
@@ -72,5 +72,5 @@ class LessThanIntersectionPosition {
 
 }
 
-#endif // INTERSECTION_H
+#endif // LIBSAKUSEN__INTERSECTION_H
 

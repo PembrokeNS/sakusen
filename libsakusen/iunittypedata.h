@@ -1,5 +1,5 @@
-#ifndef IUNITTYPEDATA_H
-#define IUNITTYPEDATA_H
+#ifndef LIBSAKUSEN__IUNITTYPEDATA_H
+#define LIBSAKUSEN__IUNITTYPEDATA_H
 
 #include "point.h"
 #include "visibility.h"
@@ -27,5 +27,5 @@ class LIBSAKUSEN_API IUnitTypeData {
 
 }
 
-#endif // IUNITTYPEDATA_H
+#endif // LIBSAKUSEN__IUNITTYPEDATA_H
 

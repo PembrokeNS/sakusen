@@ -54,9 +54,9 @@ void Game::setUniverse(const String& path, const String& hash)
     case resourceSearchResult_error:
     case resourceSearchResult_notSupported:
       /** \todo Better error handling */
-      Fatal("problem loading universe '"<<path<<"': "<<result);
+      SAKUSEN_FATAL("problem loading universe '"<<path<<"': "<<result);
     default:
-      Fatal("unexpected enum value: " << result);
+      SAKUSEN_FATAL("unexpected enum value: " << result);
   }
 }
 
@@ -93,11 +93,11 @@ void Game::pushUpdates(const UpdateMessageData& data) {
     sakusen::client::world->endTick();
   }
   if (data.getTime() < sakusen::client::world->getTimeNow()) {
-    Debug("Got updates in wrong order");
+    SAKUSEN_DEBUG("Got updates in wrong order");
   }
   list<Update> updates(data.getUpdates());
   while (!updates.empty()) {
-    QDebug(" got " << updates.front());
+    SAKUSEN_QDEBUG(" got " << updates.front());
     sakusen::client::world->applyUpdate(updates.front());
     updates.pop_front();
   }

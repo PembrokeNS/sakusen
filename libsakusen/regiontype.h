@@ -1,5 +1,5 @@
-#ifndef REGIONTYPE_H
-#define REGIONTYPE_H
+#ifndef LIBSAKUSEN__REGIONTYPE_H
+#define LIBSAKUSEN__REGIONTYPE_H
 
 namespace sakusen {
 
@@ -13,5 +13,5 @@ enum RegionType {
 
 }
 
-#endif // REGIONTYPE_H
+#endif // LIBSAKUSEN__REGIONTYPE_H
 

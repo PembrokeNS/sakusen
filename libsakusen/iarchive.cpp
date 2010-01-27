@@ -58,7 +58,7 @@ IArchive::IArchive(const Buffer& b) :
  * debugger. */
 void IArchive::dumpBuffer() const
 {
-  Debug(stringUtils_bufferToHex(pos, remainingLength));
+  SAKUSEN_DEBUG(stringUtils_bufferToHex(pos, remainingLength));
 }
 
 IArchive& IArchive::operator>>(uint16& i)

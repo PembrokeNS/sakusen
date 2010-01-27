@@ -1,5 +1,5 @@
-#ifndef UI__REGEXENTRYBOX_H
-#define UI__REGEXENTRYBOX_H
+#ifndef TEDOMARI__UI__REGEXENTRYBOX_H
+#define TEDOMARI__UI__REGEXENTRYBOX_H
 
 #include "ui/textbox.h"
 
@@ -24,5 +24,5 @@ class RegexEntryBox : public TextBox {
 
 }}
 
-#endif // UI__REGEXENTRYBOX_H
+#endif // TEDOMARI__UI__REGEXENTRYBOX_H
 

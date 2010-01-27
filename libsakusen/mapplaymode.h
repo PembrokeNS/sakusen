@@ -1,5 +1,5 @@
-#ifndef MAPPLAYMODE_H
-#define MAPPLAYMODE_H
+#ifndef LIBSAKUSEN__MAPPLAYMODE_H
+#define LIBSAKUSEN__MAPPLAYMODE_H
 
 #include "libsakusen-global.h"
 #include "universe.h"
@@ -59,5 +59,5 @@ class LIBSAKUSEN_API MapPlayMode {
 
 }
 
-#endif // MAPPLAYMODE_H
+#endif // LIBSAKUSEN__MAPPLAYMODE_H
 

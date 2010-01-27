@@ -1,5 +1,5 @@
-#ifndef BEAM_H
-#define BEAM_H
+#ifndef LIBSAKUSEN_SERVER__BEAM_H
+#define LIBSAKUSEN_SERVER__BEAM_H
 
 #include "ray.h"
 #include "ref.h"
@@ -78,5 +78,5 @@ class LIBSAKUSEN_SERVER_API Beam : protected Ray {
 
 }}
 
-#endif
+#endif // LIBSAKUSEN_SERVER__BEAM_H
 

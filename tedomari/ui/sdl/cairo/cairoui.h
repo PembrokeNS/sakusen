@@ -1,5 +1,5 @@
-#ifndef UI_SDL_CAIRO__CAIROUI_H
-#define UI_SDL_CAIRO__CAIROUI_H
+#ifndef TEDOMARI__UI_SDL_CAIRO__CAIROUI_H
+#define TEDOMARI__UI_SDL_CAIRO__CAIROUI_H
 
 #include "ui/sdl/sdlui.h"
 
@@ -52,5 +52,5 @@ class CairoUI : public SDLUI {
 
 }}}}
 
-#endif // UI_SDL_CAIRO__CAIROUI_H
+#endif // TEDOMARI__UI_SDL_CAIRO__CAIROUI_H
 

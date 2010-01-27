@@ -39,7 +39,7 @@ void IPSocket::interpretAddress(
     /* We might have a port in the hostname, after a ':' */
     size_t colon = hostname->rfind(':');
     if (colon == String::npos) {
-      *port = DEFAULT_PORT;
+      *port = SAKUSEN_COMMS_DEFAULT_PORT;
     } else {
       *port = numFromString<uint16>(hostname->substr(colon+1));
       *hostname = hostname->substr(0, colon);
@@ -80,7 +80,9 @@ void IPSocket::close()
 {
   if (!closed) {
     if (-1 == NativeSocketClose(sockfd)) {
-      Fatal("Error " << errorUtils_parseErrno(socket_errno) << " closing socket");
+      SAKUSEN_FATAL(
+          "Error " << errorUtils_parseErrno(socketErrno()) << " closing socket"
+        );
     }
     closed = true;
   }
@@ -92,19 +94,19 @@ void IPSocket::setNonBlocking(bool val)
   unsigned long flags = 0ul;
   if (val) flags = 1ul; else flags = 0ul;
   if (0 != ioctlsocket(sockfd, FIONBIO, &flags))
-    Fatal("could not set non-blocking; " << socket_errno);
+    SAKUSEN_FATAL("could not set non-blocking; " << socket_errno);
 #else
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {
-    Fatal("could not get socket flags");
+    SAKUSEN_FATAL("could not get socket flags");
   }
   if (val) {
     if (-1 == fcntl(sockfd, F_SETFL, O_NONBLOCK | flags)) {
-      Fatal("could not set socket flags");
+      SAKUSEN_FATAL("could not set socket flags");
     }
   } else {
     if (-1 == fcntl(sockfd, F_SETFL, (~O_NONBLOCK) & flags)) {
-      Fatal("could not set socket flags");
+      SAKUSEN_FATAL("could not set socket flags");
     }
   }
 #endif
@@ -125,8 +127,8 @@ String IPSocket::getAddress() const {
     char hostname[HOST_NAME_MAX];
     gethostname(hostname, HOST_NAME_MAX);
 #endif
-    return getType() + ADDR_DELIM + hostname + ADDR_DELIM +
-      numToString(port);
+    return getType() + SAKUSEN_COMMS_ADDR_DELIM + hostname +
+      SAKUSEN_COMMS_ADDR_DELIM + numToString(port);
   } else {
 #ifdef WIN32
     char* host = inet_ntoa(addr.sin_addr);
@@ -134,8 +136,8 @@ String IPSocket::getAddress() const {
     char host[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &addr.sin_addr, host, INET_ADDRSTRLEN);
 #endif
-    return getType() + ADDR_DELIM + host + ADDR_DELIM +
-      numToString(port);
+    return getType() + SAKUSEN_COMMS_ADDR_DELIM + host +
+      SAKUSEN_COMMS_ADDR_DELIM + numToString(port);
   }
 }
 

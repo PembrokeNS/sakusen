@@ -1,5 +1,5 @@
-#ifndef RESOURCESEARCHRESULT_H
-#define RESOURCESEARCHRESULT_H
+#ifndef LIBSAKUSEN__RESOURCESEARCHRESULT_H
+#define LIBSAKUSEN__RESOURCESEARCHRESULT_H
 
 #include "libsakusen-global.h"
 
@@ -27,5 +27,5 @@ LIBSAKUSEN_API std::ostream& operator<<(std::ostream& output, ResourceSearchResu
 
 }
 
-#endif // RESOURCESEARCHRESULT_H
+#endif // LIBSAKUSEN__RESOURCESEARCHRESULT_H
 

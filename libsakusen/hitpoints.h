@@ -1,5 +1,5 @@
-#ifndef HITPOINTS_H
-#define HITPOINTS_H
+#ifndef LIBSAKUSEN__HITPOINTS_H
+#define LIBSAKUSEN__HITPOINTS_H
 
 #include "oarchive.h"
 #include "iarchive.h"
@@ -167,5 +167,5 @@ inline IArchive& operator>>(IArchive& in, HitPoints& hp) {
 
 }
 
-#endif // HITPOINTS_H
+#endif // LIBSAKUSEN__HITPOINTS_H
 

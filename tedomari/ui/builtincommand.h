@@ -1,5 +1,5 @@
-#ifndef UI__BUILTINCOMMAND_H
-#define UI__BUILTINCOMMAND_H
+#ifndef TEDOMARI__UI__BUILTINCOMMAND_H
+#define TEDOMARI__UI__BUILTINCOMMAND_H
 
 #include "tedomari-global.h"
 
@@ -45,5 +45,5 @@ void executeBuiltinCommand(
 
 }}
 
-#endif // UI__BUILTINCOMMAND_H
+#endif // TEDOMARI__UI__BUILTINCOMMAND_H
 

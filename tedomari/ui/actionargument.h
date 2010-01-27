@@ -1,5 +1,5 @@
-#ifndef UI__ACTIONARGUMET_H
-#define UI__ACTIONARGUMET_H
+#ifndef TEDOMARI__UI__ACTIONARGUMET_H
+#define TEDOMARI__UI__ACTIONARGUMET_H
 
 #include "tedomari-global.h"
 
@@ -33,10 +33,11 @@ enum ActionParameterType {
   actionParameterType_frame,
   actionParameterType_unit,
   actionParameterType_unitSet,
-  actionParameterType_number
+  actionParameterType_number,
+  actionParameterType_max /* Must be last */
 };
 
 }}
 
-#endif // UI__ACTIONARGUMET_H
+#endif // TEDOMARI__UI__ACTIONARGUMET_H
 

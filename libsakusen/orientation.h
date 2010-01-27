@@ -1,5 +1,5 @@
-#ifndef ORIENTATION_H
-#define ORIENTATION_H
+#ifndef LIBSAKUSEN__ORIENTATION_H
+#define LIBSAKUSEN__ORIENTATION_H
 
 #include "point.h"
 #include "angle.h"
@@ -124,5 +124,5 @@ class LIBSAKUSEN_API Orientation {
 
 }
 
-#endif // ORIENTATION_H
+#endif // LIBSAKUSEN__ORIENTATION_H
 

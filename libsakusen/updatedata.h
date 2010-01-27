@@ -1,5 +1,5 @@
-#ifndef UPDATEDATA_H
-#define UPDATEDATA_H
+#ifndef LIBSAKUSEN__UPDATEDATA_H
+#define LIBSAKUSEN__UPDATEDATA_H
 
 #include "libsakusen-global.h"
 #include "changeownerreason.h"
@@ -186,5 +186,5 @@ class LIBSAKUSEN_API BallisticAddedUpdateData : public UpdateData {
 
 }
 
-#endif // UPDATEDATA_H
+#endif // LIBSAKUSEN__UPDATEDATA_H
 

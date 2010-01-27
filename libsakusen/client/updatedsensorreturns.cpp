@@ -28,7 +28,7 @@ void UpdatedSensorReturns::incrementState()
     altered_ = false;
   } else {
     if (!unit) {
-      Fatal("Shouldn't fail to alter non-unit return (perception = " << getPerception() << ", time=" << world->getTimeNow() << ")");
+      SAKUSEN_FATAL("Shouldn't fail to alter non-unit return (perception = " << getPerception() << ", time=" << world->getTimeNow() << ")");
     }
     UnitStatus& status = unit->getStatus();
     world->getMap()->transform(

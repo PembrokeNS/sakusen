@@ -1,5 +1,5 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef LIBSAKUSEN__MAP_H
+#define LIBSAKUSEN__MAP_H
 
 #include <vector>
 
@@ -58,6 +58,12 @@ class LIBSAKUSEN_API Map {
     inline uint32 height(void) const { return top() - bottom(); }
     inline Rectangle<sint32> area(void) const {
       return Rectangle<sint32>(left(), bottom(), right(), top());
+    }
+    inline Box<sint32> volume(void) const {
+      return Box<sint32>(
+          Position(left(), bottom(), bottomNumber<sint32>()),
+          Position(right(), top(), topNumber<sint32>())
+        );
     }
     inline sint32 reflectX(sint32 x) const
     {
@@ -196,5 +202,5 @@ class LIBSAKUSEN_API Map {
 
 }
 
-#endif // MAP_H
+#endif // LIBSAKUSEN__MAP_H
 

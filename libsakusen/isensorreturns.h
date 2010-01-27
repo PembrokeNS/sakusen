@@ -1,5 +1,5 @@
-#ifndef ISENSORRETURNS_H
-#define ISENSORRETURNS_H
+#ifndef LIBSAKUSEN__ISENSORRETURNS_H
+#define LIBSAKUSEN__ISENSORRETURNS_H
 
 #include "libsakusen-global.h"
 #include "gnu_extensions.h"
@@ -57,5 +57,5 @@ class SerializationHandler<ISensorReturns> {
 
 }
 
-#endif // ISENSORRETURNS_H
+#endif // LIBSAKUSEN__ISENSORRETURNS_H
 

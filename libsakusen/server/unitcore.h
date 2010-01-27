@@ -1,5 +1,5 @@
-#ifndef UNITCORE_H
-#define UNITCORE_H
+#ifndef LIBSAKUSEN_SERVER__UNITCORE_H
+#define LIBSAKUSEN_SERVER__UNITCORE_H
 
 #include "unitstatus.h"
 #include "unitlayer.h"
@@ -50,7 +50,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return UnitLayer::Ptr();
     }
     inline void removeLayer(const UnitMask*) {
-      Fatal("tried to remove non-existant layer");
+      SAKUSEN_FATAL("tried to remove non-existant layer");
     }
     inline Ref<LayeredUnit> getOuterUnit() {
       return outerUnit->getRefToThis();
@@ -110,5 +110,5 @@ class UnitCore : public UnitLayer, public UnitStatus {
 
 }}
 
-#endif // UNITCORE_H
+#endif // LIBSAKUSEN_SERVER__UNITCORE_H
 

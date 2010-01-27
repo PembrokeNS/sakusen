@@ -1,5 +1,5 @@
-#ifndef STRINGSETLEAF_H
-#define STRINGSETLEAF_H
+#ifndef FUSEKI__SETTINGSTREE__STRINGSETLEAF_H
+#define FUSEKI__SETTINGSTREE__STRINGSETLEAF_H
 
 #include <set>
 
@@ -35,5 +35,5 @@ class StringSetLeaf : public Leaf {
 
 }}
 
-#endif // STRINGSETLEAF_H
+#endif // FUSEKI__SETTINGSTREE__STRINGSETLEAF_H
 

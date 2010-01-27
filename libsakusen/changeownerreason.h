@@ -1,5 +1,5 @@
-#ifndef CHANGEOWNERREASON_H
-#define CHANGEOWNERREASON_H
+#ifndef LIBSAKUSEN__CHANGEOWNERREASON_H
+#define LIBSAKUSEN__CHANGEOWNERREASON_H
 
 namespace sakusen {
 
@@ -20,5 +20,5 @@ enum changeOwnerReason {
 
 }
 
-#endif // CHANGEOWNERREASON_H
+#endif // LIBSAKUSEN__CHANGEOWNERREASON_H
 

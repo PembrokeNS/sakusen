@@ -43,7 +43,7 @@ bool Rectangle<sint32>::fastIntersects(
 template<>
 bool Rectangle<uint16>::fastIntersects(const ICompleteUnit*) const
 {
-  Fatal("this method should not be called");
+  SAKUSEN_FATAL("this method should not be called");
   return true;
 }
 
@@ -51,14 +51,14 @@ template<>
 bool Rectangle<uint16>::fastIntersects(
     const Ref<const ISensorReturns>&) const
 {
-  Fatal("this method should not be called");
+  SAKUSEN_FATAL("this method should not be called");
   return true;
 }
 
 template<>
 bool Rectangle<double>::fastIntersects(const ICompleteUnit*) const
 {
-  Fatal("this method should not be called");
+  SAKUSEN_FATAL("this method should not be called");
   return true;
 }
 
@@ -66,7 +66,7 @@ template<>
 bool Rectangle<double>::fastIntersects(
     const Ref<const ISensorReturns>&) const
 {
-  Fatal("this method should not be called");
+  SAKUSEN_FATAL("this method should not be called");
   return true;
 }
 

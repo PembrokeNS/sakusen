@@ -160,7 +160,7 @@ void MdnsBrowser::Implementation::browse_callback(
             name, type, domain,
             AVAHI_PROTO_UNSPEC, static_cast<AvahiLookupFlags>(0),
             resolve_callback, self))
-        Debug("Avahi failed to create a service resolver.");
+        SAKUSEN_DEBUG("Avahi failed to create a service resolver.");
       // That's resolver, not revolver.
       break;
 
@@ -170,11 +170,11 @@ void MdnsBrowser::Implementation::browse_callback(
       break;
 
     case AVAHI_BROWSER_ALL_FOR_NOW:
-      Debug("Avahi said that's all for now.");
+      SAKUSEN_DEBUG("Avahi said that's all for now.");
       break;
 
     case AVAHI_BROWSER_CACHE_EXHAUSTED:
-      Debug("Avahi said its cache has been exhausted.");
+      SAKUSEN_DEBUG("Avahi said its cache has been exhausted.");
       break;
   }
 }
@@ -194,7 +194,7 @@ void MdnsBrowser::Implementation::client_callback(AvahiClient *c, AvahiClientSta
   MdnsBrowser::Implementation *self = reinterpret_cast<MdnsBrowser::Implementation*>(userdata);
   switch (state) {
     case AVAHI_CLIENT_S_RUNNING:
-      Debug("Avahi enters running state");
+      SAKUSEN_DEBUG("Avahi enters running state");
       break;
 
     case AVAHI_CLIENT_FAILURE:
@@ -203,11 +203,11 @@ void MdnsBrowser::Implementation::client_callback(AvahiClient *c, AvahiClientSta
       break;
 
     case AVAHI_CLIENT_CONNECTING:
-      Debug("Avahi enters connecting state");
+      SAKUSEN_DEBUG("Avahi enters connecting state");
       break;
 
     default:
-      Debug("Avahi enters unknown state.");
+      SAKUSEN_DEBUG("Avahi enters unknown state.");
       break;
   }
 }

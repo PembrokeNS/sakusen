@@ -31,7 +31,7 @@ CompleteMap::CompleteMap(
   Map(topRight, bottomLeft, gravity),
   heightfield(xyHeightfieldRes, zHeightfieldRes, 1, 1)
 {
-  Fatal("this method should not be called");
+  SAKUSEN_FATAL("this method should not be called");
 }
 
 CompleteMap::CompleteMap(
@@ -50,15 +50,15 @@ void CompleteMap::sanityCheck()
 {
   if (0 != width() % heightfield.getXYResolution() ||
       0 != height() % heightfield.getXYResolution()) {
-    Fatal("heightfield resolution not exact factor of map dimensions");
+    SAKUSEN_FATAL("heightfield resolution not exact factor of map dimensions");
   }
   if (heightfield.getWidth() !=
       1+width()/heightfield.getXYResolution()) {
-    Fatal("heightfield width incorrect");
+    SAKUSEN_FATAL("heightfield width incorrect");
   }
   if (heightfield.getHeight() !=
       1+height()/heightfield.getXYResolution()) {
-    Fatal("heightfield height incorrect");
+    SAKUSEN_FATAL("heightfield height incorrect");
   }
 }
 

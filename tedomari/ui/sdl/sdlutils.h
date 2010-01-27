@@ -1,5 +1,5 @@
-#ifndef UI_SDL__SDLUTILS_H
-#define UI_SDL__SDLUTILS_H
+#ifndef TEDOMARI__UI_SDL__SDLUTILS_H
+#define TEDOMARI__UI_SDL__SDLUTILS_H
 
 #include "libsakusen-global.h"
 
@@ -17,5 +17,5 @@ Key sdlUtils_getKey(SDLKey);
 
 }}}
 
-#endif // UI_SDL__SDLUTILS_H
+#endif // TEDOMARI__UI_SDL__SDLUTILS_H
 

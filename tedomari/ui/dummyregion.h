@@ -1,5 +1,5 @@
-#ifndef UI__DUMMYREGION_H
-#define UI__DUMMYREGION_H
+#ifndef TEDOMARI__UI__DUMMYREGION_H
+#define TEDOMARI__UI__DUMMYREGION_H
 
 namespace tedomari {
 namespace ui {
@@ -18,15 +18,15 @@ class DummyRegion : public Region {
       return new DummyRegion(width, height);
     }
     sakusen::Point<double> globalToLocal(const sakusen::Point<double>& global) {
-      Fatal("not implemented");
+      SAKUSEN_FATAL("not implemented");
       return global; //Make VC happy
     }
     sakusen::Point<double> localToGlobal(const sakusen::Point<double>& local) {
-      Fatal("not implemented");
+      SAKUSEN_FATAL("not implemented");
       return local; //Make VC happy
     }
     Layout* newLayout() const { 
-      Fatal("not implemented"); 
+      SAKUSEN_FATAL("not implemented");
       return 0; //Make VC happy
     }
     void blit(const Surface::ConstPtr&) {}
@@ -47,5 +47,5 @@ class DummyRegion : public Region {
 
 }}
 
-#endif // UI__DUMMYREGION_H
+#endif // TEDOMARI__UI__DUMMYREGION_H
 

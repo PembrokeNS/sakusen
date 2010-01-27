@@ -91,7 +91,7 @@ void Node::streamFullName(ostream& nameStream) const
     parent->streamFullName(nameStream);
   }
   if (!name.empty()) {
-    nameStream << SETTINGS_DELIMITER << name;
+    nameStream << SAKUSEN_COMMS_SETTINGS_DELIMITER << name;
   }
 }
 

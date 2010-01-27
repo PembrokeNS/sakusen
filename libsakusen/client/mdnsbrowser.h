@@ -1,5 +1,5 @@
-#ifndef MDNSBROWSER_H
-#define MDNSBROWSER_H
+#ifndef LIBSAKUSEN_CLIENT__MDNSBROWSER_H
+#define LIBSAKUSEN_CLIENT__MDNSBROWSER_H
 
 #include <boost/utility.hpp>
 #include <boost/function.hpp>
@@ -44,4 +44,4 @@ class MdnsBrowser : public boost::noncopyable {
 }
 }
 
-#endif /*MDNSBROWSER_H*/
+#endif /*LIBSAKUSEN_CLIENT__MDNSBROWSER_H*/

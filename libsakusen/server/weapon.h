@@ -1,5 +1,5 @@
-#ifndef WEAPON_H
-#define WEAPON_H
+#ifndef LIBSAKUSEN_SERVER__WEAPON_H
+#define LIBSAKUSEN_SERVER__WEAPON_H
 
 #include "libsakusen-global.h"
 #include "point.h"
@@ -94,5 +94,5 @@ class LIBSAKUSEN_SERVER_API Weapon : private boost::noncopyable {
 
 }}
 
-#endif // WEAPON_H
+#endif // LIBSAKUSEN_SERVER__WEAPON_H
 

@@ -31,7 +31,7 @@ Branch::Ptr DirectoryBranch::getSubBranch(const String& subBranchName)
    * that might be directory separators; for now we insist more
    * strongly that it match the filenameRegex. */
   if (!filenameRegex.FullMatch(subBranchName)) {
-    Fatal("invalid name");
+    SAKUSEN_FATAL("invalid name");
   }
   assert(!subBranchName.empty());
   if (subBranchName == "..") {
@@ -58,7 +58,7 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
    * that might be directory separators; for now we insist more
    * strongly that it match the filenameRegex. */
   if (!filenameRegex.FullMatch(subBranchName)) {
-    Fatal("invalid name");
+    SAKUSEN_FATAL("invalid name");
   }
   assert(!subBranchName.empty());
   /** \todo memoize? */
@@ -83,7 +83,7 @@ list<Resource> DirectoryBranch::getResources(
     return list<Resource>();
   }
 
-  /*QDebug("Searching "<<directory.native_directory_string());*/
+  /*SAKUSEN_QDEBUG("Searching "<<directory.native_directory_string());*/
   list<boost::filesystem::path> matches =
     fileUtils_findMatches(directory, resourceName);
   list<Resource> result;
@@ -91,7 +91,7 @@ list<Resource> DirectoryBranch::getResources(
   BOOST_FOREACH(const boost::filesystem::path& match, matches) {
     String filename = match.leaf();
     if (!boost::algorithm::ends_with(filename, extension)) {
-        /*QDebug("Looking for extension to "<<name<<" "<<extension);*/
+        /*SAKUSEN_QDEBUG("Looking for extension to "<<name<<" "<<extension);*/
       continue;
     }
     Reader::Ptr reader(new FileReader(match));
@@ -107,7 +107,7 @@ Writer::Ptr DirectoryBranch::getWriter(const String& writerName)
    * that might be directory separators and isn't ..; for now we insist more
    * strongly that it match the filenameRegex. */
   if (!filenameRegex.FullMatch(writerName)) {
-    Fatal("invalid name");
+    SAKUSEN_FATAL("invalid name");
   }
   boost::filesystem::path filePath = directory / writerName;
   if (boost::filesystem::exists(filePath) &&

@@ -26,7 +26,7 @@ void CommandEntryBox::sendControlChar(uint16 c, UI* ui)
       /** \todo Tab completion */
       break;
     default:
-      Debug("Unexpected unprintable character " << c);
+      SAKUSEN_DEBUG("Unexpected unprintable character " << c);
       /** \todo Make a beep or something */
       break;
   }

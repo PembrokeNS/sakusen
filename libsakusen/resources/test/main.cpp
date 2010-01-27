@@ -38,7 +38,8 @@ int main(/*int argc, char** argv*/)
       boost::filesystem::portable_posix_name
     );
   boost::filesystem::path homePath = fileUtils_getHome();
-  boost::filesystem::path dataDir = homePath / CONFIG_SUBDIR / DATA_SUBDIR;
+  boost::filesystem::path dataDir =
+    homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path testDir = dataDir / "test";
   fileUtils_mkdirRecursive(dataDir);
   boost::filesystem::path dotDot("..");
@@ -272,7 +273,9 @@ int main(/*int argc, char** argv*/)
   unitTypes.push_back(spiderType);
 
   Universe::Ptr universe(new Universe(
-        "universe", "", "test/testsrc", "create_script", "create_player", weaponTypes, unitTypes
+        "universe", "", "test/testsrc", "create_script", "create_player",
+        weaponTypes, unitTypes, 10 /* logMinSpatialNoiseScale */,
+        15 /* logMaxSpatialNoiseScale */
       ));
   String name = universe->resolveNames();
   if (name != "") {

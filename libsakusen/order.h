@@ -1,5 +1,5 @@
-#ifndef ORDER_H
-#define ORDER_H
+#ifndef LIBSAKUSEN__ORDER_H
+#define LIBSAKUSEN__ORDER_H
 
 #include "ordertype.h"
 #include "orderdata.h"
@@ -30,22 +30,22 @@ class LIBSAKUSEN_API Order {
      * new enum value is added. */
     SAKUSEN_STATIC_ASSERT(orderType_max == 11);
     
-    #define GET_DATA(type) \
+    #define SAKUSEN_ORDER_GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
       return dynamic_cast<const type##OrderData&>(*data); \
     }
-    GET_DATA(SetVelocity)
-    GET_DATA(Move)
-    GET_DATA(SetAngularVelocity)
-    GET_DATA(Orient)
-    GET_DATA(TargetNone)
-    GET_DATA(TargetNumber)
-    GET_DATA(TargetWeapon)
-    GET_DATA(TargetPosition)
-    GET_DATA(TargetFrame)
-    GET_DATA(TargetUnit)
-    GET_DATA(TargetSensorReturns)
-    #undef GET_DATA
+    SAKUSEN_ORDER_GET_DATA(SetVelocity)
+    SAKUSEN_ORDER_GET_DATA(Move)
+    SAKUSEN_ORDER_GET_DATA(SetAngularVelocity)
+    SAKUSEN_ORDER_GET_DATA(Orient)
+    SAKUSEN_ORDER_GET_DATA(TargetNone)
+    SAKUSEN_ORDER_GET_DATA(TargetNumber)
+    SAKUSEN_ORDER_GET_DATA(TargetWeapon)
+    SAKUSEN_ORDER_GET_DATA(TargetPosition)
+    SAKUSEN_ORDER_GET_DATA(TargetFrame)
+    SAKUSEN_ORDER_GET_DATA(TargetUnit)
+    SAKUSEN_ORDER_GET_DATA(TargetSensorReturns)
+    #undef SAKUSEN_ORDER_GET_DATA
     /*@}*/
 
     void store(OArchive&) const;
@@ -54,5 +54,5 @@ class LIBSAKUSEN_API Order {
 
 }
 
-#endif // ORDER_H
+#endif // LIBSAKUSEN__ORDER_H
 

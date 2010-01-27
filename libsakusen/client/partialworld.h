@@ -1,5 +1,5 @@
-#ifndef PARTIALWORLD_H
-#define PARTIALWORLD_H
+#ifndef LIBSAKUSEN_CLIENT__PARTIALWORLD_H
+#define LIBSAKUSEN_CLIENT__PARTIALWORLD_H
 
 #include <boost/scoped_ptr.hpp>
 
@@ -105,5 +105,5 @@ extern LIBSAKUSEN_CLIENT_API PartialWorld* world;
 
 }}
 
-#endif // PARTIALWORLD_H
+#endif // LIBSAKUSEN_CLIENT__PARTIALWORLD_H
 

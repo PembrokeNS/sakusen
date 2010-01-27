@@ -1,5 +1,5 @@
-#ifndef SETTINGSTREE_H
-#define SETTINGSTREE_H
+#ifndef FUSEKI__SETTINGSTREE__SETTINGSTREE_H
+#define FUSEKI__SETTINGSTREE__SETTINGSTREE_H
 
 #include <list>
 
@@ -57,5 +57,5 @@ class SettingsTree : public Branch {
 
 }}
 
-#endif // SETTINGSTREE_H
+#endif // FUSEKI__SETTINGSTREE__SETTINGSTREE_H
 

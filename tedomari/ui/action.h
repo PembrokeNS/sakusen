@@ -1,5 +1,5 @@
-#ifndef UI__ACTION_H
-#define UI__ACTION_H
+#ifndef TEDOMARI__UI__ACTION_H
+#define TEDOMARI__UI__ACTION_H
 
 #include <set>
 
@@ -67,13 +67,13 @@ class Action : private boost::noncopyable {
     }
     const std::set<String>& getStringSet() const {
       if (nextParameterType != actionParameterType_stringFromSet) {
-        Fatal("invalid call");
+        SAKUSEN_FATAL("invalid call");
       }
       return internalGetStringSet();
     }
     sakusen::Point<uint32> getSize() const {
       if (nextParameterType != actionParameterType_frame) {
-        Fatal("invalid call");
+        SAKUSEN_FATAL("invalid call");
       }
       return internalGetSize();
     }
@@ -86,5 +86,5 @@ Action::Ptr initializeAction(
 
 }}
 
-#endif // UI__ACTION_H
+#endif // TEDOMARI__UI__ACTION_H
 

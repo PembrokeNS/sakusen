@@ -21,10 +21,14 @@ TCPListeningSocket::TCPListeningSocket(uint16 port) :
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
   if (-1 == bind(sockfd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr))) {
-    Fatal("Error binding socket: " << errorUtils_errorMessage(socket_errno));
+    SAKUSEN_FATAL(
+        "Error binding socket: " << errorUtils_errorMessage(socketErrno())
+      );
   }
   if (-1 == listen(sockfd, BACKLOG)) {
-    Fatal("Error binding socket: " << errorUtils_errorMessage(socket_errno));
+    SAKUSEN_FATAL(
+        "Error binding socket: " << errorUtils_errorMessage(socketErrno())
+      );
   }
 }
 
@@ -37,7 +41,7 @@ Socket::Ptr TCPListeningSocket::accept()
   if (-1 == (newSocket = ::accept(
           sockfd, reinterpret_cast<sockaddr*>(&peerAddress), &addrlen
         ))) {
-    switch (socket_errno) {
+    switch (socketErrno()) {
       case EAGAIN:
 #if EAGAIN != EWOULDBLOCK
       case EWOULDBLOCK:
@@ -56,9 +60,9 @@ Socket::Ptr TCPListeningSocket::accept()
 #endif // WIN32
         return Socket::Ptr();
       default:
-        Fatal(
+        SAKUSEN_FATAL(
             "Error accepting new connection: " <<
-            errorUtils_errorMessage(socket_errno)
+            errorUtils_errorMessage(socketErrno())
           );
     }
   }

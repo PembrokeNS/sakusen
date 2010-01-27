@@ -1,5 +1,5 @@
-#ifndef UI__ALERT_H
-#define UI__ALERT_H
+#ifndef TEDOMARI__UI__ALERT_H
+#define TEDOMARI__UI__ALERT_H
 
 namespace tedomari {
 namespace ui {
@@ -33,5 +33,5 @@ class Alert {
 
 }}
 
-#endif // UI__ALERT_H
+#endif // TEDOMARI__UI__ALERT_H
 

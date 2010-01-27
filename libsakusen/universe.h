@@ -1,5 +1,5 @@
-#ifndef UNIVERSE_H
-#define UNIVERSE_H
+#ifndef LIBSAKUSEN__UNIVERSE_H
+#define LIBSAKUSEN__UNIVERSE_H
 
 #include "libsakusen-global.h"
 
@@ -32,7 +32,9 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
         const String& scriptFunction,
         const String& playerDataFunction,
         const std::vector<WeaponType>& weaponTypes,
-        const std::vector<UnitType>& unitTypes
+        const std::vector<UnitType>& unitTypes,
+        const uint32 logMinSpatialNoiseScale,
+        const uint32 logMaxSpatialNoiseScale
       );
     ~Universe() {}
   private:
@@ -45,6 +47,8 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     u_map<String, WeaponTypeId>::type weaponIdLookup;
     std::vector<UnitType> unitTypes;
     u_map<String, UnitTypeId>::type unitIdLookup;
+    uint32 logMinSpatialNoiseScale;
+    uint32 logMaxSpatialNoiseScale;
 
     void constructHashMaps();
   public:
@@ -109,6 +113,9 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     /** \brief Determine whether the Universe contains a given UnitTypeId */
     bool containsUnitType(const UnitTypeId id) const;
 
+    uint32 getLogMinSpatialNoiseScale() const {return logMinSpatialNoiseScale;}
+    uint32 getLogMaxSpatialNoiseScale() const {return logMaxSpatialNoiseScale;}
+
     void store(OArchive&) const;
     /** \brief Loads a Universe from an archive
      *
@@ -123,5 +130,5 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
 
 }
 
-#endif // UNIVERSE_H
+#endif // LIBSAKUSEN__UNIVERSE_H
 

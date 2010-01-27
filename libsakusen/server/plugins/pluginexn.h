@@ -1,5 +1,5 @@
-#ifndef PLUGINEXN_H
-#define PLUGINEXN_H
+#ifndef LIBSAKUSEN_SERVER_PLUGINS__PLUGINEXN_H
+#define LIBSAKUSEN_SERVER_PLUGINS__PLUGINEXN_H
 
 #include "exceptions.h"
 
@@ -32,5 +32,5 @@ class DuplicatePluginExn : public PluginExn {
 
 }}}
 
-#endif // PLUGINEXN_H
+#endif // LIBSAKUSEN_SERVER_PLUGINS__PLUGINEXN_H
 

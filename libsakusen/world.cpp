@@ -11,7 +11,7 @@ World::World(const Universe::ConstPtr& u) :
 {
   /* sanity check */
   if (world) {
-    Debug("World constructed when world != NULL");
+    SAKUSEN_DEBUG("World constructed when world != NULL");
   }
   world = this;
 }

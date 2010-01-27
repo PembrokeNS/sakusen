@@ -1,5 +1,5 @@
-#ifndef UI__MAPDISPLAY_H
-#define UI__MAPDISPLAY_H
+#ifndef TEDOMARI__UI__MAPDISPLAY_H
+#define TEDOMARI__UI__MAPDISPLAY_H
 
 #include "point.h"
 #include "game/game.h"
@@ -153,5 +153,5 @@ inline sakusen::Point<sint32> MapDisplay::pixelToDex(
 
 }}
 
-#endif // UI__MAPDISPLAY_H
+#endif // TEDOMARI__UI__MAPDISPLAY_H
 

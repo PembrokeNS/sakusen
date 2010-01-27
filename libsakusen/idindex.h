@@ -1,5 +1,5 @@
-#ifndef IDINDEX_H
-#define IDINDEX_H
+#ifndef LIBSAKUSEN__IDINDEX_H
+#define LIBSAKUSEN__IDINDEX_H
 
 #include<boost/call_traits.hpp>
 
@@ -85,5 +85,5 @@ size_t IdIndex<TId, T, Ider>::count(
 
 }
 
-#endif // IDINDEX_H
+#endif // LIBSAKUSEN__IDINDEX_H
 

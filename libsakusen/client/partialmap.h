@@ -1,5 +1,5 @@
-#ifndef PARTIALMAP_H
-#define PARTIALMAP_H
+#ifndef LIBCSAKUSEN_CLIENT__PARTIALMAP_H
+#define LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 
 #include "libsakusen-client-global.h"
 #include "maps/planemap.h"
@@ -51,5 +51,5 @@ class LIBSAKUSEN_CLIENT_API PartialMap : public Map {
 
 }}
 
-#endif // PARTIALMAP_H
+#endif // LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 

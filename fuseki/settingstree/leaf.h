@@ -1,5 +1,5 @@
-#ifndef LEAF_H
-#define LEAF_H
+#ifndef FUSEKI__SETTINGTREE__LEAF_H
+#define FUSEKI__SETTINGTREE__LEAF_H
 
 #include "settingstree/node.h"
 #include "settingstree/branch.h"
@@ -41,5 +41,5 @@ class Leaf : public Node {
 
 }}
 
-#endif // LEAF_H
+#endif // FUSEKI__SETTINGTREE__LEAF_H
 

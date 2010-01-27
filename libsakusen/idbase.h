@@ -1,5 +1,5 @@
-#ifndef IDBASE_H
-#define IDBASE_H
+#ifndef LIBSAKUSEN__IDBASE_H
+#define LIBSAKUSEN__IDBASE_H
 
 #include "gnu_extensions.h"
 #include "stringutils.h"
@@ -108,5 +108,5 @@ inline size_t hash_value(const IdBase<TInteger, TDerived>& id)
 
 }
 
-#endif // IDBASE_H
+#endif // LIBSAKUSEN__IDBASE_H
 

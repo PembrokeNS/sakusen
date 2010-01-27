@@ -1,5 +1,5 @@
-#ifndef VISIBILITY_H
-#define VISIBILITY_H
+#ifndef LIBSAKUSEN__VISIBILITY_H
+#define LIBSAKUSEN__VISIBILITY_H
 
 #include "libsakusen-global.h"
 
@@ -112,19 +112,19 @@ class LIBSAKUSEN_API Visibility {
 
     type get(SensorType sensorType) const {
       switch (sensorType) {
-#define CASE(t) \
+#define SAKUSEN_VISIBILITY_CASE(t) \
         case sakusen::t: \
           return t
-        CASE(optical);
-        CASE(infraRed);
-        CASE(radarPassive);
-        CASE(radarActive);
-        CASE(sonarPassive);
-        CASE(sonarActive);
-        CASE(seismar);
-#undef CASE
+        SAKUSEN_VISIBILITY_CASE(optical);
+        SAKUSEN_VISIBILITY_CASE(infraRed);
+        SAKUSEN_VISIBILITY_CASE(radarPassive);
+        SAKUSEN_VISIBILITY_CASE(radarActive);
+        SAKUSEN_VISIBILITY_CASE(sonarPassive);
+        SAKUSEN_VISIBILITY_CASE(sonarActive);
+        SAKUSEN_VISIBILITY_CASE(seismar);
+#undef SAKUSEN_VISIBILITY_CASE
         default:
-          Fatal("unexpected SensorType " << sensorType);
+          SAKUSEN_FATAL("unexpected SensorType " << sensorType);
       }
     }
 
@@ -224,5 +224,5 @@ struct  LIBSAKUSEN_API Sensors {
 
 }
 
-#endif
+#endif // LIBSAKUSEN__VISIBILITY_H
 

@@ -48,7 +48,7 @@ bool WeaponOrders::isTargetValid() const
     case weaponTargetType_sensorReturns:
       return bool(targetSensorReturns);
     default:
-      Fatal("unexpected WeaponTargetType: " << targetType);
+      SAKUSEN_FATAL("unexpected WeaponTargetType: " << targetType);
   }
 }
 
@@ -63,7 +63,7 @@ Point<sint32> WeaponOrders::getTargetPosition() const
   switch (targetType) {
     case weaponTargetType_none:
     case weaponTargetType_number:
-      Fatal("no target to get position of");
+      SAKUSEN_FATAL("no target to get position of");
     case weaponTargetType_position:
       return targetPosition;
     case weaponTargetType_frame:
@@ -77,7 +77,7 @@ Point<sint32> WeaponOrders::getTargetPosition() const
         return targetSensorReturns->getRegion()->getBestPosition();
       }
     default:
-      Fatal("unexpected WeaponTargetType: " << targetType);
+      SAKUSEN_FATAL("unexpected WeaponTargetType: " << targetType);
   }
 }
 
@@ -87,7 +87,7 @@ NumberTarget WeaponOrders::getTargetNumber() const
     case weaponTargetType_number:
       return targetNumber;
     default:
-      Fatal("Tried to get number for non-number WeaponTargetType: "<< targetType);
+      SAKUSEN_FATAL("Tried to get number for non-number WeaponTargetType: "<< targetType);
   }
 }
 
@@ -96,7 +96,7 @@ const Frame& WeaponOrders::getTargetFrame() const
   if (targetType == weaponTargetType_frame) {
     return targetFrame;
   }
-  Fatal("no frame in this target type");
+  SAKUSEN_FATAL("no frame in this target type");
 }
 
 /** \brief Turn the target of the Weapon (whatever it may be) into an estimated
@@ -110,7 +110,7 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
   switch (targetType) {
     case weaponTargetType_none:
     case weaponTargetType_number:
-      Fatal("no target to get velocity of");
+      SAKUSEN_FATAL("no target to get velocity of");
     case weaponTargetType_position:
     case weaponTargetType_frame:
       return Point<sint16>();
@@ -123,7 +123,7 @@ Point<sint16> WeaponOrders::getTargetVelocity() const
         return Point<sint16>();
       }
     default:
-      Fatal("unexpected WeaponTargetType: " << targetType);
+      SAKUSEN_FATAL("unexpected WeaponTargetType: " << targetType);
   }
 }
 
@@ -147,7 +147,7 @@ void WeaponOrders::update(const Order& order)
     case orderType_move:
     case orderType_setAngularVelocity:
     case orderType_orient:
-      Fatal("Order type not appropriate for a Weapon");
+      SAKUSEN_FATAL("Order type not appropriate for a Weapon");
     case orderType_targetNone:
       targetType = weaponTargetType_none;
       break;
@@ -172,7 +172,7 @@ void WeaponOrders::update(const Order& order)
       targetSensorReturns = order.getTargetSensorReturnsData().getTarget();
       break;
     default:
-      Fatal("unknown OrderType " << order.getType());
+      SAKUSEN_FATAL("unknown OrderType " << order.getType());
   }
 }
 

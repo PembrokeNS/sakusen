@@ -1,5 +1,5 @@
-#ifndef UDPSOCKET_H
-#define UDPSOCKET_H
+#ifndef LIBSAKUSEN_COMMS__UDPSOCKET_H
+#define LIBSAKUSEN_COMMS__UDPSOCKET_H
 
 #include "libsakusen-comms-global.h"
 #include "ipsocket.h"
@@ -25,7 +25,7 @@ class UDPSocket : public IPSocket {
     size_t receiveFrom(void* buf, size_t len, String& from);
     bool isConnectionBased() { return false; }
     Socket::Ptr accept() {
-      Fatal("Not connection-based socket");
+      SAKUSEN_FATAL("Not connection-based socket");
       return Socket::Ptr(); /* Return statement for the benefit of MSVC */
     }
     String getType() const { return "udp"; }
@@ -33,4 +33,4 @@ class UDPSocket : public IPSocket {
 
 }}
 
-#endif // UDPSOCKET_H
+#endif // LIBSAKUSEN_COMMS__UDPSOCKET_H

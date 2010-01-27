@@ -1,5 +1,5 @@
-#ifndef TARGETTYPE_H
-#define TARGETTYPE_H
+#ifndef LIBSAKUSEN__TARGETTYPE_H
+#define LIBSAKUSEN__TARGETTYPE_H
 
 namespace sakusen {
 
@@ -26,5 +26,5 @@ enum RotationalTargetType {
 
 }
 
-#endif // TARGETTYPE_H
+#endif // LIBSAKUSEN__TARGETTYPE_H
 

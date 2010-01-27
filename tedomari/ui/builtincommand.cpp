@@ -227,7 +227,7 @@ void executeBuiltinCommand(
       ui->executeRegex(args.front());
       break;
     default:
-      Fatal("Unknown builtin command: " << cmd);
+      SAKUSEN_FATAL("Unknown builtin command: " << cmd);
   }
 }
 

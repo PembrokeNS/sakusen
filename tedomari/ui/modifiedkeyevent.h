@@ -1,5 +1,5 @@
-#ifndef UI__MODIFIEDKEYEVENT_H
-#define UI__MODIFIEDKEYEVENT_H
+#ifndef TEDOMARI__UI__MODIFIEDKEYEVENT_H
+#define TEDOMARI__UI__MODIFIEDKEYEVENT_H
 
 #include "ui/modifiedkey.h"
 
@@ -38,5 +38,5 @@ class ModifiedKeyEventHash {
 
 }}
 
-#endif // UI__MODIFIEDKEYEVENT_H
+#endif // TEDOMARI__UI__MODIFIEDKEYEVENT_H
 

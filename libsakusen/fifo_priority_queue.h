@@ -1,5 +1,5 @@
-#ifndef FIFO_PRIORITY_QUEUE_H
-#define FIFO_PRIORITY_QUEUE_H
+#ifndef LIBSAKUSEN__FIFO_PRIORITY_QUEUE_H
+#define LIBSAKUSEN__FIFO_PRIORITY_QUEUE_H
 
 #include <queue>
 #include <list>
@@ -123,5 +123,5 @@ class fifo_priority_queue {
 
 }
 
-#endif // FIFO_PRIORITY_QUEUE_H
+#endif // LIBSAKUSEN__FIFO_PRIORITY_QUEUE_H
 

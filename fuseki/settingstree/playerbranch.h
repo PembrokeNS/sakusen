@@ -1,5 +1,5 @@
-#ifndef PLAYERBRANCH_H
-#define PLAYERBRANCH_H
+#ifndef FUSEKI__SETTINGSTREE__PLAYERBRANCH_H
+#define FUSEKI__SETTINGSTREE__PLAYERBRANCH_H
 
 #include "settingstree/branch.h"
 
@@ -21,6 +21,6 @@ class PlayerBranch : public Branch {
 
 }}
 
-#endif // PLAYERBRANCH_H
+#endif // FUSEKI__SETTINGSTREE__PLAYERBRANCH_H
 
 

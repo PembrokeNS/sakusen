@@ -19,7 +19,10 @@ UDPConnectingSocket::UDPConnectingSocket(
   endpoint = gethostbyname(hostname.c_str());
   
   if (endpoint == NULL) {
-    Fatal("host " << hostname << " not found: " << errorUtils_parseErrno(socket_errno));
+    SAKUSEN_FATAL(
+        "host " << hostname << " not found: " <<
+        errorUtils_parseErrno(socketErrno())
+      );
   }
 
   memset(&addr, 0, sizeof(addr));
@@ -27,7 +30,7 @@ UDPConnectingSocket::UDPConnectingSocket(
   memcpy(&addr.sin_addr.s_addr, endpoint->h_addr, endpoint->h_length);
   addr.sin_port = htons(port);
   if (-1 == connect(sockfd, reinterpret_cast<const sockaddr *>(&addr), sizeof(addr))) {
-    Fatal("Error connecting socket");
+    SAKUSEN_FATAL("Error connecting socket");
   }
 }
 
