@@ -7,6 +7,7 @@
 
 #include <cerrno>
 #include <list>
+#include <cstdio>
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
