@@ -6,8 +6,8 @@ from sakusen_resources import *
 if(__name__=="__main__"):
 	#setup resource interface
 	spath = fileUtils_getHome()
-	spath /= path(CONFIG_SUBDIR)
-	spath /= path(DATA_SUBDIR)
+	spath /= path(SAKUSEN_CONFIG_SUBDIR)
+	spath /= path(SAKUSEN_RESOURCES_SUBDIR)
 	resint = FileResourceInterface_create(spath, False)
 	
 	laser = WeaponType("laser", "sagittarius/sagittarius_module", "o", 0, 0, 0, 0, resint)
