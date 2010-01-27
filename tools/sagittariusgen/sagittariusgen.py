@@ -86,7 +86,7 @@ if(__name__=="__main__"):
 
 
 	#make universe and save
-	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet, attack, defense, speed], [ship, torp, cc])
+	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet, attack, defense, speed], [ship, torp, cc], 15, 19)
 	err = u.resolveNames()
 	print("Resolving names: %s"%err)
 	u.thisown = 0 #because shared_ptr
