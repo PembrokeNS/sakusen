@@ -40,7 +40,7 @@ class socketModel():
 				clientid=d.getId().toString()
 				self.m = settingsModel(self)
 				self.mainwindow.ui.settingsTree.setModel(self.m)
-		                self.mainwindow.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
+				self.mainwindow.ui.settingsTree.setRootIndex(QtCore.QModelIndex())
 				self.m.requestSetting(())
 				self.m.requestSetting(('game','universe','name')) #so that we find the universe, if another player has already set it
 				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
