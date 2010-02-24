@@ -47,18 +47,18 @@ class eventSensorReturns(UpdatedSensorReturns):
 			else:
 				self.i.setPolygon(self.polygon)
 			curhp = self.u.getStatus().getHitPoints().numify()
-        	        tmaxhp = self.u.getStatus().getTypePtr().getDynamicData().getMaxHitPoints().numify()
-	                maxhp = self.u.getTypeData().getMaxHitPoints().numify()
-        	        if(tmaxhp != maxhp):
-	                        #still being built
-                        	self.i.setBrush(QtGui.QBrush(QtGui.QColor('blue')))
-               		else:
-        	                self.i.setBrush(QtGui.QBrush(color(curhp, maxhp)))
+			tmaxhp = self.u.getStatus().getTypePtr().getDynamicData().getMaxHitPoints().numify()
+			maxhp = self.u.getTypeData().getMaxHitPoints().numify()
+			if(tmaxhp != maxhp):
+				#still being built
+				self.i.setBrush(QtGui.QBrush(QtGui.QColor('blue')))
+	       		else:
+				self.i.setBrush(QtGui.QBrush(color(curhp, maxhp)))
 			if(self.j): sip.delete(self.j)
 			self.j = None
 		elif (p & sakusen.perception_owner):
-                        print("Able to perceive owner but not full unit. Unimplemented!!")
-                elif (p & sakusen.perception_region):
+			print("Able to perceive owner but not full unit. Unimplemented!!")
+		elif (p & sakusen.perception_region):
 			region = self.getRegion()
 			rect = region.getBoundingRectangle()
 			if(not self.j):
