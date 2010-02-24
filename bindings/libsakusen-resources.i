@@ -22,6 +22,9 @@ class WeaponType;
 %{
 #include "pcrecpp.h"
 %}
+%{
+#include "boost/filesystem/path.hpp"
+%}
 /*The following code snippet might be GPLed, if it's substantial enough (independently of
 boost itself) to be copyrightable at all. It was taken from the ArX sources; the ArX COPYING
 file claims that detailed authorship information is given in the copyright statement of each
@@ -156,9 +159,6 @@ def g(self,key):
 
 
 } // namespace boost
-%{
-#include "boost/filesystem/path.hpp"
-%}
 %include "fileutils.h"
 %{
 #include "fileutils.h"
@@ -167,4 +167,11 @@ def g(self,key):
 %{
 #include "fileresourceinterface.h"
 %}
+#ifdef SWIGPYTHON
+%extend boost::filesystem::path {
+        boost::filesystem::path __truediv__(boost::filesystem::path *other) {
+                return (*$self) / (*other);
+        }
+}
+#endif
 

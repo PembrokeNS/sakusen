@@ -20,10 +20,7 @@ interestingthings = {} #the things we want user scripting to be able to interact
 
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
-	configpath=fileUtils_getHome()
-	configpath/=path(SAKUSEN_CONFIG_SUBDIR)
-	configpath/=path(KIAI_SUBDIR)
-	configpath/=path(s+".py")
+	configpath = fileUtils_getHome() / path(SAKUSEN_CONFIG_SUBDIR) / path(KIAI_SUBDIR) / path(s+".py")
 	try:
 		exec(open(configpath.string(),'r'),interestingthings)
 	except IOError:
