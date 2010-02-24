@@ -52,7 +52,7 @@ class eventSensorReturns(UpdatedSensorReturns):
 			if(tmaxhp != maxhp):
 				#still being built
 				self.i.setBrush(QtGui.QBrush(QtGui.QColor('blue')))
-	       		else:
+			else:
 				self.i.setBrush(QtGui.QBrush(color(curhp, maxhp)))
 			if(self.j): sip.delete(self.j)
 			self.j = None
