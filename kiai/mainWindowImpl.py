@@ -25,7 +25,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
 		self.ui.entryline.setText("")
-		exec str(t) in self.env
+		exec(str(t), self.env)
 	def write(self, t):
 		self.ui.output.append(t.strip())
 	def othercommands(self, button):

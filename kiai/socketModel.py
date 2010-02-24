@@ -76,7 +76,7 @@ class socketModel():
 					#TODO: check hash
 					result=self.resourceinterface.searchUniverse(d.getValue()[0])
 					if(g(result,1)!=resourceSearchResult_success):
-						print "Failed finding universe \"%s\", error %d"%(d.getValue()[0],g(result,1))
+						print("Failed finding universe \"%s\", error %d"%(d.getValue()[0],g(result,1)))
 					else:
 						self.universe = g(result,0)
 				self.m.processUpdate(d)
@@ -108,15 +108,15 @@ class socketModel():
 				while(d.getTime()>cvar.world.getTimeNow()):
 					cvar.world.endTick()
 				if(d.getTime()>cvar.world.getTimeNow()):
-					print "Got updates in wrong order"
+					print("Got updates in wrong order")
 				l=d.getUpdates()
 				for u in l:
 					cvar.world.applyUpdate(u)
 			elif(t==messageType_reject):
 				d=me.getRejectData()
-				print "Server refused our settings change: %s" %d.getReason()
+				print("Server refused our settings change: %s" %d.getReason())
 			else:
-				print("Received unexpected message of type %d"%me.getType())
+				print(("Received unexpected message of type %d"%me.getType()))
 			self.processm()
 	def leave(self):
 		try: #try and leave cleanly
