@@ -27,7 +27,7 @@ def userconfig(s):
 		print("No configuration file \"%s\" found, or failed to open that file"%(configpath.string()))
 
 userconfig("startup")
-aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
+aboutdata = kdecore.KAboutData("kiai","",kdecore.i18n("Kiai"),"0.0.4 気持ち",kdecore.i18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.i18n("(c) 2007-10 IEG/lmm"),kdecore.i18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
