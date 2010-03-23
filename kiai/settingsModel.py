@@ -111,10 +111,10 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else:
 			return False
 	def requestSetting(self, path):
-		s=string.join(path,':')
-		d=GetSettingMessageData(s)
+		s = ':'.join(path)
+		d = GetSettingMessageData(s)
 		self.socket.sendd(d)
 	def setSetting(self, path, value):
-		s=string.join(path,':')
-		d=ChangeSettingMessageData(s,value)
+		s = ':'.join(path)
+		d = ChangeSettingMessageData(s,value)
 		self.socket.sendd(d)
