@@ -22,7 +22,7 @@ def userconfig(s):
 	"""Try and execute the specified user configuration file"""
 	configpath = fileUtils_getHome() / path(SAKUSEN_CONFIG_SUBDIR) / path(KIAI_SUBDIR) / path(s+".py")
 	try:
-		exec(open(configpath.string(),'r'),interestingthings)
+		exec(open(configpath.string(),'r').read(),interestingthings)
 	except IOError:
 		print("No configuration file \"%s\" found, or failed to open that file"%(configpath.string()))
 
