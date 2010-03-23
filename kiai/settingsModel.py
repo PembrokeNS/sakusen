@@ -106,7 +106,7 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else: return QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
 	def setData(self,index,value,role):
 		if(index.isValid()): 
-			self.setSetting(self.l[index.internalId()].path,str(value.toString()))
+			self.setSetting(self.l[index.internalId()].path,str(value))
 			return True
 		else:
 			return False
