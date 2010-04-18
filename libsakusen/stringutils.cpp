@@ -5,11 +5,12 @@
 /* I seem to have now ported mhash. Which worries me a little. */
 #ifdef _MSC_VER
 #include <mutils/mhash_config.h>
+#endif //_MSC_VER
+
+#include <stdbool.h>
 #ifndef _Bool
 #define _Bool bool
 #endif //_Bool
-#endif //_MSC_VER
-
 #include <mhash.h>
 
 using namespace std;
