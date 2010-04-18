@@ -124,7 +124,11 @@ String IPSocket::getAddress() const {
 #ifdef WIN32
     String hostname; /** \bug We make no attempt to solve this issue under Windows */
 #else
+#ifdef __FreeBSD__
+    char *hostname = (char *) malloc(sysconf(_SC_HOST_NAME_MAX) * sizeof(char));
+#else
     char hostname[HOST_NAME_MAX];
+#endif
     gethostname(hostname, HOST_NAME_MAX);
 #endif
     return getType() + SAKUSEN_COMMS_ADDR_DELIM + hostname +
