@@ -6,6 +6,8 @@
 
 #include <cerrno>
 
+#include <boost/asio/ip/host_name.hpp>
+
 #ifdef WIN32
 #define NativeSocketClose(x) closesocket(x)
 #else // BSD sockets
@@ -121,13 +123,7 @@ String IPSocket::getAddress() const {
      * In practice I don't think this will in fact be used in those
      * circumstances, because it would be broken if the connection were going
      * through a router or some such thin anyway. */
-#if defined(WIN32) || defined(__FreeBSD__)
-    /** Not fixing this for freebsd either, pending port to boost::asio */ 
-    String hostname; /** \bug We make no attempt to solve this issue under Windows */
-#else
-    char hostname[HOST_NAME_MAX];
-    gethostname(hostname, HOST_NAME_MAX);
-#endif
+    String hostname = boost::asio::ip::host_name();
     return getType() + SAKUSEN_COMMS_ADDR_DELIM + hostname +
       SAKUSEN_COMMS_ADDR_DELIM + numToString(port);
   } else {
