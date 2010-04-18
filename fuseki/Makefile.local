@@ -3,8 +3,13 @@ SOURCE_DIRS = settingstree
 # The following flag makes debugging much easier, but it needs to be removed if
 # fuseki is to be installed
 THIS_LDFLAGS = -no-install
-LIB_DEP_NAMES = libltdl_hacked liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
+LIB_DEP_NAMES = liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
 LIBS := -lstdc++ -lpcrecpp
+
+ifeq ($(ENABLE_LTDL_HACKED),yes)
+LIB_DEP_NAMES += libltdl_hacked
+endif
+
 ifeq ($(ENABLE_AVAHI),yes)
   LIBS += $(shell pkg-config --libs avahi-client)
   THIS_CPPFLAGS := $(shell pkg-config --cflags avahi-client)

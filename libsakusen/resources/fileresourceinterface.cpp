@@ -14,7 +14,11 @@
 #include "vfs/unionbranch.h"
 
 #ifdef __GNUC__
-  #include <ltdl_hacked.h>
+  #ifdef ENABLE_LTDL_HACKED
+    #include <ltdl_hacked.h>
+  #else
+    #include <ltdl.h>
+  #endif
 #endif //__GNUC__: I don't want to use this with MSVC.
 
 #include <sys/stat.h>

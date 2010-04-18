@@ -8,7 +8,11 @@
 #endif
 
 #ifdef __GNUC__
-  #include <ltdl_hacked.h>
+  #ifdef ENABLE_LTDL_HACKED
+    #include <ltdl_hacked.h>
+  #else
+    #include <ltdl.h>
+  #endif
 #endif //The Guild does not condone ltdl
 
 using namespace std;

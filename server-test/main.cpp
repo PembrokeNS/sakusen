@@ -13,7 +13,11 @@
 #include "patrollerclient.h"
 
 #include <time.h>
-#include <ltdl_hacked.h>
+#ifdef ENABLE_LTDL_HACKED
+  #include <ltdl_hacked.h>
+#else
+  #include <ltdl.h>
+#endif
 
 #include <iostream>
 #include <cerrno>
