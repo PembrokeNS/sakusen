@@ -9,6 +9,8 @@
 
 #include <stdbool.h>
 #ifndef _Bool
+/* mhash relies on this #define, which is non-standard but present in the gcc
+ * library.  This preamble to #include <mhash.h> makes it work elsewhere too */
 #define _Bool bool
 #endif //_Bool
 #include <mhash.h>
