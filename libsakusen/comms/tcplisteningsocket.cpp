@@ -53,7 +53,7 @@ Socket::Ptr TCPListeningSocket::accept()
       case EPROTO:
       case ENOPROTOOPT:
       case EHOSTDOWN:
-#ifndef __FreeBSD__
+#ifdef ENONET
       case ENONET:
 #endif
       case EHOSTUNREACH:
