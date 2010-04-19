@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags` $(SWIGWORDSIZE)
+THIS_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags` $(SWIGWORDSIZE)
 define PYTHON_VERSION
 `printf "import distutils.sysconfig\nprint distutils.sysconfig.get_python_version()\n"|python`
 endef
@@ -37,11 +37,11 @@ clean:
 	cp .libs/$@ $@
 
 _sakusen.la: sakusen.lo
-	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
+	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ $(BUILD_LDFLAGS) `python-config --libs` -rpath $(PYLIBDIR) \
 		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
 
 $(LIBRARIES): _sakusen_%.la: sakusen_%.lo
-	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ `python-config --libs` -rpath $(PYLIBDIR) \
+	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ $(BUILD_LDFLAGS) `python-config --libs` -rpath $(PYLIBDIR) \
                 sakusen_$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of all the *FLAGS to which we have
