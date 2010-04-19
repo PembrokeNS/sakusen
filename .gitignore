@@ -19,3 +19,4 @@ tags
 /release-llvm
 /small
 *.bak
+*.core
