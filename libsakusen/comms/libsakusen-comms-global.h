@@ -33,9 +33,12 @@ namespace sakusen { namespace comms {
 #endif
 }}
 
-/* The value 108 is used in sys/un.h, but not declared to anything.  The
- * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit */
-#define SAKUSEN_COMMS_UNIX_PATH_MAX 108
+/* The value 108 is used in sys/un.h on linux/glibc, but not declared to
+ * anything.  The
+ * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit.
+ * FIXME: The value is 104 on FreeBSD and quite possibly 0 on the Hurd.
+ * Therefore, we should use a better way. See Debian bug #187391 */
+#define SAKUSEN_COMMS_UNIX_PATH_MAX 104
 
 /* NETWORK_PROTOCOL_VERSION is the version number of the sakusen network
  * protocol.  It must fit in a uint8.  It should remain at 0 until at least
