@@ -45,7 +45,7 @@ String BoolLeaf::setValue(const String& v)
       return "";
     }
   }
-  return "invalid value for boolean leaf";
+  return "invalid value '"+v+"' for boolean leaf";
 }
 
 std::set<String> BoolLeaf::getValue() const
