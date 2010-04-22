@@ -33,10 +33,10 @@ namespace sakusen { namespace comms {
 #endif
 }}
 
-/* The value 108 is used in sys/un.h on linux/glibc, but not declared to
+/** The value 108 is used in sys/un.h on linux/glibc, but not declared to
  * anything.  The
- * unix(7) man page uses the name UNIX_PATH_MAX, so I have followed suit.
- * FIXME: The value is 104 on FreeBSD and quite possibly 0 on the Hurd.
+ * unix(7) man page uses the name UNIX_PATH_MAX, so we have followed suit.
+ * \bug The value is 104 on FreeBSD and quite possibly 0 on the Hurd.
  * Therefore, we should use a better way. See Debian bug #187391 */
 #define SAKUSEN_COMMS_UNIX_PATH_MAX 104
 
