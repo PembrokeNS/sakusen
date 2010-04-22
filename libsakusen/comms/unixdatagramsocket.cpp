@@ -12,6 +12,7 @@
 #include <fcntl.h>
 
 #include <cerrno>
+#include <cstddef>
 
 using namespace std;
 
@@ -99,14 +100,22 @@ UnixDatagramSocket::UnixDatagramSocket(const String& p, bool a) :
 
 void UnixDatagramSocket::initialize(const char* p)
 {
+  /* There are some crazy issues with the size of the sun_path member, for
+   * which there doesn't seem to be a nice solution.  At least we can make sure
+   * that we don't write past the end of the struct: */
+  BOOST_MPL_ASSERT_RELATION(
+    SAKUSEN_COMMS_UNIX_PATH_MAX,<=,
+    sizeof(sockaddr_un)-offsetof(sockaddr_un, sun_path)
+  );
   sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
 
   if (sockfd == -1) {
     SAKUSEN_FATAL("Error creating socket");
   }
 
+  memset(&addr, 0, sizeof(sockaddr_un));
   addr.sun_family = AF_UNIX;
-  
+
   if (abstract) {
     memset(path, 0, SAKUSEN_COMMS_UNIX_PATH_MAX);
     if (strlen(p) >= SAKUSEN_COMMS_UNIX_PATH_MAX-1) {
@@ -120,10 +129,9 @@ void UnixDatagramSocket::initialize(const char* p)
     if (strlen(p) >= SAKUSEN_COMMS_UNIX_PATH_MAX) {
       SAKUSEN_FATAL("Socket path too long");
     }
-    
+
     strncpy(path, p, SAKUSEN_COMMS_UNIX_PATH_MAX-1);
     path[SAKUSEN_COMMS_UNIX_PATH_MAX-1] = '\0';
-    memset(addr.sun_path, 0, SAKUSEN_COMMS_UNIX_PATH_MAX);
     strncpy(addr.sun_path, path, SAKUSEN_COMMS_UNIX_PATH_MAX-1);
   }
 }
