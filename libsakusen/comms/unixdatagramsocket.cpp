@@ -102,10 +102,11 @@ void UnixDatagramSocket::initialize(const char* p)
 {
   /* There are some crazy issues with the size of the sun_path member, for
    * which there doesn't seem to be a nice solution.  At least we can make sure
-   * that we don't write past the end of the struct: */
+   * that we don't write past the end of the struct.  If you get a compile
+   * error here you may need to reduce SAKUSEN_COMMS_UNIX_PATH_MAX (q.v.) or
+   * take the trouble to solve this problem the Right Way. */
   BOOST_MPL_ASSERT_RELATION(
-    SAKUSEN_COMMS_UNIX_PATH_MAX,<=,
-    sizeof(sockaddr_un)-offsetof(sockaddr_un, sun_path)
+    SAKUSEN_COMMS_UNIX_PATH_MAX,<=,sizeof(addr.sun_path)
   );
   sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
 
