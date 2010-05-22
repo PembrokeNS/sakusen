@@ -137,7 +137,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
       insert<uint32, rank>(shape);
 
       /* If any dimension is zero, there are no entries, and we quit now */
-      if (shape.end() != find(shape.begin(), shape.end(), 0U)) {
+      if (shape.end() != std::find(shape.begin(), shape.end(), 0U)) {
         return *this;
       }
 
