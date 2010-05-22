@@ -51,9 +51,10 @@ class LcgIterator :
       (detail::Power<Multiplier, uint64(1)<<62>::value),==,1
     );
   /* Assertion failure here means that the Multiplier needs to be changed to
-   * ensure full-cycle LCG */
+   * ensure full-cycle LCG.  The cast to int64 is to make clang happy (because
+   * otherwise there's an implicit sign change) */
   BOOST_MPL_ASSERT_RELATION(
-      (detail::Power<Multiplier, uint64(1)<<61>::value),!=,1
+      sint64(detail::Power<Multiplier, uint64(1)<<61>::value),!=,1
     );
   public:
     LcgIterator(uint64 const s) : state(s) { assert(state & 1); }
