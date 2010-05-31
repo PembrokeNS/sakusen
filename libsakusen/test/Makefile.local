@@ -1,0 +1,8 @@
+BIN = libsakusen-test
+LIBS = -lboost_unit_test_framework-mt
+LIB_DEP_NAMES = libsakusen
+THIS_LDFLAGS = -no-install
+
+test-nonrecursive: $(BIN)
+	./$(BIN)
+
