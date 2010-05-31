@@ -245,7 +245,8 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(LIBTOOL_OBJS)
-	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
+		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
 		-o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
@@ -276,7 +277,8 @@ else
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
-	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
+		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-o $@ $(LIBS) $^
 
 # The actual compile commands (source dependencies will come from the makefrag
