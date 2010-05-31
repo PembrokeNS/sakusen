@@ -20,7 +20,7 @@ namespace detail {
     sint32 operator()(
         SampleIterator it,
         uint32 const logScale,
-        std::size_t const* const strides,
+        uint64 const* const strides,
         CoordsIterator const coordsBegin,
         CoordsIterator coordsEnd
       ) const {
@@ -56,7 +56,7 @@ namespace detail {
     sint32 operator()(
         SampleIterator it,
         uint32 const /*logScale*/,
-        std::size_t const* const /*strides*/,
+        uint64 const* const /*strides*/,
         CoordsIterator const /*coordsBegin*/,
         CoordsIterator /*coordsEnd*/
       ) const {
