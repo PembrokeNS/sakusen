@@ -288,7 +288,8 @@ FileResourceInterface::internalSymbolSearch(
   lt_dlhandle moduleHandle =
     lt_dlopen(modulePath.native_file_string().c_str());
   if (moduleHandle == NULL) {
-    error = String("lt_dlopen() failed: ") + lt_dlerror();
+    error = String("lt_dlopen("+modulePath.native_file_string()+") failed: ") +
+      lt_dlerror();
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }
   /* We could make the module resident (it cannot be closed) so as to avoid
