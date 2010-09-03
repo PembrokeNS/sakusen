@@ -1,7 +1,7 @@
 # Include overall configuration
 include $(top_srcdir)config.mk
 
-CXX=clang
+CXX=clang++
 CC=clang
 BUILD_CXXFLAGS+=-Wno-mismatched-tags
 
