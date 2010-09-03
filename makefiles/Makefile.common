@@ -253,13 +253,13 @@ $(BIN): $(LIBTOOL_OBJS)
 # The actual compile commands (source dependencies will come from the makefrag
 # file).
 
-$(CXX_LIBTOOL_OBJS): .obj/%.lo:
+$(CXX_LIBTOOL_OBJS): .obj/%.lo: $(top_srcdir)config.mk $(top_builddir)config.mk
 	@mkdir -p $(dir $@)
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
 		$(CXX) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
-$(C_LIBTOOL_OBJS): .obj/%.lo:
+$(C_LIBTOOL_OBJS): .obj/%.lo: $(top_srcdir)config.mk $(top_builddir)config.mk
 	@mkdir -p $(dir $@)
 	$(LIBTOOL) --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
@@ -285,12 +285,12 @@ $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
 # file).  Unlike the above, we *don't* use libtool, so as to speed up the
 # compile
 
-$(CXX_OBJS): .obj/%.o:
+$(CXX_OBJS): .obj/%.o: $(top_srcdir)config.mk $(top_builddir)config.mk
 	@mkdir -p $(dir $@)
 	$(CXX) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
-$(C_OBJS): .obj/%.o:
+$(C_OBJS): .obj/%.o: $(top_srcdir)config.mk $(top_builddir)config.mk
 	@mkdir -p $(dir $@)
 	$(CC) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
