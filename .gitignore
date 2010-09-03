@@ -18,6 +18,7 @@ tags
 /debug-llvm-gcc
 /release-llvm-gcc
 /debug-clang
+/release-clang
 /small
 *.bak
 *.core
