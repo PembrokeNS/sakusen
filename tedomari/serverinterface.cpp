@@ -5,8 +5,7 @@
 #include <sakusen/comms/udplisteningsocket.h>
 #include <sakusen/comms/unixdatagramlisteningsocket.h>
 #include <sakusen/comms/socketexn.h>
-#include "tedomari-global.h"
-#include "revision.h"
+#include <sakusen/revision.h>
 #include <sakusen/heightfield-methods.h>
 
 #include <ostream>

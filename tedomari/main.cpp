@@ -1,5 +1,6 @@
 #include <sakusen/libsakusen-global.h>
 #include "tedomari-global.h"
+#include <sakusen/revision.h>
 #include <sakusen/stringutils.h>
 #include <sakusen/client/partialworld.h>
 #include <sakusen/comms/libsakusen-comms-global.h>
@@ -13,7 +14,6 @@
 #include <sakusen/heightfield-methods.h>
 
 #include "asynchronousiohandler.h"
-#include "revision.h"
 #include "serverinterface.h"
 
 #include "game/game.h"

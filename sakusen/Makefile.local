@@ -2,8 +2,40 @@ SUBDIRS = test comms resources server client
 BIN = libsakusen.la
 LIBS = -lstdc++ -lm -lmhash
 THIS_CPPFLAGS =
+GEN_HEADERS = vcs_revision.h
 
 all-recurse-resources all-recurse-server: all-recurse-comms
 
 test-recurse-resources test-recurse-server: test-recurse-comms
+
+# If we're in a working copy then we can make a revision.h containing the
+# current revision number if so desired (this should be automatically
+# generated iff it's included from anywhere).
+
+# Wildcarding these deps makes the file be regenerated after an update but
+# doesn't break make when they don't exist.
+vcs_revision.h: \
+		$(wildcard $(top_srcdir).svn/entries) $(wildcard $(top_srcdir).git/index)
+	@if test -f $(top_srcdir).svn/entries ; \
+	then \
+		REVISION=`svn info -R $(top_srcdir) | grep "^Revision:" | \
+			awk '{print $$2}' | sort -nr | head -n 1`; \
+	elif test -d $(top_srcdir).git ; \
+	then \
+		REVISION=`git rev-list --max-count=1 HEAD`; \
+	else \
+		REVISION='unknown' ; \
+	fi; \
+	if test "x$$REVISION" != "x"; \
+	then \
+		echo "#define REVISION \"$$REVISION\"" > $@; \
+	else \
+		echo '' > $@; \
+	fi;
+
+# We make revision.h a dependency of the last included Makefile to ensure that
+# it's generated before any of the other makefrags.  It has to be the last
+# included because make remakes included makefiles in reverse order.
+
+$(lastword $(MAKEFRAGS)): revision.h
 
