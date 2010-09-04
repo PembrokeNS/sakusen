@@ -5,7 +5,7 @@ SOURCE_DIRS = settingstree
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = optimal sakusen sakusen-comms sakusen-resources \
 								sakusen-server sakusen-server-plugins
-LIBS := -lstdc++
+LIBS :=
 
 ifeq ($(ENABLE_LTDL_HACKED),yes)
 LIB_DEP_NAMES += ltdl_hacked

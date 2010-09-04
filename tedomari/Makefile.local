@@ -5,7 +5,7 @@ THIS_CXXFLAGS :=
 # tedomari is to be installed
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = sakusen sakusen-comms sakusen-resources sakusen-client optimal
-LIBS := -lstdc++
+LIBS :=
 THIS_CPPFLAGS =
 
 ifeq ($(ENABLE_READLINE),yes)
