@@ -4,7 +4,7 @@ SOURCE_DIRS = settingstree
 # fuseki is to be installed
 THIS_LDFLAGS = -no-install
 LIB_DEP_NAMES = liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
-LIBS := -lstdc++ -lpcrecpp
+LIBS := -lstdc++
 
 ifeq ($(ENABLE_LTDL_HACKED),yes)
 LIB_DEP_NAMES += libltdl_hacked

@@ -7,7 +7,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <pcrecpp.h>
+#include <boost/xpressive/regex_algorithms.hpp>
 
 using namespace std;
 
@@ -30,7 +30,7 @@ Branch::Ptr DirectoryBranch::getSubBranch(const String& subBranchName)
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators; for now we insist more
    * strongly that it match the filenameRegex. */
-  if (!filenameRegex.FullMatch(subBranchName)) {
+  if (!regex_match(subBranchName, filenameRegex)) {
     SAKUSEN_FATAL("invalid name");
   }
   assert(!subBranchName.empty());
@@ -57,7 +57,7 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators; for now we insist more
    * strongly that it match the filenameRegex. */
-  if (!filenameRegex.FullMatch(subBranchName)) {
+  if (!regex_match(subBranchName, filenameRegex)) {
     SAKUSEN_FATAL("invalid name");
   }
   assert(!subBranchName.empty());
@@ -106,7 +106,7 @@ Writer::Ptr DirectoryBranch::getWriter(const String& writerName)
   /* for security reasons, it's crucial that the name contain no characters
    * that might be directory separators and isn't ..; for now we insist more
    * strongly that it match the filenameRegex. */
-  if (!filenameRegex.FullMatch(writerName)) {
+  if (!regex_match(writerName, filenameRegex)) {
     SAKUSEN_FATAL("invalid name");
   }
   boost::filesystem::path filePath = directory / writerName;

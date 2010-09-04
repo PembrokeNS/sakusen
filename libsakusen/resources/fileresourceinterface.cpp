@@ -1,5 +1,7 @@
 #include "fileresourceinterface.h"
 
+#include <boost/xpressive/regex_algorithms.hpp>
+
 #include "libsakusen-resources-global.h"
 #include "iarchive.h"
 #include "resourcetype.h"
@@ -22,7 +24,6 @@
 #endif //__GNUC__: I don't want to use this with MSVC.
 
 #include <sys/stat.h>
-#include <pcrecpp.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -386,14 +387,14 @@ bool FileResourceInterface::internalSave(
         SAKUSEN_FATAL("unexpected ResourceType: " << type);
     }
 
-    if (!filenameRegex.FullMatch(shortName)) {
+    if (!regex_match(shortName, filenameRegex)) {
       error = String("Name '") + shortName +
         "' contains invalid characters and "
         "cannot be used as part of a filename.";
       return true;
     }
 
-    if (!pathRegex.FullMatch(path)) {
+    if (!regex_match(path, pathRegex)) {
       error = String("Path '") + path + "' contains invalid characters and "
         "cannot be used as part of a filename.";
       return true;

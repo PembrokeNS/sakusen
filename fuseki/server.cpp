@@ -30,7 +30,10 @@
 
 #include <ostream>
 #include <boost/bind.hpp>
-#include <pcrecpp.h>
+#include <boost/xpressive/basic_regex.hpp>
+#include <boost/xpressive/regex_algorithms.hpp>
+#include <boost/xpressive/regex_compiler.hpp>
+#include <boost/xpressive/regex_primitives.hpp>
 
 using namespace std;
 
@@ -144,9 +147,9 @@ void Server::addClient(
     /* This could be done faster, by saving one regex and not recompiling many
      * all the time, but that requires more magic, and speed is not of the
      * essence at this stage in the game */
-    pcrecpp::RE re(*i);
-    if ((requestedAddress != "" && re.FullMatch(requestedAddress)) ||
-        (fromAddress != "" && re.FullMatch(fromAddress))) {
+    boost::xpressive::sregex re = boost::xpressive::sregex::compile(*i);
+    if ((requestedAddress != "" && regex_match(requestedAddress, re)) ||
+        (fromAddress != "" && regex_match(fromAddress, re))) {
       /* We matched a blocked address, so return without even bothering to
        * reject them. */
       out << "Ignoring join request because address is blocked.\n";
@@ -806,8 +809,9 @@ void Server::unregisterListener(
 void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
 {
   String fullName = altered->getFullName();
-  bool isReadinessChange =
-    pcrecpp::RE(":clients:[0-9]+:ready").FullMatch(fullName);
+  namespace xp = boost::xpressive;
+  xp::sregex re = ":clients:" >> +xp::range('0','9') >> ":ready";
+  bool isReadinessChange = regex_match(fullName, re);
   std::set<String> value;
   if (Leaf::Ptr l = boost::dynamic_pointer_cast<Leaf>(altered)) {
     value = l->getValue();

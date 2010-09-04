@@ -1,16 +1,14 @@
 #include "replayrecorder.h"
 
+#include <boost/xpressive/regex_algorithms.hpp>
+
 #include "libsakusen-resources-global.h"
 #include "oarchive-methods.h"
 #include "pluginexn.h"
 
 #include "completeworld.h"
 
-#include <pcrecpp.h>
-
 using namespace std;
-
-using namespace pcrecpp;
 
 using namespace sakusen::comms;
 
@@ -53,7 +51,7 @@ void ReplayRecorder::writeKeyTick()
 String ReplayRecorder::setOption(const String& name, const String& newVal)
 {
   if (name == "file") {
-    if (!(newVal == "" || resources::filenameRegex.FullMatch(newVal))) {
+    if (!(newVal == "" || regex_match(newVal, resources::filenameRegex))) {
       return "filename contains invalid characters";
     }
     replayFileRoot = newVal;

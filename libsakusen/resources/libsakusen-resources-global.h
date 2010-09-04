@@ -7,10 +7,10 @@
  * using boost::filesystem::fstream tell methods now. */
 #define _FILE_OFFSET_BITS 64
 
+#include <boost/xpressive/basic_regex.hpp>
+
 #include "libsakusen-global.h"
 #include "libsakusen-comms-global.h"
-
-#include "pcrecpp.h"
 
 /** SAKUSEN_RESOURCES_SUBDIR is the subdirectory of SAKUSEN_CONFIG_SUBDIR where
  * the game data is to be found */
@@ -42,13 +42,13 @@ namespace resources {
 /** \brief Defines a regex which must be matched by filenames.
  *
  * \warning Do not expect this to be initialised during static constructors. */
-LIBSAKUSEN_RESOURCES_API extern pcrecpp::RE filenameRegex;
+LIBSAKUSEN_RESOURCES_API extern boost::xpressive::sregex filenameRegex;
 
 /** Defines a regex which must be matched by paths in the Skusen
  * VFS
  *
  * \warning Do not expect this to be initialised during static constructors. */
-LIBSAKUSEN_RESOURCES_API extern pcrecpp::RE pathRegex;
+LIBSAKUSEN_RESOURCES_API extern boost::xpressive::sregex pathRegex;
 
 }}
 

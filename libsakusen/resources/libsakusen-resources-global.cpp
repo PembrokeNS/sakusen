@@ -1,10 +1,16 @@
 #include "libsakusen-resources-global.h"
 
+#include <boost/xpressive/regex_primitives.hpp>
+
 namespace sakusen {
 namespace resources {
 
-LIBSAKUSEN_RESOURCES_API pcrecpp::RE filenameRegex("[-a-z0-9_.]+");
-LIBSAKUSEN_RESOURCES_API pcrecpp::RE pathRegex("[-a-z0-9_./]+");
+namespace xp = boost::xpressive;
+
+LIBSAKUSEN_RESOURCES_API xp::sregex filenameRegex =
+  +xp::set[xp::range('a', 'z')|xp::range('0','9')|'-'|'_'|'.'];
+LIBSAKUSEN_RESOURCES_API xp::sregex pathRegex =
+  +xp::set[xp::range('a', 'z')|xp::range('0','9')|'-'|'_'|'.'|'/'];
 
 }}
 
