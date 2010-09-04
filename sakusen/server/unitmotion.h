@@ -1,13 +1,13 @@
 #ifndef LIBSAKUSEN_SERVER__UNITMOTION_H
 #define LIBSAKUSEN_SERVER__UNITMOTION_H
 
-#include "libsakusen-server-global.h"
+#include <sakusen/server/libsakusen-server-global.h>
 
 #include <boost/utility.hpp>
 
-#include "unitstatus.h"
-#include "unitorders.h"
-#include "unitlayer.h"
+#include <sakusen/unitstatus.h>
+#include <sakusen/unitorders.h>
+#include <sakusen/server/unitlayer.h>
 
 namespace sakusen {
 namespace server {

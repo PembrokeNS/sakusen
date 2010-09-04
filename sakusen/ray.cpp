@@ -1,7 +1,7 @@
-#include "ray.h"
-#include "icompleteunit.h"
-#include "heightfield.h"
-#include "world.h"
+#include <sakusen/ray.h>
+#include <sakusen/icompleteunit.h>
+#include <sakusen/heightfield.h>
+#include <sakusen/world.h>
 
 #include <boost/algorithm/minmax.hpp>
 #include <boost/foreach.hpp>

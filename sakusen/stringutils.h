@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__STRINGUTILS_H
 #define LIBSAKUSEN__STRINGUTILS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <list>
 #include <sstream>
@@ -9,7 +9,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include "gnu_extensions.h"
+#include <sakusen/gnu_extensions.h>
 
 /** \file
  * \brief String utilities

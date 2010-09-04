@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN_COMMS__MESSAGE_H
 #define LIBSAKUSEN_COMMS__MESSAGE_H
 
-#include "libsakusen-global.h"
-#include "messagedata.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/comms/messagedata.h>
 
 namespace sakusen {
 namespace comms {

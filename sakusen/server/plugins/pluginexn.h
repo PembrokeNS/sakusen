@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER_PLUGINS__PLUGINEXN_H
 #define LIBSAKUSEN_SERVER_PLUGINS__PLUGINEXN_H
 
-#include "exceptions.h"
+#include <sakusen/exceptions.h>
 
 namespace sakusen {
 namespace server {

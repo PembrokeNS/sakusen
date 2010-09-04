@@ -1,4 +1,4 @@
-#include "timeutils.h"
+#include <sakusen/comms/timeutils.h>
 
 /** \brief Ensures that the given timeval is in canonical form
  *

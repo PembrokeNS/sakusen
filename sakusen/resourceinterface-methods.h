@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__RESOURCEINTERFACE_METHODS_H
 #define LIBSAKUSEN__RESOURCEINTERFACE_METHODS_H
 
-#include "resourceinterface.h"
-#include "universe.h"
-#include "map.h"
+#include <sakusen/resourceinterface.h>
+#include <sakusen/universe.h>
+#include <sakusen/map.h>
 
 namespace sakusen {
 

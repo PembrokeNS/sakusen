@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__RESOURCESEARCHRESULT_H
 #define LIBSAKUSEN__RESOURCESEARCHRESULT_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <iosfwd>
 

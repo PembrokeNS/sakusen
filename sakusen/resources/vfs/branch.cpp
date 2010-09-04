@@ -1,4 +1,4 @@
-#include "vfs/branch.h"
+#include <sakusen/resources/vfs/branch.h>
 
 #include <deque>
 #include <boost/foreach.hpp>

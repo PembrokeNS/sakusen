@@ -5,7 +5,7 @@
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/is_integral.hpp>
 
-#include "stringutils.h"
+#include <sakusen/stringutils.h>
 
 namespace sakusen {
 

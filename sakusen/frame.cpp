@@ -1,4 +1,4 @@
-#include "frame.h"
+#include <sakusen/frame.h>
 
 namespace sakusen {
 

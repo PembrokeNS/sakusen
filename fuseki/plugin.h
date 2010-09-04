@@ -6,9 +6,8 @@
 #include <stack>
 #include <boost/variant.hpp>
 
-//In libsakusen/server directory.
-#include "plugins/plugininfo.h"
-#include "plugins/optioncallback.h"
+#include <sakusen/server/plugins/plugininfo.h>
+#include <sakusen/server/plugins/optioncallback.h>
 
 #include "settingstree/leaf.h"
 #include "settingstree/pluginbranch.h"

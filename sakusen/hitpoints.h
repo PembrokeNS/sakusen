@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__HITPOINTS_H
 #define LIBSAKUSEN__HITPOINTS_H
 
-#include "oarchive.h"
-#include "iarchive.h"
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
 
 namespace sakusen {
 

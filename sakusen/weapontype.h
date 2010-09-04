@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_WEAPONTYPE_H
 #define LIBSAKUSEN_WEAPONTYPE_H
 
-#include "libsakusen-global.h"
-#include "iarchive.h"
-#include "oarchive.h"
-#include "resourceinterface.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/resourceinterface.h>
 
 namespace sakusen {
 

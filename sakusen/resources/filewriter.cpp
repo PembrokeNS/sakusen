@@ -1,7 +1,7 @@
-#include "filewriter.h"
+#include <sakusen/resources/filewriter.h>
 
-#include "fileutils.h"
-#include "fileioexn.h"
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 #include <fcntl.h>
 #include <stdio.h>

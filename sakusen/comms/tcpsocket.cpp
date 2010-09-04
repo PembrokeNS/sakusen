@@ -1,14 +1,14 @@
-#include "tcpsocket.h"
-#include "tcpconnectingsocket.h"
-#include "tcplisteningsocket.h"
-#include "stringutils.h"
-#include "errorutils.h"
-#include "socketexn.h"
+#include <sakusen/comms/tcpsocket.h>
+#include <sakusen/comms/tcpconnectingsocket.h>
+#include <sakusen/comms/tcplisteningsocket.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/socketexn.h>
 
 #include <boost/scoped_array.hpp>
 
 #ifdef WIN32
-#include "wsabsd.h"
+#include <sakusen/comms/wsabsd.h>
 #define NativeReceiveReturnType int
 #else // BSD sockets
 #define NativeReceiveReturnType ssize_t

@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__EXCEPTIONS_H
 #define LIBSAKUSEN__EXCEPTIONS_H
 
-#include "libsakusen-global.h"
-#include "stringutils.h"
-#include "resourcesearchresult.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/resourcesearchresult.h>
 
 #include <cerrno>
 #include <stdexcept>

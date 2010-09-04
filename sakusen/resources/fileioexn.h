@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILEIOEXN_H
 #define LIBSAKUSEN_RESOURCES__FILEIOEXN_H
 
-#include "libsakusen-resources-global.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
 
-#include "exceptions.h"
-#include "errorutils.h"
+#include <sakusen/exceptions.h>
+#include <sakusen/comms/errorutils.h>
 
 namespace sakusen {
 namespace resources {

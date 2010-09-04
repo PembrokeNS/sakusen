@@ -1,7 +1,7 @@
-#include "mathsutils.h"
+#include <sakusen/mathsutils.h>
 
-#include "box.h"
-#include "unitcorneriterator.h"
+#include <sakusen/box.h>
+#include <sakusen/unitcorneriterator.h>
 
 #include <boost/algorithm/minmax.hpp>
 

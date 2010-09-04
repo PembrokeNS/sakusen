@@ -3,8 +3,8 @@
 
 #include <set>
 
-#include "listener.h"
-#include "optioncallback.h"
+#include <sakusen/server/plugins/listener.h>
+#include <sakusen/server/plugins/optioncallback.h>
 
 namespace sakusen {
 namespace server {

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__SERVEDGAME_H
 #define LIBSAKUSEN__SERVEDGAME_H
 
-#include "exceptions.h"
+#include <sakusen/exceptions.h>
 
 namespace sakusen {
 

@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN_CLIENT__UPDATEDSENSORRETURNS_H
 #define LIBSAKUSEN_CLIENT__UPDATEDSENSORRETURNS_H
 
-#include "libsakusen-client-global.h"
+#include <sakusen/client/libsakusen-client-global.h>
 
-#include "sensorreturns.h"
+#include <sakusen/sensorreturns.h>
 
 namespace sakusen {
 namespace client {

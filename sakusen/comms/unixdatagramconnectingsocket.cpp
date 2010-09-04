@@ -1,9 +1,9 @@
 #ifndef DISABLE_UNIX_SOCKETS
 
-#include "unixdatagramconnectingsocket.h"
+#include <sakusen/comms/unixdatagramconnectingsocket.h>
 
-#include "errorutils.h"
-#include "socketexn.h"
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/socketexn.h>
 
 #include <sys/socket.h>
 

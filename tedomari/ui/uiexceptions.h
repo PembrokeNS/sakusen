@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__UIEXCEPTIONS_H
 #define TEDOMARI__UI__UIEXCEPTIONS_H
 
-#include "exceptions.h"
+#include <sakusen/exceptions.h>
 
 namespace tedomari {
 namespace ui {

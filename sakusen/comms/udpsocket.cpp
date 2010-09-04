@@ -1,12 +1,12 @@
-#include "udpsocket.h"
-#include "udpconnectingsocket.h"
-#include "udplisteningsocket.h"
-#include "stringutils.h"
-#include "errorutils.h"
-#include "socketexn.h"
+#include <sakusen/comms/udpsocket.h>
+#include <sakusen/comms/udpconnectingsocket.h>
+#include <sakusen/comms/udplisteningsocket.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/socketexn.h>
 
 #ifdef WIN32
-#include "wsabsd.h"
+#include <sakusen/comms/wsabsd.h>
 #define NativeReceiveReturnType int
 #else // BSD sockets
 #define NativeReceiveReturnType ssize_t

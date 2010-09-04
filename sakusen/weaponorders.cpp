@@ -1,6 +1,6 @@
-#include "weaponorders.h"
+#include <sakusen/weaponorders.h>
 
-#include "region-methods.h"
+#include <sakusen/region-methods.h>
 
 using namespace sakusen;
 

@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN_SERVER__COMPLETEMAP_H
 #define LIBSAKUSEN_SERVER__COMPLETEMAP_H
 
-#include "libsakusen-server-global.h"
-#include "map.h"
-#include "heightfield.h"
+#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/map.h>
+#include <sakusen/heightfield.h>
 
 namespace sakusen {
 namespace server {

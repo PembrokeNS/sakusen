@@ -1,4 +1,4 @@
-#include "update.h"
+#include <sakusen/update.h>
 
 #include <ostream>
 

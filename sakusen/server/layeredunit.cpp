@@ -1,10 +1,10 @@
-#include "layeredunit.h"
+#include <sakusen/server/layeredunit.h>
 
-#include "completeworld.h"
-#include "unitcore.h"
-#include "unitmask.h"
-#include "region-methods.h"
-#include "unitstatus-methods.h"
+#include <sakusen/server/completeworld.h>
+#include <sakusen/server/unitcore.h>
+#include <sakusen/server/unitmask.h>
+#include <sakusen/region-methods.h>
+#include <sakusen/unitstatus-methods.h>
 
 namespace sakusen{
 namespace server{

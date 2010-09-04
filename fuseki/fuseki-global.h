@@ -1,8 +1,8 @@
 #ifndef FUSEKI_GLOBAL_H
 #define FUSEKI_GLOBAL_H
 
-#include "libsakusen-comms-global.h"
-#include "gnu_extensions.h"
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/gnu_extensions.h>
 
 #define FUSEKI_APPLICATION_NAME "fuseki"
 #define FUSEKI_APPLICATION_VERSION "0.1"

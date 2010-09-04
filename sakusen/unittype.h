@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__UNITTYPE_H
 #define LIBSAKUSEN__UNITTYPE_H
 
-#include "libsakusen-global.h"
-#include "weapontype.h"
-#include "unittypedata.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/weapontype.h>
+#include <sakusen/unittypedata.h>
 
 #include <list>
 

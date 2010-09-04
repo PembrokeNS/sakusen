@@ -3,19 +3,19 @@
 
 #include <boost/random/mersenne_twister.hpp>
 
-#include "world.h"
-#include "hash_list.h"
-#include "player.h"
-#include "ispatial.h"
-#include "completemap.h"
-#include "layeredunit.h"
-#include "fuse.h"
-#include "script.h"
-#include "ballistic.h"
-#include "beam.h"
-#include "effect.h"
-#include "playerdata.h"
-#include "morphingperlinvectorfield.h"
+#include <sakusen/world.h>
+#include <sakusen/hash_list.h>
+#include <sakusen/server/player.h>
+#include <sakusen/ispatial.h>
+#include <sakusen/server/completemap.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/server/fuse.h>
+#include <sakusen/server/script.h>
+#include <sakusen/server/ballistic.h>
+#include <sakusen/server/beam.h>
+#include <sakusen/server/effect.h>
+#include <sakusen/server/playerdata.h>
+#include <sakusen/morphingperlinvectorfield.h>
 
 namespace sakusen {
 namespace server {

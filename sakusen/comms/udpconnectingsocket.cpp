@@ -1,9 +1,9 @@
-#include "udpconnectingsocket.h"
-#include "errorutils.h"
+#include <sakusen/comms/udpconnectingsocket.h>
+#include <sakusen/comms/errorutils.h>
 
 #ifdef WIN32
 #include <winsock2.h>
-#include "wsabsd.h"
+#include <sakusen/comms/wsabsd.h>
 #endif
 
 using namespace sakusen::comms;

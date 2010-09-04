@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 #define LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <iosfwd>
 
-#include "client.h"
-#include "player.h"
+#include <sakusen/server/client.h>
+#include <sakusen/server/player.h>
 
 /* This class provides a debugging client which dumps information to
  * a stream about what messages it receives, etc. */

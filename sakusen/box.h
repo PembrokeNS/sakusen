@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__BOX_H
 #define LIBSAKUSEN__BOX_H
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "rectangle.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/rectangle.h>
 
 namespace sakusen {
 

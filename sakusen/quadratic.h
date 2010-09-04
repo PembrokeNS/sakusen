@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__QUADRATIC_H
 #define LIBSAKUSEN__QUADRATIC_H
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "oarchive.h"
-#include "iarchive.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
 
 namespace sakusen {
 

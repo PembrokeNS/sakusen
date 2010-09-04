@@ -4,9 +4,9 @@
 #include <list>
 #include <boost/variant.hpp>
 
-#include "maskedptr.h"
-#include "ref.h"
-#include "iindex.h"
+#include <sakusen/maskedptr.h>
+#include <sakusen/ref.h>
+#include <sakusen/iindex.h>
 
 namespace sakusen {
 

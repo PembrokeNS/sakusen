@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__RECTANGLEREGION_H
 #define LIBSAKUSEN__RECTANGLEREGION_H
 
-#include "region.h"
-#include "world.h"
-#include "rectangle.h"
+#include <sakusen/region.h>
+#include <sakusen/world.h>
+#include <sakusen/rectangle.h>
 
 namespace sakusen {
 

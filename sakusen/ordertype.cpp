@@ -1,6 +1,6 @@
-#include "ordertype.h"
+#include <sakusen/ordertype.h>
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

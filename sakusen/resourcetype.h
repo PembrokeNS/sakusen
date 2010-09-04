@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__RESOURCETYPE_H
 #define LIBSAKUSEN__RESOURCETYPE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <iosfwd>
 

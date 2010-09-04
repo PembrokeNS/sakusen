@@ -1,10 +1,10 @@
 #ifndef TEDOMARI__UI__UI_H
 #define TEDOMARI__UI__UI_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "stringutils.h"
-#include "ptrhash.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/ptrhash.h>
 
 #include "converter.h"
 #include "game/game.h"
@@ -19,7 +19,7 @@
 #include "ui/function.h"
 #include "ui/actiontarget.h"
 #include "ui/action.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
 namespace tedomari {
 namespace ui {

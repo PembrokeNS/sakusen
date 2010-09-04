@@ -8,12 +8,12 @@ class Effect;
 
 }}
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "region.h"
-#include "playerid.h"
-#include "visibility.h"
-#include "layeredunit.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/region.h>
+#include <sakusen/playerid.h>
+#include <sakusen/visibility.h>
+#include <sakusen/server/layeredunit.h>
 
 namespace sakusen {
 namespace server {

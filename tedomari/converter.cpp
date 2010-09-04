@@ -1,6 +1,6 @@
 #include "converter.h"
 
-#include "errorutils.h"
+#include <sakusen/comms/errorutils.h>
 
 #define CONVERT_BUFFER_LEN 4096
 

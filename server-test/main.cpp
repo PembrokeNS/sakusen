@@ -1,20 +1,20 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "sphereregion.h"
-#include "region.h"
-#include "resourceinterface-methods.h"
-#include "fileutils.h"
-#include "fileresourceinterface.h"
-#include "completeworld.h"
-#include "debuggingclient.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/region.h>
+#include <sakusen/resourceinterface-methods.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/server/completeworld.h>
+#include <sakusen/server/debuggingclient.h>
 #include "patrollerclient.h"
 
 #include <time.h>
 #ifdef ENABLE_LTDL_HACKED
-  #include <ltdl_hacked.h>
+  #include <ltdl_hacked/ltdl_hacked.h>
 #else
   #include <ltdl.h>
 #endif

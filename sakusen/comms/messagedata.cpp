@@ -1,8 +1,8 @@
-#include "messagedata.h"
+#include <sakusen/comms/messagedata.h>
 
-#include "libsakusen-global.h"
-#include "oarchive-methods.h"
-#include "world.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/world.h>
 
 using namespace std;
 

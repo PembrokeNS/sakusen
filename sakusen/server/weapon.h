@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_SERVER__WEAPON_H
 #define LIBSAKUSEN_SERVER__WEAPON_H
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "weapontype.h"
-#include "layeredunit.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/weapontype.h>
+#include <sakusen/server/layeredunit.h>
 
 namespace sakusen {
 namespace server {

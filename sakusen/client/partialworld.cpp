@@ -1,8 +1,8 @@
-#include "partialworld.h"
+#include <sakusen/client/partialworld.h>
 
-#include "map-methods.h"
-#include "naivespatial.h"
-#include "heightfield-methods.h"
+#include <sakusen/map-methods.h>
+#include <sakusen/naivespatial.h>
+#include <sakusen/heightfield-methods.h>
 
 using namespace std;
 

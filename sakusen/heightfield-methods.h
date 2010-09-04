@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__HEIGHTFIELD_METHODS_H
 #define LIBSAKUSEN__HEIGHTFIELD_METHODS_H
 
-#include "heightfield.h"
-#include "world.h"
+#include <sakusen/heightfield.h>
+#include <sakusen/world.h>
 
 namespace sakusen {
 

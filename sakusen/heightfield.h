@@ -1,16 +1,16 @@
 #ifndef LIBSAKUSEN__HEIGHTFIELD_H
 #define LIBSAKUSEN__HEIGHTFIELD_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/multi_array.hpp>
 
-#include "point.h"
-#include "rectangle.h"
-#include "iarchive.h"
-#include "oarchive.h"
-#include "iheightfield.h"
-#include "image.h"
+#include <sakusen/point.h>
+#include <sakusen/rectangle.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iheightfield.h>
+#include <sakusen/image.h>
 
 namespace sakusen {
 

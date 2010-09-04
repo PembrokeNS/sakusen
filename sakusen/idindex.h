@@ -3,7 +3,7 @@
 
 #include<boost/call_traits.hpp>
 
-#include "iindex.h"
+#include <sakusen/iindex.h>
 
 namespace sakusen {
 

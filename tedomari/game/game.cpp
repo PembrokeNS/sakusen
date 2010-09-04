@@ -1,11 +1,11 @@
 #include "game.h"
 
-#include "resourceinterface-methods.h"
-#include "messagedata.h"
+#include <sakusen/resourceinterface-methods.h>
+#include <sakusen/comms/messagedata.h>
 #include "serverinterface.h"
 #include "game/smartunitfactory.h"
 #include "game/smartsensorreturnsfactory.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
 using namespace std;
 

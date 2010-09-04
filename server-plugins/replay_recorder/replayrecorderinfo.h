@@ -1,7 +1,7 @@
 #ifndef SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDERINFO_H
 #define SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDERINFO_H
 
-#include "plugininfo.h"
+#include <sakusen/server/plugins/plugininfo.h>
 #include "replayrecorder.h"
 
 namespace sakusen {

@@ -1,19 +1,19 @@
 #ifndef LIBSAKUSEN_SERVER__PLAYER_H
 #define LIBSAKUSEN_SERVER__PLAYER_H
 
-#include "libsakusen-global.h"
-#include "hash_list.h"
-#include "gnu_extensions.h"
-#include "playerid.h"
-#include "client.h"
-#include "updatetype.h"
-#include "changeownerreason.h"
-#include "playertemplate.h"
-#include "maskedptr.h"
-#include "idindex.h"
-#include "dynamicsensorreturns.h"
-#include "ballistic.h"
-#include "playerdata.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/hash_list.h>
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/playerid.h>
+#include <sakusen/server/client.h>
+#include <sakusen/updatetype.h>
+#include <sakusen/changeownerreason.h>
+#include <sakusen/playertemplate.h>
+#include <sakusen/maskedptr.h>
+#include <sakusen/idindex.h>
+#include <sakusen/server/dynamicsensorreturns.h>
+#include <sakusen/server/ballistic.h>
+#include <sakusen/server/playerdata.h>
 
 namespace sakusen {
 namespace server {
@@ -113,7 +113,7 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
 
 }}
 
-#include "layeredunit.h"
+#include <sakusen/server/layeredunit.h>
 
 #endif // LIBSAKUSEN_SERVER__PLAYER_H
 

@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__BOUNDED_H
 #define LIBSAKUSEN__BOUNDED_H
 
-#include "libsakusen-global.h"
-#include "box.h"
-#include "gameobject.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/box.h>
+#include <sakusen/gameobject.h>
 
 namespace sakusen {
 

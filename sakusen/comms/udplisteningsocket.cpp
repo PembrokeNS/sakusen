@@ -1,5 +1,5 @@
-#include "udplisteningsocket.h"
-#include "errorutils.h"
+#include <sakusen/comms/udplisteningsocket.h>
+#include <sakusen/comms/errorutils.h>
 
 #include <sys/types.h>
 

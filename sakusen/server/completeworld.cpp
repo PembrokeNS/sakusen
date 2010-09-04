@@ -1,10 +1,10 @@
-#include "completeworld.h"
+#include <sakusen/server/completeworld.h>
 
-#include "effect.h"
-#include "mapplaymode.h"
-#include "region-methods.h"
-#include "map-methods.h"
-#include "naivespatial.h"
+#include <sakusen/server/effect.h>
+#include <sakusen/mapplaymode.h>
+#include <sakusen/region-methods.h>
+#include <sakusen/map-methods.h>
+#include <sakusen/naivespatial.h>
 
 #include <list>
 #include <vector>

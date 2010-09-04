@@ -1,7 +1,7 @@
-#include "unittype.h"
+#include <sakusen/unittype.h>
 
-#include "universe.h"
-#include "oarchive-methods.h"
+#include <sakusen/universe.h>
+#include <sakusen/oarchive-methods.h>
 
 using namespace sakusen;
 

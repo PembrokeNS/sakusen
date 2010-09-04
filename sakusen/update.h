@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__UPDATE_H
 #define LIBSAKUSEN__UPDATE_H
 
-#include "updatedata.h"
-#include "updatetype.h"
-#include "iarchive.h"
-#include "oarchive.h"
+#include <sakusen/updatedata.h>
+#include <sakusen/updatetype.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
 
 namespace sakusen {
 

@@ -1,7 +1,7 @@
-#include "fixedmotion.h"
+#include <sakusen/server/fixedmotion.h>
 
-#include "layeredunit.h"
-#include "unitcorneriterator.h"
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/unitcorneriterator.h>
 
 namespace sakusen {
 namespace server {

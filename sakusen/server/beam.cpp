@@ -1,6 +1,6 @@
-#include "beam.h"
-#include "world.h"
-#include "serializationhandler.h"
+#include <sakusen/server/beam.h>
+#include <sakusen/world.h>
+#include <sakusen/serializationhandler.h>
 
 using namespace std;
 using namespace sakusen;

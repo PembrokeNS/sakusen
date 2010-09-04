@@ -1,7 +1,7 @@
 #include "settingstree/branch.h"
 
 #include "server.h"
-#include "null_deleter.h"
+#include <sakusen/null_deleter.h>
 
 using namespace std;
 

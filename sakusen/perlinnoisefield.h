@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__PERLINNOISEFIELD_H
 #define LIBSAKUSEN__PERLINNOISEFIELD_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <cstddef>
 #include <vector>
@@ -10,7 +10,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/foreach.hpp>
 
-#include "sawwavefield.h"
+#include <sakusen/sawwavefield.h>
 
 namespace sakusen {
 

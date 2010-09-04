@@ -3,8 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "gnu_extensions.h"
-#include "getptr.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/getptr.h>
 
 namespace sakusen {
 

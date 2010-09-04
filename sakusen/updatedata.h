@@ -1,15 +1,15 @@
 #ifndef LIBSAKUSEN__UPDATEDATA_H
 #define LIBSAKUSEN__UPDATEDATA_H
 
-#include "libsakusen-global.h"
-#include "changeownerreason.h"
-#include "updatetype.h"
-#include "order.h"
-#include "oarchive.h"
-#include "completeunit.h"
-#include "sensorreturns.h"
-#include "quadratic.h"
-#include "clientballisticid.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/changeownerreason.h>
+#include <sakusen/updatetype.h>
+#include <sakusen/order.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/completeunit.h>
+#include <sakusen/sensorreturns.h>
+#include <sakusen/quadratic.h>
+#include <sakusen/clientballisticid.h>
 
 namespace sakusen {
 

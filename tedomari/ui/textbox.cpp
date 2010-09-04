@@ -1,6 +1,6 @@
 #include "ui/textbox.h"
 
-#include "stringutils.h"
+#include <sakusen/stringutils.h>
 
 using namespace sakusen;
 

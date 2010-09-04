@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN_COMMS__MESSAGEDATA_H
 #define LIBSAKUSEN_COMMS__MESSAGEDATA_H
 
-#include "messagetype.h"
-#include "oarchive.h"
-#include "iarchive.h"
-#include "update.h"
-#include "libsakusen-comms-global.h"
-#include "clientid.h"
-#include "topology.h"
-#include "ordermessage.h"
+#include <sakusen/comms/messagetype.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/update.h>
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/clientid.h>
+#include <sakusen/topology.h>
+#include <sakusen/ordermessage.h>
 
 namespace sakusen {
 namespace comms {

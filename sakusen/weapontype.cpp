@@ -1,4 +1,4 @@
-#include "weapontype.h"
+#include <sakusen/weapontype.h>
 
 using namespace sakusen;
 

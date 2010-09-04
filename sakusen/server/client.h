@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN_SERVER__CLIENT_H
 #define LIBSAKUSEN_SERVER__CLIENT_H
 
-#include "libsakusen-global.h"
-#include "libsakusen-server-global.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/libsakusen-server-global.h>
 
 #include <queue>
-#include "playerid.h"
-#include "clientid.h"
-#include "ordermessage.h"
-#include "update.h"
+#include <sakusen/playerid.h>
+#include <sakusen/clientid.h>
+#include <sakusen/ordermessage.h>
+#include <sakusen/update.h>
 
 namespace sakusen {
 namespace server {

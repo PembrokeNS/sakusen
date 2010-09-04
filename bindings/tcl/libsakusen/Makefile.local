@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms
+THIS_CPPFLAGS := -I$(top_srcdir)
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes
@@ -23,11 +23,11 @@ clean:
 
 sakusen.la: sakusen.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
-		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
+		sakusen.lo $(top_builddir)sakusen/libsakusen.la
 
 sakusencomms.la: sakusencomms.o
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib \
-                sakusencomms.lo $(top_builddir)libsakusen/comms/libsakusen-comms.la
+		sakusencomms.lo $(top_builddir)sakusen/comms/libsakusen-comms.la
 
 # FIXME: We're not taking account of all the *FLAGS to which we have
 # access
@@ -39,11 +39,11 @@ sakusencomms.la: sakusencomms.o
 # we just assume it's including all of them except revision.h
 sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
-	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
+	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 sakusencomms.cpp: $(top_srcdir)/bindings/libsakusen-comms.i $(top_srcdir)/bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
-	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I/usr/include $<
+	$(SWIG) $(SWIGWORDSIZE) -tcl -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 
 .PHONY: all test clean

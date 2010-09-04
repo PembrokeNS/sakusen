@@ -1,15 +1,15 @@
-#include "socket.h"
-#include "libsakusen-global.h"
-#include "stringutils.h"
+#include <sakusen/comms/socket.h>
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/stringutils.h>
 #include <list>
 
 #ifdef WIN32
 #include <winsock2.h>
 #endif //WIN32
 
-#include "unixdatagramsocket.h"
-#include "udpsocket.h"
-#include "tcpsocket.h"
+#include <sakusen/comms/unixdatagramsocket.h>
+#include <sakusen/comms/udpsocket.h>
+#include <sakusen/comms/tcpsocket.h>
 
 using namespace std;
 

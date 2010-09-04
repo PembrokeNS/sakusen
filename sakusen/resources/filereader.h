@@ -3,8 +3,8 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include "file.h"
-#include "reader.h"
+#include <sakusen/resources/file.h>
+#include <sakusen/reader.h>
 
 namespace sakusen {
 namespace resources {

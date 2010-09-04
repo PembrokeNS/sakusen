@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__IHEIGHTFIELD_H
 #define LIBSAKUSEN__IHEIGHTFIELD_H
 
-#include "ray.h"
+#include <sakusen/ray.h>
 
 namespace sakusen {
 

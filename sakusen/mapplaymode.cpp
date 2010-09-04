@@ -1,7 +1,7 @@
-#include "mapplaymode.h"
+#include <sakusen/mapplaymode.h>
 
-#include "oarchive-methods.h"
-#include "map.h"
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/map.h>
 
 using namespace sakusen;
 

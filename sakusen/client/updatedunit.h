@@ -1,11 +1,11 @@
 #ifndef LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 #define LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 
-#include "libsakusen-client-global.h"
+#include <sakusen/client/libsakusen-client-global.h>
 
-#include "completeunit.h"
-#include "updatedata.h"
-#include "unitorders.h"
+#include <sakusen/completeunit.h>
+#include <sakusen/updatedata.h>
+#include <sakusen/unitorders.h>
 
 namespace sakusen {
 namespace client {

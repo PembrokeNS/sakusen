@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__IARCHIVE_H
 #define LIBSAKUSEN__IARCHIVE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <vector>
 #include <list>
@@ -10,12 +10,12 @@
 #include <boost/multi_array.hpp>
 #include <boost/utility.hpp>
 
-#include "gnu_extensions.h"
-#include "point.h"
-#include "exceptions.h"
-#include "stringutils.h"
-#include "deserializationcontext.h"
-#include "buffer.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/point.h>
+#include <sakusen/exceptions.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/deserializationcontext.h>
+#include <sakusen/buffer.h>
 
 namespace sakusen {
 

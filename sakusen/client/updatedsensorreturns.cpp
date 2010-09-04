@@ -1,6 +1,6 @@
-#include "updatedsensorreturns.h"
+#include <sakusen/client/updatedsensorreturns.h>
 
-#include "partialworld.h"
+#include <sakusen/client/partialworld.h>
 
 namespace sakusen {
 namespace client {

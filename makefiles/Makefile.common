@@ -122,11 +122,8 @@ GLOBAL_CFLAGS ?= -Werror -O0 -g3
 LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
 		$(top_builddir)$(subst -,/,$(lib))/lib$(lib).la \
 	)
-ALL_CPPFLAGS := $(CPPFLAGS) $(BUILD_CPPFLAGS) -I$(this_srcdir) -I. \
-	$(foreach lib,\
-		$(patsubst $(top_builddir)%,$(top_srcdir)%,$(LIB_DEP)),\
-		-I$(dir $(lib))\
-	) $(THIS_CPPFLAGS)
+ALL_CPPFLAGS := $(CPPFLAGS) $(BUILD_CPPFLAGS) -I$(this_srcdir) \
+	-I$(top_builddir) -I$(top_srcdir) $(THIS_CPPFLAGS)
 
 # Concatenate all the CXXFLAGSs and CFLAGSs together
 

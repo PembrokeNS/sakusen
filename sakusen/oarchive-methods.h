@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__OARCHIVE_METHODS_H
 #define LIBSAKUSEN__OARCHIVE_METHODS_H
 
-#include "oarchive.h"
+#include <sakusen/oarchive.h>
 
-#include "weapontype.h"
-#include "unittype.h"
+#include <sakusen/weapontype.h>
+#include <sakusen/unittype.h>
 
 namespace sakusen {
 

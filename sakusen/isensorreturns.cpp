@@ -1,7 +1,7 @@
-#include "isensorreturns.h"
+#include <sakusen/isensorreturns.h>
 
-#include "icompleteunit.h"
-#include "region-methods.h"
+#include <sakusen/icompleteunit.h>
+#include <sakusen/region-methods.h>
 
 using namespace sakusen;
 

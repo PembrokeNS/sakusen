@@ -4,8 +4,8 @@
 #include <boost/utility.hpp>
 #include <boost/function.hpp>
 #include <boost/scoped_ptr.hpp>
-#include "libsakusen-global.h"
-#include "servedgame.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/servedgame.h>
 
 namespace sakusen {
 namespace client {

@@ -1,4 +1,4 @@
-#include "debuggingclient.h"
+#include <sakusen/server/debuggingclient.h>
 
 namespace sakusen{
 namespace server{

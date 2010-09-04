@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__WEAPONORDERS_H
 #define LIBSAKUSEN__WEAPONORDERS_H
 
-#include "order.h"
-#include "weapontargettype.h"
-#include "ref.h"
+#include <sakusen/order.h>
+#include <sakusen/weapontargettype.h>
+#include <sakusen/ref.h>
 
 namespace sakusen {
 

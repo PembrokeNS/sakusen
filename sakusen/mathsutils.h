@@ -1,11 +1,11 @@
 #ifndef LIBSAKUSEN__MATHSUTILS_H
 #define LIBSAKUSEN__MATHSUTILS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/tuple/tuple.hpp>
 
-#include "frame.h"
+#include <sakusen/frame.h>
 
 namespace sakusen {
 

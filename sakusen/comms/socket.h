@@ -4,9 +4,9 @@
 #include <sys/types.h>
 #include <boost/shared_ptr.hpp>
 
-#include "message.h"
-#include "timeutils.h"
-#include "socketexn.h"
+#include <sakusen/comms/message.h>
+#include <sakusen/comms/timeutils.h>
+#include <sakusen/comms/socketexn.h>
 
 namespace sakusen {
 namespace comms {

@@ -1,10 +1,10 @@
-#include "tcpconnectingsocket.h"
-#include "socketexn.h"
-#include "errorutils.h"
+#include <sakusen/comms/tcpconnectingsocket.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/comms/errorutils.h>
 
 #ifdef WIN32
 #include <winsock2.h>
-#include "wsabsd.h"
+#include <sakusen/comms/wsabsd.h>
 #endif
 
 using namespace sakusen::comms;

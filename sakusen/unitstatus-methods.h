@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__UNITSTATUS_METHODS_H
 #define LIBSAKUSEN__UNITSTATUS_METHODS_H
 
-#include "unitstatus.h"
+#include <sakusen/unitstatus.h>
 
-#include "world.h"
+#include <sakusen/world.h>
 
 namespace sakusen {
 

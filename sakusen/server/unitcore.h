@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN_SERVER__UNITCORE_H
 #define LIBSAKUSEN_SERVER__UNITCORE_H
 
-#include "unitstatus.h"
-#include "unitlayer.h"
-#include "weapon.h"
+#include <sakusen/unitstatus.h>
+#include <sakusen/server/unitlayer.h>
+#include <sakusen/server/weapon.h>
 
 namespace sakusen {
 namespace server {

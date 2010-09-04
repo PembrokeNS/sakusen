@@ -1,7 +1,7 @@
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
-#include "oarchive-methods.h"
-#include "mathsutils.h"
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/mathsutils.h>
 
 using namespace std;
 using namespace sakusen;

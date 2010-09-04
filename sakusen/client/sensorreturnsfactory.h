@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_CLIENT__SENSORRETURNSFACTORY_H
 #define LIBSAKUSEN_CLIENT__SENSORRETURNSFACTORY_H
 
-#include "updatedsensorreturns.h"
+#include <sakusen/client/updatedsensorreturns.h>
 
 namespace sakusen {
 namespace client {

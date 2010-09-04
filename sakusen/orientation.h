@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__ORIENTATION_H
 #define LIBSAKUSEN__ORIENTATION_H
 
-#include "point.h"
-#include "angle.h"
-#include "iarchive.h"
-#include "oarchive.h"
+#include <sakusen/point.h>
+#include <sakusen/angle.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
 
 namespace sakusen {
 

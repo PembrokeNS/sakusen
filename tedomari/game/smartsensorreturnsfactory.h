@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__GAME__SMARTSENSORRETURNSFACTORY_H
 #define TEDOMARI__GAME__SMARTSENSORRETURNSFACTORY_H
 
-#include "sensorreturnsfactory.h"
+#include <sakusen/client/sensorreturnsfactory.h>
 
 namespace tedomari {
 namespace game {

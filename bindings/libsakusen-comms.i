@@ -11,7 +11,7 @@
 /*support for std::list<sakusen::Update*/
 %include "std_list.i"
 %{
-#include "update.h"
+#include <sakusen/comms/update.h>
 %}
 #endif
 #endif
@@ -69,15 +69,15 @@ using Sakusen;
 %}
 
 /* libsakusen-comms */
-%include "libsakusen-comms-global.h"
+%include <sakusen/comms/libsakusen-comms-global.h>
 %{
-#include "libsakusen-comms-global.h"
+#include <sakusen/comms/libsakusen-comms-global.h>
 %}
 
 %ignore sakusen::comms::operator<<(std::ostream& output, MessageType type);
-%include "messagetype.h"
+%include <sakusen/comms/messagetype.h>
 %{
-#include "messagetype.h"
+#include <sakusen/comms/messagetype.h>
 %}
 
 namespace sakusen{
@@ -88,31 +88,31 @@ class MessageData;
 }
 }
 #ifdef SWIGPYTHON
-%include "std_set.i"
+%include <sakusen/comms/std_set.i>
 namespace saksen{
 namespace comms{
 %template(stringSet) ::std::set<::sakusen::String>;
 }
 }
 #endif
-%include "messagedata.h"
+%include <sakusen/comms/messagedata.h>
 %{
-#include "messagedata.h"
+#include <sakusen/comms/messagedata.h>
 %}
 
-%include "message.h"
+%include <sakusen/comms/message.h>
 %{
-#include "message.h"
+#include <sakusen/comms/message.h>
 %}
 
-%include "timeutils.h"
+%include <sakusen/comms/timeutils.h>
 %{
-#include "timeutils.h"
+#include <sakusen/comms/timeutils.h>
 %}
 
-%include "socketexn.h"
+%include <sakusen/comms/socketexn.h>
 %{
-#include "socketexn.h"
+#include <sakusen/comms/socketexn.h>
 %}
 
 namespace sakusen{
@@ -121,20 +121,20 @@ class Socket;
 %template(sPtr) ::boost::shared_ptr<Socket>;
 }
 }
-%include "socket.h"
+%include <sakusen/comms/socket.h>
 %{
-#include "socket.h"
+#include <sakusen/comms/socket.h>
 %}
-%include "unixdatagramsocket.h"
+%include <sakusen/comms/unixdatagramsocket.h>
 %{
-#include "unixdatagramsocket.h"
+#include <sakusen/comms/unixdatagramsocket.h>
 %}
-%include "unixdatagramlisteningsocket.h"
+%include <sakusen/comms/unixdatagramlisteningsocket.h>
 %{
-#include "unixdatagramlisteningsocket.h"
+#include <sakusen/comms/unixdatagramlisteningsocket.h>
 %}
 %{
-#include "time.h"
+#include <time.h>
 %}
 #ifndef _WIN32
 	struct timeval {

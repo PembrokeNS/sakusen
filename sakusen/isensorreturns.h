@@ -1,16 +1,16 @@
 #ifndef LIBSAKUSEN__ISENSORRETURNS_H
 #define LIBSAKUSEN__ISENSORRETURNS_H
 
-#include "libsakusen-global.h"
-#include "gnu_extensions.h"
-#include "visibility.h"
-#include "playerid.h"
-#include "region.h"
-#include "rectangle.h"
-#include "sensorreturnsid.h"
-#include "ref.h"
-#include "world.h"
-#include "sensorreturnmap.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/visibility.h>
+#include <sakusen/playerid.h>
+#include <sakusen/region.h>
+#include <sakusen/rectangle.h>
+#include <sakusen/sensorreturnsid.h>
+#include <sakusen/ref.h>
+#include <sakusen/world.h>
+#include <sakusen/sensorreturnmap.h>
 
 namespace sakusen {
 

@@ -8,8 +8,8 @@
 #include <boost/range/end.hpp>
 #include <boost/range/size.hpp>
 
-#include "lcgiterator.h"
-#include "mathsutils.h"
+#include <sakusen/lcgiterator.h>
+#include <sakusen/mathsutils.h>
 
 namespace sakusen {
 

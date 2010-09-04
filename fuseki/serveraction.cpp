@@ -1,6 +1,6 @@
 #include "serveraction.h"
 
-#include "plugins/pluginexn.h"
+#include <sakusen/server/plugins/pluginexn.h>
 
 using namespace std;
 

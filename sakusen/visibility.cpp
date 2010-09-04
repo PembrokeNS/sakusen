@@ -1,6 +1,6 @@
-#include "visibility.h"
+#include <sakusen/visibility.h>
 
-#include "completeunit.h"
+#include <sakusen/completeunit.h>
 
 using namespace sakusen;
 

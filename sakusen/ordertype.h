@@ -2,7 +2,7 @@
 #define LIBSAKUSEN__ORDERTYPE_H
 
 #include <iosfwd>
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 namespace sakusen {
 

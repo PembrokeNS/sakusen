@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__UNITSTATUS_H
 #define LIBSAKUSEN__UNITSTATUS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "iunitstatus.h"
-#include "universe.h"
+#include <sakusen/iunitstatus.h>
+#include <sakusen/universe.h>
 
 namespace sakusen {
 

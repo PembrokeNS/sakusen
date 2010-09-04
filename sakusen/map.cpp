@@ -1,4 +1,4 @@
-#include "map.h"
+#include <sakusen/map.h>
 
 using namespace std;
 

@@ -3,8 +3,8 @@
 
 #include <boost/iterator/iterator_facade.hpp>
 
-#include "point.h"
-#include "icompleteunit.h"
+#include <sakusen/point.h>
+#include <sakusen/icompleteunit.h>
 
 namespace sakusen {
 

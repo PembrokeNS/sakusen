@@ -1,6 +1,6 @@
-#include "updatedunit.h"
-#include "partialworld.h"
-#include "heightfield-methods.h"
+#include <sakusen/client/updatedunit.h>
+#include <sakusen/client/partialworld.h>
+#include <sakusen/heightfield-methods.h>
 
 namespace sakusen {
 namespace client {

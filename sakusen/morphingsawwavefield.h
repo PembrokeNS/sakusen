@@ -4,7 +4,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_int.hpp>
 
-#include "sawwavefield.h"
+#include <sakusen/sawwavefield.h>
 
 namespace sakusen {
 

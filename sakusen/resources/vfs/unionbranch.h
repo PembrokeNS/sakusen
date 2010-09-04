@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__VFS__UNIONBRANCH_H
 #define LIBSAKUSEN_RESOURCES__VFS__UNIONBRANCH_H
 
-#include "vfs/branch.h"
+#include <sakusen/resources/vfs/branch.h>
 
 namespace sakusen {
 namespace resources {

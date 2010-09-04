@@ -1,7 +1,7 @@
-#include "playertemplate.h"
+#include <sakusen/playertemplate.h>
 
-#include "maptemplate.h"
-#include "oarchive-methods.h"
+#include <sakusen/maptemplate.h>
+#include <sakusen/oarchive-methods.h>
 
 using namespace sakusen;
 

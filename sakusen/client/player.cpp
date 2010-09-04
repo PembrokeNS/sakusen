@@ -1,5 +1,5 @@
-#include "player.h"
-#include "updatedata.h"
+#include <sakusen/client/player.h>
+#include <sakusen/updatedata.h>
 
 using namespace std;
 

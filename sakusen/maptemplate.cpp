@@ -1,6 +1,6 @@
-#include "maptemplate.h"
+#include <sakusen/maptemplate.h>
 
-#include "oarchive-methods.h"
+#include <sakusen/oarchive-methods.h>
 
 using namespace std;
 

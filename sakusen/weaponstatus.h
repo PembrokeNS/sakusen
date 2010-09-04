@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN__WEAPONSTATUS_H
 #define LIBSAKUSEN__WEAPONSTATUS_H
 
-#include "iarchive.h"
-#include "oarchive.h"
-#include "weapontype.h"
-#include "weapontargettype.h"
-#include "ref.h"
-#include "frame.h"
-#include "serializationhandler.h"
-#include "materielprovider.h"
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/weapontype.h>
+#include <sakusen/weapontargettype.h>
+#include <sakusen/ref.h>
+#include <sakusen/frame.h>
+#include <sakusen/serializationhandler.h>
+#include <sakusen/materielprovider.h>
 
 namespace sakusen {
 

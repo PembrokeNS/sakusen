@@ -1,16 +1,16 @@
 #ifndef LIBSAKUSEN__UNIVERSE_H
 #define LIBSAKUSEN__UNIVERSE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <vector>
 #include <boost/utility.hpp>
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
-#include "unittype.h"
-#include "iarchive.h"
-#include "oarchive.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/unittype.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
 
 namespace sakusen {
 

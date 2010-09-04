@@ -1,15 +1,15 @@
 #ifndef LIBSAKUSEN__VISIBILITY_H
 #define LIBSAKUSEN__VISIBILITY_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/integer_traits.hpp>
 
-#include "angle.h"
-#include "iarchive.h"
-#include "oarchive.h"
-#include "eachsensorreturn.h"
-#include "ref.h"
+#include <sakusen/angle.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/eachsensorreturn.h>
+#include <sakusen/ref.h>
 
 namespace sakusen {
 

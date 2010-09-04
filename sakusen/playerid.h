@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__PLAYERID_H
 #define LIBSAKUSEN__PLAYERID_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "stringutils.h"
-#include "idbase.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/idbase.h>
 
 
 namespace sakusen {

@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 #include "ui/builtincommand.h"
 #include "ui/function.h"
 

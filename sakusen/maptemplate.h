@@ -1,11 +1,11 @@
 #ifndef LIBSAKUSEN__MAPTEMPLATE_H
 #define LIBSAKUSEN__MAPTEMPLATE_H
 
-#include "libsakusen-global.h"
-#include "universe.h"
-#include "heightfield.h"
-#include "mapplaymode.h"
-#include "topology.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/universe.h>
+#include <sakusen/heightfield.h>
+#include <sakusen/mapplaymode.h>
+#include <sakusen/topology.h>
 
 namespace sakusen {
 

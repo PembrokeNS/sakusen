@@ -1,8 +1,8 @@
 #ifndef TEDOMARI__UI__MODE_H
 #define TEDOMARI__UI__MODE_H
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
 
 #include "ui/modifiedkeyevent.h"
 #include "ui/command.h"

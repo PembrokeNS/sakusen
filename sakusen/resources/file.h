@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILE_H
 #define LIBSAKUSEN_RESOURCES__FILE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/shared_array.hpp>
 #include <boost/utility.hpp>

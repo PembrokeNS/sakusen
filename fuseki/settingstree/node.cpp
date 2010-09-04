@@ -1,7 +1,7 @@
 #include "settingstree/node.h"
 
-#include "libsakusen-comms-global.h"
-#include "stringutils.h"
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/stringutils.h>
 #include "settingstree/branch.h"
 #include "server.h"
 

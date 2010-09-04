@@ -1,16 +1,16 @@
 
-#include "point.h"
-#include "unittype.h"
-#include "universe.h"
-#include "heightfield.h"
-#include "mapplaymode.h"
-#include "sphereregion.h"
-#include "libsakusen-resources-global.h"
-#include "resourceinterface-methods.h"
-#include "fileresourceinterface.h"
-#include "fileutils.h"
-#include "pngimage.h"
-#include "fileioexn.h"
+#include <sakusen/point.h>
+#include <sakusen/unittype.h>
+#include <sakusen/universe.h>
+#include <sakusen/heightfield.h>
+#include <sakusen/mapplaymode.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resourceinterface-methods.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/pngimage.h>
+#include <sakusen/resources/fileioexn.h>
 
 #include <iostream>
 #include <boost/filesystem/operations.hpp>

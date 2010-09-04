@@ -1,9 +1,9 @@
-#include "errorutils.h"
+#include <sakusen/comms/errorutils.h>
 
 #include <cerrno>
 #include <cstring>
 #include <sstream>
-#include "libsakusen-comms-global.h"
+#include <sakusen/comms/libsakusen-comms-global.h>
 
 namespace sakusen {
 namespace comms {

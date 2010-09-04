@@ -1,15 +1,15 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILERESOURCEINTERFACE_H
 #define LIBSAKUSEN_RESOURCES__FILERESOURCEINTERFACE_H
 
-#include "libsakusen-resources-global.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
 
 #include <vector>
 #include <boost/weak_ptr.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include "resourceinterface.h"
-#include "universe.h"
-#include "vfs/branch.h"
+#include <sakusen/resourceinterface.h>
+#include <sakusen/universe.h>
+#include <sakusen/resources/vfs/branch.h>
 
 namespace sakusen {
 namespace resources {

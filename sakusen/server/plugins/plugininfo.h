@@ -3,7 +3,7 @@
 
 #include <boost/utility.hpp>
 
-#include "pluginserverinterface.h"
+#include <sakusen/server/plugins/pluginserverinterface.h>
 
 namespace sakusen {
 namespace server {

@@ -1,13 +1,13 @@
 #ifndef LIBSAKUSEN__COMPLETEUNIT_H
 #define LIBSAKUSEN__COMPLETEUNIT_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <list>
-#include "point.h"
-#include "unittype.h"
-#include "unitstatus.h"
-#include "icompleteunit.h"
+#include <sakusen/point.h>
+#include <sakusen/unittype.h>
+#include <sakusen/unitstatus.h>
+#include <sakusen/icompleteunit.h>
 
 namespace sakusen {
 

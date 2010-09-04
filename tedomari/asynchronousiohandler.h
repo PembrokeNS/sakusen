@@ -6,10 +6,10 @@
 #include <queue>
 #include <boost/filesystem/path.hpp>
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 #include "tedomari-global.h"
 #include "converter.h"
-#include "timeutils.h"
+#include <sakusen/comms/timeutils.h>
 
 namespace tedomari {
 

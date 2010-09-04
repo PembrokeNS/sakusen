@@ -1,7 +1,7 @@
-#include "unitmotion.h"
+#include <sakusen/server/unitmotion.h>
 
-#include "groundmotion.h"
-#include "fixedmotion.h"
+#include <sakusen/server/groundmotion.h>
+#include <sakusen/server/fixedmotion.h>
 
 namespace sakusen {
 namespace server {

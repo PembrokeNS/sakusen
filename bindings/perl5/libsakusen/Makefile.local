@@ -55,7 +55,7 @@ Sakusen.o: Sakusen.cpp
 # we just assume it's including all of them except revision.h
 Sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)sakusen/*.h))
-	$(SWIG) $(SWIGWORDSIZE) -perl5 -c++ -o $@ -module Sakusen -I$(top_srcdir)sakusen -I/usr/include $<
+	$(SWIG) $(SWIGWORDSIZE) -perl5 -c++ -o $@ -module Sakusen -I$(top_srcdir) -I/usr/include $<
 
 .PHONY: all config static dynamic test linkext manifest blibdirs clean realclean disttest distdir
 

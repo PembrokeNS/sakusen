@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__IUNITTYPEDATA_H
 #define LIBSAKUSEN__IUNITTYPEDATA_H
 
-#include "point.h"
-#include "visibility.h"
-#include "hitpoints.h"
-#include "region.h"
+#include <sakusen/point.h>
+#include <sakusen/visibility.h>
+#include <sakusen/hitpoints.h>
+#include <sakusen/region.h>
 
 namespace sakusen {
 

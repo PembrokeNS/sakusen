@@ -1,11 +1,11 @@
 #ifndef LIBSAKUSEN__REGION_METHODS_H
 #define LIBSAKUSEN__REGION_METHODS_H
 
-#include "region.h"
-#include "world.h"
-#include "iunitstatus.h"
-#include "sphereregion.h"
-#include "rectangleregion.h"
+#include <sakusen/region.h>
+#include <sakusen/world.h>
+#include <sakusen/iunitstatus.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/rectangleregion.h>
 
 namespace sakusen {
 

@@ -1,8 +1,8 @@
-#include "sensorreturns.h"
+#include <sakusen/sensorreturns.h>
 
-#include "oarchive-methods.h"
-#include "world.h"
-#include "region-methods.h"
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/world.h>
+#include <sakusen/region-methods.h>
 
 using namespace sakusen;
 

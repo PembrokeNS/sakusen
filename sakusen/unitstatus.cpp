@@ -1,6 +1,6 @@
-#include "unitstatus-methods.h"
+#include <sakusen/unitstatus-methods.h>
 
-#include "oarchive-methods.h"
+#include <sakusen/oarchive-methods.h>
 
 using namespace std;
 

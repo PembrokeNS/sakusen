@@ -1,9 +1,9 @@
-#include "dynamicsensorreturns.h"
+#include <sakusen/server/dynamicsensorreturns.h>
 
-#include "player.h"
-#include "layeredunit.h"
-#include "sphereregion.h"
-#include "completeworld.h"
+#include <sakusen/server/player.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/server/completeworld.h>
 
 #include <stack>
 

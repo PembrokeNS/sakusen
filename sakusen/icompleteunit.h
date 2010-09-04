@@ -1,17 +1,17 @@
 #ifndef LIBSAKUSEN__ICOMPLETEUNIT_H
 #define LIBSAKUSEN__ICOMPLETEUNIT_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <list>
-#include "point.h"
-#include "rectangle.h"
-#include "box.h"
-#include "unittype.h"
-#include "iunitstatus.h"
-#include "ref.h"
-#include "bounded.h"
-#include "unitid.h"
+#include <sakusen/point.h>
+#include <sakusen/rectangle.h>
+#include <sakusen/box.h>
+#include <sakusen/unittype.h>
+#include <sakusen/iunitstatus.h>
+#include <sakusen/ref.h>
+#include <sakusen/bounded.h>
+#include <sakusen/unitid.h>
 
 namespace sakusen {
 

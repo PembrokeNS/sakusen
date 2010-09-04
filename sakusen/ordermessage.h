@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__ORDERMESSAGE_H
 #define LIBSAKUSEN__ORDERMESSAGE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "order.h"
+#include <sakusen/order.h>
 
 namespace sakusen {
 

@@ -1,5 +1,5 @@
-#include "messagetype.h"
-#include "libsakusen-global.h"
+#include <sakusen/comms/messagetype.h>
+#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

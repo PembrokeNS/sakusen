@@ -1,7 +1,7 @@
-#include "fileutils.h"
+#include <sakusen/resources/fileutils.h>
 
-#include "stringutils.h"
-#include "fileioexn.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 #include <sys/stat.h>
 

@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__DESERIALIZATIONCONTEXT_H
 #define LIBSAKUSEN__DESERIALIZATIONCONTEXT_H
 
-#include "resourceinterface.h"
-#include "playerid.h"
+#include <sakusen/resourceinterface.h>
+#include <sakusen/playerid.h>
 
 namespace sakusen {
 

@@ -163,37 +163,37 @@ class tuple<
 
 %ignore debugStream;
 %ignore errorStream;
-%include "libsakusen-global.h"
+%include <sakusen/libsakusen-global.h>
 %{
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 %}
 #if !defined(SWIGCSHARP) && !defined(SWIGTCL)
   %template(stringList) std::list<sakusen::String>;
 #endif
-%include "numbertarget.h"
+%include <sakusen/numbertarget.h>
 %{
-#include "numbertarget.h"
+#include <sakusen/numbertarget.h>
 %}
-%include "arithmetictraits.h"
+%include <sakusen/arithmetictraits.h>
 %array_class(uint8,uint8);
 %array_class(sint16,sint16);
 /* it looks like it really has to be called uint8, otherwise SWIG gets
  * confused. Crazy, huh? */
-/* Causes make clean to fail, though this is probably due to problems in makefiles %include "revision.h"*/
-%include "gameobject.h"
-%include "topology.h"
+/* Causes make clean to fail, though this is probably due to problems in makefiles %include <sakusen/revision.h>*/
+%include <sakusen/gameobject.h>
+%include <sakusen/topology.h>
 %{
-#include "topology.h"
+#include <sakusen/topology.h>
 %}
 
-%include "numbertarget.h"
+%include <sakusen/numbertarget.h>
 %{
-#include "numbertarget.h"
+#include <sakusen/numbertarget.h>
 %}
 
-%include "point.h"
+%include <sakusen/point.h>
 %{
-#include "point.h"
+#include <sakusen/point.h>
 %}
 namespace sakusen {
 #ifdef BINDING_NOOVERLOAD
@@ -228,34 +228,34 @@ namespace sakusen {
 %template(UPoint32) Point<uint32>;
 %template(SPoint64) Point<sint64>;
 }
-%include "angle.h"
+%include <sakusen/angle.h>
 %{
-#include "angle.h"
+#include <sakusen/angle.h>
 %}
-%include "buffer.h"
+%include <sakusen/buffer.h>
 %{
-#include "buffer.h"
+#include <sakusen/buffer.h>
 %}
-%include "iarchive.h"
+%include <sakusen/iarchive.h>
 %{
-#include "iarchive.h"
+#include <sakusen/iarchive.h>
 %}
-%include "oarchive.h"
+%include <sakusen/oarchive.h>
 %{
-#include "oarchive.h"
+#include <sakusen/oarchive.h>
 %}
-%import "ref.h"
-%include "box.h"
+%import <sakusen/ref.h>
+%include <sakusen/box.h>
 %{
-#include "box.h"
+#include <sakusen/box.h>
 %}
-%include "bounded.h"
+%include <sakusen/bounded.h>
 %{
-#include "bounded.h"
+#include <sakusen/bounded.h>
 %}
-%include "idbase.h"
+%include <sakusen/idbase.h>
 %{
-#include "idbase.h"
+#include <sakusen/idbase.h>
 %}
 namespace sakusen{
 class ClientId;
@@ -269,28 +269,28 @@ class SensorReturnsId;
 class ClientBallisticId;
 %template(ClientBallisticIdBase) IdBase<uint32, ClientBallisticId >;
 }
-%include "sensorreturnsid.h"
+%include <sakusen/sensorreturnsid.h>
 %{
-#include "sensorreturnsid.h"
+#include <sakusen/sensorreturnsid.h>
 %}
-%include "perception.h"
+%include <sakusen/perception.h>
 %{
-#include "perception.h"
+#include <sakusen/perception.h>
 %}
-%include "regiontype.h"
-%include "region.h"
-%include "sphereregion.h"
-%include "rectangleregion.h"
+%include <sakusen/regiontype.h>
+%include <sakusen/region.h>
+%include <sakusen/sphereregion.h>
+%include <sakusen/rectangleregion.h>
 %{
-#include "region.h"
-#include "region-methods.h"
-#include "sphereregion.h"
-#include "rectangleregion.h"
+#include <sakusen/region.h>
+#include <sakusen/region-methods.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/rectangleregion.h>
 %}
 
-%include "rectangle.h"
+%include <sakusen/rectangle.h>
 %{
-#include "rectangle.h"
+#include <sakusen/rectangle.h>
 %}
 namespace sakusen {
   %extend Rectangle {
@@ -312,65 +312,65 @@ namespace sakusen {
 %template(SSphereRegion16) sakusen::SphereRegion<sint16>;
 %template(SRectangleRegion16) sakusen::RectangleRegion<sint16>;
 
-%include "hitpoints.h"
+%include <sakusen/hitpoints.h>
 %{
-#include "hitpoints.h"
+#include <sakusen/hitpoints.h>
 %}
-%include "sensorreturnmap.h"
+%include <sakusen/sensorreturnmap.h>
 %{
-#include "sensorreturnmap.h"
+#include <sakusen/sensorreturnmap.h>
 %}
-%include "isensorreturns.h"
+%include <sakusen/isensorreturns.h>
 %{
-#include "isensorreturns.h"
+#include <sakusen/isensorreturns.h>
 %}
-%include "image.h"
+%include <sakusen/image.h>
 %{
-#include "image.h"
+#include <sakusen/image.h>
 %}
-%include "writer.h"
+%include <sakusen/writer.h>
 %{
-#include "writer.h"
+#include <sakusen/writer.h>
 %}
-%include "resourcesearchresult.h"
+%include <sakusen/resourcesearchresult.h>
 %{
-#include "resourcesearchresult.h"
+#include <sakusen/resourcesearchresult.h>
 %}
-%include "resourceinterface.h"
+%include <sakusen/resourceinterface.h>
 %{
-#include "resourceinterface.h"
-#include "resourceinterface-methods.h"
+#include <sakusen/resourceinterface.h>
+#include <sakusen/resourceinterface-methods.h>
 %}
 %extend sakusen::ResourceInterface{
   %template(usave) save<sakusen::Universe>;
 }
-%include "deserializationcontext.h"
+%include <sakusen/deserializationcontext.h>
 %{
-#include "deserializationcontext.h"
+#include <sakusen/deserializationcontext.h>
 %}
-%include "sensorreturn.h"
+%include <sakusen/sensorreturn.h>
 %{
-#include "sensorreturn.h"
+#include <sakusen/sensorreturn.h>
 %}
-%include "eachsensorreturn.h"
+%include <sakusen/eachsensorreturn.h>
 %{
-#include "eachsensorreturn.h"
+#include <sakusen/eachsensorreturn.h>
 %}
-%include "visibility.h"
+%include <sakusen/visibility.h>
 #{
-#include "visibility.h"
+#include <sakusen/visibility.h>
 #}
-%include "iunittypedata.h"
+%include <sakusen/iunittypedata.h>
 %{
-#include "iunittypedata.h"
+#include <sakusen/iunittypedata.h>
 %}
-%include "unittypedata.h"
+%include <sakusen/unittypedata.h>
 %{
-#include "unittypedata.h"
+#include <sakusen/unittypedata.h>
 %}
-%include "icompleteunit.h"
+%include <sakusen/icompleteunit.h>
 %{
-#include "icompleteunit.h"
+#include <sakusen/icompleteunit.h>
 %}
 namespace sakusen{
 /*Unfortunately this breaks due to making a pointer to a reference */
@@ -381,80 +381,80 @@ namespace sakusen{
 %template(ICompleteUnitConstRef) sakusen::Ref<sakusen::ICompleteUnit const>;
 %ignore sakusen::Ref<sakusen::ISensorReturns>::operator*;
 %template(ISensorReturnsRef) sakusen::Ref<sakusen::ISensorReturns>;
-%include "sensorreturns.h"
+%include <sakusen/sensorreturns.h>
 %{
-#include "sensorreturns.h"
+#include <sakusen/sensorreturns.h>
 %}
 
 
 %template(SBox32) sakusen::Box<sint32>;
 
-%include "ray.h"
+%include <sakusen/ray.h>
 %{
-#include "ray.h"
+#include <sakusen/ray.h>
 %}
 
-%include "quadratic.h"
+%include <sakusen/quadratic.h>
 %{
-#include "quadratic.h"
+#include <sakusen/quadratic.h>
 %}
 
 %template(SRegion32) sakusen::Region<sint32>;
 %template(SSphereRegion32) sakusen::SphereRegion<sint32>;
 %template(SRectangleRegion32) sakusen::RectangleRegion<sint32>;
 
-%include "ordertype.h"
+%include <sakusen/ordertype.h>
 %{
-#include "ordertype.h"
+#include <sakusen/ordertype.h>
 %}
 
 
 /* dependencies of libsakusen-comms */
-%include "clientid.h"
+%include <sakusen/clientid.h>
 %{
-#include "clientid.h"
+#include <sakusen/clientid.h>
 %}
 
-%include "playerid.h"
+%include <sakusen/playerid.h>
 %{
-#include "playerid.h"
+#include <sakusen/playerid.h>
 %}
-%include "orientation.h"
+%include <sakusen/orientation.h>
 %{
-#include "orientation.h"
+#include <sakusen/orientation.h>
 %}
-%include "frame.h"
+%include <sakusen/frame.h>
 %{
-#include "frame.h"
+#include <sakusen/frame.h>
 %}
-%include "mathsutils.h"
+%include <sakusen/mathsutils.h>
 %{
-#include "mathsutils.h"
+#include <sakusen/mathsutils.h>
 %}
-%include "iheightfield.h"
+%include <sakusen/iheightfield.h>
 %{
-#include "iheightfield.h"
+#include <sakusen/iheightfield.h>
 %}
-%include "heightfield.h"
+%include <sakusen/heightfield.h>
 %{
-#include "heightfield.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield.h>
+#include <sakusen/heightfield-methods.h>
 %}
-%include "updatetype.h"
+%include <sakusen/updatetype.h>
 %{
-#include "updatetype.h"
+#include <sakusen/updatetype.h>
 %}
-%include "unitid.h"
+%include <sakusen/unitid.h>
 %{
-#include "unitid.h"
+#include <sakusen/unitid.h>
 %}
-%include "changeownerreason.h"
+%include <sakusen/changeownerreason.h>
 %{
-#include "changeownerreason.h"
+#include <sakusen/changeownerreason.h>
 %}
-%include "weapontype.h"
+%include <sakusen/weapontype.h>
 %{
-#include "weapontype.h"
+#include <sakusen/weapontype.h>
 %}
 
 #if !defined(SWIGCSHARP) && !defined(SWIGTCL)
@@ -479,14 +479,14 @@ namespace sakusen{
 #endif
 %template(stdVectorWeaponType) std::vector<sakusen::WeaponType>;
 
-%include "unittype.h"
+%include <sakusen/unittype.h>
 %{
-#include "unittype.h"
+#include <sakusen/unittype.h>
 %}
 %template(stdVectorUnitType) std::vector<sakusen::UnitType>;
-%include "universe.h"
+%include <sakusen/universe.h>
 %{
-#include "universe.h"
+#include <sakusen/universe.h>
 %}
 namespace sakusen{
 %extend ResourceInterface {
@@ -514,42 +514,42 @@ namespace sakusen{
     return ::boost::shared_ptr<const sakusen::Universe>(u);
   }
 }
-%include "weapontargettype.h"
+%include <sakusen/weapontargettype.h>
 %{
-#include "weapontargettype.h"
+#include <sakusen/weapontargettype.h>
 %}
-%include "materielprovider.h"
+%include <sakusen/materielprovider.h>
 %{
-#include "materielprovider.h"
+#include <sakusen/materielprovider.h>
 %}
-%include "weaponstatus.h"
+%include <sakusen/weaponstatus.h>
 %{
-#include "weaponstatus.h"
+#include <sakusen/weaponstatus.h>
 %}
-%include "iunitstatus.h"
+%include <sakusen/iunitstatus.h>
 %{
-#include "iunitstatus.h"
+#include <sakusen/iunitstatus.h>
 %}
-%include "unitstatus.h"
+%include <sakusen/unitstatus.h>
 %{
-#include "unitstatus.h"
-#include "unitstatus-methods.h"
+#include <sakusen/unitstatus.h>
+#include <sakusen/unitstatus-methods.h>
 %}
-%include "completeunit.h"
+%include <sakusen/completeunit.h>
 %{
-#include "completeunit.h"
+#include <sakusen/completeunit.h>
 %}
-%include "clientballisticid.h"
+%include <sakusen/clientballisticid.h>
 %{
-#include "clientballisticid.h"
+#include <sakusen/clientballisticid.h>
 %}
-%include "updatedata.h"
+%include <sakusen/updatedata.h>
 %{
-#include "updatedata.h"
+#include <sakusen/updatedata.h>
 %}
-%include "update.h"
+%include <sakusen/update.h>
 %{
-#include "update.h"
+#include <sakusen/update.h>
 %}
 #if !defined(SWIGCSHARP) && !defined(SWIGTCL)
   /* SWIG doesn't support std::list in C# or TCL yet */
@@ -557,73 +557,73 @@ namespace sakusen{
   %template(listUpdate) ::std::list<Update>;
   }
 #endif
-%include "ordermessage.h"
+%include <sakusen/ordermessage.h>
 %{
-#include "ordermessage.h"
+#include <sakusen/ordermessage.h>
 %}
-%include "world.h"
+%include <sakusen/world.h>
 %{
-#include "world.h"
+#include <sakusen/world.h>
 %}
-%include "targettype.h"
+%include <sakusen/targettype.h>
 %{
-#include "targettype.h"
+#include <sakusen/targettype.h>
 %}
-%include "weaponorders.h"
+%include <sakusen/weaponorders.h>
 %{
-#include "weaponorders.h"
+#include <sakusen/weaponorders.h>
 %}
-%include "unitorders.h"
+%include <sakusen/unitorders.h>
 %{
-#include "unitorders.h"
+#include <sakusen/unitorders.h>
 %}
-%include "exceptions.h"
+%include <sakusen/exceptions.h>
 %{
-#include "exceptions.h"
+#include <sakusen/exceptions.h>
 %}
-%include "map.h"
+%include <sakusen/map.h>
 %{
-#include "map.h"
+#include <sakusen/map.h>
 %}
-%include "orderdata.h"
+%include <sakusen/orderdata.h>
 %{
-#include "orderdata.h"
+#include <sakusen/orderdata.h>
 %}
-%include "order.h"
+%include <sakusen/order.h>
 %{
-#include "order.h"
+#include <sakusen/order.h>
 %}
-%include "hitpoints.h"
+%include <sakusen/hitpoints.h>
 %{
-#include "hitpoints.h"
+#include <sakusen/hitpoints.h>
 %}
-%include "unittemplate.h"
+%include <sakusen/unittemplate.h>
 %{
-#include "unittemplate.h"
+#include <sakusen/unittemplate.h>
 %}
 %ignore std::vector<sakusen::UnitTemplate>::vector(size_type);
 %ignore std::vector<sakusen::UnitTemplate>::vector(unsigned int);
 %ignore std::vector<sakusen::UnitTemplate>::resize(size_type);
 %template(unitTemplateVector) std::vector<sakusen::UnitTemplate>;
-%include "playertemplate.h"
+%include <sakusen/playertemplate.h>
 %{
-#include "playertemplate.h"
+#include <sakusen/playertemplate.h>
 %}
 %ignore std::vector<sakusen::PlayerTemplate>::resize(size_type);
 %ignore std::vector<sakusen::PlayerTemplate>::vector(size_type);
 %ignore std::vector<sakusen::PlayerTemplate>::vector(unsigned int);
 %template(playerTemplateVector) std::vector<sakusen::PlayerTemplate>;
-%include "mapplaymode.h"
+%include <sakusen/mapplaymode.h>
 %{
-#include "mapplaymode.h"
+#include <sakusen/mapplaymode.h>
 %}
 %ignore std::vector<sakusen::MapPlayMode>::resize(size_type);
 %ignore std::vector<sakusen::MapPlayMode>::vector(size_type);
 %ignore std::vector<sakusen::MapPlayMode>::vector(unsigned int);
 %template(mapPlayModeVector) std::vector<sakusen::MapPlayMode>;
-%include "maptemplate.h"
+%include <sakusen/maptemplate.h>
 %{
-#include "maptemplate.h"
+#include <sakusen/maptemplate.h>
 %}
 %extend sakusen::MapTemplate {
   static boost::shared_ptr<sakusen::MapTemplate>

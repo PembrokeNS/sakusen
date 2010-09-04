@@ -7,15 +7,15 @@
 
 #include <boost/ptr_container/ptr_list.hpp>
 
-#include "gnu_extensions.h"
-#include "player.h"
-#include "map.h"
-#include "resourceinterface.h"
-#include "socket.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/server/player.h>
+#include <sakusen/map.h>
+#include <sakusen/resourceinterface.h>
+#include <sakusen/comms/socket.h>
 #include "remoteclient.h"
 #include "plugin.h"
 #include "plugininterface.h"
-#include "servedgame.h"
+#include <sakusen/servedgame.h>
 #include "settingstree/settingstree.h"
 #include "settingstree/leaf.h"
 

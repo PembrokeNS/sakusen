@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__MAPDISPLAY_H
 #define TEDOMARI__UI__MAPDISPLAY_H
 
-#include "point.h"
+#include <sakusen/point.h>
 #include "game/game.h"
 #include "ui/control.h"
 #include "ui/surface.h"

@@ -1,6 +1,6 @@
-#include "resourcetype.h"
+#include <sakusen/resourcetype.h>
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

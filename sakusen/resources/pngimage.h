@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 #define LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 
-#include "libsakusen-resources-global.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
 
 #include <boost/scoped_ptr.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include "image.h"
+#include <sakusen/image.h>
 
 namespace sakusen {
 namespace resources {

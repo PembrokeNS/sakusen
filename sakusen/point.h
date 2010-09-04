@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__POINT_H
 #define LIBSAKUSEN__POINT_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 #include <boost/utility.hpp>
 
-#include "arithmetictraits.h"
+#include <sakusen/arithmetictraits.h>
 
 namespace sakusen {
 

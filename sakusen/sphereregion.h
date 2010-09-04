@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__SPHEREREGION_H
 #define LIBSAKUSEN__SPHEREREGION_H
 
-#include "libsakusen-global.h"
-#include "region.h"
-#include "world.h"
-#include "mathsutils.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/region.h>
+#include <sakusen/world.h>
+#include <sakusen/mathsutils.h>
 
 namespace sakusen {
 

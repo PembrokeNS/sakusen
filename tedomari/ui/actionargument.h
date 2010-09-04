@@ -3,11 +3,11 @@
 
 #include "tedomari-global.h"
 
-#include "numbertarget.h"
-#include "point.h"
-#include "orientation.h"
-#include "ref.h"
-#include "updatedunit.h"
+#include <sakusen/numbertarget.h>
+#include <sakusen/point.h>
+#include <sakusen/orientation.h>
+#include <sakusen/ref.h>
+#include <sakusen/client/updatedunit.h>
 #include "ui/actiontarget.h"
 
 namespace tedomari {

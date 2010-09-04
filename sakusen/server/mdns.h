@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN_SERVER__MDNS_H
 #define LIBSAKUSEN_SERVER__MDNS_H
 
-#include "libsakusen-server-global.h"
-#include "servedgame.h"
+#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/servedgame.h>
 #include <boost/utility.hpp> // for noncopyable
 #include <boost/shared_ptr.hpp> // for shared_ptr
 #include <boost/scoped_ptr.hpp> // for scoped_ptr

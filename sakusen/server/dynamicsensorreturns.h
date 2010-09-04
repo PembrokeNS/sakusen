@@ -1,11 +1,11 @@
 #ifndef LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 #define LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 
-#include "libsakusen-global.h"
-#include "hash_list.h"
-#include "visibility.h"
-#include "isensorreturns.h"
-#include "serializationhandler.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/hash_list.h>
+#include <sakusen/visibility.h>
+#include <sakusen/isensorreturns.h>
+#include <sakusen/serializationhandler.h>
 
 namespace sakusen {
 namespace server {

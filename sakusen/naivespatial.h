@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__NAIVESPATIAL_H
 #define LIBSAKUSEN__NAIVESPATIAL_H
 
-#include "ispatial.h"
+#include <sakusen/ispatial.h>
 
 namespace sakusen {
 /** \brief Naive implementation of spatial index

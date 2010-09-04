@@ -1,8 +1,8 @@
-#include "vfs/directorybranch.h"
+#include <sakusen/resources/vfs/directorybranch.h>
 
-#include "fileutils.h"
-#include "filereader.h"
-#include "filewriter.h"
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/filereader.h>
+#include <sakusen/resources/filewriter.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/foreach.hpp>

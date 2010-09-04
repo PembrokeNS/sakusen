@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__PTRHASH_H
 #define LIBSAKUSEN__PTRHASH_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 namespace sakusen {
 

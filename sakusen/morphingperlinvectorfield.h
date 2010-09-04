@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__MORPHINGPERLINVECTORFIELD_H
 #define LIBSAKUSEN__MORPHINGPERLINVECTORFIELD_H
 
-#include "morphingperlinnoisefield.h"
+#include <sakusen/morphingperlinnoisefield.h>
 
 namespace sakusen {
 

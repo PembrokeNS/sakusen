@@ -1,6 +1,6 @@
-#include "resourcesearchresult.h"
+#include <sakusen/resourcesearchresult.h>
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

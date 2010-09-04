@@ -1,9 +1,9 @@
-#include "libsakusen-global.h"
-#include "socket.h"
-#include "errorutils.h"
-#include "libsakusen-resources-global.h"
-#include "fileresourceinterface.h"
-#include "fileutils.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/comms/socket.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/resources/fileutils.h>
 #include "fuseki-global.h"
 #include "server.h"
 
@@ -11,7 +11,7 @@
 
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
-    #include <ltdl_hacked.h>
+    #include <ltdl_hacked/ltdl_hacked.h>
   #else
     #include <ltdl.h>
   #endif
@@ -19,7 +19,7 @@
 
 #include <cerrno>
 #include <iostream>
-#include <optionsparser.h>
+#include <optimal/optionsparser.h>
 #include <boost/filesystem/operations.hpp>
 
 using namespace std;

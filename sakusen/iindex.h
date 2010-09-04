@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__IINDEX_H
 #define LIBSAKUSEN__IINDEX_H
 
-#include "ref.h"
+#include <sakusen/ref.h>
 
 namespace sakusen {
 

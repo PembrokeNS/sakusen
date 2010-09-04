@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__CLIENTBALLISTICID_H
 #define LIBSAKUSEN__CLIENTBALLISTICID_H
 
-#include "idbase.h"
+#include <sakusen/idbase.h>
 
 namespace sakusen {
 

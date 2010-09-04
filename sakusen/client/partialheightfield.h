@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_CLIENT__PARTIALHEIGHTFIELD_H
 #define LIBSAKUSEN_CLIENT__PARTIALHEIGHTFIELD_H
 
-#include "heightfield.h"
+#include <sakusen/heightfield.h>
 
 namespace sakusen {
 namespace client {

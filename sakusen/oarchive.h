@@ -1,18 +1,18 @@
 #ifndef LIBSAKUSEN__OARCHIVE_H
 #define LIBSAKUSEN__OARCHIVE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <set>
 
 #include <boost/multi_array.hpp>
 #include <boost/call_traits.hpp>
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
-#include "point.h"
-#include "idbase.h"
-#include "buffer.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/point.h>
+#include <sakusen/idbase.h>
+#include <sakusen/buffer.h>
 
 namespace sakusen {
 

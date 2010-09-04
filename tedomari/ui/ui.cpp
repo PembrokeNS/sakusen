@@ -1,7 +1,7 @@
 #include "ui/ui.h"
 
-#include "stringutils.h"
-#include "socketexn.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/socketexn.h>
 #include "ui/mapdisplay.h"
 #include "ui/modifiedkeyevent.h"
 

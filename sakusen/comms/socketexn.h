@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H
 #define LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H
 
-#include "libsakusen-global.h"
-#include "exceptions.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/exceptions.h>
 
 namespace sakusen {
 namespace comms {

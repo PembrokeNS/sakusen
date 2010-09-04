@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__UNITID_H
 #define LIBSAKUSEN__UNITID_H
 
-#include "libsakusen-global.h"
-#include "idbase.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/idbase.h>
 
 namespace sakusen {
 

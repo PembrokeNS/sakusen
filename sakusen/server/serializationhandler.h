@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__SERIALIZATIONHANDLER_H
 #define LIBSAKUSEN_SERVER__SERIALIZATIONHANDLER_H
 
-#include "ref.h"
+#include <sakusen/ref.h>
 
 namespace sakusen {
 namespace server {

@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__SERIALIZATIONHANDLER_H
 #define LIBSAKUSEN__SERIALIZATIONHANDLER_H
 
-#include "ref.h"
-#include "playerid.h"
+#include <sakusen/ref.h>
+#include <sakusen/playerid.h>
 
 namespace sakusen {
 

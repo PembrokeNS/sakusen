@@ -1,5 +1,5 @@
-#include "ballistic.h"
-#include "completeworld.h"
+#include <sakusen/server/ballistic.h>
+#include <sakusen/server/completeworld.h>
 
 namespace sakusen {
 namespace server {

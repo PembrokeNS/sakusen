@@ -5,7 +5,7 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/foreach.hpp>
 
-#include "morphingsawwavefield.h"
+#include <sakusen/morphingsawwavefield.h>
 
 namespace sakusen {
 

@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__SENSORRETURN_H
 #define LIBSAKUSEN__SENSORRETURN_H
 
-#include "libsakusen-global.h"
-#include "perception.h"
-#include "oarchive.h"
-#include "iarchive.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/perception.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
 
 namespace sakusen {
 

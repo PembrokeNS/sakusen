@@ -1,16 +1,16 @@
 #ifndef SAKUSEN_TESTSRC__CANNON_H
 #define SAKUSEN_TESTSRC__CANNON_H
 
-#include "weapon.h"
-#include "ballistic.h"
-#include "layeredunit.h"
-#include "effect.h"
-#include "sphereregion.h"
-#include "beam.h"
-#include "unitmask.h"
-#include "fuse.h"
-#include "script.h"
-#include "playerdata.h"
+#include <sakusen/server/weapon.h>
+#include <sakusen/server/ballistic.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/server/effect.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/server/beam.h>
+#include <sakusen/server/unitmask.h>
+#include <sakusen/server/fuse.h>
+#include <sakusen/server/script.h>
+#include <sakusen/server/playerdata.h>
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and

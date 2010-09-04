@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__COLOUR_H
 #define TEDOMARI__UI__COLOUR_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 /* Opaque is 1 to align with what SDL uses */
 #define TEDOMARI_UI_ALPHA_OPAQUE_DBL 1.0

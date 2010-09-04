@@ -3,18 +3,18 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "gnu_extensions.h"
-#include "hash_list.h"
-#include "idindex.h"
-#include "world.h"
-#include "partialmap.h"
-#include "updatedunit.h"
-#include "unitfactory.h"
-#include "sensorreturnsfactory.h"
-#include "updatedsensorreturns.h"
-#include "updatedballistic.h"
-#include "update.h"
-#include "rectangle.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/hash_list.h>
+#include <sakusen/idindex.h>
+#include <sakusen/world.h>
+#include <sakusen/client/partialmap.h>
+#include <sakusen/client/updatedunit.h>
+#include <sakusen/client/unitfactory.h>
+#include <sakusen/client/sensorreturnsfactory.h>
+#include <sakusen/client/updatedsensorreturns.h>
+#include <sakusen/client/updatedballistic.h>
+#include <sakusen/update.h>
+#include <sakusen/rectangle.h>
 
 namespace sakusen {
 namespace client {

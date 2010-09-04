@@ -2,11 +2,11 @@
 
 #include <boost/xpressive/regex_algorithms.hpp>
 
-#include "libsakusen-resources-global.h"
-#include "oarchive-methods.h"
-#include "pluginexn.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/server/plugins/pluginexn.h>
 
-#include "completeworld.h"
+#include <sakusen/server/completeworld.h>
 
 using namespace std;
 

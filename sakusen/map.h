@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include "libsakusen-global.h"
-#include "point.h"
-#include "topology.h"
-#include "iarchive.h"
-#include "maptemplate.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/point.h>
+#include <sakusen/topology.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/maptemplate.h>
 
 namespace sakusen {
 

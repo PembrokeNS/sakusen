@@ -1,9 +1,9 @@
-#include "unittype.h"
+#include <sakusen/unittype.h>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-#include "sphereregion.h"
+#include <sakusen/sphereregion.h>
 
 namespace sakusen { namespace test {
 

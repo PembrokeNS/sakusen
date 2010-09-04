@@ -1,15 +1,15 @@
 #ifndef LIBSAKUSEN__RESOURCE_INTERFACE_H
 #define LIBSAKUSEN__RESOURCE_INTERFACE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include "resourcesearchresult.h"
-#include "resourcetype.h"
-#include "writer.h"
-#include "image.h"
+#include <sakusen/resourcesearchresult.h>
+#include <sakusen/resourcetype.h>
+#include <sakusen/writer.h>
+#include <sakusen/image.h>
 
 namespace sakusen {
 

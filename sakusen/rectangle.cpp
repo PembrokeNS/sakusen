@@ -1,6 +1,6 @@
-#include "rectangle.h"
-#include "icompleteunit.h"
-#include "isensorreturns.h"
+#include <sakusen/rectangle.h>
+#include <sakusen/icompleteunit.h>
+#include <sakusen/isensorreturns.h>
 
 namespace sakusen {
 

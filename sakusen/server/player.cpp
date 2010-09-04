@@ -1,7 +1,7 @@
-#include "player.h"
-#include "updatedata.h"
-#include "layeredunit.h"
-#include "completeworld.h"
+#include <sakusen/server/player.h>
+#include <sakusen/updatedata.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/server/completeworld.h>
 
 #include <stack>
 

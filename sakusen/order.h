@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__ORDER_H
 #define LIBSAKUSEN__ORDER_H
 
-#include "ordertype.h"
-#include "orderdata.h"
-#include "oarchive.h"
-#include "iarchive.h"
+#include <sakusen/ordertype.h>
+#include <sakusen/orderdata.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
 
 namespace sakusen {
 

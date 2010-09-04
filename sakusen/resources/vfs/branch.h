@@ -5,11 +5,11 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include "reader.h"
-#include "writer.h"
-#include "resourcetype.h"
-#include "resourcesearchresult.h"
-#include "vfs/resource.h"
+#include <sakusen/reader.h>
+#include <sakusen/writer.h>
+#include <sakusen/resourcetype.h>
+#include <sakusen/resourcesearchresult.h>
+#include <sakusen/resources/vfs/resource.h>
 
 namespace sakusen {
 namespace resources {

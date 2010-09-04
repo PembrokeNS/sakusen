@@ -1,8 +1,8 @@
-#include "ipsocket.h"
-#include "errorutils.h"
-#include "socketexn.h"
-#include "stringutils.h"
-#include "timeutils.h"
+#include <sakusen/comms/ipsocket.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/timeutils.h>
 
 #include <cerrno>
 

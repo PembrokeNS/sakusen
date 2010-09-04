@@ -1,8 +1,8 @@
-#include "unitcore.h"
+#include <sakusen/server/unitcore.h>
 
-#include "completeworld.h"
-#include "player.h"
-#include "unitstatus-methods.h"
+#include <sakusen/server/completeworld.h>
+#include <sakusen/server/player.h>
+#include <sakusen/unitstatus-methods.h>
 
 namespace sakusen{
 namespace server{

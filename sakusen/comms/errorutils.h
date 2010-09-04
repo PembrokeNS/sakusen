@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN_COMMS__ERRORUTILS_H
 #define LIBSAKUSEN_COMMS__ERRORUTILS_H
 
-#include "libsakusen-global.h"
-#include "libsakusen-comms-global.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/comms/libsakusen-comms-global.h>
 
 #if defined (_MSC_VER)
 #include <winsock2.h>
-#include "wsabsd.h"
+#include <sakusen/comms/wsabsd.h>
 #endif //_MSC_VER
 
 namespace sakusen {

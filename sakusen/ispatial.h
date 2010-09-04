@@ -3,10 +3,10 @@
 
 #include <map>
 
-#include "iindex.h"
-#include "bounded.h"
-#include "box.h"
-#include "intersection.h"
+#include <sakusen/iindex.h>
+#include <sakusen/bounded.h>
+#include <sakusen/box.h>
+#include <sakusen/intersection.h>
 
 namespace sakusen {
 

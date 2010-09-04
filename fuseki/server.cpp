@@ -1,19 +1,18 @@
 #include "server-methods.h"
 
-#include "libsakusen-global.h"
-#include "resourcesearchresult.h"
-#include "libsakusen-comms-global.h"
-#include "message.h"
-#include "socketexn.h"
-#include "completeworld.h"
-#include "servedgame.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/resourcesearchresult.h>
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/message.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/server/completeworld.h>
+#include <sakusen/servedgame.h>
 #include "settingstree/stringsetleaf.h"
 #include "settingstree/intleaf.h"
 #include "settingstree/boolleaf.h"
-#include "timeutils.h"
+#include <sakusen/comms/timeutils.h>
 
-//In libsakusen/server.
-#include "plugins/pluginexn.h"
+#include <sakusen/server/plugins/pluginexn.h>
 
 #ifndef _MSC_VER
   #include "revision.h"
@@ -22,7 +21,7 @@
 #endif
 
 #ifndef DISABLE_AVAHI
-  #include "mdns.h"
+  #include <sakusen/server/mdns.h>
 #endif
 
 #include <time.h>

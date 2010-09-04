@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_CLIENT__UNITFACTORY_H
 #define LIBSAKUSEN_CLIENT__UNITFACTORY_H
 
-#include "updatedunit.h"
+#include <sakusen/client/updatedunit.h>
 
 namespace sakusen {
 namespace client {

@@ -4,8 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
 
-#include "client.h"
-#include "message.h"
+#include <sakusen/server/client.h>
+#include <sakusen/comms/message.h>
 
 namespace sakusen {
 namespace server {

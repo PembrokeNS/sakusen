@@ -1,5 +1,5 @@
-#include "libsakusen-global.h"
-#include "mdnsbrowser.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/client/mdnsbrowser.h>
 #include <iostream> // std::cerr
 #include <avahi-client/client.h>
 #include <avahi-client/lookup.h>

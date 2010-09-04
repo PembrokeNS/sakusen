@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__MAPPLAYMODE_H
 #define LIBSAKUSEN__MAPPLAYMODE_H
 
-#include "libsakusen-global.h"
-#include "universe.h"
-#include "playertemplate.h"
-#include "playerid.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/universe.h>
+#include <sakusen/playertemplate.h>
+#include <sakusen/playerid.h>
 
 namespace sakusen {
 

@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_SERVER__UNITLAYER_H
 #define LIBSAKUSEN_SERVER__UNITLAYER_H
 
-#include "hitpointalteration.h"
-#include "playerid.h"
-#include "changeownerreason.h"
-#include "unitstatus.h"
+#include <sakusen/hitpointalteration.h>
+#include <sakusen/playerid.h>
+#include <sakusen/changeownerreason.h>
+#include <sakusen/unitstatus.h>
 
 namespace sakusen {
 namespace server {

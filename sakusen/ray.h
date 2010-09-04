@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN__RAY_H
 #define LIBSAKUSEN__RAY_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <set>
 
-#include "point.h"
-#include "box.h"
-#include "gameobject.h"
-#include "intersection.h"
+#include <sakusen/point.h>
+#include <sakusen/box.h>
+#include <sakusen/gameobject.h>
+#include <sakusen/intersection.h>
 
 namespace sakusen {
 

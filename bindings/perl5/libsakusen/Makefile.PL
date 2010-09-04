@@ -22,7 +22,7 @@ WriteMakefile(
   CC => $CC,
   LD => $LD,
   DEFINE => '-DHAVE_BOOL',
-  INC => '-I'.$top_srcdir.'sakusen '.$ENV{'BUILD_CPPFLAGS'},
+  INC => '-I'.$top_srcdir.' '.$ENV{'BUILD_CPPFLAGS'},
   OBJECT => 'Sakusen.o',
   FIRST_MAKEFILE => 'Makefile.PL.out',
   #LDLOADLIBS => '../../../libsakusen/.libs/libsakusen.so',

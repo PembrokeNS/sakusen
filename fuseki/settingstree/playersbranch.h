@@ -1,8 +1,8 @@
 #ifndef FUSEKI__SETTINGSTREE__PLAYERSBRANCH_H
 #define FUSEKI__SETTINGSTREE__PLAYERSBRANCH_H
 
-#include "playerid.h"
-#include "playertemplate.h"
+#include <sakusen/playerid.h>
+#include <sakusen/playertemplate.h>
 #include "settingstree/branch.h"
 
 namespace fuseki {

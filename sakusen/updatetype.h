@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UPDATETYPE_H
 #define LIBSAKUSEN__UPDATETYPE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <iosfwd>
 

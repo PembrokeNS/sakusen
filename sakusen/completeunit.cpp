@@ -1,7 +1,7 @@
-#include "completeunit.h"
+#include <sakusen/completeunit.h>
 
-#include "oarchive-methods.h"
-#include "world.h"
+#include <sakusen/oarchive-methods.h>
+#include <sakusen/world.h>
 
 using namespace std;
 

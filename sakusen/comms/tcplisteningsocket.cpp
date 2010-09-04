@@ -1,6 +1,6 @@
-#include "tcplisteningsocket.h"
-#include "tcpconnectingsocket.h"
-#include "errorutils.h"
+#include <sakusen/comms/tcplisteningsocket.h>
+#include <sakusen/comms/tcpconnectingsocket.h>
+#include <sakusen/comms/errorutils.h>
 
 #include <sys/types.h>
 

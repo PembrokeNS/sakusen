@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_SERVER__BEAM_H
 #define LIBSAKUSEN_SERVER__BEAM_H
 
-#include "ray.h"
-#include "ref.h"
-#include "layeredunit.h"
-#include "effect.h"
+#include <sakusen/ray.h>
+#include <sakusen/ref.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/server/effect.h>
 
 namespace sakusen {
 namespace server {

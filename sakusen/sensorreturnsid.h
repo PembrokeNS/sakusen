@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__SENSORRETURNSID_H
 #define LIBSAKUSEN__SENSORRETURNSID_H
 
-#include "idbase.h"
+#include <sakusen/idbase.h>
 
 namespace sakusen {
 

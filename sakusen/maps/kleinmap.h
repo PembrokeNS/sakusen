@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__MAPS__KLEINMAP_H
 #define LIBSAKUSEN__MAPS__KLEINMAP_H
 
-#include "map.h"
+#include <sakusen/map.h>
 
 namespace sakusen {
 namespace maps {

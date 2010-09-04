@@ -4,7 +4,7 @@
 #include <queue>
 #include <list>
 
-#include "gnu_extensions.h"
+#include <sakusen/gnu_extensions.h>
 
 namespace sakusen {
 

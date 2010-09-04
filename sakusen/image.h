@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__IMAGE_H
 #define LIBSAKUSEN__IMAGE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <boost/multi_array.hpp>
 #include <boost/shared_ptr.hpp>

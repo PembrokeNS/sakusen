@@ -1,7 +1,7 @@
 #include "ui/key.h"
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
 
 using namespace sakusen;
 

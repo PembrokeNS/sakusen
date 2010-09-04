@@ -1,23 +1,23 @@
-#include "fileresourceinterface.h"
+#include <sakusen/resources/fileresourceinterface.h>
 
 #include <boost/xpressive/regex_algorithms.hpp>
 
-#include "libsakusen-resources-global.h"
-#include "iarchive.h"
-#include "resourcetype.h"
-#include "maptemplate.h"
-#include "errorutils.h"
-#include "filereader.h"
-#include "filewriter.h"
-#include "fileutils.h"
-#include "fileioexn.h"
-#include "pngimage.h"
-#include "vfs/directorybranch.h"
-#include "vfs/unionbranch.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/resourcetype.h>
+#include <sakusen/maptemplate.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/filereader.h>
+#include <sakusen/resources/filewriter.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileioexn.h>
+#include <sakusen/resources/pngimage.h>
+#include <sakusen/resources/vfs/directorybranch.h>
+#include <sakusen/resources/vfs/unionbranch.h>
 
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
-    #include <ltdl_hacked.h>
+    #include <ltdl_hacked/ltdl_hacked.h>
   #else
     #include <ltdl.h>
   #endif

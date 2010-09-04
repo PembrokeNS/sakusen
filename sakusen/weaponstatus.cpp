@@ -1,7 +1,7 @@
-#include "weaponstatus.h"
+#include <sakusen/weaponstatus.h>
 
-#include "world.h"
-#include "icompleteunit.h"
+#include <sakusen/world.h>
+#include <sakusen/icompleteunit.h>
 
 using namespace std;
 using namespace sakusen;

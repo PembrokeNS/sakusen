@@ -1,11 +1,11 @@
 #ifndef TEDOMARI__UI__REGION_H
 #define TEDOMARI__UI__REGION_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <list>
 
-#include "rectangle.h"
+#include <sakusen/rectangle.h>
 #include "ui/colour.h"
 #include "ui/layout.h"
 #include "ui/surface.h"

@@ -1,6 +1,6 @@
-#include "pngimage.h"
+#include <sakusen/resources/pngimage.h>
 
-#include "fileioexn.h"
+#include <sakusen/resources/fileioexn.h>
 
 #include <png.h>
 

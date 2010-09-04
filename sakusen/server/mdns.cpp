@@ -1,6 +1,6 @@
 #ifndef DISABLE_AVAHI
 
-#include "mdns.h"
+#include <sakusen/server/mdns.h>
 #include <iostream>
 
 #include <avahi-client/client.h>

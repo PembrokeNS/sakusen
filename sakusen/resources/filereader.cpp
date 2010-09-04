@@ -1,7 +1,7 @@
-#include "filereader.h"
+#include <sakusen/resources/filereader.h>
 
-#include "fileutils.h"
-#include "fileioexn.h"
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 #include <fcntl.h>
 #include <stdio.h>

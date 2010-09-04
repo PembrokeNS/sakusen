@@ -4,7 +4,7 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "oarchive.h"
+#include <sakusen/oarchive.h>
 
 namespace sakusen {
 

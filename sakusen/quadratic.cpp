@@ -1,5 +1,5 @@
-#include "quadratic.h"
-#include "world.h"
+#include <sakusen/quadratic.h>
+#include <sakusen/world.h>
 
 using namespace sakusen;
 

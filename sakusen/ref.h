@@ -5,9 +5,9 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/type_traits/add_const.hpp>
 
-#include "iarchive.h"
-#include "oarchive.h"
-#include "maskedptr.h"
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/maskedptr.h>
 
 namespace sakusen {
 

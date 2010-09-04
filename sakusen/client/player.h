@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN_CLIENT__PLAYER_H
 #define LIBSAKUSEN_CLIENT__PLAYER_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 #include <list>
-#include "gnu_extensions.h"
-#include "playerid.h"
-#include "client.h"
-#include "updatetype.h"
-#include "changeownerreason.h"
-#include "playertemplate.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/playerid.h>
+#include <sakusen/client/client.h>
+#include <sakusen/updatetype.h>
+#include <sakusen/changeownerreason.h>
+#include <sakusen/playertemplate.h>
 
 namespace sakusen {
 namespace client {

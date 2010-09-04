@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__EACHSENSORRETURN_H
 #define LIBSAKUSEN__EACHSENSORRETURN_H
 
-#include "sensorreturn.h"
+#include <sakusen/sensorreturn.h>
 
 namespace sakusen {
 

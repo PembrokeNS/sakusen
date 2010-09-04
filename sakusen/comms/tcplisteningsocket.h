@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__TCPLISTENINGSOCKET_H
 #define LIBSAKUSEN_COMMS__TCPLISTENINGSOCKET_H
 
-#include "tcpsocket.h"
+#include <sakusen/comms/tcpsocket.h>
 
 namespace sakusen {
 namespace comms {

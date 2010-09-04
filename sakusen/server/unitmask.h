@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN_SERVER__UNITMASK_H
 #define LIBSAKUSEN_SERVER__UNITMASK_H
 
-#include "unitlayer.h"
-#include "unitcore.h"
-#include "unitstatus-methods.h"
+#include <sakusen/server/unitlayer.h>
+#include <sakusen/server/unitcore.h>
+#include <sakusen/unitstatus-methods.h>
 
 namespace sakusen {
 namespace server {

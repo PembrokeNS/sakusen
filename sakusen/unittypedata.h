@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__UNITTYPEDATA_H
 #define LIBSAKUSEN__UNITTYPEDATA_H
 
-#include "iarchive.h"
-#include "oarchive.h"
-#include "iunittypedata.h"
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iunittypedata.h>
 
 namespace sakusen {
 

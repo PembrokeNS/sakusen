@@ -1,9 +1,9 @@
-#include "groundmotion.h"
+#include <sakusen/server/groundmotion.h>
 
-#include "unitstatus-methods.h"
-#include "unitcorneriterator.h"
-#include "completeworld.h"
-#include "mathsutils.h"
+#include <sakusen/unitstatus-methods.h>
+#include <sakusen/unitcorneriterator.h>
+#include <sakusen/server/completeworld.h>
+#include <sakusen/mathsutils.h>
 
 #include <boost/foreach.hpp>
 

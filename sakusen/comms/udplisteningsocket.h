@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__UDPLISTENINGSOCKET_H
 #define LIBSAKUSEN_COMMS__UDPLISTENINGSOCKET_H
 
-#include "udpsocket.h"
+#include <sakusen/comms/udpsocket.h>
 
 namespace sakusen {
 namespace comms {

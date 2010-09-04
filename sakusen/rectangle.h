@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN__RECTANGLE_H
 #define LIBSAKUSEN__RECTANGLE_H
 
-#include "point.h"
-#include "iarchive.h"
-#include "oarchive.h"
-#include "ref.h"
+#include <sakusen/point.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/ref.h>
 
 /** \file
  * A Rectangle is the region enclosed by two points in the plane. Both corners

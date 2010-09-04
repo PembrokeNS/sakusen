@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN__IUNITSTATUS_H
 #define LIBSAKUSEN__IUNITSTATUS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
 #include <list>
-#include "point.h"
-#include "unittype.h"
-#include "visibility.h"
-#include "frame.h"
-#include "weaponstatus.h"
+#include <sakusen/point.h>
+#include <sakusen/unittype.h>
+#include <sakusen/visibility.h>
+#include <sakusen/frame.h>
+#include <sakusen/weaponstatus.h>
 
 namespace sakusen {
 

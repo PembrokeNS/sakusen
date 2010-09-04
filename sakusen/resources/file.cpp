@@ -1,7 +1,7 @@
-#include "file.h"
-#include "fileutils.h"
-#include "errorutils.h"
-#include "fileioexn.h"
+#include <sakusen/resources/file.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 #include <cerrno>
 #include <boost/filesystem/operations.hpp>

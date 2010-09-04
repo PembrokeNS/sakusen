@@ -1,10 +1,10 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILEWRITER_H
 #define LIBSAKUSEN_RESOURCES__FILEWRITER_H
 
-#include "libsakusen-resources-global.h"
-#include "oarchive.h"
-#include "writer.h"
-#include "file.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/writer.h>
+#include <sakusen/resources/file.h>
 
 namespace sakusen {
 namespace resources {

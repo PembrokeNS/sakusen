@@ -1,7 +1,7 @@
 #include "plugininterface.h"
-#include "fileutils.h"
-#include "plugins/pluginexn.h"
-#include "plugins/plugininfo.h"
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/server/plugins/pluginexn.h>
+#include <sakusen/server/plugins/plugininfo.h>
 
 #ifdef WIN32
   #include <windows.h>
@@ -9,7 +9,7 @@
 
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
-    #include <ltdl_hacked.h>
+    #include <ltdl_hacked/ltdl_hacked.h>
   #else
     #include <ltdl.h>
   #endif

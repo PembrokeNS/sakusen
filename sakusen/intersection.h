@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__INTERSECTION_H
 #define LIBSAKUSEN__INTERSECTION_H
 
-#include "ref.h"
-#include "bounded.h"
-#include "serializationhandler.h"
+#include <sakusen/ref.h>
+#include <sakusen/bounded.h>
+#include <sakusen/serializationhandler.h>
 
 namespace sakusen {
 

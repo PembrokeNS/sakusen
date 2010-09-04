@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN__IDBASE_H
 #define LIBSAKUSEN__IDBASE_H
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
 
 namespace sakusen {
 

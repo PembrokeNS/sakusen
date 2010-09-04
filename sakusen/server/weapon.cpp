@@ -1,7 +1,7 @@
-#include "weapon.h"
+#include <sakusen/server/weapon.h>
 
-#include "mathsutils.h"
-#include "completeworld.h"
+#include <sakusen/mathsutils.h>
+#include <sakusen/server/completeworld.h>
 
 using namespace sakusen;
 using namespace sakusen::server;

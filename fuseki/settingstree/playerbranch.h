@@ -3,8 +3,8 @@
 
 #include "settingstree/branch.h"
 
-#include "playerid.h"
-#include "playertemplate.h"
+#include <sakusen/playerid.h>
+#include <sakusen/playertemplate.h>
 
 namespace fuseki {
 namespace settingsTree {

@@ -1,6 +1,6 @@
-#include "bounded.h"
+#include <sakusen/bounded.h>
 
-#include "ray.h"
+#include <sakusen/ray.h>
 
 using namespace std;
 

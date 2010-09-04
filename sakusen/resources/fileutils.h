@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILEUTILS_H
 #define LIBSAKUSEN_RESOURCES__FILEUTILS_H
 
-#include "libsakusen-resources-global.h"
+#include <sakusen/resources/libsakusen-resources-global.h>
 
 #include <list>
 #include <boost/filesystem/path.hpp>

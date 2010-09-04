@@ -1,13 +1,13 @@
 #ifndef LIBSAKUSEN__UNITTEMPLATE_H
 #define LIBSAKUSEN__UNITTEMPLATE_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "point.h"
-#include "unittype.h"
-#include "orientation.h"
-#include "universe.h"
-#include "unitstatus.h"
+#include <sakusen/point.h>
+#include <sakusen/unittype.h>
+#include <sakusen/orientation.h>
+#include <sakusen/universe.h>
+#include <sakusen/unitstatus.h>
 
 namespace sakusen {
 

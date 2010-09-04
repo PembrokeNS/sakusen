@@ -1,4 +1,4 @@
-#include "sensorreturn.h"
+#include <sakusen/sensorreturn.h>
 
 using namespace sakusen;
 

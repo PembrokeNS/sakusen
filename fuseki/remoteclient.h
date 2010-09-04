@@ -3,8 +3,8 @@
 
 #include <list>
 
-#include "client.h"
-#include "socket.h"
+#include <sakusen/server/client.h>
+#include <sakusen/comms/socket.h>
 #include "settingsuser.h"
 #include "settingstree/leaf.h"
 

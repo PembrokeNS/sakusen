@@ -1,9 +1,9 @@
 #ifndef LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 #define LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 
-#include "libsakusen-client-global.h"
-#include "maps/planemap.h"
-#include "partialheightfield.h"
+#include <sakusen/client/libsakusen-client-global.h>
+#include <sakusen/maps/planemap.h>
+#include <sakusen/client/partialheightfield.h>
 
 namespace sakusen {
 namespace client {

@@ -1,9 +1,9 @@
 #ifndef LIBSAKUSEN__FRAME_H
 #define LIBSAKUSEN__FRAME_H
 
-#include "point.h"
-#include "orientation.h"
-#include "box.h"
+#include <sakusen/point.h>
+#include <sakusen/orientation.h>
+#include <sakusen/box.h>
 
 namespace sakusen {
 

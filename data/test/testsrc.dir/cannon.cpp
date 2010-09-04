@@ -1,5 +1,5 @@
 #include "cannon.h"
-#include "completeworld.h"
+#include <sakusen/server/completeworld.h>
 
 #include <iostream>
 

@@ -3,7 +3,7 @@
 
 #ifndef DISABLE_UNIX_SOCKETS
 
-#include "unixdatagramsocket.h"
+#include <sakusen/comms/unixdatagramsocket.h>
 
 namespace sakusen {
 namespace comms {

@@ -1,14 +1,14 @@
 #ifndef LIBSAKUSEN__MAP_METHODS_H
 #define LIBSAKUSEN__MAP_METHODS_H
 
-#include "map.h"
-#include "maps/planemap.h"
-#include "maps/cylindermap.h"
-#include "maps/torusmap.h"
-#include "maps/mobiusmap.h"
-#include "maps/kleinmap.h"
-#include "maps/spheremap.h"
-#include "maps/crosscutmap.h"
+#include <sakusen/map.h>
+#include <sakusen/maps/planemap.h>
+#include <sakusen/maps/cylindermap.h>
+#include <sakusen/maps/torusmap.h>
+#include <sakusen/maps/mobiusmap.h>
+#include <sakusen/maps/kleinmap.h>
+#include <sakusen/maps/spheremap.h>
+#include <sakusen/maps/crosscutmap.h>
 
 namespace sakusen {
 

@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN_SERVER__BALLISTIC_H
 #define LIBSAKUSEN_SERVER__BALLISTIC_H
 
-#include "libsakusen-global.h"
-#include "quadratic.h"
-#include "point.h"
-#include "ref.h"
-#include "playerid.h"
-#include "layeredunit.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/quadratic.h>
+#include <sakusen/point.h>
+#include <sakusen/ref.h>
+#include <sakusen/playerid.h>
+#include <sakusen/server/layeredunit.h>
 
 namespace sakusen {
 namespace server {

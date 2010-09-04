@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ARITHMETICTRAITS_H
 #define LIBSAKUSEN__ARITHMETICTRAITS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 #include <limits>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_unsigned.hpp>

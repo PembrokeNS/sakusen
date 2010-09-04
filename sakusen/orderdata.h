@@ -1,15 +1,15 @@
 #ifndef LIBSAKUSEN__ORDERDATA_H
 #define LIBSAKUSEN__ORDERDATA_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "point.h"
-#include "oarchive.h"
-#include "iarchive.h"
-#include "sensorreturns.h"
-#include "ordertype.h"
-#include "numbertarget.h"
-#include "ref.h"
+#include <sakusen/point.h>
+#include <sakusen/oarchive.h>
+#include <sakusen/iarchive.h>
+#include <sakusen/sensorreturns.h>
+#include <sakusen/ordertype.h>
+#include <sakusen/numbertarget.h>
+#include <sakusen/ref.h>
 
 namespace sakusen {
 

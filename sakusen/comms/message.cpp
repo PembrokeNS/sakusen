@@ -1,8 +1,8 @@
-#include "message.h"
+#include <sakusen/comms/message.h>
 
-#include "iarchive.h"
-#include "libsakusen-comms-global.h"
-#include "world.h"
+#include <sakusen/iarchive.h>
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/world.h>
 
 namespace sakusen {
 namespace comms{

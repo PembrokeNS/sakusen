@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__GROUNDMOTION_H
 #define LIBSAKUSEN_SERVER__GROUNDMOTION_H
 
-#include "unitmotion.h"
+#include <sakusen/server/unitmotion.h>
 
 namespace sakusen {
 namespace server {

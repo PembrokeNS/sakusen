@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN__REGION_H
 #define LIBSAKUSEN__REGION_H
 
-#include "regiontype.h"
-#include "point.h"
-#include "rectangle.h"
-#include "box.h"
-#include "ray.h"
-#include "oarchive.h"
+#include <sakusen/regiontype.h>
+#include <sakusen/point.h>
+#include <sakusen/rectangle.h>
+#include <sakusen/box.h>
+#include <sakusen/ray.h>
+#include <sakusen/oarchive.h>
 
 namespace sakusen {
 

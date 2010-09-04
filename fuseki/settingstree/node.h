@@ -8,8 +8,8 @@
 #include <boost/utility.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include "libsakusen-global.h"
-#include "clientid.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/clientid.h>
 #include "settingsuser.h"
 
 namespace fuseki {

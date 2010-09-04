@@ -1,12 +1,12 @@
 #ifndef LIBSAKUSEN__UNITORDERS_H
 #define LIBSAKUSEN__UNITORDERS_H
 
-#include "libsakusen-global.h"
+#include <sakusen/libsakusen-global.h>
 
-#include "order.h"
-#include "targettype.h"
-#include "orientation.h"
-#include "weaponorders.h"
+#include <sakusen/order.h>
+#include <sakusen/targettype.h>
+#include <sakusen/orientation.h>
+#include <sakusen/weaponorders.h>
 
 namespace sakusen {
 

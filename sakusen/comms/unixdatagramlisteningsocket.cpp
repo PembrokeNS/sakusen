@@ -1,7 +1,7 @@
 #ifndef DISABLE_UNIX_SOCKETS
 
-#include "unixdatagramlisteningsocket.h"
-#include "errorutils.h"
+#include <sakusen/comms/unixdatagramlisteningsocket.h>
+#include <sakusen/comms/errorutils.h>
 
 #include <sys/socket.h>
 #include <sys/time.h>

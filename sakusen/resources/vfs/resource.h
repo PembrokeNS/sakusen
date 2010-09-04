@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__VFS__RESOURCE_H
 #define LIBSAKUSEN_RESOURCES__VFS__RESOURCE_H
 
-#include "fileioexn.h"
+#include <sakusen/resources/fileioexn.h>
 
 namespace sakusen {
 namespace resources {

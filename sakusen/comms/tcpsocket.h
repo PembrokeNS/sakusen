@@ -1,8 +1,8 @@
 #ifndef LIBSAKUSEN_COMMS__TCPSOCKET_H
 #define LIBSAKUSEN_COMMS__TCPSOCKET_H
 
-#include "libsakusen-comms-global.h"
-#include "ipsocket.h"
+#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/ipsocket.h>
 
 namespace sakusen {
 namespace comms {

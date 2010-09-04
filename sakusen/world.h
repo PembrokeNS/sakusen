@@ -3,13 +3,13 @@
 
 #include <boost/utility.hpp>
 
-#include "libsakusen-global.h"
-#include "universe.h"
-#include "map.h"
-#include "sensorreturnsid.h"
-#include "ref.h"
-#include "ispatial.h"
-#include "unitid.h"
+#include <sakusen/libsakusen-global.h>
+#include <sakusen/universe.h>
+#include <sakusen/map.h>
+#include <sakusen/sensorreturnsid.h>
+#include <sakusen/ref.h>
+#include <sakusen/ispatial.h>
+#include <sakusen/unitid.h>
 
 namespace sakusen {
 
