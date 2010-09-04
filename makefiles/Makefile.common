@@ -333,6 +333,7 @@ $(MAKEFRAGS): .makefrags/%.makefrag: $(top_srcdir)makefiles/Makefile.common
 	@mkdir -p $(dir $@)
 	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
 		-MT $@ -MP -M -MF $@ $(this_srcdir)$(subst _dot_dot,..,$*)
+	printf "\n%s:\n" "$(this_srcdir)$(subst _dot_dot,..,$*)" >> $@
 
 #####################################################
 #
