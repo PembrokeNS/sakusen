@@ -244,7 +244,7 @@ ifneq ($(IS_LIB),)
 
 # Build the binary
 
-$(BIN): $(LIBTOOL_OBJS)
+$(BIN): $(LIBTOOL_OBJS) Makefile.local
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
 		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
@@ -276,10 +276,10 @@ else
 
 # Build the binary
 
-$(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
+$(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) Makefile.local
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
 		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
-		-o $@ $(LIBS) $^
+		-o $@ $(LIBS) $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
 
 # The actual compile commands (source dependencies will come from the makefrag
 # file).  Unlike the above, we *don't* use libtool, so as to speed up the
