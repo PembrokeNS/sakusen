@@ -1,6 +1,6 @@
 BIN = libsakusen-client.la
 LIBS = -lstdc++
-LIB_DEP_NAMES = libsakusen
+LIB_DEP_NAMES = sakusen
 
 ifeq ($(ENABLE_AVAHI),yes)
   LIBS := $(LIBS) -lavahi-client

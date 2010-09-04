@@ -3,11 +3,12 @@ SOURCE_DIRS = settingstree
 # The following flag makes debugging much easier, but it needs to be removed if
 # fuseki is to be installed
 THIS_LDFLAGS = -no-install
-LIB_DEP_NAMES = liboptimal libsakusen libsakusen-comms libsakusen-resources libsakusen-server libsakusen-server-plugins
+LIB_DEP_NAMES = optimal sakusen sakusen-comms sakusen-resources \
+								sakusen-server sakusen-server-plugins
 LIBS := -lstdc++
 
 ifeq ($(ENABLE_LTDL_HACKED),yes)
-LIB_DEP_NAMES += libltdl_hacked
+LIB_DEP_NAMES += ltdl_hacked
 endif
 
 ifeq ($(ENABLE_AVAHI),yes)

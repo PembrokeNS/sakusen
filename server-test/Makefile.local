@@ -1,11 +1,11 @@
 BIN = libsakusen-server-test
 LIBS := -lrt
-LIB_DEP_NAMES = libsakusen libsakusen-server libsakusen-comms libsakusen-resources
+LIB_DEP_NAMES = sakusen sakusen-server sakusen-comms sakusen-resources
 THIS_CXXFLAGS =
 THIS_LDFLAGS = -no-install
 
 ifeq ($(ENABLE_LTDL_HACKED),yes)
-LIB_DEP_NAMES += libltdl_hacked
+LIB_DEP_NAMES += ltdl_hacked
 endif
 
 ifeq ($(ENABLE_AVAHI),yes)

@@ -120,7 +120,7 @@ GLOBAL_CFLAGS ?= -Werror -O0 -g3
 # because e.g. libsakusen-comms is in libsakusen/comms
 
 LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
-		$(top_builddir)$(subst -,/,$(lib))/$(lib).la \
+		$(top_builddir)$(subst -,/,$(lib))/lib$(lib).la \
 	)
 ALL_CPPFLAGS := $(CPPFLAGS) $(BUILD_CPPFLAGS) -I$(this_srcdir) -I. \
 	$(foreach lib,\

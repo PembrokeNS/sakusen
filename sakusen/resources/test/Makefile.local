@@ -1,5 +1,5 @@
 BIN = libsakusen-resources-test
-LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
+LIB_DEP_NAMES = sakusen sakusen-comms sakusen-resources
 THIS_LDFLAGS = -no-install
 
 test-nonrecursive: $(BIN)

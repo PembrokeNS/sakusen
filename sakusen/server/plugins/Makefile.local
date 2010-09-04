@@ -1,0 +1,4 @@
+BIN = libsakusen-server-plugins.la
+LIB_DEP_NAMES = sakusen sakusen-comms sakusen-server
+THIS_CPPFLAGS =
+
