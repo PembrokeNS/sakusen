@@ -179,7 +179,7 @@ class tuple<
 %array_class(sint16,sint16);
 /* it looks like it really has to be called uint8, otherwise SWIG gets
  * confused. Crazy, huh? */
-/* Causes make clean to fail, though this is probably due to problems in makefiles %include <sakusen/revision.h>*/
+%include <sakusen/revision.h>
 %include <sakusen/gameobject.h>
 %include <sakusen/topology.h>
 %{
