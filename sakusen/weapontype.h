@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_WEAPONTYPE_H
 #define LIBSAKUSEN_WEAPONTYPE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/iarchive.h>
 #include <sakusen/oarchive.h>
 #include <sakusen/resourceinterface.h>

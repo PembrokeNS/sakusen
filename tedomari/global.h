@@ -1,7 +1,7 @@
 #ifndef TEDOMARI_GLOBAL_H
 #define TEDOMARI_GLOBAL_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/resources/global.h>
 #include <sakusen/gnu_extensions.h>
 
 #define TEDOMARI_APPLICATION_NAME "tedomari"

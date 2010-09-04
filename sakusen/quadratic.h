@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__QUADRATIC_H
 #define LIBSAKUSEN__QUADRATIC_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/point.h>
 #include <sakusen/oarchive.h>
 #include <sakusen/iarchive.h>

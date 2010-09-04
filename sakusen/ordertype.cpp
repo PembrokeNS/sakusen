@@ -1,7 +1,5 @@
 #include <sakusen/ordertype.h>
 
-#include <sakusen/libsakusen-global.h>
-
 #include <ostream>
 
 namespace sakusen{

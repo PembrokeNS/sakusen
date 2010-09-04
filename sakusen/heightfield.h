@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__HEIGHTFIELD_H
 #define LIBSAKUSEN__HEIGHTFIELD_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <boost/multi_array.hpp>
 

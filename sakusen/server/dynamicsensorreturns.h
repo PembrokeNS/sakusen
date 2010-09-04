@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 #define LIBSAKUSEN_SERVER__DYNAMICSENSORRETURNS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/hash_list.h>
 #include <sakusen/visibility.h>
 #include <sakusen/isensorreturns.h>

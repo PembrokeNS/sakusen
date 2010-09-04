@@ -2,7 +2,7 @@
 
 #include <boost/xpressive/regex_algorithms.hpp>
 
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 #include <sakusen/oarchive-methods.h>
 #include <sakusen/server/plugins/pluginexn.h>
 

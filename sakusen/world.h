@@ -3,7 +3,7 @@
 
 #include <boost/utility.hpp>
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/universe.h>
 #include <sakusen/map.h>
 #include <sakusen/sensorreturnsid.h>

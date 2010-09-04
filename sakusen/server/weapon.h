@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__WEAPON_H
 #define LIBSAKUSEN_SERVER__WEAPON_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/point.h>
 #include <sakusen/weapontype.h>
 #include <sakusen/server/layeredunit.h>

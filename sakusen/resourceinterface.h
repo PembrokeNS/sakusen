@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__RESOURCE_INTERFACE_H
 #define LIBSAKUSEN__RESOURCE_INTERFACE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/tuple/tuple.hpp>

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__STRINGUTILS_H
 #define LIBSAKUSEN__STRINGUTILS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <list>
 #include <sstream>

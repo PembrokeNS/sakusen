@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__LCGITERATOR_H
 #define LIBSAKUSEN__LCGITERATOR_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <boost/iterator/iterator_facade.hpp>
 

@@ -1,8 +1,7 @@
 #ifndef TEDOMARI__SERVERINTERFACE_H
 #define TEDOMARI__SERVERINTERFACE_H
 
-#include <sakusen/comms/libsakusen-comms-global.h>
-#include "tedomari-global.h"
+#include "global.h"
 #include <sakusen/comms/timeutils.h>
 #include <sakusen/comms/socket.h>
 #include "game/game.h"

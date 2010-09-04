@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__GNU_EXTENSIONS_H
 #define LIBSAKUSEN__GNU_EXTENSIONS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <boost/functional/hash/hash.hpp>
 
 #ifdef __GNUC__

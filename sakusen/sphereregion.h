@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__SPHEREREGION_H
 #define LIBSAKUSEN__SPHEREREGION_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/region.h>
 #include <sakusen/world.h>
 #include <sakusen/mathsutils.h>

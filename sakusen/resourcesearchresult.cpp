@@ -1,7 +1,5 @@
 #include <sakusen/resourcesearchresult.h>
 
-#include <sakusen/libsakusen-global.h>
-
 #include <ostream>
 
 using namespace sakusen;

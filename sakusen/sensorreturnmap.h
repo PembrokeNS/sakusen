@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__SENSORRETURNMAP_H
 #define LIBSAKUSEN__SENSORRETURNMAP_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/unitid.h>
 #include <sakusen/eachsensorreturn.h>
 

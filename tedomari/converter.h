@@ -1,8 +1,8 @@
 #ifndef TEDOMARI__CONVERTER_H
 #define TEDOMARI__CONVERTER_H
 
-#include <sakusen/libsakusen-global.h>
-#include "tedomari-global.h"
+#include "global.h"
+#include "global.h"
 
 #include <boost/utility.hpp>
 

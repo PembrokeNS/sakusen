@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__BALLISTIC_H
 #define LIBSAKUSEN_SERVER__BALLISTIC_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/quadratic.h>
 #include <sakusen/point.h>
 #include <sakusen/ref.h>

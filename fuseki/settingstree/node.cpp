@@ -1,6 +1,6 @@
 #include "settingstree/node.h"
 
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 #include <sakusen/stringutils.h>
 #include "settingstree/branch.h"
 #include "server.h"

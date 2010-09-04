@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS_GLOBAL_H
 #define LIBSAKUSEN_COMMS_GLOBAL_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <cerrno>
 

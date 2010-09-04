@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__ACTIONARGUMET_H
 #define TEDOMARI__UI__ACTIONARGUMET_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 #include <sakusen/numbertarget.h>
 #include <sakusen/point.h>

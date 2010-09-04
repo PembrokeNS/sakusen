@@ -1,6 +1,8 @@
 #ifndef FUSEKI__SETTINGSTREE__NODE_H
 #define FUSEKI__SETTINGSTREE__NODE_H
 
+#include "global.h"
+
 #include <list>
 #include <iosfwd>
 
@@ -8,7 +10,6 @@
 #include <boost/utility.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/clientid.h>
 #include "settingsuser.h"
 

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__MAPTEMPLATE_H
 #define LIBSAKUSEN__MAPTEMPLATE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/universe.h>
 #include <sakusen/heightfield.h>
 #include <sakusen/mapplaymode.h>

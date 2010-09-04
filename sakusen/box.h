@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__BOX_H
 #define LIBSAKUSEN__BOX_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/point.h>
 #include <sakusen/rectangle.h>
 

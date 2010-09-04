@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UNITSTATUS_H
 #define LIBSAKUSEN__UNITSTATUS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/iunitstatus.h>
 #include <sakusen/universe.h>

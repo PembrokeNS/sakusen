@@ -1,9 +1,10 @@
 #ifndef FUSEKI__SETTINGSTREE__SETTINGSTREE_H
 #define FUSEKI__SETTINGSTREE__SETTINGSTREE_H
 
+#include "global.h"
+
 #include <list>
 
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/clientid.h>
 #include "settingstree/branch.h"
 #include "settingstree/serverbranch.h"

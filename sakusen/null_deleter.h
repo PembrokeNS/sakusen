@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__NULL_DELETER_H
 #define LIBSAKUSEN__NULL_DELETER_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 namespace sakusen {
 

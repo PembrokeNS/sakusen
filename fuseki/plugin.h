@@ -1,7 +1,7 @@
 #ifndef FUSEKI__PLUGIN_H
 #define FUSEKI__PLUGIN_H
 
-#include "fuseki-global.h"
+#include "global.h"
 
 #include <stack>
 #include <boost/variant.hpp>

@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__UI_H
 #define TEDOMARI__UI__UI_H
 
-#include <sakusen/libsakusen-global.h>
+#include "global.h"
 
 #include <sakusen/stringutils.h>
 #include <sakusen/ptrhash.h>

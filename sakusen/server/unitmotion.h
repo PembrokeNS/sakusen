@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__UNITMOTION_H
 #define LIBSAKUSEN_SERVER__UNITMOTION_H
 
-#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/server/global.h>
 
 #include <boost/utility.hpp>
 

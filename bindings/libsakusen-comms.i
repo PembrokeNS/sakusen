@@ -69,9 +69,9 @@ using Sakusen;
 %}
 
 /* libsakusen-comms */
-%include <sakusen/comms/libsakusen-comms-global.h>
+%include <sakusen/comms/global.h>
 %{
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 %}
 
 %ignore sakusen::comms::operator<<(std::ostream& output, MessageType type);

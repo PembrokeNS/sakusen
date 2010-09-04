@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__FUNCTION_H
 #define TEDOMARI__UI__FUNCTION_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 #include <list>
 

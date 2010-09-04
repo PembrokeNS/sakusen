@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__EXCEPTIONS_H
 #define LIBSAKUSEN__EXCEPTIONS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/stringutils.h>
 #include <sakusen/resourcesearchresult.h>
 

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_CLIENT__UPDATEDSENSORRETURNS_H
 #define LIBSAKUSEN_CLIENT__UPDATEDSENSORRETURNS_H
 
-#include <sakusen/client/libsakusen-client-global.h>
+#include <sakusen/client/global.h>
 
 #include <sakusen/sensorreturns.h>
 

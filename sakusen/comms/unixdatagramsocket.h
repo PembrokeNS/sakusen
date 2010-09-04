@@ -3,7 +3,7 @@
 
 #ifndef DISABLE_UNIX_SOCKETS
 
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 #include <sakusen/comms/socket.h>
 
 #include <sys/un.h>

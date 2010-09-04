@@ -1,7 +1,7 @@
 #ifndef FUSEKI__PLUGININTERFACE_H
 #define FUSEKI__PLUGININTERFACE_H
 
-#include <sakusen/libsakusen-global.h>
+#include "global.h"
 
 #include <vector>
 #include <boost/filesystem.hpp>

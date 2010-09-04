@@ -1,10 +1,11 @@
 #ifndef FUSEKI__SETTINGSTREE__BRANCH_H
 #define FUSEKI__SETTINGSTREE__BRANCH_H
 
+#include "global.h"
+
 #include <list>
 #include <sakusen/gnu_extensions.h>
 
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/stringutils.h>
 #include <sakusen/clientid.h>
 #include "settingstree/node.h"

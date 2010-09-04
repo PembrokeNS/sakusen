@@ -1,5 +1,4 @@
 #include <sakusen/comms/socket.h>
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/stringutils.h>
 #include <list>
 

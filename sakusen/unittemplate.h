@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UNITTEMPLATE_H
 #define LIBSAKUSEN__UNITTEMPLATE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/point.h>
 #include <sakusen/unittype.h>

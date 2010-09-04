@@ -1,7 +1,7 @@
 #ifndef FUSEKI__SERVER_H
 #define FUSEKI__SERVER_H
 
-#include "fuseki-global.h"
+#include "global.h"
 
 #include <iosfwd>
 

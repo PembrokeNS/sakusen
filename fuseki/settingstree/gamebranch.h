@@ -1,6 +1,8 @@
 #ifndef FUSEKI__SETTINGSTREE__GAMEBRANCH_H
 #define FUSEKI__SETTINGSTREE__GAMEBRANCH_H
 
+#include "global.h"
+
 #include "settingstree/branch.h"
 
 namespace fuseki {

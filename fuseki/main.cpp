@@ -1,10 +1,8 @@
-#include <sakusen/libsakusen-global.h>
+#include "global.h"
 #include <sakusen/comms/socket.h>
 #include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/libsakusen-resources-global.h>
 #include <sakusen/resources/fileresourceinterface.h>
 #include <sakusen/resources/fileutils.h>
-#include "fuseki-global.h"
 #include "server.h"
 
 #include <sys/stat.h>

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__COMPLETEUNIT_H
 #define LIBSAKUSEN__COMPLETEUNIT_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <list>
 #include <sakusen/point.h>

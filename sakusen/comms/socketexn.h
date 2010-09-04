@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H
 #define LIBSAKUSEN_COMMS__SOCKETEXCEPTION_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/comms/global.h>
 #include <sakusen/exceptions.h>
 
 namespace sakusen {

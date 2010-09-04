@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UNIVERSE_H
 #define LIBSAKUSEN__UNIVERSE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <vector>
 #include <boost/utility.hpp>

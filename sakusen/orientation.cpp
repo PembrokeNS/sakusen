@@ -1,5 +1,4 @@
 #include <sakusen/orientation.h>
-#include <sakusen/libsakusen-global.h>
 
 using namespace sakusen;
 

@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN__ORIENTATION_H
 #define LIBSAKUSEN__ORIENTATION_H
 
+#include <sakusen/global.h>
+
 #include <sakusen/point.h>
 #include <sakusen/angle.h>
 #include <sakusen/iarchive.h>

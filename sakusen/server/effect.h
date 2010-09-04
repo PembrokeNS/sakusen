@@ -8,7 +8,7 @@ class Effect;
 
 }}
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/point.h>
 #include <sakusen/region.h>
 #include <sakusen/playerid.h>

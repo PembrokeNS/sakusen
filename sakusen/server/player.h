@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__PLAYER_H
 #define LIBSAKUSEN_SERVER__PLAYER_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/hash_list.h>
 #include <sakusen/gnu_extensions.h>
 #include <sakusen/playerid.h>

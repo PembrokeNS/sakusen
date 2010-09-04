@@ -1,7 +1,6 @@
 #include <sakusen/comms/message.h>
 
 #include <sakusen/iarchive.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
 #include <sakusen/world.h>
 
 namespace sakusen {

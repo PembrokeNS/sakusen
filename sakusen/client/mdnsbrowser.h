@@ -1,10 +1,11 @@
 #ifndef LIBSAKUSEN_CLIENT__MDNSBROWSER_H
 #define LIBSAKUSEN_CLIENT__MDNSBROWSER_H
 
+#include <sakusen/client/global.h>
+
 #include <boost/utility.hpp>
 #include <boost/function.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/servedgame.h>
 
 namespace sakusen {

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 #define LIBSAKUSEN_RESOURCES__PNGIMAGE_H
 
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 
 #include <boost/scoped_ptr.hpp>
 #include <boost/filesystem/path.hpp>

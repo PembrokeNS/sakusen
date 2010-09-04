@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__REGION_H
 #define TEDOMARI__UI__REGION_H
 
-#include <sakusen/libsakusen-global.h>
+#include "global.h"
 
 #include <list>
 

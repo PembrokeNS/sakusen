@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__BOUNDED_H
 #define LIBSAKUSEN__BOUNDED_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/box.h>
 #include <sakusen/gameobject.h>
 

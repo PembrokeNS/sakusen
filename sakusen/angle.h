@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ANGLE_H
 #define LIBSAKUSEN__ANGLE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/point.h>
 
 namespace sakusen {

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__COMPLETEMAP_H
 #define LIBSAKUSEN_SERVER__COMPLETEMAP_H
 
-#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/map.h>
 #include <sakusen/heightfield.h>
 

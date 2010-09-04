@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ICOMPLETEUNIT_H
 #define LIBSAKUSEN__ICOMPLETEUNIT_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <list>
 #include <sakusen/point.h>

@@ -1,7 +1,7 @@
 #ifndef LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 #define LIBCSAKUSEN_CLIENT__PARTIALMAP_H
 
-#include <sakusen/client/libsakusen-client-global.h>
+#include <sakusen/client/global.h>
 #include <sakusen/maps/planemap.h>
 #include <sakusen/client/partialheightfield.h>
 

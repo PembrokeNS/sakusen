@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__SENSORRETURN_H
 #define LIBSAKUSEN__SENSORRETURN_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/perception.h>
 #include <sakusen/oarchive.h>
 #include <sakusen/iarchive.h>

@@ -1,5 +1,4 @@
 #include <sakusen/orderdata.h>
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/oarchive-methods.h>
 
 using namespace sakusen;

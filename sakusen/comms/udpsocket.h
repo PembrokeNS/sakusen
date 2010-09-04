@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__UDPSOCKET_H
 #define LIBSAKUSEN_COMMS__UDPSOCKET_H
 
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 #include <sakusen/comms/ipsocket.h>
 
 namespace sakusen {

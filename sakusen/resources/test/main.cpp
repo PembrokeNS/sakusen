@@ -5,7 +5,6 @@
 #include <sakusen/heightfield.h>
 #include <sakusen/mapplaymode.h>
 #include <sakusen/sphereregion.h>
-#include <sakusen/resources/libsakusen-resources-global.h>
 #include <sakusen/resourceinterface-methods.h>
 #include <sakusen/resources/fileresourceinterface.h>
 #include <sakusen/resources/fileutils.h>

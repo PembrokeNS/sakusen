@@ -8,8 +8,7 @@
 #include <time.h>
 #endif
 
-#include <sakusen/libsakusen-global.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 
 /** Number of microseconds in a second */
 #define SAKUSEN_COMMS_TIMEUTILS_MICRO 1000000

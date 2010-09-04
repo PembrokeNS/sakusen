@@ -1,4 +1,3 @@
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/client/mdnsbrowser.h>
 #include <iostream> // std::cerr
 #include <avahi-client/client.h>

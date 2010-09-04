@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UPDATEDATA_H
 #define LIBSAKUSEN__UPDATEDATA_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/changeownerreason.h>
 #include <sakusen/updatetype.h>
 #include <sakusen/order.h>

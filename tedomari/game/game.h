@@ -3,7 +3,7 @@
 
 #include <queue>
 
-#include "tedomari-global.h"
+#include "global.h"
 #include <sakusen/universe.h>
 #include <sakusen/update.h>
 #include <sakusen/resourceinterface.h>

@@ -1,14 +1,11 @@
-#include <sakusen/libsakusen-global.h>
-#include "tedomari-global.h"
+#include "global.h"
 #include <sakusen/revision.h>
 #include <sakusen/stringutils.h>
 #include <sakusen/client/partialworld.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
 #include <sakusen/comms/timeutils.h>
 #include <sakusen/comms/errorutils.h>
 #include <sakusen/comms/unixdatagramconnectingsocket.h>
 #include <sakusen/comms/socketexn.h>
-#include <sakusen/resources/libsakusen-resources-global.h>
 #include <sakusen/resources/fileutils.h>
 #include <sakusen/resources/fileresourceinterface.h>
 #include <sakusen/heightfield-methods.h>

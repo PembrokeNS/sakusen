@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__FUSE_H
 #define LIBSAKUSEN_SERVER__FUSE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/fifo_priority_queue.h>
 
 namespace sakusen {

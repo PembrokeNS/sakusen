@@ -1,8 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__CLIENT_H
 #define LIBSAKUSEN_SERVER__CLIENT_H
 
-#include <sakusen/libsakusen-global.h>
-#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/server/global.h>
 
 #include <queue>
 #include <sakusen/playerid.h>

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 #define LIBSAKUSEN_CLIENT__UPDATEDUNIT_H
 
-#include <sakusen/client/libsakusen-client-global.h>
+#include <sakusen/client/global.h>
 
 #include <sakusen/completeunit.h>
 #include <sakusen/updatedata.h>

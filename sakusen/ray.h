@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__RAY_H
 #define LIBSAKUSEN__RAY_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <set>
 

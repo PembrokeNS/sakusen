@@ -163,9 +163,9 @@ class tuple<
 
 %ignore debugStream;
 %ignore errorStream;
-%include <sakusen/libsakusen-global.h>
+%include <sakusen/global.h>
 %{
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 %}
 #if !defined(SWIGCSHARP) && !defined(SWIGTCL)
   %template(stringList) std::list<sakusen::String>;

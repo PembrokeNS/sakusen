@@ -1,8 +1,9 @@
 #ifndef LIBSAKUSEN__ORDERTYPE_H
 #define LIBSAKUSEN__ORDERTYPE_H
 
+#include <sakusen/global.h>
+
 #include <iosfwd>
-#include <sakusen/libsakusen-global.h>
 
 namespace sakusen {
 

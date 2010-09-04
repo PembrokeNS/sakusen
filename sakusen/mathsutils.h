@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__MATHSUTILS_H
 #define LIBSAKUSEN__MATHSUTILS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <boost/tuple/tuple.hpp>
 

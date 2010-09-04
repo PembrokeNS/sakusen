@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__IPSOCKET_H
 #define LIBSAKUSEN_COMMS__IPSOCKET_H
 
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 #include <sakusen/comms/socket.h>
 
 #ifdef WIN32

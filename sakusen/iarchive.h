@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__IARCHIVE_H
 #define LIBSAKUSEN__IARCHIVE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <vector>
 #include <list>

@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILEWRITER_H
 #define LIBSAKUSEN_RESOURCES__FILEWRITER_H
 
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 #include <sakusen/oarchive.h>
 #include <sakusen/writer.h>
 #include <sakusen/resources/file.h>

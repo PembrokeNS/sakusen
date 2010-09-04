@@ -1,4 +1,4 @@
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <iostream>
 

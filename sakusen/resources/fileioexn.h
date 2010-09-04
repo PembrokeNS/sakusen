@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILEIOEXN_H
 #define LIBSAKUSEN_RESOURCES__FILEIOEXN_H
 
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 
 #include <sakusen/exceptions.h>
 #include <sakusen/comms/errorutils.h>

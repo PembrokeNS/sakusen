@@ -1,8 +1,7 @@
 #ifndef LIBSAKUSEN_COMMS__ERRORUTILS_H
 #define LIBSAKUSEN_COMMS__ERRORUTILS_H
 
-#include <sakusen/libsakusen-global.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/comms/global.h>
 
 #if defined (_MSC_VER)
 #include <winsock2.h>

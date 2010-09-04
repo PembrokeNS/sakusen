@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__PLAYERID_H
 #define LIBSAKUSEN__PLAYERID_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/stringutils.h>
 #include <sakusen/idbase.h>

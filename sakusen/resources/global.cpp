@@ -1,4 +1,4 @@
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 
 #include <boost/xpressive/regex_primitives.hpp>
 

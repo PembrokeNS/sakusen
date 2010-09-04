@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ORDERMESSAGE_H
 #define LIBSAKUSEN__ORDERMESSAGE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/order.h>
 

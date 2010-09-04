@@ -1,9 +1,7 @@
 #include "server-methods.h"
 
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/revision.h>
 #include <sakusen/resourcesearchresult.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
 #include <sakusen/comms/message.h>
 #include <sakusen/comms/socketexn.h>
 #include <sakusen/server/completeworld.h>

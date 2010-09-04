@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__UNITORDERS_H
 #define LIBSAKUSEN__UNITORDERS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/order.h>
 #include <sakusen/targettype.h>

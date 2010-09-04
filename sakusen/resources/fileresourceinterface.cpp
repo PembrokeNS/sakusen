@@ -2,7 +2,6 @@
 
 #include <boost/xpressive/regex_algorithms.hpp>
 
-#include <sakusen/resources/libsakusen-resources-global.h>
 #include <sakusen/iarchive.h>
 #include <sakusen/resourcetype.h>
 #include <sakusen/maptemplate.h>

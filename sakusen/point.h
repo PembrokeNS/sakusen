@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__POINT_H
 #define LIBSAKUSEN__POINT_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <boost/utility.hpp>
 
 #include <sakusen/arithmetictraits.h>

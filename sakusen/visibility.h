@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__VISIBILITY_H
 #define LIBSAKUSEN__VISIBILITY_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <boost/integer_traits.hpp>
 

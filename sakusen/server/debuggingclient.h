@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 #define LIBSAKUSEN_SERVER__DEBUGGINGCLIENT_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 
 #include <iosfwd>
 

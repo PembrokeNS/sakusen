@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ISENSORRETURNS_H
 #define LIBSAKUSEN__ISENSORRETURNS_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/gnu_extensions.h>
 #include <sakusen/visibility.h>
 #include <sakusen/playerid.h>

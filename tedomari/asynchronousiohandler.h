@@ -1,13 +1,13 @@
 #ifndef TEDOMARI__ASYNCHRONOUSIOHANDLER_H
 #define TEDOMARI__ASYNCHRONOUSIOHANDLER_H
 
+#include "global.h"
+
 #include <cstdio>
 #include <iosfwd>
 #include <queue>
 #include <boost/filesystem/path.hpp>
 
-#include <sakusen/libsakusen-global.h>
-#include "tedomari-global.h"
 #include "converter.h"
 #include <sakusen/comms/timeutils.h>
 

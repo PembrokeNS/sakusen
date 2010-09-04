@@ -9,8 +9,8 @@
 
 #include <boost/xpressive/basic_regex.hpp>
 
-#include <sakusen/libsakusen-global.h>
-#include <sakusen/comms/libsakusen-comms-global.h>
+#include <sakusen/global.h>
+#include <sakusen/comms/global.h>
 
 /** SAKUSEN_RESOURCES_SUBDIR is the subdirectory of SAKUSEN_CONFIG_SUBDIR where
  * the game data is to be found */

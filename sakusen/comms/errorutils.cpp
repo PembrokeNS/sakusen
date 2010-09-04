@@ -3,7 +3,6 @@
 #include <cerrno>
 #include <cstring>
 #include <sstream>
-#include <sakusen/comms/libsakusen-comms-global.h>
 
 namespace sakusen {
 namespace comms {

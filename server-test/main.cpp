@@ -1,7 +1,7 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/server/global.h>
 #include <sakusen/point.h>
 #include <sakusen/sphereregion.h>
 #include <sakusen/region.h>

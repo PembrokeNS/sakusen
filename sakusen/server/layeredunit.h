@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 #define LIBSAKUSEN_SERVER__LAYEREDUNIT_H
 
-#include <sakusen/server/libsakusen-server-global.h>
+#include <sakusen/server/global.h>
 
 #include <list>
 #include <boost/scoped_ptr.hpp>

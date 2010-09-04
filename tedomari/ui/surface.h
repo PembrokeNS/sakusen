@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__SURFACE_H
 #define TEDOMARI__UI__SURFACE_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>

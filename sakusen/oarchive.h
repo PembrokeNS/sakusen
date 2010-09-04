@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__OARCHIVE_H
 #define LIBSAKUSEN__OARCHIVE_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <set>
 

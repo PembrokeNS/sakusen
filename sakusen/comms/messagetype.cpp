@@ -1,5 +1,4 @@
 #include <sakusen/comms/messagetype.h>
-#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

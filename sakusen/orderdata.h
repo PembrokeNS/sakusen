@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN__ORDERDATA_H
 #define LIBSAKUSEN__ORDERDATA_H
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 
 #include <sakusen/point.h>
 #include <sakusen/oarchive.h>

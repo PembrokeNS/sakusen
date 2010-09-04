@@ -1,6 +1,5 @@
 #include <sakusen/comms/messagedata.h>
 
-#include <sakusen/libsakusen-global.h>
 #include <sakusen/oarchive-methods.h>
 #include <sakusen/world.h>
 

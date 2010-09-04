@@ -1,5 +1,4 @@
 #include <sakusen/updatetype.h>
-#include <sakusen/libsakusen-global.h>
 
 #include <ostream>
 

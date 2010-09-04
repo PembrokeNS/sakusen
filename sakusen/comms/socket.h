@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_COMMS__SOCKET_H
 #define LIBSAKUSEN_COMMS__SOCKET_H
 
+#include <sakusen/comms/global.h>
+
 #include <sys/types.h>
 #include <boost/shared_ptr.hpp>
 

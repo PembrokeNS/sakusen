@@ -1,7 +1,7 @@
 #ifndef LIBSAKUSEN_RESOURCES__FILERESOURCEINTERFACE_H
 #define LIBSAKUSEN_RESOURCES__FILERESOURCEINTERFACE_H
 
-#include <sakusen/resources/libsakusen-resources-global.h>
+#include <sakusen/resources/global.h>
 
 #include <vector>
 #include <boost/weak_ptr.hpp>

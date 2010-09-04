@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <sakusen/libsakusen-global.h>
+#include <sakusen/global.h>
 #include <sakusen/point.h>
 #include <sakusen/topology.h>
 #include <sakusen/iarchive.h>
