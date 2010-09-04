@@ -12,9 +12,6 @@ class LIBSAKUSEN_API OrderMessage {
     OrderMessage(UnitId orderee, const Order& order);
     ~OrderMessage() {}
   private:
-    /** Default ctor is not implemented. Call OrderMessage(UnitId, const Order&). */
-    OrderMessage();
-
     UnitId orderee;
     Order order;
   public:
