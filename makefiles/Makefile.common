@@ -16,7 +16,7 @@
 #   Include arguments will also be extrapolated from LIB_DEP_NAMES, so you
 #   needn't include those here.  Indeed, you probably should rarely need to
 #   specify this.
-# LIBS - system library arguments, e.g. "-lstdc++".
+# LIBS - system library arguments, e.g. "-lpng".
 # LIB_DEP_NAMES - base names of prerequisite libraries, e.g. "libsakusen" will
 #   be searched for at ../libsakusen/libsakusen.la  and at
 #   ../../libsakusen/libsakusen.la.  This will give appropriate
