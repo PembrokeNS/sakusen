@@ -33,9 +33,6 @@ vcs_revision.h: \
 		echo '' > $@; \
 	fi;
 
-# We make revision.h a dependency of the last included Makefile to ensure that
-# it's generated before any of the other makefrags.  It has to be the last
-# included because make remakes included makefiles in reverse order.
-
-$(lastword $(MAKEFRAGS)): revision.h
+clean:
+	rm -f vcs_revision.h
 

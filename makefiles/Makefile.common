@@ -217,7 +217,7 @@ clean: $(CLEAN_RECURSIONS) clean-nonrecursive
 
 clean-nonrecursive: remove-empty-subdirs
 	-rm -rf .libs .obj .makefrags
-	-rm -f $(BIN) revision.h
+	-rm -f $(BIN)
 
 # Same stuff for install
 INSTALL_RECURSIONS := $(addprefix install-recurse-,$(SUBDIRS))
