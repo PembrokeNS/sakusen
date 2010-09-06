@@ -1,6 +1,6 @@
 NO_AUTO_COMPILING := yes
 THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
-LIBS := -lboost_python
+LIBS := -lboost_python$(BOOST_LIB_SUFFIX)
 
 all-nonrecursive: sakusen.so sakusencomms.so
 
