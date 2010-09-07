@@ -1,6 +1,6 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-THIS_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms -I$(top_srcdir)libsakusen/resources -I$(top_srcdir)libsakusen/client `python-config --cflags` $(SWIGWORDSIZE)
+THIS_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(top_srcdir) -I$(top_srcdir) `python-config --cflags` $(SWIGWORDSIZE)
 define PYTHON_VERSION
 `printf "import distutils.sysconfig\nprint distutils.sysconfig.get_python_version()\n"|python`
 endef
@@ -54,11 +54,11 @@ $(OBJECTS) sakusen.lo: %.lo: %.cpp
 # we just assume it's including all of them except revision.h
 sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
 		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
-	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I/usr/include $<
+	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 $(SOURCES): sakusen_%.cpp: $(top_srcdir)bindings/libsakusen-%.i \
 		$(top_srcdir)bindings/libsakusen.i
-	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/$* -I/usr/include $<
+	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 define source_dependencies
 sakusen_$(1).cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/$(1)/*.h))
