@@ -11,7 +11,7 @@
 /*support for std::list<sakusen::Update*/
 %include "std_list.i"
 %{
-#include <sakusen/comms/update.h>
+#include <sakusen/update.h>
 %}
 #endif
 #endif
@@ -88,7 +88,7 @@ class MessageData;
 }
 }
 #ifdef SWIGPYTHON
-%include <sakusen/comms/std_set.i>
+%include <std_set.i>
 namespace saksen{
 namespace comms{
 %template(stringSet) ::std::set<::sakusen::String>;
