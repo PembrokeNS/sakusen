@@ -38,11 +38,11 @@ clean:
 
 _sakusen.la: sakusen.lo
 	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ $(BUILD_LDFLAGS) `python-config --libs` -rpath $(PYLIBDIR) \
-		sakusen.lo $(top_builddir)libsakusen/libsakusen.la
+		sakusen.lo $(top_builddir)sakusen/libsakusen.la
 
 $(LIBRARIES): _sakusen_%.la: sakusen_%.lo
 	libtool --mode=link --tag=disable-static --tag=CXX $(CXX) -module -o $@ $(BUILD_LDFLAGS) `python-config --libs` -rpath $(PYLIBDIR) \
-                sakusen_$*.lo $(top_builddir)libsakusen/$*/libsakusen-$*.la
+                sakusen_$*.lo $(top_builddir)sakusen/$*/libsakusen-$*.la
 
 # FIXME: We're not taking account of all the *FLAGS to which we have
 # access
