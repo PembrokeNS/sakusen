@@ -36,19 +36,19 @@ class WeaponType;
 /* And some Region template instantiations */
 template<typename T> class SphereRegion;
 }
-#include "rectangleregion.h"
+#include "sakusen/rectangleregion.h"
 %}
 %import "libsakusen.i"
 %{
 /* seems these have to be early, no idea why */
-#include "updatedunit.h"
-#include "updatedsensorreturns.h"
+#include "sakusen/client/updatedunit.h"
+#include "sakusen/client/updatedsensorreturns.h"
 %}
-%include "libsakusen-client-global.h"
+%include "sakusen/client/global.h"
 %{
-#include "libsakusen-client-global.h"
+#include "sakusen/client/global.h"
 %}
-%include "updatedunit.h"
+%include "sakusen/client/updatedunit.h"
 namespace sakusen{
 namespace client{
 %template(UpdatedUnitPtr) ::boost::shared_ptr<UpdatedUnit>;
@@ -62,7 +62,7 @@ static boost::shared_ptr<sakusen::client::UpdatedUnit> CreateUpdatedUnitPtr(saku
 }
 /* temporary workaround 
 #define LIBSAKUSEN_CLIENT_API*/
-%include "updatedsensorreturns.h"
+%include "sakusen/client/updatedsensorreturns.h"
 namespace sakusen{
 namespace client{
 class UpdatedSensorReturns; //ARRGH
@@ -75,23 +75,23 @@ static boost::shared_ptr<sakusen::client::UpdatedSensorReturns> CreateUpdatedSen
 }
 }
 }
-%include "unitfactory.h"
+%include "sakusen/client/unitfactory.h"
 %{
-#include "unitfactory.h"
+#include "sakusen/client/unitfactory.h"
 %}
-%include "sensorreturnsfactory.h"
+%include "sakusen/client/sensorreturnsfactory.h"
 %{
-#include "sensorreturnsfactory.h"
+#include "sakusen/client/sensorreturnsfactory.h"
 %}
-%include "partialheightfield.h"
+%include "sakusen/client/partialheightfield.h"
 %{
-#include "partialheightfield.h"
+#include "sakusen/client/partialheightfield.h"
 %}
-%include "partialmap.h"
+%include "sakusen/client/partialmap.h"
 %{
-#include "partialmap.h"
+#include "sakusen/client/partialmap.h"
 %}
-%include "partialworld.h"
+%include "sakusen/client/partialworld.h"
 %{
-#include "partialworld.h"
+#include "sakusen/client/partialworld.h"
 %}

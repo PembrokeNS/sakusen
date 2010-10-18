@@ -15,9 +15,9 @@ class WeaponType;
 }
 %}
 %import "libsakusen.i"
-%include "libsakusen-resources-global.h"
+%include "sakusen/resources/global.h"
 %{
-#include "libsakusen-resources-global.h"
+#include "sakusen/resources/global.h"
 %}
 %{
 #include "pcrecpp.h"
@@ -159,13 +159,13 @@ def g(self,key):
 
 
 } // namespace boost
-%include "fileutils.h"
+%include "sakusen/resources/fileutils.h"
 %{
-#include "fileutils.h"
+#include "sakusen/resources/fileutils.h"
 %}
-%include "fileresourceinterface.h"
+%include "sakusen/resources/fileresourceinterface.h"
 %{
-#include "fileresourceinterface.h"
+#include "sakusen/resources/fileresourceinterface.h"
 %}
 #ifdef SWIGPYTHON
 %extend boost::filesystem::path {
