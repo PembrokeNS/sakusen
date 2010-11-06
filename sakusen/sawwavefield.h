@@ -131,7 +131,7 @@ class SawWaveField {
     void reseed(uint64 const seed) { iterator.reseed(seed | 1); }
   private:
     uint32 logScale;
-    LcgIterator<0x7bec9cc1ef90f1a3> iterator;
+    LcgIterator<UINT64_C(0x7bec9cc1ef90f1a3)> iterator;
     uint64 strides[Rank];
 };
 
