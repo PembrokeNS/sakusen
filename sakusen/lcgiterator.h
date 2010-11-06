@@ -59,7 +59,7 @@ class LcgIterator :
   public:
     LcgIterator(uint64 const s) : state(s) { assert(state & 1); }
 
-    void reseed(uint64 const s) { assert(state & 1); state = s; }
+    void reseed(uint64 const s) { assert(s & 1); state = s; }
   private:
     friend class boost::iterator_core_access;
 
