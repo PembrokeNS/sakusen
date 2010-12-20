@@ -212,7 +212,12 @@ void CheckForGameStartAction::act(Server& server) const
           allClientsReady = false;
           server.out << "Not ready because client '" <<
             client->second->getClientId().toString() <<
-            "' not ready\n";
+            "' ";
+          if (client->second->isReady()) {
+            server.out << "has no player assigned and is not an observer\n";
+          } else {
+            server.out << "is not ready\n";
+          }
           break;
         }
       }

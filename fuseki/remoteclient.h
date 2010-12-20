@@ -62,6 +62,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     inline bool isAdmin() const { return admin; }
     inline void setAdmin(bool value);
     inline bool isNeverAdmin() const { return neverAdmin; }
+    inline bool isReady() const { return ready; }
     inline bool isAutoUnready() const { return autoUnready; }
     inline bool isDead() const { return dead; }
     inline void setDead() { dead = true; }
