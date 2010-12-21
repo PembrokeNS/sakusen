@@ -76,7 +76,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
       return message;
     }
     //@}
-    
+
     /** \brief Adds an order to the back of the Client's order queue
      *
      * \param o OrderMessage to add */
@@ -88,7 +88,7 @@ class RemoteClient : public sakusen::server::Client, public SettingsUser {
     inline bool isReadyForGameStart() {
       return ready && (observer || (playerId != 0));
     }
-    
+
     /** \brief Process all pending Messages on inSocket
      *
      * This receives as much data as posible on the incoming Socket and
