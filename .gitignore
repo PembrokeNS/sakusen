@@ -21,3 +21,4 @@ tags
 /small
 *.bak
 *.core
+temp.out
