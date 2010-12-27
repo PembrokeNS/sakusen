@@ -1,7 +1,7 @@
 #include "ui/ui.h"
 
-#include "stringutils.h"
-#include "socketexn.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/socketexn.h>
 #include "ui/mapdisplay.h"
 #include "ui/modifiedkeyevent.h"
 
@@ -11,7 +11,10 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/spirit/home/qi/parse.hpp>
 #include <boost/spirit/home/qi/numeric/uint.hpp>
-#include <pcrecpp.h>
+#include <boost/xpressive/basic_regex.hpp>
+#include <boost/xpressive/regex_algorithms.hpp>
+#include <boost/xpressive/regex_compiler.hpp>
+#include <boost/xpressive/regex_primitives.hpp>
 
 using namespace std;
 
@@ -79,24 +82,36 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
 
 list<String> UI::tokenise(const String& s)
 {
-  pcrecpp::StringPiece piece(s);
-  pcrecpp::RE re(
-      "\\s*([+-]?[a-zA-Z_][a-zA-Z_0-9]*|-?[0-9\\.]+|'[^']*'|{|}|;)",
-      pcrecpp::UTF8()
+  /* It would be nice to use xpressive's tokenization features for this, but I
+   * can't figure out how to do so safely */
+  namespace xp = boost::xpressive;
+  xp::smatch results;
+  xp::sregex tokenRe =
+    xp::bos >> *xp::blank >> (xp::s1 =
+      (!(xp::set='+','-') >> (xp::alpha|'_') >> *(xp::alnum|'_')) |
+      (!xp::as_xpr('-') >> +xp::set[xp::range('0','9')|'.']) |
+      ('\'' >> *~xp::set['\''] >> '\'') |
+      '{' |
+      '}' |
+      ';'
     );
   list<String> tokens;
   String token;
-  
-  while(re.Consume(&piece, &token)) {
+  String::const_iterator parsedTo = s.begin();
+
+  while (regex_search(parsedTo, s.end(), results, tokenRe)) {
+    String token = results[1];
     assert(!token.empty());
     /*SAKUSEN_QDEBUG("adding token '" << token << "'");*/
     tokens.push_back(token);
+    parsedTo = results[1].second;
   }
 
-  pcrecpp::RE("\\s*(?:\\#[^\\n]*)?").Consume(&piece);
+  xp::sregex restRe =
+    *xp::blank >> !('#' >> *~xp::_n);
 
-  if (!piece.empty()) {
-    alert(Alert(String("Unexpected character '") + piece[0] + "' in command"));
+  if (!regex_match(parsedTo, s.end(), restRe)) {
+    SAKUSEN_FATAL("Unexpected character '" << *parsedTo << "' in command");
   }
 
   return tokens;
@@ -105,6 +120,10 @@ list<String> UI::tokenise(const String& s)
 void UI::setMode(Mode* newMode)
 {
   assert(newMode != NULL);
+  if (!modeIndicator) {
+    /** \todo Should this be supported? */
+    SAKUSEN_FATAL("mode change without GUI");
+  }
   mode = newMode;
   String indicator = "-- " + boost::to_upper_copy(mode->getName());
   if (pendingMode) {
@@ -369,7 +388,6 @@ void UI::executeCommands(const String& cmdString)
 
 void UI::executeRegex(const String& regex)
 {
-  pcrecpp::RE r(regex);
   /** \todo Other possible uses of regexes */
   if (pendingAction) {
     switch (pendingAction->getNextParameterType()) {
@@ -378,7 +396,9 @@ void UI::executeRegex(const String& regex)
           const set<String>& options = pendingAction->getStringSet();
           for (set<String>::const_iterator i=options.begin();
               i != options.end(); ++i ) {
-            if (r.PartialMatch(*i)) {
+            namespace xp = boost::xpressive;
+            xp::sregex r = xp::bos >> xp::sregex::compile(regex);
+            if (regex_search(*i, r)) {
               supplyActionArg(ActionArgument(*i));
               return;
             }
@@ -656,10 +676,14 @@ void UI::moveMapRelativeFrac(double dx, double dy)
 
 void UI::dragRegion(bool start)
 {
-  if (start) {
-    activeMapDisplay->startDrag();
+  if (!activeMapDisplay) {
+    alert("Attempting to drag while no map active!");
   } else {
-    lastRectangle = activeMapDisplay->stopDrag();
+    if (start) {
+      activeMapDisplay->startDrag();
+    } else {
+      lastRectangle = activeMapDisplay->stopDrag();
+    }
   }
 }
 

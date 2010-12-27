@@ -2,7 +2,7 @@
 
 #include "ui/alert.h"
 #include "ui/ui.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
 using namespace std;
 

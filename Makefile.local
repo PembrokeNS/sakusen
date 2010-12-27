@@ -9,8 +9,15 @@ else
 ifeq ($(ENABLE_EVERYTHING),yes)
 
 SUBDIRS := \
-	liboptimal libltdl_hacked \
-	libsakusen \
+	optimal
+
+# Use bundled libltdl version, which provides better error messages but has
+# less functionality
+ifeq ($(ENABLE_LTDL_HACKED),yes)
+SUBDIRS += ltdl_hacked
+endif
+
+SUBDIRS += sakusen \
 	data server-test server-plugins \
 	fuseki tedomari
 
@@ -23,19 +30,21 @@ endif
 
 SUBDIRS += tools
 
-all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings all-recurse-tools: all-recurse-libsakusen
+all-recurse-server-test all-recurse-server-plugins all-recurse-fuseki all-recurse-tedomari all-recurse-data all-recurse-bindings all-recurse-tools: all-recurse-sakusen
 
-all-recurse-fuseki all-recurse-tedomari: all-recurse-liboptimal
-
-all-recurse-libsakusen: all-recurse-libltdl_hacked
+all-recurse-fuseki all-recurse-tedomari: all-recurse-optimal
 
 test-recurse-server-test: test-recurse-data
 
-test-recurse-server-test test-recurse-server-plugins test-recurse-fuseki test-recurse-tedomari test-recurse-data test-recurse-bindings test-recurse-tools: test-recurse-libsakusen
+test-recurse-server-test test-recurse-server-plugins test-recurse-fuseki test-recurse-tedomari test-recurse-data test-recurse-bindings test-recurse-tools: test-recurse-sakusen
 
-test-recurse-fuseki test-recurse-tedomari: test-recurse-liboptimal
+test-recurse-fuseki test-recurse-tedomari: test-recurse-optimal
 
-test-recurse-libsakusen: test-recurse-libltdl_hacked
+ifeq ($(ENABLE_LTDL_HACKED),yes)
+all-recurse-sakusen: all-recurse-ltdl_hacked
+
+test-recurse-sakusen: test-recurse-ltdl_hacked
+endif
 
 # If we're installing to a relative DESTDIR, then we have to make it absolute
 # before we recurse because otherwise it ends up pointing at different places

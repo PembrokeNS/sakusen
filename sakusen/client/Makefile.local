@@ -1,0 +1,10 @@
+BIN = libsakusen-client.la
+LIB_DEP_NAMES = sakusen
+
+ifeq ($(ENABLE_AVAHI),yes)
+  LIBS := $(LIBS) -lavahi-client
+endif
+
+ifneq ($(ENABLE_AVAHI),yes)
+  EXCLUDE_FILES := mdnsbrowser.cpp
+endif

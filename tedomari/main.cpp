@@ -1,19 +1,16 @@
-#include "libsakusen-global.h"
-#include "tedomari-global.h"
-#include "stringutils.h"
-#include "partialworld.h"
-#include "libsakusen-comms-global.h"
-#include "timeutils.h"
-#include "errorutils.h"
-#include "unixdatagramconnectingsocket.h"
-#include "socketexn.h"
-#include "libsakusen-resources-global.h"
-#include "fileutils.h"
-#include "fileresourceinterface.h"
-#include "heightfield-methods.h"
+#include "global.h"
+#include <sakusen/revision.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/client/partialworld.h>
+#include <sakusen/comms/timeutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/unixdatagramconnectingsocket.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/heightfield-methods.h>
 
 #include "asynchronousiohandler.h"
-#include "revision.h"
 #include "serverinterface.h"
 
 #include "game/game.h"
@@ -37,7 +34,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <optionsparser.h>
+#include <optimal/optionsparser.h>
 
 using namespace std;
 using namespace optimal;

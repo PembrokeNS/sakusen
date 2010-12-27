@@ -1,8 +1,8 @@
 #include "remoteclient.h"
 
-#include "messagedata.h"
-#include "unixdatagramlisteningsocket.h"
-#include "completeworld.h"
+#include <sakusen/comms/messagedata.h>
+#include <sakusen/comms/unixdatagramlisteningsocket.h>
+#include <sakusen/server/completeworld.h>
 #include "server.h"
 
 using namespace sakusen;

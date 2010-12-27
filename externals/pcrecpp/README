@@ -1,6 +1,0 @@
-This is a slight modification of the pcrecpp code from the pcre library.  This
-code was originally contributed by Google, and has been altered to allow it to
-compile with Visual C++ 2005, when linked against the windows port of the pcre
-library.
-
-

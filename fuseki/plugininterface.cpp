@@ -1,14 +1,18 @@
 #include "plugininterface.h"
-#include "fileutils.h"
-#include "plugins/pluginexn.h"
-#include "plugins/plugininfo.h"
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/server/plugins/pluginexn.h>
+#include <sakusen/server/plugins/plugininfo.h>
 
 #ifdef WIN32
   #include <windows.h>
 #endif
 
 #ifdef __GNUC__
-  #include <ltdl_hacked.h>
+  #ifdef ENABLE_LTDL_HACKED
+    #include <ltdl_hacked/ltdl_hacked.h>
+  #else
+    #include <ltdl.h>
+  #endif
 #endif //The Guild does not condone ltdl
 
 using namespace std;

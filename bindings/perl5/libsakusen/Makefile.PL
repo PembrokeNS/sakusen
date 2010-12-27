@@ -22,11 +22,11 @@ WriteMakefile(
   CC => $CC,
   LD => $LD,
   DEFINE => '-DHAVE_BOOL',
-  INC => '-I'.$top_srcdir.'libsakusen '.$ENV{'BUILD_CPPFLAGS'},
+  INC => '-I'.$top_srcdir.' '.$ENV{'BUILD_CPPFLAGS'},
   OBJECT => 'Sakusen.o',
   FIRST_MAKEFILE => 'Makefile.PL.out',
   #LDLOADLIBS => '../../../libsakusen/.libs/libsakusen.so',
   #LIBS => $top_builddir . 'libsakusen/.libs/libsakusen.so',
   test => { TESTS => $this_srcdir.'t/*.t' },
-  LDDLFLAGS => $LDDLFLAGS.' '.$top_builddir.'libsakusen/.libs/libsakusen.so -shared -Wl,--rpath -Wl,'.`cd ../../../libsakusen/.libs/ && pwd`,
+  LDDLFLAGS => $LDDLFLAGS.' '.$top_builddir.'sakusen/.libs/libsakusen.so -shared -Wl,--rpath -Wl,'.`cd ../../../sakusen/.libs/ && pwd`,
 );

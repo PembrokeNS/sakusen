@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__BUILTINCOMMAND_H
 #define TEDOMARI__UI__BUILTINCOMMAND_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 #include <list>
 

@@ -6,7 +6,7 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "unitid.h"
+#include <sakusen/unitid.h>
 #include "ui/actionargument.h"
 #include "ui/uiexceptions.h"
 

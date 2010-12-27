@@ -68,7 +68,6 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 	def itemChange(self, change, value):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
 			s = self.unit.getStatus()
-			d = value.toBool()
 			utype = s.getTypePtr()
 			for j,w in enumerate(utype.getWeapons()):
 				if(w.getClientHint()[:2] == 'c:'):
@@ -79,14 +78,14 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 						#there are always buttons available to build something so long
 						#as any of the selected units can build it.
 						#button exists, so cahnge its reference count
-						if(d):
+						if(value):
 							b.refcount += 1
 						else:
 							b.refcount -= 1
 							if( not b.refcount):
 								sip.delete(b)
 					else:
-						assert(d) #no button, so we must be getting selected
+						assert(value) #no button, so we must be getting selected
 						b = constructor(cname, self.mainwindow)
 				if(w.getClientHint()[:2] == 'n:'):
 					cname = w.getClientHint()[2:]
@@ -96,14 +95,14 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 						#there are always buttons available to build something so long
 						#as any of the selected units can build it.
 						#button exists, so cahnge its reference count
-						if(d):
+						if(value):
 							b.refcount += 1
 						else:
 							b.refcount -= 1
 							if( not b.refcount):
 								sip.delete(b)
 					else:
-						assert(d) #no button, so we must be getting selected
+						assert(value) #no button, so we must be getting selected
 						b = setter(cname, self.mainwindow)
 			return value
 		else:

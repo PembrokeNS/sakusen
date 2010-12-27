@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__LAYOUT_H
 #define TEDOMARI__UI__LAYOUT_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 #include "ui/colour.h"
 

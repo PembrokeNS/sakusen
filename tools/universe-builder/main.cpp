@@ -3,8 +3,8 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
-#include "fileresourceinterface.h"
-#include "fileutils.h"
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/resources/fileutils.h>
 
 #include "ui.h"
 

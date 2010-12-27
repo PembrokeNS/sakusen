@@ -1,6 +1,6 @@
 #include "ui/commandentrybox.h"
 
-#include "stringutils.h"
+#include <sakusen/stringutils.h>
 #include "ui/ui.h"
 
 using namespace sakusen;

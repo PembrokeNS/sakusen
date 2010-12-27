@@ -1,10 +1,10 @@
 #ifndef SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDER_H
 #define SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDER_H
 
-#include "listener.h"
-#include "pluginserverinterface.h"
-#include "optioncallback.h"
-#include "clientid.h"
+#include <sakusen/server/plugins/listener.h>
+#include <sakusen/server/plugins/pluginserverinterface.h>
+#include <sakusen/server/plugins/optioncallback.h>
+#include <sakusen/clientid.h>
 
 /* Exporting functions. This should never be an import library,
  * so need not use dllimport. */

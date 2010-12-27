@@ -3,7 +3,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "client.h"
+#include <sakusen/server/client.h>
 
 namespace sakusen {
 namespace server {

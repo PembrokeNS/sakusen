@@ -1,7 +1,7 @@
 #include "ui/builtincommand.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
-#include "stringutils.h"
+#include <sakusen/stringutils.h>
 #include "ui/ui.h"
 
 using namespace std;

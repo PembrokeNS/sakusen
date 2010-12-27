@@ -9,5 +9,5 @@ run-sagittariusgen-from-builddir.sh: $(this_srcdir)Makefile.local
 	-chmod a+x $@
 
 clean:
-	-rm -f settingsDialog.py connectDialog.py mainWindow.py *.pyc run-kiai-from-builddir.sh
+	-rm -f run-sagittariusgen-from-builddir.sh
 

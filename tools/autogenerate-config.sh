@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script to check for existence of a few executables, and disable components as
 # necessary.  Note that this is *not* trying to aid portability.  Reinventing
@@ -41,7 +41,7 @@ function check_for_lib
   shift
   # Subsequent arguments are things to pass to gcc (probably includes and -lfoo)
   if printf '#include <stdio.h>\n#include <%s>\nint main() { return 0; }\n' "${header}" | \
-    g++ $CPPFLAGS -x c++ -o temp.out "$@" -
+    g++ $CPPFLAGS $LDFLAGS -x c++ -o temp.out "$@" -
   then
     eval ${name}_exists=yes
   else

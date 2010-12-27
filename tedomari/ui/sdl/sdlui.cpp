@@ -1,6 +1,5 @@
 #include "sdlui.h"
 
-#include "libsakusen-global.h"
 #include "ui/dummyregion.h"
 #include "ui/sdl/sdlutils.h"
 #include "ui/sdl/masks.h"

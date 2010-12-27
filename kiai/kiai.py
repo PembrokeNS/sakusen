@@ -20,17 +20,15 @@ interestingthings = {} #the things we want user scripting to be able to interact
 
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
-	configpath=fileUtils_getHome()
-	configpath/=path(SAKUSEN_CONFIG_SUBDIR)
-	configpath/=path(KIAI_SUBDIR)
-	configpath/=path(s+".py")
+	configpath = fileUtils_getHome() / path(SAKUSEN_CONFIG_SUBDIR) / path(KIAI_SUBDIR) / path(s+".py")
 	try:
-		exec(open(configpath.string(),'r'),interestingthings)
+		exec(open(configpath.string(),'r').read(),interestingthings)
 	except IOError:
-		print "No configuration file \"%s\" found, or failed to open that file"%(configpath.string())
+		print("No configuration file \"%s\" found, or failed to open that file"%(configpath.string()))
 
 userconfig("startup")
-aboutdata = kdecore.KAboutData("kiai","",kdecore.ki18n("Kiai"),"0.0.4 気持ち",kdecore.ki18n("Sakusen client"),kdecore.KAboutData.License_Custom,kdecore.ki18n("(c) 2007-9 IEG/lmm"),kdecore.ki18n("none"),"none","md401@srcf.ucam.org") # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
+# necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
+aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), "0.0.4 気持ち".encode(), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()

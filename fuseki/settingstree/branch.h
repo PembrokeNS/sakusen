@@ -1,12 +1,13 @@
 #ifndef FUSEKI__SETTINGSTREE__BRANCH_H
 #define FUSEKI__SETTINGSTREE__BRANCH_H
 
-#include <list>
-#include "gnu_extensions.h"
+#include "global.h"
 
-#include "libsakusen-global.h"
-#include "stringutils.h"
-#include "clientid.h"
+#include <list>
+#include <sakusen/gnu_extensions.h>
+
+#include <sakusen/stringutils.h>
+#include <sakusen/clientid.h>
 #include "settingstree/node.h"
 
 namespace fuseki {

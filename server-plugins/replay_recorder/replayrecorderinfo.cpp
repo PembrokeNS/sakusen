@@ -1,6 +1,6 @@
 #include "replayrecorderinfo.h"
 
-#include "pluginexn.h"
+#include <sakusen/server/plugins/pluginexn.h>
 
 namespace sakusen {
 namespace server {

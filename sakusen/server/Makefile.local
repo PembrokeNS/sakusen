@@ -1,0 +1,9 @@
+SUBDIRS = plugins
+BIN = libsakusen-server.la
+SOURCE_DIRS = 
+LIB_DEP_NAMES = sakusen
+THIS_CPPFLAGS =
+
+ifneq ($(ENABLE_AVAHI),yes)
+  EXCLUDE_FILES := mdns.cpp mdns.h
+endif

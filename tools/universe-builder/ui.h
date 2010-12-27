@@ -4,7 +4,7 @@
 #include <gtkmm.h>
 #include <libglademm.h>
 
-#include "universe.h"
+#include <sakusen/universe.h>
 
 namespace universeBuilder {
 

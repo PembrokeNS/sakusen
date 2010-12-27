@@ -1,6 +1,8 @@
 #ifndef TEDOMARI__UI_SDL_CAIRO__CAIROUI_H
 #define TEDOMARI__UI_SDL_CAIRO__CAIROUI_H
 
+#include "global.h"
+
 #include "ui/sdl/sdlui.h"
 
 typedef struct _cairo_surface cairo_surface_t;

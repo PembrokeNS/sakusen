@@ -1,13 +1,12 @@
 #include "serverinterface.h"
 
-#include "stringutils.h"
-#include "timeutils.h"
-#include "udplisteningsocket.h"
-#include "unixdatagramlisteningsocket.h"
-#include "socketexn.h"
-#include "tedomari-global.h"
-#include "revision.h"
-#include "heightfield-methods.h"
+#include <sakusen/stringutils.h>
+#include <sakusen/comms/timeutils.h>
+#include <sakusen/comms/udplisteningsocket.h>
+#include <sakusen/comms/unixdatagramlisteningsocket.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/revision.h>
+#include <sakusen/heightfield-methods.h>
 
 #include <ostream>
 #include <sstream>

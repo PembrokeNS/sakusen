@@ -3,8 +3,8 @@
 
 #include <set>
 
-#include "gnu_extensions.h"
-#include "stringutils.h"
+#include <sakusen/gnu_extensions.h>
+#include <sakusen/stringutils.h>
 #include "ui/key.h"
 
 namespace tedomari {

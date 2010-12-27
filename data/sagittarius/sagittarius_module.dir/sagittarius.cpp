@@ -1,15 +1,15 @@
 #include <boost/typeof/typeof.hpp>
 
-#include "weapontype.h"
-#include "ref.h"
-#include "layeredunit.h"
-#include "weapon.h"
-#include "beam.h"
-#include "completeworld.h"
-#include "sphereregion.h"
-#include "rectangleregion.h"
-#include "unitmask.h"
-#include "ispatial.h"
+#include <sakusen/weapontype.h>
+#include <sakusen/ref.h>
+#include <sakusen/server/layeredunit.h>
+#include <sakusen/server/weapon.h>
+#include <sakusen/server/beam.h>
+#include <sakusen/server/completeworld.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/rectangleregion.h>
+#include <sakusen/server/unitmask.h>
+#include <sakusen/ispatial.h>
 
 #if defined(_MSC_VER)
 /* The __declspec stuff for ensuring symbols are exported from DLLs and

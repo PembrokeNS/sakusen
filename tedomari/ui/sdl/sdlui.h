@@ -1,7 +1,9 @@
 #ifndef TEDOMARI__UI_SDL__SDLUI_H
 #define TEDOMARI__UI_SDL__SDLUI_H
 
-#include <optionsparser.h>
+#include "global.h"
+
+#include <optimal/optionsparser.h>
 
 #include "ui/ui.h"
 #include "ui/sdl/sdlsurface.h"

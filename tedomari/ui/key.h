@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI__KEY_H
 #define TEDOMARI__UI__KEY_H
 
-#include "tedomari-global.h"
+#include "global.h"
 
 namespace tedomari {
 namespace ui {

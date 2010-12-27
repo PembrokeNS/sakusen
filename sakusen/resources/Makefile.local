@@ -1,0 +1,16 @@
+BIN = libsakusen-resources.la
+SOURCE_DIRS = vfs
+SUBDIRS = test
+LIB_DEP_NAMES := sakusen sakusen-comms
+LIBS := \
+	-lboost_filesystem$(BOOST_LIB_SUFFIX) -lboost_system$(BOOST_LIB_SUFFIX) \
+	-lpng
+
+ifeq ($(ENABLE_LTDL_HACKED),yes)
+LIB_DEP_NAMES += ltdl_hacked
+else
+LIBS += -lltdl
+endif
+
+.PHONY: test
+

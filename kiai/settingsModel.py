@@ -43,8 +43,8 @@ class settingsModel(QtCore.QAbstractItemModel):
 		self.socket = socket
 		self.l=[settingItem(('',),self.createIndex(0,0,0),QtCore.QModelIndex(),"[root]")]
 	def data(self,index,role):
-		if((role!=QtCore.Qt.DisplayRole) or not index.isValid()): return QtCore.QVariant()
-		else: return QtCore.QVariant(self.l[index.internalId()].data)
+		if((role!=QtCore.Qt.DisplayRole) or not index.isValid()): return None
+		else: return self.l[index.internalId()].data
 	def parent(self,index):
 		if(not index.isValid()): return QtCore.QModelIndex()
 		else:
@@ -68,11 +68,11 @@ class settingsModel(QtCore.QAbstractItemModel):
 	def headerData(self,section,orientation,role):
 		if(role==QtCore.Qt.DisplayRole and orientation==QtCore.Qt.Horizontal and 0<=section and 2>=section):
 			if(section==0):
-				return QtCore.QVariant("Node")
+				return "Node"
 			else:
-				return QtCore.QVariant("Data")
+				return "Data"
 		else:
-			return QtCore.QVariant()
+			return None
 	def processUpdate(self,d):
 		self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
 		path=tuple(d.getSetting().split(':'))
@@ -106,15 +106,15 @@ class settingsModel(QtCore.QAbstractItemModel):
 		else: return QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
 	def setData(self,index,value,role):
 		if(index.isValid()): 
-			self.setSetting(self.l[index.internalId()].path,str(value.toString()))
+			self.setSetting(self.l[index.internalId()].path,str(value))
 			return True
 		else:
 			return False
 	def requestSetting(self, path):
-		s=string.join(path,':')
-		d=GetSettingMessageData(s)
+		s = ':'.join(path)
+		d = GetSettingMessageData(s)
 		self.socket.sendd(d)
 	def setSetting(self, path, value):
-		s=string.join(path,':')
-		d=ChangeSettingMessageData(s,value)
+		s = ':'.join(path)
+		d = ChangeSettingMessageData(s,value)
 		self.socket.sendd(d)

@@ -1,7 +1,7 @@
 #ifndef FUSEKI__SETTINGSUSER_H
 #define FUSEKI__SETTINGSUSER_H
 
-#include "fuseki-global.h"
+#include "global.h"
 
 #include <set>
 

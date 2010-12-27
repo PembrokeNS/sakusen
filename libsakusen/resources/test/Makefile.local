@@ -1,9 +1,0 @@
-BIN = libsakusen-resources-test
-LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources
-THIS_LDFLAGS = -no-install
-
-test-nonrecursive: $(BIN)
-	./$(BIN)
-
-.PHONY: test
-

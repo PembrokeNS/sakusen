@@ -1,6 +1,5 @@
 #include "settingstree/gamebranch.h"
 
-#include "fuseki-global.h"
 #include "settingstree/stringleaf.h"
 #include "settingstree/intleaf-methods.h"
 #include "settingstree/boolleaf.h"

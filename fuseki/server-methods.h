@@ -3,7 +3,7 @@
 
 #include "server.h"
 
-#include "resourceinterface-methods.h"
+#include <sakusen/resourceinterface-methods.h>
 #include "serveraction.h"
 #include "remoteclient-methods.h"
 #include "null_cast.h"

@@ -1,10 +1,10 @@
 #include "ui/action.h"
 
-#include "partialworld.h"
+#include <sakusen/client/partialworld.h>
 #include "ui/ui.h"
 #include "ui/actiontarget.h"
 #include "game/game.h"
-#include "heightfield-methods.h"
+#include <sakusen/heightfield-methods.h>
 
 #include <boost/algorithm/string/predicate.hpp>
 

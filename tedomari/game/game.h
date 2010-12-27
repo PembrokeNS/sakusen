@@ -3,13 +3,13 @@
 
 #include <queue>
 
-#include "tedomari-global.h"
-#include "universe.h"
-#include "update.h"
-#include "resourceinterface.h"
-#include "ordermessage.h"
-#include "messagedata.h"
-#include "partialworld.h"
+#include "global.h"
+#include <sakusen/universe.h>
+#include <sakusen/update.h>
+#include <sakusen/resourceinterface.h>
+#include <sakusen/ordermessage.h>
+#include <sakusen/comms/messagedata.h>
+#include <sakusen/client/partialworld.h>
 
 namespace tedomari {
 

@@ -3,7 +3,7 @@
 
 #include <boost/variant.hpp>
 
-#include "point.h"
+#include <sakusen/point.h>
 
 /* Note that it's critical that the order of the types in the variant
  * correspond to the order of the values in the enum, so that variant::which()

@@ -1,9 +1,0 @@
-SUBDIRS = comms resources server client
-BIN = libsakusen.la
-LIBS = -lstdc++ -lm -lmhash
-THIS_CPPFLAGS =
-
-all-recurse-resources all-recurse-server: all-recurse-comms
-
-test-recurse-resources test-recurse-server: test-recurse-comms
-

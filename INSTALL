@@ -55,6 +55,14 @@ If you're going to be building sakusen repeatedly you can save a lot of time by
 adding "BUILD_LIBTOOLFLAGS=--tag=disable-static" to your config.mk.  This will
 mean that only shared versions of library object files are built.
 
+A hacked version of libltdl is provided which gives better error messages than
+the mainline one (it loses some functionality too, but not in cases that matter
+to sakusen).  If you want to use this (because you're developing sakusen game
+data and can't understand the library load errors) then add the following two
+lines to your config.mk:
+ENABLE_LTDL_HACKED = yes
+BUILD_CPPFLAGS += -DENABLE_LTDL_HACKED
+
 Documentation for developers wishing to use this build system does not exist at
 time of writing.  When it does, it should be in the Doxygen docs along with all
 the other development docs.  Probably it will never exist because we'll switch

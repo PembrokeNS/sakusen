@@ -1,9 +1,9 @@
 #include "ui/mapdisplay.h"
 
-#include "heightfield-methods.h"
-#include "unitcorneriterator.h"
+#include <sakusen/heightfield-methods.h>
+#include <sakusen/unitcorneriterator.h>
 #include "ui/ui.h"
-#include "sphereregion.h"
+#include <sakusen/sphereregion.h>
 
 using namespace std;
 

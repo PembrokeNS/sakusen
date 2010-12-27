@@ -1,8 +1,8 @@
 #ifndef TEDOMARI__GAME__SMARTUNITFACTORY_H
 #define TEDOMARI__GAME__SMARTUNITFACTORY_H
 
-#include "updatedunit.h"
-#include "unitfactory.h"
+#include <sakusen/client/updatedunit.h>
+#include <sakusen/client/unitfactory.h>
 
 namespace tedomari {
 namespace game {

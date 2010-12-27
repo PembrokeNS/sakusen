@@ -88,11 +88,11 @@ if(__name__=="__main__"):
 	#make universe and save
 	u = Universe("sagittarius", "", "sagittarius/sagittarius_module", "create_script", "create_player", [laser, torpedo, fleet, attack, defense, speed], [ship, torp, cc], 15, 19)
 	err = u.resolveNames()
-	print("Resolving names: %s"%err)
+	print(("Resolving names: %s"%err))
 	u.thisown = 0 #because shared_ptr
 	up = Universe.createConstPtr(u)
 	res = resint.usave(up, "sagittarius")
-	print("Tried to save, result: %d" % res)
+	print(("Tried to save, result: %d" % res))
 
 	#next the map
 	h = Heightfield(150 * CM, 2, 2, 2)
@@ -109,5 +109,5 @@ if(__name__=="__main__"):
 	mtp = MapTemplate.createPtr(mt)
 	mtp.thisown = 0 #shared_ptr
 	res = resint.mtsave(mtp, "sagittarius")
-	print("Tried to save map, result: %d" %res)
+	print(("Tried to save map, result: %d" %res))
 	

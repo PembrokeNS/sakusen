@@ -1,9 +1,0 @@
-BIN = liboptimal-test
-LIBS = -lboost_unit_test_framework -lboost_system -lstdc++
-LIB_DEP_NAMES = liboptimal
-THIS_LDFLAGS = -no-install
-
-# Must test in the srcdir to pick up the sample config files
-test-nonrecursive: $(BIN)
-	dir=`pwd` && cd $(this_srcdir) && $${dir}/$(BIN)
-

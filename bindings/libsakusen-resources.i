@@ -15,12 +15,15 @@ class WeaponType;
 }
 %}
 %import "libsakusen.i"
-%include "libsakusen-resources-global.h"
+%include "sakusen/resources/global.h"
 %{
-#include "libsakusen-resources-global.h"
+#include "sakusen/resources/global.h"
 %}
 %{
 #include "pcrecpp.h"
+%}
+%{
+#include "boost/filesystem/path.hpp"
 %}
 /*The following code snippet might be GPLed, if it's substantial enough (independently of
 boost itself) to be copyrightable at all. It was taken from the ArX sources; the ArX COPYING
@@ -156,15 +159,19 @@ def g(self,key):
 
 
 } // namespace boost
+%include "sakusen/resources/fileutils.h"
 %{
-#include "boost/filesystem/path.hpp"
+#include "sakusen/resources/fileutils.h"
 %}
-%include "fileutils.h"
+%include "sakusen/resources/fileresourceinterface.h"
 %{
-#include "fileutils.h"
+#include "sakusen/resources/fileresourceinterface.h"
 %}
-%include "fileresourceinterface.h"
-%{
-#include "fileresourceinterface.h"
-%}
+#ifdef SWIGPYTHON
+%extend boost::filesystem::path {
+        boost::filesystem::path __truediv__(boost::filesystem::path *other) {
+                return (*$self) / (*other);
+        }
+}
+#endif
 

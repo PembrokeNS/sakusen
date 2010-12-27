@@ -1,6 +1,6 @@
 #include "ui/control.h"
 
-#include "rectangle.h"
+#include <sakusen/rectangle.h>
 
 using namespace std;
 

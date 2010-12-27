@@ -1,4 +1,0 @@
-BIN = libsakusen-comms.la
-THIS_CXXFLAGS =
-LIB_DEP_NAMES = libsakusen
-

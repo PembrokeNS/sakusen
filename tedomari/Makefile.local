@@ -4,8 +4,8 @@ THIS_CXXFLAGS :=
 # The following flag makes debugging much easier, but it needs to be removed if
 # tedomari is to be installed
 THIS_LDFLAGS = -no-install
-LIB_DEP_NAMES = libsakusen libsakusen-comms libsakusen-resources libsakusen-client liboptimal
-LIBS := -lstdc++
+LIB_DEP_NAMES = sakusen sakusen-comms sakusen-resources sakusen-client optimal
+LIBS :=
 THIS_CPPFLAGS =
 
 ifeq ($(ENABLE_READLINE),yes)

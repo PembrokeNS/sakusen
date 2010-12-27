@@ -1,0 +1,4 @@
+SUBDIRS = test
+BIN = liboptimal.la
+THIS_CPPFLAGS =
+

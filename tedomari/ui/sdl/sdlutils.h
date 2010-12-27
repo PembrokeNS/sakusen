@@ -1,7 +1,7 @@
 #ifndef TEDOMARI__UI_SDL__SDLUTILS_H
 #define TEDOMARI__UI_SDL__SDLUTILS_H
 
-#include "libsakusen-global.h"
+#include "global.h"
 
 #include <SDL/SDL.h>
 

@@ -1,6 +1,6 @@
 #include "ui.h"
 
-#include "resourceinterface-methods.h"
+#include <sakusen/resourceinterface-methods.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem/path.hpp>

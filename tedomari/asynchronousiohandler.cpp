@@ -1,7 +1,7 @@
 #include "asynchronousiohandler.h"
-#include "errorutils.h"
-#include "fileutils.h"
-#include "fileioexn.h"
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/fileutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 #ifndef DISABLE_READLINE
 #include <readline/readline.h>

@@ -1,9 +1,10 @@
 #ifndef TEDOMARI__UI__COMMAND_H
 #define TEDOMARI__UI__COMMAND_H
 
+#include "global.h"
+
 #include <list>
 
-#include "libsakusen-global.h"
 #include "ui/builtincommand.h"
 #include "ui/function.h"
 

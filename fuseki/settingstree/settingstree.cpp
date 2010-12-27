@@ -1,7 +1,6 @@
 #include "settingstree.h"
 
-#include "libsakusen-comms-global.h"
-#include "stringutils.h"
+#include <sakusen/stringutils.h>
 #include "settingstree/serverbranch.h"
 #include "settingstree/gamebranch.h"
 #include "settingstree/playersbranch.h"
