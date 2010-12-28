@@ -1,6 +1,7 @@
 #ifndef SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDER_H
 #define SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER__REPLAYRECORDER_H
 
+#include <sakusen/global.h>
 #include <sakusen/server/plugins/listener.h>
 #include <sakusen/server/plugins/pluginserverinterface.h>
 #include <sakusen/server/plugins/optioncallback.h>
