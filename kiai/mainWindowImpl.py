@@ -51,10 +51,13 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.connect(d, QtCore.SIGNAL('valueChanged(double)'), self.orientto)
 		d.show()
 		self.orientationDialog = d
-	
+
+	@orderSelectedUnits
 	def orientto(self, orientation):
-		print(orientation)
-		del self.orientationDialog
+		angle = int(orientation * 100)
+		rotation = Rotation.rotation_anticlockwise
+		orientation = Orientation(rotation, angle)
+		return OrientationOrderData(orientation)
 
 	@staticmethod
 	@orderSelectedUnits
