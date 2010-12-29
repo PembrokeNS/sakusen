@@ -10,3 +10,5 @@ class OrientationDialog(orientationDialog):
 	#	self.setWindowFlags(QtCore.Qt.Popup)
 		self.rose = Qwt5.QwtSimpleCompassRose()
 		self.compass.setRose(self.rose)
+		self.needle = Qwt5.QwtCompassMagnetNeedle()
+		self.compass.setNeedle(self.needle)
