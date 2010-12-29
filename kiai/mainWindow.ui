@@ -39,9 +39,6 @@
          <property name="text">
           <string>Orient</string>
          </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
        <item>
