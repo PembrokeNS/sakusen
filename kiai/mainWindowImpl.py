@@ -52,8 +52,12 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		d.show()
 		self.orientationDialog = d
 
-	@orderSelectedUnits
 	def orientto(self, orientation):
+		self.orientorder(orientation, selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
+
+	@staticmethod
+	@orderSelectedUnits
+	def orientorder(orientation, **kwargs):
 		angle = int(orientation * 100)
 		rotation = Rotation.rotation_anticlockwise
 		orientation = Orientation(rotation, angle)

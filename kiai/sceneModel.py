@@ -30,10 +30,10 @@ def mpeFunction(f):
 	return g
 
 def orderSelectedUnits(f):
-	def g(self, *args, **kwargs):
-		for i in self.selectedItems():
+	def g(*args, **kwargs):
+		for i in kwargs['selectedUnits']:
 			kwargs['unit'] = i.unit
-			od = f(self, *args, **kwargs)
+			od = f(*args, **kwargs)
 			if(od):
 				od.thisown = 0
 				o = Order(od)
