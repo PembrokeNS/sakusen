@@ -49,6 +49,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 	def oirent(self):
 		d = OrientationDialog()
 		self.connect(d, QtCore.SIGNAL('valueChanged(double)'), self.orientto)
+		d.show()
 	
 	def orientto(self, orientation):
 		print(orientation)
