@@ -59,7 +59,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 	@orderSelectedUnits
 	def orientorder(orientation, **kwargs):
 		angle = int(orientation * 100)
-		rotation = Rotation.rotation_anticlockwise
+		rotation = rotation_anticlockwise
 		orientation = Orientation(rotation, angle)
 		return OrientationOrderData(orientation)
 
