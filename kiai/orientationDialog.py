@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../kiai/orientationDialog.ui'
 #
-# Created: Wed Dec 29 19:56:06 2010
+# Created: Wed Dec 29 20:01:50 2010
 #      by: PyQt4 UI code generator 4.8.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,6 +26,7 @@ class Ui_orientationDialog(object):
         self.horizontalLayout.addWidget(self.compass)
 
         self.retranslateUi(orientationDialog)
+        QtCore.QObject.connect(self.compass, QtCore.SIGNAL(_fromUtf8("valueChanged(double)")), orientationDialog.close)
         QtCore.QMetaObject.connectSlotsByName(orientationDialog)
 
     def retranslateUi(self, orientationDialog):
