@@ -35,25 +35,14 @@
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="KPushButton" name="orient">
-           <property name="text">
-            <string>Orient</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QwtCompass" name="Compass">
-           <property name="lineWidth">
-            <number>4</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="KPushButton" name="orient">
+         <property name="text">
+          <string>Orient</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="KPushButton" name="attack">
@@ -83,14 +72,6 @@
         </widget>
        </item>
       </layout>
-      <zorder>move</zorder>
-      <zorder>attack</zorder>
-      <zorder>stop</zorder>
-      <zorder>build</zorder>
-      <zorder>orient</zorder>
-      <zorder>Compass</zorder>
-      <zorder>Compass</zorder>
-      <zorder></zorder>
      </widget>
     </item>
     <item>
@@ -205,16 +186,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtCompass</class>
-   <extends>QwtDial</extends>
-   <header>qwt_compass.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QwtDial</class>
-   <extends>QWidget</extends>
-   <header>qwt_dial.h</header>
-  </customwidget>
-  <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
@@ -236,22 +207,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>orient</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>Compass</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>162</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>162</x>
-     <y>301</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
