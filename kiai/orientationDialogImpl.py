@@ -12,3 +12,7 @@ class OrientationDialog(orientationDialog):
 		self.compass.setRose(self.rose)
 		self.needle = Qwt5.QwtCompassMagnetNeedle()
 		self.compass.setNeedle(self.needle)
+		self.connect(self.ok, QtCore.SIGNAL("clicked()"), self.onClick)
+	def onClick(self):
+		self.emit(QtCore.SIGNAL("valueChanged(double)"), self.compass.value().value())
+		self.close()
