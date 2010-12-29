@@ -1,6 +1,7 @@
 connectDialog.py
 mainWindow.py
 resources.py
+orientationDialog.py
 *.pyc
 run-kiai-from-builddir.sh
 *~
