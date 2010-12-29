@@ -14,5 +14,5 @@ class OrientationDialog(orientationDialog):
 		self.compass.setNeedle(self.needle)
 		self.connect(self.ok, QtCore.SIGNAL("clicked()"), self.onClick)
 	def onClick(self):
-		self.emit(QtCore.SIGNAL("valueChanged(double)"), self.compass.value().value())
+		self.emit(QtCore.SIGNAL("valueChanged(double)"), self.compass.value())
 		self.close()
