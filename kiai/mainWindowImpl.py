@@ -46,7 +46,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 	def stop(self):
 		self.stopcmd(selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
 	
-	def oirent(self):
+	def orient(self):
 		d = OrientationDialog()
 		self.connect(d, QtCore.SIGNAL('valueChanged(double)'), self.orientto)
 		d.show()
