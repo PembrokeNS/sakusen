@@ -61,7 +61,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		angle = int(orientation * 100)
 		rotation = rotation_anticlockwise
 		orientation = Orientation(rotation, angle)
-		return OrientationOrderData(orientation)
+		return OrientOrderData(orientation)
 
 	@staticmethod
 	@orderSelectedUnits
