@@ -36,22 +36,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>compass</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>orientationDialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>56</x>
-     <y>56</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>56</x>
-     <y>56</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
