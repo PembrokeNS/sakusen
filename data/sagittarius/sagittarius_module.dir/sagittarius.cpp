@@ -193,7 +193,7 @@ bool FleetCreator::aim(const Ref<LayeredUnit>& firer, WeaponStatus& status, cons
 
 void FleetCreator::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& status, WeaponOrders&, uint16) {
 	/** \todo Require ships to be created in the plane */
-	for(int i=0; i<1500; i++) {
+	for(int i=0; i<50; i++) {
 		BOOST_AUTO(u, LayeredUnit::spawn(firer->getOwner(), server::world->getUniverse()->getUnitTypeId("ship"), Frame(status.getTargetDirection() + firer->getStatus().getPosition(), firer->getStatus().getFrame().getOrientation()), Velocity(), HitPoints(1000 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->defense)));
 		BOOST_AUTO(f, boost::shared_ptr<DefenseLayer>(new DefenseLayer()));
 		BOOST_AUTO(g, boost::shared_ptr<SpeedLayer>(new SpeedLayer(boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData)->speed)));
