@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../kiai/orientationDialog.ui'
 #
-# Created: Wed Dec 29 20:01:50 2010
+# Created: Wed Dec 29 20:38:46 2010
 #      by: PyQt4 UI code generator 4.8.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,7 +20,7 @@ class Ui_orientationDialog(object):
         orientationDialog.resize(114, 114)
         self.horizontalLayout = QtGui.QHBoxLayout(orientationDialog)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.compass = QwtCompass(orientationDialog)
+        self.compass = Qwt5.QwtCompass(orientationDialog)
         self.compass.setLineWidth(4)
         self.compass.setObjectName(_fromUtf8("compass"))
         self.horizontalLayout.addWidget(self.compass)
@@ -32,7 +32,7 @@ class Ui_orientationDialog(object):
     def retranslateUi(self, orientationDialog):
         orientationDialog.setWindowTitle(QtGui.QApplication.translate("orientationDialog", "Form", None, QtGui.QApplication.UnicodeUTF8))
 
-from qwt_compass import QwtCompass
+from PyQt4 import Qwt5
 
 class orientationDialog(QtGui.QWidget, Ui_orientationDialog):
     def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):

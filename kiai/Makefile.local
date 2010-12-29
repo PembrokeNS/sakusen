@@ -15,5 +15,5 @@ run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
 	-chmod a+x $@
 
 clean:
-	-rm -f connectDialog.py mainWindow.py resources.py *.pyc run-kiai-from-builddir.sh
+	-rm -f connectDialog.py mainWindow.py orientationDialog.py resources.py *.pyc run-kiai-from-builddir.sh
 
