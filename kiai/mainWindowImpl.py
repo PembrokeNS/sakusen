@@ -9,6 +9,7 @@ from sakusen_comms import *
 from mainWindow import Ui_mainWindow
 
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons, sceneModel
+from orientationDialogImpl import OrientationDialog
 
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, environment, parent=None):
@@ -20,6 +21,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.connectUp(self.ui.move, move)
 		self.connectUp(self.ui.attack, attack)
 		self.connectUp(self.ui.build, build)
+		self.connect(self.ui.orient, QtCore.SIGNAL('clicked()'), self.orient)
 		self.connect(self.ui.stop, QtCore.SIGNAL('clicked()'), self.stop)
 		self.env = environment
 	def runcommand(self, t):
@@ -43,6 +45,24 @@ class mainWindow(kdeui.KXmlGuiWindow):
 
 	def stop(self):
 		self.stopcmd(selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
+	
+	def orient(self):
+		d = OrientationDialog()
+		self.connect(d, QtCore.SIGNAL('valueChanged(double)'), self.orientto)
+		d.show()
+		self.orientationDialog = d
+
+	def orientto(self, orientation):
+		self.orientorder(orientation, selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
+
+	@staticmethod
+	@orderSelectedUnits
+	def orientorder(orientation, **kwargs):
+		orientation = (270 - orientation) % 360 #TODO: abstract this out
+		angle = int(orientation * 100)
+		rotation = rotation_anticlockwise
+		orientation = Orientation(rotation, angle)
+		return OrientOrderData(orientation)
 
 	@staticmethod
 	@orderSelectedUnits

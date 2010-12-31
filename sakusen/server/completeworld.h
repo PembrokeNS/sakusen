@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 #define LIBSAKUSEN_SERVER__COMPLETEWORLD_H
 
+#include <sakusen/global.h>
+
 #include <boost/random/mersenne_twister.hpp>
 
 #include <sakusen/world.h>

@@ -65,7 +65,7 @@ namespace sakusen { namespace comms {
 
 /** DEFAULT_PORT is the port that sockets default to using if none is specified
  * */
-#define SAKUSEN_COMMS_DEFAULT_PORT 1723
+#define SAKUSEN_COMMS_DEFAULT_PORT 15498
 
 #endif // LIBSAKUSEN_COMMS_GLOBAL_H
 

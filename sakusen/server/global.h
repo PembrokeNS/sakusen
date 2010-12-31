@@ -1,6 +1,8 @@
 #ifndef LIBSAKUSEN_SERVER_GLOBAL_H
 #define LIBSAKUSEN_SERVER_GLOBAL_H
 
+#include <sakusen/global.h>
+
 #if defined(_MSC_VER)
   /*4251: This warning is about members of exported classes not being exported.
    * This is mostly to do with stuff from std, but in at least one case it 

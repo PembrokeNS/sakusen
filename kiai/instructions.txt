@@ -1,5 +1,6 @@
-Kiai requires a working install of python (probably needs to be version >=2.5, and version 3 is completely untested),
+Kiai requires a working install of python 3, probably 3.1 or above,
 with the KDE4 python bindings installed (and their various dependencies: most immediately PyQt4, and of course KDE4 (and therefore Qt4)).
+It also requires pyqwt (and therefore qwt). Opengl must be enabled for PyQt4.
 It also requires the python bindings for sakusen to be installed; these should
 be built automaticly if your config.mk is set appropriately (they require only
 python (with its development files) and SWIG (from http://www.swig.org/;
