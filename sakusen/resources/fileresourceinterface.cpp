@@ -1,19 +1,5 @@
 #include <sakusen/resources/fileresourceinterface.h>
 
-#include <boost/xpressive/regex_algorithms.hpp>
-
-#include <sakusen/iarchive.h>
-#include <sakusen/resourcetype.h>
-#include <sakusen/maptemplate.h>
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/filereader.h>
-#include <sakusen/resources/filewriter.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/fileioexn.h>
-#include <sakusen/resources/pngimage.h>
-#include <sakusen/resources/vfs/directorybranch.h>
-#include <sakusen/resources/vfs/unionbranch.h>
-
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
     #include <ltdl_hacked/ltdl_hacked.h>
@@ -26,6 +12,19 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/xpressive/regex_algorithms.hpp>
+
+#include <sakusen/iarchive.h>
+#include <sakusen/resourcetype.h>
+#include <sakusen/maptemplate.h>
+#include <sakusen/fileutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/filereader.h>
+#include <sakusen/resources/filewriter.h>
+#include <sakusen/resources/fileioexn.h>
+#include <sakusen/resources/pngimage.h>
+#include <sakusen/resources/vfs/directorybranch.h>
+#include <sakusen/resources/vfs/unionbranch.h>
 
 using namespace std;
 

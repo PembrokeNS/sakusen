@@ -4,7 +4,7 @@
 #include <boost/filesystem.hpp>
 
 #include <sakusen/resources/fileresourceinterface.h>
-#include <sakusen/resources/fileutils.h>
+#include <sakusen/fileutils.h>
 
 #include "ui.h"
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
   ResourceInterface::Ptr resourceInterface(
       FileResourceInterface::create(
-        fileUtils_getHome()/SAKUSEN_CONFIG_SUBDIR/SAKUSEN_RESOURCES_SUBDIR,
+        fileUtils_configDirectory()/SAKUSEN_RESOURCES_SUBDIR,
         false
       )
     );

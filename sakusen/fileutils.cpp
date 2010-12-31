@@ -1,23 +1,22 @@
-#include <sakusen/resources/fileutils.h>
+#include <sakusen/fileutils.h>
+
+#include <cerrno>
+#include <cstdio>
+#include <list>
+
+#include <sys/stat.h>
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <sakusen/stringutils.h>
 #include <sakusen/resources/fileioexn.h>
 
-#include <sys/stat.h>
-
-#include <cerrno>
-#include <list>
-#include <cstdio>
-#include <boost/filesystem/operations.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-
 using namespace std;
 
 using namespace sakusen;
-using namespace sakusen::comms;
 
 namespace sakusen {
-namespace resources {
 
 #ifdef _MSC_VER
 int fileUtils_fileno(FILE* s) { return _fileno(s); }
@@ -43,6 +42,9 @@ void fileUtils_mkdirRecursive(const boost::filesystem::path& path)
   boost::filesystem::create_directory(path);
 }
 
+/** \brief Returns all files in the directory whose name
+ * begins with the given name.
+ */
 list<boost::filesystem::path> fileUtils_findMatches(
     const boost::filesystem::path& directory,
     const String& name
@@ -69,7 +71,7 @@ boost::filesystem::path fileUtils_getHome()
   char *buffer;
   errno_t err;
   //err=_dupenv_s(&buffer, NULL, "HOMEDRIVE");
-  
+
   err=_dupenv_s(&buffer, NULL, "APPDATA");
   String path(buffer);
   //path += buffer;
@@ -81,4 +83,20 @@ boost::filesystem::path fileUtils_getHome()
 #endif
 }
 
-}}
+/** Returns the user-writable directory where
+ * sakusen should store . */
+boost::filesystem::path fileUtils_configDirectory()
+{
+#ifdef WIN32
+  return fileUtils_getHome()/"sakusen"
+#else
+  char const* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  if (xdgConfigHome && *xdgConfigHome) {
+    return xdgConfigHome;
+  } else {
+    return fileUtils_getHome()/".config"/"sakusen";
+  }
+#endif
+}
+
+}

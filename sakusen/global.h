@@ -136,14 +136,6 @@
   #define SAKUSEN_STATIC_ASSERT(a) BOOST_STATIC_ASSERT(a)
 #endif
 
-/* SAKUSEN_CONFIG_SUBDIR is the subdirectory of the users home directory where
- * general sakusen stuff happens. */
-#ifdef WIN32
-  #define SAKUSEN_CONFIG_SUBDIR "sakusen"
-#else
-  #define SAKUSEN_CONFIG_SUBDIR ".sakusen"
-#endif
-
 #ifndef SAKUSEN_THROW_SPEC
   #define SAKUSEN_THROW_SPEC(a) throw(a)
 #endif

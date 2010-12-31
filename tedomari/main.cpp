@@ -1,21 +1,9 @@
-#include "global.h"
-#include <sakusen/revision.h>
-#include <sakusen/stringutils.h>
-#include <sakusen/client/partialworld.h>
-#include <sakusen/comms/timeutils.h>
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/comms/unixdatagramconnectingsocket.h>
-#include <sakusen/comms/socketexn.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/fileresourceinterface.h>
-#include <sakusen/heightfield-methods.h>
-
-#include "asynchronousiohandler.h"
-#include "serverinterface.h"
-
-#include "game/game.h"
-
-#include "ui/ui.h"
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 #ifndef DISABLE_SDL
   #include "ui/sdl/sdlui.h"
@@ -28,13 +16,26 @@
   #include <locale.h>
 #endif
 
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <optimal/optionsparser.h>
+
+#include "global.h"
+#include <sakusen/revision.h>
+#include <sakusen/stringutils.h>
+#include <sakusen/fileutils.h>
+#include <sakusen/client/partialworld.h>
+#include <sakusen/comms/timeutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/comms/unixdatagramconnectingsocket.h>
+#include <sakusen/comms/socketexn.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/heightfield-methods.h>
+
+#include "asynchronousiohandler.h"
+#include "serverinterface.h"
+
+#include "game/game.h"
+
+#include "ui/ui.h"
 
 using namespace std;
 using namespace optimal;
@@ -130,13 +131,11 @@ enum Command {
 
 void runTest(
     const Options& options,
-    const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   );
 
 void runClient(
     const Options& options,
-    const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   );
 
@@ -158,16 +157,14 @@ int main(int argc, char* argv[])
   if (NULL == setlocale(LC_CTYPE, "")) {
     SAKUSEN_FATAL("error setting locale");
   }
-  
+
   boost::filesystem::path::default_name_check(
       boost::filesystem::portable_posix_name
     );
-  /* Seek out the home directory */
-  boost::filesystem::path homePath = fileUtils_getHome();
-  
+
   /* Construct the path to the tedomari config directory */
   boost::filesystem::path configPath =
-    homePath / SAKUSEN_CONFIG_SUBDIR / "tedomari";
+    fileUtils_configDirectory() / "tedomari";
   cout << "Using directory " << configPath.native_file_string() <<
     " for tedomari configuration\n";
 
@@ -175,7 +172,7 @@ int main(int argc, char* argv[])
     cout << "Directory not found, trying to create it" << endl;
     fileUtils_mkdirRecursive(configPath);
   }
-  
+
   Options options = getOptions(configPath / "config", argc, argv);
 
   if (options.help) {
@@ -196,7 +193,7 @@ int main(int argc, char* argv[])
     exit(EXIT_SUCCESS);
   }
 #endif
-  
+
   cout << "*******************************\n"
           "* tedomari (a Sakusen client) *\n"
           "*  Similus est circo mortis!  *\n"
@@ -206,17 +203,16 @@ int main(int argc, char* argv[])
   Socket::socketsInit();
 
   if (options.test) {
-    runTest(options, homePath, configPath);
+    runTest(options, configPath);
   } else {
-    runClient(options, homePath, configPath);
+    runClient(options, configPath);
   }
-  
+
   return EXIT_SUCCESS;
 }
 
 void runTest(
     const Options& options,
-    const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   ) {
   boost::filesystem::path uiConfFilePath;
@@ -226,7 +222,7 @@ void runTest(
     uiConfFilePath = options.uiConfig;
   }
   ResourceInterface::Ptr resourceInterface = FileResourceInterface::create(
-      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR, false
+      fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR, false
     );
   Game* game = new Game(resourceInterface);
   UI::Ptr ui = newUI(options, uiConfFilePath, game);
@@ -250,7 +246,6 @@ void runTest(
 
 void runClient(
     const Options& options,
-    const boost::filesystem::path& homePath,
     const boost::filesystem::path& configPath
   ) {
   boost::filesystem::path uiConfFilePath;
@@ -264,7 +259,7 @@ void runClient(
    * it. */
   /** \todo Allow for connecting elsewhere, or not connecting at all at once */
   String socketAddress;
-  
+
   socketAddress = options.joinAddress;
   if (socketAddress.empty()) {
 #ifdef DISABLE_UNIX_SOCKETS
@@ -273,7 +268,7 @@ void runClient(
     /* Use default socket */
     socketAddress =
       "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM +
-      (homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_COMMS_SOCKET_SUBDIR /
+      (fileUtils_configDirectory() / SAKUSEN_COMMS_SOCKET_SUBDIR /
         "fuseki-socket").
       native_file_string();
 #endif
@@ -291,25 +286,25 @@ void runClient(
   /* Construct the path to the history file */
   boost::filesystem::path historyPath = configPath / "history";
   cout << "Using history file at " << historyPath.native_file_string() << "\n";
-  
+
   bool reconnect;
 
   do {
     reconnect = false;
-    
+
     /** \todo The ResourceInterface actually needs to be able to access
      * resources over the network from the server as well as from disk */
     boost::filesystem::path dotDot("..");
     vector<boost::filesystem::path> dataDirs;
     dataDirs.push_back(
-        homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR
+        fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR
       );
     dataDirs.push_back("data");
     dataDirs.push_back(dotDot/"data");
     dataDirs.push_back(dotDot/".."/"data");
     dataDirs.push_back(dotDot/".."/".."/"data");
     dataDirs.push_back(dotDot/".."/".."/".."/"data");
-   
+
     ResourceInterface::Ptr resourceInterface =
         FileResourceInterface::create(dataDirs, false);
     Game* game = new Game(resourceInterface);
@@ -355,7 +350,7 @@ void runClient(
     commands["u"] = commands["resetui"] = command_resetUI;
     commands["z"] = commands["sleep"] = command_sleep;
     commands["h"] = commands["?"] = commands["help"] = command_help;
-    
+
     String helpMessage =
       "Available commands:\n"
       "  join (j)                Connect to server\n"
@@ -377,7 +372,7 @@ void runClient(
 
     /* If asked to autoJoin, then cause it to happen */
     ioHandler.fakeCommand("join");
-    
+
     while (!finished) {
       /* Process commands enterred through stdin */
       String command;
@@ -569,7 +564,7 @@ void runClient(
       }
       timeUtils_sleep(sleepTime);
     }
-    
+
     cout << endl;
     /* Must leave before deleting game object */
     if (serverInterface.isJoined()) {
