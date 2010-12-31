@@ -13,8 +13,6 @@ Message::Message(const MessageData* d) :
 }
 
 Message::Message(
-    /*const uint8* buffer,
-    size_t bufferLength,*/
     IArchive& in,
     const PlayerId p, /*= static_cast<PlayerId>(-1) (default in header)*/
     const ResourceInterface::Ptr& resourceInterface
@@ -97,7 +95,6 @@ Message::Message(
   /* Check that we exactly reached the end of the archive */
   if (!in.isFinished()) {
     throw TooMuchArchiveDeserializationExn();
-    data.reset();
   }
 }
 
