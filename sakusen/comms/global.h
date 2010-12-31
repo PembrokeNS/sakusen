@@ -40,31 +40,30 @@ namespace sakusen { namespace comms {
  * Therefore, we should use a better way. See Debian bug #187391 */
 #define SAKUSEN_COMMS_UNIX_PATH_MAX 104
 
-/* NETWORK_PROTOCOL_VERSION is the version number of the sakusen network
+/* The version number of the sakusen network
  * protocol.  It must fit in a uint8.  It should remain at 0 until at least
  * v1.0 of some server and client exist.  If we hit version ~100, we should
  * think about expanding it to two bytes. */
 #define SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION 0
 
-/** BUFFER_LEN is the max length allowed for any sakusen message sent over the
+/** The max length allowed for any sakusen message sent over the
  * wire.
  *
  * \bug This is surely unnecessary. */
 #define SAKUSEN_COMMS_BUFFER_LEN 1000000
 
-/** ADDR_DELIM is the delimiter for sakusen-style socket addresses */
+/** The delimiter for sakusen-style socket addresses */
 #define SAKUSEN_COMMS_ADDR_DELIM "|"
 
-/* SOCKET_SUBDIR is the subdirectory of CONFG_SUBDIR where servers are
- * expected to put their sockets */
+/** The subdirectory of SAKUSEN_CONFIG_SUBDIR where servers
+ * are expected to put their sockets */
 #define SAKUSEN_COMMS_SOCKET_SUBDIR "servers"
 
-/* SETTINGS_DELIMITER is the character used to split the names of nodes when
+/** The character used to split the names of nodes when
  * constructing full names of nodes in the settings tree */
 #define SAKUSEN_COMMS_SETTINGS_DELIMITER ":"
 
-/** DEFAULT_PORT is the port that sockets default to using if none is specified
- * */
+/** The port that sockets default to using if none is specified */
 #define SAKUSEN_COMMS_DEFAULT_PORT 15498
 
 #endif // LIBSAKUSEN_COMMS_GLOBAL_H
