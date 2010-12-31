@@ -23,7 +23,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
 
   Velocity expectedVelocity(status.velocity);
   AngularVelocity expectedAngularVelocity(status.angularVelocity);
-  
+
   /* compute the expected velocity based on the unit's orders */
   switch (orders.getLinearTarget()) {
     case linearTargetType_none:
@@ -62,7 +62,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
           SAKUSEN_DEBUG("[1] desiredVel=" << desiredVelocity <<
               ", acc=" << acceleration);
         }*/
-        
+
         expectedVelocity += acceleration;
       }
       break;
@@ -70,7 +70,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       SAKUSEN_FATAL("Unknown linearTargetType '" << orders.getLinearTarget() << "'");
       break;
   }
-  
+
   /* Compute the expected angular velocity based on the unit's orders.
    * At present we allow infinite angular acceleration.
    */
@@ -111,7 +111,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
         heightAboveGround, cornerPos.z - hf.getHeightAt(cornerPos)
       );
   }
-  
+
   if (heightAboveGround + expectedVelocity.z < 0) {
     /* The unit will end up below the ground, so we need to raise it. */
     /** \bug The
@@ -144,7 +144,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
   Frame newFrame = status.frame;
   Velocity newVelocity = expectedVelocity;
   AngularVelocity newAngularVelocity = expectedAngularVelocity;
-  
+
   /* Simulate the move (note: potentially changes all the arguments) */
   world->getMap()->transform(newFrame, newVelocity, newAngularVelocity);
 
@@ -163,7 +163,7 @@ void GroundMotion::incrementState(LayeredUnit& unit)
       continue;
     }
     /** \todo Skip if there is a subunit relationship */
-    
+
     const UnitStatus& otherStatus = otherUnit->getStatus();
     const Point<uint32> otherSize = otherUnit->getITypeData().getSize();
 
@@ -190,13 +190,13 @@ void GroundMotion::incrementState(LayeredUnit& unit)
     expectedVelocity.zero();
     expectedAngularVelocity.zero();
   }
-  
+
   /* Now set the velocity to this newly computed value */
   if (expectedVelocity != status.velocity) {
     status.velocity = expectedVelocity;
     unit.setDirty();
   }
-  
+
   /* ... and the angular velocity */
   if (expectedAngularVelocity != status.angularVelocity) {
     status.angularVelocity = expectedAngularVelocity;

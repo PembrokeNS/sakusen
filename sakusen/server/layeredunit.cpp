@@ -202,7 +202,7 @@ void LayeredUnit::incrementState(Ref<LayeredUnit> refToThis, const Time& /*timeN
   /* Call motion handler to set velocity properly */
   refToThis->motion->incrementState(*refToThis);
   if (!refToThis) { return; }
-  
+
   /* Do the actual move */
   Position oldPos = refToThis->status.frame.getPosition();
   world->getMap()->transform(

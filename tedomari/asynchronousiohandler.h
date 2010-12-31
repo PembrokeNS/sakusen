@@ -64,10 +64,10 @@ class AsynchronousIOHandler : private boost::noncopyable {
     String inputBuffer;
     #ifdef _MSC_VER
         HANDLE hStdout, hStdin;
-        DWORD cRead, cWritten, fdwMode, fdwOldMode; 
+        DWORD cRead, cWritten, fdwMode, fdwOldMode;
     #endif //_MSC_VER
 #endif //DISABLE_READLINE
-    
+
     /** \brief Put all pending commands into commandBuffer
      *
      * This method reads as many chars as are available on the input and puts
@@ -77,7 +77,7 @@ class AsynchronousIOHandler : private boost::noncopyable {
     /** \brief Returns true iff input has reached EOF */
     inline bool getEof() const { return eof; }
     /** \brief Get the next pending command
-     * 
+     *
      * If a command is ready, put it into \a command and return true, else
      * return false.  Wait until a period of length \a timeout occurs *between*
      * characters being input. */

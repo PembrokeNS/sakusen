@@ -22,7 +22,7 @@ class MobiusMap : public MapType {
           topRight, bottomLeft, gravity, hf
         )
     {}
-    
+
     virtual Topology getTopology() const { return topology_mobius; }
 
     virtual bool resolvePosition(
@@ -31,7 +31,7 @@ class MobiusMap : public MapType {
       ) const {
       p = pos;
       bool truncated = false;
-      
+
       while (p.x < this->left()) {
         p.x += this->width();
         p.y = this->reflectY(p.y);
@@ -39,7 +39,7 @@ class MobiusMap : public MapType {
           *orientation = Orientation::reflectionY * *orientation;
         }
       }
-      
+
       while (p.x >= this->right()) {
         p.x -= this->width();
         p.y = this->reflectY(p.y);
@@ -47,7 +47,7 @@ class MobiusMap : public MapType {
           *orientation = Orientation::reflectionY * *orientation;
         }
       }
-      
+
       if (p.y < this->bottom()) {
         p.y = this->bottom();
         truncated = true;

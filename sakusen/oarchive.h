@@ -97,7 +97,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     OArchive& operator<<(const IdBase<TInteger, TBase>& toStore) {
       return *this << toStore.val;
     }
-    
+
     template<typename T, size_t size>
     OArchive& operator<<(const T (&toStore)[size]) {
       Storer<T> storer;
@@ -107,7 +107,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T>
     OArchive& insert(const T* toStore, size_t size) {
       Storer<T> storer;
@@ -117,7 +117,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T, size_t size>
     OArchive& insert(const boost::array<T, size>& toStore) {
       Storer<T> storer;
@@ -164,7 +164,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     OArchive& operator<<(const std::vector<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
-  
+
       for(typename std::vector<T>::const_iterator i = toStore.begin();
           i != toStore.end(); ++i) {
         storer(*this, *i);
@@ -177,7 +177,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     OArchive& operator<<(const std::list<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
-  
+
       for(typename std::list<T>::const_iterator i = toStore.begin();
           i != toStore.end(); ++i) {
         storer(*this, *i);
@@ -190,7 +190,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     OArchive& operator<<(const std::set<T>& toStore) {
       *this << uint32(toStore.size());
       Storer<T> storer;
-  
+
       for(typename std::set<T>::const_iterator i = toStore.begin();
           i != toStore.end(); ++i) {
         storer(*this, *i);
@@ -212,7 +212,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
     {
       *this << uint32(toStore.size());
       Storer<std::pair<T, U> > storer;
-  
+
       for(typename u_map<T, U, THash>::type::const_iterator i =
           toStore.begin(); i != toStore.end(); ++i) {
         storer(*this, *i);
@@ -220,7 +220,7 @@ class LIBSAKUSEN_API OArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T>
     inline OArchive& operator<<(const Point<T>& p) {
       return *this << p.x << p.y << p.z;

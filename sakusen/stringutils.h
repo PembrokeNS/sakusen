@@ -46,12 +46,12 @@ template<typename Container>
   typename Container::const_iterator s = strings.begin();
   String result = *s;
   ++s;
-  
+
   for (; s != strings.end(); ++s) {
     result += delim;
     result += *s;
   }
-  
+
   return result;
 }
 

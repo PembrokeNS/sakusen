@@ -87,7 +87,7 @@ class LIBSAKUSEN_API Box {
     }
 
     inline Box& operator+=(const Point<T>& p);
-    
+
     /** \brief Create a new Box, which is a translation of this one by \a p */
     inline Box operator+(const Point<T>& p) {
       return Box(*this) += p;
@@ -99,7 +99,7 @@ class LIBSAKUSEN_API Box {
     Box<T> intersection(const Box<T>& b) const;
     Box<T> enclosure(const Box<T>& b) const;
     Rectangle<T> rectangle() const;
-    
+
 };
 
 /** Prints the co-ordinates of a box, for debugging purposes. */
@@ -166,7 +166,7 @@ bool Box<T>::intersects(const Box<T>& b) const {
  *
  * If this does not intersect \p b, then the result will be empty, but
  * it is not defined \b which empty Box it will be. This method commutes.
- * 
+ *
  * \todo Use fewer branches.
  */
 template<typename T>

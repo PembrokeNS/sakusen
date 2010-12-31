@@ -38,7 +38,7 @@ class LIBSAKUSEN_API UnitTypeData : public IUnitTypeData {
     Region<sint32>::ConstPtr possibleAngularVelocities;
     Visibility visibility;
     Sensors vision;
-    
+
     /** \name Accessors */
     //@{
     inline HitPoints getMaxHitPoints(void) const { return maxHitPoints; }

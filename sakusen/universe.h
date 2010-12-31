@@ -72,7 +72,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
      * \return false iff a problem is detected
      */
     bool sanityCheck() const;
-    
+
     /** \name Accessors */
     //@{
     inline const String& getInternalName() const { return internalName; }
@@ -81,7 +81,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
     inline const String& getScriptFunction() const { return scriptFunction; }
     inline const String& getPlayerDataFunction() const { return playerDataFunction; }
     //@}
-    
+
     /** \name Index/pointer/Id/Name conversions */
     //@{
     inline const WeaponType* getWeaponTypePtr(WeaponTypeId id) const
@@ -89,7 +89,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
       return id;
     }
     WeaponTypeId getWeaponTypeId(String weaponTypeName) const;
-    
+
     inline UnitTypeId getUnitTypeId(uint32 i) const
     {
       assert(i<unitTypes.size());
@@ -109,7 +109,7 @@ class LIBSAKUSEN_API Universe : private boost::noncopyable {
       return getUnitTypePtr(getUnitTypeId(unitTypeName));
     }
     //@}
-    
+
     /** \brief Determine whether the Universe contains a given UnitTypeId */
     bool containsUnitType(const UnitTypeId id) const;
 

@@ -60,7 +60,7 @@ UDPSocket::UDPSocket(uint16 myPort):
 void UDPSocket::send(const void* buf, size_t len)
 {
   int retVal;
- 
+
   retVal = ::send(sockfd, reinterpret_cast<const char*>(buf), len, 0);
   if (retVal == -1) {
     switch (socketErrno()) {
@@ -85,15 +85,15 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
   assert(!splitAddress.empty());
   assert(splitAddress.front() == getType());
   splitAddress.pop_front();
-  
+
   String hostname;
   uint16 port;
 
   interpretAddress(splitAddress, &hostname, &port);
-  
+
   struct hostent *endpoint;
   endpoint = gethostbyname(hostname.c_str());
-  
+
   if (endpoint == NULL) {
     SAKUSEN_FATAL("host " << hostname << " not found.");
   }
@@ -104,9 +104,9 @@ void UDPSocket::sendTo(const void* buf, size_t len, const String& address)
   dest.sin_family = AF_INET;
   memcpy(&dest.sin_addr.s_addr, endpoint->h_addr, endpoint->h_length);
   dest.sin_port = htons(port);
-  
+
   int retVal;
- 
+
   retVal = ::sendto(
       sockfd, reinterpret_cast<const char*>(buf), len, 0,
       reinterpret_cast<sockaddr*>(&dest), sizeof(dest)

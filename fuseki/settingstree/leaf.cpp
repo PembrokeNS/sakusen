@@ -37,16 +37,16 @@ String Leaf::changeRequestListRef(
     const SettingsUser* user)
 {
   //SAKUSEN_DEBUG("checking permissions for node " << getFullName());
-  
+
   if (!user->hasReadPermissionFor(ptrToThis())) {
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
-  
+
   if (!nodeAddress.empty()) {
     return String("node '") + getFullName() + "' is a leaf and has no child";
   }
-  
+
   if (!user->hasWritePermissionFor(ptrToThis())) {
     return String("cannot write to node '") + getFullName() +
       "': permission denied";
@@ -71,7 +71,7 @@ Leaf::getRequestListRef(
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
-  
+
   if (!nodeAddress.empty()) {
     return String("node '") + getFullName() + "' is a leaf and has no child";
   }

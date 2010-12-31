@@ -31,7 +31,7 @@ void UnixDatagramSocket::interpretAddress(
   }
   String abstractness = address.front();
   address.pop_front();
-  
+
   if (abstractness == "abstract") {
     *abstract = true;
   } else if (abstractness == "concrete") {

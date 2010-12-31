@@ -25,7 +25,7 @@ class ModifiedKey {
     inline Key getKey() const { return key; }
     //#ifndef _MSC_VER
       inline const std::set<String>& getModifiers() const { return modifiers; }
-    //#else 
+    //#else
     ///*This is required due to some peculiarity of the way stlport does allocators*/
     //  inline std::set<String> getModifiers() const{ return modifiers; }
     //#endif
@@ -38,7 +38,7 @@ class ModifiedKeyHash {
   public:
     inline size_t operator()(const ModifiedKey& k) const {
       size_t hash = keyHasher(k.getKey());
-      for (std::set<String>::const_iterator mod = k.getModifiers().begin(); mod != k.getModifiers().end(); ++mod) 
+      for (std::set<String>::const_iterator mod = k.getModifiers().begin(); mod != k.getModifiers().end(); ++mod)
       {
         hash *= 17;
         hash += stringHasher(*mod);

@@ -53,7 +53,7 @@ String errorUtils_errorMessage(int num)
   if (NULL == strerror_s(message, MESSAGE_BUFFER_LEN, num)) {
     return "error getting error message for errno " + errorUtils_parseErrno(num);
   }
-  return String(message); 
+  return String(message);
 
 #else
 

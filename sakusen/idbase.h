@@ -17,7 +17,7 @@ class OArchive;
  *
  * IdBase adds as much appropriate functionality as it can to the derived
  * class through the use of friend function definitions and static methods.
- * 
+ *
  * Thanks to the way boost::hash works we can also have hashes work
  * automatically for all derived classes.
  *
@@ -47,7 +47,7 @@ class IdBase {
     operator TInteger() const { return val; }
     /** \brief Determine if this id is valid. */
     bool valid() const { return val != TInteger(-1); }
-    /** \brief Convert to string. 
+    /** \brief Convert to string.
      *
      * \see IdBase::fromString */
     String toString() const { return numToString(val); }

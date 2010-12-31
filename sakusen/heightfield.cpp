@@ -63,7 +63,7 @@ Heightfield::Heightfield(
   sanityCheck();
 }
 
-/** \brief Assignment operator 
+/** \brief Assignment operator
  *
  * \note This has to exist because the boost::multi_array assignment operator
  * won't assign arrays of different dimensions.*/
@@ -131,7 +131,7 @@ double Heightfield::intersectRayInCell(
    * probability that I've got it right is slim.  Even if it is right, it's
    * probably horribly numerically unstable. */
   /** \todo Test this code */
-  
+
   /* First we extract some heights */
   const double h00 = heightfield[x  ][y  ];
   const double h01 = heightfield[x  ][y+1];
@@ -199,7 +199,7 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
   uint32 xr = xoff % xyResolution;
   uint32 yq = yoff / xyResolution;
   uint32 yr = yoff % xyResolution;
-  
+
   /** \bug There is a risk of overflow in various places
    * here.  Maybe we should cast up to sint64s */
 
@@ -209,7 +209,7 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
 
   /* All this branching is not supposed to speed things up, rather it is to
    * prevent accessing memory out of range in boundary cases */
-  
+
   if (xr == 0) {
     lowerHeight = getHeightAtSample(xq, yq);
     if (yr == 0) {
@@ -435,7 +435,7 @@ Heightfield Heightfield::load(
   uint32 xyResolution;
   uint32 zResolution;
   bool useImage;
-  
+
   in >> xyResolution >> zResolution >> useImage;
   if (useImage) {
     String givenImagePath;
@@ -458,7 +458,7 @@ Heightfield Heightfield::load(
     boost::multi_array<sint16,2> heightfield;
     in >> width >> height;
     in.extract<sint16,2>(heightfield);
-  
+
     return Heightfield(
         xyResolution, zResolution, width, height, heightfield
       );

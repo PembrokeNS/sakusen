@@ -89,7 +89,7 @@ void DynamicSensorReturns::update()
     assert(sensers.empty());
     return;
   }
-  
+
   /* If the player is player 0 then they get to see everything (so that
    * observers can see everything) */
   if (senserOwner->getId() == 0) {
@@ -99,16 +99,16 @@ void DynamicSensorReturns::update()
     }
     return;
   }
-    
+
   /* If the player owns the unit, then clear and quit */
   if (sensee->getOwner() == senserOwner->getId()) {
     sensers.clear();
     return;
   }
-  
+
   perception = perception_none;
   uint32 bestRadius = numeric_limits<uint32>::max();
-  
+
   /* Check over the sensers, and erase any who no longer exist */
   stack<UnitId> deadUnitIds;
   for (SensorReturnMap::iterator senser = sensers.begin();
@@ -128,7 +128,7 @@ void DynamicSensorReturns::update()
    * \todo Stop once it is clear that adding more units will add no more
    * information. */
   EachSensorReturn workingCopy;
-  
+
   for (u_map<UnitId, Ref<LayeredUnit> >::type::const_iterator unitIt =
       senserOwner->getUnits().begin(); unitIt != senserOwner->getUnits().end();
       ++unitIt) {

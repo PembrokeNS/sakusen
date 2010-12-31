@@ -59,14 +59,14 @@ class LIBSAKUSEN_RESOURCES_API FileResourceInterface :
         ResourceType type,
         Universe::ConstPtr
       );
-    
+
     virtual boost::tuple<void*, ResourceSearchResult> internalSymbolSearch(
         const String& moduleName,
         const String& symbolName
       );
 
     virtual boost::tuple<Image::Ptr, String> imageSearch(const String& path);
-    
+
     virtual bool internalSave(
         const boost::shared_ptr<const void>& resource,
         const String& path,

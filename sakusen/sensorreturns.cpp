@@ -39,7 +39,7 @@ SensorReturns SensorReturns::load(
   if (0 != (perception & ~perception_full)) {
     throw EnumDeserializationExn("perception", perception);
   }
-  
+
   if (0 != (perception & perception_owner)) {
     in >> senseeOwner;
   } else {

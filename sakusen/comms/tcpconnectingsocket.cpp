@@ -16,9 +16,9 @@ TCPConnectingSocket::TCPConnectingSocket(
   remoteHost(hostname)
 {
   struct hostent *endpoint;
-  
+
   endpoint = gethostbyname(hostname.c_str());
-  
+
   if (endpoint == NULL) {
     throw HostNotFoundExn(hostname);
   }

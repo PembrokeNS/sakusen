@@ -49,12 +49,12 @@ CompleteUnit CompleteUnit::load(
   )
 {
   UnitId unitId;
-  
+
   in.magicValue("CUNIT");
   in >> unitId;
   UnitStatus status = UnitStatus::load(in, context);
   UnitTypeData typeData = UnitTypeData::load(in);
-  
+
   return CompleteUnit(
       unitId, status, typeData
     );

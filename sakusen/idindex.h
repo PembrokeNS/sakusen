@@ -22,7 +22,7 @@ class IdIndex : public IIndex<T> {
   public:
     typedef boost::shared_ptr<IdIndex<TId, T, Ider> > Ptr;
     typedef boost::shared_ptr<const IdIndex<TId, T, Ider> > ConstPtr;
-    
+
     IdIndex() {}
   private:
     typedef typename u_map<TId, Ref<T> >::type IdHashType;

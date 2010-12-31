@@ -28,7 +28,7 @@ Control::Control(uint16 xoffset, uint16 yoffset, DockStyle ds, Region* r) :
 }
 
 /** \brief Destructor
- * 
+ *
  * The destructor destroys all subcontrols.  Further behaviour is not excluded.
  * */
 Control::~Control()
@@ -92,7 +92,7 @@ void Control::alignSubControls()
   for (list< list<Control*> >::iterator layer = subControls.begin();
       layer != subControls.end(); ++layer) {
     Rectangle<uint16> remainingArea(0, 0, getWidth(), getHeight());
-    
+
     for (list<Control*>::iterator subControl = layer->begin();
         subControl != layer->end(); ++subControl) {
       Rectangle<uint16> controlArea(remainingArea);

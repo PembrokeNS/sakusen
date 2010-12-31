@@ -48,7 +48,7 @@ String UnitType::resolveNames(const Universe* universe)
 {
   assert(weapons.empty());
   assert(corpseUnitType == NULL);
-  
+
   while (!weaponNames.empty()) {
     WeaponTypeId weaponId = universe->getWeaponTypeId(weaponNames.front());
     if (weaponId == NULL) {

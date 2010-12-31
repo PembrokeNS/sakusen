@@ -18,7 +18,7 @@
   #else
     #define SAKUSEN_SERVER_PLUGINS_REPLAY_RECORDER_API
   #endif
-#endif 
+#endif
 
 namespace sakusen {
 namespace server {

@@ -44,38 +44,38 @@ class LIBSAKUSEN_API Frame {
     /** \brief Converts an position in local to absolute global coordinates.
      *
      * Local coordinates are those of the Frame.
-     * 
+     *
      * Absolute global coordinates are the usual coordinate system.
      */
     inline Point<sint32> localToGlobal(const Point<sint32>& p) const {
       return getOrientation()*p+getPosition();
     }
-    
+
     /** \brief Converts an position in local to relative global coordinates.
      *
      * Local coordinates are those of the Frame.
-     * 
+     *
      * Relative global coordinates are aligned with the usual coordinates, but
      * with their origin at the origin of the Frame.
      */
     inline Point<sint32> localToGlobalRelative(const Point<sint32>& p) const {
       return getOrientation()*p;
     }
-    
+
     /** \brief Converts an position in absolute global to local coordinates.
      *
      * Local coordinates are those of the Frame.
-     * 
+     *
      * Absolute global coordinates are the usual coordinate system.
      */
     inline Point<sint32> globalToLocal(const Point<sint32>& p) const {
       return getOrientation().inverseMul(p-getPosition());
     }
-    
+
     /** \brief Converts an position in relative global to local coordinates.
      *
      * Local coordinates are those of the Frame.
-     * 
+     *
      * Relative global coordinates are aligned with the usual coordinates, but
      * with their origin at the origin of the Frame.
      */

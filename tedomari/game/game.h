@@ -42,7 +42,7 @@ class Game {
 
     /** \bug This doesn't belong here */
     uint32 dexPerPixel;
-    
+
     bool dirty;
   public:
     uint64 getAvailableEnergy() const { return availableEnergy; }
@@ -62,7 +62,7 @@ class Game {
     void clearDirty() { dirty = false; }
     /** Returns true iff the game is underway */
     inline bool isStarted() const { return sakusen::client::world != NULL; }
-    
+
     void setUniverse(const String& path, const String& hash);
     /** \brief Starts the game
      *

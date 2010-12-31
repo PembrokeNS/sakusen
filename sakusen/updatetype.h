@@ -12,11 +12,11 @@ namespace sakusen {
  * the game state.
  *
  * What arguments each takes is given in its description.
- * 
+ *
  * \note Current serialization implementation limits us to 256 types. */
 enum UpdateType {
   /** Dummy value because mistakes will most probably lead to a value of zero */
-  updateType_none, 
+  updateType_none,
   /** Remove unit.
    *
    * UnitId, changeOwnerReason */

@@ -22,7 +22,7 @@ class CylinderMap : public MapType {
           topRight, bottomLeft, gravity, hf
         )
     {}
-    
+
     virtual Topology getTopology() const { return topology_cylinder; }
 
     virtual bool resolvePosition(
@@ -31,15 +31,15 @@ class CylinderMap : public MapType {
       ) const {
       p = pos;
       bool truncated = false;
-      
+
       while (p.x < this->left()) {
         p.x += this->width();
       }
-      
+
       while (p.x >= this->right()) {
         p.x -= this->width();
       }
-      
+
       if (p.y < this->bottom()) {
         p.y = this->bottom();
         truncated = true;

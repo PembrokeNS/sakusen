@@ -42,14 +42,14 @@ Node::Ptr Branch::getNodeByListRef(
   }
 
   Node::Ptr child = getChild(nodeAddress.front());
-  
+
   if (!child) {
     SAKUSEN_FATAL("node '" << nodeAddress.front() << "' not found in '" <<
         getFullName() << "'");
   }
 
   nodeAddress.pop_front();
-  
+
   return child->getNodeByListRef(nodeAddress);
 }
 
@@ -62,7 +62,7 @@ String Branch::changeRequestListRef(
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
-  
+
   if (setting.empty()) {
     return "requested node '" + getFullName() + "' not a leaf";
   }
@@ -75,7 +75,7 @@ String Branch::changeRequestListRef(
   }
 
   setting.pop_front();
-  
+
   return child->changeRequestListRef(setting, value, user);
 }
 
@@ -89,7 +89,7 @@ Branch::getRequestListRef(
     return String("cannot read node '") + getFullName() +
       "': permission denied";
   }
-  
+
   if (nodeAddress.empty()) {
     return boost::make_tuple("", getChildNames(), ptrToThis());
   }
@@ -104,7 +104,7 @@ Branch::getRequestListRef(
   }
 
   nodeAddress.pop_front();
-  
+
   return child->getRequestListRef(nodeAddress, user);
 }
 

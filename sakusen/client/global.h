@@ -3,8 +3,8 @@
 
 #if defined(_MSC_VER)
   /*4251: This warning is about members of exported classes not being exported.
-   * This is mostly to do with stuff from std, but in at least one case it 
-   * was very important.  In the long run we should do without disabling 
+   * This is mostly to do with stuff from std, but in at least one case it
+   * was very important.  In the long run we should do without disabling
    * this warning. */
   //#pragma warning(disable:4251)
   /* The __declspec stuff for ensuring symbols are exported from DLLs and

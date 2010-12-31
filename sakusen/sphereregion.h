@@ -41,7 +41,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     {
       archive << centre << radius;
     }
-    
+
     static SphereRegion<T>* loadNew(IArchive& archive)
     {
       Point<T> centre;
@@ -60,7 +60,7 @@ class LIBSAKUSEN_API SphereRegion : public Region<T> {
     inline Rectangle<T> getBoundingRectangle() const;
     inline Box<sint32> getBoundingBox() const;
     inline boost::tuple<double,double> intersect(const Ray& r) const;
-    
+
     RegionType getType() const { return regionType_sphere; }
 };
 

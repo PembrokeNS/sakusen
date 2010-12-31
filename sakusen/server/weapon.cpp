@@ -74,7 +74,7 @@ bool Weapon::aim(
   if (isnan(tanTheta)) {
     return false;
   }
-  
+
   double theta = atan(tanTheta);
 
   Point<double> initialVelocity(
@@ -102,7 +102,7 @@ void Weapon::incrementState(const Ref<LayeredUnit>& firer, uint16 weaponIndex)
   UnitStatus& unitStatus = firer->getStatus();
   assert(weaponIndex < unitStatus.getWeaponsStatus().size());
   WeaponStatus& status = unitStatus.getWeaponsStatus()[weaponIndex];
-  
+
   /* Obtain the orders */
   WeaponOrders& orders =
     firer->getOrders().getWeaponsOrders()[weaponIndex];

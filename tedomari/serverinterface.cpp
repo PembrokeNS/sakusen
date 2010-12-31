@@ -111,7 +111,7 @@ String ServerInterface::flushIncoming(
   size_t messageLength;
   uint8 buf[SAKUSEN_COMMS_BUFFER_LEN];
   ostringstream out;
-  
+
   while (joined && 0 != (
         messageLength = incomingSocket->receive(buf, SAKUSEN_COMMS_BUFFER_LEN)
       )) {
@@ -241,7 +241,7 @@ String ServerInterface::join()
     outgoingSocket.reset();
     return ret;
   }
-  
+
   uint8 buffer[SAKUSEN_COMMS_BUFFER_LEN];
   size_t messageLength;
 
@@ -255,7 +255,7 @@ String ServerInterface::join()
 
   IArchive messageArchive(buffer, messageLength);
   Message message(messageArchive);
-  
+
   switch (message.getType()) {
     case messageType_accept:
       {
@@ -344,7 +344,7 @@ bool ServerInterface::setSetting(const String& setting, const String& value)
 }
 
 /** \brief Requests a setting value from client settings tree.
- * 
+ *
  * \param setting Address of the setting to get relative to the client
  * branch
  * \return true iff an error occurs */
@@ -356,14 +356,14 @@ bool ServerInterface::getClientSetting(
   if (setting.length() != 0 && setting[0] != ':') {
     delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
-  
+
   return getSetting(
       "clients:" + id.toString() + delim + setting
     );
 }
 
 /** \brief Requests a setting change  our client settings tree.
- * 
+ *
  * \param setting Address of the setting to change relative to the client
  * branch
  * \param value Value to assign to the setting
@@ -377,7 +377,7 @@ bool ServerInterface::setClientSetting(
   if (setting.length() != 0 && setting[0] != ':') {
     delim = SAKUSEN_COMMS_SETTINGS_DELIMITER;
   }
-  
+
   return setSetting(
       "clients:" + id.toString() + delim + setting, value
     );

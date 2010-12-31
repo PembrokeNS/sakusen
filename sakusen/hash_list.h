@@ -87,7 +87,7 @@ class hash_list : private boost::noncopyable {
     typedef hash_list_const_iterator<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>
       const_iterator;
     typedef size_t size_type;
-    
+
     hash_list();
     ~hash_list();
   private:
@@ -126,7 +126,7 @@ class hash_list : private boost::noncopyable {
     typedef std::list<boost::shared_ptr<T> > List;
     typedef typename u_map<MaskedPtr<T>, typename List::iterator>::type
       ListIteratorHash;
-    
+
     List list;
     /** \brief A hash_map of iterators from the above list
      *
@@ -198,7 +198,7 @@ class hash_list_iterator {
     explicit hash_list_iterator(const ListIt& i) :
       listIt(i)
     {}
-    
+
     ListIt listIt;
   public:
     bool operator==(const hash_list_iterator&);
@@ -223,7 +223,7 @@ class hash_list_const_iterator {
   friend class hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>;
   private:
     typedef typename hash_list<T, SAKUSEN_HASH_LIST_ENUM_INDEXES(TIndex)>::List::const_iterator ListIt;
-    
+
     explicit hash_list_const_iterator(const ListIt& i) :
       listIt(i)
     {}

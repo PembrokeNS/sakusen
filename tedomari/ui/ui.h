@@ -50,7 +50,7 @@ class UI : protected Control {
     Mode* mode;
     /** \brief Modifiers like ctrl from keys currently held down */
     std::set<String> currentModifiers;
-    
+
     /** \brief True iff we are currently interested in characters input,
      * rather than keys pressed
      *
@@ -90,7 +90,7 @@ class UI : protected Control {
      * for deleting the returned object */
     virtual Region* newRegion(uint16 x, uint16 y, uint16 width, uint16 height)
       = 0;
-    
+
     /** \brief Indicate window resize
      *
      * Called by a subclass to indicate that the UI window has been resized,
@@ -140,7 +140,7 @@ class UI : protected Control {
 
     /** \brief Construct and return a surface for drawing into memory */
     virtual Surface::Ptr createSurface(uint16 width, uint16 height) = 0;
-    
+
     /** \brief Execute the given command
      *
      * \warning Modifies its argument args */
@@ -151,11 +151,11 @@ class UI : protected Control {
     void executeCommands(const String& cmd);
 
     void executeRegex(const String& re);
-    
+
     /** \brief Add an alert to the list */
     void alert(const Alert&);
     inline void alert(const String s) { alert(Alert(s)); }
-    
+
     void setCommandEntry(bool on);
     void setRegexEntry(bool on);
 

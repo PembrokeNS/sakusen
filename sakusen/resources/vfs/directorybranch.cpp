@@ -40,7 +40,7 @@ Branch::Ptr DirectoryBranch::getSubBranch(const String& subBranchName)
   if (subBranchName == ".") {
     return ptrToThis.lock();
   }
-  
+
   boost::filesystem::path potential = directory / subBranchName;
   if (!boost::filesystem::exists(potential)) {
     return Branch::Ptr();
@@ -68,7 +68,7 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
   if (subBranchName == ".") {
     return ptrToThis.lock();
   }
-  
+
   boost::filesystem::path potential = directory / subBranchName;
   boost::filesystem::create_directory(potential);
   return create(subBranchName, potential, ptrToThis.lock());

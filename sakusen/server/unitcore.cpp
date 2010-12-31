@@ -119,7 +119,7 @@ void UnitCore::damage(HitPoints amount) {
 void UnitCore::repair(HitPoints amount, bool superhealth) {
   if (0 != amount) {
     HitPoints max = getMaxHitPoints();
-  
+
     if (superhealth) {
       hitPoints += amount;
     } else if (hitPoints + amount > max) {
@@ -147,7 +147,7 @@ void UnitCore::changeType(
   ) {
   const UnitType* newType;
   if ((newType = world->getUniverse()->getUnitTypePtr(to)) == NULL) {
-    
+
   } else {
     switch (hpAlteration)
     {
@@ -197,7 +197,7 @@ void UnitCore::changeOwner(PlayerId to, enum changeOwnerReason why) {
   owner = to;
   if (why != changeOwnerReason_destroyed) {
     toPtr->addUnit(outerUnit->getRefToThis(), why);
-    
+
     /* We also need to ensure that sensor returns from this unit are flagged so
      * that the change of ownership is transmitted. */
     for (u_map<PlayerId, DynamicSensorReturnsRef>::type::iterator returns =
@@ -209,7 +209,7 @@ void UnitCore::changeOwner(PlayerId to, enum changeOwnerReason why) {
       }
     }
   }
-  
+
   /* \todo Deal with subunits */
 }
 

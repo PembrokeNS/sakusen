@@ -38,7 +38,7 @@ class Mode {
     void addCommand(const String& name, const Command& cmd, UI* ui);
     void addBinding(const ModifiedKeyEvent& key, const std::list<String>& cmd);
     void addFunction(const Function& function, UI* ui);
-    
+
   private:
     static Mode getCommon(UI* ui);
   public:

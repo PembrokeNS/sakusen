@@ -29,7 +29,7 @@ class LIBSAKUSEN_CLIENT_API UpdatedSensorReturns : public SensorReturns {
       altered_(true)
     {}
     virtual ~UpdatedSensorReturns() {}
-    
+
     void alter(const SensorReturns& to);
     virtual void incrementState();
     virtual void altered() {}

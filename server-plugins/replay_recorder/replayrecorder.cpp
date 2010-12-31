@@ -29,7 +29,7 @@ void ReplayRecorder::writeKeyTick()
 {
   if (!mainReplayWriter)
     return;
-  
+
   OArchive keyTick;
 
   /* 1 indicates that what follows is an entire copy of the gamestate */
@@ -39,7 +39,7 @@ void ReplayRecorder::writeKeyTick()
   /* We also need to store in the index where we put this in the replay file,
    * for seeking */
   uint64 keyTickStart = mainReplayWriter->tell();
-  
+
   mainReplayWriter->write(keyTick);
 
   OArchive indexEntry;
@@ -77,7 +77,7 @@ void ReplayRecorder::gameStart()
     SAKUSEN_QDEBUG("ReplayRecorder not recording because no filename specified");
     return;
   }
-  
+
   /* Open the writers */
   mainReplayWriter =
     resourceInterface->openWriter("replays/"+replayFileRoot+".sakusenreplay");
@@ -98,7 +98,7 @@ void ReplayRecorder::ticksMessagesDone()
   if (!mainReplayWriter) {
     return;
   }
-  
+
   OArchive ticksMessages;
 
   /* 0 indicates that what follows is a ticks worth of messages */

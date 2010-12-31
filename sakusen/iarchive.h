@@ -22,7 +22,7 @@ namespace sakusen {
 class OArchive;
 
 /** \internal \brief Class used inside IArchive for working with
- * boost::multi_array */  
+ * boost::multi_array */
 template<size_t pos>
 class extent_generator {
   public:
@@ -84,7 +84,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
     const Buffer originalBuffer;
     /* Pointer into originalBuffer's memory, which is safe only because
      * originalBuffer is const, and thus will never copy its memory */
-    const uint8* pos; 
+    const uint8* pos;
     size_t remainingLength;
     inline void assertLength(size_t length) const {
       /* We ensure that enough length remains.
@@ -170,7 +170,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
       result.val = v;
       return *this;
     }
-    
+
     template<typename T, size_t size>
     IArchive& extract(T result[size]) {
       Extracter<T> extracter;
@@ -180,7 +180,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T, size_t size>
     IArchive& extract(T (&result)[size], const DeserializationContext& context)
     {
@@ -191,7 +191,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T>
     IArchive& extract(T* result, size_t size) {
       Extracter<T> extracter;
@@ -201,7 +201,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T, size_t size>
     IArchive& extract(boost::array<T, size>& result) {
       Extracter<T> extracter;
@@ -217,7 +217,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
       assert(rank == result.num_dimensions());
       boost::array<uint32, rank> shape;
       extract<uint32, rank>(shape);
-      
+
       result.resize(extent_generator<rank>()(shape));
 
       // If any dimension is zero, there are no entries, and we quit now
@@ -243,7 +243,7 @@ class LIBSAKUSEN_API IArchive : private boost::noncopyable {
 
       return *this;
     }
-    
+
     template<typename T>
     IArchive& operator>>(std::vector<T>& result) {
       assert(result.empty());

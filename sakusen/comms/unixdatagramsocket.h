@@ -23,7 +23,7 @@ class LIBSAKUSEN_API UnixDatagramSocket : public Socket {
   public:
     static Socket::Ptr newConnectionToAddress(std::list<String>& address);
     static Socket::Ptr newBindingToAddress(std::list<String>& address);
-  
+
   /* Abstract class - all constructors must be protected */
   protected:
     UnixDatagramSocket(const char* path, bool abstract);

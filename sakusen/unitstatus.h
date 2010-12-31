@@ -53,7 +53,7 @@ class LIBSAKUSEN_API UnitStatus : public IUnitStatus {
     Velocity velocity;
     AngularVelocity angularVelocity;
     //@}
-    
+
     /** \name Unit's status */
     //@{
     HitPoints hitPoints;

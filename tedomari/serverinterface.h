@@ -68,7 +68,7 @@ class ServerInterface {
     inline bool isJoined() const { return joined; }
     inline sakusen::ClientId getId() const { return id; }
     //@}
-    
+
     String flushIncoming(const sakusen::ResourceInterface::Ptr&);
     String join();
     bool leave(bool sendMessage);

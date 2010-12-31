@@ -35,7 +35,7 @@ class LIBSAKUSEN_API Region : public Bounded {
     /** \name Containment functions
      *
      * These functions return true iff \p point is inside this Region.
-     * 
+     *
      * We can't use Point<T> because then Point<sint32>s become corrupted when
      * T=sint16, and we can't use a templated Point type because the functions
      * are virtual.  We could probably get away with allowing just
@@ -120,7 +120,7 @@ class LIBSAKUSEN_API Region : public Bounded {
      * the region, you still get the first intersection with the boundary.
      */
     virtual boost::tuple<double,double> intersect(const Ray& r) const = 0;
-    
+
     /** \brief Get the type of Region
      *
      * Used for (de)serialization.  Preferably shouldn't be needed otherwise.

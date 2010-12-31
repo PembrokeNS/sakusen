@@ -30,7 +30,7 @@ class RectangleRegion : public Region<T> {
     inline Rectangle<T> getBoundingRectangle() const { return rectangle; }
     inline Box<sint32> getBoundingBox() const;
     inline boost::tuple<double,double> intersect(const Ray& r) const;
-    
+
     RegionType getType() const { return regionType_rectangle; }
 };
 

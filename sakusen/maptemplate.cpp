@@ -35,7 +35,7 @@ MapTemplate::MapTemplate(
   if (!(topRight >= bottomLeft)) {
     SAKUSEN_FATAL("map has negative dimension");
   }
-  
+
   for (std::vector<MapPlayMode>::iterator playMode = playModes.begin();
       playMode != playModes.end(); playMode++) {
     if (playMode->sanityCheck(universe, *this)) {
@@ -71,7 +71,7 @@ MapTemplate MapTemplate::load(
   archive >> dexPerPixel;
   archive >> gravity;
   archive.extract(playModes, context);
-  
+
   return MapTemplate(
       context.getUniverse(), internalName, topRight, bottomLeft,
       topology, heightfield, dexPerPixel, gravity, playModes

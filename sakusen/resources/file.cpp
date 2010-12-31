@@ -58,7 +58,7 @@ size_t File::getWholeFile(
     /* do nothing, since we were asked for the *whole* file */
     return 0;
   }
-  
+
   if (!stream.is_open()) {
     open();
   }

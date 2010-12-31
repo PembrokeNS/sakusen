@@ -30,7 +30,7 @@ enum Topology {
   /** Sphere with adjacent pairs of edges identified (singularities at top left
    * and bottom right)
    *
-   * \todo Possibly also the other sphere 
+   * \todo Possibly also the other sphere
    *
    * \note Using a spherical topology on a non-square map will cause
    * everything to go completely haywire */

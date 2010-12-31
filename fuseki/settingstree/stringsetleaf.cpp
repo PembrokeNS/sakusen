@@ -27,9 +27,9 @@ String StringSetLeaf::setValue(const String& v)
     return "When setting the value of a list leaf, the first character must "
         "be '0', '+' or '-'";
   }
-  
+
   set<String> newValue = value;
-  
+
   switch (v[0]) {
     case '0':
       if (v.length() > 1) {
@@ -62,7 +62,7 @@ String StringSetLeaf::setValue(const String& v)
   }
 
   String reason;
-  if ("" != 
+  if ("" !=
       (reason = server->settingAlteringCallback(this, newValue))
     ) {
     return reason;

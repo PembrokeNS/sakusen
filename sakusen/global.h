@@ -10,7 +10,7 @@
 #if defined(_MSC_VER)
 
   #if(_MSC_VER<1310)
-    /*1310 is VC2003. None of this will work with earlier compilers, and later 
+    /*1310 is VC2003. None of this will work with earlier compilers, and later
     ones are free, so there is really no reason to not upgrade */
     #error Need at least MSVC 7.1 to work.
   #endif
@@ -18,17 +18,17 @@
   #if (_MSC_VER<1600)
     /* This is a rather silly way of avoiding a warning on VC.
      * Essentially, specifying the exception type is ignored by the compiler,
-     * and generates warnings. 
+     * and generates warnings.
      * These warnings are not critical in any way, but I feel aspergic. */
     #define SAKUSEN_THROW_SPEC(a) throw(...)
   #endif
 
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
-//#if 0 
+//#if 0
 //If libsakusen was a dll, this would specify what is in the dll interface.
 //However, in order to make life easier, I am making it a static library.
-//Alas this does not work, because of C4251 and John doing funky things with global pointers. 
+//Alas this does not work, because of C4251 and John doing funky things with global pointers.
   #ifdef LIBSAKUSEN_EXPORTS
     #define LIBSAKUSEN_API   __declspec(dllexport)
     #define LIBSAKUSEN_EXIMP extern
@@ -39,27 +39,27 @@
   #endif
 
   /*4251: This warning is about members of exported classes not being exported.
-   * This is mostly to do with stuff from std, but in at least two cases it 
+   * This is mostly to do with stuff from std, but in at least two cases it
    * was very important.  This warning should be enabled every now and again for checking. */
   /*4275: This warning is about exported classes having non-exported classes as a base.
    * Mostly to do with boost libraries. */
   #pragma warning(disable: 4715 4345 4275 4251)
   #ifdef _DEBUG
-        #pragma warning(disable:4503)  
-   //This warning is about exceeding the limit of decorated name lengths. 
+        #pragma warning(disable:4503)
+   //This warning is about exceeding the limit of decorated name lengths.
    //Checked iterator Stlport does this a lot.
   #endif
-  /* 4345 is a warning about a change from VS 2003. We don't care. 
+  /* 4345 is a warning about a change from VS 2003. We don't care.
    * 4715: Disable "not all code paths return a value" warning because the
    * compiler is too stupid to exhibit it properly */
 
-  //Alias of __PRETTY_FUNCTION for 
+  //Alias of __PRETTY_FUNCTION for
   #define __PRETTY_FUNCTION__ __FUNCDNAME__
 
   /* Try to prevent min and max macros being defined.  They cause name
    * clashes, and the inline function versions are better anyway */
   #define NOMINMAX
-  
+
   /*Define types the MSVC way */
   typedef signed __int8          sint8;
   typedef unsigned __int8        uint8;
@@ -100,7 +100,7 @@
   typedef int64_t  sint64;
 #elif defined(SWIG)
   #define LIBSAKUSEN_API
-  
+
   #ifndef _WIN32
     %include "stdint.i"
     typedef uint8_t  uint8;

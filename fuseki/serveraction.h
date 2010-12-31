@@ -40,7 +40,7 @@ class ClientChangeSettingAction : public ServerAction {
  * any client has admin status.  If there is no such client, and one is willing
  * to assume admin status, then that client is automatically promoted to admin
  * status.
- * 
+ *
  * This is used if any client loses admin status or leaves or permits admin
  * status. */
 class EnsureAdminExistsAction : public ServerAction {

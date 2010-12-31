@@ -86,7 +86,7 @@ bool WeaponStatus::incrementState(WeaponTypeId type, MaterielProvider& provider)
   /** \todo Do we need a separate cap for charge?  For now we use the cost. */
   const uint32 energyCap = typePtr->getEnergyCost();
   const uint32 metalCap = typePtr->getMetalCost();
-  
+
   /*requestEnergy subtracts the resources from availableEnergy. Ditto metal*/
   energyCharge += provider.requestEnergy(
       min<uint32>(energyCap-energyCharge, typePtr->getEnergyRate())

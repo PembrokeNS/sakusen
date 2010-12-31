@@ -172,7 +172,7 @@ bool OptionsParser::parse(
             errors.push_back("no option name after '--no-'");
           } else {
             OptionContainer::iterator optionIt = options.find(optionName);
-            
+
             if (optionIt != options.end() && (*optionIt)->isBoolean()) {
               (*optionIt)->setBoolean(false);
             } else {

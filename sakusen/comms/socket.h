@@ -14,7 +14,7 @@ namespace sakusen {
 namespace comms {
 
 /** \brief This is a generic class for representing any type of socket.
- * 
+ *
  * Socket::newConnectionToAddress() and Socket::newBindingToAddress() can be
  * used to create Sockets.
  *
@@ -45,7 +45,7 @@ class LIBSAKUSEN_COMMS_API Socket : private boost::noncopyable {
      * SAKUSEN_FATAL()s on failure.
      */
     static void socketsInit(void);
-    
+
   /* Abstract class - all constructors must be protected */
   protected:
     Socket();

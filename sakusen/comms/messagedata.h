@@ -22,7 +22,7 @@ class LIBSAKUSEN_COMMS_API MessageData {
     MessageData();
     MessageData(const MessageData& copy);
     mutable Buffer buffer;
-    
+
     virtual void fillArchive(OArchive&) const = 0;
   public:
     virtual ~MessageData();

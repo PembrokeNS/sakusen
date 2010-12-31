@@ -176,7 +176,7 @@ void Ray::getAllInteractionsTo(
       }
     }
   }
-  
+
   /* Intersections with units and Effects */
   set<Intersection, LessThanIntersectionPosition> otherIntersections =
     world->getSpatialIndex()->findIntersections(*this, extent, interesting);

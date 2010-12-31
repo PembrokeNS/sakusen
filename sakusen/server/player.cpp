@@ -106,7 +106,7 @@ void Player::detachClient(Client* client)
     clients.erase(c);
     return;
   }
-  
+
   SAKUSEN_DEBUG("Tried to detach an unattached client");
 }
 

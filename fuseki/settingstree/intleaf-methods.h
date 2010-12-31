@@ -20,7 +20,7 @@ IntLeaf<T>::IntLeaf(
   Leaf(name, readers, writers, parent, server),
   value(v)
 {
-}  
+}
 
 template<typename T>
 String IntLeaf<T>::setValue(const String& s)

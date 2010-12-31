@@ -24,7 +24,7 @@
     #define LIBSAKUSEN_RESOURCES_EXIMP extern
   #else
     #define LIBSAKUSEN_RESOURCES_API   __declspec(dllimport)
-    #define LIBSAKUSEN_RESOURCES_EXIMP 
+    #define LIBSAKUSEN_RESOURCES_EXIMP
   #endif
 #else
   #if defined(__GNUC__) && (__GNUC__ >= 4)

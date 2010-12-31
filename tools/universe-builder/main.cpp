@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     if (exists(gladeFile)) {
       Glib::RefPtr<Gnome::Glade::Xml> refXml =
         Gnome::Glade::Xml::create(gladeFile.file_string());
-  
+
       UI ui(refXml, resourceInterface);
 
       return 0;

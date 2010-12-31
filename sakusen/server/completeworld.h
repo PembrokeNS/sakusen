@@ -56,7 +56,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     /** \brief Spatial index to the objects in the game universe
      * (including at least units and effects) */
     ISpatial::Ptr spatialIndex;
-    
+
     /** New effects which have been added this tick and still have to have
      * their methods called
      *
@@ -114,15 +114,15 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
       return getLayeredUnit(player, unitId);
     }
     //@}
-    
+
     Ref<LayeredUnit> addUnit(const LayeredUnit::Ptr& unit, PlayerId owner);
     void removeUnit(LayeredUnit*);
-    
+
     /** \warning This has to be a non-const return for stuff that happens in
      * Player::checkSensorReturns to work, but don't abuse it.  In particular,
      * don't add or remove elements */
     inline hash_list<LayeredUnit, Bounded>& getUnits(void) { return units; }
-    
+
     /** \brief Add a Ballistic to the world.
      *
      * This is the appropriate function to call from module code when creating
@@ -135,7 +135,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     inline const hash_list<Ballistic>& getBallistics(void) const {
       return ballistics;
     }
-    
+
     /** \brief Add a Beam to the world.
      *
      * This is the appropriate function to call from module code when creating
@@ -185,7 +185,7 @@ class LIBSAKUSEN_SERVER_API CompleteWorld : public World {
     }
 
     inline ISpatial::ConstPtr getSpatialIndex() const { return spatialIndex; }
-    
+
     /** \brief Get pointer to player of given id. */
     inline Player* getPlayerPtr(const PlayerId& id)
     {

@@ -58,7 +58,7 @@ void Mode::addCommand(const String& name, const Command& cmd, UI* ui)
           while (!abbrev.empty()) {
             existing = commands.find(abbrev);
             assert(existing != commands.end());
-            
+
             if (existing->second.getType() == commandType_abbreviation) {
               existing->second = Command(name);
             } else {

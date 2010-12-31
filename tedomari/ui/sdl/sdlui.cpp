@@ -43,7 +43,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   debug = options.debug;
 #endif
   TEDOMARI_UI_SDL_DEBUG("Enabled SDL debugging output");
-  
+
   /* Initialize SDL */
   if (-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
     SAKUSEN_FATAL(SDL_GetError());
@@ -66,7 +66,7 @@ SDLUI::SDLUI(const Options& options, ifstream& uiConf, Game* game) :
   } else {
     flags |= SDL_SWSURFACE;
   }
-  
+
   screen = SDL_SetVideoMode(getWidth(), getHeight(), TEDOMARI_UI_SDL_BITS_PER_PIXEL, flags);
   if (screen == NULL) {
     SAKUSEN_FATAL(SDL_GetError());
@@ -120,7 +120,7 @@ void SDLUI::resize(uint16 width, uint16 height)
 OptionsParser SDLUI::getParser(Options* options)
 {
   OptionsParser parser(',');
-  
+
   parser.addOption("w",             '\0', &options->width);
   parser.addOption("h",             '\0', &options->height);
   parser.addOption("help",          '\0', &options->help);
@@ -211,7 +211,7 @@ void SDLUI::update()
 
   /* Call superclass update method */
   UI::update();
-  
+
   /* Update the display */
   /** \todo Update only that portion which has been altered */
   if (0 != SDL_BlitSurface(sdlBuffer, NULL, screen, NULL)) {

@@ -105,7 +105,7 @@ class LIBSAKUSEN_API SensorReturns : public ISensorReturns {
     static SensorReturns load(IArchive&, const DeserializationContext&);
 };
 
-/** \brief Function object to extract the id from an SensorReturns */ 
+/** \brief Function object to extract the id from an SensorReturns */
 struct SensorReturnsIder {
   SensorReturnsId operator()(const Ref<SensorReturns>& s) const {
     return s->getId();

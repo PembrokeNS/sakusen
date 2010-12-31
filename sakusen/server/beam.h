@@ -30,7 +30,7 @@ class LIBSAKUSEN_SERVER_API Beam : protected Ray {
      * the unit that created it is destroyed.
      */
     Time endTime;
-    
+
     /** The default ctr is private to stop people creating an uninitialized
      * Beam.
      */

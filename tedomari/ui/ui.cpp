@@ -50,7 +50,7 @@ UI::UI(tedomari::ui::Region* region, ifstream& uiConf, Game* g) :
 
   list<String> tokens;
   uint16 depth = 0;
-  
+
   /* Execute all the commands from the configuration stream */
   while (uiConf.is_open() && !uiConf.eof()) {
     String line;
@@ -174,7 +174,7 @@ void UI::resize(tedomari::ui::Region* newRegion)
   replaceRegion(newRegion);
 
   alignSubControls();
-  
+
   paint();
 }
 
@@ -300,7 +300,7 @@ void UI::executeCommand(const String& cmdName, std::list<String>& args)
     );
   u_map<String, Command>::type::const_iterator cmd =
     mode->getCommands().find(cmdName);
-  
+
   if (cmd != mode->getCommands().end()) {
     cmd->second.execute(args, this);
   } else {
@@ -320,7 +320,7 @@ void UI::executeCommand(std::list<String>& tokens)
       token->erase(token->end()-1);
     }
   }
-    
+
   String cmdName = tokens.front();
   tokens.pop_front();
   executeCommand(cmdName, tokens);
@@ -534,7 +534,7 @@ void UI::addBinding(
     alert(Alert("Unknown modified key name '" + keyName + "'"));
     return;
   }
-  
+
   if (mode == "all") {
     /* Special case: add to all modes */
     for (u_map<String, Mode>::type::iterator modeIt = modes.begin();
@@ -771,7 +771,7 @@ void UI::move(const std::set<sakusen::UnitId>& units, const Position& target)
 {
   const Map* map = sakusen::world->getMap();
   Order moveOrder = Order(new MoveOrderData(target));
-  
+
   BOOST_FOREACH (UnitId unitId, units) {
     Ref<UpdatedUnit> unit = client::world->getUnitsById()->find(unitId);
     if (unit) {

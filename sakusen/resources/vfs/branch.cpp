@@ -28,7 +28,7 @@ Branch::Ptr Branch::getRoot() const
 String Branch::getSakusenPath() const
 {
   Ptr p = parent.lock();
-  
+
   if (!p) {
     /* At top of resource tree */
     assert(name.empty());
@@ -102,7 +102,7 @@ boost::tuple<Resource, ResourceSearchResult> Branch::search(
   String next = splitPath.front();
   splitPath.pop_front();
   std::list<Resource> candidates = currentBranch->getResources(next, extension);
-  
+
   /* See if we found nothing at all */
   if (candidates.empty()) {
     return boost::make_tuple(Resource(), resourceSearchResult_notFound);
