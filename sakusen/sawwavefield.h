@@ -8,7 +8,6 @@
 #include <boost/range/end.hpp>
 #include <boost/range/size.hpp>
 
-#include <sakusen/global.h>
 #include <sakusen/lcgiterator.h>
 #include <sakusen/mathsutils.h>
 
