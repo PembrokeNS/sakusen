@@ -96,7 +96,7 @@ class socketModel():
 				sf.mapmodel = mapmodel
 				e.mapmodel = mapmodel
 				gamescene.addItem(mapmodel.i)
-				self.mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
+				#self.mainwindow.ui.gameview.setViewport(QtOpenGL.QGLWidget())
 				self.mainwindow.ui.gameview.setScene(gamescene)
 				self.mainwindow.ui.gameview.centerOn(mapmodel.i) #for now, map should be initially centered
 				self.mainwindow.ui.gameview.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
