@@ -3,6 +3,7 @@
 
 #include <limits>
 
+#include <boost/cstdint.hpp> // For UINT64_C
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
