@@ -206,6 +206,15 @@
    obj:/lib/ld-2.6.so
 }
 {
+   libld stuff
+   Memcheck:Cond
+   fun:_dl_relocate_object
+   fun:dl_main
+   fun:_dl_sysdep_start
+   fun:_dl_start
+   obj:/lib64/ld-2.11.2.so
+}
+{
    libld nonsense
    Memcheck:Addr4
    obj:/lib/ld-2.6.1.so
