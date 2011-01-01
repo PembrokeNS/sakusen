@@ -88,7 +88,6 @@
   #define LIBSAKUSEN_METHOD_DEFINITIONS
 
   /* Define types the gcc way. */
-  #define __STDC_CONSTANT_MACROS
   #include <stdint.h>
   typedef uint8_t  uint8;
   typedef int8_t   sint8;
