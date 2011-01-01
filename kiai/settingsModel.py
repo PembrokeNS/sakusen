@@ -3,6 +3,7 @@
 from PyQt4 import QtCore
 
 import string
+from sys import version_info
 
 from sakusen_comms import *
 
@@ -105,7 +106,8 @@ class settingsModel(QtCore.QAbstractItemModel):
 		if(index.isValid() and index.column()==1): return QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
 		else: return QtCore.Qt.ItemIsEnabled|QtCore.Qt.ItemIsSelectable
 	def setData(self,index,value,role):
-		if(index.isValid()): 
+		if(index.isValid()):
+			if(version_info[0] <= 2): value = value.toString()
 			self.setSetting(self.l[index.internalId()].path,str(value))
 			return True
 		else:
