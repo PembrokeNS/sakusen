@@ -635,3 +635,15 @@ namespace sakusen{
   %template(mtsave) save<sakusen::MapTemplate>;
 }
 %template(MapTemplatePtr) boost::shared_ptr<sakusen::MapTemplate>;
+%include "sakusen/fileutils.h"
+%{
+#include "sakusen/fileutils.h"
+%}
+#ifdef SWIGPYTHON
+%extend boost::filesystem::path {
+        boost::filesystem::path __truediv__(boost::filesystem::path *other) {
+                return (*$self) / (*other);
+        }
+}
+#endif
+
