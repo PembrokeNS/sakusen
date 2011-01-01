@@ -16,7 +16,7 @@ Rectangle<sint32> ICompleteUnit::getBoundingRectangle(void) const
   const Point<sint32>& pos = frame.getPosition();
   const Orientation& orientation = frame.getOrientation();
   const Point<uint32>& size = getITypeData().getSize();
-  
+
   for (int i=0; i<2; i++) {
     dExtents[i] = 0;
     for (int j=0; j<3; j++) {

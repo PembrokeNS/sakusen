@@ -29,7 +29,7 @@ void Function::execute(const list<String>& argsList, UI* ui) const
       newBody.push_back(*b);
     }
   }
-  
+
   ui->executeCommands(newBody);
 }
 

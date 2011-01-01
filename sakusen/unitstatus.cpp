@@ -118,13 +118,13 @@ UnitStatus UnitStatus::load(
   UnitTypeId type;
   Point<sint16> velocity;
   AngularVelocity angularVelocity;
-  
+
   /* status stuff */
   HitPoints hitPoints;
   bool radarIsActive;
   bool sonarIsActive;
   std::vector<WeaponStatus> weaponsStatus;
-  
+
   in >> typeName;
   type = context.getUniverse()->getUnitTypeId(typeName);
   Frame frame = Frame::load(in);

@@ -28,7 +28,7 @@ class LIBSAKUSEN_API WeaponOrders {
         const Ref<ISensorReturns>& targetSensorReturns,
         const NumberTarget targetNumber
       );
-    
+
     WeaponTargetType targetType;
     Position targetPosition;
     Frame targetFrame;
@@ -48,7 +48,7 @@ class LIBSAKUSEN_API WeaponOrders {
     /*@}*/
 
     void clear();
-    
+
     /** \brief Update according to the instructions in the given order */
     void update(const Order& order);
 

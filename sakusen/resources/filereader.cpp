@@ -1,10 +1,7 @@
 #include <sakusen/resources/filereader.h>
 
-#include <sakusen/resources/fileutils.h>
+#include <sakusen/fileutils.h>
 #include <sakusen/resources/fileioexn.h>
-
-#include <fcntl.h>
-#include <stdio.h>
 
 namespace sakusen {
 namespace resources {
@@ -33,7 +30,7 @@ Buffer FileReader::getBuffer()
   if (length > (1 << 20)) {
     SAKUSEN_FATAL("file size exceeded arbitrary limit");
   }
-  
+
   size_t lengthAsSizeT = static_cast<size_t>(length);
   Buffer buffer(length);
   size_t bytesRead = getWholeFile(buffer.get(), length);

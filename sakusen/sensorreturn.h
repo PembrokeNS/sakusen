@@ -22,7 +22,7 @@ struct LIBSAKUSEN_API SensorReturn {
     SensorReturn(Perception p) :
       perception(p)
     {}
-    
+
     Perception perception;
 
     /** \brief Reset the SensorReturn to indicate that it carries no
@@ -30,7 +30,7 @@ struct LIBSAKUSEN_API SensorReturn {
     inline void clear() {
       perception = perception_none;
     }
-    
+
     void store(OArchive&) const;
     static SensorReturn load(IArchive&);
 };

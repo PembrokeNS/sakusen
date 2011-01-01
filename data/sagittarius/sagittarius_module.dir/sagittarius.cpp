@@ -211,7 +211,7 @@ void TorpedoLauncher::onFire(const Ref<LayeredUnit>& firer, const WeaponStatus& 
 	tv.normalise();
 	tv *= 30000;
 	BOOST_AUTO(u, LayeredUnit::spawn(PlayerId::fromString("0"), /* All torpedoes are neutral */
-	server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv))); 
+	server::world->getUniverse()->getUnitTypeId("torp"), Frame(tp, angle), Velocity(tv)));
 	BOOST_AUTO(f, boost::shared_ptr<TorpedoFuse>(new TorpedoFuse(HitPoints(200 * (boost::dynamic_pointer_cast<SagPlayerData, PlayerData>(server::world->getPlayerPtr(firer->getOwner())->playerData))->attack)))); /* can't use TorpedoFuse::Ptr as ambiguous */
 	u->insertLayer(f);
 	lastFire = server::world->getTimeNow();

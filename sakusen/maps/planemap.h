@@ -42,7 +42,7 @@ class PlaneMap : public MapType {
     {
       p = pos;
       bool truncated = false;
-      
+
       if (p.x<this->left()) {
         p.x = this->left();
         truncated = true;

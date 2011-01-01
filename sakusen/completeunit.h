@@ -36,7 +36,7 @@ class LIBSAKUSEN_API CompleteUnit : public ICompleteUnit {
   protected:
     UnitId unitId;
     UnitStatus status;
-    
+
     /* modifiable stuff from UnitType */
     UnitTypeData typeData;
   public:

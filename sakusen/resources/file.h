@@ -12,7 +12,7 @@ namespace sakusen {
 namespace resources {
 
 /** \brief Class representing a file on disk with appropriate helper functions
- * 
+ *
  * \bug Methods marked as throwing FileIOExns (and maybe other methods), may
  * also throw std::ios_base::failure or boost::filesystem::filesystem_error. */
 class File : private boost::noncopyable {
@@ -27,7 +27,7 @@ class File : private boost::noncopyable {
     uint64 length; /**< The length of the file */
     /** true iff we know the length of the file (i.e. \a length is valid) */
     bool lengthIsKnown;
-    
+
     virtual void open() = 0;
     int close();
   public:

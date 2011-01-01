@@ -150,7 +150,7 @@ void Server::addClient(
   }
 
   Socket::Ptr socket;
-  
+
   if (requestedAddress != "") {
     socket = Socket::newConnectionToAddress(requestedAddress);
   } else if (NULL != existingSocket) {
@@ -202,7 +202,7 @@ void Server::handleClientMessages()
     } else {
       try {
         client->flushIncoming();
-        
+
         while (!client->messageQueueEmpty()) {
           const Message& message = client->messageQueuePopFront();
 
@@ -295,7 +295,7 @@ void Server::handleClientMessages()
         clientRemoved = true;
       }
     }
-    
+
     if (clientRemoved) {
       /* erasing invalidates the iterator */
       clientIt = clients.begin();
@@ -471,7 +471,7 @@ void Server::serve()
   signal(SIGINT, &interruptHandler);
   signal(SIGTERM, &interruptHandler);
   out << "Server started.  Hit Ctrl+C to interrupt and shut down server.\n";
-  
+
 #ifndef DISABLE_UNIX_SOCKETS
   unixSocket->setNonBlocking(true);
 #endif
@@ -482,7 +482,7 @@ void Server::serve()
   /* A list of incoming (probably TCP) connections where we expect to get join
    * messages from prospective clients */
   list<pair<Socket::Ptr, timeval> > newConnections;
-  
+
 #ifndef DISABLE_AVAHI
   /* Start up the mDNS publisher. */
   MdnsPublisher publisher(gameToAdvertise);
@@ -519,7 +519,7 @@ void Server::serve()
       }
     }
 #endif // DISABLE_UNIX_SOCKETS
-    
+
     /* If we have a separate tcp socket then check for messages there too */
     if (tcpSocket != NULL) {
       while (true) {
@@ -527,7 +527,7 @@ void Server::serve()
         if (newConnection == NULL) {
           break;
         }
-        
+
         newConnection->setNonBlocking(true);
         timeval timeout;
         timeUtils_getTime(&timeout);
@@ -583,7 +583,7 @@ void Server::serve()
         }
       }
     }
-    
+
     /* Process client messages */
     handleClientMessages();
 
@@ -596,7 +596,7 @@ void Server::serve()
 #endif
       gameToAdvertiseChanged = false;
     }
-    
+
     timeUtils_sleep(sleepTime);
     if (dots) {
       out << "." << flush;
@@ -639,7 +639,7 @@ void Server::serve()
 
     /** \todo The part where we wait for the clients to initialize themselves
      * */
-    
+
     gameStarted = true;
 
     /* Now we have the real game loop */
@@ -654,13 +654,13 @@ void Server::serve()
         listeners.begin(); listener != listeners.end(); ++listener) {
       listener->second.apply_visitor(gp)->gameStart();
     }
-    
+
     /* Note: henceforth, do not use the local field 'players', because world has
      * a copy of it - that's the one that must be worked with */
     struct timeval timeNow;
     struct timeval timeForNextTick;
     bool warnedLastTime = false;
-    
+
     while (!interrupted) {
       /* find out when we aim to start the next tick */
       timeUtils_getTime(&timeNow);
@@ -678,7 +678,7 @@ void Server::serve()
           listeners.begin(); listener != listeners.end(); ++listener) {
         listener->second.apply_visitor(gp)->ticksMessagesDone();
       }
-      
+
       /* Do the game's stuff */
       sakusen::server::world->incrementGameState();
 
@@ -687,7 +687,7 @@ void Server::serve()
           clients.begin(); clientIt!=clients.end(); ) {
         RemoteClient* client = clientIt->second;
         bool clientRemoved = false;
-        
+
         try {
           client->flushOutgoing(sakusen::server::world->getTimeNow());
         } catch (SocketExn& e) {
@@ -696,7 +696,7 @@ void Server::serve()
           removeClient(client);
           clientRemoved = true;
         }
-        
+
         if (clientRemoved) {
           /* erasing invalidates the iterator */
           clientIt = clients.begin();
@@ -710,7 +710,7 @@ void Server::serve()
           listeners.begin(); listener != listeners.end(); ++listener) {
         listener->second.apply_visitor(gp)->tickDone();
       }
-      
+
       if (dots && sakusen::server::world->getTimeNow() % 16 == 0) {
         out << "." << flush;
       }
@@ -730,7 +730,7 @@ void Server::serve()
 
     delete sakusen::server::world;
   }
-  
+
   if (interrupted) {
     out << "Server interrupted.  Shutting down." << endl;
     while (!clients.empty()) {
@@ -768,7 +768,7 @@ void Server::checkForGameStart()
  * any client has admin status.  If there is no such client, and one is willing
  * to assume admin status, then that client is automatically promoted to admin
  * status.
- * 
+ *
  * This is called if any client loses admin status or leaves or permits admin
  * status. */
 void Server::ensureAdminExists()
@@ -812,9 +812,9 @@ void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
   } else {
     SAKUSEN_FATAL("unexpected node type");
   }
-  
+
   NotifySettingMessageData data(fullName, altered->isLeaf(), value);
-  
+
   /* Inform everyone with read permission that the setting was altered */
   for (u_map<ClientId, RemoteClient*>::type::iterator clientIt =
       clients.begin(); clientIt != clients.end(); ++clientIt) {
@@ -822,7 +822,7 @@ void Server::settingAlteredCallback(settingsTree::Node::Ptr altered)
     if (client->hasReadPermissionFor(altered)) {
       try {
         client->send(new NotifySettingMessageData(data));
-        
+
         /* clear readiness flag if desired */
         if (client->isAutoUnready() && !isReadinessChange) {
           changeInClientBranch(client, "ready", "false");

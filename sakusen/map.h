@@ -77,20 +77,20 @@ class LIBSAKUSEN_API Map {
     {
       return bottomLeft <= p && p < topRight;
     }
-    
+
     inline uint16 getGravity(void) const { return gravity; }
 
     /* game mechanics */
-    
+
     /** \brief Resolves any point in space into one within the bounds of the
      * map
-     * 
+     *
      * Takes the position \a pos, and adjusts it (through wrapping and
      * truncation) to force it into the map
      * area, returning the adjusted value through resolved.  Returns true
      * iff truncation was necessary.  Note that truncation means exactly that -
      * it will not return true simply because it wrapped over a map edge.
-     * 
+     *
      * The \a orientation argument (if not \c NULL)
      * is updated by prepending rotations and
      * reflections as appropriate when transitioning over map edges.
@@ -113,10 +113,10 @@ class LIBSAKUSEN_API Map {
         const Point<sint32>& pos, Point<sint32>& resolved) const {
       return resolvePosition(pos, resolved, NULL);
     }
-    
+
     /** \brief Increments the given \a pos by \a inc, taking into account map
      * topology
-     * 
+     *
      * This method guaranteed to yield a point inside the map, even at the
      * cost of truncation
      */
@@ -174,7 +174,7 @@ class LIBSAKUSEN_API Map {
         mapOrientationChange * Orientation(angularVelocity) *
         frame.getOrientation();
     }
-    
+
     /** \brief Finds the shortest vector from op2 to op1
      *
      * Intuitively, this function returns \a op1 - \a op2.
@@ -186,10 +186,10 @@ class LIBSAKUSEN_API Map {
     virtual Point<sint32> getShortestDifference(
         const Point<sint32>& op1, const Point<sint32>& op2
       ) const = 0;
-    
+
     template<typename MapType>
     static MapType* newMap(const MapTemplate& t);
-    
+
     template<typename MapType>
     static MapType* newMap(
         Topology topology,

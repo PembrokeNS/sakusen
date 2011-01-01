@@ -58,13 +58,13 @@ CompleteWorld::CompleteWorld(
     SAKUSEN_FATAL("A World must have at least a neutral player.");
   }
   const MapPlayMode* playMode = &m.getPlayModes()[mode];
-  
+
   vectorSize = players.size();
   numPlayers = static_cast<uint32>(vectorSize);
   if (!playMode->acceptableNumberOfPlayers(numPlayers)) {
     SAKUSEN_FATAL("Number of players not acceptable for this map and mode");
   }
-  
+
   /* check player ids */
   for (PlayerId i; i < numPlayers; ++i) {
     if (!i.valid()) {
@@ -128,7 +128,7 @@ CompleteWorld::CompleteWorld(
           universe->getScriptModule(), result, resourceInterface->getError()
         );
   }
-  
+
   /* put units on the map as specified in MapPlayMode */
   for (PlayerId i; i < numPlayers; ++i) {
     std::vector<UnitTemplate> playersUnits =
@@ -146,7 +146,7 @@ CompleteWorld::~CompleteWorld()
   fuseMap.clear();
   /* Clear units lest they outlive the sensor returns from them */
   units.clear();
-  
+
   delete map;
   map = NULL;
 
@@ -161,7 +161,7 @@ void CompleteWorld::applyEffect(
   /** \bug Using point-to-member-function here because it has the minimal code
    * duplication.  This is possibly too slow.  To speed it up this method could
    * be inlined, so that \p method becomes a constant */
-  
+
   /* We can't just iterate over the units and mess with them directly, because
    * if they get destroyed then the iterator will be invalidated, and
    * segfaults ensue.  Instead, we first collect Refs to all the affected
@@ -178,7 +178,7 @@ void CompleteWorld::applyEffect(
       affectedUnits.push(unit);
     }
   }
-  
+
   while (!affectedUnits.empty()) {
     Ref<LayeredUnit> unit = affectedUnits.front();
     affectedUnits.pop();
@@ -279,19 +279,19 @@ void CompleteWorld::advanceGameState(Time timeToReach)
 void CompleteWorld::incrementGameState(void)
 {
   bool effectHappened;
-  
+
   /* sanity check */
   assert(world == this);
-  
+
   /* apply incoming orders */
   for (std::vector<Player>::iterator player = players.begin();
       player != players.end(); player++) {
     player->applyIncomingOrders();
   }
-  
+
   /* advance game time */
   timeNow++;
-  
+
   /* process units */
   /* The two iterators are needed because units can die while being updated */
   /** \bug What if both *j and *k die while j is being updated? */
@@ -327,14 +327,14 @@ void CompleteWorld::incrementGameState(void)
       ++beam;
     }
   }
-  
+
   /* Next we deal with all effects that already exist (as opposed to newly
    * created ones, which are dealt with in the loop below) */
   for (hash_list<Effect, Bounded>::iterator effect = effects.begin();
       effect != effects.end(); ) {
     effect = processEffect(effect);
   }
-  
+
   do {
     /* check fuses */
     FuseEntry fuseEntry;
@@ -367,7 +367,7 @@ void CompleteWorld::incrementGameState(void)
     }
 
     effectHappened = false;
-    
+
     while (!newEffects.empty()) {
       effectHappened = true;
 
@@ -386,14 +386,14 @@ void CompleteWorld::incrementGameState(void)
      * Effects can cause Fuses which can cause Effects
      * again, all in the course of one game cycle, not to mention
      * the fact that dying units also cause things, etc. */
-  
+
   /* create the appropriate sensor returns and send them to clients,
    * as well as informing them of the removal of old ones */
   for (vector<Player>::iterator player = players.begin();
       player != players.end(); ++player) {
     player->checkSensorReturns();
   }
-  
+
   /** \todo send to clients:
    * - newly explored/altered portions of the map */
 

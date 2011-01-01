@@ -1,26 +1,27 @@
 /* This is intended to be a quick and superficial test of libsakusen, although
  * with luck it will become less superficial over time */
 
-#include <sakusen/server/global.h>
-#include <sakusen/point.h>
-#include <sakusen/sphereregion.h>
-#include <sakusen/region.h>
-#include <sakusen/resourceinterface-methods.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/fileresourceinterface.h>
-#include <sakusen/server/completeworld.h>
-#include <sakusen/server/debuggingclient.h>
-#include "patrollerclient.h"
+#include <cerrno>
+#include <iostream>
 
 #include <time.h>
+
 #ifdef ENABLE_LTDL_HACKED
   #include <ltdl_hacked/ltdl_hacked.h>
 #else
   #include <ltdl.h>
 #endif
 
-#include <iostream>
-#include <cerrno>
+#include <sakusen/server/global.h>
+#include <sakusen/point.h>
+#include <sakusen/sphereregion.h>
+#include <sakusen/region.h>
+#include <sakusen/resourceinterface-methods.h>
+#include <sakusen/fileutils.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include <sakusen/server/completeworld.h>
+#include <sakusen/server/debuggingclient.h>
+#include "patrollerclient.h"
 
 #define NANO 1000000000 /* Nanoseconds in a second */
 
@@ -76,7 +77,7 @@ void doLoadTest(ostream& output)
   cout << "Test complete." << endl;
   if (0 != timeTaken) {
     cout << "Tickrate: "<<1000 * numTicks / timeTaken<<" tps "<<endl;
-  } 
+  }
   else {
     cout<<"Test too fast to time."<<endl;
   }
@@ -89,15 +90,14 @@ int main(/* int argc, char** argv */)
   if (lt_dlinit()) {
     SAKUSEN_FATAL("lt_dlinit() failed");
   }
-  
+
   boost::filesystem::path::default_name_check(
       boost::filesystem::portable_posix_name
     );
-  boost::filesystem::path homePath = fileUtils_getHome();
   boost::filesystem::path dataDir =
-    homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR;
+    fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path dotDot("..");
-  
+
   cout << "Creating ResourceInterface with data root " <<
     dataDir.native_directory_string() << endl;
   vector<boost::filesystem::path> dataDirs;
@@ -106,10 +106,10 @@ int main(/* int argc, char** argv */)
   dataDirs.push_back(dotDot/"data");
   dataDirs.push_back(dotDot/".."/"data");
   dataDirs.push_back(dotDot/".."/".."/"data");
-  
+
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, true);
-  
+
   /* Create a debugging client */
   DebuggingClient client(ClientId(), cout);
   vector<Client*> clients;
@@ -122,7 +122,7 @@ int main(/* int argc, char** argv */)
   boost::tie(universe, result, boost::tuples::ignore) =
     resourceInterface->search<Universe>("test/universe");
   cout << "Result of reload was " << result << endl;
-  
+
   switch(result) {
     case resourceSearchResult_error:
       cout << "Error was: " << resourceInterface->getError() << endl;
@@ -139,7 +139,7 @@ int main(/* int argc, char** argv */)
   boost::tie(mapTemplate, result, boost::tuples::ignore) =
     resourceInterface->search<MapTemplate>("test/map", universe);
   cout << "Result of reload was " << result << endl;
-  
+
   switch(result) {
     case resourceSearchResult_error:
       cout << "Error was: " << resourceInterface->getError() << endl;
@@ -164,23 +164,23 @@ int main(/* int argc, char** argv */)
 
   /* Now another test, this time with a unit */
   cout << "Performing test with one unit each..." << endl;
-  
+
   /* Create the world */
   World* w =
     new CompleteWorld(*mapTemplate, 0 /* mode */, players, resourceInterface);
-  
+
   doLoadTest(cout);
   delete w;
   w = NULL;
 
   /* Do a test with a unit patrolling */
   cout << "Performing test with a patrolling unit..." << endl;
-  
+
   PatrollerClient patrollerClient(
       ClientId::fromInteger(1), Point<sint32>(50000, 0, 1000)
     );
   players.back().attachClient(&patrollerClient);
-  
+
   w = new CompleteWorld(*mapTemplate, 0 /* mode */, players, resourceInterface);
   doLoadTest(cout);
   delete w;
@@ -192,7 +192,7 @@ int main(/* int argc, char** argv */)
 #ifdef _MSC_VER
   cout<<"Total time taken: "<<clock()<<"ms"<<endl;
 #endif
-  
+
   /* ltdl finalization */
   if (lt_dlexit()) {
     SAKUSEN_FATAL("lt_dlexit() failed");

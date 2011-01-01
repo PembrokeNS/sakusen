@@ -20,7 +20,7 @@ class Reader : private boost::noncopyable {
   public:
     virtual ~Reader() = 0;
     /** \brief Get the entire content of the Reader into a buffer of bytes in
-     * one go. 
+     * one go.
      *
      * Throws exception on error. */
     virtual Buffer getBuffer() = 0;

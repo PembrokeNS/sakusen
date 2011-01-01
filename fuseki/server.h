@@ -1,8 +1,6 @@
 #ifndef FUSEKI__SERVER_H
 #define FUSEKI__SERVER_H
 
-#include <sakusen/global.h>
-
 #include "global.h"
 
 #include <iosfwd>
@@ -157,7 +155,7 @@ class Server : public SettingsUser, private boost::noncopyable {
     inline bool getAllowObservers() const { return allowObservers; }
     /** \brief Determine if the game hosted by the Server has yet started */
     inline bool isGameStarted() const { return gameStarted; }
-    
+
     void serve();
     void checkForGameStart();
     void ensureAdminExists();

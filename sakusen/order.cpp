@@ -31,7 +31,7 @@ Order Order::load(IArchive& in, const DeserializationContext& context)
 {
   OrderType type;
   in.extractEnum(type);
-  
+
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
   SAKUSEN_STATIC_ASSERT(orderType_max == 11);

@@ -92,13 +92,13 @@ String LIBSAKUSEN_API stringUtils_getSecureHashAsString(
     SAKUSEN_FATAL("error initing hash");
   }
   */
-  
+
   mhash(thread, buffer, length);
 
   uint8 hash[32];
-  
+
   mhash_deinit(thread, hash);
-  
+
   return sakusen::stringUtils_bufferToHex(hash, 32);
 }
 

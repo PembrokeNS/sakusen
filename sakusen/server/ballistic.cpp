@@ -48,7 +48,7 @@ bool Ballistic::resolveIntersections()
     onCollision(path.evaluate(collisions.begin()->getPosition()));
     return true;
   }
-  
+
   return false;
 }
 

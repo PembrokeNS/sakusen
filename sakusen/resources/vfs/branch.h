@@ -36,16 +36,16 @@ class Branch : private boost::noncopyable {
     /** \brief Get the full sakusen path of this branch */
     String getSakusenPath() const;
     /** \brief Get the root of the resource hierarchy.
-     * 
+     *
      * this is more useful than just using root, because it never yields null.
      * */
     Ptr getRoot() const;
-    /** \brief Get a sub-branch of this one with name exactly \p name. 
+    /** \brief Get a sub-branch of this one with name exactly \p name.
      *
      * If no such sub-branch exists, return Ptr(). */
     virtual Ptr getSubBranch(const String& name) = 0;
     /** \brief Get a sub-branch of this one with name exactly \p name.
-     * 
+     *
      * If no such sub-branch exists, create it. */
     virtual Ptr createSubBranch(const String& name) = 0;
     /** \brief Get all resources in this branch with name starting \p name and
@@ -55,7 +55,7 @@ class Branch : private boost::noncopyable {
         const String& extension
       ) = 0;
     /** \brief Get a writer in this branch with name \p name.
-     * 
+     *
      * Unlike openWriter, this method requires name *not* contain slashes. */
     virtual Writer::Ptr getWriter(const String& name) = 0;
 
@@ -67,7 +67,7 @@ class Branch : private boost::noncopyable {
 
     /** \brief Search for resource at path \p sakusenPath with name ending \p
      * extension.
-     * 
+     *
      * All components of the path except the last much match exactly; the last
      * may be only a prefix.
      *

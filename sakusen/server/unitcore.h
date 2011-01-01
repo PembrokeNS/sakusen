@@ -58,7 +58,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     inline Ref<const LayeredUnit> getOuterUnit() const {
       return outerUnit->getRefToThis();
     }
-    
+
     /** \name Accessors. */
     //@{
     inline PlayerId getOwner() const { return owner; }
@@ -87,7 +87,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
       return getTypePtr()->getDynamicData().getVision();
     }
     //@}
-    
+
     virtual void incrementState() {}
 
     /** \name Game mechanics.
@@ -101,7 +101,7 @@ class UnitCore : public UnitLayer, public UnitStatus {
     void changeType(const UnitTypeId& to, hitPointAlteration hpAlteration);
     void changeOwner(const PlayerId to, enum changeOwnerReason why);
     //@}
-    
+
     /* callbacks */
     void onCreate() {}
     void onDestruct() { /** \todo what should the default be? */ }

@@ -22,7 +22,7 @@ Orientation::Orientation()
 Orientation::Orientation(Rotation rotation, Angle amount)
 {
   double radians;
-  
+
   switch (rotation) {
     case rotation_anticlockwise:
       radians = double(amount) * M_PI / 18000;
@@ -53,7 +53,7 @@ Orientation::Orientation(const AngularVelocity& axis)
     normalised = Point<double>(axis);
     normalised.normalise();
   }
-  
+
   for (int i=0; i<3; ++i) {
     for (int j=0; j<3; ++j) {
       matrix[i][j] = normalised[i]*normalised[j]*(1-cos(theta));
@@ -122,7 +122,7 @@ Orientation Orientation::operator*(const Orientation& right) const
 
   /* Normalise row 1 */
   retMatrix[1].normalise();
-  
+
   /* Set row 2 to be orthonormal to the other two */
   {
     Point<double> row2 = retMatrix[0].crossProduct(retMatrix[1]);
@@ -144,7 +144,7 @@ Orientation Orientation::operator*(const Orientation& right) const
     }
   }
   retMatrix[0].normalise();
-  
+
   return Orientation(retMatrix);
 }
 
@@ -231,7 +231,7 @@ void Orientation::store(OArchive& archive) const
 Orientation Orientation::load(IArchive& archive)
 {
   double matrix[3][3];
-  
+
   for (int i=0; i<3; i++) {
     for (int j=0; j<3; j++) {
       archive >> matrix[i][j];

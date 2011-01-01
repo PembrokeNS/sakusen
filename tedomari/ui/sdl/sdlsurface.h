@@ -16,7 +16,7 @@ class SDLSurface : public Surface {
   public:
     typedef boost::shared_ptr<SDLSurface> Ptr;
     typedef boost::shared_ptr<const SDLSurface> ConstPtr;
-    
+
     SDLSurface(uint16 width, uint16 height);
     ~SDLSurface();
   private:

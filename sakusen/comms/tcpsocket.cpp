@@ -88,7 +88,7 @@ void TCPSocket::send(const void* buf, size_t len)
   }
   *reinterpret_cast<BufferLenType*>(longerBuf.get()) = hton_buffer(len);
   memcpy(longerBuf.get()+sizeof(BufferLenType), buf, len);
-  
+
   char const* toSend = reinterpret_cast<char*>(longerBuf.get());
   char const* bufferEnd = toSend+len+sizeof(BufferLenType);
 

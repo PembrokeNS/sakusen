@@ -21,7 +21,7 @@ interestingthings = {} #the things we want user scripting to be able to interact
 
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
-	configpath = fileUtils_getHome() / path(SAKUSEN_CONFIG_SUBDIR) / path(KIAI_SUBDIR) / path(s+".py")
+	configpath = fileUtils_configDirectory() / path(KIAI_SUBDIR) / path(s+".py")
 	try:
 		exec(open(configpath.string(),'r').read(),interestingthings)
 	except IOError:
@@ -35,8 +35,7 @@ sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
 Socket_socketsInit()
 
-d=fileUtils_getHome()
-d/=path(SAKUSEN_CONFIG_SUBDIR)
+d=fileUtils_configDirectory()
 d/=path(SAKUSEN_RESOURCES_SUBDIR)
 resourceinterface=FileResourceInterface_create(d,False)
 

@@ -13,7 +13,7 @@ ModifiedKey::ModifiedKey(const String& name) : key(K_Unknown), modifiers()
   }
   key = tedomari::ui::getKey(components.back());
   components.pop_back();
-  
+
   if (key != K_Unknown) {
     for (list<String>::iterator modifier = components.begin();
         modifier != components.end(); ++modifier) {

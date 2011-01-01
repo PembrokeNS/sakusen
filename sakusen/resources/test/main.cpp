@@ -1,3 +1,6 @@
+#include <iostream>
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <sakusen/point.h>
 #include <sakusen/unittype.h>
@@ -5,15 +8,11 @@
 #include <sakusen/heightfield.h>
 #include <sakusen/mapplaymode.h>
 #include <sakusen/sphereregion.h>
+#include <sakusen/fileutils.h>
 #include <sakusen/resourceinterface-methods.h>
 #include <sakusen/resources/fileresourceinterface.h>
-#include <sakusen/resources/fileutils.h>
 #include <sakusen/resources/pngimage.h>
 #include <sakusen/resources/fileioexn.h>
-
-#include <iostream>
-#include <boost/filesystem/operations.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
 
@@ -36,13 +35,12 @@ int main(/*int argc, char** argv*/)
   boost::filesystem::path::default_name_check(
       boost::filesystem::portable_posix_name
     );
-  boost::filesystem::path homePath = fileUtils_getHome();
   boost::filesystem::path dataDir =
-    homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR;
+    fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path testDir = dataDir / "test";
   fileUtils_mkdirRecursive(dataDir);
   boost::filesystem::path dotDot("..");
-  
+
   cout << "Creating ResourceInterface" << endl;
   vector<boost::filesystem::path> dataDirs;
   dataDirs.push_back(dataDir);
@@ -51,7 +49,7 @@ int main(/*int argc, char** argv*/)
   dataDirs.push_back(dotDot/".."/"data");
   dataDirs.push_back(dotDot/".."/".."/"data");
   dataDirs.push_back(dotDot/".."/".."/".."/"data");
-  
+
   ResourceInterface::Ptr resourceInterface =
     FileResourceInterface::create(dataDirs, false);
 
@@ -73,7 +71,7 @@ int main(/*int argc, char** argv*/)
       files.pop_front();
     }
   }
-  
+
   cout << "Creating Universe" << endl;
   vector<WeaponType> weaponTypes;
   try {
@@ -295,7 +293,7 @@ int main(/*int argc, char** argv*/)
   boost::tie(reloadedUniverse, result, boost::tuples::ignore) =
     resourceInterface->search<Universe>("test/universe");
   cout << "Result of reload was " << result << endl;
-  
+
   switch(result) {
     case resourceSearchResult_error:
       cout << "Error was: " << resourceInterface->getError() << endl;
@@ -357,7 +355,7 @@ int main(/*int argc, char** argv*/)
   boost::tie(reloadedTemplate, result, boost::tuples::ignore) =
     resourceInterface->search<MapTemplate>("test/map", reloadedUniverse);
   cout << "Result of reload was " << result << endl;
-  
+
   switch(result) {
     case resourceSearchResult_error:
       cout << "Error was: " << resourceInterface->getError() << endl;
@@ -404,7 +402,7 @@ int main(/*int argc, char** argv*/)
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_plane,
         heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
-  
+
   cout << "Saving small 2 player map" << endl;
   if (resourceInterface->save(t, "test")) {
     cout << resourceInterface->getError() << endl;
@@ -433,7 +431,7 @@ int main(/*int argc, char** argv*/)
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH), topology_plane,
         heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
-  
+
   cout << "Saving image-based map" << endl;
   if (resourceInterface->save(t, "test")) {
     cout << resourceInterface->getError() << endl;
@@ -452,13 +450,13 @@ int main(/*int argc, char** argv*/)
         Point<sint32>(-MAP_WIDTH,-MAP_WIDTH,-MAP_WIDTH)/10, topology_mobius,
         heightfield, 100 /* dexPerPixel */, 1000 /* gravity */, playModes
       ));
-  
+
   cout << "Saving mobius strip map" << endl;
   if (resourceInterface->save(t, "test")) {
     cout << resourceInterface->getError() << endl;
     return EXIT_FAILURE;
   }
-  
+
   switch(result) {
     case resourceSearchResult_error:
       cout << "Error was: " << resourceInterface->getError() << endl;

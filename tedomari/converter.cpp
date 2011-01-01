@@ -18,7 +18,7 @@ Converter::~Converter() {}
 /** \brief Default constructor
  *
  * Uses nl_langinfo(3) to determine native codeset for conversion */
-Converter::Converter() 
+Converter::Converter()
 {
   //Find native locale.
   nativeLocale = nl_langinfo(CODESET);
@@ -30,7 +30,7 @@ Converter::Converter()
 /** \brief Destructor */
 Converter::~Converter(){}
 
-/** \brief Converts a string from the native codeset to UTF-8. 
+/** \brief Converts a string from the native codeset to UTF-8.
  *   \todo There are more efficient/powerful ways to do this.  */
 String Converter::convertNativeToUTF8(const String& s) {
   UErrorCode errorCode = U_ZERO_ERROR;

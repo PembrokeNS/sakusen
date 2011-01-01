@@ -22,7 +22,7 @@ MapType* Map::newMap(const MapTemplate& t)
   /* To remind that update here is needed by causing a compile error when a
    * new enum value is added. */
   SAKUSEN_STATIC_ASSERT(topology_max == 7);
-  
+
   switch (t.getTopology()) {
 #define SAKUSEN_MAP_CASE(ltopology, utopology) \
     case topology_##ltopology:     \

@@ -37,14 +37,14 @@ class LIBSAKUSEN_API UnitOrders {
     /** The position we're trying to reach */
     Point<sint32> targetPosition;
     /** The velocity we're trying to achieve */
-    Point<sint16> targetVelocity; 
+    Point<sint16> targetVelocity;
     /** Whether we're currently trying to achieve an orientation or an angular
      * velocity. */
     RotationalTargetType rotationalTarget;
     /** The orientation we're trying to reach */
-    Orientation targetOrientation; 
+    Orientation targetOrientation;
     /** The angular velocity we're trying to achieve */
-    AngularVelocity targetAngularVelocity; 
+    AngularVelocity targetAngularVelocity;
     //@}
     /** The order status of the unit's weapons */
     std::vector<WeaponOrders> weaponOrders;

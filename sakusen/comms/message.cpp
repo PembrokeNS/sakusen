@@ -13,8 +13,6 @@ Message::Message(const MessageData* d) :
 }
 
 Message::Message(
-    /*const uint8* buffer,
-    size_t bufferLength,*/
     IArchive& in,
     const PlayerId p, /*= static_cast<PlayerId>(-1) (default in header)*/
     const ResourceInterface::Ptr& resourceInterface
@@ -24,7 +22,7 @@ Message::Message(
 {
   /* We try to initialize this message by reading in from the given buffer.
    * If anything goes wrong, then we throw an exception */
-  
+
   /* Extract the protocol version and message type */
   uint8 version;
   MessageType type;
@@ -40,7 +38,7 @@ Message::Message(
         SAKUSEN_COMMS_NETWORK_PROTOCOL_VERSION, version
       );
   }
-  
+
   /** \todo More stuff in the message header such as endianness, a magic value
    * to show that it *really* is a sakusen message */
 
@@ -93,11 +91,10 @@ Message::Message(
       throw EnumDeserializationExn("type", type);
       return;
   }
-  
+
   /* Check that we exactly reached the end of the archive */
   if (!in.isFinished()) {
     throw TooMuchArchiveDeserializationExn();
-    data.reset();
   }
 }
 

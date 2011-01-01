@@ -86,7 +86,7 @@ inline void SensorCapability::updateReturn(
   const IUnitTypeData& senseeTypeData = sensee->getITypeData();
   const Visibility& senseeVisibility = senseeTypeData.getVisibility();
   Visibility::type visibility = senseeVisibility.get(type);
-  
+
   if (visibility == Visibility::max) {
     if (retrn.perception != perception_unit) {
       retrn.perception = perception_unit;

@@ -86,7 +86,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     boost::scoped_ptr<UnitMotion> motion;
 
     UnitOrders orders;
-    
+
     /** \brief Sensor returns from this unit, indexed by the player doing the
      * sensing. */
     u_map<PlayerId, DynamicSensorReturnsRef>::type sensorReturns;
@@ -118,7 +118,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
 
     Ref<LayeredUnit> getRefToThis();
     Ref<const LayeredUnit> getRefToThis() const;
-    
+
     void setPosition(const Position&);
     bool setRadar(bool active);
     bool setSonar(bool active);
@@ -145,7 +145,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
       }
     }
     void removeLayer(const UnitMask*);
-    
+
     /** \brief Kills the unit unconditionally.
      *
      * \return true iff the unit is gone (as
@@ -156,7 +156,7 @@ class LIBSAKUSEN_SERVER_API LayeredUnit :
     }
     /** \brief Damages the unit and kills if HP <= 0 */
     inline void damage(HitPoints amount) { topLayer->damage(amount); }
-    
+
     /** \brief Repairs the unit.
      *
      * If superhealth is false, then repairs up to its max HP.  Otherwise,

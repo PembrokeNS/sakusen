@@ -22,7 +22,7 @@ class CrosscutMap : public MapType {
           topRight, bottomLeft, gravity, hf
         )
     {}
-    
+
     virtual Topology getTopology() const { return topology_crosscut; }
 
     virtual bool resolvePosition(
@@ -30,7 +30,7 @@ class CrosscutMap : public MapType {
         Orientation* orientation
       ) const {
       p = pos;
-      
+
       while (p.x < this->left()) {
         p.x += this->width();
         p.y = this->reflectY(p.y);
@@ -38,7 +38,7 @@ class CrosscutMap : public MapType {
           *orientation = Orientation::reflectionY * *orientation;
         }
       }
-      
+
       while (p.x >= this->right()) {
         p.x -= this->width();
         p.y = this->reflectY(p.y);
@@ -46,7 +46,7 @@ class CrosscutMap : public MapType {
           *orientation = Orientation::reflectionY * *orientation;
         }
       }
-      
+
       while (p.y < this->bottom()) {
         p.y += this->height();
         p.x = this->reflectX(p.x);
@@ -54,7 +54,7 @@ class CrosscutMap : public MapType {
           *orientation = Orientation::reflectionX * *orientation;
         }
       }
-      
+
       while (p.y >= this->top()) {
         p.y -= this->height();
         p.x = this->reflectX(p.x);

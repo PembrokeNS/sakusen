@@ -43,7 +43,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
         const Heightfield&
       );
     ~PartialWorld();
-    
+
     typedef IdIndex<UnitId, UpdatedUnit, UpdatedUnitIder> UnitIdIndex;
     typedef IdIndex<
         SensorReturnsId, UpdatedSensorReturns, SensorReturnsIder
@@ -57,7 +57,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     PartialMap* map;
     hash_list<UpdatedUnit, Bounded, UpdatedUnit> units;
     UnitIdIndex::Ptr unitsById;
-    
+
     hash_list<UpdatedSensorReturns, Bounded, UpdatedSensorReturns>
       sensorReturns;
     SensorReturnsIdIndex::Ptr sensorReturnsById;
@@ -66,7 +66,7 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
     BallisticIdIndex::Ptr ballisticsById;
 
     ISpatial::Ptr spatialIndex;
-    
+
     Ref<ISensorReturns> getISensorReturns(PlayerId player, SensorReturnsId id) {
       assert(player == playerId);
       static_cast<void>(player);

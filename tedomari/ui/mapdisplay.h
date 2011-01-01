@@ -52,17 +52,17 @@ class MapDisplay : public Control {
     inline sakusen::Rectangle<sint32> pixelToDex(
         const sakusen::Rectangle<double>&
       ) const;
-    
+
     inline sakusen::Point<double> dexToPixel(
         const sakusen::Point<sint32>&
       ) const;
-    
+
     inline sakusen::Point<sint32> pixelToDex(
         const sakusen::Point<double>&
       ) const;
 
     void redrawGround();
-    
+
     template<typename UnitRef>
     void drawUnit(const UnitRef& unit, const Colour&);
     void drawUnitOrders(

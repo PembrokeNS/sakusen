@@ -29,7 +29,7 @@ class LIBSAKUSEN_API ICompleteUnit : public Bounded {
     virtual UnitId getId(void) const = 0;
     virtual const IUnitStatus& getIStatus(void) const = 0;
     virtual const IUnitTypeData& getITypeData(void) const = 0;
-    
+
     GameObject getObjectType() const { return gameObject_unit; }
     virtual Rectangle<sint32> getBoundingRectangle(void) const;
     virtual Box<sint32> getBoundingBox(void) const;

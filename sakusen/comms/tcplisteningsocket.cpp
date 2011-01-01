@@ -37,7 +37,7 @@ Socket::Ptr TCPListeningSocket::accept()
   sockaddr_in peerAddress;
   socklen_t addrlen = sizeof(peerAddress);
   NativeSocket newSocket;
-  
+
   if (-1 == (newSocket = ::accept(
           sockfd, reinterpret_cast<sockaddr*>(&peerAddress), &addrlen
         ))) {

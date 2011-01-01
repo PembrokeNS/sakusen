@@ -44,7 +44,7 @@ class Listener {
      * incoming client messages have been processed, but before the state of
      * the world is changed. */
     virtual void ticksMessagesDone() {}
-    
+
     /** \brief Callback after each tick's gamestate change
      *
      * This function will be called on each listener once each tick, after the

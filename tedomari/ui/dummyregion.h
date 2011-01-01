@@ -25,7 +25,7 @@ class DummyRegion : public Region {
       SAKUSEN_FATAL("not implemented");
       return local; //Make VC happy
     }
-    Layout* newLayout() const { 
+    Layout* newLayout() const {
       SAKUSEN_FATAL("not implemented");
       return 0; //Make VC happy
     }

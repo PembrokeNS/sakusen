@@ -31,7 +31,7 @@ class LIBSAKUSEN_API ResourceInterface {
     virtual ~ResourceInterface() {}
   protected:
     String error;
-    
+
     virtual boost::tuple<boost::shared_ptr<void>, ResourceSearchResult, String>
     internalSearch(
         const String& name,
@@ -39,7 +39,7 @@ class LIBSAKUSEN_API ResourceInterface {
         ResourceType type,
         boost::shared_ptr<const Universe> = boost::shared_ptr<const Universe>()
       ) = 0;
-    
+
     virtual boost::tuple<void*, ResourceSearchResult> internalSymbolSearch(
         const String& moduleName,
         const String& symbolName
@@ -50,7 +50,7 @@ class LIBSAKUSEN_API ResourceInterface {
         const String& path,
         ResourceType type
       ) = 0;
-    
+
     template<typename T>
     inline ResourceType typenameToResourceType();
   public:

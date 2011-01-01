@@ -14,7 +14,7 @@ class Client {
     Client(const Client&);
   public:
     virtual ~Client();
-    
+
     virtual Client* newCopy() = 0;
 };
 

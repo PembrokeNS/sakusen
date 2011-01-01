@@ -31,10 +31,10 @@ class ICompleteUnit;
  * objects, then you must clear \c capable.  A range of the
  * largest uint32 means the object can see everything on that sensor except
  * things of Visibility 0.
- * 
+ *
  * Visibilities of 0 and capabilities of -1 should only be used for
  * special reasons by level designers.
- * 
+ *
  * \todo It is not yet decided whether max. visibility is affected by
  * environment. Does an object with max. seismar visibility only appear if it is
  * on the ground, and only to other ground-based objects? Does an object with
@@ -48,7 +48,7 @@ class ICompleteUnit;
  */
 
 /** \brief describes a type of sensor
- * 
+ *
  * This enumeration holds a type of sensor. It is expected to be used where a
  * sensor has to be described, e.g. in a SensorReturn to describe by what
  * sensor an object was detected.
@@ -64,7 +64,7 @@ enum SensorType {
   sensorType_max
 };
 
-/** \brief describes an object's visibility to each type of sensor 
+/** \brief describes an object's visibility to each type of sensor
  *
  * This class is just a collection of sint8's, each describing how visible the
  * appropriate object is to a type of sensor. For two objects A and B, A's
@@ -98,7 +98,7 @@ class LIBSAKUSEN_API Visibility {
     static const type min = boost::integer_traits<type>::const_min;
     static const type max = boost::integer_traits<type>::const_max;
     static const type default_ = (min+max)/2+1;
-    
+
     /** \name Specific visibilities */
     //@{
     type optical;
@@ -135,7 +135,7 @@ class LIBSAKUSEN_API Visibility {
 };
 
 /** \brief Describes capability with one sensor.
- * 
+ *
  * This struct contains all the information related to the use of any one
  * sensor.
  */
@@ -145,7 +145,7 @@ struct LIBSAKUSEN_API SensorCapability {
   SensorCapability(IArchive& archive) {
     archive >> capable >> range >> falloff;
   }
-  
+
   bool capable; /**< false iff unit doesn't have this sensor */
   uint32 range; /**< corresponds to distances in the world */
   Angle falloff; /**< describes the rate of falloff from looking straight
@@ -160,7 +160,7 @@ struct LIBSAKUSEN_API SensorCapability {
       Perception* maxPerception,
       uint32* bestRadius
     ) const;
-  
+
   inline void store(OArchive& archive) const {
     archive << capable << range << falloff;
   }
@@ -190,7 +190,7 @@ struct  LIBSAKUSEN_API Sensors {
     sonarPassive(archive),
     sonarActive(archive)
   {}
-  
+
   /** \name Capabilities in each type of sensor */
   //@{
   struct SensorCapability optical;
@@ -210,7 +210,7 @@ struct  LIBSAKUSEN_API Sensors {
       Perception* maxPerception,
       uint32* bestRadius
     ) const;
-  
+
   void store(OArchive& archive) const {
     optical.store(archive);
     infraRed.store(archive);

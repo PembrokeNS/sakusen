@@ -160,7 +160,7 @@ void UI::storeCurrentPage()
   }
 
   SAKUSEN_STATIC_ASSERT(page_max == 3);
-    
+
   switch(currentPage) {
     case page_general:
       storeGeneralPage();
@@ -198,7 +198,7 @@ void UI::updateCurrentPage()
   }
 
   SAKUSEN_STATIC_ASSERT(page_max == 3);
-    
+
   switch(currentPage) {
     case page_general:
       updateGeneralPage();

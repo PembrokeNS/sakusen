@@ -24,7 +24,7 @@ struct LIBSAKUSEN_API EachSensorReturn {
     sonarActive(sA),
     seismar(s)
   {}
-  
+
   SensorReturn optical;
   SensorReturn infraRed;
   SensorReturn radarPassive;

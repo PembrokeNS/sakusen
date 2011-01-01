@@ -179,7 +179,7 @@ void MapDisplay::paint()
     Rectangle<sint32> displayRect = pixelToDex(
         Rectangle<double>(0, 0, getWidth(), getHeight())
       );
-    
+
     /* Draw units */
     ISpatial::Result unitsToDraw =
       sakusen::client::world->getSpatialIndex()->findIntersecting(
@@ -194,7 +194,7 @@ void MapDisplay::paint()
       drawUnit(unit, colour);
       drawUnitOrders(unit, colour);
     }
-    
+
     /* Draw sensor returns */
     ISpatial::Result returnsToDraw =
       sakusen::client::world->getSpatialIndex()->findIntersecting(
@@ -226,14 +226,14 @@ void MapDisplay::paint()
         ballisticIt->dynamicCast<UpdatedBallistic>();
       drawBallistic(ballistic, Colour::yellow*0.8);
     }
-    
+
     if (dragging) {
       /*SAKUSEN_DEBUG("Drawing the selection rectangle");*/
       /* Draw the selection rectangle as it stands */
       Rectangle<double> selection(dexToPixel(dragStart), mousePos);
       r->drawRect(selection, Colour::grey(0.5));
     }
-    
+
     r->unsetClip();
   }
 }

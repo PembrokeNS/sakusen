@@ -37,7 +37,7 @@ class Effect : public Bounded {
     {}
     Effect(PlayerId o, const Region<sint32>::Ptr& r, Visibility v) :
       owner(o), region(r), visibility(v) {}
-    
+
   public:
     virtual ~Effect() {}
     /** \name Accessors. */
@@ -66,7 +66,7 @@ class Effect : public Bounded {
     /** \brief Test the effect for removal
      *
      * \return true iff the Effect should be removed from the World
-     * 
+     *
      * Called every tick by CompleteWorld to allow the Effect to remove itself,
      * after the onUnitPresent calls.
      *

@@ -19,7 +19,7 @@ bool SettingsUser::hasGroupIn(const std::set<String>& groupsToCheck) const
    * intersection.  I thought there would be an STL algorithm for this, but
    * here doesn't appear to be.  There is the "setintersection" algorithm, but
    * that won't abort when it finds an intersection.  So, we do it "by hand" */
-  
+
   std::set<String>::const_iterator i1 = groups.begin();
   std::set<String>::const_iterator i2 = groupsToCheck.begin();
 

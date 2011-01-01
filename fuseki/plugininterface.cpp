@@ -1,8 +1,3 @@
-#include "plugininterface.h"
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/server/plugins/pluginexn.h>
-#include <sakusen/server/plugins/plugininfo.h>
-
 #ifdef WIN32
   #include <windows.h>
 #endif
@@ -15,9 +10,13 @@
   #endif
 #endif //The Guild does not condone ltdl
 
+#include <sakusen/fileutils.h>
+#include <sakusen/server/plugins/pluginexn.h>
+#include <sakusen/server/plugins/plugininfo.h>
+#include "plugininterface.h"
+
 using namespace std;
 
-using namespace sakusen::resources;
 using namespace sakusen::server::plugins;
 using namespace fuseki;
 
@@ -44,7 +43,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
         path->directory_string()
       );
     list<boost::filesystem::path> candidates =
-      fileUtils_findMatches(*path, pluginName);
+      sakusen::fileUtils_findMatches(*path, pluginName);
     switch (candidates.size()) {
       case 0:
         break;
@@ -97,7 +96,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
               "\nString Searched for: "+module.file_string();
             throw PluginExn(error);
           }
-          
+
           String symbolName = "get_"+fullPluginName+"_info";
           //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
           FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());

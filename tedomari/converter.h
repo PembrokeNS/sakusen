@@ -13,7 +13,7 @@ namespace tedomari {
  *
  * When DISABLE_CONVERSION is defined, this class performs no alterations to
  * the strings it is given to convert, but simply passes them on verbatim.
- * 
+ *
  * \warning This may yield invalid UTF-8 strings.
  *
  * Otherwise, the icu library is used to convert strings between the native

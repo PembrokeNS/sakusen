@@ -1,10 +1,12 @@
 #include <sakusen/resources/file.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/fileioexn.h>
 
 #include <cerrno>
+
 #include <boost/filesystem/operations.hpp>
+
+#include <sakusen/fileutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 using namespace sakusen::comms;
 using namespace sakusen::resources;
@@ -56,7 +58,7 @@ size_t File::getWholeFile(
     /* do nothing, since we were asked for the *whole* file */
     return 0;
   }
-  
+
   if (!stream.is_open()) {
     open();
   }

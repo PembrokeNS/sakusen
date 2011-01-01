@@ -22,21 +22,21 @@ namespace sakusen {
  * representable number. So sue me.
  */
 
-/* Apparently MSVC is on the ball in this case, but because it has reduced the 
+/* Apparently MSVC is on the ball in this case, but because it has reduced the
  * answer to a constant, generates a warning (4101) about the now unreferenced local variable.
  * This is slightly mystifying for a few seconds, and clutters things up, so I have disabled
  * it.
- * 4146 is a warning telling me that when I apply a unary minus to an unsigned operator, 
+ * 4146 is a warning telling me that when I apply a unary minus to an unsigned operator,
  * nothing happens. Thanks MSVC.
  */
-#ifdef _MSC_VER 
+#ifdef _MSC_VER
   #pragma warning (disable:4101 4146)
 #endif
 
 template<typename T>
 inline T bottomNumber() {
   std::numeric_limits<T> limits;
-  
+
   if (limits.is_integer)
     return limits.min();
   if (limits.is_signed) {
@@ -177,7 +177,7 @@ class LIBSAKUSEN_API Point {
     inline bool operator<(const Point<U>& right) const {
       return (*this <= right) && (*this != right);
     }
-    
+
     template <typename U>
     inline bool operator>=(const Point<U>& right) const {
       return x>=right.x && y>=right.y && z>=right.z;
@@ -242,7 +242,7 @@ class LIBSAKUSEN_API Point {
       return Point<T>(*this) /= scale;
     }
     //@}
-    
+
     /** \brief Return the cross product of this Point with another. */
     inline Point<T> crossProduct(const Point<T>& right) {
       return Point<T>(

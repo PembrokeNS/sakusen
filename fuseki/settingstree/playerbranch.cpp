@@ -19,7 +19,7 @@ PlayerBranch::PlayerBranch(
 {
   String playerGroup = String("player") + id.toString();
   String playerAdminGroup = playerGroup+",admin";
-  
+
   addChild(Node::Ptr(new StringLeaf(
           "race", "world", ( t.isRaceFixed() ? "" : playerAdminGroup ), this,
           server
@@ -34,4 +34,4 @@ PlayerBranch::PlayerBranch(
           "racefixed", "world", "", this, server, t.isRaceFixed()
         )));
 }
-  
+

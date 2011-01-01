@@ -238,7 +238,7 @@ GameStartMessageData::GameStartMessageData(
   ) :
   MessageData(),
   /* Dummy call because there's no default constructor for Heightfield */
-  heightfield(1, 1, 2, 2) 
+  heightfield(1, 1, 2, 2)
 {
   (in >> playerId).extractEnum(topology) >> topRight >> bottomLeft >>
     dexPerPixel >> gravity;

@@ -1,11 +1,13 @@
 #include "global.h"
-#include <sakusen/comms/socket.h>
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/fileresourceinterface.h>
-#include <sakusen/resources/fileutils.h>
-#include "server.h"
+
+#include <cerrno>
+#include <iostream>
 
 #include <sys/stat.h>
+
+#include <boost/filesystem/operations.hpp>
+
+#include <optimal/optionsparser.h>
 
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
@@ -15,10 +17,11 @@
   #endif
 #endif //Not condoned here.
 
-#include <cerrno>
-#include <iostream>
-#include <optimal/optionsparser.h>
-#include <boost/filesystem/operations.hpp>
+#include <sakusen/fileutils.h>
+#include <sakusen/comms/socket.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/fileresourceinterface.h>
+#include "server.h"
 
 using namespace std;
 using namespace optimal;
@@ -33,7 +36,7 @@ namespace fuseki {
 /** Stores command-line options.
  * \todo More command line arguments (changing game name, etc.).
  *
- * Made complicated by UNIX having UNIX sockets and Windows not. 
+ * Made complicated by UNIX having UNIX sockets and Windows not.
  * Use of a UNIX socket in Windows results in crash, and Complications(R)
  */
 struct Options {
@@ -49,9 +52,9 @@ struct Options {
     tcpAddress("localhost"),
     dots(true),
     help(false),
-    version(false) 
+    version(false)
   {}
-  
+
 #ifndef DISABLE_UNIX_SOCKETS
   /** Whether to use abstract unix socket namespace where possible */
   bool abstract;
@@ -77,10 +80,7 @@ struct Options {
 }
 
 /* Forward-declarations */
-int startServer(
-    const boost::filesystem::path& homePath,
-    const Options& options
-  );
+int startServer(const Options& options);
 Options getOptions(
     const boost::filesystem::path& optionsFile,
     int argc,
@@ -95,12 +95,10 @@ int main(int argc, char* const* argv)
   boost::filesystem::path::default_name_check(
       boost::filesystem::portable_posix_name
     );
-  /* Seek out the home directory */
-  boost::filesystem::path homePath = fileUtils_getHome();
-  
+
   boost::filesystem::path fusekiConfigFile =
-    homePath / SAKUSEN_CONFIG_SUBDIR / "fuseki" / "config";
-  
+    fileUtils_configDirectory() / "fuseki" / "config";
+
   /* Parse config file and command line arguments */
   Options options = getOptions(fusekiConfigFile, argc, argv);
 
@@ -117,8 +115,8 @@ int main(int argc, char* const* argv)
 
   cout << "Looked for fuseki config file at " <<
     fusekiConfigFile.native_file_string() << endl;
-  
-  return startServer(homePath, options);
+
+  return startServer(options);
 }
 
 /** Prints usage information */
@@ -135,7 +133,7 @@ void usage()
   " -h,  --help             display help and exit.\n"
   " -V,  --version          display version information and exit.\n"
 #ifndef DISABLE_UNIX_SOCKETS
-  " -a-, --no-abstract      do not use the abstract unix socket namespace.\n" 
+  " -a-, --no-abstract      do not use the abstract unix socket namespace.\n"
   " -f,  --force-socket     overwrite any existing socket file.\n"
   " -x,  --unix ADDRESS     bind the unix socket at sakusen-style address\n"
   "                         ADDRESS (e.g. concrete|/var/fuseki/socket)\n"
@@ -188,13 +186,13 @@ Options getOptions(
   return results;
 }
 
-int startServer(const boost::filesystem::path& homePath, const Options& options)
+int startServer(const Options& options)
 {
   cout << "*****************************\n"
           "* fuseki (a Sakusen server) *\n"
           "* Similus est circo mortis! *\n"
           "*****************************" << endl;
-  
+
   /* ltdl initialization */
 #ifdef __GNUC__
   if (lt_dlinit()) {
@@ -207,14 +205,14 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   boost::filesystem::path dotDot("..");
   vector<boost::filesystem::path> dataDirs;
   dataDirs.push_back(
-      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_RESOURCES_SUBDIR
+      fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR
     );
   dataDirs.push_back("data");
   dataDirs.push_back(dotDot/"data");
   dataDirs.push_back(dotDot/".."/"data");
   dataDirs.push_back(dotDot/".."/".."/"data");
   dataDirs.push_back(dotDot/".."/".."/".."/"data");
-  
+
   ResourceInterface::Ptr resourceInterface =
       FileResourceInterface::create(dataDirs, true);
 
@@ -226,13 +224,13 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
   if (options.pluginPaths.empty()) {
     cout << "(None)\n";
   }
-  
+
   /* Initialize sockets */
   Socket::socketsInit();
-  
+
   #ifndef DISABLE_UNIX_SOCKETS
   String unixSocketAddress = options.unixAddress;
-  
+
   if (unixSocketAddress.empty()) {
     /* By default, when Unix sockets enabled, this server listens for clients
      * on a unix datagram socket located in
@@ -240,13 +238,13 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 
     /* Construct the server directory */
     boost::filesystem::path serverPath =
-      homePath / SAKUSEN_CONFIG_SUBDIR / SAKUSEN_COMMS_SOCKET_SUBDIR;
+      fileUtils_configDirectory() / SAKUSEN_COMMS_SOCKET_SUBDIR;
 
     cout << "Using directory '" << serverPath.native_directory_string() <<
       "' for unix socket.\n";
-    
+
     /* Determine whether the directory exists */
-    
+
     if (!boost::filesystem::exists(serverPath)) {
       /* Try to create the directory if it doesn't */
       cout << "Directory not found, trying to create it." <<
@@ -294,7 +292,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
 
   String bindAddress = options.tcpAddress;
   Socket::Ptr tcpSocket;
-  
+
   if (!bindAddress.empty()) {
     cout << "Starting TCP socket at " << bindAddress << endl;
     tcpSocket =
@@ -319,7 +317,7 @@ int startServer(const boost::filesystem::path& homePath, const Options& options)
       endl;
     return EXIT_FAILURE;
   }
-  
+
   { /* Braces to ensure that server is destructed before lt_dlexit called */
     vector<boost::filesystem::path> pluginPaths;
     copy(

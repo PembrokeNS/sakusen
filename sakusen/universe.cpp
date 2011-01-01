@@ -39,7 +39,7 @@ void Universe::constructHashMaps()
     }
     weaponIdLookup[weaponType->getInternalName()] = &*weaponType;
   }
-  
+
   for (vector<UnitType>::iterator unitType = unitTypes.begin();
       unitType != unitTypes.end(); unitType++) {
     if (unitIdLookup.count(unitType->getInternalName())) {

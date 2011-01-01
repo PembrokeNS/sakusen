@@ -73,7 +73,7 @@ class ISpatial : public IIndex<Bounded> {
 
     /** \brief Find objects whose bboxes partially or completely enclose the given bbox. */
     /** \brief Find objects whose bboxes completely enclose the given bbox. */
-    
+
     /** \brief Find ray intersections with objects
      *
      * Returns a map, keyed by ray parameter, of all intersections of the given

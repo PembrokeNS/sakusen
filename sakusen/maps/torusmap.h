@@ -22,7 +22,7 @@ class TorusMap : public MapType {
           topRight, bottomLeft, gravity, hf
         )
     {}
-    
+
     virtual Topology getTopology() const { return topology_torus; }
 
     virtual bool resolvePosition(
@@ -30,19 +30,19 @@ class TorusMap : public MapType {
         Orientation*
       ) const {
       p = pos;
-      
+
       while (p.x < this->left()) {
         p.x += this->width();
       }
-      
+
       while (p.x >= this->right()) {
         p.x -= this->width();
       }
-      
+
       while (p.y < this->bottom()) {
         p.y += this->height();
       }
-      
+
       while (p.y >= this->top()) {
         p.y -= this->height();
       }

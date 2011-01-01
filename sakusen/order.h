@@ -17,7 +17,7 @@ class LIBSAKUSEN_API Order {
     OrderType type;
     /** Pointer to abstract class OrderData, which has subclasses for the
      * diffferent types of data which can occur */
-    OrderData::ConstPtr data; 
+    OrderData::ConstPtr data;
   public:
     /** \name acccessors */
     /*@{*/
@@ -29,7 +29,7 @@ class LIBSAKUSEN_API Order {
     /* To remind that update here is needed by causing a compile error when a
      * new enum value is added. */
     SAKUSEN_STATIC_ASSERT(orderType_max == 11);
-    
+
     #define SAKUSEN_ORDER_GET_DATA(type) \
     inline const type##OrderData& get##type##Data(void) const { \
       return dynamic_cast<const type##OrderData&>(*data); \

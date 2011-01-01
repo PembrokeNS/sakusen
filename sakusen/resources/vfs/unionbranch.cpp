@@ -29,7 +29,7 @@ Branch::Ptr UnionBranch::getSubBranch(const String& name)
       subBranches.push_back(subBranch);
     }
   }
-  
+
   if (subBranches.empty()) {
     return Branch::Ptr();
   }
@@ -58,7 +58,7 @@ Branch::Ptr UnionBranch::createSubBranch(const String& name)
       subBranches.push_back(subBranch);
     }
   }
-  
+
   return create(name, subBranches, ptrToThis.lock());
 }
 
@@ -78,7 +78,7 @@ list<Resource> UnionBranch::getResources(
     list<Resource> branchCandidates = branch->getResources(name, extension);
     candidates.splice(candidates.end(), branchCandidates);
   }
-  
+
   return candidates;
 }
 

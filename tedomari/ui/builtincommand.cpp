@@ -23,7 +23,7 @@ void tooFewArgs(
   o << "Too few arguments to command '" << name << "'.  Expected at least " <<
     expected << ", got " << args.size() << " ('" <<
     stringUtils_join(args, "' '") << "')";
-  
+
   ui->alert(Alert(o.str()));
 }
 
@@ -39,7 +39,7 @@ void tooManyArgs(
   ostringstream o;
   o << "Too many arguments to command '" << name << "'.  Expected at most " <<
     expected << ", got " << args.size();
-  
+
   ui->alert(Alert(o.str()));
 }
 
@@ -55,7 +55,7 @@ void wrongNumberArgs(
   ostringstream o;
   o << "Wrong number of arguments to command '" << name << "'.  Expected " <<
     expected << ", got " << args.size();
-  
+
   ui->alert(Alert(o.str()));
 }
 

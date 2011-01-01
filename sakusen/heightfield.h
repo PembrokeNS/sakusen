@@ -92,7 +92,7 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
     inline uint32 dexToSampleCeilY(sint32 y) const;
     inline sint32 sampleToDexX(uint32 x) const;
     inline sint32 sampleToDexY(uint32 y) const;
-    
+
     inline sint32 getHeightAtSample(uint32 x, uint32 y) const {
       assert(x < width);
       assert(y < height);
@@ -134,7 +134,7 @@ class LIBSAKUSEN_API Heightfield : public IHeightfield {
 
     sint32 getMaxHeightIn(const Rectangle<sint32>&) const;
     double intersectRay(const Ray&, double extent) const;
-    
+
     void store(OArchive&) const;
     static Heightfield load(IArchive&, const DeserializationContext&);
 };

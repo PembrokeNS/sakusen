@@ -13,7 +13,7 @@ class TCPListeningSocket : public TCPSocket {
   public:
     TCPListeningSocket(uint16 port);
     ~TCPListeningSocket() {}
-    
+
     bool isConnectionBased() { return true; }
     Socket::Ptr accept();
 };

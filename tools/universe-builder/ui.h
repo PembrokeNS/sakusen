@@ -22,7 +22,7 @@ class UI {
     void storeGeneralPage();
     void storeUnitTypesPage();
     void storeWeaponTypesPage();
-    
+
     void updateCurrentPage();
     void updateGeneralPage();
     void updateUnitTypesPage();

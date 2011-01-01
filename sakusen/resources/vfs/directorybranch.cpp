@@ -1,13 +1,13 @@
 #include <sakusen/resources/vfs/directorybranch.h>
 
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/filereader.h>
-#include <sakusen/resources/filewriter.h>
-
 #include <boost/filesystem/operations.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/xpressive/regex_algorithms.hpp>
+
+#include <sakusen/fileutils.h>
+#include <sakusen/resources/filereader.h>
+#include <sakusen/resources/filewriter.h>
 
 using namespace std;
 
@@ -40,7 +40,7 @@ Branch::Ptr DirectoryBranch::getSubBranch(const String& subBranchName)
   if (subBranchName == ".") {
     return ptrToThis.lock();
   }
-  
+
   boost::filesystem::path potential = directory / subBranchName;
   if (!boost::filesystem::exists(potential)) {
     return Branch::Ptr();
@@ -68,7 +68,7 @@ Branch::Ptr DirectoryBranch::createSubBranch(const String& subBranchName)
   if (subBranchName == ".") {
     return ptrToThis.lock();
   }
-  
+
   boost::filesystem::path potential = directory / subBranchName;
   boost::filesystem::create_directory(potential);
   return create(subBranchName, potential, ptrToThis.lock());

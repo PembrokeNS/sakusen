@@ -31,7 +31,7 @@ class SphereMap : public MapType {
         SAKUSEN_FATAL("spherical topology incompatible with non-square map");
       }
     }
-    
+
     virtual Topology getTopology() const { return topology_sphere; }
 
     virtual bool resolvePosition(
@@ -39,11 +39,11 @@ class SphereMap : public MapType {
         Orientation* orientation
       ) const {
       p = pos;
-      
+
       bool altered;
       sint32 newX;
       sint32 newY;
-      
+
       do {
         altered = false;
 

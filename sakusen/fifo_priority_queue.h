@@ -29,7 +29,7 @@ namespace sakusen {
  *
  * The overhead in insertion and removal can be non-negligible.  Things are
  * better if there are many ValueType instances with each given priority.
- * 
+ *
  * This class breaks the libsakusen naming conventions to look more STL-ish
  */
 template<
@@ -62,7 +62,7 @@ class fifo_priority_queue {
     inline bool empty() const {
       return priorityQueue.empty();
     }
-    
+
     inline void push(const ValueType& val) {
       PriorityType priority = prioritizer(val);
       typename QueueHashMap::iterator queue = fifoQueues.find(priority);

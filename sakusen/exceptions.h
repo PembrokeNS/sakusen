@@ -102,7 +102,7 @@ class LIBSAKUSEN_API EnumDeserializationExn :
     public DeserializationExn {
   public:
     /** \brief Constructs a new exception
-     * 
+     *
      * \param name  Name of variable whose value was out of range
      * \param value Actual value taken by variable
      */

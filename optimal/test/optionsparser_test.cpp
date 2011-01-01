@@ -45,13 +45,13 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   }
   {
     const char* argv[] = { "foo", "-x" };
-    
+
     OptionsParser p;
     checkParseGivesErrors("", argv, p, "detecting invalid short option");
   }
   {
     const char* argv[] = { "foo", "-x-" };
-    
+
     OptionsParser p;
     checkParseGivesErrors(
         "", argv, p, "detecting invalid negated short option", 2
@@ -59,13 +59,13 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   }
   {
     const char* argv[] = { "foo", "--x" };
-    
+
     OptionsParser p;
     checkParseGivesErrors("", argv, p, "detecting invalid long option");
   }
   {
     const char* argv[] = { "foo", "--x=y" };
-    
+
     OptionsParser p;
     checkParseGivesErrors(
         "", argv, p, "detecting invalid long option with argument"
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   {
     const char* argv[] = { "foo", "--b=y" };
     bool b;
-    
+
     OptionsParser p;
     p.addOption("b", '\0', &b);
     checkParseGivesErrors(
@@ -83,14 +83,14 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   }
   {
     const char* argv[] = { "foo", "--no-x" };
-    
+
     OptionsParser p;
     checkParseGivesErrors("", argv, p, "detecting invalid negated long option");
   }
   {
     const char* argv[] = { "foo", "--no-s" };
     string s;
-    
+
     OptionsParser p;
     p.addOption("s", '\0', &s);
     checkParseGivesErrors(
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   {
     const char* argv[] = { "foo", "-s" };
     string s;
-    
+
     OptionsParser p;
     p.addOption("", 's', &s);
     checkParseGivesErrors("", argv, p, "detecting argumentless short option");
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(options_parser_errors)
   {
     const char* argv[] = { "foo", "--s" };
     string s;
-    
+
     OptionsParser p;
     p.addOption("s", '\0', &s);
     checkParseGivesErrors("", argv, p, "detecting argumentless long option");
@@ -261,7 +261,7 @@ void checkIntegerOptions()
     for (int setValueIndex = 0; setValueIndex<6; ++setValueIndex) {
       const Integer initialValue = 1;
       string setValue;
-      
+
       switch (setValueIndex) {
         case 0:
           setValue = "0";
@@ -284,7 +284,7 @@ void checkIntegerOptions()
         default:
           throw logic_error("unexpected value index");
       }
-      
+
       Integer int0 = initialValue;
       Integer int1 = initialValue;
       boost::optional<Integer> optInt2;

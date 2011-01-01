@@ -23,7 +23,7 @@ class UnitCornerIterator :
   public:
     /** \brief Constructs a past-the-end iterator. */
     UnitCornerIterator() : frame(NULL), index(8) {}
-    
+
     /** \brief Constructs an iterator pointing at a corner of the given unit.
      *
      * If the second optional parameter is false (the default) then all 8

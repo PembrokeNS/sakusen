@@ -6,7 +6,7 @@
 #include "null_cast.h"
 #ifdef _MSC_VER
 #pragma warning (disable:4101)
-#endif //This is about unreferenced local variables. 
+#endif //This is about unreferenced local variables.
 //Called on e, below. Spurious, because the constructor to e does all the work.
 
 namespace fuseki {
@@ -59,7 +59,7 @@ String RemoteClient::performMagic(
       SAKUSEN_DEBUG("unexpectedly asked to confirm non-change");
       return "";
     }
-    
+
     if (newValueBool) {
       if (neverAdmin) {
         return "cannot make admin when neveradmin is set";

@@ -75,7 +75,7 @@ struct ArithmeticTraits<double, void>
  *
  * If one of U and T is neither an integer type nor double then the behaviour
  * is undefined.
- * 
+ *
  * For example, LosslessCast<sint32, uint8>::type is boost::mpl::true_ but
  * LosslessCast<sint32, uint32>::type is boost::mpl::false_
  */

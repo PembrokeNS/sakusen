@@ -38,13 +38,13 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     PlayerId playerId;
     String name;
     std::list<Client*> clients;
-    
+
     /* This is a hashtable of the units belonging to the player, keyed by
        their id */
     u_map<UnitId, Ref<LayeredUnit> >::type units;
     /* The id of the next unit to be added for this player */
     UnitId nextUnitId;
-    
+
     hash_list<DynamicSensorReturns, DynamicSensorReturns> sensorReturns;
     /* Index into sensorReturns giving access by Id */
     SensorReturnsIdIndex::Ptr sensorReturnsById;
@@ -92,7 +92,7 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
       return (clients.size() > 0 || noClients);
     }
     //@}
-    
+
     /** \name Materiel request functions
      *
      * Implementation of MaterielProvider interface. */
@@ -105,9 +105,9 @@ class LIBSAKUSEN_SERVER_API Player : public MaterielProvider {
     void removeUnit(const UnitId id, enum changeOwnerReason why);
     void addUnit(const Ref<LayeredUnit>& unit, enum changeOwnerReason why);
     void checkSensorReturns();
-    
+
     void applyIncomingOrders(void);
-    
+
     void informClients(const Update& update);
 };
 

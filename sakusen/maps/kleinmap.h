@@ -22,7 +22,7 @@ class KleinMap : public MapType {
           topRight, bottomLeft, gravity, hf
         )
     {}
-    
+
     virtual Topology getTopology() const { return topology_klein; }
 
     virtual bool resolvePosition(
@@ -30,15 +30,15 @@ class KleinMap : public MapType {
         Orientation* orientation
       ) const {
       p = pos;
-      
+
       while (p.x < this->left()) {
         p.x += this->width();
       }
-      
+
       while (p.x >= this->right()) {
         p.x -= this->width();
       }
-      
+
       while (p.y < this->bottom()) {
         p.y += this->height();
         p.x = this->reflectX(p.x);
@@ -46,7 +46,7 @@ class KleinMap : public MapType {
           *orientation = Orientation::reflectionX * *orientation;
         }
       }
-      
+
       while (p.y >= this->top()) {
         p.y -= this->height();
         p.x = this->reflectX(p.x);

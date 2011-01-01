@@ -1,10 +1,7 @@
 #include <sakusen/resources/filewriter.h>
 
-#include <sakusen/resources/fileutils.h>
+#include <sakusen/fileutils.h>
 #include <sakusen/resources/fileioexn.h>
-
-#include <fcntl.h>
-#include <stdio.h>
 
 using namespace sakusen::resources;
 

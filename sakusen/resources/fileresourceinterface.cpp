@@ -1,19 +1,5 @@
 #include <sakusen/resources/fileresourceinterface.h>
 
-#include <boost/xpressive/regex_algorithms.hpp>
-
-#include <sakusen/iarchive.h>
-#include <sakusen/resourcetype.h>
-#include <sakusen/maptemplate.h>
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/filereader.h>
-#include <sakusen/resources/filewriter.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/fileioexn.h>
-#include <sakusen/resources/pngimage.h>
-#include <sakusen/resources/vfs/directorybranch.h>
-#include <sakusen/resources/vfs/unionbranch.h>
-
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
     #include <ltdl_hacked/ltdl_hacked.h>
@@ -26,6 +12,19 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/xpressive/regex_algorithms.hpp>
+
+#include <sakusen/iarchive.h>
+#include <sakusen/resourcetype.h>
+#include <sakusen/maptemplate.h>
+#include <sakusen/fileutils.h>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/resources/filereader.h>
+#include <sakusen/resources/filewriter.h>
+#include <sakusen/resources/fileioexn.h>
+#include <sakusen/resources/pngimage.h>
+#include <sakusen/resources/vfs/directorybranch.h>
+#include <sakusen/resources/vfs/unionbranch.h>
 
 using namespace std;
 
@@ -183,7 +182,7 @@ FileResourceInterface::internalSearch(
         boost::shared_ptr<void>(), resourceSearchResult_error, ""
       );
   }
-  
+
   if (!fileAsArchive.isFinished()) {
     error = "archive was not exhausted by deserialization - could it be "
       "corrupted?";
@@ -191,7 +190,7 @@ FileResourceInterface::internalSearch(
         boost::shared_ptr<void>(), resourceSearchResult_error, ""
       );
   }
-  
+
   return boost::make_tuple(
       resourcePtr, resourceSearchResult_success, resource.getSakusenPath()
     );
@@ -217,7 +216,7 @@ FileResourceInterface::imageSearch(const String& path)
     return boost::make_tuple(Image::Ptr(), "");
   }
 }
-    
+
 boost::tuple<void*, ResourceSearchResult>
 FileResourceInterface::internalSymbolSearch(
     const String& moduleName,
@@ -227,7 +226,7 @@ FileResourceInterface::internalSymbolSearch(
   if (!loadModules) {
     return boost::make_tuple<void*>(NULL, resourceSearchResult_notSupported);
   }
-  
+
   vfs::Resource sourceResource;
   ResourceSearchResult result;
   boost::tie(sourceResource, result) =
@@ -249,7 +248,7 @@ FileResourceInterface::internalSymbolSearch(
     }
     return boost::make_tuple<void*>(NULL, result);
   }
-  
+
   String sourceSakPath = sourceResource.getSakusenPath();
 
   /* replace the extension of the filename to get the module name */
@@ -318,7 +317,7 @@ FileResourceInterface::internalSymbolSearch(
     char buffer[33];
 //    _itoa_s(GetLastError(), buffer, 33,2);
     FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
         FORMAT_MESSAGE_FROM_SYSTEM,
         NULL,
         GetLastError(),
@@ -328,7 +327,7 @@ FileResourceInterface::internalSymbolSearch(
       ".\n Error value: " + String(buffer);
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }
-  
+
   //Equivalent to  lt_ptr symbol = lt_dlsym(moduleHandle, symbolName.c_str());
   FARPROC symbol = GetProcAddress(moduleHandle,symbolName.c_str());
   //Error handling if this fails.
@@ -337,7 +336,7 @@ FileResourceInterface::internalSymbolSearch(
     char buffer[33];
  //   _itoa_s(GetLastError(), buffer, 33,2);
      FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
         FORMAT_MESSAGE_FROM_SYSTEM,
         NULL,
         GetLastError(),
@@ -406,7 +405,7 @@ bool FileResourceInterface::internalSave(
       );
 
     writer->write(archive);
-    
+
     return false;
   } catch (FileIOExn& e) {
     error = e.message;

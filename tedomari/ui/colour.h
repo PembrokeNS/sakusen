@@ -76,7 +76,7 @@ class Colour {
     inline uint8 ib() const { return uint8(b*255); }
     inline uint8 ia() const { return uint8(a*255); }
     //@}
-    
+
     /** \name Some predefined colours
      *
      * These static fields and methods allow common Colours to be easily

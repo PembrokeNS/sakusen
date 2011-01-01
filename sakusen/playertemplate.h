@@ -43,7 +43,7 @@ class LIBSAKUSEN_API PlayerTemplate {
     inline bool isRaceFixed() const { return raceFixed; }
     inline const std::vector<UnitTemplate>& getUnits() const { return units; }
     inline const Position& getStartPos() const { return startPos; }
-    
+
     bool sanityCheck(
         const Universe::ConstPtr& universe,
         const MapTemplate& map

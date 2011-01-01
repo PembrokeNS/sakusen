@@ -50,10 +50,10 @@ class Ref {
   public:
     inline operator bool() const { return !referee.expired(); }
     inline bool operator!() const { return referee.expired(); }
-    
+
     inline bool isRefTo(typename boost::add_const<T>::type* t) const { return referee.lock().get() == t; }
-    
-    /** \brief Standard dereferencing operator 
+
+    /** \brief Standard dereferencing operator
      *
      * \warning If you store a reference obtained via this function, then you
      * risk accessing it after it has been deleted.
@@ -61,7 +61,7 @@ class Ref {
     inline typename boost::shared_ptr<T>::reference operator*() const {
       return *referee.lock();
     }
-    
+
     inline boost::shared_ptr<T> operator->() const {
       return referee.lock();
     }
@@ -90,7 +90,7 @@ class Ref {
         SHandler().insert(archive, cast<typename boost::add_const<T>::type>());
       }
     }
-    
+
     static Ref<T> load(
         IArchive& archive,
         const DeserializationContext& context
@@ -100,7 +100,7 @@ class Ref {
       if (!valid) {
         return Ref<T>();
       }
-      
+
       return SHandler().extract(archive, context);
     }
 };

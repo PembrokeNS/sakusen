@@ -201,7 +201,7 @@ WeaponOrders WeaponOrders::load(
   targetUnit = Ref<ICompleteUnit>::load(archive, context);
   targetSensorReturns = Ref<ISensorReturns>::load(archive, context);
   archive >> targetNumber;
-  
+
   return WeaponOrders(
       targetType, targetPosition, targetFrame, targetUnit,
       targetSensorReturns, targetNumber

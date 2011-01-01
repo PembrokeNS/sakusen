@@ -22,7 +22,7 @@ OrderMessage OrderMessage::load(
   )
 {
   UnitId orderee;
-  
+
   in >> orderee;
   Order order(Order::load(in, context));
 

@@ -12,7 +12,7 @@ class StringSetLeaf : public Leaf {
   public:
     typedef boost::shared_ptr<StringSetLeaf> Ptr;
     typedef boost::shared_ptr<const StringSetLeaf> ConstPtr;
-    
+
     StringSetLeaf(
         const String& name,
         const String& readers,

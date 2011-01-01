@@ -1,19 +1,20 @@
 #include "asynchronousiohandler.h"
-#include <sakusen/comms/errorutils.h>
-#include <sakusen/resources/fileutils.h>
-#include <sakusen/resources/fileioexn.h>
+
+#include <cerrno>
+#include <ostream>
+#include <algorithm>
+#include <fcntl.h>
+
+#include <boost/filesystem/operations.hpp>
 
 #ifndef DISABLE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif
 
-#include <fcntl.h>
-
-#include <cerrno>
-#include <ostream>
-#include <algorithm>
-#include <boost/filesystem/operations.hpp>
+#include <sakusen/comms/errorutils.h>
+#include <sakusen/fileutils.h>
+#include <sakusen/resources/fileioexn.h>
 
 using namespace std;
 
@@ -47,24 +48,24 @@ AsynchronousIOHandler::AsynchronousIOHandler(
 {
   out << "> " << flush;
 #ifdef _MSC_VER
-  hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+  hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
   hStdin = GetStdHandle(STD_INPUT_HANDLE);
-  if (hStdin == INVALID_HANDLE_VALUE) 
+  if (hStdin == INVALID_HANDLE_VALUE)
   {
     /* No reason why this should stop the whole show. */
     SAKUSEN_FATAL("Error getting console handle. Will try again later.");
     return;
   }
 
-  //Change the console mode to single-character. 
-  if (! GetConsoleMode(hStdin, &fdwOldMode)) 
+  //Change the console mode to single-character.
+  if (! GetConsoleMode(hStdin, &fdwOldMode))
   {
     SAKUSEN_FATAL("GetConsoleMode Console Error");
     return;
   }
 
-  fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT); 
-  if (! SetConsoleMode(hStdin, fdwMode)) 
+  fdwMode = fdwOldMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT);
+  if (! SetConsoleMode(hStdin, fdwMode))
   {
     SAKUSEN_FATAL("SetConsoleMode Console Error");
     return;
@@ -120,7 +121,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     }
   }
 #else
-    
+
 /* Read what we can from the console */
   while (_kbhit())
   {
@@ -132,10 +133,10 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     if (! WriteConsole(hStdout,buf,1,&cWritten,NULL) ){
       out<<"Error Writing to Console."<<endl;
       break;
-    }      
+    }
     /* Append what we've read to the input buffer */
     /*SAKUSEN_QDEBUG("[updateBuffer] got char " << chr);*/
-    /* If a backspace is pressed, we want to remove a character from the buffer 
+    /* If a backspace is pressed, we want to remove a character from the buffer
      * and then move the cursor back one.*/
     switch(buf[0])
     {
@@ -160,7 +161,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
       if ((buf[0] == '\n') || (buf[0] == '\r')) {
         out << "\n> " << flush;
       }
-    }        
+    }
   }
 
   static const char newlines[2] = { '\n', '\r' };
@@ -172,7 +173,7 @@ void AsynchronousIOHandler::updateBuffer(const struct ::timeval& timeout)
     commandBuffer.push(String(inputBuffer.begin(), nl));
     inputBuffer.erase(inputBuffer.begin(), nl+1);
     nl = find(inputBuffer.begin(), inputBuffer.end(), '\n');
-  } 
+  }
 #endif
 }
 
@@ -187,7 +188,7 @@ void AsynchronousIOHandler::message(const String& message)
 #else // DISABLE_READLINE
 
 /** \brief Static data for tedomari::line_callback_handler to use
- * 
+ *
  * \internal */
 AsynchronousIOHandler* handler = NULL;
 
@@ -212,7 +213,7 @@ void tedomari::line_callback_handler(char* line)
     handler->commandBuffer.push(line);
     free(line);
   }
-}  
+}
 
 AsynchronousIOHandler::AsynchronousIOHandler(
     FILE* in,

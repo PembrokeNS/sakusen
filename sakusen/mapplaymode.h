@@ -47,12 +47,12 @@ class LIBSAKUSEN_API MapPlayMode {
       assert(player < players.size());
       return players[player];
     }
-    
+
     bool sanityCheck(
         const Universe::ConstPtr& universe,
         const MapTemplate& map
       );
-    
+
     void store(OArchive&) const;
     static MapPlayMode load(IArchive&, const DeserializationContext&);
 };

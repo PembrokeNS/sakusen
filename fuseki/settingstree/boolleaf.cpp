@@ -28,7 +28,7 @@ String BoolLeaf::setValue(const String& v)
       if ("" != (reason = server->settingAlteringCallback<bool>(this, true))) {
         return reason;
       }
-      
+
       value = true;
       return "";
     }
@@ -40,7 +40,7 @@ String BoolLeaf::setValue(const String& v)
       if ("" != (reason = server->settingAlteringCallback<bool>(this, false))) {
         return reason;
       }
-      
+
       value = false;
       return "";
     }

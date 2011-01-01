@@ -28,12 +28,12 @@ class LIBSAKUSEN_API UnitTemplate {
      * A 'private line' to the universe is needed because there's no world
      * when UnitTemplates are being used. */
     Universe::ConstPtr universe;
-    
+
     /** \brief Initial state of the unit */
     UnitStatus status;
   public:
     const IUnitStatus& getStatus(void) const { return status; }
-    
+
     void store(OArchive&) const;
     static UnitTemplate load(IArchive&, const DeserializationContext&);
 };

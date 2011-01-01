@@ -242,7 +242,7 @@ void MdnsPublisher::Implementation::game_changed() {
     if (avahi_entry_group_get_state(group) != AVAHI_ENTRY_GROUP_ESTABLISHED) {
       SAKUSEN_DEBUG("Avahi advert in unexpected state on update.");
     }
-    
+
     avahi_entry_group_update_service_txt_strlst(group,
         AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
         static_cast<AvahiPublishFlags>(0),

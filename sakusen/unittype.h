@@ -77,7 +77,7 @@ class LIBSAKUSEN_API UnitType {
     }
     inline UnitTypeId getCorpseUnitType() const { return corpseUnitType; }
     //@}
-    
+
     void store(OArchive&) const;
     static UnitType load(IArchive&);
 };

@@ -13,7 +13,7 @@ namespace ui {
  *
  * This class has methods for setting the text to be rendered, and it colour,
  * and can return the height which this text will take up when rendered.
- * 
+ *
  * It is expected that this class have subclasses implementing its methods for
  * each particular text rendering method. */
 class Layout {
@@ -28,7 +28,7 @@ class Layout {
     Colour colour;
   public:
     virtual ~Layout() {}
-   
+
     /** \name Accessors */
     //@{
     inline const Colour& getColour() const { return colour; }

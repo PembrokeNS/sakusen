@@ -84,7 +84,7 @@ class LIBSAKUSEN_SERVER_API Weapon : private boost::noncopyable {
         const Ref<LayeredUnit>& firer,
         uint16 weaponIndex
       );
-    
+
     /** \brief Callback called when a unit carrying this Weapon dies
      *
      * This might be used if a Weapon wants to have ammo exploding or
