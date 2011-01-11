@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="plugins">
+      <UniqueIdentifier>{7d9bb8ea-bd55-412b-8f8a-6643432027e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\plugins\listener.h">
+      <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\plugins\optioncallback.h">
+      <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\plugins\pluginexn.h">
+      <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\plugins\plugininfo.h">
+      <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\plugins\pluginserverinterface.h">
+      <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ballistic.h" />
+    <ClInclude Include="..\..\beam.h" />
+    <ClInclude Include="..\..\client.h" />
+    <ClInclude Include="..\..\completemap.h" />
+    <ClInclude Include="..\..\completeworld.h" />
+    <ClInclude Include="..\..\debuggingclient.h" />
+    <ClInclude Include="..\..\dynamicsensorreturns.h" />
+    <ClInclude Include="..\..\effect.h" />
+    <ClInclude Include="..\..\fixedmotion.h" />
+    <ClInclude Include="..\..\fuse.h" />
+    <ClInclude Include="..\..\groundmotion.h" />
+    <ClInclude Include="..\..\layeredunit.h" />
+    <ClInclude Include="..\..\libsakusen-server-global.h" />
+    <ClInclude Include="..\..\maskedptr.h" />
+    <ClInclude Include="..\..\mdns.h" />
+    <ClInclude Include="..\..\player.h" />
+    <ClInclude Include="..\..\unitcore.h" />
+    <ClInclude Include="..\..\unitlayer.h" />
+    <ClInclude Include="..\..\unitmotion.h" />
+    <ClInclude Include="..\..\weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ballistic.cpp" />
+    <ClCompile Include="..\..\beam.cpp" />
+    <ClCompile Include="..\..\client.cpp" />
+    <ClCompile Include="..\..\completemap.cpp" />
+    <ClCompile Include="..\..\completeworld.cpp" />
+    <ClCompile Include="..\..\debuggingclient.cpp" />
+    <ClCompile Include="..\..\dynamicsensorreturns.cpp" />
+    <ClCompile Include="..\..\fixedmotion.cpp" />
+    <ClCompile Include="..\..\groundmotion.cpp" />
+    <ClCompile Include="..\..\layeredunit.cpp" />
+    <ClCompile Include="..\..\mdns.cpp" />
+    <ClCompile Include="..\..\player.cpp" />
+    <ClCompile Include="..\..\unitcore.cpp" />
+    <ClCompile Include="..\..\unitmotion.cpp" />
+    <ClCompile Include="..\..\weapon.cpp" />
+  </ItemGroup>
+</Project>

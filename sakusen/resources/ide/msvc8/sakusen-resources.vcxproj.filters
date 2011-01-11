@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="vfs">
+      <UniqueIdentifier>{6eb769bc-2e16-4dee-8278-418a825510fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vfs\branch.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vfs\directorybranch.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vfs\unionbranch.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\file.cpp" />
+    <ClCompile Include="..\..\filereader.cpp" />
+    <ClCompile Include="..\..\fileresourceinterface.cpp" />
+    <ClCompile Include="..\..\fileutils.cpp" />
+    <ClCompile Include="..\..\filewriter.cpp" />
+    <ClCompile Include="..\..\libsakusen-resources-global.cpp" />
+    <ClCompile Include="..\..\pngimage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\vfs\branch.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vfs\directorybranch.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vfs\resource.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vfs\unionbranch.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\file.h" />
+    <ClInclude Include="..\..\fileioexn.h" />
+    <ClInclude Include="..\..\filereader.h" />
+    <ClInclude Include="..\..\fileresourceinterface.h" />
+    <ClInclude Include="..\..\fileutils.h" />
+    <ClInclude Include="..\..\filewriter.h" />
+    <ClInclude Include="..\..\libsakusen-resources-global.h" />
+    <ClInclude Include="..\..\pngimage.h" />
+  </ItemGroup>
+</Project>

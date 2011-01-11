@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="settingstree">
+      <UniqueIdentifier>{1b933dc6-54da-40b2-a945-9827152f5133}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\settingstree\applicationbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\boolleaf.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\branch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\clientbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\clientsbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\gamebranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\leaf.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\node.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\playerbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\playersbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\pluginbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\pluginsbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\serverbranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\settingstree.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\stringleaf.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\stringsetleaf.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\settingstree\universebranch.cpp">
+      <Filter>settingstree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\plugin.cpp" />
+    <ClCompile Include="..\..\plugininterface.cpp" />
+    <ClCompile Include="..\..\remoteclient.cpp" />
+    <ClCompile Include="..\..\server.cpp" />
+    <ClCompile Include="..\..\serveraction.cpp" />
+    <ClCompile Include="..\..\settingsuser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\settingstree\applicationbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\boolleaf.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\branch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\clientbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\clientsbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\gamebranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\intleaf-methods.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\intleaf.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\leaf.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\node.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\playerbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\playersbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\pluginbranch-methods.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\pluginbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\pluginsbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\serverbranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\settingstree.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\stringleaf.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\stringsetleaf.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\treetraits.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\settingstree\universebranch.h">
+      <Filter>settingstree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\fuseki-global.h" />
+    <ClInclude Include="..\..\plugin.h" />
+    <ClInclude Include="..\..\plugininterface.h" />
+    <ClInclude Include="..\..\remoteclient-methods.h" />
+    <ClInclude Include="..\..\remoteclient.h" />
+    <ClInclude Include="..\..\server-methods.h" />
+    <ClInclude Include="..\..\server.h" />
+    <ClInclude Include="..\..\serveraction.h" />
+    <ClInclude Include="..\..\settingsuser.h" />
+  </ItemGroup>
+</Project>

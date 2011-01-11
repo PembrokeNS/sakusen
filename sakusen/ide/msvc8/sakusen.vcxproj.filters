@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="maps">
+      <UniqueIdentifier>{cb717a0a-1af7-40d9-9f7d-e1f78e471dd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\maps\crosscutmap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\cylindermap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\kleinmap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\mobiusmap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\planemap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\spheremap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\maps\torusmap.h">
+      <Filter>maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\angle.h" />
+    <ClInclude Include="..\..\bounded.h" />
+    <ClInclude Include="..\..\box.h" />
+    <ClInclude Include="..\..\changeownerreason.h" />
+    <ClInclude Include="..\..\clientballisticid.h" />
+    <ClInclude Include="..\..\clientid.h" />
+    <ClInclude Include="..\..\completeunit.h" />
+    <ClInclude Include="..\..\deserializationcontext.h" />
+    <ClInclude Include="..\..\eachsensorreturn.h" />
+    <ClInclude Include="..\..\exceptions.h" />
+    <ClInclude Include="..\..\fifo_priority_queue.h" />
+    <ClInclude Include="..\..\frame.h" />
+    <ClInclude Include="..\..\gameobject.h" />
+    <ClInclude Include="..\..\getptr.h" />
+    <ClInclude Include="..\..\gnu_extensions.h" />
+    <ClInclude Include="..\..\hash_list.h" />
+    <ClInclude Include="..\..\heightfield-methods.h" />
+    <ClInclude Include="..\..\heightfield.h" />
+    <ClInclude Include="..\..\hitpointalteration.h" />
+    <ClInclude Include="..\..\hitpoints.h" />
+    <ClInclude Include="..\..\iarchive.h" />
+    <ClInclude Include="..\..\icompleteunit.h" />
+    <ClInclude Include="..\..\idbase.h" />
+    <ClInclude Include="..\..\idindex.h" />
+    <ClInclude Include="..\..\iheightfield.h" />
+    <ClInclude Include="..\..\iindex.h" />
+    <ClInclude Include="..\..\intersection.h" />
+    <ClInclude Include="..\..\intmunger.h" />
+    <ClInclude Include="..\..\isensorreturns.h" />
+    <ClInclude Include="..\..\ispatial.h" />
+    <ClInclude Include="..\..\iunitstatus.h" />
+    <ClInclude Include="..\..\iunittypedata.h" />
+    <ClInclude Include="..\..\libsakusen-global.h" />
+    <ClInclude Include="..\..\map-methods.h" />
+    <ClInclude Include="..\..\map.h" />
+    <ClInclude Include="..\..\mapplaymode.h" />
+    <ClInclude Include="..\..\maptemplate.h" />
+    <ClInclude Include="..\..\maskedptr.h" />
+    <ClInclude Include="..\..\mathsutils.h" />
+    <ClInclude Include="..\..\naivespatial.h" />
+    <ClInclude Include="..\..\null_deleter.h" />
+    <ClInclude Include="..\..\oarchive-methods.h" />
+    <ClInclude Include="..\..\oarchive.h" />
+    <ClInclude Include="..\..\order.h" />
+    <ClInclude Include="..\..\orderdata.h" />
+    <ClInclude Include="..\..\ordermessage.h" />
+    <ClInclude Include="..\..\ordertype.h" />
+    <ClInclude Include="..\..\orientation.h" />
+    <ClInclude Include="..\..\perception.h" />
+    <ClInclude Include="..\..\playerid.h" />
+    <ClInclude Include="..\..\playertemplate.h" />
+    <ClInclude Include="..\..\point.h" />
+    <ClInclude Include="..\..\ptrhash.h" />
+    <ClInclude Include="..\..\quadratic.h" />
+    <ClInclude Include="..\..\ray.h" />
+    <ClInclude Include="..\..\rectangle.h" />
+    <ClInclude Include="..\..\rectangleregion.h" />
+    <ClInclude Include="..\..\ref.h" />
+    <ClInclude Include="..\..\region-methods.h" />
+    <ClInclude Include="..\..\region.h" />
+    <ClInclude Include="..\..\regiontype.h" />
+    <ClInclude Include="..\..\resourceinterface-methods.h" />
+    <ClInclude Include="..\..\resourceinterface.h" />
+    <ClInclude Include="..\..\resourcesearchresult.h" />
+    <ClInclude Include="..\..\resourcetype.h" />
+    <ClInclude Include="..\..\sensorreturn.h" />
+    <ClInclude Include="..\..\sensorreturns.h" />
+    <ClInclude Include="..\..\sensorreturnsid.h" />
+    <ClInclude Include="..\..\serializationhandler.h" />
+    <ClInclude Include="..\..\servedgame.h" />
+    <ClInclude Include="..\..\sphereregion.h" />
+    <ClInclude Include="..\..\stringutils.h" />
+    <ClInclude Include="..\..\targettype.h" />
+    <ClInclude Include="..\..\topology.h" />
+    <ClInclude Include="..\..\unitid.h" />
+    <ClInclude Include="..\..\unitorders.h" />
+    <ClInclude Include="..\..\unitstatus-methods.h" />
+    <ClInclude Include="..\..\unitstatus.h" />
+    <ClInclude Include="..\..\unittemplate.h" />
+    <ClInclude Include="..\..\unittype.h" />
+    <ClInclude Include="..\..\unittypedata.h" />
+    <ClInclude Include="..\..\universe.h" />
+    <ClInclude Include="..\..\update.h" />
+    <ClInclude Include="..\..\updatedata.h" />
+    <ClInclude Include="..\..\updatetype.h" />
+    <ClInclude Include="..\..\visibility.h" />
+    <ClInclude Include="..\..\weaponorders.h" />
+    <ClInclude Include="..\..\weaponstatus.h" />
+    <ClInclude Include="..\..\weapontargettype.h" />
+    <ClInclude Include="..\..\weapontype.h" />
+    <ClInclude Include="..\..\world.h" />
+    <ClInclude Include="..\..\writer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\bounded.cpp" />
+    <ClCompile Include="..\..\completeunit.cpp" />
+    <ClCompile Include="..\..\eachsensorreturn.cpp" />
+    <ClCompile Include="..\..\frame.cpp" />
+    <ClCompile Include="..\..\heightfield.cpp" />
+    <ClCompile Include="..\..\iarchive.cpp" />
+    <ClCompile Include="..\..\icompleteunit.cpp" />
+    <ClCompile Include="..\..\isensorreturns.cpp" />
+    <ClCompile Include="..\..\libsakusen-global.cpp" />
+    <ClCompile Include="..\..\map.cpp" />
+    <ClCompile Include="..\..\mapplaymode.cpp" />
+    <ClCompile Include="..\..\maptemplate.cpp" />
+    <ClCompile Include="..\..\mathsutils.cpp" />
+    <ClCompile Include="..\..\naivespatial.cpp" />
+    <ClCompile Include="..\..\oarchive.cpp" />
+    <ClCompile Include="..\..\order.cpp" />
+    <ClCompile Include="..\..\orderdata.cpp" />
+    <ClCompile Include="..\..\ordermessage.cpp" />
+    <ClCompile Include="..\..\ordertype.cpp" />
+    <ClCompile Include="..\..\orientation.cpp" />
+    <ClCompile Include="..\..\playertemplate.cpp" />
+    <ClCompile Include="..\..\quadratic.cpp" />
+    <ClCompile Include="..\..\ray.cpp" />
+    <ClCompile Include="..\..\rectangle.cpp" />
+    <ClCompile Include="..\..\resourceinterface.cpp" />
+    <ClCompile Include="..\..\resourcesearchresult.cpp" />
+    <ClCompile Include="..\..\resourcetype.cpp" />
+    <ClCompile Include="..\..\sensorreturn.cpp" />
+    <ClCompile Include="..\..\sensorreturns.cpp" />
+    <ClCompile Include="..\..\serializationhandler.cpp" />
+    <ClCompile Include="..\..\stringutils.cpp" />
+    <ClCompile Include="..\..\unitorders.cpp" />
+    <ClCompile Include="..\..\unitstatus.cpp" />
+    <ClCompile Include="..\..\unittemplate.cpp" />
+    <ClCompile Include="..\..\unittype.cpp" />
+    <ClCompile Include="..\..\unittypedata.cpp" />
+    <ClCompile Include="..\..\universe.cpp" />
+    <ClCompile Include="..\..\update.cpp" />
+    <ClCompile Include="..\..\updatedata.cpp" />
+    <ClCompile Include="..\..\updatetype.cpp" />
+    <ClCompile Include="..\..\visibility.cpp" />
+    <ClCompile Include="..\..\weaponorders.cpp" />
+    <ClCompile Include="..\..\weaponstatus.cpp" />
+    <ClCompile Include="..\..\weapontype.cpp" />
+    <ClCompile Include="..\..\world.cpp" />
+  </ItemGroup>
+</Project>

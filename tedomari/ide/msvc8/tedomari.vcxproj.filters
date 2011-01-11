@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ui">
+      <UniqueIdentifier>{690eb334-d4d8-4d67-9444-38764980a794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\sdl">
+      <UniqueIdentifier>{2b81020a-4858-4ea5-b590-fbc16cceb922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\sdl\cairo">
+      <UniqueIdentifier>{7a8c0a3f-a107-463a-ab7e-fd9800006c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{c58ab581-262e-4da2-ab48-ba2720f8edd1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ui\action.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\alertdisplay.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\builtincommand.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\colour.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\command.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\commandentrybox.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\control.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\function.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\key.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\label.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\mapdisplay.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\mode.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\modifiedkey.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\modifiedkeyevent.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\regexentrybox.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\surface.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\textbox.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\ui.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\sdlsurface.cpp">
+      <Filter>ui\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\sdlui.cpp">
+      <Filter>ui\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\sdlutils.cpp">
+      <Filter>ui\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\cairo\cairolayout.cpp">
+      <Filter>ui\sdl\cairo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\cairo\cairoregion.cpp">
+      <Filter>ui\sdl\cairo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\sdl\cairo\cairoui.cpp">
+      <Filter>ui\sdl\cairo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\game.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\smartsensorreturnsfactory.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\smartunitfactory.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\asynchronousiohandler.cpp" />
+    <ClCompile Include="..\..\converter.cpp" />
+    <ClCompile Include="..\..\..\externals\libunicode\langinfo.c" />
+    <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\serverinterface.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ui\action.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\actionargument.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\actionparametertype.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\actiontarget.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\alert.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\alertdisplay.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\builtincommand.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\colour.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\command.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\commandentrybox.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\control.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\dockstyle.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\dummyregion.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\function.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\key.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\label.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\layout.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\mapdisplay.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\mode.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\modifiedkey.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\modifiedkeyevent.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\regexentrybox.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\region.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\surface.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\textbox.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\ui.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\uiexceptions.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\sdl\masks.h">
+      <Filter>ui\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\sdl\sdlsurface.h">
+      <Filter>ui\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\sdl\sdlui.h">
+      <Filter>ui\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\sdl\sdlutils.h">
+      <Filter>ui\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\smartsensorreturns.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\smartsensorreturnsfactory.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\smartunit.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\smartunitfactory.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\asynchronousiohandler.h" />
+    <ClInclude Include="..\..\converter.h" />
+    <ClInclude Include="..\..\..\externals\libunicode\langinfo.h" />
+    <ClInclude Include="..\..\serverinterface.h" />
+    <ClInclude Include="..\..\tedomari-global.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\..\ui\sdl\cairo\cairolayout.h">
+      <Filter>ui\sdl\cairo</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\ui\sdl\cairo\cairoregion.h">
+      <Filter>ui\sdl\cairo</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\ui\sdl\cairo\cairoui.h">
+      <Filter>ui\sdl\cairo</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>
