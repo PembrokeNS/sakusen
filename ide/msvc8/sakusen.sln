@@ -5,27 +5,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "python-bindings", "python-bindings", "{1ED7220A-FBA4-4007-B372-5B52971BEB72}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen", "..\..\libsakusen\ide\msvc8\libsakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen", "..\..\sakusen\ide\msvc8\sakusen.vcproj", "{57C8FBC1-74EC-4F27-A964-89B1D475A982}"
 	ProjectSection(ProjectDependencies) = postProject
 		{598635F0-5D26-4C6B-85B5-F6904DB3EB83} = {598635F0-5D26-4C6B-85B5-F6904DB3EB83}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-comms", "..\..\libsakusen\comms\ide\msvc8\libsakusen-comms.vcproj", "{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen-comms", "..\..\sakusen\comms\ide\msvc8\sakusen-comms.vcproj", "{5CD05372-DD2D-48B4-B7F2-E8861CF345F7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-server", "..\..\libsakusen\server\ide\msvc8\libsakusen-server.vcproj", "{8B705117-2954-465C-82CC-98C20598B4E3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen-server", "..\..\sakusen\server\ide\msvc8\sakusen-server.vcproj", "{8B705117-2954-465C-82CC-98C20598B4E3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-client", "..\..\libsakusen\client\ide\msvc8\libsakusen-client.vcproj", "{3E022526-106C-4C4B-987D-A7D476EF37C1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen-client", "..\..\sakusen\client\ide\msvc8\sakusen-client.vcproj", "{3E022526-106C-4C4B-987D-A7D476EF37C1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-resources", "..\..\libsakusen\resources\ide\msvc8\libsakusen-resources.vcproj", "{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen-resources", "..\..\sakusen\resources\ide\msvc8\sakusen-resources.vcproj", "{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5CD05372-DD2D-48B4-B7F2-E8861CF345F7} = {5CD05372-DD2D-48B4-B7F2-E8861CF345F7}
 		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B} = {1B29ED8B-2374-469E-9C94-00BC95E4FD5B}
@@ -34,7 +34,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-resources", "..\
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsakusen-resources-test", "..\..\libsakusen\resources\test\ide\msvc8\libsakusen-resources-test.vcproj", "{1CB628B3-89A4-4238-ABC6-A71B53AA7764}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sakusen-resources-test", "..\..\sakusen\resources\test\ide\msvc8\sakusen-resources-test.vcproj", "{1CB628B3-89A4-4238-ABC6-A71B53AA7764}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1B29ED8B-2374-469E-9C94-00BC95E4FD5B} = {1B29ED8B-2374-469E-9C94-00BC95E4FD5B}
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
