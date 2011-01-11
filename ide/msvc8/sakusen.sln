@@ -51,7 +51,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuseki", "..\..\fuseki\ide\
 		{57C8FBC1-74EC-4F27-A964-89B1D475A982} = {57C8FBC1-74EC-4F27-A964-89B1D475A982}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liboptimal", "..\..\liboptimal\ide\msvc8\liboptimal.vcproj", "{BF0D6147-4B74-4105-9105-8613E0B9067C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "optimal", "..\..\optimal\ide\msvc8\optimal.vcproj", "{BF0D6147-4B74-4105-9105-8613E0B9067C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tedomari", "..\..\tedomari\ide\msvc8\tedomari.vcproj", "{856F9BB0-0417-44A7-8193-60FE95D016BB}"
 	ProjectSection(ProjectDependencies) = postProject
