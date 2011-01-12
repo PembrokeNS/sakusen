@@ -41,9 +41,30 @@
 
 namespace sakusen {
 
-/** \bug Will need a variant of this for MSVC */
-template<typename T, typename Integer>
-inline T power(T c, Integer n) { return __gnu_cxx::power(c, n); }
+#ifdef __GNUC__
+	template<typename T, typename Integer>
+	inline T power(T c, Integer n) { return __gnu_cxx::power(c, n); }
+#else
+	/** \bug This is probably a particularly slow and stupid implementation.
+    Also I am unsure whether the n<0 case is needed or correct.*/
+	template<typename T, typename Integer>
+	inline T power(T c, Integer n) {
+        T d=1;
+        if(n==0) return 1;
+        if(n<0){
+            c=1./c;
+            n*=-1;
+        }
+        if(n>0){
+            while(n > 0){
+                d*=c;
+                --n;
+			}
+        }
+        return d; 
+    }
+#endif
+
 
 #ifdef SAKUSEN_USE_UNORDERED_MAP
 
