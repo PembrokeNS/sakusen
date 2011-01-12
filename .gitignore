@@ -28,3 +28,13 @@ externals/libpng/*
 *.vcxproj.user
 *.suo
 *.sdf
+*/ide/msvc*/Debug/*
+*/ide/msvc*/Release/*
+*/*/ide/msvc*/Debug/*
+*/*/ide/msvc*/Release/*
+*/*/*/ide/msvc*/Debug/*
+*/*/*/ide/msvc*/Release/*
+/ide/msvc*/Debug/*
+/ide/msvc*/Release/*
+/ide/msvc*/ipch/*
+server-plugins/*/ide/msvc/*
