@@ -12,10 +12,10 @@ template<typename T>
 class MaskedPtr;
 
 template<typename T>
-inline bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
+bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right);
 
 template<typename T>
-inline size_t hash_value(const MaskedPtr<T>& p);
+size_t hash_value(const MaskedPtr<T>& p);
 
 /** \brief Hides a pointer so that it cannot be dereferenced, but can still be
  * used as a UID.
@@ -44,14 +44,14 @@ class MaskedPtr {
 };
 
 template<typename T>
-inline bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right) {
+bool operator==(const MaskedPtr<T>& left, const MaskedPtr<T>& right) {
   return left.ptr == right.ptr;
 }
 
 /* The name hash_value for this function is required for it to work with
  * boost::hash */
 template<typename T>
-inline size_t hash_value(const MaskedPtr<T>& p)
+size_t hash_value(const MaskedPtr<T>& p)
 {
   return reinterpret_cast<size_t>(p.ptr);
 }

@@ -5,9 +5,11 @@
 /* I seem to have now ported mhash. Which worries me a little. */
 #ifdef _MSC_VER
 #include <mutils/mhash_config.h>
+#else
+/*Not in MSVC*/
+#include <stdbool.h>
 #endif //_MSC_VER
 
-#include <stdbool.h>
 #ifndef _Bool
 /* mhash relies on this #define, which is non-standard but present in the gcc
  * library.  This preamble to #include <mhash.h> makes it work elsewhere too */
