@@ -22,3 +22,9 @@ tags
 *.bak
 *.core
 temp.out
+externals/zlib/*
+externals/mhash-win32/*
+externals/libpng/*
+*.vcxproj.user
+*.suo
+*.sdf
