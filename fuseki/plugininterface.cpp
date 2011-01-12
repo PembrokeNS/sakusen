@@ -1,6 +1,4 @@
-#ifdef WIN32
-  #include <windows.h>
-#endif
+
 
 #ifdef __GNUC__
   #ifdef ENABLE_LTDL_HACKED
@@ -19,6 +17,11 @@ using namespace std;
 
 using namespace sakusen::server::plugins;
 using namespace fuseki;
+
+/*This MUST be after all the other headers, due to name conflicts*/
+#ifdef WIN32
+  #include <windows.h>
+#endif
 
 PluginInterface::PluginInterface(
     const vector<boost::filesystem::path>& pP,
@@ -81,6 +84,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
             throw PluginExn(error);
           }
 #else
+          
           //Opens the plugin.
           boost::filesystem::path module = candidate;
           //Equivalent to  lt_dlhandle moduleHandle = lt_dlopen(module.c_str());
