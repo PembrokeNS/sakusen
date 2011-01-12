@@ -2,6 +2,7 @@
 #define TEDOMARI__UI__UI_H
 
 #include "global.h"
+#include <math.h>
 
 #include <sakusen/stringutils.h>
 #include <sakusen/ptrhash.h>
