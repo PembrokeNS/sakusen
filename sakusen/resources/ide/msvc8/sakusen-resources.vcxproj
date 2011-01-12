@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>libsakusen-resources</ProjectName>
+    <ProjectName>sakusen-resources</ProjectName>
     <ProjectGuid>{FBCB6B17-6F57-41DF-BB3B-3AA74B44E7BE}</ProjectGuid>
     <RootNamespace>libsakusen-server</RootNamespace>
   </PropertyGroup>
@@ -45,6 +45,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -62,7 +63,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\..\..\externals\pcrecpp\pcre;..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\;..\..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1;BOOST_SYSTEM_DYN_LINK=1;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>true</MinimalRebuild>
@@ -114,7 +115,7 @@
     <ClCompile>
       <AdditionalOptions>/LDd  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\externals\pcrecpp;..\..\;..\..\..\;..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;..\..\..\..\externals\pcrecpp\pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\;..\..\..\..\comms;..\..\..\..\externals\libpng;..\..\..\..\externals\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;LIBSAKUSEN_RESOURCES_EXPORTS;WIN32;BOOST_FILESYSTEM_DYN_LINK=1;BOOST_SYSTEM_DYN_LINK=1;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -152,36 +153,30 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\vfs\branch.cpp" />
-    <ClCompile Include="..\..\vfs\directorybranch.cpp" />
-    <ClCompile Include="..\..\vfs\unionbranch.cpp" />
     <ClCompile Include="..\..\file.cpp" />
     <ClCompile Include="..\..\filereader.cpp" />
     <ClCompile Include="..\..\fileresourceinterface.cpp" />
-    <ClCompile Include="..\..\fileutils.cpp" />
     <ClCompile Include="..\..\filewriter.cpp" />
-    <ClCompile Include="..\..\libsakusen-resources-global.cpp" />
+    <ClCompile Include="..\..\global.cpp" />
     <ClCompile Include="..\..\pngimage.cpp" />
+    <ClCompile Include="..\..\vfs\branch.cpp" />
+    <ClCompile Include="..\..\vfs\directorybranch.cpp" />
+    <ClCompile Include="..\..\vfs\unionbranch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\vfs\branch.h" />
-    <ClInclude Include="..\..\vfs\directorybranch.h" />
-    <ClInclude Include="..\..\vfs\resource.h" />
-    <ClInclude Include="..\..\vfs\unionbranch.h" />
     <ClInclude Include="..\..\file.h" />
     <ClInclude Include="..\..\fileioexn.h" />
     <ClInclude Include="..\..\filereader.h" />
     <ClInclude Include="..\..\fileresourceinterface.h" />
-    <ClInclude Include="..\..\fileutils.h" />
     <ClInclude Include="..\..\filewriter.h" />
-    <ClInclude Include="..\..\libsakusen-resources-global.h" />
+    <ClInclude Include="..\..\global.h" />
     <ClInclude Include="..\..\pngimage.h" />
+    <ClInclude Include="..\..\vfs\branch.h" />
+    <ClInclude Include="..\..\vfs\directorybranch.h" />
+    <ClInclude Include="..\..\vfs\resource.h" />
+    <ClInclude Include="..\..\vfs\unionbranch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\externals\libpng\projects\visualc8\libpng.vcxproj">
-      <Project>{0008960e-e0dd-41a6-8265-00b31ddb4c21}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\comms\ide\msvc8\sakusen-comms.vcxproj">
       <Project>{5cd05372-dd2d-48b4-b7f2-e8861cf345f7}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

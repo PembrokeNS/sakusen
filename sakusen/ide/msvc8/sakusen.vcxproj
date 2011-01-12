@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>libsakusen</ProjectName>
+    <ProjectName>sakusen</ProjectName>
     <ProjectGuid>{57C8FBC1-74EC-4F27-A964-89B1D475A982}</ProjectGuid>
     <RootNamespace>libsakusen</RootNamespace>
   </PropertyGroup>
@@ -45,6 +45,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -62,7 +63,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\..\externals\mhash-win32\include;..\..\..\externals\mhash-win32\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\externals\mhash-win32\include;..\..\..\externals\mhash-win32\lib;..\..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;LIBSAKUSEN_EXPORTS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -103,7 +104,7 @@
     <ClCompile>
       <AdditionalOptions>/LDd  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\externals\mhash-win32\include;..\..\..\externals\mhash-win32\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\externals\mhash-win32\include;..\..\..\externals\mhash-win32\lib;..\..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;WIN32;LIBSAKUSEN_EXPORTS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -137,16 +138,11 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\maps\crosscutmap.h" />
-    <ClInclude Include="..\..\maps\cylindermap.h" />
-    <ClInclude Include="..\..\maps\kleinmap.h" />
-    <ClInclude Include="..\..\maps\mobiusmap.h" />
-    <ClInclude Include="..\..\maps\planemap.h" />
-    <ClInclude Include="..\..\maps\spheremap.h" />
-    <ClInclude Include="..\..\maps\torusmap.h" />
     <ClInclude Include="..\..\angle.h" />
+    <ClInclude Include="..\..\arithmetictraits.h" />
     <ClInclude Include="..\..\bounded.h" />
     <ClInclude Include="..\..\box.h" />
+    <ClInclude Include="..\..\buffer.h" />
     <ClInclude Include="..\..\changeownerreason.h" />
     <ClInclude Include="..\..\clientballisticid.h" />
     <ClInclude Include="..\..\clientid.h" />
@@ -155,9 +151,11 @@
     <ClInclude Include="..\..\eachsensorreturn.h" />
     <ClInclude Include="..\..\exceptions.h" />
     <ClInclude Include="..\..\fifo_priority_queue.h" />
+    <ClInclude Include="..\..\fileutils.h" />
     <ClInclude Include="..\..\frame.h" />
     <ClInclude Include="..\..\gameobject.h" />
     <ClInclude Include="..\..\getptr.h" />
+    <ClInclude Include="..\..\global.h" />
     <ClInclude Include="..\..\gnu_extensions.h" />
     <ClInclude Include="..\..\hash_list.h" />
     <ClInclude Include="..\..\heightfield-methods.h" />
@@ -170,21 +168,33 @@
     <ClInclude Include="..\..\idindex.h" />
     <ClInclude Include="..\..\iheightfield.h" />
     <ClInclude Include="..\..\iindex.h" />
+    <ClInclude Include="..\..\image.h" />
     <ClInclude Include="..\..\intersection.h" />
-    <ClInclude Include="..\..\intmunger.h" />
     <ClInclude Include="..\..\isensorreturns.h" />
     <ClInclude Include="..\..\ispatial.h" />
     <ClInclude Include="..\..\iunitstatus.h" />
     <ClInclude Include="..\..\iunittypedata.h" />
-    <ClInclude Include="..\..\libsakusen-global.h" />
+    <ClInclude Include="..\..\lcgiterator.h" />
     <ClInclude Include="..\..\map-methods.h" />
     <ClInclude Include="..\..\map.h" />
     <ClInclude Include="..\..\mapplaymode.h" />
+    <ClInclude Include="..\..\maps\crosscutmap.h" />
+    <ClInclude Include="..\..\maps\cylindermap.h" />
+    <ClInclude Include="..\..\maps\kleinmap.h" />
+    <ClInclude Include="..\..\maps\mobiusmap.h" />
+    <ClInclude Include="..\..\maps\planemap.h" />
+    <ClInclude Include="..\..\maps\spheremap.h" />
+    <ClInclude Include="..\..\maps\torusmap.h" />
     <ClInclude Include="..\..\maptemplate.h" />
     <ClInclude Include="..\..\maskedptr.h" />
+    <ClInclude Include="..\..\materielprovider.h" />
     <ClInclude Include="..\..\mathsutils.h" />
+    <ClInclude Include="..\..\morphingperlinnoisefield.h" />
+    <ClInclude Include="..\..\morphingperlinvectorfield.h" />
+    <ClInclude Include="..\..\morphingsawwavefield.h" />
     <ClInclude Include="..\..\naivespatial.h" />
     <ClInclude Include="..\..\null_deleter.h" />
+    <ClInclude Include="..\..\numbertarget.h" />
     <ClInclude Include="..\..\oarchive-methods.h" />
     <ClInclude Include="..\..\oarchive.h" />
     <ClInclude Include="..\..\order.h" />
@@ -193,12 +203,14 @@
     <ClInclude Include="..\..\ordertype.h" />
     <ClInclude Include="..\..\orientation.h" />
     <ClInclude Include="..\..\perception.h" />
+    <ClInclude Include="..\..\perlinnoisefield.h" />
     <ClInclude Include="..\..\playerid.h" />
     <ClInclude Include="..\..\playertemplate.h" />
     <ClInclude Include="..\..\point.h" />
     <ClInclude Include="..\..\ptrhash.h" />
     <ClInclude Include="..\..\quadratic.h" />
     <ClInclude Include="..\..\ray.h" />
+    <ClInclude Include="..\..\reader.h" />
     <ClInclude Include="..\..\rectangle.h" />
     <ClInclude Include="..\..\rectangleregion.h" />
     <ClInclude Include="..\..\ref.h" />
@@ -209,7 +221,10 @@
     <ClInclude Include="..\..\resourceinterface.h" />
     <ClInclude Include="..\..\resourcesearchresult.h" />
     <ClInclude Include="..\..\resourcetype.h" />
+    <ClInclude Include="..\..\revision.h" />
+    <ClInclude Include="..\..\sawwavefield.h" />
     <ClInclude Include="..\..\sensorreturn.h" />
+    <ClInclude Include="..\..\sensorreturnmap.h" />
     <ClInclude Include="..\..\sensorreturns.h" />
     <ClInclude Include="..\..\sensorreturnsid.h" />
     <ClInclude Include="..\..\serializationhandler.h" />
@@ -218,6 +233,7 @@
     <ClInclude Include="..\..\stringutils.h" />
     <ClInclude Include="..\..\targettype.h" />
     <ClInclude Include="..\..\topology.h" />
+    <ClInclude Include="..\..\unitcorneriterator.h" />
     <ClInclude Include="..\..\unitid.h" />
     <ClInclude Include="..\..\unitorders.h" />
     <ClInclude Include="..\..\unitstatus-methods.h" />
@@ -238,15 +254,22 @@
     <ClInclude Include="..\..\writer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\externals\mhash-win32\win32\libmhash\libmhash.vcxproj">
+      <Project>{598635f0-5d26-4c6b-85b5-f6904db3eb83}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\bounded.cpp" />
     <ClCompile Include="..\..\completeunit.cpp" />
     <ClCompile Include="..\..\eachsensorreturn.cpp" />
+    <ClCompile Include="..\..\fileutils.cpp" />
     <ClCompile Include="..\..\frame.cpp" />
+    <ClCompile Include="..\..\global.cpp" />
     <ClCompile Include="..\..\heightfield.cpp" />
     <ClCompile Include="..\..\iarchive.cpp" />
     <ClCompile Include="..\..\icompleteunit.cpp" />
     <ClCompile Include="..\..\isensorreturns.cpp" />
-    <ClCompile Include="..\..\libsakusen-global.cpp" />
     <ClCompile Include="..\..\map.cpp" />
     <ClCompile Include="..\..\mapplaymode.cpp" />
     <ClCompile Include="..\..\maptemplate.cpp" />
@@ -285,10 +308,8 @@
     <ClCompile Include="..\..\world.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\externals\mhash-win32\win32\libmhash\libmhash.vcxproj">
-      <Project>{598635f0-5d26-4c6b-85b5-f6904db3eb83}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
+    <None Include="..\..\mainpage.dox" />
+    <None Include="..\..\Makefile.local" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

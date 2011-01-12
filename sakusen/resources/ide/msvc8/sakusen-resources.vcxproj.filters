@@ -18,9 +18,8 @@
     <ClCompile Include="..\..\file.cpp" />
     <ClCompile Include="..\..\filereader.cpp" />
     <ClCompile Include="..\..\fileresourceinterface.cpp" />
-    <ClCompile Include="..\..\fileutils.cpp" />
     <ClCompile Include="..\..\filewriter.cpp" />
-    <ClCompile Include="..\..\libsakusen-resources-global.cpp" />
+    <ClCompile Include="..\..\global.cpp" />
     <ClCompile Include="..\..\pngimage.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +39,8 @@
     <ClInclude Include="..\..\fileioexn.h" />
     <ClInclude Include="..\..\filereader.h" />
     <ClInclude Include="..\..\fileresourceinterface.h" />
-    <ClInclude Include="..\..\fileutils.h" />
     <ClInclude Include="..\..\filewriter.h" />
-    <ClInclude Include="..\..\libsakusen-resources-global.h" />
+    <ClInclude Include="..\..\global.h" />
     <ClInclude Include="..\..\pngimage.h" />
   </ItemGroup>
 </Project>
