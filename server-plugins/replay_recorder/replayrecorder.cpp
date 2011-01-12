@@ -17,12 +17,12 @@ namespace server {
 namespace plugins {
 namespace replay_recorder {
 
-ReplayRecorder::ReplayRecorder(const PluginServerInterface& interface) :
+ReplayRecorder::ReplayRecorder(const PluginServerInterface& server_face) :
   keyTickInterval(0),
-  resourceInterface(interface.getResourceInterface())
+  resourceInterface(server_face.getResourceInterface())
 {
-  interface.registerOption("file", this, "");
-  interface.registerOption("keytickinterval", this, keyTickInterval);
+  server_face.registerOption("file", this, "");
+  server_face.registerOption("keytickinterval", this, keyTickInterval);
 }
 
 void ReplayRecorder::writeKeyTick()

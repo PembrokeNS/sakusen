@@ -7,17 +7,17 @@ namespace server {
 namespace plugins {
 namespace replay_recorder {
 
-void ReplayRecorderInfo::init(PluginServerInterface& interface)
+void ReplayRecorderInfo::init(PluginServerInterface& server_face)
 {
   if (replayRecorder) {
     throw PluginExn("replay_recorder already initialized");
   }
-  if (interface.isGameStarted()) {
+  if (server_face.isGameStarted()) {
     throw PluginExn("Must initialize replay_recorder plugin before game start");
   }
 
-  replayRecorder.reset(new ReplayRecorder(interface));
-  interface.registerListener(replayRecorder);
+  replayRecorder.reset(new ReplayRecorder(server_face));
+  server_face.registerListener(replayRecorder);
 }
 
 void ReplayRecorderInfo::close()

@@ -13,7 +13,7 @@ class ReplayRecorderInfo : public PluginInfo {
   private:
     ReplayRecorder::Ptr replayRecorder;
 
-    void init(PluginServerInterface& interface);
+    void init(PluginServerInterface& server_face);
     void close();
 };
 
