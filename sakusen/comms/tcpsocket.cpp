@@ -94,13 +94,17 @@ void TCPSocket::send(const void* buf, size_t len)
   char const* bufferEnd = toSend+len+sizeof(BufferLenType);
 
   while (toSend != bufferEnd) {
+    int const flags =
   #ifndef _MSC_VER
-      ssize_t retVal = ::send(sockfd, toSend, bufferEnd - toSend, MSG_NOSIGNAL);
+      MSG_NOSIGNAL
   #else
-	  /*Windows does not, I think, support SIGPIPE. 
-	  Hence a flag to tell the socket not to send the signal is also a bit redundant.*/
-	  ssize_t retVal = ::send(sockfd, toSend, bufferEnd - toSend, 0);  
+      /* Windows does not, I think, support SIGPIPE.
+       * Hence a flag to tell the socket not to send the signal is also a bit
+       * redundant. */
+      0
   #endif
+      ;
+    ssize_t retVal = ::send(sockfd, toSend, bufferEnd - toSend, flags);
     if (retVal == -1) {
       switch (socketErrno()) {
         case ENOTCONN:
