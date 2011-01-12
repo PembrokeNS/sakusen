@@ -228,7 +228,7 @@ sint32 Heightfield::getHeightAt(sint32 x, sint32 y) const
       sint32(xyResolution);
   }
   /* And finally the interpolation in the y direction (the two are done
-   * seperately for my sanity, and to reduce risk of overflow). */
+   * separately for my sanity, and to reduce risk of overflow). */
   return (sint32(yr) * upperHeight + sint32(xyResolution - yr) * lowerHeight) /
     sint32(xyResolution);
 }
