@@ -38,7 +38,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     const boost::filesystem::path& hf,
     int hl
   ) :
-  infd(NativeFileno(in)),
+  infd(fileUtils_fileno(in)),
   out(o),
   historyFile(hf),
   historyLength(hl),
