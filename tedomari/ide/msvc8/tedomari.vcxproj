@@ -73,11 +73,13 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_cairo|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_cairo|Win32'">false</LinkIncremental>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -109,7 +111,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;DISABLE_CAIRO;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -135,7 +137,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Cairo|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;..\..\..\externals\libunicode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -168,7 +170,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\client;..\..\..\externals\pcrecpp;..\..\;..\..\..\externals;.;..\..\..\externals\pcrecpp\pcre;..\..\..\externals\libunicode;..\..\..\externals\icu\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;..\..\..\externals\libunicode;..\..\..\externals\icu\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
