@@ -1,11 +1,6 @@
 @echo off
 echo USAGE: To setup a debug build use "setupsak D"
 if /I "%1" EQU "D" (set folder=Debug) else (set folder=Release)
-if /I "%1" EQU "D" set d=d 
-
-if EXIST "..\..\externals\STlport\bin\stlport%d%.5.1.dll" if EXIST ".\%folder%\stlport%d%.5.1.dll" (echo stlport%d%.5.1.dll already exists) else copy "..\..\externals\STlport\bin\stlport%d%.5.1.dll" ".\%folder%\stlport%d%.5.1.dll"
-
-if /I "%d%" EQU "d" set e=gd
 
 REM Execute libsak-res-test if not already.
 if EXIST "%AppData%\sakusen\data\test" (echo libsak-res-test already run) else ".\%folder%\libsakusen-resources-test"

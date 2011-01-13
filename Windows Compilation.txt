@@ -8,13 +8,11 @@ Place libpng in externals\libpng and zlib in externals\zlib. You must edit the z
 4. Download mhash from http://sourceforge.net/project/showfiles.php?group_id=4286 Place it in externals\mhash-win32. Make sure you do not overwrite mutils.h, mhash_int.h and mhash_config.h, which were modified for our purposes. git reset will fix it if you do.
 5. IF you are using tedomari, get SDL from http://www.libsdl.org/download-1.2.php (you want SDL-devel-1.2.*-VC8.zip) and unzip it to "externals\SDL". Move the files in externals\SDL\include into externals\SDL.
 6. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
-http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
-C:\GTK\include\pango-1.0
-C:\GTK\include\glib-2.0
-C:\GTK\lib\glib-2.0\include
-C:\GTK\include\cairo
-and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
+http://www.gtk.org/download-windows.html into externals\GTK
+If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
 7. If you desire to use unicode with tedomari, download icu from http://icu-project.org/download/4.0.html#ICU4C into externals\icu. If you do not desire to use unicode with tedomari, define the DISABLE_CONVERSION macro.
+8. If you desire to use readline with tedomari, download readline 5 from http://gnuwin32.sourceforge.net/packages/readline.htm to externals\readline
+Do not overwrite version of keymaps.h
 8. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
 9. To actually "play" Sakusen you must:
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
