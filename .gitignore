@@ -27,12 +27,14 @@ externals/mhash-win32/*
 externals/libpng/*
 externals/SDL/*
 externals/icu/*
+externals/readline/*
+externals/GTK/*
 *.opensdf
 *.vcxproj.user
 *.suo
 *.sdf
-*/ide/msvc*/Debug/*
-*/ide/msvc*/Release/*
+*/ide/msvc*/Debug*
+*/ide/msvc*/Release*
 */*/ide/msvc*/Debug/*
 */*/ide/msvc*/Release/*
 */*/*/ide/msvc*/Debug/*
