@@ -6,7 +6,6 @@
 #include <cerrno>
 
 #if defined(_MSC_VER)
-  /*Needed for WSAGetLastError, below*/
   /* The __declspec stuff for ensuring symbols are exported from DLLs and
    * imported back into libraries */
   #ifdef LIBSAKUSEN_COMMS_EXPORTS
