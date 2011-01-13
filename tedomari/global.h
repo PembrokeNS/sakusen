@@ -9,7 +9,6 @@
 
 #ifdef _MSC_VER
  #pragma warning(disable:4251 4275)
- #define REVISION "0.1"
 #endif
 
 namespace tedomari {

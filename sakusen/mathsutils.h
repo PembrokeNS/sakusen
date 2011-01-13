@@ -21,7 +21,7 @@ bool LIBSAKUSEN_API mathsUtils_boxesIntersect(
   );
 
 template<typename T>
-inline LIBSAKUSEN_API T mathsUtils_divideRoundUp(T const n, T const d)
+inline T mathsUtils_divideRoundUp(T const n, T const d)
 {
   return (n+d-1)/d;
 }

@@ -69,7 +69,7 @@ void UnitCore::incrementWeaponsState()
 
   for (size_t i=0; i<numWeapons; ++i) {
     weapons[i]->incrementState(refToThis, static_cast<uint16>(i));
-    if(not refToThis) return;
+    if(! refToThis) return;
   }
 }
 

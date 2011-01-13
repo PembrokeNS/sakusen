@@ -7,6 +7,11 @@
 
 #include <sakusen/gnu_extensions.h>
 
+#ifdef _MSC_VER
+/*This warning is about integer overflow. Since this is an RNG mod 2**64, integer overflow is the point.*/
+#pragma warning(disable:4307)
+#endif
+
 namespace sakusen {
 
 namespace detail {

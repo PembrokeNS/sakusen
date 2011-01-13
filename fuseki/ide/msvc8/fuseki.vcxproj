@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{00AD53E0-AD97-4512-8615-14A566EE2E4D}</ProjectGuid>
+    <RootNamespace>fuseki</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_AVAHI;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\..\liboptimal;..\..\..\libsakusen;..\..\..\libsakusen\comms;..\..\..\libsakusen\resources;..\..\..\libsakusen\server;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;BOOST_ALL_DYN_LINK=1;DISABLE_UNIX_SOCKETS;DISABLE_AVAHI;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\settingstree\applicationbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\boolleaf.cpp" />
+    <ClCompile Include="..\..\settingstree\branch.cpp" />
+    <ClCompile Include="..\..\settingstree\clientbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\clientsbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\gamebranch.cpp" />
+    <ClCompile Include="..\..\settingstree\leaf.cpp" />
+    <ClCompile Include="..\..\settingstree\node.cpp" />
+    <ClCompile Include="..\..\settingstree\playerbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\playersbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\pluginbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\pluginsbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\serverbranch.cpp" />
+    <ClCompile Include="..\..\settingstree\settingstree.cpp" />
+    <ClCompile Include="..\..\settingstree\stringleaf.cpp" />
+    <ClCompile Include="..\..\settingstree\stringsetleaf.cpp" />
+    <ClCompile Include="..\..\settingstree\universebranch.cpp" />
+    <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\plugin.cpp" />
+    <ClCompile Include="..\..\plugininterface.cpp" />
+    <ClCompile Include="..\..\remoteclient.cpp" />
+    <ClCompile Include="..\..\server.cpp" />
+    <ClCompile Include="..\..\serveraction.cpp" />
+    <ClCompile Include="..\..\settingsuser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\settingstree\applicationbranch.h" />
+    <ClInclude Include="..\..\settingstree\boolleaf.h" />
+    <ClInclude Include="..\..\settingstree\branch.h" />
+    <ClInclude Include="..\..\settingstree\clientbranch.h" />
+    <ClInclude Include="..\..\settingstree\clientsbranch.h" />
+    <ClInclude Include="..\..\settingstree\gamebranch.h" />
+    <ClInclude Include="..\..\settingstree\intleaf-methods.h" />
+    <ClInclude Include="..\..\settingstree\intleaf.h" />
+    <ClInclude Include="..\..\settingstree\leaf.h" />
+    <ClInclude Include="..\..\settingstree\node.h" />
+    <ClInclude Include="..\..\settingstree\playerbranch.h" />
+    <ClInclude Include="..\..\settingstree\playersbranch.h" />
+    <ClInclude Include="..\..\settingstree\pluginbranch-methods.h" />
+    <ClInclude Include="..\..\settingstree\pluginbranch.h" />
+    <ClInclude Include="..\..\settingstree\pluginsbranch.h" />
+    <ClInclude Include="..\..\settingstree\serverbranch.h" />
+    <ClInclude Include="..\..\settingstree\settingstree.h" />
+    <ClInclude Include="..\..\settingstree\stringleaf.h" />
+    <ClInclude Include="..\..\settingstree\stringsetleaf.h" />
+    <ClInclude Include="..\..\settingstree\treetraits.h" />
+    <ClInclude Include="..\..\settingstree\universebranch.h" />
+    <ClInclude Include="..\..\fuseki-global.h" />
+    <ClInclude Include="..\..\plugin.h" />
+    <ClInclude Include="..\..\plugininterface.h" />
+    <ClInclude Include="..\..\remoteclient-methods.h" />
+    <ClInclude Include="..\..\remoteclient.h" />
+    <ClInclude Include="..\..\server-methods.h" />
+    <ClInclude Include="..\..\server.h" />
+    <ClInclude Include="..\..\serveraction.h" />
+    <ClInclude Include="..\..\settingsuser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\optimal\ide\msvc8\optimal.vcxproj">
+      <Project>{bf0d6147-4b74-4105-9105-8613e0b9067c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\sakusen\comms\ide\msvc8\sakusen-comms.vcxproj">
+      <Project>{5cd05372-dd2d-48b4-b7f2-e8861cf345f7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\sakusen\ide\msvc8\sakusen.vcxproj">
+      <Project>{57c8fbc1-74ec-4f27-a964-89b1d475a982}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\sakusen\resources\ide\msvc8\sakusen-resources.vcxproj">
+      <Project>{fbcb6b17-6f57-41df-bb3b-3aa74b44e7be}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\sakusen\server\ide\msvc8\sakusen-server.vcxproj">
+      <Project>{8b705117-2954-465c-82cc-98c20598b4e3}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

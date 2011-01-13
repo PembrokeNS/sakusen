@@ -136,7 +136,12 @@
 #endif
 
 #ifndef SAKUSEN_THROW_SPEC
-  #define SAKUSEN_THROW_SPEC(a) throw(a)
+  #ifndef _MSC_VER
+    #define SAKUSEN_THROW_SPEC(a) throw(a)
+  #else
+    /*Exception specifiers are ignored under msvc*/
+    #define SAKUSEN_THROW_SPEC(a) 
+  #endif
 #endif
 
 #include <cassert>

@@ -27,7 +27,7 @@
 
 namespace sakusen { namespace comms {
 #ifdef WIN32
-  inline int socketErrno() { return WSAGetLastError(); }
+  #define socketErrno WSAGetLastError 
 #else
   inline int socketErrno() { return errno; }
 #endif

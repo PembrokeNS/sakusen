@@ -176,8 +176,8 @@ void MapDisplay::paint()
           Rectangle<sint32>(m->left(), m->bottom(), m->right(), m->top())
         ), Colour::green);
         */
-    Rectangle<sint32> displayRect = pixelToDex(
-        Rectangle<double>(0, 0, getWidth(), getHeight())
+    sakusen::Rectangle<sint32> displayRect = pixelToDex(
+        sakusen::Rectangle<double>(0, 0, getWidth(), getHeight())
       );
 
     /* Draw units */
@@ -230,7 +230,7 @@ void MapDisplay::paint()
     if (dragging) {
       /*SAKUSEN_DEBUG("Drawing the selection rectangle");*/
       /* Draw the selection rectangle as it stands */
-      Rectangle<double> selection(dexToPixel(dragStart), mousePos);
+      sakusen::Rectangle<double> selection(dexToPixel(dragStart), mousePos);
       r->drawRect(selection, Colour::grey(0.5));
     }
 
@@ -271,14 +271,14 @@ void MapDisplay::startDrag()
   dragStart = pixelToDex(mousePos);
 }
 
-Rectangle<sint32> MapDisplay::stopDrag()
+sakusen::Rectangle<sint32> MapDisplay::stopDrag()
 {
   if (!dragging) {
     SAKUSEN_DEBUG("stopped dragging when wasn't dragging");
-    return Rectangle<sint32>();
+    return sakusen::Rectangle<sint32>();
   }
 
   dragging = false;
-  return Rectangle<sint32>(dragStart, pixelToDex(mousePos));
+  return sakusen::Rectangle<sint32>(dragStart, pixelToDex(mousePos));
 }
 

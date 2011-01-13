@@ -88,7 +88,7 @@ boost::filesystem::path fileUtils_getHome()
 boost::filesystem::path fileUtils_configDirectory()
 {
 #ifdef WIN32
-  return fileUtils_getHome()/"sakusen"
+  return fileUtils_getHome()/"sakusen";
 #else
   char const* xdgConfigHome = getenv("XDG_CONFIG_HOME");
   if (xdgConfigHome && *xdgConfigHome) {

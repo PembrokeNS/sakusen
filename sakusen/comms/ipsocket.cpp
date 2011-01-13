@@ -96,7 +96,7 @@ void IPSocket::setNonBlocking(bool val)
   unsigned long flags = 0ul;
   if (val) flags = 1ul; else flags = 0ul;
   if (0 != ioctlsocket(sockfd, FIONBIO, &flags))
-    SAKUSEN_FATAL("could not set non-blocking; " << socket_errno);
+    SAKUSEN_FATAL("could not set non-blocking; " << socketErrno());
 #else
   int flags = fcntl(sockfd, F_GETFL);
   if (-1 == flags) {

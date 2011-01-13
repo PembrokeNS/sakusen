@@ -265,7 +265,7 @@ vector<Ref<UpdatedUnit> > UI::getUnitsAtCursor() {
   vector<Ref<UpdatedUnit> > result;
 
   Point<sint32> cursorPos = activeMapDisplay->getMousePosAtZero();
-  Rectangle<sint32> cursorRect(cursorPos, cursorPos);
+  sakusen::Rectangle<sint32> cursorRect(cursorPos, cursorPos);
   ISpatial::Result units =
     client::world->getSpatialIndex()->findIntersecting(
         cursorRect, gameObject_unit

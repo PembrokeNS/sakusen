@@ -43,7 +43,7 @@ class Buffer {
     void ensureCapacity(size_t reqdCapacity) {
       ensureUnique(reqdCapacity);
       if (capacity < reqdCapacity) {
-        capacity = std::max(2*capacity, reqdCapacity);
+        capacity = std::max<size_t>(2*capacity, reqdCapacity);
         boost::shared_array<uint8> newContent(new uint8[capacity]);
         memcpy(newContent.get(), content.get(), size);
         content = newContent;
@@ -63,7 +63,7 @@ class Buffer {
       if (!content || content.unique()) {
         return;
       }
-      capacity = std::max(size, newCapacity);
+      capacity = std::max<size_t>(size, newCapacity);
       boost::shared_array<uint8> newContent(new uint8[capacity]);
       memcpy(newContent.get(), content.get(), size);
       content = newContent;

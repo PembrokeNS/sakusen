@@ -263,7 +263,7 @@ void runClient(
   socketAddress = options.joinAddress;
   if (socketAddress.empty()) {
 #ifdef DISABLE_UNIX_SOCKETS
-    socketAddress = "tcp"ADDR_DELIM"localhost";
+    socketAddress = "tcp"SAKUSEN_COMMS_ADDR_DELIM"localhost";
 #else
     /* Use default socket */
     socketAddress =

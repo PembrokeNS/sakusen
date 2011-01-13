@@ -91,11 +91,11 @@ void Control::alignSubControls()
 {
   for (list< list<Control*> >::iterator layer = subControls.begin();
       layer != subControls.end(); ++layer) {
-    Rectangle<uint16> remainingArea(0, 0, getWidth(), getHeight());
+    sakusen::Rectangle<uint16> remainingArea(0, 0, getWidth(), getHeight());
 
     for (list<Control*>::iterator subControl = layer->begin();
         subControl != layer->end(); ++subControl) {
-      Rectangle<uint16> controlArea(remainingArea);
+      sakusen::Rectangle<uint16> controlArea(remainingArea);
       switch ((*subControl)->getDockStyle()) {
         case dockStyle_top:
           controlArea.maxy = controlArea.miny +

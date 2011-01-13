@@ -1,20 +1,18 @@
 To Compile and Run Sakusen for windows, do the following:
 
-0. Download an svn copy. I assume you have already done this to be reading this file.
-1. Download and install VC 2005 (or later). The file "Installing VC Express" in this directory may be useful here.
-2. Download and install Boost 1.36. http://www.boostpro.com/products/free. You must also add the boost include directories to your VC++ include path. This can be done in the Projects and Solutions section in the Options dialog box. 
-3. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.2.20 and zlib >=1.2.3 sources.
-Place libpng in externals\libpng and zlib in externals\zlib
-4. Download mhash from http://sourceforge.net/project/showfiles.php?group_id=4286 Place it in externals\mhash-win32. Make sure you do not overwrite mutils.h, mhash_int.h and mhash_config.h, which were modified for our purposes. svn revert on the directory will fix it if you do.
+0. Clone from git. I assume you have already done this to be reading this file.
+1. Download and install VC 2010 (or later). 
+2. Download and install Boost at least 1.44. http://www.boostpro.com/products/free. You must also add the boost include directories to your VC++ include path. This can be done in the properties page of each project. 
+3. Download from http://sourceforge.net/project/showfiles.php?group_id=5624 libpng >=1.5 and zlib >=1.2.5 sources.
+Place libpng in externals\libpng and zlib in externals\zlib. You must edit the zlib and libpng .vcxproj projects to refer to the correct path for zlib.props, which is ..\zlib.props
+4. Download mhash from http://sourceforge.net/project/showfiles.php?group_id=4286 Place it in externals\mhash-win32. Make sure you do not overwrite mutils.h, mhash_int.h and mhash_config.h, which were modified for our purposes. git reset will fix it if you do.
 5. IF you are using tedomari, get SDL from http://www.libsdl.org/download-1.2.php (you want SDL-devel-1.2.*-VC8.zip) and unzip it to "externals\SDL". Move the files in externals\SDL\include into externals\SDL.
 6. IF you desire a Pango-Cairo UI, you should install the GTK dev libraries from here:
-http://gladewin32.sourceforge.net/ and add the following paths to your MSVC include paths:
-C:\GTK\include\pango-1.0
-C:\GTK\include\glib-2.0
-C:\GTK\lib\glib-2.0\include
-C:\GTK\include\cairo
-and C:\GTK\lib to your library paths. If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
+http://www.gtk.org/download-windows.html into externals\GTK
+If you do not desire a Cairo UI, you may skip this step. Note that at present Cairo is the only UI there is.
 7. If you desire to use unicode with tedomari, download icu from http://icu-project.org/download/4.0.html#ICU4C into externals\icu. If you do not desire to use unicode with tedomari, define the DISABLE_CONVERSION macro.
+8. If you desire to use readline with tedomari, download readline 5 from http://gnuwin32.sourceforge.net/packages/readline.htm to externals\readline
+Do not overwrite version of keymaps.h
 8. Compile Sakusen by opening the main solution file and pressing f7. This may take some time (~15 mins here).
 9. To actually "play" Sakusen you must:
    a) Run setupsak.bat (in the same directory as the main solution file). Use "setupsak D" to setup a debug build. This script:
