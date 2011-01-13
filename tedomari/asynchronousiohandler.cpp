@@ -23,14 +23,14 @@ using namespace sakusen::comms;
 using namespace sakusen::resources;
 using namespace tedomari;
 
-#ifdef DISABLE_READLINE
-
-#define INPUT_BUFFER_LEN 512
-
 #ifdef WIN32
 #include <conio.h>
 #include <stdio.h>
 #endif
+
+#ifdef DISABLE_READLINE
+
+#define INPUT_BUFFER_LEN 512
 
 AsynchronousIOHandler::AsynchronousIOHandler(
     FILE* in,
@@ -221,7 +221,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
     const boost::filesystem::path& hf,
     int hl
   ) :
-  infd(fileno(in)),
+  infd(fileUtils_fileno(in)),
   out(o),
   historyFile(hf),
   historyLength(hl),
@@ -269,10 +269,18 @@ void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout2)
   FD_SET(infd, &inSet);
   struct timeval timeout=timeout2;
   while(true) {
+  /* The implementation of select on windows only works on network sockets*/
+#ifdef WIN32
+    if(_kbhit())
+        rl_callback_read_char();
+    else
+        return;
+#else
     switch(select(infd+1, &inSet, NULL, NULL, &timeout)) {
       case -1:
         SAKUSEN_FATAL("select failed , errno=" << errno << " (" <<
           errorUtils_parseErrno(errno) << ")");
+
       case 0:
         /* Nothing further */
         return;
@@ -283,6 +291,7 @@ void AsynchronousIOHandler::updateBuffer(const struct timeval& timeout2)
       default:
         SAKUSEN_FATAL("Unexpected return value from select.");
     }
+#endif
   }
 }
 
