@@ -183,8 +183,4 @@
     <ClCompile Include="..\..\weapontype.cpp" />
     <ClCompile Include="..\..\world.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\mainpage.dox" />
-    <None Include="..\..\Makefile.local" />
-  </ItemGroup>
 </Project>

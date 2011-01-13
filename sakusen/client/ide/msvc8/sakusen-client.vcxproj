@@ -48,6 +48,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\boost\boost_1_44;..\..\..\</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -138,8 +139,14 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ide\msvc8\sakusen.vcxproj">
+      <Project>{57c8fbc1-74ec-4f27-a964-89b1d475a982}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\..\client.h" />
-    <ClInclude Include="..\..\libsakusen-client-global.h" />
+    <ClInclude Include="..\..\global.h" />
     <ClInclude Include="..\..\partialheightfield.h" />
     <ClInclude Include="..\..\partialmap.h" />
     <ClInclude Include="..\..\partialworld.h" />
@@ -154,13 +161,8 @@
     <ClCompile Include="..\..\partialmap.cpp" />
     <ClCompile Include="..\..\partialworld.cpp" />
     <ClCompile Include="..\..\player.cpp" />
+    <ClCompile Include="..\..\updatedsensorreturns.cpp" />
     <ClCompile Include="..\..\updatedunit.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ide\msvc8\sakusen.vcxproj">
-      <Project>{57c8fbc1-74ec-4f27-a964-89b1d475a982}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
