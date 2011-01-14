@@ -141,8 +141,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Cairo|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;..\..\..\externals\GTK\include\pango-1.0;..\..\..\externals\GTK\include\glib-2.0;..\..\..\externals\GTK\lib\glib-2.0\include;..\..\..\externals\GTK\include\cairo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_READLINE;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\;..\..\..\externals;..\..\..\externals\icu\include;..\..\..\externals\libunicode;..\..\..\externals\GTK\include\pango-1.0;..\..\..\externals\GTK\include\glib-2.0;..\..\..\externals\GTK\lib\glib-2.0\include;..\..\..\externals\GTK\include\cairo;..\..\..\externals\readline\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_UNICODE;BOOST_ALL_DYN_LINK=1;DISABLE_UNIX_SOCKETS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -158,7 +158,7 @@
  %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>..\..\..\externals\SDL\lib\SDL.lib;..\..\..\externals\SDL\lib\SDLmain.lib;..\..\..\externals\icu\lib\icuuc.lib;gobject-2.0.lib;pango-1.0.lib;cairo.lib;pangocairo-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-cairo.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib;..\..\..\externals\GTK\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib;..\..\..\externals\GTK\lib;..\..\..\externals\readline\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -184,7 +184,7 @@
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\externals\SDL\lib\SDL.lib;..\..\..\externals\SDL\lib\SDLmain.lib;..\..\..\externals\icu\lib\icuuc.lib;gobject-2.0.lib;pango-1.0.lib;cairo.lib;pangocairo-1.0.lib;readline.lib;history.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\externals\SDL\lib\SDL.lib;..\..\..\externals\SDL\lib\SDLmain.lib;..\..\..\externals\icu\lib\icuuc.lib;gobject-2.0.lib;pango-1.0.lib;cairo.lib;pangocairo-1.0.lib;readline.lib;history.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-cairo.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\externals\SDL\lib;..\..\..\externals\icu\lib;..\..\..\externals\GTK\lib;..\..\..\externals\readline\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

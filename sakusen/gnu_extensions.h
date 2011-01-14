@@ -45,22 +45,20 @@ namespace sakusen {
   template<typename T, typename Integer>
   inline T power(T c, Integer n) { return __gnu_cxx::power(c, n); }
 #else
-  /** \bug This is probably a particularly slow and stupid implementation.
-    Also I am unsure whether the n<0 case is needed or correct.*/
   template<typename T, typename Integer>
   inline T power(T c, Integer n) {
-    T d=1;
     if (n==0) return 1;
     if (n<0) {
       SAKUSEN_FATAL("negative power");
     }
-    if (n>0) {
-      while (n > 0) {
-        d*=c;
-        --n;
-      }
+    if(n%2){
+        T d=power(c, (n-1)/2);
+        return d*d*c;
     }
-    return d;
+    else{
+        T d = power(c,n/2);
+        return d*d;
+    }
   }
 #endif
 

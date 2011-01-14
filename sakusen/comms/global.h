@@ -48,9 +48,10 @@ namespace sakusen { namespace comms {
 
 /** The max length allowed for any sakusen message sent over the
  * wire.
- *
- * \bug This is surely unnecessary. */
-#define SAKUSEN_COMMS_BUFFER_LEN 1000000
+ * Please do not increase this too much, as it will cause stack overflows.
+ * Also small buffers are needed for low latency.
+ * If you find yourself pushing 32kB messages, find a way to break up your messages.*/
+#define SAKUSEN_COMMS_BUFFER_LEN 32000
 
 /** The delimiter for sakusen-style socket addresses */
 #define SAKUSEN_COMMS_ADDR_DELIM "|"
