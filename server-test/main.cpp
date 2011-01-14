@@ -6,10 +6,12 @@
 
 #include <time.h>
 
-#ifdef ENABLE_LTDL_HACKED
-  #include <ltdl_hacked/ltdl_hacked.h>
-#else
-  #include <ltdl.h>
+#ifdef __GNUC__
+    #ifdef ENABLE_LTDL_HACKED
+     #include <ltdl_hacked/ltdl_hacked.h>
+    #else
+     #include <ltdl.h>
+    #endif
 #endif
 
 #include <sakusen/server/global.h>
@@ -22,6 +24,11 @@
 #include <sakusen/server/completeworld.h>
 #include <sakusen/server/debuggingclient.h>
 #include "patrollerclient.h"
+
+/*This MUST be after all the other headers, due to name conflicts*/
+#ifdef WIN32
+  #include <windows.h>
+#endif
 
 #define NANO 1000000000 /* Nanoseconds in a second */
 
@@ -86,10 +93,13 @@ void doLoadTest(ostream& output)
 
 int main(/* int argc, char** argv */)
 {
+
+#ifdef __GNUC__
   /* ltdl initialization */
   if (lt_dlinit()) {
     SAKUSEN_FATAL("lt_dlinit() failed");
   }
+#endif
 
   boost::filesystem::path::default_name_check(
       boost::filesystem::portable_posix_name
@@ -193,10 +203,12 @@ int main(/* int argc, char** argv */)
   cout<<"Total time taken: "<<clock()<<"ms"<<endl;
 #endif
 
+#ifdef __GNUC__
   /* ltdl finalization */
   if (lt_dlexit()) {
     SAKUSEN_FATAL("lt_dlexit() failed");
   }
+#endif
 
   return 0;
 }
