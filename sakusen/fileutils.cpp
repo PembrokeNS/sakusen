@@ -92,7 +92,7 @@ boost::filesystem::path fileUtils_configDirectory()
 #else
   char const* xdgConfigHome = getenv("XDG_CONFIG_HOME");
   if (xdgConfigHome && *xdgConfigHome) {
-    return xdgConfigHome;
+    return xdgConfigHome/"sakusen";
   } else {
     return fileUtils_getHome()/".config"/"sakusen";
   }
