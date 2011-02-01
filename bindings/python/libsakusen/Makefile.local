@@ -1,8 +1,9 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
+PYTHON ?= python
 THIS_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(top_srcdir) -I$(top_srcdir) `python-config --cflags` $(SWIGWORDSIZE)
 define PYTHON_VERSION
-`printf "import distutils.sysconfig\nprint distutils.sysconfig.get_python_version()\n"|python`
+`printf "import distutils.sysconfig\nfrom __future__ import print_function\nprint(distutils.sysconfig.get_python_version())\n"| $(PYTHON)`
 endef
 PYLIBDIR := $(PREFIX)/lib/python$(PYTHON_VERSION)/site-packages
 
