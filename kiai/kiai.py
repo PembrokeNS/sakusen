@@ -14,6 +14,7 @@ from sakusen_comms import *
 from connectDialogImpl import connectDialog
 from mainWindowImpl import mainWindow
 from socketModel import socketModel
+from sys import version_info
 
 
 KIAI_SUBDIR="kiai"
@@ -29,7 +30,11 @@ def userconfig(s):
 
 userconfig("startup")
 # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
-aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
+
+if(version_info[0] < 3):
+    aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
+else:
+    aboutData = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
