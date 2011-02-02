@@ -9,8 +9,7 @@ all-nonrecursive: connectDialog.py mainWindow.py orientationDialog.py resources.
 	pyuic4 -o $@ $<
 
 %.py: $(this_srcdir)%.qrc $(this_srcdir)Makefile.local
-	echo $(PY_VER_ARGS)
-	pyrcc4 -o $@ $<
+	pyrcc4 $(PY_VER_ARGS) -o $@ $<
 
 run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
 	echo '#!/bin/sh' > $@
