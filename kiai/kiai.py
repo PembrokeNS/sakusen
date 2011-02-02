@@ -34,7 +34,7 @@ userconfig("startup")
 if(version_info[0] < 3):
     aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
 else:
-    aboutData = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
+    aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), "0.0.4 気持ち".encode(), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md4401@srcf.ucam.org")
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
