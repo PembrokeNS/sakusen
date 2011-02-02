@@ -1,6 +1,7 @@
 NO_AUTO_COMPILING=yes
 PYTHON ?= python
-PYTHON_VERSION = $(shell python -V 2>&1 | sed 's/^.* //' | sed 's/\..*$$//')
+PYTHON_VERSION = $(shell $(PYTHON) -V 2>&1 | sed 's/^.* //' | sed 's/\..*$$//')
+PY_VER_ARGS = $(shell [ 3 -eq $(PYTHON_VERSION) ] && echo '-py3')
 
 all-nonrecursive: connectDialog.py mainWindow.py orientationDialog.py resources.py run-kiai-from-builddir.sh
 
@@ -8,7 +9,7 @@ all-nonrecursive: connectDialog.py mainWindow.py orientationDialog.py resources.
 	pyuic4 -o $@ $<
 
 %.py: $(this_srcdir)%.qrc $(this_srcdir)Makefile.local
-	echo $(PYTHON_VERSION)
+	echo $(PY_VER_ARGS)
 	pyrcc4 -o $@ $<
 
 run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
