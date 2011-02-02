@@ -1,6 +1,6 @@
 NO_AUTO_COMPILING=yes
 PYTHON ?= python
-PYTHON_VERSION = `python -V 2>&1 | sed 's/^.* //' | sed 's/\..*$$//'`
+PYTHON_VERSION = $(shell python -V 2>&1 | sed 's/^.* //' | sed 's/\..*$$//')
 
 all-nonrecursive: connectDialog.py mainWindow.py orientationDialog.py resources.py run-kiai-from-builddir.sh
 
