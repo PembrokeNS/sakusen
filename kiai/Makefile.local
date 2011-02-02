@@ -1,17 +1,20 @@
 NO_AUTO_COMPILING=yes
+PYTHON ?= python
+PYTHON_VERSION = $(shell $(PYTHON) -V 2>&1 | sed 's/^.* //' | sed 's/\..*$$//')
+PY_VER_ARGS = $(shell [ 3 -eq $(PYTHON_VERSION) ] && echo '-py3')
 
 all-nonrecursive: connectDialog.py mainWindow.py orientationDialog.py resources.py run-kiai-from-builddir.sh
 
-%.py: $(this_srcdir)%.ui
-	pyuic4 -w -o $@ $<
+%.py: $(this_srcdir)%.ui $(this_srcdir)Makefile.local
+	pyuic4 -o $@ $<
 
-%.py: $(this_srcdir)%.qrc
-	pyrcc4 -py3 -o $@ $<
+%.py: $(this_srcdir)%.qrc $(this_srcdir)Makefile.local
+	pyrcc4 $(PY_VER_ARGS) -o $@ $<
 
 run-kiai-from-builddir.sh: $(this_srcdir)Makefile.local
 	echo '#!/bin/sh' > $@
 	echo 'cd $$(dirname $$(which $$0))' >> $@
-	echo 'PYTHONPATH=$(top_builddir)bindings/python/libsakusen:$(top_builddir)bindings/python/libsakusen/.libs:$(top_builddir)kiai python3.1 "$$@" $(this_srcdir)kiai.py' >> $@
+	echo 'PYTHONPATH=$(top_builddir)bindings/python/libsakusen:$(top_builddir)bindings/python/libsakusen/.libs:$(top_builddir)kiai $(this_srcdir)kiai.py' >> $@
 	-chmod a+x $@
 
 clean:

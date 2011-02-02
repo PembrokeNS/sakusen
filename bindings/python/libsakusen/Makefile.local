@@ -1,8 +1,9 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
+PYTHON ?= python
 THIS_CPPFLAGS := $(BUILD_CPPFLAGS) -I$(top_srcdir) -I$(top_srcdir) `python-config --cflags` $(SWIGWORDSIZE)
 define PYTHON_VERSION
-`printf "import distutils.sysconfig\nprint distutils.sysconfig.get_python_version()\n"|python`
+`printf "import distutils.sysconfig\nfrom __future__ import print_function\nprint(distutils.sysconfig.get_python_version())\n"| $(PYTHON)`
 endef
 PYLIBDIR := $(PREFIX)/lib/python$(PYTHON_VERSION)/site-packages
 
@@ -53,12 +54,12 @@ $(OBJECTS) sakusen.lo: %.lo: %.cpp
 # There's no easy way to know what header files libsakusen.i is including, so
 # we just assume it's including all of them except revision.h
 sakusen.cpp: $(top_srcdir)bindings/libsakusen.i \
-		$(filter-out %revision.h,$(wildcard $(top_srcdir)sakusen/*.h))
-	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
+		$(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h))
+	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 $(SOURCES): sakusen_%.cpp: $(top_srcdir)bindings/libsakusen-%.i \
 		$(top_srcdir)bindings/libsakusen.i
-	$(SWIG) -py3 -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
+	$(SWIG) -dirprot $(SWIGWORDSIZE) -python -c++ -o $@ -I$(top_srcdir) -I/usr/include $<
 
 define source_dependencies
 sakusen_$(1).cpp: \
