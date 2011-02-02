@@ -174,7 +174,7 @@ $(SUBDIR_MAKEFILES): %/Makefile: $(top_srcdir)makefiles/Makefile.common
 
 remove-empty-subdirs:
 	-rm -f $(SUBDIR_MAKEFILES)
-	-rmdir --ignore-fail-on-non-empty $(SUBDIRS)
+	-rmdir $(SUBDIRS) || true
 
 endif
 
