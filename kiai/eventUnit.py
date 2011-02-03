@@ -13,6 +13,8 @@ import resources
 from util import color
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons
 
+selectedUnits = set()
+
 class constructor:
 	def __init__(self, cname, mainwindow):
 		self.button = kdeui.KPushButton(mainwindow.ui.construct)
@@ -67,6 +69,7 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		self.mainwindow = mainwindow
 	def itemChange(self, change, value):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
+            value and selectedUnits.add(self) or selectedUnits.remove(self)
 			s = self.unit.getStatus()
 			utype = s.getTypePtr()
 			for j,w in enumerate(utype.getWeapons()):
