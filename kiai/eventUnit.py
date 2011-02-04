@@ -15,6 +15,8 @@ from sceneModel import mpeFunction, orderSelectedUnits, forWeapons
 from singleton import interestingthings
 
 selectedUnits = set()
+interestingthings['selectedUnits'] = selectedUnits
+interestingthings['units'] = set()
 
 class constructor:
 	def __init__(self, cname, mainwindow):
@@ -117,7 +119,6 @@ class eventUnitFactory(UnitFactory):
 		UnitFactory.__init__(self)
 		self.scene = scene
 		self.mainwindow = mainwindow
-		interestingthings['units'] = []
 	def create(self,u):
 		e=eventUpdatedUnit(u, self.scene, self.mapmodel, self.mainwindow)
 		e = e.__disown__() #the C++ code will look after it.
@@ -139,7 +140,7 @@ class eventUpdatedUnit(UpdatedUnit):
 		for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)//self.scene.mapmodel.d,(t.y-scene.bottom)//self.scene.mapmodel.d))
 		self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-		interestingthings['units'].append(self)
+		interestingthings['units'].add(self)
 		self.i.setPen(self.pen())
 		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self.i)
 		self.icon.setOffset((pos.x-self.scene.left)//self.scene.mapmodel.d, (pos.y-self.scene.bottom)//self.scene.mapmodel.d)
