@@ -15,10 +15,9 @@ from connectDialogImpl import connectDialog
 from mainWindowImpl import mainWindow
 from socketModel import socketModel
 from sys import version_info
-
+from singleton import interestingthings
 
 KIAI_SUBDIR="kiai"
-interestingthings = {} #the things we want user scripting to be able to interact with
 
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
@@ -44,7 +43,7 @@ d=fileUtils_configDirectory()
 d/=path(SAKUSEN_RESOURCES_SUBDIR)
 resourceinterface=FileResourceInterface_create(d,False)
 
-mainwindow = mainWindow(interestingthings)
+mainwindow = mainWindow()
 w=connectDialog()
 mainwindow.show()
 activeSocket = socketModel(interestingthings, mainwindow, resourceinterface, userconfig)
