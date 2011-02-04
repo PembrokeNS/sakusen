@@ -17,8 +17,8 @@ class SakusenOrder(KiaiOrder):
 	def __call__(self, od):
 		od.thisown = 0
 		o = Order(od)
-	    om = OrderMessage(kwargs['unit'].getId(), o)
+		om = OrderMessage(kwargs['unit'].getId(), o)
 		omd = OrderMessageData(om)
-	    interestingthings['socket'].sendd(omd)
+		interestingthings['socket'].sendd(omd)
 
 SakusenOrder()
