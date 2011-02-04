@@ -16,7 +16,8 @@ from singleton import interestingthings
 
 selectedUnits = set()
 interestingthings['selectedUnits'] = selectedUnits
-interestingthings['units'] = set()
+units = set()
+interestingthings['units'] = units
 
 class constructor:
 	def __init__(self, cname, mainwindow):
@@ -140,7 +141,7 @@ class eventUpdatedUnit(UpdatedUnit):
 		for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)//self.scene.mapmodel.d,(t.y-scene.bottom)//self.scene.mapmodel.d))
 		self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-		interestingthings['units'].add(self)
+		units.add(self)
 		self.i.setPen(self.pen())
 		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self.i)
 		self.icon.setOffset((pos.x-self.scene.left)//self.scene.mapmodel.d, (pos.y-self.scene.bottom)//self.scene.mapmodel.d)
@@ -176,5 +177,5 @@ class eventUpdatedUnit(UpdatedUnit):
 					if( not b.refcount):
 						sip.delete(b)
 		sip.delete(self.i)
-		interestingthings['units'].remove(self)
+		units.remove(self)
 
