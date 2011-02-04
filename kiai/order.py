@@ -7,6 +7,8 @@ interestingthings['availableOrders'] = availableOrders
 
 class Order:
     def __init__(self):
-        orders.append(self)
-    def addToUi(self):
-        self.mainwindow.ui.orders.layout().addWidget(self.button)
+        availableOrders.add(self)
+#    def addToUi(self):
+#        self.mainwindow.ui.orders.layout().addWidget(self.button)
+
+sendSakusenOrder = Order()
