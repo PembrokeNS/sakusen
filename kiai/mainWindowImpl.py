@@ -12,8 +12,6 @@ from sceneModel import mpeFunction, orderSelectedUnits, forWeapons, sceneModel
 from orientationDialogImpl import OrientationDialog
 from singleton import interestingthings
 
-orders = []
-
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, parent=None):
 		kdeui.KXmlGuiWindow.__init__(self,parent)
