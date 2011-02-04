@@ -46,7 +46,7 @@ resourceinterface=FileResourceInterface_create(d,False)
 mainwindow = mainWindow()
 w=connectDialog()
 mainwindow.show()
-activeSocket = socketModel(interestingthings, mainwindow, resourceinterface, userconfig)
+activeSocket = socketModel(mainwindow, resourceinterface, userconfig)
 interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)

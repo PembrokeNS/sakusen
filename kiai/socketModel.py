@@ -13,11 +13,11 @@ from eventUnit import  eventUnitFactory
 from eventSensorReturns import  eventSensorReturnsFactory
 from sceneModel import sceneModel
 from mapModel import mapModel
+from singleton import interestingthings
 
 class socketModel():
 	"""Encapsulates a sakusen socket"""
-	def __init__(self, interestingthings, mainwindow, resourceinterface, userconfig):
-		self.interestingthings = interestingthings
+	def __init__(self, mainwindow, resourceinterface, userconfig):
 		self.mainwindow = mainwindow
 		self.resourceinterface = resourceinterface
 		self.userconfig = userconfig
@@ -45,7 +45,7 @@ class socketModel():
 				self.m.requestSetting(('game','universe','name')) #so that we find the universe, if another player has already set it
 				self.m.setSetting(('clients',str(clientid),'application','name'),'Kiai')
 				self.m.setSetting(('clients',str(clientid),'application','version'),'"0.0.4 気持ち')
-				self.interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
+				interestingthings['setSetting'] = self.m.setSetting #want to let users set settings
 				self.userconfig("onconnect")
 			else:
 				print("Server refused our connection")
@@ -83,7 +83,7 @@ class socketModel():
 			elif(t==messageType_gameStart):
 				d=me.getGameStartData()
 				gamescene=sceneModel(self.mainwindow,self,self.universe)
-				e=eventUnitFactory(self.interestingthings, gamescene, self.mainwindow)
+				e=eventUnitFactory(gamescene, self.mainwindow)
 				sf=eventSensorReturnsFactory(gamescene)
 				self.pw = PartialWorld(self.universe,e,sf,d.getPlayerId(),d.getTopology(),d.getTopRight(),d.getBottomLeft(),d.getGravity(),d.getHeightfield())
 				e = e.__disown__() #pw takes ownership of e and sf
