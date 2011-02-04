@@ -8,8 +8,8 @@ availableOrders = {}
 interestingthings['availableOrders'] = availableOrders
 
 class KiaiOrder:
-    def __init__(self, name):
-        availableOrders[name] = self
+	def __init__(self, name):
+		availableOrders[name] = self
 
 class SakusenOrder(KiaiOrder):
 	def __init__(self):
