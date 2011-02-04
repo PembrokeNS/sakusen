@@ -103,6 +103,7 @@ class socketModel():
 				self.mainwindow.ui.gameview.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 				self.mainwindow.ui.gameview.setRubberBandSelectionMode(QtCore.Qt.ContainsItemShape)
 				self.game = True
+				import order #FIXME: this is stupid
 			elif(t==messageType_update):
 				d=me.getUpdateData()
 				while(d.getTime()>cvar.world.getTimeNow()):
