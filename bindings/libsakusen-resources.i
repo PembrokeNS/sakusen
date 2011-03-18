@@ -47,17 +47,11 @@ namespace boost
     class path
     {
     public:
-      typedef bool (*name_check)( const std::string & name );
-
       // compiler generates copy constructor, copy assignment, and destructor
 
       path(){}
 
       path( const std::string & src );
-      path( const char * src );
-
-      path( const std::string & src, name_check checker );
-      path( const char * src, name_check checker );
 
       // append operations:
       path & operator /=( const path & rhs );
@@ -69,21 +63,16 @@ namespace boost
 
       // conversion functions:
       const std::string & string() const { return m_path; }
-      std::string native_file_string() const;
-      std::string native_directory_string() const;
-
+      
       // decomposition functions:
       path         root_path() const;
-      std::string  root_name() const;
-      std::string  root_directory() const;
+      path  root_name() const;
+      path  root_directory() const;
       path         relative_path() const;
-      std::string  filename() const;
-      path         branch_path() const;
+      path  filename() const;
 
       // query functions:
       bool empty() const { return m_path.empty(); } // name consistent with std containers
-
-      bool is_complete() const;
 
       bool has_root_path() const;
       bool has_root_name() const;
@@ -91,11 +80,6 @@ namespace boost
       bool has_relative_path() const;
       bool has_filename() const { return !m_path.empty(); }
       bool has_parent_path() const;
-
-      // default name_check mechanism:
-      static bool default_name_check_writable(); 
-      static void default_name_check( name_check new_check );
-      static name_check default_name_check();
 
     private:
       // Note: This is an implementation for POSIX and Windows, where there
@@ -130,7 +114,6 @@ namespace boost
     bool portable_name( const std::string & name );
     bool portable_directory_name( const std::string & name );
     bool portable_file_name( const std::string & name );
-    bool no_check( const std::string & name );   // always returns true
     bool native( const std::string & name );
       // native(name) must return true for any name which MIGHT be valid
       // on the native platform.

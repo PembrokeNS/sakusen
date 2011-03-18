@@ -55,7 +55,7 @@ list<boost::filesystem::path> fileUtils_findMatches(
   for (boost::filesystem::directory_iterator
       item = boost::filesystem::directory_iterator(directory);
       item != boost::filesystem::directory_iterator(); ++item) {
-    if (boost::algorithm::starts_with(item->filename(), name)) {
+    if (boost::algorithm::starts_with(item->path().filename().string(), name)) {
       result.push_back(*item);
     }
   }

@@ -92,10 +92,6 @@ void usage();
 
 int main(int argc, char* const* argv)
 {
-  boost::filesystem::path::default_name_check(
-      boost::filesystem::portable_posix_name
-    );
-
   boost::filesystem::path fusekiConfigFile =
     fileUtils_configDirectory() / "fuseki" / "config";
 
@@ -114,7 +110,7 @@ int main(int argc, char* const* argv)
   }
 
   cout << "Looked for fuseki config file at " <<
-    fusekiConfigFile.native_file_string() << endl;
+    fusekiConfigFile.string() << endl;
 
   return startServer(options);
 }
@@ -240,7 +236,7 @@ int startServer(const Options& options)
     boost::filesystem::path serverPath =
       fileUtils_configDirectory() / SAKUSEN_COMMS_SOCKET_SUBDIR;
 
-    cout << "Using directory '" << serverPath.native_directory_string() <<
+    cout << "Using directory '" << serverPath.string() <<
       "' for unix socket.\n";
 
     /* Determine whether the directory exists */
@@ -254,7 +250,7 @@ int startServer(const Options& options)
 
     /* Check that config directory is really a directory */
     if (!boost::filesystem::is_directory(serverPath)) {
-      SAKUSEN_FATAL("path '" << serverPath.native_directory_string() <<
+      SAKUSEN_FATAL("path '" << serverPath.string() <<
           "' not a directory");
     }
 
@@ -275,7 +271,7 @@ int startServer(const Options& options)
 
     /* Use the default socket address */
     unixSocketAddress =
-      "concrete"SAKUSEN_COMMS_ADDR_DELIM + unixSocketPath.native_file_string();
+      "concrete"SAKUSEN_COMMS_ADDR_DELIM + unixSocketPath.string();
   }
 
   cout << "Creating unix socket " << unixSocketAddress << endl;

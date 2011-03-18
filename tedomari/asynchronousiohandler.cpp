@@ -235,7 +235,7 @@ AsynchronousIOHandler::AsynchronousIOHandler(
   rl_callback_handler_install("> ", line_callback_handler);
   if (boost::filesystem::exists(historyFile)) {
     if (!boost::filesystem::is_directory(historyFile)) {
-      if (0 == read_history(historyFile.native_file_string().c_str())) {
+      if (0 == read_history(historyFile.string().c_str())) {
         if (0 == history_set_pos(history_length)) {
           SAKUSEN_DEBUG("error setting history position");
         }
@@ -249,9 +249,9 @@ AsynchronousIOHandler::AsynchronousIOHandler(
 
 AsynchronousIOHandler::~AsynchronousIOHandler()
 {
-  if (0 == write_history(historyFile.native_file_string().c_str())) {
+  if (0 == write_history(historyFile.string().c_str())) {
     if (0 != history_truncate_file(
-          historyFile.native_file_string().c_str(), historyLength
+          historyFile.string().c_str(), historyLength
         )) {
       SAKUSEN_DEBUG("error truncating history");
     }

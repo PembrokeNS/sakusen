@@ -42,7 +42,7 @@ Buffer FileReader::getBuffer()
 
 String FileReader::humanReadableName() const
 {
-  return path.native_file_string();
+  return path.string();
 }
 
 boost::filesystem::path FileReader::asPath() const

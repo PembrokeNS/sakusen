@@ -101,15 +101,12 @@ int main(/* int argc, char** argv */)
   }
 #endif
 
-  boost::filesystem::path::default_name_check(
-      boost::filesystem::portable_posix_name
-    );
   boost::filesystem::path dataDir =
     fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path dotDot("..");
 
   cout << "Creating ResourceInterface with data root " <<
-    dataDir.native_directory_string() << endl;
+    dataDir.string() << endl;
   vector<boost::filesystem::path> dataDirs;
   dataDirs.push_back(dataDir);
   dataDirs.push_back("data");

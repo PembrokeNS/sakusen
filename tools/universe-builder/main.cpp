@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     path gladeFile = p / "universe-builder.glade";
     if (exists(gladeFile)) {
       Glib::RefPtr<Gnome::Glade::Xml> refXml =
-        Gnome::Glade::Xml::create(gladeFile.file_string());
+        Gnome::Glade::Xml::create(gladeFile.string());
 
       UI ui(refXml, resourceInterface);
 
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
   cerr << "Unable to find glade file.  Following directories were searched:\n";
   BOOST_FOREACH(const path& p, potentialGladeDirs) {
-    cerr << p.directory_string() << '\n';
+    cerr << p.string() << '\n';
   }
   return 1;
 }
