@@ -178,6 +178,12 @@ remove-empty-subdirs:
 
 endif
 
+ifneq (,$(wildcard Makefile.local))
+MAKEFILE_LOCAL:=Makefile.local
+else
+MAKEFILE_LOCAL:=$(this_srcdir)Makefile.local
+endif
+
 #####################################################
 #
 #  Top-level targets (all, test, clean)
@@ -241,7 +247,7 @@ ifneq ($(IS_LIB),)
 
 # Build the binary
 
-$(BIN): $(LIBTOOL_OBJS) $(this_srcdir)Makefile.local
+$(BIN): $(LIBTOOL_OBJS) $(MAKEFILE_LOCAL)
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
 		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
@@ -273,7 +279,7 @@ else
 
 # Build the binary
 
-$(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(this_srcdir)Makefile.local
+$(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(MAKEFILE_LOCAL)
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
 		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-o $@ $(LIBS) $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
