@@ -42,10 +42,10 @@ PngImageImpl::PngImageImpl(const boost::filesystem::path& path) :
   rowPointers(NULL)
 {
 #ifndef _MSC_VER
-  fp = fopen(path.string().c_str(), "rb");
+  fp = fopen(path.c_str(), "rb");
   if (!fp) {
 #else
-  if (fopen_s(&fp, path.string().c_str(), "rb")) {
+  if (fopen_s(&fp, path.c_str(), "rb")) {
 #endif
     throw FileIOExn("fopen("+path.string()+")");
   }

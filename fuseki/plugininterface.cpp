@@ -60,7 +60,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           boost::filesystem::path module =
             candidate / (fullPluginName + ".la");
           lt_dlhandle moduleHandle =
-            lt_dlopen(module.string().c_str());
+            lt_dlopen(module.c_str());
           if (moduleHandle == NULL) {
             String error = "lt_dlopen(" + module.string() +
               ") failed: " + lt_dlerror();

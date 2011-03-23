@@ -285,7 +285,7 @@ FileResourceInterface::internalSymbolSearch(
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
   lt_dlhandle moduleHandle =
-    lt_dlopen(modulePath.string().c_str());
+    lt_dlopen(modulePath.c_str());
   if (moduleHandle == NULL) {
     error = String("lt_dlopen("+modulePath.string()+") failed: ") +
       lt_dlerror();
@@ -311,7 +311,7 @@ FileResourceInterface::internalSymbolSearch(
   //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
   //Opens the library for searching. Must be a dll or an exe.
   /** \bug This should work for UNICODE filenames.*/
-  HMODULE moduleHandle = LoadLibrary(modulePath.string().c_str());
+  HMODULE moduleHandle = LoadLibrary(modulePath.c_str());
   //Error handling for the above.
   if(moduleHandle == NULL) {
     char buffer[33];
