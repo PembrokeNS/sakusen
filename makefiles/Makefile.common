@@ -63,6 +63,13 @@
 
 CXX ?= g++
 CC ?= gcc
+ifeq ($(origin CC),default)
+CC := gcc
+endif
+CPP ?= $(CC) -E
+ifeq ($(origin CPP),default)
+CPP := $(CC) -E
+endif
 LIBTOOL ?= libtool
 
 PREFIX ?= /usr/local
@@ -335,7 +342,7 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag: $(top_srcdir)makefiles/Makefile.common
 	@mkdir -p $(dir $@)
-	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
+	$(CPP) $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
 		-MT $@ -MP -M -MF $@ $(this_srcdir)$(subst _dot_dot,..,$*)
 	printf "\n%s:\n" "$(this_srcdir)$(subst _dot_dot,..,$*)" >> $@
 
