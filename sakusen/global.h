@@ -184,7 +184,7 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
   do { \
     sakusen::errorStream << __FILE__ << ":" << __LINE__ << ":" << \
       __PRETTY_FUNCTION__ <<  ": fatal error: " << msg << std::endl; \
-    abort(); \
+    std::abort(); \
   } while(false)
 
 
