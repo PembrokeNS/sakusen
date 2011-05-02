@@ -178,6 +178,8 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 //  #define SAKUSEN_QDEBUG(msg)
 //#endif
 
+#include <cstdlib>
+
 #define SAKUSEN_FATAL(msg) \
   do { \
     sakusen::errorStream << __FILE__ << ":" << __LINE__ << ":" << \
