@@ -17,7 +17,7 @@ void FileWriter::open()
         path, std::ios_base::binary | std::ios_base::out
       );
   } catch (std::ios_base::failure&) {
-    throw FileIOExn("open(\""+path.native_file_string()+"\")");
+    throw FileIOExn("open(\""+path.string()+"\")");
   }
 }
 

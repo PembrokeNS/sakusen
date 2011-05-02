@@ -32,9 +32,6 @@ using namespace sakusen::resources;
 /** \brief main function for test */
 int main(/*int argc, char** argv*/)
 {
-  boost::filesystem::path::default_name_check(
-      boost::filesystem::portable_posix_name
-    );
   boost::filesystem::path dataDir =
     fileUtils_configDirectory() / SAKUSEN_RESOURCES_SUBDIR;
   boost::filesystem::path testDir = dataDir / "test";
@@ -60,10 +57,10 @@ int main(/*int argc, char** argv*/)
 
     while (!files.empty()) {
       if (boost::algorithm::ends_with(
-            files.front().leaf(), ".sakusenmaptemplate"
+            files.front().filename().string(), ".sakusenmaptemplate"
           ) ||
           boost::algorithm::ends_with(
-            files.front().leaf(), ".sakusenuniverse"
+            files.front().filename().string(), ".sakusenuniverse"
           )
         ) {
         boost::filesystem::remove(files.front());

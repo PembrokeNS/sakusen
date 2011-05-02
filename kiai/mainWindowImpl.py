@@ -10,9 +10,10 @@ from mainWindow import Ui_mainWindow
 
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons, sceneModel
 from orientationDialogImpl import OrientationDialog
+from singleton import interestingthings
 
 class mainWindow(kdeui.KXmlGuiWindow):
-	def __init__(self, environment, parent=None):
+	def __init__(self, parent=None):
 		kdeui.KXmlGuiWindow.__init__(self,parent)
 		self.ui=Ui_mainWindow()
 		self.ui.setupUi(self)
@@ -23,11 +24,10 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.connectUp(self.ui.build, build)
 		self.connect(self.ui.orient, QtCore.SIGNAL('clicked()'), self.orient)
 		self.connect(self.ui.stop, QtCore.SIGNAL('clicked()'), self.stop)
-		self.env = environment
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
 		self.ui.entryline.setText("")
-		exec(str(t), self.env)
+		exec(str(t), interestingthings)
 	def write(self, t):
 		self.ui.output.append(t.strip())
 	def othercommands(self, button):
@@ -45,7 +45,7 @@ class mainWindow(kdeui.KXmlGuiWindow):
 
 	def stop(self):
 		self.stopcmd(selectedUnits = self.ui.gameview.scene().selectedItems(), socket = self.ui.gameview.scene().sock)
-	
+
 	def orient(self):
 		d = OrientationDialog()
 		self.connect(d, QtCore.SIGNAL('valueChanged(double)'), self.orientto)

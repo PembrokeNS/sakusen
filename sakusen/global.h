@@ -88,6 +88,7 @@
   #define LIBSAKUSEN_METHOD_DEFINITIONS
 
   /* Define types the gcc way. */
+  //#define __STDC_CONSTANT_MACROS //Appears needed on some systems. TODO: fix
   #include <stdint.h>
   typedef uint8_t  uint8;
   typedef int8_t   sint8;
@@ -176,6 +177,8 @@ extern LIBSAKUSEN_API std::ostream& errorStream;
 //  #define SAKUSEN_DEBUG(msg)
 //  #define SAKUSEN_QDEBUG(msg)
 //#endif
+
+#include <cstdlib>
 
 #define SAKUSEN_FATAL(msg) \
   do { \

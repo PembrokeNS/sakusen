@@ -209,7 +209,7 @@ FileResourceInterface::imageSearch(const String& path)
   }
 
   boost::filesystem::path realPath = resource.asPath();
-  if (boost::algorithm::ends_with(realPath.leaf(), ".png")) {
+  if (boost::algorithm::ends_with(realPath.filename().string(), ".png")) {
     Image::Ptr image(new PngImage(realPath));
     return boost::make_tuple(image, resource.getSakusenPath());
   } else {
@@ -285,9 +285,9 @@ FileResourceInterface::internalSymbolSearch(
   /** \todo Maybe we should keep a record and not open the same module over and
    * over. ltdl does keep track, so it works, but it's a little inelegant */
   lt_dlhandle moduleHandle =
-    lt_dlopen(modulePath.native_file_string().c_str());
+    lt_dlopen(modulePath.c_str());
   if (moduleHandle == NULL) {
-    error = String("lt_dlopen("+modulePath.native_file_string()+") failed: ") +
+    error = String("lt_dlopen("+modulePath.string()+") failed: ") +
       lt_dlerror();
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }
@@ -311,7 +311,7 @@ FileResourceInterface::internalSymbolSearch(
   //Equivalent to lt_dlhandle moduleHandle = lt_dlopenext(modulePath.c_str());
   //Opens the library for searching. Must be a dll or an exe.
   /** \bug This should work for UNICODE filenames.*/
-  HMODULE moduleHandle = LoadLibrary(modulePath.native_file_string().c_str());
+  HMODULE moduleHandle = LoadLibrary(modulePath.c_str());
   //Error handling for the above.
   if(moduleHandle == NULL) {
     char buffer[33];
@@ -323,7 +323,7 @@ FileResourceInterface::internalSymbolSearch(
         GetLastError(),
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),buffer,
         33, NULL );
-    error = "LoadLibrary() failed on "+modulePath.native_file_string()+
+    error = "LoadLibrary() failed on "+modulePath.string()+
       ".\n Error value: " + String(buffer);
     return boost::make_tuple<void*>(NULL, resourceSearchResult_error);
   }

@@ -43,7 +43,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
       path != pluginPaths.end(); ++path) {
     SAKUSEN_DEBUG(
         "Looking for plugin " << pluginName << " in " <<
-        path->directory_string()
+        path->string()
       );
     list<boost::filesystem::path> candidates =
       sakusen::fileUtils_findMatches(*path, pluginName);
@@ -55,14 +55,14 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           // We should have found a directory, and we want to open the module
           // therein
           boost::filesystem::path& candidate = candidates.front();
-          String fullPluginName = boost::filesystem::basename(candidate.leaf());
+          String fullPluginName = boost::filesystem::basename(candidate.filename());
 #ifdef __GNUC__
           boost::filesystem::path module =
             candidate / (fullPluginName + ".la");
           lt_dlhandle moduleHandle =
-            lt_dlopen(module.native_file_string().c_str());
+            lt_dlopen(module.c_str());
           if (moduleHandle == NULL) {
-            String error = "lt_dlopen(" + module.native_file_string() +
+            String error = "lt_dlopen(" + module.string() +
               ") failed: " + lt_dlerror();
             throw PluginExn(error);
           }
@@ -109,7 +109,7 @@ Plugin::Ptr PluginInterface::load(const String& pluginName)
           {
             char buffer[33];
             _itoa_s(GetLastError(), buffer, 33,10);
-            String error = "GetProcAddress() on "+symbolName+" in " + candidate.directory_string()+
+            String error = "GetProcAddress() on "+symbolName+" in " + candidate.string()+
               " failed. Error value: " + String(buffer);
             throw PluginExn(error);
           }

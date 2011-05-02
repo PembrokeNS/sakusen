@@ -89,7 +89,7 @@ list<Resource> DirectoryBranch::getResources(
   list<Resource> result;
 
   BOOST_FOREACH(const boost::filesystem::path& match, matches) {
-    String filename = match.leaf();
+    String filename = match.filename().string();
     if (!boost::algorithm::ends_with(filename, extension)) {
         /*SAKUSEN_QDEBUG("Looking for extension to "<<name<<" "<<extension);*/
       continue;

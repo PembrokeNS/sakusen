@@ -155,7 +155,7 @@ bool OptionsParser::parse(
   errors.clear();
   boost::filesystem::ifstream configFile(configFilePath);
   if (configFile.is_open()) {
-    parseStream(configFile, configFilePath.native_file_string());
+    parseStream(configFile, configFilePath.string());
   }
 
   /* Now we process the command line */

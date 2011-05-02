@@ -55,7 +55,7 @@ list<boost::filesystem::path> fileUtils_findMatches(
   for (boost::filesystem::directory_iterator
       item = boost::filesystem::directory_iterator(directory);
       item != boost::filesystem::directory_iterator(); ++item) {
-    if (boost::algorithm::starts_with(item->filename(), name)) {
+    if (boost::algorithm::starts_with(item->path().filename().string(), name)) {
       result.push_back(*item);
     }
   }
@@ -92,7 +92,8 @@ boost::filesystem::path fileUtils_configDirectory()
 #else
   char const* xdgConfigHome = getenv("XDG_CONFIG_HOME");
   if (xdgConfigHome && *xdgConfigHome) {
-    return xdgConfigHome;
+    boost::filesystem::path home(xdgConfigHome);
+    return home/"sakusen";
   } else {
     return fileUtils_getHome()/".config"/"sakusen";
   }

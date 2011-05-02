@@ -12,6 +12,12 @@ from sakusen_comms import *
 import resources
 from util import color
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons
+from singleton import interestingthings
+
+selectedUnits = set()
+interestingthings['selectedUnits'] = selectedUnits
+units = set()
+interestingthings['units'] = units
 
 class constructor:
 	def __init__(self, cname, mainwindow):
@@ -67,6 +73,8 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 		self.mainwindow = mainwindow
 	def itemChange(self, change, value):
 		if(change == QtGui.QGraphicsItem.ItemSelectedChange):
+			if(value): selectedUnits.add(self)
+			else: selectedUnits.remove(self)
 			s = self.unit.getStatus()
 			utype = s.getTypePtr()
 			for j,w in enumerate(utype.getWeapons()):
@@ -109,20 +117,18 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 			return value
 
 class eventUnitFactory(UnitFactory):
-	def __init__(self, interestingthings, scene, mainwindow):
+	def __init__(self, scene, mainwindow):
 		UnitFactory.__init__(self)
-		self.interestingthings = interestingthings
 		self.scene = scene
 		self.mainwindow = mainwindow
-		self.interestingthings['units'] = []
 	def create(self,u):
-		e=eventUpdatedUnit(self.interestingthings, u, self.scene, self.mapmodel, self.mainwindow)
+		e=eventUpdatedUnit(u, self.scene, self.mapmodel, self.mainwindow)
 		e = e.__disown__() #the C++ code will look after it.
 		p=UpdatedUnit_CreateUpdatedUnitPtr(e)
 		return p
 
 class eventUpdatedUnit(UpdatedUnit):
-	def __init__(self, interestingthings, u, scene, m, mainwindow):
+	def __init__(self, u, scene, m, mainwindow):
 		UpdatedUnit.__init__(self,u)
 		self.scene = scene
 		status = self.getStatus()
@@ -136,8 +142,7 @@ class eventUpdatedUnit(UpdatedUnit):
 		for t in corners: self.polygon.append(QtCore.QPointF((t.x-scene.left)//self.scene.mapmodel.d,(t.y-scene.bottom)//self.scene.mapmodel.d))
 		self.i=unitShape(self, self.polygon, mainwindow, m.i)
 		self.i.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-		interestingthings['units'].append(self)
-		self.interestingthings = interestingthings
+		units.add(self)
 		self.i.setPen(self.pen())
 		self.icon = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(':/pixmaps/sakusen-unit-ground01.PNG'), self.i)
 		self.icon.setOffset((pos.x-self.scene.left)//self.scene.mapmodel.d, (pos.y-self.scene.bottom)//self.scene.mapmodel.d)
@@ -173,5 +178,5 @@ class eventUpdatedUnit(UpdatedUnit):
 					if( not b.refcount):
 						sip.delete(b)
 		sip.delete(self.i)
-		self.interestingthings['units'].remove(self)
+		units.remove(self)
 

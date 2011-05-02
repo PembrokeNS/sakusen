@@ -158,14 +158,10 @@ int main(int argc, char* argv[])
     SAKUSEN_FATAL("error setting locale");
   }
 
-  boost::filesystem::path::default_name_check(
-      boost::filesystem::portable_posix_name
-    );
-
   /* Construct the path to the tedomari config directory */
   boost::filesystem::path configPath =
     fileUtils_configDirectory() / "tedomari";
-  cout << "Using directory " << configPath.native_file_string() <<
+  cout << "Using directory " << configPath.string() <<
     " for tedomari configuration\n";
 
   if (!boost::filesystem::exists(configPath)) {
@@ -269,8 +265,7 @@ void runClient(
     socketAddress =
       "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM +
       (fileUtils_configDirectory() / SAKUSEN_COMMS_SOCKET_SUBDIR /
-        "fuseki-socket").
-      native_file_string();
+        "fuseki-socket").string();
 #endif
   }
 
@@ -285,7 +280,7 @@ void runClient(
 
   /* Construct the path to the history file */
   boost::filesystem::path historyPath = configPath / "history";
-  cout << "Using history file at " << historyPath.native_file_string() << "\n";
+  cout << "Using history file at " << historyPath.string() << "\n";
 
   bool reconnect;
 

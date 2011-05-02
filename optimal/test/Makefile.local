@@ -1,7 +1,8 @@
 BIN = liboptimal-test
 LIBS = \
 	-lboost_unit_test_framework$(BOOST_LIB_SUFFIX) \
-	-lboost_system$(BOOST_LIB_SUFFIX)
+	-lboost_system$(BOOST_LIB_SUFFIX) \
+	-lboost_filesystem$(BOOST_LIB_SUFFIX)
 LIB_DEP_NAMES = optimal
 THIS_LDFLAGS = -no-install
 

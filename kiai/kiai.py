@@ -14,10 +14,10 @@ from sakusen_comms import *
 from connectDialogImpl import connectDialog
 from mainWindowImpl import mainWindow
 from socketModel import socketModel
-
+from sys import version_info
+from singleton import interestingthings
 
 KIAI_SUBDIR="kiai"
-interestingthings = {} #the things we want user scripting to be able to interact with
 
 def userconfig(s):
 	"""Try and execute the specified user configuration file"""
@@ -29,7 +29,11 @@ def userconfig(s):
 
 userconfig("startup")
 # necessary to keep a reference to this around, otherwise it gets GCed at the wrong time and we segfault. Call that a pykde bug.
-aboutdata = kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode('utf-8'), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")
+
+if(version_info[0] < 3):
+    aboutdata = eval('kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), u"0.0.4 気持ち".encode("utf-8"), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md401@srcf.ucam.org")')
+else:
+    aboutdata = eval('kdecore.KAboutData(b"kiai", b"", kdecore.ki18n(b"Kiai"), "0.0.4 気持ち".encode(), kdecore.ki18n(b"Sakusen client"), kdecore.KAboutData.License_Custom, kdecore.ki18n(b"(c) 2007-10 IEG/lmm"), kdecore.ki18n(b"none"), b"none", b"md4401@srcf.ucam.org")')
 kdecore.KCmdLineArgs.init(sys.argv, aboutdata)
 sys.argv = [""] # cProfile wants to modify it, even though kde already has.
 a=kdeui.KApplication()
@@ -39,10 +43,10 @@ d=fileUtils_configDirectory()
 d/=path(SAKUSEN_RESOURCES_SUBDIR)
 resourceinterface=FileResourceInterface_create(d,False)
 
-mainwindow = mainWindow(interestingthings)
+mainwindow = mainWindow()
 w=connectDialog()
 mainwindow.show()
-activeSocket = socketModel(interestingthings, mainwindow, resourceinterface, userconfig)
+activeSocket = socketModel(mainwindow, resourceinterface, userconfig)
 interestingthings['socket'] = activeSocket
 QtCore.QObject.connect(w,QtCore.SIGNAL("openConnection(QString)"),activeSocket.join)
 QtCore.QObject.connect(a,QtCore.SIGNAL("aboutToQuit()"),activeSocket.leave)

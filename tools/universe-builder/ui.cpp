@@ -103,7 +103,7 @@ void UI::openUniverse()
     switch(result)
     {
       case(Gtk::RESPONSE_OK):
-        filename = dialog.get_filename();
+        filename = boost::filesystem::path(String(dialog.get_filename()));
         break;
       case(Gtk::RESPONSE_CANCEL):
         return;
@@ -118,7 +118,7 @@ void UI::openUniverse()
   ResourceSearchResult result;
   String loadingPath;
   boost::tie(loading, result, loadingPath) =
-    resourceInterface->search<Universe>(filename.leaf());
+    resourceInterface->search<Universe>(filename.filename().string());
   switch (result) {
     default:
       throw logic_error(

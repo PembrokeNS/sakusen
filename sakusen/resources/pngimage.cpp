@@ -42,14 +42,13 @@ PngImageImpl::PngImageImpl(const boost::filesystem::path& path) :
   rowPointers(NULL)
 {
 #ifndef _MSC_VER
-  fp = fopen(path.native_file_string().c_str(), "rb");
+  fp = fopen(path.c_str(), "rb");
   if (!fp) {
-    throw FileIOExn("fopen("+path.native_file_string()+")");
-  }
 #else
-  if (fopen_s(&fp, path.native_file_string().c_str(), "rb"))
-    throw FileIOExn("fopen");
+  if (fopen_s(&fp, path.c_str(), "rb")) {
 #endif
+    throw FileIOExn("fopen("+path.string()+")");
+  }
 
 #define SIG_BYTES 8
   /* Read in a bit of file and check it matches the PNG header */

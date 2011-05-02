@@ -4,6 +4,7 @@
 #include <sakusen/global.h>
 
 #include <list>
+#include <cstdio>
 #include <boost/filesystem/path.hpp>
 
 namespace sakusen {
