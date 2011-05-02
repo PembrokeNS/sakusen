@@ -11,6 +11,7 @@ from mainWindow import Ui_mainWindow
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons, sceneModel
 from orientationDialogImpl import OrientationDialog
 from singleton import interestingthings
+from order import orders
 
 class mainWindow(kdeui.KXmlGuiWindow):
 	def __init__(self, parent=None):
@@ -22,8 +23,10 @@ class mainWindow(kdeui.KXmlGuiWindow):
 		self.connectUp(self.ui.move, move)
 		self.connectUp(self.ui.attack, attack)
 		self.connectUp(self.ui.build, build)
-		self.connect(self.ui.orient, QtCore.SIGNAL('clicked()'), self.orient)
-		self.connect(self.ui.stop, QtCore.SIGNAL('clicked()'), self.stop)
+		orders['stop'] = self.stop
+		orders['orient'] = self.orient
+		#For debugging only, remove when extension API is finalized (hahahahaha)
+		interestingthings['mainwindow'] = self
 	def runcommand(self, t):
 		self.ui.output.append(">"+t)
 		self.ui.entryline.setText("")
