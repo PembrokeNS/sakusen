@@ -35,26 +35,12 @@
         </widget>
        </item>
        <item>
-        <widget class="KPushButton" name="orient">
-         <property name="text">
-          <string>Orient</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="KPushButton" name="attack">
          <property name="text">
           <string>Attack</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="KPushButton" name="stop">
-         <property name="text">
-          <string>Stop</string>
          </property>
         </widget>
        </item>

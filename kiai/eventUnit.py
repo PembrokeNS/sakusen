@@ -13,6 +13,7 @@ import resources
 from util import color
 from sceneModel import mpeFunction, orderSelectedUnits, forWeapons
 from singleton import interestingthings
+from order import orders
 
 selectedUnits = set()
 interestingthings['selectedUnits'] = selectedUnits
@@ -66,6 +67,36 @@ class setter:
 			setcmd(selectedUnits = self.mainwindow.ui.gameview.scene().selectedItems(), socket = self.mainwindow.ui.gameview.scene().sock)
 		QtCore.QObject.connect(self.button, QtCore.SIGNAL('clicked()'), set_)
 
+class orderer:
+	def __init__(self, f, cname, mainwindow):
+		self.button = kdeui.KPushButton(mainwindow.ui.orders)
+		self.button.setObjectName(cname)
+		self.button.setText(cname)
+		self.button.refcount = 1
+		mainwindow.ui.orders.layout().addWidget(self.button)
+		self.button.show()
+		QtCore.QObject.connect(self.button, QtCore.SIGNAL('clicked()'), f)
+
+def referenceCounted(parent, name, selecting, construct):
+	"""For the case where we want to display a button when at least one appropriate unit is selected.
+Implements manual reference-counting.
+TODO: Merge this into the above three classes, and merge said classes together.
+
+selecting: if true, we have selected one more appropriate unit; otherwise we have deselected
+construct: closure to create a new button if we need to"""
+
+	b = parent.findChild(kdeui.KPushButton, name)
+	if(b): #existing button
+		if(isPlus):
+			b.refcount += 1
+		else:
+			b.refcount -= 1
+			if( not b.refcount):
+				sip.delete(b)
+	else:
+		assert(isPlus) #no button, so we must be getting selected
+		construct()
+
 class unitShape(QtGui.QGraphicsPolygonItem):
 	def __init__(self, unit, polygon, mainwindow, parent = None):
 		QtGui.QGraphicsPolygonItem.__init__(self, polygon, parent)
@@ -80,38 +111,15 @@ class unitShape(QtGui.QGraphicsPolygonItem):
 			for j,w in enumerate(utype.getWeapons()):
 				if(w.getClientHint()[:2] == 'c:'):
 					cname = w.getClientHint()[2:]
-					b = self.mainwindow.ui.construct.findChild(kdeui.KPushButton, cname)
-					if(b):
-						#this is a manual reference-counting scheme to ensure that
-						#there are always buttons available to build something so long
-						#as any of the selected units can build it.
-						#button exists, so cahnge its reference count
-						if(value):
-							b.refcount += 1
-						else:
-							b.refcount -= 1
-							if( not b.refcount):
-								sip.delete(b)
-					else:
-						assert(value) #no button, so we must be getting selected
-						b = constructor(cname, self.mainwindow)
+					referenceCounted(self.mainwindow.ui.construct, cname, value.toBool(),
+							lambda: constructor(cname, self.mainwindow))
 				if(w.getClientHint()[:2] == 'n:'):
 					cname = w.getClientHint()[2:]
-					b = self.mainwindow.ui.setters.findChild(kdeui.KPushButton, cname)
-					if(b):
-						#this is a manual reference-counting scheme to ensure that
-						#there are always buttons available to build something so long
-						#as any of the selected units can build it.
-						#button exists, so cahnge its reference count
-						if(value):
-							b.refcount += 1
-						else:
-							b.refcount -= 1
-							if( not b.refcount):
-								sip.delete(b)
-					else:
-						assert(value) #no button, so we must be getting selected
-						b = setter(cname, self.mainwindow)
+					referenceCounted(self.mainwindow.ui.setters, cname, value.toBool(),
+							lambda: setter(cname, self.mainwindow))
+			for ordername in orders:
+				referenceCounted(self.mainwindow.ui.orders, ordername, value.toBool(),
+						lambda: orderer(orders[ordername], ordername, self.mainwindow))
 			return value
 		else:
 			return value
