@@ -23,8 +23,8 @@ interestingthings['units'] = units
 class buttonthing:
 	def __init__(self, name, parent):
 		self.button = kdeui.KPushButton(parent)
-		self.button.setObjectName(cname)
-		self.button.setText(cname)
+		self.button.setObjectName(name)
+		self.button.setText(name)
 		self.button.refcount = 1
 		parent.layout().addWidget(self.button)
 		self.button.show()
