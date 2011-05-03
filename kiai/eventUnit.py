@@ -87,14 +87,14 @@ construct: closure to create a new button if we need to"""
 
 	b = parent.findChild(kdeui.KPushButton, name)
 	if(b): #existing button
-		if(isPlus):
+		if(selecting):
 			b.refcount += 1
 		else:
 			b.refcount -= 1
 			if( not b.refcount):
 				sip.delete(b)
 	else:
-		assert(isPlus) #no button, so we must be getting selected
+		assert(selecting) #no button, so we must be getting selected
 		construct()
 
 class unitShape(QtGui.QGraphicsPolygonItem):
