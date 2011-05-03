@@ -20,15 +20,19 @@ interestingthings['selectedUnits'] = selectedUnits
 units = set()
 interestingthings['units'] = units
 
-class constructor:
-	def __init__(self, cname, mainwindow):
-		self.button = kdeui.KPushButton(mainwindow.ui.construct)
-		self.button.setCheckable(True)
-		self.button.setObjectName(cname)
-		self.button.setText(cname)
+class buttonthing:
+	def __init__(self, name, parent):
+		self.button = kdeui.KPushButton(parent)
+		self.button.setObjectName(name)
+		self.button.setText(name)
 		self.button.refcount = 1
-		mainwindow.ui.construct.layout().addWidget(self.button)
+		parent.layout().addWidget(self.button)
 		self.button.show()
+
+class constructor(buttonthing):
+	def __init__(self, cname, mainwindow):
+		buttonthing.__init__(self, cname, mainwindow.ui.construct)
+		self.button.setCheckable(True)
 		self.cname = cname
 		self.mainwindow = mainwindow
 		@mpeFunction
@@ -47,14 +51,9 @@ class constructor:
 				self.mainwindow.othercommands(self.button)
 		QtCore.QObject.connect(self.button, QtCore.SIGNAL('toggled(bool)'), setConstruct)
 
-class setter:
+class setter(buttonthing):
 	def __init__(self, cname, mainwindow):
-		self.button = kdeui.KPushButton(mainwindow.ui.setters)
-		self.button.setObjectName(cname)
-		self.button.setText(cname)
-		self.button.refcount = 1
-		mainwindow.ui.setters.layout().addWidget(self.button)
-		self.button.show()
+		buttonthing.__init__(self, cname, mainwindow.ui.setters)
 		self.cname = cname
 		self.mainwindow = mainwindow
 		self.flag = False
@@ -67,14 +66,9 @@ class setter:
 			setcmd(selectedUnits = self.mainwindow.ui.gameview.scene().selectedItems(), socket = self.mainwindow.ui.gameview.scene().sock)
 		QtCore.QObject.connect(self.button, QtCore.SIGNAL('clicked()'), set_)
 
-class orderer:
+class orderer(buttonthing):
 	def __init__(self, f, cname, mainwindow):
-		self.button = kdeui.KPushButton(mainwindow.ui.orders)
-		self.button.setObjectName(cname)
-		self.button.setText(cname)
-		self.button.refcount = 1
-		mainwindow.ui.orders.layout().addWidget(self.button)
-		self.button.show()
+		buttonthing.__init__(self, cname, mainwindow.ui.orders)
 		QtCore.QObject.connect(self.button, QtCore.SIGNAL('clicked()'), f)
 
 def referenceCounted(parent, name, selecting, construct):
@@ -87,14 +81,14 @@ construct: closure to create a new button if we need to"""
 
 	b = parent.findChild(kdeui.KPushButton, name)
 	if(b): #existing button
-		if(isPlus):
+		if(selecting):
 			b.refcount += 1
 		else:
 			b.refcount -= 1
 			if( not b.refcount):
 				sip.delete(b)
 	else:
-		assert(isPlus) #no button, so we must be getting selected
+		assert(selecting) #no button, so we must be getting selected
 		construct()
 
 class unitShape(QtGui.QGraphicsPolygonItem):
