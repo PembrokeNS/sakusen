@@ -6,3 +6,6 @@ Sakusen.o
 Sakusen.pm
 blib
 pm_to_blib
+MYMETA.json
+MYMETA.yml
+Sakusen.h
