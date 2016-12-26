@@ -1,6 +1,7 @@
 BIN = libsakusen-resources-test
 LIB_DEP_NAMES = sakusen sakusen-comms sakusen-resources
 THIS_LDFLAGS = -no-install
+LIBS := -lboost_filesystem -lboost_system
 
 test-nonrecursive: $(BIN)
 	./$(BIN)
