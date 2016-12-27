@@ -44,8 +44,8 @@ class LIBSAKUSEN_CLIENT_API PartialWorld : public World {
       );
     ~PartialWorld();
 
-    typedef IdIndex<UnitId, UpdatedUnit, UpdatedUnitIder> UnitIdIndex;
-    typedef IdIndex<
+    typedef ::sakusen::IdIndex<UnitId, UpdatedUnit, UpdatedUnitIder> UnitIdIndex;
+    typedef ::sakusen::IdIndex<
         SensorReturnsId, UpdatedSensorReturns, SensorReturnsIder
       > SensorReturnsIdIndex;
     typedef IdIndex<ClientBallisticId, UpdatedBallistic, UpdatedBallisticIder>
