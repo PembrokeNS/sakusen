@@ -643,9 +643,20 @@ Options getOptions(
 }
 
 UI::Ptr newUI(
-    const Options& o,
-    const boost::filesystem::path& uiConfFilePath,
+    const Options& o
+#ifdef DISABLE_CAIRO
+__attribute__((unused))
+#endif
+,
+    const boost::filesystem::path& uiConfFilePath
+#ifdef DISABLE_CAIRO
+__attribute__((unused))
+#endif
+,
     Game* game
+#ifdef DISABLE_CAIRO
+__attribute__((unused))
+#endif
   )
 {
   /** \todo Support alternate UIs (OpenGL, DirectX) */

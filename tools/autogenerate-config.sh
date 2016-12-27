@@ -112,7 +112,7 @@ check_for_pyplusplus
 check_for_prog pyqt4 pykdeuic4
 #check_for_prog something_that_doesnt_exist
 check_for_lib boost boost/shared_ptr.hpp
-check_for_lib boost_filesystem boost/filesystem/path.hpp -lboost_filesystem -lboost_system
+check_for_lib boost_filesystem boost/filesystem/path.hpp -lboost_filesystem -lboost_system -DBOOST_SYSTEM_NO_DEPRECATED
 check_for_lib readline readline/readline.h -lreadline
 check_for_lib SDL SDL/SDL.h -lSDL
 check_for_lib pangocairo pango/pangocairo.h `pkg-config pangocairo --cflags --libs`
