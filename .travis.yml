@@ -3,4 +3,4 @@ script: make config && make && make test
 dist: xenial
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libmhash-dev libboost-all-dev
+  - sudo apt-get install -y libmhash-dev libboost-all-dev swig
