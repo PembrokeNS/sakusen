@@ -19,8 +19,8 @@ CairoUI::CairoUI(const SDLUI::Options& options, ifstream& uiConf, Game* game) :
       buffer, CAIRO_FORMAT_ARGB32, getWidth(), getHeight(), stride
     );
   cairoContext = cairo_create(cairoBuffer);
-  pangoContext = pango_cairo_font_map_create_context(
-      reinterpret_cast<PangoCairoFontMap*>(pango_cairo_font_map_get_default())
+  pangoContext = pango_font_map_create_context(
+      reinterpret_cast<PangoFontMap*>(pango_cairo_font_map_get_default())
     );
   pango_cairo_update_context(cairoContext, pangoContext);
   /* Provide access to these buffers to the UI and associated controls */

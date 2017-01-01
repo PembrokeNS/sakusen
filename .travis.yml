@@ -1,5 +1,5 @@
 language: cpp
-script: make config && make && make test
+script: cp makefiles/config.mk.ubuntu config.mk && make && make test
 dist: xenial
 before_install:
   - sudo apt-get -qq update
