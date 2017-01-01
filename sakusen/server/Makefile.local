@@ -4,6 +4,9 @@ SOURCE_DIRS =
 LIB_DEP_NAMES = sakusen
 THIS_CPPFLAGS =
 
-ifneq ($(ENABLE_AVAHI),yes)
+ifeq ($(ENABLE_AVAHI),yes)
+  LIBS += $(shell pkg-config --libs avahi-client)
+  THIS_CXXFLAGS += $(shell pkg-config --cflags avahi-client)
+else
   EXCLUDE_FILES := mdns.cpp mdns.h
 endif
