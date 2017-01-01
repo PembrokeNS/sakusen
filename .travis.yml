@@ -3,4 +3,4 @@ script: make config && make && make test
 dist: xenial
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libmhash-dev libboost-all-dev swig
+  - sudo apt-get install -y libmhash-dev libboost-all-dev swig python-py++ tcl-dev libsdl1.2-dev libsdl-pango-dev libavahi-client-dev libglademm-2.4-dev
