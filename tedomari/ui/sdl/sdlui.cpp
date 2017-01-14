@@ -231,7 +231,7 @@ void SDLUI::blit(uint16 x, uint16 y, const SDLSurface::ConstPtr& surface)
 {
   SDL_Surface* src = surface->sdlSurface;
   /* The destination rectangle width and height do not matter */
-  SDL_Rect destRect = { /*.x=*/x, /*.y=*/y, /*.w=*/0, /*.h=*/0 };
+  SDL_Rect destRect = { (sint16) /*.x=*/x, (sint16) /*.y=*/y, /*.w=*/0, /*.h=*/0 };
   if (SDL_BlitSurface(src, NULL, sdlBuffer, &destRect)) {
     SAKUSEN_FATAL(SDL_GetError());
   }

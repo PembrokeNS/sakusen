@@ -1,5 +1,5 @@
 NO_AUTO_COMPILING := yes
-THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)libsakusen/comms `python-config --cflags`
+THIS_CPPFLAGS := -I$(top_srcdir)libsakusen -I$(top_srcdir)sakusen/comms `python-config --cflags`
 LIBS := -lboost_python$(BOOST_LIB_SUFFIX)
 
 all-nonrecursive: sakusen.so sakusencomms.so
@@ -9,18 +9,18 @@ all-nonrecursive: sakusen.so sakusencomms.so
 
 sakusencomms.la: sakusencomms.lo
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib $(LIBS) \
-		$< $(top_builddir)libsakusen/libsakusen.la $(top_builddir)libsakusen/comms/libsakusen-comms.la
+		$< $(top_builddir)sakusen/libsakusen.la $(top_builddir)sakusen/comms/libsakusen-comms.la
 
 sakusen.la: sakusen.lo
 	libtool --mode=link --tag=CXX $(CXX) -module -o $@ -rpath $(PREFIX)/lib $(LIBS) \
-        	$< $(top_builddir)libsakusen/libsakusen.la
+        	$< $(top_builddir)sakusen/libsakusen.la
 
 %.lo: %.cpp
 	libtool --mode=compile --tag=CXX $(CXX) -c $(THIS_CPPFLAGS) -o $@ -Wall $<
 
 sakusencomms.cpp: sakusen.cpp
 
-sakusen.cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)libsakusen/comms/*.h))
+sakusen.cpp: $(filter-out %revision.h,$(wildcard $(top_srcdir)sakusen/*.h)) $(filter-out %revision.h,$(wildcard $(top_srcdir)sakusen/comms/*.h))
 	python generate_code.py
 
 clean: 

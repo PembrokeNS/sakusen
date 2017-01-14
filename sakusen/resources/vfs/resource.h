@@ -25,7 +25,7 @@ class Resource {
     Reader::Ptr reader;
     boost::filesystem::path path;
   public:
-    operator bool() const { return reader; }
+    operator bool() const { return (bool) reader; }
     /** \brief Get full sakusen path to this resource */
     String getSakusenPath() const { return sakusenPath; }
     /** \brief Get a Reader to the content of this resource */
