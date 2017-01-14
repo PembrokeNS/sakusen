@@ -1,6 +1,15 @@
 language: cpp
 script: cp makefiles/config.mk.ubuntu config.mk && make && make test
 dist: xenial
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libmhash-dev libboost-all-dev swig python-py++ tcl-dev libsdl1.2-dev libsdl-pango-dev libavahi-client-dev libglademm-2.4-dev
+addons:
+  apt:
+    packages:
+      - libmhash-dev
+      - libboost-all-dev
+      - swig
+      - python-py++
+      - tcl-dev
+      - libsdl1.2-dev
+      - libsdl-pango-dev
+      - libavahi-client-dev
+      - libglademm-2.4-dev
