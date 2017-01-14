@@ -1,5 +1,4 @@
 language: cpp
-script: cp makefiles/config.mk.ubuntu config.mk && make && make test
 dist: xenial
 addons:
   apt:
@@ -13,3 +12,4 @@ addons:
       - libsdl-pango-dev
       - libavahi-client-dev
       - libglademm-2.4-dev
+script: cp makefiles/config.mk.ubuntu config.mk && make && make test
