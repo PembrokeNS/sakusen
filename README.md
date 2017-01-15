@@ -12,7 +12,7 @@ The programs in the `tedomari/` and `kiai/` directories
 have their own license statements; please see their
 respective README files.
 
-All other files are subject to the following license statement:
+All other files are distributed under the following license statement:
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
