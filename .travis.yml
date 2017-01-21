@@ -13,4 +13,12 @@ addons:
       - libsdl-pango-dev
       - libavahi-client-dev
       - libglademm-2.4-dev
+      - python-kde4-dev
+      - python3-pykde4
+      - python-qwt5-qt4
+      - pyqt4-dev-tools
+      # Added only because install fails without them
+      - kdepim-runtime
+      - akonadi-server
+      - akonadi-backend-mysql
 script: cp makefiles/config.mk.ubuntu config.mk && make && make test
