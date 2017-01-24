@@ -17,6 +17,7 @@ addons:
       - python3-pykde4
       - python-qwt5-qt4
       - pyqt4-dev-tools
+      - python3-dev
       # Added only because install fails without them
       - kdepim-runtime
       - akonadi-server
