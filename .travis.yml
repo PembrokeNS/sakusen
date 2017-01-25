@@ -3,6 +3,8 @@ dist: trusty
 sudo: required
 addons:
   apt:
+    sources:
+      - deadsnakes
     packages:
       - libmhash-dev
       - libboost-all-dev
@@ -17,10 +19,9 @@ addons:
       - python3-pykde4
       - python-qwt5-qt4
       - pyqt4-dev-tools
+      - python3.5-dev
       # Added only because install fails without them
       - kdepim-runtime
       - akonadi-server
       - akonadi-backend-mysql
-python:
- - "3.4"
 script: cp makefiles/config.mk.ubuntu config.mk && make && make test
