@@ -2,6 +2,8 @@ language: cpp
 dist: trusty
 addons:
   apt:
+    sources:
+      - deadsnakes
     packages:
       - libmhash-dev
       - libboost-all-dev
@@ -16,6 +18,7 @@ addons:
       - python3-pykde4
       - python-qwt5-qt4
       - pyqt4-dev-tools
+      - python3.5-dev
       # Added only because install fails without them
       - kdepim-runtime
       - akonadi-server
