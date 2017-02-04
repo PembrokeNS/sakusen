@@ -2,6 +2,7 @@ PERL5 ?= perl
 SWIG ?= swig
 PREFIX ?= /usr/local
 PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
+BUILD_CPPFLAGS += -std=c++14
 THIS_CPPFLAGS := -I$(PERL5ARCH)/CORE -I../../../sakusen $(BUILD_CPPFLAGS)
 
 # Ask that Makefile.common not try to do things for us
