@@ -25,7 +25,6 @@ WriteMakefile(
   INC => '-I'.$top_srcdir.' '.$ENV{'BUILD_CPPFLAGS'},
   OBJECT => 'Sakusen.o',
   FIRST_MAKEFILE => 'Makefile.PL.out',
-  LDLOADLIBS => '../../../sakusen/.libs/libsakusen.so',
   LIBS => $top_builddir . 'sakusen/.libs/libsakusen.so',
   test => { TESTS => $this_srcdir.'t/*.t' },
   LDDLFLAGS => $LDDLFLAGS.' '.$top_builddir.'sakusen/.libs/libsakusen.so -shared -Wl,--rpath -Wl,'.`cd ../../../sakusen/.libs/ && pwd`,
