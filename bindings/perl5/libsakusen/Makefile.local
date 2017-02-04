@@ -35,7 +35,7 @@ clean: Makefile.PL.out
 Makefile.PL: $(this_srcdir)Makefile.PL
 	cp $< $@
 
-Makefile.PL.out: Makefile.PL Sakusen.cpp
+Makefile.PL.out: Makefile.PL Sakusen.cpp Makefile.local
 	top_builddir=$(top_builddir) \
 	top_srcdir=$(top_srcdir) \
 	this_srcdir=$(this_srcdir) \
