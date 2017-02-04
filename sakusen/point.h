@@ -8,6 +8,36 @@
 
 namespace sakusen {
 
+/* Apparently MSVC is on the ball in this case, but because it has reduced the
+ * answer to a constant, generates a warning (4101) about the now unreferenced local variable.
+ * This is slightly mystifying for a few seconds, and clutters things up, so I have disabled
+ * it.
+ * 4146 is a warning telling me that when I apply a unary minus to an unsigned operator,
+ * nothing happens. Thanks MSVC.
+ */
+#ifdef _MSC_VER
+  #pragma warning (disable:4101 4146)
+#endif
+
+template<typename T>
+inline T bottomNumberImpl(std::true_type) {
+  return std::numeric_limits<T>::min();
+}
+
+template<typename T>
+inline T bottomNumberImpl(std::false_type) {
+  std::numeric_limits<T> limits;
+
+  if (limits.is_signed) {
+    if (limits.has_infinity)
+      return -(limits.infinity());
+    else
+      return -(limits.max());
+  } else
+    return static_cast<T>(0);
+}
+
+
 /** \brief Get the most negative number.
  * \return The minimal number of type T
  *
@@ -21,31 +51,9 @@ namespace sakusen {
  * representable number not equal to the negation of the most +ve
  * representable number. So sue me.
  */
-
-/* Apparently MSVC is on the ball in this case, but because it has reduced the
- * answer to a constant, generates a warning (4101) about the now unreferenced local variable.
- * This is slightly mystifying for a few seconds, and clutters things up, so I have disabled
- * it.
- * 4146 is a warning telling me that when I apply a unary minus to an unsigned operator,
- * nothing happens. Thanks MSVC.
- */
-#ifdef _MSC_VER
-  #pragma warning (disable:4101 4146)
-#endif
-
 template<typename T>
 inline T bottomNumber() {
-  std::numeric_limits<T> limits;
-
-  if (limits.is_integer)
-    return limits.min();
-  if (limits.is_signed) {
-    if (limits.has_infinity)
-      return -(limits.infinity());
-    else
-      return -(limits.max());
-  } else
-    return static_cast<T>(0);
+  return bottomNumberImpl<T>(typename std::is_integral<T>::type());
 }
 
 /** \brief Get the most positive number.
