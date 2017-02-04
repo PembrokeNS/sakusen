@@ -263,7 +263,7 @@ void runClient(
 #else
     /* Use default socket */
     socketAddress =
-      "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM +
+      "unix" SAKUSEN_COMMS_ADDR_DELIM "concrete" SAKUSEN_COMMS_ADDR_DELIM +
       (fileUtils_configDirectory() / SAKUSEN_COMMS_SOCKET_SUBDIR /
         "fuseki-socket").string();
 #endif

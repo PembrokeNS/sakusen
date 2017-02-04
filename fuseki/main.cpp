@@ -271,12 +271,12 @@ int startServer(const Options& options)
 
     /* Use the default socket address */
     unixSocketAddress =
-      "concrete"SAKUSEN_COMMS_ADDR_DELIM + unixSocketPath.string();
+      "concrete" SAKUSEN_COMMS_ADDR_DELIM + unixSocketPath.string();
   }
 
   cout << "Creating unix socket " << unixSocketAddress << endl;
   Socket::Ptr unixSocket =Socket::newBindingToAddress(
-        "unix"SAKUSEN_COMMS_ADDR_DELIM+unixSocketAddress
+        "unix" SAKUSEN_COMMS_ADDR_DELIM + unixSocketAddress
       );
 
   if (unixSocket == NULL) {
@@ -292,7 +292,8 @@ int startServer(const Options& options)
   if (!bindAddress.empty()) {
     cout << "Starting TCP socket at " << bindAddress << endl;
     tcpSocket =
-      Socket::newBindingToAddress("tcp"SAKUSEN_COMMS_ADDR_DELIM+bindAddress);
+      Socket::newBindingToAddress(
+        "tcp" SAKUSEN_COMMS_ADDR_DELIM + bindAddress);
 
     if (tcpSocket==NULL) {
       cout << "Error creating TCP socket at:" << endl;
