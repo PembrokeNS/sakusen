@@ -2,6 +2,7 @@
 #define LIBSAKUSEN__POINT_H
 
 #include <sakusen/global.h>
+#include <type_traits>
 #include <boost/utility.hpp>
 
 #include <sakusen/arithmetictraits.h>
