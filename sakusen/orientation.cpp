@@ -175,7 +175,7 @@ void Orientation::sanityCheck() const
 {
   for (int i=0; i<3; ++i) {
     for (int j=0; j<3; ++j) {
-      assert(!isnan(matrix[i][j]));
+      assert(!std::isnan(matrix[i][j]));
       assert(matrix[i][j] >= -1);
       assert(matrix[i][j] <= 1);
     }

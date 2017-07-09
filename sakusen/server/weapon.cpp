@@ -71,7 +71,7 @@ bool Weapon::aim(
   boost::tie(tanTheta, boost::tuples::ignore) =
     mathsUtils_solveQuadratic(a, b, c);
 
-  if (isnan(tanTheta)) {
+  if (std::isnan(tanTheta)) {
     return false;
   }
 

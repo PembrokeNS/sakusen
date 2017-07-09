@@ -162,7 +162,7 @@ double Heightfield::intersectRayInCell(
 
   boost::tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
 
-  if (isnan(r1) || (!isnan(r2) && r2 < minimum)) {
+  if (std::isnan(r1) || (!std::isnan(r2) && r2 < minimum)) {
     /* Something's gone wrong... */
     SAKUSEN_FATAL("no valid solution found");
   }
@@ -174,7 +174,7 @@ double Heightfield::intersectRayInCell(
       return std::numeric_limits<double>::infinity();
     }
   } else {
-    if (!isnan(r2) && r2 <= extent) {
+    if (!std::isnan(r2) && r2 <= extent) {
       return r2;
     } else {
       return std::numeric_limits<double>::infinity();
