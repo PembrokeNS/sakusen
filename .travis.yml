@@ -23,4 +23,6 @@ addons:
       - kdepim-runtime
       - akonadi-server
       - akonadi-backend-mysql
+      - mysql-server-core-5.5
+      - mysql-client-core-5.5
 script: cp makefiles/config.mk.ubuntu config.mk && make && make test
