@@ -323,7 +323,7 @@ endif # $(BIN) non-empty
 ifneq ($(MAKEFRAGS),)
 # Don't include them if we're cleaning
 ifneq ($(MAKECMDGOALS),clean)
-include $(MAKEFRAGS)
+-include $(MAKEFRAGS)
 
 # We make generated headers a dependency of the last included Makefile to
 # ensure that they are generated before any of the other makefrags.  It has to
