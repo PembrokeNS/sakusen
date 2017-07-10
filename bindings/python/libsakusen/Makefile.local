@@ -3,7 +3,7 @@ PREFIX ?= /usr/local
 PYTHON ?= python
 THIS_CPPFLAGS := \
 	$(GLOBAL_CXXPPFLAGS) $(BUILD_CPPFLAGS) \
-	-I$(top_srcdir) -I$(top_srcdir) `python3-config --cflags` $(SWIGWORDSIZE)
+	-I$(top_srcdir) -I$(top_srcdir) `python3-config --includes` $(SWIGWORDSIZE)
 define PYTHON_VERSION
 `printf "from __future__ import print_function\nimport distutils.sysconfig\nprint(distutils.sysconfig.get_python_version())\n"| $(PYTHON)`
 endef
