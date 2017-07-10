@@ -124,7 +124,7 @@ check_for_lib mhash mhash.h -lmhash
 check_for_lib png png.h -lpng
 check_for_lib avahiclient avahi-client/client.h -lavahi-client
 # Having 2.4 here is correct: that is the API version, not the library version
-check_for_lib glademm libglademm.h `pkg-config libglademm-2.4 --cflags --libs`
+check_for_lib glademm libglademm.h `pkg-config libglademm-2.4 --cflags --libs` -std=c++14
 check_for_lib tcl tcl/tcl.h
 #check_for_lib something_that_doesnt_exist some_header.h
 
