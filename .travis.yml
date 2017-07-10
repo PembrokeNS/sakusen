@@ -5,12 +5,13 @@ addons:
     sources:
       - deadsnakes
       - ubuntu-toolchain-r-test
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse'
     packages:
       - gcc-6
       - g++-6
       - libmhash-dev
       - libboost-all-dev
-      - swig
+      - swig3.0/trusty-backports
       - python-py++
       - tcl-dev
       - libsdl1.2-dev
