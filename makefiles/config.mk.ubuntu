@@ -71,3 +71,5 @@ ifeq ($(ENABLE_UNIVERSE_BUILDER),no)
 endif
 
 BUILD_ARCH := x86_64
+CC = gcc-6
+CXX = g++-6

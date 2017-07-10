@@ -4,7 +4,10 @@ addons:
   apt:
     sources:
       - deadsnakes
+      - ubuntu-toolchain-r-test
     packages:
+      - gcc-6
+      - g++-6
       - libmhash-dev
       - libboost-all-dev
       - swig
