@@ -4,8 +4,8 @@ addons:
   apt:
     sources:
       - deadsnakes
-      - ubuntu-toolchain-r-test
-      - sourceline: 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse'
+      - ubuntu-toolchain-r-test # For gcc-6/g++-6
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' # For swig3.0
     packages:
       - gcc-6
       - g++-6
