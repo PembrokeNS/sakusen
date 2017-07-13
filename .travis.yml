@@ -4,10 +4,14 @@ addons:
   apt:
     sources:
       - deadsnakes
+      - ubuntu-toolchain-r-test # For gcc-6/g++-6
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' # For swig3.0
     packages:
+      - gcc-6
+      - g++-6
       - libmhash-dev
       - libboost-all-dev
-      - swig
+      - swig3.0/trusty-backports
       - python-py++
       - tcl-dev
       - libsdl1.2-dev
@@ -23,4 +27,6 @@ addons:
       - kdepim-runtime
       - akonadi-server
       - akonadi-backend-mysql
+      - mysql-server-core-5.5
+      - mysql-client-core-5.5
 script: cp makefiles/config.mk.ubuntu config.mk && make && make test

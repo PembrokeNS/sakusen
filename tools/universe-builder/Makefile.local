@@ -1,5 +1,5 @@
 BIN := universe-builder
-THIS_CPPFLAGS := `pkg-config --cflags libglademm-2.4`
+THIS_CPPFLAGS := `pkg-config --cflags libglademm-2.4 | sed 's/-I/-isystem/g'`
 THIS_LDFLAGS := -export-dynamic -no-install
 LIBS := `pkg-config --libs libglademm-2.4` -lboost_filesystem -lboost_system
 LIB_DEP_NAMES := sakusen sakusen-comms sakusen-resources

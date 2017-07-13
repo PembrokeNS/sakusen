@@ -58,7 +58,7 @@ class Ref {
      * \warning If you store a reference obtained via this function, then you
      * risk accessing it after it has been deleted.
      */
-    inline typename boost::detail::sp_dereference<T>::type operator*() const {
+    inline std::add_lvalue_reference_t<T> operator*() const {
       return *referee.lock();
     }
 

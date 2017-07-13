@@ -238,11 +238,11 @@ void UnixDatagramSocket::setNonBlocking(bool val)
 String UnixDatagramSocket::getAddress() const {
   if (abstract) {
     return String(
-        "unix"SAKUSEN_COMMS_ADDR_DELIM"abstract"SAKUSEN_COMMS_ADDR_DELIM
+        "unix" SAKUSEN_COMMS_ADDR_DELIM "abstract" SAKUSEN_COMMS_ADDR_DELIM
       ) + (path+1);
   } else {
     return String(
-        "unix"SAKUSEN_COMMS_ADDR_DELIM"concrete"SAKUSEN_COMMS_ADDR_DELIM
+        "unix" SAKUSEN_COMMS_ADDR_DELIM "concrete" SAKUSEN_COMMS_ADDR_DELIM
       ) + path;
   }
 }

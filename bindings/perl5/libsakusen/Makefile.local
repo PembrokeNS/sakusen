@@ -2,6 +2,7 @@ PERL5 ?= perl
 SWIG ?= swig
 PREFIX ?= /usr/local
 PERL5ARCH := $(shell $(PERL5) -MConfig -e 'print $$Config{archlib}')
+BUILD_CPPFLAGS += -std=c++14
 THIS_CPPFLAGS := -I$(PERL5ARCH)/CORE -I../../../sakusen $(BUILD_CPPFLAGS)
 
 # Ask that Makefile.common not try to do things for us
@@ -34,7 +35,7 @@ clean: Makefile.PL.out
 Makefile.PL: $(this_srcdir)Makefile.PL
 	cp $< $@
 
-Makefile.PL.out: Makefile.PL Sakusen.cpp
+Makefile.PL.out: Makefile.PL Sakusen.cpp Makefile.local
 	top_builddir=$(top_builddir) \
 	top_srcdir=$(top_srcdir) \
 	this_srcdir=$(this_srcdir) \

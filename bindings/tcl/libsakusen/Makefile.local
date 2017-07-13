@@ -1,6 +1,8 @@
 SWIG ?= swig
 PREFIX ?= /usr/local
-THIS_CPPFLAGS := -I$(top_srcdir) -I/usr/include/tcl
+THIS_CPPFLAGS := \
+	$(GLOBAL_CXXPPFLAGS) $(BUILD_CPPFLAGS) \
+	-I$(top_srcdir) -I/usr/include/tcl
 
 # Ask that Makefile.common not try to do things for us
 NO_AUTO_COMPILING := yes

@@ -4,6 +4,8 @@ this_srcdir =
 
 all:
 
+include global.mk
+
 # Don't include the config file if we're trying to make it
 ifneq ($(MAKECMDGOALS),config)
 include config.mk
@@ -56,6 +58,7 @@ $(BUILTIN_CONFIG_MAKEFILES): %/Makefile: $(top_srcdir)makefiles/Makefile.common
 	@echo >> $@
 	@echo 'all:' >> $@
 	@echo >> $@
+	@echo 'include $$(top_builddir)global.mk' >> $@
 	@echo 'include $$(top_builddir)config.mk' >> $@
 	@echo 'include ../Makefile.local' >> $@
 	@echo 'include $$(top_srcdir)makefiles/Makefile.common' >> $@
