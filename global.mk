@@ -4,7 +4,7 @@
 # apply to a build or a binary respectively).
 GLOBAL_CXXFLAGS ?= \
 	-Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith \
-	-Wwrite-strings -Wno-deprecated-declarations -O0 -g3
+	-Wwrite-strings -O0 -g3
 GLOBAL_CFLAGS ?= -Werror -O0 -g3
 GLOBAL_CXXPPFLAGS ?= -std=c++14
 

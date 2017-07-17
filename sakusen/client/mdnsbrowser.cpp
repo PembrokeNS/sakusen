@@ -28,7 +28,7 @@ namespace client {
 class MdnsBrowser::Implementation : public boost::noncopyable {
   public:
   Implementation(
-      boost::function<void(std::auto_ptr<ServedGame>)> cb_appeared,
+      boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
       boost::function<void(String)> cb_gone);
   ~Implementation();
 
@@ -36,7 +36,7 @@ class MdnsBrowser::Implementation : public boost::noncopyable {
   AvahiClient *client;
   AvahiThreadedPoll *poll;
   AvahiServiceBrowser *sb;
-  boost::function<void(std::auto_ptr<ServedGame>)> game_appeared;
+  boost::function<void(std::unique_ptr<ServedGame>)> game_appeared;
   boost::function<void(String)> game_gone;
 
   static void resolve_callback(
@@ -78,9 +78,11 @@ class MdnsBrowser::Implementation : public boost::noncopyable {
  * will not be modified or freed within this function.
  * \return A pointer to a ServedGame encapsulating the supplied information.
  */
-static std::auto_ptr<ServedGame> txt_records_to_game(String name, int port, AvahiStringList const * records) {
+static std::unique_ptr<ServedGame> txt_records_to_game(
+    String name, int port, AvahiStringList const * records
+  ) {
   assert(records != NULL);
-  std::auto_ptr<ServedGame> result(new ServedGame(name, port));
+  auto result = std::make_unique<ServedGame>(name, port);
   /** \bug Function not written. */
   static_cast<void>(records);
 
@@ -108,7 +110,8 @@ void MdnsBrowser::Implementation::resolve_callback(
     AvahiStringList *txt,
     AVAHI_GCC_UNUSED AvahiLookupResultFlags flags,
     AVAHI_GCC_UNUSED void* userdata) {
-  MdnsBrowser::Implementation *self = reinterpret_cast<MdnsBrowser::Implementation*>(userdata);
+  MdnsBrowser::Implementation *self =
+    reinterpret_cast<MdnsBrowser::Implementation*>(userdata);
   switch (event) {
     case AVAHI_RESOLVER_FAILURE:
       /* The service timed out. How rude. */
@@ -121,9 +124,9 @@ void MdnsBrowser::Implementation::resolve_callback(
         return;
       }
       // do something with address->ipv4.address, which is a uint32 in network byte order
-      std::auto_ptr<ServedGame> result = txt_records_to_game(name, port, txt);
+      std::unique_ptr<ServedGame> result = txt_records_to_game(name, port, txt);
       if (self->game_appeared)
-        self->game_appeared(result);
+        self->game_appeared(std::move(result));
       break;
   }
 
@@ -220,7 +223,7 @@ void MdnsBrowser::Implementation::client_callback(AvahiClient *c, AvahiClientSta
  * empty.
  */
 MdnsBrowser::MdnsBrowser(
-    boost::function<void(std::auto_ptr<ServedGame>)> cb_appeared,
+    boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
     boost::function<void(String)> cb_gone)
       : pimpl(new Implementation(cb_appeared, cb_gone))
 { }
@@ -230,7 +233,7 @@ MdnsBrowser::MdnsBrowser(
  * This is the real constructor that does all the work.
  */
 MdnsBrowser::Implementation::Implementation(
-    boost::function<void(std::auto_ptr<ServedGame>)> cb_appeared,
+    boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
     boost::function<void(String)> cb_gone)
       : client(0), poll(0), sb(0), game_appeared(cb_appeared), game_gone(cb_gone)
 {
