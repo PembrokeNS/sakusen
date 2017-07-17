@@ -5,14 +5,11 @@ use ExtUtils::MakeMaker;
 my $CC = $ENV{'CXX'} || 'g++';
 my $LD = '$(CC)';
 my $LDDLFLAGS = $ENV{'LDDLFLAGS'} || '';
-#$libtool = 'libtool';
 my $top_srcdir = $ENV{'top_srcdir'} || die;
 my $top_builddir = $ENV{'top_builddir'} || die;
 my $this_srcdir = $ENV{'this_srcdir'} || die;
 
-# note the order of these two assignments
-#$LD = "$libtool --tag=CXX --mode=link $CC -module -avoid-version";
-#$CC = "$libtool --mode=compile --tag=CXX $CC";
+my $dep_lib_dir = $top_builddir.'sakusen/.libs/';
 
 WriteMakefile(
   NAME => 'Sakusen',
@@ -25,8 +22,9 @@ WriteMakefile(
   INC => '-I'.$top_srcdir.' '.$ENV{'BUILD_CPPFLAGS'},
   OBJECT => 'Sakusen.o',
   FIRST_MAKEFILE => 'Makefile.PL.out',
-  LDLOADLIBS => '../../../sakusen/.libs/libsakusen.so',
-  LIBS => $top_builddir . 'sakusen/.libs/libsakusen.so',
+  MYEXTLIB => $dep_lib_dir.'libsakusen.so',
   test => { TESTS => $this_srcdir.'t/*.t' },
-  LDDLFLAGS => $LDDLFLAGS.' '.$top_builddir.'sakusen/.libs/libsakusen.so -shared -Wl,--rpath -Wl,'.`cd ../../../sakusen/.libs/ && pwd`,
+  dynamic_lib => {
+    OTHERLDFLAGS => '-Wl,-rpath -Wl,'.`cd $dep_lib_dir && pwd`,
+  },
 );

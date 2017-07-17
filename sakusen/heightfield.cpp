@@ -3,8 +3,7 @@
 #include <sakusen/oarchive-methods.h>
 #include <sakusen/mathsutils.h>
 
-using namespace std;
-using namespace sakusen;
+namespace sakusen {
 
 Heightfield::Heightfield(
     uint32 xyR,
@@ -93,15 +92,15 @@ void Heightfield::sanityCheck() const
   if (width == 0 || height == 0) {
     SAKUSEN_FATAL("heightfield dimension 0");
   }
-  if (numeric_limits<uint32>::max() / width < height) {
+  if (std::numeric_limits<uint32>::max() / width < height) {
     SAKUSEN_FATAL("heightfield contains too much data");
   }
   /* Check that all possible height values fit into the proper range */
   if (zResolution == 0 || xyResolution == 0) {
     SAKUSEN_FATAL("heightfield resolution 0");
   }
-  if (numeric_limits<sint32>::max() / zResolution <
-      uint32(numeric_limits<sint16>::max())) {
+  if (std::numeric_limits<sint32>::max() / zResolution <
+      uint32(std::numeric_limits<sint16>::max())) {
     SAKUSEN_FATAL(
         "heights could overflow (zres is " << zResolution <<
         ")"
@@ -163,7 +162,7 @@ double Heightfield::intersectRayInCell(
 
   boost::tie(r1, r2) = mathsUtils_solveQuadratic(a, b, c);
 
-  if (isnan(r1) || (!isnan(r2) && r2 < minimum)) {
+  if (std::isnan(r1) || (!std::isnan(r2) && r2 < minimum)) {
     /* Something's gone wrong... */
     SAKUSEN_FATAL("no valid solution found");
   }
@@ -175,7 +174,7 @@ double Heightfield::intersectRayInCell(
       return std::numeric_limits<double>::infinity();
     }
   } else {
-    if (!isnan(r2) && r2 <= extent) {
+    if (!std::isnan(r2) && r2 <= extent) {
       return r2;
     } else {
       return std::numeric_limits<double>::infinity();
@@ -264,7 +263,7 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
     SAKUSEN_FATAL("rectangle outside map");
   }
   Rectangle<sint32> croppedArea = area.intersect(world->getMap()->area());
-  sint32 result = numeric_limits<sint32>::min();
+  sint32 result = std::numeric_limits<sint32>::min();
   /* We check the height at various positions, exploiting the fact that we know
    * the height is linearly interpolated between samples.
    *
@@ -276,29 +275,34 @@ sint32 Heightfield::getMaxHeightIn(const Rectangle<sint32>& area) const
   uint32 maxSampleX = dexToSampleCeilX(croppedArea.getMaxX());
   uint32 maxSampleY = dexToSampleCeilY(croppedArea.getMaxY());
   /* The corners */
-  result =
-    max(result, getHeightAt(croppedArea.getMinX(), croppedArea.getMinY()));
-  result =
-    max(result, getHeightAt(croppedArea.getMaxX(), croppedArea.getMinY()));
-  result =
-    max(result, getHeightAt(croppedArea.getMinX(), croppedArea.getMaxY()));
-  result =
-    max(result, getHeightAt(croppedArea.getMaxX(), croppedArea.getMaxY()));
+  result = std::max(
+    result, getHeightAt(croppedArea.getMinX(), croppedArea.getMinY()));
+  result = std::max(
+    result, getHeightAt(croppedArea.getMaxX(), croppedArea.getMinY()));
+  result = std::max(
+    result, getHeightAt(croppedArea.getMinX(), croppedArea.getMaxY()));
+  result = std::max(
+    result, getHeightAt(croppedArea.getMaxX(), croppedArea.getMaxY()));
   /* The following edge computations are far from optimized */
   /* Across the top and bottom edges */
   for (uint32 x = minSampleX; x < maxSampleX; ++x) {
-    result = max(result, getHeightAt(sampleToDexX(x), croppedArea.getMinY()));
-    result = max(result, getHeightAt(sampleToDexX(x), croppedArea.getMaxY()));
+    result = std::max(
+      result, getHeightAt(sampleToDexX(x), croppedArea.getMinY()));
+    result = std::max(
+      result, getHeightAt(sampleToDexX(x), croppedArea.getMaxY()));
   }
   /* Up the left and right edges */
   for (uint32 y = minSampleY; y < maxSampleY; ++y) {
-    result = max(result, getHeightAt(croppedArea.getMinX(), sampleToDexY(y)));
-    result = max(result, getHeightAt(croppedArea.getMaxX(), sampleToDexY(y)));
+    result = std::max(
+      result, getHeightAt(croppedArea.getMinX(), sampleToDexY(y)));
+    result = std::max(
+      result, getHeightAt(croppedArea.getMaxX(), sampleToDexY(y)));
   }
   /* The internal points */
   for (uint32 x = minSampleX; x < maxSampleX; ++x) {
     for (uint32 y = minSampleY; y < maxSampleY; ++y) {
-      result = max(result, getHeightAtSample(x, y));
+      result = std::max(
+        result, getHeightAtSample(x, y));
     }
   }
   return result;
@@ -325,7 +329,7 @@ double Heightfield::intersectRay(const Ray& ray, double extent) const
    * A Fast Voxel Traversal Algorithm for Ray Tracing,
    * John Amanatides, Andrew Woo
    */
-  const double inf = numeric_limits<double>::infinity();
+  const double inf = std::numeric_limits<double>::infinity();
 
   if (extent == inf) {
     /* This could well make us loop forever, so abort instead */
@@ -465,3 +469,4 @@ Heightfield Heightfield::load(
   }
 }
 
+}

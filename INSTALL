@@ -55,6 +55,10 @@ If you're going to be building sakusen repeatedly you can save a lot of time by
 adding "BUILD_LIBTOOLFLAGS=--tag=disable-static" to your config.mk.  This will
 mean that only shared versions of library object files are built.
 
+config.mk is for local choices of flags and other variables which should be
+chosen on a per-build-environment basis.  Use build.mk for flags that should be
+the same everywhere and must exist before Makefile.local is processed.
+
 A hacked version of libltdl is provided which gives better error messages than
 the mainline one (it loses some functionality too, but not in cases that matter
 to sakusen).  If you want to use this (because you're developing sakusen game

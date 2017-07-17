@@ -116,13 +116,6 @@ MAKEFRAGS := \
 		.makefrags/$(subst ..,_dot_dot,$(source)).makefrag\
 	)
 
-# Add warnings and debugging, and turn off optimizations.  To get optimizations
-# and such things, they should be added to BUILD_CXXFLAGS in a config.mk or to
-# THIS_CXXFLAGS in a Makefile.local (depending on whether they are supposed to
-# apply to a build or a binary respectively).
-GLOBAL_CXXFLAGS ?= -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -g3
-GLOBAL_CFLAGS ?= -Werror -O0 -g3
-
 # We replace '-' with '/' in the library name when using it as a directory
 # because e.g. libsakusen-comms is in libsakusen/comms
 
@@ -131,11 +124,12 @@ LIB_DEP := $(foreach lib,$(LIB_DEP_NAMES), \
 	)
 ALL_CPPFLAGS := $(CPPFLAGS) $(BUILD_CPPFLAGS) -I$(this_srcdir) \
 	-I$(top_builddir) -I$(top_srcdir) $(THIS_CPPFLAGS)
+ALL_CXXPPFLAGS := $(ALL_CPPFLAGS) $(GLOBAL_CXXPPFLAGS)
 
 # Concatenate all the CXXFLAGSs and CFLAGSs together
 
 ALL_CXXFLAGS := \
-	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(ALL_CPPFLAGS) $(THIS_CXXFLAGS)
+	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(ALL_CXXPPFLAGS) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
 	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(ALL_CPPFLAGS) $(THIS_CFLAGS)
 ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS)
@@ -171,6 +165,7 @@ $(SUBDIR_MAKEFILES): %/Makefile: $(top_srcdir)makefiles/Makefile.common
 	@echo >> $@
 	@echo 'all:' >> $@
 	@echo >> $@
+	@echo 'include $$(top_builddir)global.mk' >> $@
 	@echo 'include $$(top_builddir)config.mk' >> $@
 	@echo 'ifneq (,$$(wildcard Makefile.local))' >> $@
 	@echo '  include Makefile.local' >> $@
@@ -328,7 +323,7 @@ endif # $(BIN) non-empty
 ifneq ($(MAKEFRAGS),)
 # Don't include them if we're cleaning
 ifneq ($(MAKECMDGOALS),clean)
-include $(MAKEFRAGS)
+-include $(MAKEFRAGS)
 
 # We make generated headers a dependency of the last included Makefile to
 # ensure that they are generated before any of the other makefrags.  It has to
@@ -342,7 +337,7 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag: $(top_srcdir)makefiles/Makefile.common
 	@mkdir -p $(dir $@)
-	$(CPP) $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
+	$(CPP) $(ALL_CXXPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
 		-MT $@ -MP -M -MF $@ $(this_srcdir)$(subst _dot_dot,..,$*)
 	printf "\n%s:\n" "$(this_srcdir)$(subst _dot_dot,..,$*)" >> $@
 

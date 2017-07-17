@@ -152,7 +152,7 @@ inline boost::tuple<double,double> SphereRegion<T>::intersect(
   double c = static_cast<double>(relativeOrigin.squareLength());
 
   boost::tuple<double,double> result = mathsUtils_solveQuadratic(a, b, c);
-  if (isnan(result.get<0>())) {
+  if (std::isnan(result.get<0>())) {
     result.get<0>() = result.get<1>() = std::numeric_limits<double>::infinity();
   }
   return result;

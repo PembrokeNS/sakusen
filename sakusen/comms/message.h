@@ -42,7 +42,7 @@ class LIBSAKUSEN_COMMS_API Message {
       return ( data ? data->getType() : messageType_none );
     }
     inline bool isRealMessage(void) const {
-      return data;
+      return !!data;
     }
     inline const Buffer& getBuffer(void) const {
       return data->getBuffer();
