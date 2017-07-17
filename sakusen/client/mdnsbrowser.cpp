@@ -28,16 +28,16 @@ namespace client {
 class MdnsBrowser::Implementation : public boost::noncopyable {
   public:
   Implementation(
-      boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
-      boost::function<void(String)> cb_gone);
+      std::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
+      std::function<void(String)> cb_gone);
   ~Implementation();
 
   private:
   AvahiClient *client;
   AvahiThreadedPoll *poll;
   AvahiServiceBrowser *sb;
-  boost::function<void(std::unique_ptr<ServedGame>)> game_appeared;
-  boost::function<void(String)> game_gone;
+  std::function<void(std::unique_ptr<ServedGame>)> game_appeared;
+  std::function<void(String)> game_gone;
 
   static void resolve_callback(
     AvahiServiceResolver *r,
@@ -223,8 +223,8 @@ void MdnsBrowser::Implementation::client_callback(AvahiClient *c, AvahiClientSta
  * empty.
  */
 MdnsBrowser::MdnsBrowser(
-    boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
-    boost::function<void(String)> cb_gone)
+    std::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
+    std::function<void(String)> cb_gone)
       : pimpl(new Implementation(cb_appeared, cb_gone))
 { }
 
@@ -233,8 +233,8 @@ MdnsBrowser::MdnsBrowser(
  * This is the real constructor that does all the work.
  */
 MdnsBrowser::Implementation::Implementation(
-    boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
-    boost::function<void(String)> cb_gone)
+    std::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
+    std::function<void(String)> cb_gone)
       : client(0), poll(0), sb(0), game_appeared(cb_appeared), game_gone(cb_gone)
 {
   int error = 0;

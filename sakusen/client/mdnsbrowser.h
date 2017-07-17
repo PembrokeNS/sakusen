@@ -33,8 +33,10 @@ namespace client {
  */
 class MdnsBrowser : public boost::noncopyable {
   public:
-  MdnsBrowser(boost::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
-      boost::function<void(String)> cb_gone);
+  MdnsBrowser(
+    std::function<void(std::unique_ptr<ServedGame>)> cb_appeared,
+    std::function<void(String)> cb_gone
+  );
   ~MdnsBrowser();
 
   private:
